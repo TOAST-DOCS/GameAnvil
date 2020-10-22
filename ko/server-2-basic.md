@@ -1,4 +1,4 @@
-# 기본 개념
+## Game > GameAnvil > 서버 개발 가이드 > 기본 개념
 
 ## 1.Node
 
@@ -18,7 +18,7 @@ GameAnvil 사용자는 이 중에서 컨텐츠 구현이 가능한 노드들(Gat
 
 이러한 노드의 계층 구조는 아래의 그림과 같은 모습입니다.
 
-![Node Layer.png](./images/NodeLayer.png)
+![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/NodeLayer.png)
 
 <br>
 
@@ -37,11 +37,11 @@ GameAnvil 사용자는 이 중에서 컨텐츠 구현이 가능한 노드들(Gat
 
 다수의 Fiber들은 스레드풀(Executor) 상에서 스케쥴링 됩니다. 이 때, 스레드풀의 크기를 1로 고정하면 바로 GameAnvil 노드의 모델이 됩니다. 즉, 노드는 다수의 Fiber를 동시에 처리하기 위한 싱글스레드 스케쥴러인 것입니다. 이를 그림으로 표현하면 아래와 같습니다.
 
-![image.png](./images/FiberConcept.png)
+![image.png](http://static.toastoven.net/prod_gameanvil/images/FiberConcept.png)
 
 이와 같이 Fiber를 사용할 때의 장점은 순차적인 코드 작성이 가능하다는 점입니다. 서버 코드는 일반적인 블러킹 코드를 작성하는 것과 매우 흡사해지는거죠. 별도의 콜백 처리나 완료 통보에 신경쓸 필요가 전혀 없습니다. 이런 Fiber와 관련하여 한 가지 다행인 점은 GameAnvil 사용자가 이 Fiber 단위에 대해 크게 신경 쓸 필요가 없다는 점입니다. GameAnvil 엔진단에서 모든 Fiber를 관리하고 있으므로 사용자는 일반적인 싱글 스레딩 코드를 작성하듯이 개발하면 됩니다.
 
-![image.png](./images/FiberConcept2.png)
+![image.png](http://static.toastoven.net/prod_gameanvil/images/FiberConcept2.png)
 
 GameAnvil 서버 코드는 비동기 처리를 기반으로 합니다. 이를 위해 비동기 전용 [비동기 지원 API](3z5.async)를 제공합니다. 이러한 비동기 API를 사용하여  임의의 Fiber 상에서 블러킹 호출을 할 경우에는 해당 Fiber만 Suspend 됩니다. 이 부분은 문서의 다음 부분에서 더 자세히 다루도록 하겠습니다.
 

@@ -1,4 +1,4 @@
-# 서버 구성의 기본 요소와 구현
+## Game > GameAnvil > 서버 개발 가이드 > 서버 구성의 기본 요소와 구현
 
 기본적인 서버를 구현하기 위해 알아야할 기본 요소들과 이를 구현하는 방법에 대해 설명합니다. 엔진의 핵심적인 부분을 중심으로 가능한 이해하기 쉽게 가이드 합니다. 코드 레벨의 참고 자료가 필요한 경우에는 [GameAnvil 레퍼런스 서버](reference-server)를 참고할 수 있습니다. 또한 [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)를 통해 JavaDoc 문서도 이용 가능합니다. 가능하다면 레퍼런스 서버 프로젝트와 이 가이드 문서를 함께 살펴보기를 추천합니다.
 
@@ -95,7 +95,7 @@ public class SampleGatewayNode extends BaseGatewayNode {
 
 GatewayNode는 클라이언트가 접속하는 노드입니다. 앞서 살펴본 것처럼 BaseGatewayNode 클래스를 상속하여 공통 콜백 메소드만 재정의하면 됩니다. 그 외 GatewayNode 자체에 특별히 추가로 필수 구현할 사항은 없습니다.  GatewayNode는 클라이언트로부터의 Connection과 Session들을 관리하는데 이들의 관계는 다음의 그림과 같습니다.
 
-![Node Layer.png](./images/ConnectionAndSession.png)
+![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
 일반적으로 클라이언트는 GatewayNode로 하나의 Connection을 맺습니다. 이 때, 해당 Connection에 대해 인증 절차를 진행하여 성공한 경우에 하나 이상의 Session을 생성할 수 있습니다. 각각의 세션은 서로 다른 게임 서비스에 대한 논리적 연결 단위입니다. 위의 그림은 클라이언트가 하나의 Connection을 통해 Game 서비스와 Chat 서비스 각각에 대해 Session을 생성한 모습입니다.
 

@@ -1,4 +1,5 @@
-# GameAnvil Connector
+## Game > GameAnvil > 클라이언트 개발 가이드 > 시작하기
+## GameAnvil Connector
 
 * [GameAnvil](https://github.nhnent.com/game-server-engine/GameAnvil.git) 서버 접속을 위한 전용 Connector 모듈입니다.
 

@@ -1,10 +1,10 @@
-# 중급 주제
+## Game > GameAnvil > 서버 개발 가이드 > 중급 주제
 
 ## 1. 분산 서버
 
 앞서 기본 개념에서 GameAnvil의 노드 구성은 아래의 그림과 같다고 했습니다. 즉, 하나의 프로세스는 여러 가지의 노드를 자유롭게 구성해서 구동할 수 있습니다. 단, 모든 GameAnvil 프로세스는 반드시 하나의 IPC 노드가 필수적으로 포함됩니다. 이 IPC 노드는 GameAnvil 프로세스 간의 통신을 담당합니다. 사실 실제 네트워크 처리를 담당하는 로우 레벨 노드가 더 있지만 사용자는 이 부분을 통틀어 IPC 노드로 이해하면 됩니다. 
 
-![Node Layer.png](./images/NodeLayer.png)
+![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/NodeLayer.png)
 
 
 
@@ -14,7 +14,7 @@
 
 서로 다른 프로세스의 노드들과 통신하기 위해 각 노드들은 IPC 노드를 통해 메시지를 전달합니다. 반면에 동일한 프로세스 상의 노드들은 큐를 이용해서 상호 통신합니다. 그러므로 이 경우에는 IPC 노드를 통하지 않습니다.
 
-![Node Layer.png](./images/IPC.png)
+![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/IPC.png)
 
 
 
@@ -45,7 +45,7 @@
 
 만일, 클라이언트와 Gateway 노드 사이의 접속이 끊기면 아래의 그림과 같이 접속 복구(Connection Recovery)가 진행됩니다. 재접속을 하는 과정에서 클라이언트는 여러대의 Gateway 노드 중 이전과 다른 곳에 접속을 시도할 수도 있습니다. 이 경우 유저 객체가 존재하는 Game 노드에 대한 위치 정보를 바탕으로 새롭게 세션을 복구합니다. 그러므로 유저는 게임 진행 중에 재접속을 하더라도 이전의 게임 상태를 이어갈 수 있습니다.
 
-![Node Layer.png](./images/ConnectionRecovery.png)
+![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/ConnectionRecovery.png)
 
 
 

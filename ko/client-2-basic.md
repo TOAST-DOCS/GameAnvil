@@ -1,5 +1,4 @@
-# 기본 개념
-
+## Game > GameAnvil > 클라이언트 개발 가이드 > 기본 개념
 
 
 ## Connector

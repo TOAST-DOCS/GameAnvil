@@ -1,4 +1,4 @@
-# 개요
+## Game > GameAnvil > 개요
 
 다수의 게임 프로젝트에서 사용 중인 GameAvnil은 NHN에서 직접 만든 Java 기반의 실시간 게임 서버 엔진입니다. 
 
@@ -6,7 +6,7 @@ GameAnvil을 이용하여 풍부한 Java 생태계의 혜택을 누리며 쉽고
 
 <br>
 
-# Key Features
+## Key Features
 
 * Fiber 기반의 Continuation 지원과 순차적인 코드 흐름
 * 싱글 스레딩과 Lock Free
