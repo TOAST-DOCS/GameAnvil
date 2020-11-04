@@ -13,7 +13,7 @@ GameAnvil을 이용하여 게임 서버를 개발하는 방법에 대해서 쉽�
 
 GameAnvil은 기본적인 골격 작업을 빠르게 완료하기 위해 자체 템플릿을 제공합니다. 템플릿을 사용하면 몇 번의 클릭만으로 기본적인  게임 서버가 완성됩니다. 이렇게 생성된 서버는 간단한 채팅 기능을 포함하고 있습니다. 자세한 사항은 아래의 서버 템플릿 사용법을 참고하세요.
 
-[서버 템플릿 사용법](gameanvil-template)
+[서버 템플릿 사용법](server-link-gameanvil-template)
 
 <br>
 
@@ -36,5 +36,5 @@ GameAnvil은 템플릿 뿐만 아니라 레퍼런스 프로젝트를 제공하�
 
 | 서버 | 클라이언트 | GameAnvil API Reference |
 | --- | ---- | --- |
-| [참고](reference-server) | [참고](reference-client) | [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil) |
+| [참고](server-link-reference-server) | [참고](server-link-reference-client) | [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil) |
 

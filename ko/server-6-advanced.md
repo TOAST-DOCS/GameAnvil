@@ -217,6 +217,6 @@ public boolean canNonStopPatchDstEnd() throws SuspendExecution {
 
 무점검 패치는 GameAnvil의 여러 요소가 복합적으로 잘 맞물려 돌아갔을 때 좋은 결과가 나옵니다. 그러므로 반드시 아래의 가이드 문서를 읽어보고 모든 내용을 이해한 후에 사용할 수 있도록 하세요.
 
-#### [무점검 패치 가이드 ](nonstop-patch)
+#### [무점검 패치 가이드 ](server-link-nonstop-patch)
 
 
