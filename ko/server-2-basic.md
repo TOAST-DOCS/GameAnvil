@@ -129,7 +129,7 @@ void someCaller() throws SuspendExeuction {
     }
 ```
 
-이에 대한 자세한 설명은 [비동기 지원](3z5.async)에서 자세히 다룹니다.
+이에 대한 자세한 설명은 [비동기 지원](server-5-async)에서 자세히 다룹니다.
 
 <br>
 

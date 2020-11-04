@@ -1,6 +1,6 @@
 ## Game > GameAnvil > 서버 개발 가이드 > 서버 구성의 기본 요소와 구현
 
-기본적인 서버를 구현하기 위해 알아야할 기본 요소들과 이를 구현하는 방법에 대해 설명합니다. 엔진의 핵심적인 부분을 중심으로 가능한 이해하기 쉽게 가이드 합니다. 코드 레벨의 참고 자료가 필요한 경우에는 [GameAnvil 레퍼런스 서버](reference-server)를 참고할 수 있습니다. 또한 [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)를 통해 JavaDoc 문서도 이용 가능합니다. 가능하다면 레퍼런스 서버 프로젝트와 이 가이드 문서를 함께 살펴보기를 추천합니다.
+기본적인 서버를 구현하기 위해 알아야할 기본 요소들과 이를 구현하는 방법에 대해 설명합니다. 엔진의 핵심적인 부분을 중심으로 가능한 이해하기 쉽게 가이드 합니다. 코드 레벨의 참고 자료가 필요한 경우에는 [GameAnvil 레퍼런스 서버](server-link-reference-server)를 참고할 수 있습니다. 또한 [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)를 통해 JavaDoc 문서도 이용 가능합니다. 가능하다면 레퍼런스 서버 프로젝트와 이 가이드 문서를 함께 살펴보기를 추천합니다.
 
 <br>
 
@@ -329,7 +329,7 @@ public class SampleGameNode extends BaseGameNode {
 
 
 
-아래의 예제 코드는 GameUser의 전체 콜백 메소드 목록을 보여줍니다. 이 중 일부는 기본 구현이 제공되므로 필요한 상황이 아니면 재정의할 필요는 없습니다. 이는 GameUser 뿐만 아니라 엔진에서 제공하는 대부분의 콜백 메소드에 해당하는 사항입니다. 이러한 부분은 상속받는 각각의 기본 클래스(e.g.BaseUser)에 대해  [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)에서 JavaDoc 문서를 확인하거나 [레퍼런스 서버 프로젝트](reference-server)를 참고하는 것이 좋습니다.
+아래의 예제 코드는 GameUser의 전체 콜백 메소드 목록을 보여줍니다. 이 중 일부는 기본 구현이 제공되므로 필요한 상황이 아니면 재정의할 필요는 없습니다. 이는 GameUser 뿐만 아니라 엔진에서 제공하는 대부분의 콜백 메소드에 해당하는 사항입니다. 이러한 부분은 상속받는 각각의 기본 클래스(e.g.BaseUser)에 대해  [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)에서 JavaDoc 문서를 확인하거나 [레퍼런스 서버 프로젝트](server-link-reference-server)를 참고하는 것이 좋습니다.
 
 
 
