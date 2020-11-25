@@ -1,4 +1,4 @@
-## GameAnvil 서버 템플릿 사용 방법
+## Game > GameAnvil > 서버 개발 가이드 > GameAnvil 서버 템플릿 사용 방법
 
 * [템플릿 다운로드](./files/GameAnvil-Templates.zip)
 

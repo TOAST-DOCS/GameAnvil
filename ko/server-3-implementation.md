@@ -1,4 +1,4 @@
-## Game > GameAnvil > 서버 개발 가이드 > 서버 구성의 기본 요소와 구현
+## Game > GameAnvil > 서버 개발 가이드 > 구현 가이드
 
 기본적인 서버를 구현하기 위해 알아야 할 엔진의 핵심적인 부분을 중심으로 기본 요소들과 이를 구현하는 방법에 대해 설명합니다. 코드 레벨의 참고 자료가 필요한 경우에는 [GameAnvil 레퍼런스 서버](server-link-reference-server)를 참고할 수 있습니다. 또한 [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)를 통해 JavaDoc 문서도 이용 가능합니다. 가능하다면 레퍼런스 서버 프로젝트와 이 가이드 문서를 함께 살펴보시기를 추천드립니다.
 
@@ -103,7 +103,7 @@ GatewayNode는 클라이언트가 접속하는 노드입니다. BaseGatewayNode 
 
 ### 2-1.Connection
 
-Connection은 클라이언트의 물리적 접속 자체를 의미합니다. 클라이언트는 고유한 AccountId를 이용하여 Connection 상에서 인증 절차를 진행할 수 있습니다. 인증이 성공할 경우 해당 AccountId는 생성된 Connection에 매핑됩니다. Connection은 아래와 같은 콜백 메소드를 재정의 합니다.
+Connection은 클라이언트의 물리적 접속 자체를 의미합니다. 클라이언트는 고유한 AccountId를 이용하여 Connection 상에서 인증 절차를 진행할 수 있습니다. 인증이 성공할 경우 해당 AccountId는 생성된 Connection에 매핑됩니다. Connection은 아래와 같은 콜백 메소드를 재정의 합니다. 이 때, AccountId는 임의의 플랫폼에서 인증한 후 획득하는 유저의 키값 등을 사용할 수 있습니다. 예를 들어 Gamebase를 통해 인증한 후 UserId를 획득하면 이 값을 GameAnvil의 인증 과정에서 AccountId로 사용할 수 있습니다.
 
 ```java
 public class SampleConnection extends BaseConnection<SampleGameSession> {
@@ -179,7 +179,7 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
 
 ### 2-2.Session
 
-Connection을 성공적으로 맺은 클라이언트는 해당 Connection 상에서 서비스별로 한 개씩 GameNode에 논리적인 Session을 맺을 수 있습니다. 고유한 Session은 Connection의 AccountId와 Session의 SubId를 조합해서 나타낼 수 있습니다. Session은 아래와 같이 해당 세션에서 처리할 메시지와 핸들러를 등록한 후 콜백 메소드를 통해 디스패치할 수 있습니다.
+Connection을 성공적으로 맺은 클라이언트는 해당 Connection 상에서 서비스별로 한 개씩 GameNode에 논리적인 Session을 맺을 수 있습니다. GameAnvil은 내부적으로 Connection의 AccountId와 Session의 SubId를 "AccoundId:SubId" 형태로 조합해서 고유한 Session과 해당 세션을 사용중인 유저를 구분합니다. 이러한 Session은 아래와 같이 해당 Session에서 처리할 메시지와 핸들러를 등록한 후 콜백 메소드를 통해 디스패치할 수 있습니다. 이 때, subId는 사용자가 임의로 정한 규칙에 맞추어 해당 Connection 내에서 고유한 값으로 할당하면 됩니다.
 
 ```java
 public class SampleSession extends BaseSession {
@@ -867,7 +867,418 @@ public class Main {
 
 <br>
 
-## 6.MatchNode & MatchMaker
+## 4. UserTransfer
+
+게임 노드에는 게임 유저 객체가 생성됩니다. 이 게임 유저 객체는 게임 노드 사이에서 언제든지 전송될 수 있습니다. 예를 들면 1번 게임 노드의 유저 객체가 2번 게임 노드에 생성된 방으로 들어가는 과정에서 게임 노드간 유저 객체 전송이 일어납니다. 이 기술은 GameAnvil의 가장 핵심이자 근간이 되며 유저 객체를 잘 직렬화/역직렬화 해주어야 의도한대로 동작합니다. 이러한 직렬화/역직렬화 대상은 GameAnvil 사용자가 직접 구현할 수 있습니다. 즉, 해당 게임 유저 객체의 어떤 값을 전송할 것인지 결정하는 것이죠.
+
+이러한 유저 전송이 발생하는 경우는 크게 세 가지로 나눌 수 있습니다.
+
+* 첫 째, 매치메이킹을 포함한 방 생성이나 방 참여 로직에 의해 유저 객체는 다른 게임 노드로 전송될 수 있습니다. 이 때, 구현에 따라 다른 채널의 방으로 진입할 수도 있습니다.
+* 둘 째, 다른 채널로 이동 할 때 발생합니다. 하나의 게임 노드는 하나의 채널에 속할 수 있습니다. 그러므로 채널을 이동하는 것은 게임 노드 사이의 이동을 의미합니다.
+  * 첫 번째 경우처럼 매치메이킹 등을 이용해서 다른 채널의 방으로 진입할 경우에는 엔진 내부에서 묵시적으로 처리합니다.
+  * 클라이언트는 명시적으로 채널 이동을 요청할 수도 있습니다.
+* 셋 째, 임의의 게임 노드에 대해 무정지 점검(NonStopPatch)을 진행하면 해당 노드의 유저 객체들은 다른 유효한 게임 노드들로 분산되어 전송 됩니다. 이 경우는 운영 측면에서 GameAnvil Console을 통해 명시적으로 명령을 내린 경우입니다.
+
+<br>
+
+### 4-1.  유저 전송 구현
+
+실제 유저 전송은 GameAnvil이 내부적으로 조용하게 처리합니다. 이 때, 클라이언트는 자신의 게임 유저 객체가 서버 사이에서 전송되는지 인지하지 못합니다. 즉, 다른 게임 노드의 방으로 들어가더라도 클라이언트는 단지 하나의 GameAnvil 서버군에서 임의의 방으로 들어간 것 뿐이죠. 
+
+단, 다른 게임 노드로 유저 객체를 전송할 때 어떤 데이터를 함께 전송할지는 사용자가 지정할 수 있습니다. 간단히 지정만 해두면 이 데이터는 유저 객체의 일부로 함께 직렬화 됩니다. 전송할 대상 게임 노드에서는 역직렬화를 신경쓸 필요 없이 쉽게 해당 객체들에 접근해서 사용할 수 있습니다.
+
+다음은 이러한 유저 전송에 관련된 콜백 메소드들입니다. 우선 "함께 전송할 데이터 지정하기" 입니다. 이를 위해 BaseUser 추상 클래스를 상속받은 게임 유저 클래스에 아래의 콜백을 구현합니다. 방법은 간단합니다. 아래의 예제와 같이 전송할 데이터를 사용자가 원하는 key값을 이용하여 key-value 쌍으로 매개변수로 넘겨받은 transferPack에 넣기만 하면 됩니다.
+
+만일 여기에서 전송할 데이터를 지정하지 않으면 대상 게임 노드로 전송된 유저 객체의 해당 데이터는 모두 기본값으로 초기화 되므로 주의가 필요 합니다.
+
+```java
+@Override
+public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
+    transferPack.put("DataTopic", myDataTopic);
+    transferPack.put("TotalMoney", myTotalMoney);
+    transferPack.put("Message", myMessage);
+}
+```
+
+이제 유저 전송이 완료된 후 대상 게임 노드에서 처리할 콜백 메소드를 살펴보겠습니다. 아래와 같이 전송 전에 지정한 key를 이용해서 원하는 객체에 접근할 수 있습니다. 이와 같은 방법으로 전송 완료된 유저 객체의 해당 데이터를 원래 상태로 만들어 줍니다.
+
+
+```java
+@Override
+public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
+    setTestTransferDataTopic(transferPack.getToString("DataTopic"));
+    setTotalMoney(transferPack.getToLong("TotalMoney"));
+    setTransferMessage(transferPack.getToString("Message"));
+}
+```
+
+위의 두 가지 메소드는 GameAnvil이 알아서 호출합니다. 사용자는 그냥 구현만 하면 됩니다.
+
+<br>
+
+###  4-2.  전송 가능한 유저 타이머
+
+유저가 전송될 때 유저에 등록해둔 타이머도 함께 전송할 수 있습니다. 전송 가능한 타이머를 사용하기 위해서는 별도로 아래의 콜백 메소드에서 원하는 key를 이용해서 미리 등록해두어야 합니다. Timer 핸들러를 다음과 같이 원하는 key로 매핑해둡니다.
+
+
+```java
+ @Override
+ public void onRegisterTimerHandler() {
+     registerTimerHandler("transferUserTimerHandler1", transferUserTimerHandler1());
+     registerTimerHandler("transferUserTimerHandler2", (timerObject, object) -> {
+         GameUser user = (GameUser) object;
+         logger.warn("GameUser::transferUserTimerHandler2() : userId({})", user.getId());
+     });
+ }
+```
+
+등록이 완료된 타이머 객체는 언제든 해당 key를 이용해서 아래와 같이 게임 유저 구현부에서 사용할 수 있습니다. 단순히 등록만 한 타이머는 효과가 없으므로 실제 사용을 위해서는 반드시 아래와 같이 유저 객체에 추가해주어야 타이머가 발동합니다. 
+
+```java
+addTimer(1, TimeUnit.SECONDS, 20, "transferRoomTimerHandler1", false);
+addTimer(2, TimeUnit.SECONDS, 0, "transferRoomTimerHandler2", false);
+```
+
+이렇게 유저 객체에 추가해 둔 타이머는 별도로 전송에 대한 처리를 하지 않아도 모두 자동으로 전송됩니다. 즉, 대상 게임 노드에서 해당 유저 객체에 대해 동일한 타이머 추가 과정을 거칠 필요가 없습니다.
+
+<br>
+
+## 5. 아이디
+
+GameAnvil은 여러 종류의 아이디를 사용합니다. 그 중 일부는 서버가 자체 발급하고 다른 일부는 사용자가 GameAnvilConfig에 직접 설정합니다. 접속에 필요한 계정 정보 등은 클라이언트에서 입력받은 정보를 서버로 전달합니다. 다음은 GameAnvil에서 사용하는 대표적인 아이디에 대한 설명입니다.
+
+| 이름      | 설명                                                         | 자료형 | 범위      |
+| --------- | ------------------------------------------------------------ | ------ | --------- |
+| ServiceId | - 설정한 각각의 서비스를 구분하기 위한 아이디<br>- 하나의 서비스 아이디는 여러 개의 노드로 구성할 수 있음 | int    | 0<id< 100 |
+| HostId    | - 호스트의 고유 아이디<br>- 하나의 호스트에 여러 개의 GameAnvil 프로세스를 구동할 경우에는 GameAnvilConfig에 별도의 vmId를 설정 | long   | -         |
+| NodeId    | - 노드의 고유 아이디<br>- HostId + ServiceId + 내부Counter 값으로 구성 | long   | -         |
+| AccountId | - 클라이언트가 접속할 때 입력<br>- 접속(Connection) 하나당 하나의 계정 아이디가 매핑 | string | -         |
+| UserId    | - 게임 유저 객체의 고유 아이디<br>- 게임 유저 객체가 생성될 때 서버가 발급<br>- 동일한 유저가 재접속 할 경우라도 새로운 게임 유저 객체가 생성되면 새로운 아이디 발급 | int    | -         |
+| RoomId    | - 방의 고유 아이디<br>- 방 객체가 생성될 때 서버가 발급      | int    | -         |
+| SubId     | - 하나의 계정(accountId) 내에서 고유한 보조 아이디<br>- 세션(Session) 하나당 AccountId + SubId가 매핑<br>- 접속(Connection) 단위로 여러개의 세션(Session)을 사용할 때 하나의 접속 내에서 각각의 세션 유저를 구분하는 아이디<br>- 클라이언트가 접속할 때 입력 | int    | 0 < id    |
+
+
+
+### 5-1.아이디 지원 API
+
+앞서 살펴본 ID에 관한 일부 기능을 아래의 표와 같이 엔진 사용자에게 제공합니다. 해당 ID를 획득하거나 체크하기 위해서는 반드시 아래의 API를 사용해야 합니다.
+
+* ServiceId 클래스
+
+| 메소드                                | 설명                                    |
+| ------------------------------------- | --------------------------------------- |
+| boolean isValid(int serviceId)        | 유효한 serviceId인지 체크               |
+| int findServiceId(String serviceName) | ServiceName에 해당하는 ServiceId을 획득 |
+| String findServiceName(int serviceId) | ServiceId에 해당하는 ServiceName을 획득 |
+
+* HostId 클래스
+
+| 메소드                       | 설명                     |
+| ---------------------------- | ------------------------ |
+| boolean isValid(long hostId) | 유효한 hostId인지 체크   |
+| long get()                   | 프로세스의 hostId를 획득 |
+
+* NodeId 클래스
+
+| 메소드                        | 이름                          |
+| ----------------------------- | ----------------------------- |
+| boolean isValid(long nodeId)  | 유효한 nodeId인지 체크        |
+| long getHostId(long nodeId)   | nodeId로부터 hostId를 획득    |
+| int getServiceId(long nodeId) | nodeId로부터 serviceId를 획득 |
+| int getNodeNum(long nodeId)   | nodeId로부터 nodeNum을 획득   |
+
+* UserId 클래스
+
+| 메소드                      | 설명                   |
+| --------------------------- | ---------------------- |
+| boolean isValid(int userId) | 유효한 userId인지 체크 |
+
+* RoomId 클래스
+
+| 메소드                      | 설명                   |
+| --------------------------- | ---------------------- |
+| boolean isValid(int roomId) | 유효한 roomId인지 체크 |
+
+* SubId 클래스
+
+| 메소드                     | 설명                  |
+| -------------------------- | --------------------- |
+| boolean isValid(int subId) | 유효한 subId인지 체크 |
+
+<br>
+
+## 6. Channel
+
+채널은 단일 서버군을 논리적으로 나눌 수 있는 방법 중 하나입니다. GameAnvil은 한 개 이상의 Game 노드를 포함할 경우에 채널을 설정할 수 있습니다. 기본적으로 GameAnvilConfig을 통해 Game 노드에 아래의 예제처럼 채널을 설정합니다. 이 예제에서 총 4개의 Game노드에 대해 각각 ch1,ch1,ch2,ch2를 설정합니다.
+
+```json
+"game": [
+    {
+      "nodeCnt": 4,
+      "serviceId": 1,
+      "serviceName": "Game",
+      "channelIDs": [
+        "ch1",
+        "ch1",
+        "ch2",
+        "ch2"
+      ],
+    }
+    
+```
+
+
+
+이 때, 동일한 채널의 Game 노드는 서로 채널 관련 정보를 공유합니다. 예를 들면 채널에 새로운 유저가 진입하거나 떠날 때 GameAnvil 엔진이 미리 구현한 콜백을 호출해줍니다. 채널간 유저와 방 정보 동기화를 위해 다음과 같이 GameUserInfo 그리고 GameRoomInfo를 사용합니다. 앞서 살펴본 GameNode에 대한 Bootstrap의 내용에 추가로 SampleChannelUserInfo와 SampleChannelRoomInfo가 등록되는 것을 확인할 수 있습니다.
+
+```java
+public class Main {
+
+    public static void main(String[] args) {
+        GameAnvilBootstrap bootstrap = GameAnvilBootstrap.getInstance();
+
+        bootstrap.setGame("SampleGameService")
+            .node(SampleGameNode.class)
+            .user("SampleGameUserType", SampleGameUser.class, SampleChannelUserInfo.class)
+            .room("SampleGameRoomType", SampleGameRoom.class, SampleChannelRoomInfo.class);
+
+        bootstrap.run();
+    }
+}
+
+```
+
+
+
+그럼 이러한 ChannelUserInfo와 ChannelRoomInfo를 구현하는 방법에 대해 살펴보겠습니다. 우선 채널 유저 정보는 GameAnvil이 제공하는 ChannelUserInfo 인터페이스와 Serializable 인터페이스를 구현합니다. 동일한 채널에 속한 GameNode 사이에서 전송되어야 하므로 Serializable은 필수입니다. 나머지는 엔진 사용자가 원하는 정보로 채우면 됩니다.
+
+```java
+public class SampleChannelUserInfo implements ChannelUserInfo, Serializable {
+
+    private int userId = 0;
+    private String userType = "";
+    private String accountId = "";
+
+    public SampleChannelUserInfo(String userType, int userId, String accountId) {
+        this.userType = userType;
+        this.userId = userId;
+        this.accountId = accountId;
+    }
+
+    public SampleChannelUserInfo() {}
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    /**
+     * {@link KryoSerializer} 를 가지고 직렬화 한다.
+     *
+     * @return ByteBuffer 로 직렬화 된 객체 반환.
+     */
+    @Override
+    public ByteBuffer serialize() {
+        return KryoSerializer.write(this);
+    }
+
+    /**
+     * {@link KryoSerializer} 를 가지고 역직렬화 한다.
+     *
+     * @param inputStream 직렬화된 스트림을 전달.
+     * @return ChannelUserInfo 으로 역직렬화된 객체를 반환.
+     */
+    @Override
+    public ChannelUserInfo deserialize(InputStream inputStream) {
+        return (GameChannelUserInfo) KryoSerializer.read(inputStream);
+    }
+
+    /**
+     * 변경될 Channel User 정보의 User Id.
+     *
+     * @return int type 으로 UserId 반환.
+     */
+    @Override
+    public int getUserId() {
+        return userId;
+    }
+
+    /**
+     * 변경될 Channel User 정보의 Account Id.
+     *
+     * @return String type 으로 AccountId 반환.
+     */
+    @Override
+    public String getAccountId() {
+        return accountId;
+    }
+
+    @Override
+    public int compareTo(GameChannelUserInfo o) {
+        if (o.userId != this.userId)
+            return -1;
+        else
+            return 0;
+    }
+
+}
+```
+
+
+
+채널 방 정보도 동일한 방법으로 구현합니다. GameAnvil이 제공하는 RoomInfo 인터페이스와 Serializable을 구현합니다. 인터페이스명이 ChannelRoomInfo가 아닌 RoomInfo임에 주의하세요. 이 클래스는 채널 유저 정보와 마찬가지로 엔진 사용자가 채널간 동기화에 사용할 정보를 바탕으로 구현하면 됩니다.
+
+```java
+public class SampleChannelRoomInfo implements Serializable, RoomInfo {
+
+    public static final int MAX_ENTRY_USER = 4;
+    private int roomId = 0;
+
+    private int userCnt;
+    private int gameState;
+    private long createTime;
+    
+    public SampleChannelRoomInfo() {
+    }
+    
+	//... 컨텐츠에서 필요한 정보로 클래스 구현
+
+    /**
+     * Room 정보의 Room Id.
+     *
+     * @return int type 으로 RoomId 반환.
+     */
+    @Override
+    public int getRoomId() {
+        return roomId;
+    }
+    
+    /**
+     * Room 정보를 {@link KryoSerializer} 이용해서 serialize 처리를 한다.
+     *
+     * @return ByteBuffer type 으로 serialize 된 내용을 반환.
+     */
+    @Override
+    public ByteBuffer serialize() {
+        return KryoSerializer.write(this);
+    }
+    
+    /**
+     * 전달 받은 정보를 {@link KryoSerializer} 이용해서 deserialize 처리를 한다.
+     *
+     * @param inputStream deserialize 할 데이터를 전달.
+     * @return RoomInfo 로 Room 정보를 반환.
+     */
+    @Override
+    public RoomInfo deserialize(InputStream inputStream) {
+        return (RoomInfo) KryoSerializer.read(inputStream);
+    }
+
+    /**
+     * Room 정보를 복사 한다.
+     *
+     * @return RoomInfo 로 복사된 Room 정보를 반환.
+     * @throws CloneNotSupportedException 복사가 안되는 경우.
+     */
+    @Override
+    public RoomInfo copy() throws CloneNotSupportedException {
+        GameRoomInfo roomInfo = (GameRoomInfo) super.clone();
+        roomInfo.testListInfo = new ArrayList<>(testListInfo);
+
+        return roomInfo;
+    }
+}
+```
+
+
+
+앞서 살펴본 채널의 유저,방 정보는 실제 해당 유저나 방에 대한 갱신이 필요할 때마다 동일한 채널 내의 GameNode 사이에 전파됩니다. 이 때, 관련 GameNode는 아래의 두 가지 콜백 메소드를 각각 채널 유저 정보와 채널 방 정보 갱신에 대해 호출합니다.
+
+```java
+    /**
+     * 같은 채널의 다른 node 에 유저 변화가 있을때 올라오는 callback.
+     * <p>
+     * updateChannelUser() 호출시 발생.
+     *
+     * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
+     * @param channelUserInfo 변경될 User 정보 전달.
+     * @param userId          변경 대상의 User Id 전달.
+     * @param accountId       변경 대상의 Account Id 전달.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+    public void onChannelUserUpdate(ChannelUpdateType type, ChannelUserInfo channelUserInfo, final int userId, final String accountId) throws SuspendExecution {        
+    }
+```
+
+파라메터로 전달받은 채널 유저,방 정보를 바탕으로 엔진 사용자가 원하는 방식으로 구현하면 됩니다.
+
+```java
+    /**
+     * 같은 채널의 다른 node 에 room 상태 변화가 있을때 올라오는 callback.
+     * <p>
+     * updateChannelRoomInfo() 호출시 발생.
+     *
+     * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
+     * @param channelRoomInfo 변경될 Room 정보 전달.
+     * @param roomId          변경 대상의 Room Id 전달.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+    public void onChannelRoomUpdate(ChannelUpdateType type, RoomInfo channelRoomInfo, final int roomId) throws SuspendExecution {        
+    }
+```
+
+마지막으로 클라이언트는 서버로 채널 정보를 요청할 수 있습니다. 이 때, 아래의 콜백 메소드가 호출됩니다. 이 또한 엔진 사용자가 원하는 방식으로 적절하게 구현합니다.
+
+```java
+    /**
+     * Client 에서 Channel 정보를 요청 시 올라오는 callback. (Base.GetChannelInfoReq)
+     *
+     * @param outPayload Client 로 전달될 Channel 정보 전달.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+    public void onChannelInfo(Payload outPayload) throws SuspendExecution {        
+    }
+```
+
+<br>
+
+## 7. MatchingGroup
+
+매칭 그룹도 채널과 마찬가지로 단일 서버군을 논리적으로 나눌 수 있는 방법 중 하나입니다. 단, 매칭그룹은 채널과 달리 명시적으로 미리 설정하지 않습니다. 또한 채널은 GameNode를 논리적으로 나누기 위한 방법인 반면에 매칭 그룹은 매치메이킹을 논리적으로 나누기 위한 방법입니다. 앞서 살펴본 유저 매치메이킹 콜백 메소드를 다시 한번 살펴보겠습니다. 이 예제에서 설정한 매칭그룹은 "Newbie"입니다. 이 "Newbie"라는 값은 클라이언트에서 서버로 payload를 통해 전달할 수도 있고 엔진 사용자가 서버 상에 해당 유저에 대해 미리 저장해둔 값일 수도 있습니다. 아래와 같이 하드코딩한 값을 쓸 수도 있으나 실제 게임 서버 코드에는 바람직하지 않습니다. 어쨌든  "Newbie"라는 매칭그룹에 대해 하나의 매치메이커가 생성되고 이 후의 모든 "Newbie" 요청은 이 매치메이커에 쌓여서 함께 처리되는 것이 보장됩니다.
+
+```java
+    /**
+     * client 에서 userMatch 를 요청했을 경우 호출되는 callback.
+     *
+     * @param roomType   매칭되는 room 의 type 전달.
+     * @param payload    client 의 요청시 추가적으로 전달되는 define 전달.
+     * @param outPayload 서버에서 client 로 전달되는 define 전달.
+     * @return boolean type 으로 반환. true: user matching 요청 성공,false: user matching 요청 실패.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+    public boolean onMatchUser(final String roomType, 
+                               final Payload payload, Payload outPayload) throws SuspendExecution {
+
+        String matchingGroup = "Newbie";
+        SampleUserMatchInfo sampleUserMatchInfo = new SampleUserMatchInfo(getUserId());
+        sampleUserMatchInfo.setRating(rating);
+        
+        return matchUser(matchingGroup, roomType, term, payload);
+    }
+```
+
+매치 메이킹 관련한 모든 프로토콜에는 매칭 그룹 필드가 존재합니다. 그러므로 클라이언트와 서버 사이에 미리 매칭그룹을 정의해두고 사용하는 것이 가장 이상적입니다. 예를 들어, "초보", "중수", "고수" 처럼 실력을 기반으로 한 매칭 그룹을 정의할 수도 있고 "한국", "일본", "미국" 처럼 국가별 매칭 그룹을 정의할 수도 있습니다. 이는 어디까지나 엔진 사용자가 원하는대로 사용할 수 있는 부분입니다.
+
+<br>
+
+## 8.MatchNode & MatchMaker
 
 엔진 사용자는 간단하게 매칭 로직만 구현함으로써 매치메이킹을 적용할 수 있습니다. 매치메이커는 로직에 기반하여 유저들을 동일한 방으로 입장시켜줍니다. GameAnvil은 RoomMatchMaker와 UserMatchMaker의 두 가지의 매치메이커를 제공합니다. 이 매치메이커는 MatchNode에서 독자적으로 구동됩니다. 이러한 MatchNode는 매치메이킹을 수행하는 용도 외에 추가적인 컨텐츠를 구현할 수 없습니다. 그러므로 유저는 MatchNode가 아닌 매치메이커에만 집중하면 됩니다.
 
@@ -875,7 +1286,7 @@ public class Main {
 
 ### Note
 
-*매치메이커는 매칭그룹 단위로 생성됩니다. 즉, 동일한 매칭그룹끼리 매치메이킹을 수행합니다. 이러한 매칭그룹에 대해서는 중급 개념에서 좀 더 자세하게 설명합니다.*
+*매치메이커는 매칭그룹 단위로 생성됩니다. 즉, 동일한 매칭그룹끼리 매치메이킹을 수행합니다.*
 
 <br>
 
@@ -1086,6 +1497,10 @@ public class Main {
 ### 6-2. RoomMatchMaker
 
 룸 매치메이킹은 게임 유저들을 적합한 방으로 자동 입장시켜줍니다. 룸 매치메이킹을 요청한 게임 유저를 어떤 방으로 입장시킬지는 엔진 사용자가 구현하기에 달렸습니다. 가장 유저수가 많은 방으로 입장시킬 수도 있고, 가장 한산한 방으로 입장시킬 수도 있습니다. 혹은 평균 점수가 가장 높은 방으로 입장시킬 수도 있습니다. 엔진 사용자는 이러한 매칭 로직에만 집중하면 됩니다. 참고로 가장 대표적인 룸 매치메이킹 게임은 "*한게임 포커*"나 "*카트라이더*" 등이 있습니다.
+
+
+
+* 주의> RoomMatchMaker와 UserMatchMaker는 서로 독립적으로 운영됩니다. 즉, 동일한 매칭그룹으로 유저 매칭과 룸 매칭을 각각 요청하더라도 이 두 요청이 함께 매칭되는 일은 없습니다.
 
 
 
@@ -1345,7 +1760,172 @@ public class Main {
 
 <br>
 
-### 8.프로토콜 정의와 컴파일
+## 8.RoomTranfer
+
+방 전송은 중급 개념에서 설명한 유저 전송과 매우 비슷한 기능입니다. 유저 보다 큰 개념인 방이 전송되는 차이가 있을 뿐입니다. 게임 노드에는 한 명 이상의 게임 유저가 참여한 방 객체가 생성될 수 있습니다. 이 방 객체는 유저 객체와 마찬가지로 게임 노드 사이에서 전송될 수 있습니다. 예를 들면 1번 게임 노드의 방 객체가 2번 게임 노드로 전송이 되는 것이죠. 이렇게 방이 전송될 때 당연하게도 방 안에 존재하는 유저들도 함께 전송이 일어납니다. 그 덕분에 방이 전송되기 전/후의 게임 흐름은 연속되어 진행될 수 있습니다. 즉, 해당 방 객체가 전송되는 과정은 매우 빠르게 진행되므로 방 안의 유저들은 인지하지 못한 상태에서 게임을 지속할 수 있습니다.  이 기술은 GameAnvil 무점검 패치(NonStopPatch)의 핵심이자 근간이 되며 방 객체를 잘 직렬화/역직렬화 해주어야 의도한대로 동작합니다. 이러한 직렬화/역직렬화 대상은 GameAnvil 사용자가 직접 구현할 수 있습니다. 즉, 해당 방 객체의 어떤 값을 전송할 것인지 결정하는 것이죠.
+
+이러한 방 전송을 발생시키는 것은 오직 무점검 패치(NonStopPatch) 명령 뿐입니다. 이 명령은 일반적으로 GameAnvil Console을 통해 게임 운영자가 명시적으로 전달합니다.
+
+<br>
+
+### 8-1.  방 전송 구현
+
+실제 방 전송은 GameAnvil이 내부적으로 조용하게 처리합니다. 이 때, 클라이언트는 자신의 게임 유저와 더불어 자신이 속한 방 객체가 서버 사이에서 전송되는지 인지하지 못할 가능성이 높습니다. 특별한 문제가 발생하지 않는 한 전체 흐름이 매우 빠르게 진행되기 때문에 전송 전의 게임 흐름을 전송 후에 계속 이어감에 있어 무리가 없습니다.
+
+이 때, 다른 게임 노드로 방 객체를 전송할 때 어떤 데이터를 함께 전송할지는 사용자가 지정할 수 있습니다. 간단히 지정만 해두면 이 데이터는 방 객체의 일부로 함께 직렬화 됩니다. 전송할 대상 게임 노드에서는 역직렬화를 신경쓸 필요 없이 쉽게 해당 객체들에 접근해서 사용할 수 있습니다.
+
+다음은 이러한 유저 전송에 관련된 콜백 메소드들입니다. 우선 "함께 전송할 데이터 지정하기" 입니다. 이를 위해 BaseRoom 추상 클래스를 상속받은 게임 룸 클래스에 아래의 콜백을 구현합니다. 방법은 간단합니다. 아래의 예제와 같이 전송할 데이터를 사용자가 원하는 key값을 이용하여 key-value 쌍으로 매개변수로 넘겨받은 transferPack에 넣기만 하면 됩니다. 
+
+만일 여기에서 전송할 데이터를 지정하지 않으면 대상 게임 노드로 전송된 방 객체의 해당 데이터는 모두 기본값으로 초기화 되므로 주의가 필요 합니다.
+
+
+
+**참고**> *앞서 설명하였듯이 방이 전송될 때는 당연하게도 방 안의 유저들이 함께 전송됩니다. 유저 전송에 관해서는 중급 개념에서 설명했으므로 여기에서는 따로 설명하지 않습니다.*
+
+
+
+```java
+@Override
+public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
+    transferPack.put("DataTopic", myDataTopic);
+    transferPack.put("RoomInfo", myRoomInfo);
+}
+```
+
+이제 방 전송이 완료된 후 대상 게임 노드에서 처리할 콜백 메소드를 살펴보겠습니다. 아래와 같이 전송 전에 지정한 key를 이용해서 원하는 객체에 접근할 수 있습니다. 이와 같은 방법으로 전송 완료된 방 객체의 해당 데이터를 원래 상태로 만들어 줍니다. 특히, 전송된 방 안의 유저 객체 리스트를 매개 변수로 전달받고 있음을 확인할 수 있습니다. 이 부분만 제외하면 전체적인 흐름은 유저 전송과 매우 흡사합니다.
+
+
+```java
+@Override
+public void onTransferIn(List<GameUser> userList, TransferPack transferPack) throws SuspendExecution {
+    this.users.clear();
+    for (GameUser user : userList)
+        this.users.put(user.getUserId(), user);
+    
+    setTestTransferDataTopic(transferPack.getToString("DataTopic"));
+    setRoomInfo(transferPack.getToLong("RoomInfo"));
+}
+```
+
+<br>
+
+### 8-2.  전송 가능한 방 타이머
+
+방이 전송될 때 방에 등록해둔 타이머도 함께 전송할 수 있습니다. 전송 가능한 타이머를 사용하기 위해서는 별도로 아래의 콜백 메소드에서 원하는 key를 이용해서 미리 등록해두어야 합니다. Timer 핸들러를 다음과 같이 원하는 key로 매핑해둡니다. 이는 유저 전송과 완전히 동일합니다.
+
+```java
+ @Override
+ public void onRegisterTimerHandler() {
+     registerTimerHandler("transferRoomTimerHandler1", transferRoomTimerHandler1());
+     registerTimerHandler("transferRoomTimerHandler2", (timerObject, object) -> {
+         GameRoom room = (GameRoom) object;
+         logger.warn("GameRoom::transferRoomTimerHandler2() : roomId({})", room.getId());
+     });
+ }
+```
+
+등록이 완료된 타이머 객체는 언제든 해당 key를 이용해서 아래와 같이 게임 룸 구현부에서 사용할 수 있습니다. 단순히 등록만 한 타이머는 효과가 없으므로 실제 사용을 위해서는 반드시 아래와 같이 유저 객체에 추가해주어야 타이머가 발동합니다. 
+
+```java
+addTimer(1, TimeUnit.SECONDS, 20, "transferRoomTimerHandler1", false);
+addTimer(2, TimeUnit.SECONDS, 0, "transferRoomTimerHandler2", false);
+```
+
+이렇게 방 객체에 추가해 둔 타이머는 별도로 전송에 대한 처리를 하지 않아도 모두 자동으로 전송됩니다. 즉, 대상 게임 노드에서 해당 방 객체에 대해 동일한 타이머 추가 과정을 거칠 필요가 없습니다.
+
+<br>
+
+## 9.NonStopPatch
+
+일반적으로 점검을 할 때에는 게임 서비스 전체에 대해 명시적으로 점검을 걸고 유저들의 게임 플레이를 차단합니다. 그 후 필요한 패치를 진행하죠. 하지만 GameAnvil을 사용하면 서버 바이너리의 호환성이 깨지는 경우가 아닌 이상 서비스를 멈출 필요 없이 패치를 진행할 수 있습니다. 이를 무점검 패치라고 하며 기본적으로 GameAnvil Console 운영 도구를 이용해서 진행할 수 있습니다. 
+
+
+
+무점검 패치의 핵심은 앞서 설명했던 유저 전송과 방 전송 기술입니다. 이 두 기능을 기반으로 패치를 진행할 게임 서버의 유저와 방을 모두 유효한 타 게임 서버로 전송시킨 후 게임 서버가 빈 상태가 되었을 때 패치를 진행하는 것이죠. 이러한 무점검 패치는 서비스 과정에서 진행할 부분이므로 반드시 서비스 전에 선 테스트를 진행하여 문제가 없는지 확인하는 과정을 거치시기 바랍니다. 또한 패치할 서버 바이너리와 이전 서버 바이너리 사이의 호환성이 깨지지 않는지 반드시 체크해보아야 합니다.
+
+
+
+무점검 패치를 이용하기 위해서 사용자는 GameNode 클래스에 관련 콜백 메소드들을 재정의 해야 합니다.
+
+```java
+    /**
+     * 무정지 점검 시작 시 해당 node 가 출발지 node 일 경우 호출되는 callback.
+     *
+     * @return boolean type 으로 성공 여부 반환.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+@Override
+public boolean onNonStopPatchSrcStart() throws SuspendExecution {
+    return true;
+}
+
+    /**
+     * 무정지 점검이 종료되면 해당 node 가 출발지 node 일 경우 호출되는 callback.
+     *
+     * @return boolean type 으로 성공 여부 반환.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+@Override
+public boolean onNonStopPatchSrcEnd() throws SuspendExecution {
+    return true;
+}
+
+    /**
+     * 무정지 점검이 시작되고 해당 node 가 출발지 node 일 경우 무정지 점검을 끝낼지 확인하기 위해 호출되는 callback.
+     *
+     * @return boolean type 으로 성공 여부 반환.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+@Override
+public boolean canNonStopPatchSrcEnd() throws SuspendExecution {
+    return true;
+}
+
+    /**
+     * 무정지 점검 시작 시 해당 node 가 도착지 node 일 경우 호출되는 callback.
+     *
+     * @return boolean type 으로 성공 여부 반환.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+@Override
+public boolean onNonStopPatchDstStart() throws SuspendExecution {
+    return true;
+}
+
+    /**
+     * 무정지 점검이 종료되면 해당 node 가 도착지 node 일 경우 호출되는 callback.
+     *
+     * @return boolean type 으로 성공 여부 반환.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+@Override
+public boolean onNonStopPatchDstEnd() throws SuspendExecution {
+    return true;
+}
+
+	/**
+     * 무정지 점검이 시작되고 해당 node 가 도착지 node 일 경우 무정지 점검을 끝낼지 확인하기 위해 호출되는 callback.
+     *
+     * @return boolean type 으로 성공 여부 반환.
+     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     */
+@Override
+public boolean canNonStopPatchDstEnd() throws SuspendExecution {
+    return true;
+}
+```
+
+<br>
+
+### 3-1. 무점검 패치 가이드
+
+무점검 패치는 GameAnvil의 여러 요소가 복합적으로 잘 맞물려 돌아갔을 때 좋은 결과가 나옵니다. 그러므로 반드시 아래의 가이드 문서를 읽어보고 모든 내용을 이해한 후에 사용할 수 있도록 하세요.
+
+#### [무점검 패치 가이드 ](server-link-nonstop-patch)
+
+
+
+## 10.프로토콜 정의와 컴파일
 
 GameAnvil은 [Google Protocol Buffers](https://developers.google.com/protocol-buffers)를 사용하여 프로토콜을 정의하고 빌드합니다. 아래의 예제는 이러한 프로토콜을 정의하는 법과 빌드하는 법을 설명합니다. 우선 SampleGame.proto 파일을 텍스트 에디터로 생성한 후 원하는 프로토콜을 정의합니다. 프로토콜 버퍼의 자세한 문법은 [공식 Protocol Buffers 가이드](https://developers.google.com/protocol-buffers/docs/overview)를 참고할 수 있습니다.
 
@@ -1401,7 +1981,7 @@ protoc  ./MyGame.proto --java_out=../java
 
 <br>
 
-## 9.Configurations
+## 11.Configurations
 
 GameAnvil은 GameAnvilConfig.json 파일을 통해 서버 구성을 변경할 수 있습니다. 이러한 구성 파일은 총 7개의 항목으로 분류되며 common을 제외하면 각각 한 종류의 노드를 설정합니다. 이 때, 설정하는 값 중 일부는 Bootstrap 단계에서 사용하는 값과 일치해야 합니다. 예를 들면 앞서 우리는 아래와 같이 GameNode를 구성했습니다. 여기에 사용된 ServiceName인 "SampleGameService"는 반드시 GameAnvilConfig.json에 설정되어 있어야 합니다. 그렇지 않으면 해당 서비스를 찾지 못하여 서버 구동 과정에서 오류가 발생합니다.
 
@@ -1425,7 +2005,7 @@ bootstrap.setGame("SampleGameService")
 | nodeTimeout | 노드 상태 체크 타임아웃(ms)0이면 체크하지 않음. | 180000 |
 | msgExpiredTime | 메세지 만료 시간 | 30000 |
 | defaultReqTimeout | 노드간 메세지 라우팅 타임아웃(ms)0이면 체크하지 않음. | 30000 |
-| defaultAsyncAwaitTimeout | Blocking 호출 시 타임아웃(ms) | 30000 |
+| defaultAsyncAwaitTimeout | 블러킹 호출 시 타임아웃(ms) | 30000 |
 | ipcPort | 다른 ipc node 와 통신할때 사용되는 port | 11100 |
 | publisherPort | publish socket 을 위한 port | 11101 |
 | debugMode | 디버깅시 각종 timeout 이 발생안하도록 하는 옵션리얼에서는 반드시 false 이어야 한다. | false |
@@ -1531,7 +2111,7 @@ bootstrap.setGame("SampleGameService")
 | ip | 클라이언트와 연결되는 IP<br>설정값이 없을 경우 private ip로 자동 설정 |  |
 | dns | 클라이언트와 연결되는 도메인 주소 |  |
 | maintenance | 서버 시작 시 점검 여부 | false |
-| checkWhiteListBeforeOnAuth | onAuthenticate 함수 호출 전 WhiteList 체크 여부 | true |
+| checkWhiteListBeforeOnAuth | onAuthenticate 콜백 호출 전 WhiteList 체크 여부 | true |
 | connectGroup | TCP\_SOCKET<br>WEB\_SOCKET |  |
 | connectGroup - port | 클라이언트와 연결되는 포트 |  |
 | connectGroup  - idleClientTimeout | 데이터 송수신이 없는 상태 이후의 타임아웃.0 이면 사용하지 않음 | <span style="color:  #6897bb;;">4000</span> |
@@ -1705,4 +2285,509 @@ bootstrap.setGame("SampleGameService")
     }
 }
 ```
+<br>
 
+## 12.비동기 지원 API
+
+앞서 설명한 Fiber 상에서의 비동기 처리를 위해 GameAnvil은 Async 클래스를 제공합니다. 아래와 같은 import문을 통해 Async 클래스를 이용하면 일반적인 블러킹/논블러킹 호출을 모두 Fiber화할 수 있습니다.
+
+```java
+import com.nhn.gameanvil.async.Async;
+```
+
+*모든 API에 대한 설명은 [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)에서 JavaDoc으로 작성된 문서를 확인할 수 있습니다.*
+
+호출용 API는 크게 call과 run으로 나뉘며 각각 반환값이 있는 경우와 그렇지 않은 경우에 사용합니다. 그 외 스레드 기반의 future를 Fiber 기반으로 사용할 수 있도록 전환해줍니다. 각각의 용도에 따른 사용법은 문서의 다음 부분에서 더 자세하게 다루도록 합니다.
+
+### **12-1.블러킹 호출 처리**
+
+일반적인 블러킹 호출은 스레드 블러킹을 의미합니다. 즉, 현재 코드가 수행중인 Fiber 뿐만 아니라 이 Fiber를 스케쥴링하는 스레드까지 블러킹 시킨다는 뜻입니다. 이 말은 곧 노드가 멈춘다는 의미이므로 절대 블러킹 호출을 직접적으로 사용해서는 안됩니다. GameAnvil은 이러한 스레드 블러킹 호출을 Fiber 블러킹으로 전환해주는 Async API를 제공합니다. 이 API는 외부 executor를 사용하여 해당 블러킹 호출을 처리한 후 완료 이후의 코드 흐름을 다시 Fiber화 해줍니다. 반환값 유무에 따라 runBlocking()과 callBlocking() 중 하나를 사용하면 됩니다. 또한 기본 개념에서 설명했듯이 이러한 Fiber 블러킹 API는 Suspendable하므로 API 호출 메서드는 반드시 SuspendExecution 예외 시그니쳐를 명시해야 합니다.
+
+```java
+import com.nhn.gameanvil.async.Async;
+
+void runningBlockingMethod() throws SuspendExecution {
+
+    Async.runBlocking(executor, runnable); // 스레드 블러킹 호출을 Fiber 블러킹 호출로 전환
+
+}
+```
+
+```java
+import com.nhn.gameanvil.async.Async;
+
+int callingBlockingMethod() throws SuspendExecution {
+
+    return Async.callBlocking(executor, callable);  // 스레드 블러킹 호출을 Fiber 블러킹 호출로 전환
+
+}
+```
+
+### **12-2.Future 처리**
+
+Future에 대한 대기는 스레드 블러킹을 유발합니다. 예를 들어 아래와 같은 코드는 호출 스레드를 블러킹합니다.
+
+```java
+Future<SomeObject> future = someAsyncJob();
+
+SomeObject ret = future.get(); // 스레드 블러킹을 유발
+```
+
+GameAnvil은 이런 future에 대한 대기를 스레드 블러킹에서 Fiber 블러킹으로 전환해주는 API를 제공합니다. 단, 이 API들은 Java의 CompletableFuture와 Guava의 ListenableFuture만 지원합니다. 다행히도 대부분의 라이브러리는 이 두 가지의 future를 기반으로 비동기를 지원하기 때문에 큰 무리없이 적용 가능할 것입니다. 아래의 코드는 이러한 Async API를 이용해서 future에 대한 대기를 Fiber 블러킹으로 처리하는 예입니다.
+
+```java
+Future<SomeObject> future = someAsyncJob();
+
+SomeObject ret = Async.awaitFuture(future); // 해당 Fiber만 블러킹
+```
+
+### **12-3.블러킹 처리 위임**
+
+앞서 블러킹 호출에 대한 처리를 살펴보았습니다. Async API의 runBlocking()이나 callBlocking()은 블러킹 처리를 완료한 이후에 다시 해당 Fiber의 실행 흐름을 이어가는 경우에 사용합니다. 반면 외부 스레드로 블러킹 호출을 위임한 후 그 결과에 대해 신경쓸 필요가 없다면 실행 흐름을 계속 이어갈 수 있을 것입니다. 이런 경우에는 아래의 API를 사용하면 됩니다. 이 API는 블러킹 호출의 결과를 대기하지 않으므로 Suspendable하지 않음에 주의하세요.
+
+```java
+import com.nhn.gameanvil.async.Async;
+
+void runningBlockingMethod() { // NOT suspendable
+
+    Async.exec(executor, runnable); // 외부 스레드로 블러킹 호출을 위임했으므로 이 Fiber는 블러킹되지 않는다.
+
+}
+```
+
+```java
+import com.nhn.gameanvil.async.Async;
+
+int callingBlockingMethod() {  // NOT suspendable
+
+    return Async.exec(executor, callable);  // 외부 스레드로 블러킹 호출을 위임했으므로 이 Fiber는 블러킹되지 않는다.
+
+}
+```
+
+<br>
+
+## 13.비동기 Redis 지원
+
+그 동안 어떤 종류의 Redis 클라이언트를 사용할지는 전적으로 GameAnvil 사용자의 선택이었습니다. 하지만 이로 인해 Redis 관련 이슈의 종류와 복잡도가 사용자가 선택한 Redis 클라이언트 종류와 사용 방식의 차이에 비례해서 증가한다는 사실을 알게 되었습니다. 우리는 이를 방지하고자 GameAnvil의 기본적인 가이드라인에 Redis 클라이언트에 관한 사용법을 포함하기로 결정했습니다. 이 가이드라인은 GameAnvil에서 지원하는 Redis 클라이언트의 종류와 그 기본적인 사용법을 API화 하여 통일시키는 것을 목표로 합니다. 물론 제공되는 API가 아닌 다른 종류의 Redis 클라이언트를 선택해서 별도로 사용하는 것도 가능하지만 틀별한 이유가 없다면 지양하길 권합니다.
+
+### **[Note]**
+
+*이 후의 내용에서 GameAnvil에서 제공하는 Lettuce 클래스와 제품명인 "Lettuce"를 구분하기 위해 전자의 경우는 가능한 "Lettuce 클래스"라고 표기하고 일부 내용상 필요에 의해 그냥 "Lettuce"로 표기할 수도 있습니다. 이와 구분하기 위해 제품명은 전체 대문자 <i>**LETTUCE**</i>로 표기합니다. 이 글에서 설명하는 LETTUCE는 GameAnvil에서의 사용 방법에 포커스를 두기 때문에 그 이상의 설명이 필요할 경우에는 [LETTUCE 공식 페이지](https://github.com/lettuce-io/lettuce-core)를 참고하세요.*
+
+
+
+GameAnvil은 Redis 클라이언트로 LETTUCE의 사용을 권장합니다. GameAnvil에서 제공하는 Redis 래핑 API 또한 LETTUCE를 사용합니다. 참고로 LETTUCE는 비동기 Redis 클라이언트로서 대부분의 비동기 API는 CompletableFuture를 기반으로 합니다. 이는 곧 GameAnvil의 Async API를 이용해서 Fiber 기반의 비동기화로 전환할 수 있음을 의미합니다.
+
+GameAnvil에서 제공하는 Redis 래핑 API는 크게 3가지의 클래스인 Lettuce, RedisCluster 그리고 RedisSingle로 나뉩니다. Lettuce는 가장 일반적인 형태의 사용법을 제공하며 내부적으로 LETTUCE 객체를 관리하지 않는 static 클래스입니다. 그러므로 LETTUCE를 가장 일반적인 형태로 사용하고 싶을 경우에는 이 Lettuce 클래스가 가장 적합합니다. RedisCluster와 RedisSingle은 각각 Redis 클러스터와 스탠드얼론에 대응하기 위한 클래스로서 내부적으로 LETTUCE 객체들을 관리합니다.
+
+### **13-1.Lettuce**
+
+Lettuce 클래스는 Fiber단위의 처리를 위한 가장 핵심적인 static API들을 제공합니다. 내부적으로 Redis에 관한 그 어떤 상태도 보관하지 않으므로 별도의 객체를 만들 필요가 없이 바로 사용이 가능합니다. 만일 Lettuce 라이브러리에 대해 어느정도 익숙하다면 Lettuce 클래스를 직접 사용하는 것이 가장 좋습니다.
+
+```java
+import com.nhn.gameanvil.async.redis.Lettuce;
+```
+
+다음의 3가지 주의 사항 외에는 기본적인 Lettuce 사용법을 그대로 유지할 수 있습니다.
+
+* 첫 째, 반드시 connect는 GameAnvil의 Lettuce.connect() 혹은 Lettuce.connectAsync()를 사용한다. Connection은 기본적으로 스레드를 블러킹하므로 이에 대한 Fiber화 처리를 포함합니다.
+* 둘 째, shutdown 또한 connection과 동일한 이유로 Lettuce.shutdown()을 사용해야 합니다.
+* 셋 째, RedisFuture에 대한 대기는 반드시 Lettuce.awaitFuture()를 사용해서 Fiber 블러킹화 해야 합니다.
+
+이런 Lettuce 클래스를 사용하여 Redis에 접속하는 코드는 아래와 같습니다.
+
+```java
+RedisURI clusterURI = RedisURI.Builder.redis(IP_ADDRESS, 7500).build();
+clusterClient = RedisClusterClient.create(Arrays.asList(clusterURI));
+clusterConnection = Lettuce.connect(RpsConfig.DB_THREAD_POOL, clusterClient);
+
+if (clusterConnection.isOpen()) {
+    logger.info("============= Connected to Redis using Lettuce =============");
+}
+```
+
+### **13-2.RedisCluster**
+
+```java
+import com.nhn.gameanvil.async.redis.RedisCluster;
+```
+
+Redis Cluster에 대한 API를 래핑합니다. 기본적으로 앞서 설명한 Lettuce 와 사용법은 크게 다르지 않습니다. 하지만 이 클래스는 Lettuce 관련 객체들(e.g.RedisClusterClient, StatefulRedisClusterConnection 등)을 자체적으로 관리합니다. 이러한 Lettuce 객체들을 직접 관리하기 보다 RedisCluster를 통해 관리하고 싶다면 사용을 고려해보세요.
+
+주의 사항은 Lettuce의 경우와 완전히 동일합니다. 아래는 RedisCluster를 이용해서 Redis에 접속하는 코드입니다.
+
+```java
+redisClient = RedisSingle.create("redis://IP_ADDRESS:6379");
+redisAsyncCommands = Lettuce.connect(RpsConfig.DB_THREAD_POOL, redisClient).async();
+
+if (redisClient.isOpen()) {
+    logger.info("============= Connected to Redis using Lettuce =============");
+}
+```
+
+### **13-3.RedisSingle**
+
+```java
+import com.nhn.gameanvil.async.redis.RedisSingle;
+```
+
+RedisCluster와 비교했을 때, 대상 Redis가 스탠드얼론이라는 차이점 밖에 없습니다. 
+
+주의 사항은 Lettuce의 경우와 완전히 동일합니다. 아래는 RedisSingle을 이용해서 Redis에 접속하는 코드입니다.
+
+```java
+redisCluster = new RedisCluster<>(IP_ADDRESS, 7500);
+redisCluster.connect(RpsConfig.DB_THREAD_POOL, StringCodec.UTF8);
+
+if (redisCluster.isConnected()) {
+    logger.warn("============= Connected to Redis using Lettuce =============");
+}
+```
+
+### **13-4.RedisFuture를 Fiber에서 사용하기**
+
+Lettuce, RedisCluster 그리고 RedisSingle은 모두 Lettuce 라이브러리가 지원하는 RedisFuture를 Fiber 상에서 대기할 수 있는 API를 제공합니다. 내부 구현은 모두 엔진에서 제공하는 Async.awaitFuture()를 동일하게 사용하므로 혼용해도 무방합니다. 아래의 4가지 코드는 모두 동일한 코드입니다. GameAnvil의 Fiber 상에서 RedisFuture에 대한 get()은 반드시 이 4가지 중 하나의 방법을 사용해야 합니다.
+
+* Async.awaitFuture()
+
+```java
+try {
+    Async.awaitFuture(clusterAsyncCommands.mget("testKey", getUserId()));
+} catch (TimeoutException e) {
+    logger.error("GameUser::onLogin() - timeout", e);
+}
+```
+
+* Lettuce.awaitFuture()
+
+```java
+try {
+    Lettuce.awaitFuture(clusterAsyncCommands.mget("testKey", getUserId()));
+} catch (TimeoutException e) {
+    logger.error("GameUser::onLogin() - timeout", e);
+}
+```
+
+* RedisCluster.awaitFuture()
+
+```java
+try {
+    redisCluster.awaitFuture(clusterAsyncCommands.mget("testKey", getUserId()));
+} catch (TimeoutException e) {
+    logger.error("GameUser::onLogin() - timeout", e);
+}
+```
+
+* RedisSingle.awaitFuture()
+
+```java
+try {
+    redisSingle.awaitFuture(clusterAsyncCommands.mget("testKey", getUserId()));
+} catch (TimeoutException e) {
+    logger.error("GameUser::onLogin() - timeout", e);
+}
+```
+
+* **잘못된 사용법**: 직접 Future에 대한 대기를 할 경우 해당 Node(Thread)가 블러킹되므로 절대 아래와 같은 코드는 사용하면 안됩니다.
+
+```java
+try {
+    RedisFuture future = clusterAsyncCommands.mget("testKey", getUserId()));
+    future.get(); // 스레드 블러킹을 유발
+} catch (TimeoutException e) {
+    logger.error("GameUser::onLogin() - timeout", e);
+}
+```
+
+### **13-5.set/get**
+
+가장 기본이 되는 set과 get은 RedisCluser와 RedisSingle에서 기본 제공합니다.
+
+* RedisCluster를 이용한 set/get 예제
+
+```java
+String setResult = redisCluster.set(key, value);
+String getResult = redisCluster.get(key);
+```
+
+* RedisSingle을 이용한 set/get 예제
+
+```java
+String setResult = redisSingle.set(key, value);
+String getResult = redisSingle.get(key);
+```
+
+* 직접 LETTUCE의 RedisAsyncCommands 객체를 사용한 예제
+
+```java
+RedisFuture<String> setFuture = redisAsyncCommands.set(key, value);
+RedisFuture<String> getFuture = redisAsyncCommands.get(key);
+
+String setResult = Async.awaitFuture(setFuture);
+String getResult = Async.awaitFuture(getFuture);
+```
+
+### **13-6.본격적인 LETTUCE 비동기 처리**
+
+Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 통해 사용 가능합니다. 기본적으로 LETTUCE는 Sync방식의 Commands 객체과 Async방식의 Commands 객체를 제공하는데 GameAnvil은 그 중 Aync방식의 사용을 권장합니다. 기본적으로 AsyncCommands는 Redis Cluster인 경우와 StandAlone인 경우에 대해 각각 아래와 같습니다.
+
+* RedisAdvancedClusterAsyncCommands
+* RedisAsyncCommands
+
+아래의 예제들은 이런 AsyncCommands 객체를 이용하여 mget을 수행하는 예제들입니다. LETTUCE의 비동기 처리는 기본적으로 RedisFuture를 사용하고 이 RedisFuture는 CompletableFuture입니다. CompletableFuture에 대한 자세한 내용은 [Java 공식 레퍼런스](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에서 확인 가능합니다. 참고로 아래의 예제들은 LETTUCE에 대한 비동기 처리의 극히 일부 방식만을 보여주고 있으므로 그대로 사용하기 보다는 개발중인 코드에 알맞게 작성하세요. 완벽한 비동기 코드의 제어를 위해서는 반드시 [LETTUCE](https://github.com/lettuce-io/lettuce-core)와 [CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에 대한 내용을 숙지해야 합니다.
+
+### **[Note]**
+
+<span style="color:#e11d21">thenApply()와 thenAccept() 등은 임의의 외부 스레드에서 호출되므로 Node에서 관리하는 내부 리소스에 대한 접근을 하거나 리소스에 대한 Lock을 사용하면 안됩니다.</span>
+
+
+
+* 예제1>  key1과 key2에 대한 값을 비동기로 획득
+
+```java
+Lettuce.awaitFuture(asyncCommands.mget("key1", "key2"));
+```
+
+
+
+* 예제2> 이 후의 코드 흐름과 상관없는 경우 future chain으로 외부 스레드에 처리를 위임 (즉, mget으로 값 획득을 완료할 때까지 대기할 필요가 없을 경우)
+
+```java
+RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
+
+future.thenApplyAsync(r -> {
+    Map<String, String> map = new HashMap<>();
+    for (KeyValue<String, String> kv : r)
+        map.put(kv.getKey(), kv.getValue());
+    return map;
+}).thenAccept(r -> {
+    for (Entry<String, String> entry : r.entrySet())
+        logger.warn("CompletableFuture Test =====> Key: {}, Value: {}", entry.getKey(), entry.getValue());
+});
+```
+
+
+
+* 예제3> 이후의 코드 흐름과 상관있는 경우에 해당 future를 대기한 후 처리
+
+```java
+RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
+
+CompletionStage<Map<String, String>> cs = future.thenApplyAsync(r -> {
+    Map<String, String> map = new HashMap<>();
+    for (KeyValue<String, String> kv : r)
+        map.put(kv.getKey(), kv.getValue());
+    return map;
+});
+
+// do something here
+
+try {
+    // 파이버 상에서 해당 future를 대기하기 위해 Lettuce.awaitFuture()를 사용해야 함을 명심하세요
+    Map<String, String> map = Lettuce.awaitFuture(cs); 
+
+    for (Entry<String, String> entry : map.entrySet())
+        logger.warn("CompletableFuture Test =====> Key: {}, Value: {}", entry.getKey(), entry.getValue());
+} catch (TimeoutException e) {
+    logger.error("GameUser::onLogin()", e);
+}
+```
+
+<br>
+
+## 14.비동기 HttpReqeust & HttpResponse 사용법
+
+Http 처리에 관한 부분도 Redis와 마찬가지로 GameAnvil에서 기본적인 API와 가이드라인을 제공합니다. 물론 다른 종류의 Http 사용법 역시 선택이 가능하지만 특별한 이유가 없다면 지양하길 권합니다. GameAnvil은 비동기 기반의 Http 사용을 위해 내부적으로 [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client)를 사용합니다. 다음에서 설명할 API와 그 사용 범위를 넘는 경우에는 저희가 제공하는 API 보다 직접 [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client)를 사용하길 권합니다. LETTUCE와 마찬가지로 AsyncHttpClient도 내부적으로 CompletableFuture를 사용하므로 future에 대한 대기를 Async.awaitFuture()를 이용해서 Fiber화 해주기만 하면 나머지는 일반 스레드 상에서의 사용법과 완전히 동일합니다.
+
+```java
+Async.awaitFuture(future.get()); // Fiber 상에서 해당 future를 대기합니다.
+```
+
+GameAnvil에서 제공하는 Http API는 요청과 응답을 위한 HttpRequest, HttpResponse 클래스 그리고 결과에 대한 일반적인 처리를 위한 HttpResultTemplate 클래스로 이루어집니다. 이 클래스들을 이용하면 간단하고 직관적으로 Http 요청과 응답을 처리할 수 있으며 그 결과를 원하는 형태로 취할 수도 있습니다. 또한 모든 코드는 비동기이므로 특별한 처리가 필요없습니다. 다음은 이를 사용한 예제 코드들입니다.
+
+
+
+* 예제1> 가장 기본적인 사용법
+내부적으로 Fiber 단위의 future 처리를 알아서 해주므로 가장 직관적인 방식입니다. 특별한 이유가 없다면 이러한 기본적인 사용법만으로도 충분합니다.
+
+```java
+HttpRequest request = new HttpRequest(URL);
+HttpResponse response = request.GET();
+```
+
+
+
+* 예제2> future 기반의 비동기 방식
+HTTP 요청과 응답 대기 사이에 다른 작업을 하고 싶을 경우 아래와 같이 future를 직접 이용할 수 있습니다.
+
+```java
+HttpRequest request = new HttpRequest("abc");
+CompletableFuture<Response> future = request.GETAsync();
+
+// Do something here
+
+HttpResponse response = new HttpResponse(Async.awaitFuture(future, 10000, TimeUnit.MILLISECONDS));
+```
+
+
+
+* 예제3> HTTP 요청 header 구성
+아래의 예제와 같이 AsyncHttpClient는 다양한 API를 제공합니다. AsyncHttpClient에 대한 자세한 사용법은 [공식 페이지](https://github.com/AsyncHttpClient/async-http-client)를 참고하세요.
+
+```java
+HttpRequest request = new HttpRequest(url);
+request.getBuilder()
+    .addHeader("if-none-check-node", "false")
+    .setRequestTimeout(timeout);
+    .addQueryParam("serviceId", serviceId);
+
+HttpResponse httpResponse = request.GET();
+```
+
+
+
+* 예제4> 이후의 코드 흐름과 상관없는 경우 future chain으로 외부 스레드에 처리를 위임 (Lettuce의 경우와 동일한 방식)
+
+```java
+HttpRequest request = new HttpRequest("abc");
+CompletableFuture<Response> future = request.GETAsync();
+
+future.thenApplyAsync(r -> {
+    try {
+        HttpResponse response = new HttpResponse(r);
+        String body = response.getContents(String.class);
+        HttpResultTemplate<JsonObject> result = GameAnvilUtil.Gson().fromJson(body, new RestResponseParamType(JsonObject.class));
+        if (!result.getHeader().getIsSuccessful()) {
+            logger.warn("GET failed : resultCode {}, resultMessage {}",
+                result.getHeader().getResultCode(),
+                result.getHeader().getResultMessage());
+        }
+        return result.getContents();
+    } catch (IOException e) {
+        logger.error("Exception occurred: ", e);
+        return null;
+    }
+}).thenAccept(r -> {
+    if (r != null) {
+        JsonElement element = r.get(ELEMENT_NAME);
+        if (element != null) {
+            logger.info("The response code: {}", element.getAsString());
+        }
+    }
+});
+```
+
+
+
+* 예제5>  이후의 코드 흐름과 상관있는 경우에 해당 future를 대기한 후 처리
+
+```java
+RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
+
+CompletionStage<JsonObject> cs = future.thenApplyAsync(r -> {
+    try {
+        HttpResponse response = new HttpResponse(r);
+        String body = response.getContents(String.class);
+        HttpResultTemplate<JsonObject> result = GameAnvilUtil.Gson().fromJson(body, new RestResponseParamType(JsonObject.class));
+        if (!result.getHeader().getIsSuccessful()) {
+            logger.warn("GET failed : resultCode {}, resultMessage {}",
+                result.getHeader().getResultCode(),
+                result.getHeader().getResultMessage());
+        }
+        return result.getContents();
+    } catch (IOException e) {
+        logger.error("GameUser::onLogin()", e);
+        return null;
+    }
+});
+
+// do something here
+
+try {
+    // 파이버 상에서 해당 future를 대기하기 위해 Async.awaitFuture()를 사용해야 함을 명심하자.
+    JsonObject jsonObject = Async.awaitFuture(cs);
+    if (jsonObject != null) {
+        JsonElement element = jsonObject.get(ELEMENT_NAME);
+        if (element != null) {
+            logger.info("The response code: {}", element.getAsString());
+        }
+    }
+} catch (TimeoutException e) {
+    logger.error("Exception occurred: ", e);
+}
+```
+
+<br>
+
+## 15.RDBMS 비동기 처리
+
+RDBMS에 대한 쿼리는 일반적으로 블러킹입니다. 이런 블러킹 쿼리를 GameAnvil 상에서 처리하는 방법은 앞서 살펴보았던 다른 Async 사용법과 크게 다르지 않습니다. 어떤 종류의 RDBMS를 사용하던 SQL 쿼리에 대한 코드는 동일한 방법으로 구현할 수 있습니다. 또한 엔진 사용자는 DB 접근을 위해 자유롭게 SQL Mapper나 ORM 등을 선택할 수 있습니다.
+
+<br>
+
+### Note
+
+*DB에 대한 쿼리를 구현하는 과정에서 가장 중요하지만 흔히 놓치는 부분은 DB에 대한 CP(ConnectionPool) 크기와 이를 비동기로 처리할 TP(ThreadPool)의 개수에 대한 설정과 이들 사이의 관계에 대한 이해입니다. 일반적으로 이들 두 수치는 처리할 쿼리의 양을 고려하여 동일한 값으로 설정하거나 TP를 CP보다 조금 더 넉넉하게 설정하면 됩니다. 참고로 GameAnvil를 이용한 대규모 성능 테스트 결과, 서버 프로세스 하나 당 6000~8000명 처리 기준 TP와 CP 250개 설정이 가장 좋은 결과를 보여주었습니다. 이는 어디까지나 쿼리 복잡도와 빈도 등 복합적인 요소를 고려하여 가능한 많은 테스트를 거쳐 최적의 값을 찾는 것이 최선입니다.*
+
+<br>
+
+### 15-1.Async Query
+
+우선 쿼리에 대한 비동기 처리는 크게 두 가지로 나눌 수 있습니다. 쿼리의 결과가 필요한 경우와 그렇지 않은 경우입니다. 이 두 경우는 쿼리의 결과 유무 차이만 있을 뿐 전체 쿼리 수행이 완료될 때까지 해당 Fiber가 대기하는 것은 동일합니다. 즉, 비동기로 요청한 쿼리가 완료된 후 다음 코드로 진행되므로 엔진 사용자는 일반적인 블러킹 코드를 작성하듯이 구현할 수 있습니다.
+
+<br>
+
+첫 째, 쿼리의 결과를 획득하고자 할 경우에는 다음의 예제와 같이 Async 클래스의 callBlocking API를 사용합니다. callBlocking은 Fiber 상에서 임의의 블러킹 호출을 수행한 후 결과를 반환합니다.
+
+```java
+try {
+	return Async.callBlocking("MyThreadPool", new Callable<List<T>>() {
+		@Override
+		public List<T> call() throws Exception {
+			return myQueryCode();
+		}
+	});
+} catch (TimeoutException e) {
+	logger.error("TimeoutException occured: ", e);
+}
+
+logger.info("Query has finished.");
+```
+
+이 때, 비동기 처리를 위한 스레드풀은 Bootstrap 단계에서 미리 생성해둘 수 있습니다. 
+
+```java
+bootstrap.createExecutorService("MyThreadPool", 250);
+```
+
+혹은 엔진 사용자가 필요에 따라 직접 생성한 외부 스레드풀을 사용할 수도 있습니다.
+
+```java
+bootstrap.createExecutorService(myExecutorService, 250);
+```
+
+<br>
+
+둘 째, 쿼리의 결과가 필요없는 경우에는 다음의 예제와 같이 Async 클래스의 runBlocking API를 사용합니다. runBlocking은 Fiber 상에서 임의의 블러킹 호출을 수행합니다.
+
+```java
+try {
+	Async.runBlocking("MyThreadPool", new Runnable() {
+		@Override
+		public void run() {
+			try {
+				myQueryCode();
+			} catch (Exception e) {
+				logger.error("Exception occured during query code: ", e);
+			}
+		}
+	});
+} catch (TimeoutException e) {
+	logger.error("TimeoutException occured: ", e);
+}
+
+logger.info("Query has finished.");
+```
+
+이 경우도 마찬가지로 임의의 스레드풀을 runBlocking API에 매개변수로 전달 할 수 있습니다.
