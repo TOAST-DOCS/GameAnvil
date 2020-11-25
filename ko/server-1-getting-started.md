@@ -1,11 +1,11 @@
-## Game > GameAnvil > 서버 개발 가이드 > Quick Guide
+## Game > GameAnvil > 서버 개발 가이드 > 시작하기
 GameAnvil을 이용하여 게임 서버를 개발하는 방법에 대해서 쉽고 자세하게 설명합니다.
 
 ## 시스템 요구사항
 
 | 개발 언어 | 개발 IDE | 지원 O/S | 프로젝트 관리 | 사용 가능한 네트워크 프로토콜 | 보안 |
 | ---- | ---- | ---- | ---- | ---- | ---- |
-| Java 8 | IntelliJ IDEA | Linux, Windows, MacOS | Maven | TCP/IP, WebSocket, HTTP/HTTPS  | SSL |
+| Java 8, 11 | IntelliJ IDEA | Linux, Windows, MacOS | Maven | TCP/IP, WebSocket, HTTP/HTTPS  | SSL |
 
 <br>
 
@@ -19,7 +19,7 @@ GameAnvil은 기본적인 골격 작업을 빠르게 완료하기 위해 자체 
 
 ## 서버 구동
 
-템플릿을 이용한 기본적인 서버 구성이 완료되었으면 이제 실행해볼 수 있습니다. 서버가 무사히 구동되면 아래와 같이 각 노드별로 **onReady** 로그가 출력됩니다. 이제 준비한 서버로 클라이언트를 이용해서 접속해 볼 수도 있습니다. 이 부분에 대해서는 [클라이언트 쪽 설명](client-1-getting-started)을 참고해주세요.
+템플릿을 이용한 기본적인 서버 구성이 완료되었으면 이제 실행해볼 수 있습니다. 서버가 무사히 구동되면 아래와 같이 각 노드별로 **onReady** 로그가 출력됩니다. 이제 준비한 서버로 클라이언트를 이용해서 접속해 볼 수도 있습니다. 
 
 ```
 [2020-03-13 17:36:16,925] [INFO ] [MANAGEMENT@1005@ThinkServer@1] [c.n.t.m.ManagementNode] onReady
