@@ -133,7 +133,64 @@ void someCaller() throws SuspendExeuction {
 
 <br>
 
-## 5.핵심 라이브러리
+## 5. 분산 서버
+
+앞서 기본 개념에서 GameAnvil의 노드 구성은 아래의 그림과 같다고 했습니다. 즉, 하나의 프로세스는 여러 가지의 노드를 자유롭게 구성해서 구동할 수 있습니다. 단, 모든 GameAnvil 프로세스는 반드시 하나의 IPC (Inter-Process Communication)노드가 필수적으로 포함됩니다. 이 IPC 노드는 GameAnvil 프로세스 간의 통신을 담당합니다. 사실 실제 네트워크 처리를 담당하는 로우 레벨 노드가 더 있지만 사용자는 이 부분을 통틀어 IPC 노드로 이해하면 됩니다. 
+
+![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/NodeLayer.png)
+
+
+
+### 5-1. 노드간 통신
+
+이러한 IPC 노드를 통해 두 개 이상의 GameAnvil 프로세스가 통신하는 모습은 아래의 그림과 같습니다. 이 그림에서 두 개의 GameAnvil 프로세스는 서로 다른 구성의 노드들을 구동합니다. 이 때, 각각의 노드들은 서로 통신이 가능합니다. 
+
+서로 다른 프로세스의 노드들과 통신하기 위해 각 노드들은 IPC 노드를 통해 메시지를 전달합니다. 반면에 동일한 프로세스 상의 노드들은 큐를 이용해서 상호 통신합니다. 그러므로 이 경우에는 IPC 노드를 통하지 않습니다.
+
+![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/IPC.png)
+
+
+
+### 5-2. Meetpoint
+
+그럼, 이러한 IPC를 위해 프로세스는 상호 접속을 어떻게 하는걸까요? 그 답은 Meetpoint 입니다. GameAnvil은 Meetpoint 주소를 설정할 수 있습니다. 아래와 같은 형태인데 하나 이상의 IP 주소쌍을 설정할 수 있습니다. GameAnvil 프로세스는 최초 구동 시에 설정된 Meetpoint 주소 중 하나에 대해 접속을 시도하여 전체 서버군 정보를 동기화 합니다.
+
+```json
+"common": {
+    
+    "meetEndPoints": [
+      "10.1.2.1:16000",
+      "10.1.2.2:16000",
+    ],
+    
+}
+```
+
+<br>
+
+## 6. Connection과 Session
+
+클라이언트는 Gateway 노드로 접속(Connection)을 합니다. 이 접속을 통해 계정과 유저 정보를 바탕으로 인증과 로그인을 진행할 수 있습니다. 로그인까지 완료되면 임의의 Game 노드에 유저 객체가 생성됩니다. 이는 Gateway 노드와 해당 Game 노드 사이에는 논리적인 세션이 생성되었음을 의미합니다. 이렇게 접속과 세션 생성이 완료되면 해당 유저는 게임 진행이 가능해집니다. 
+
+
+
+### 6-1. Connection Recovery
+
+만일, 클라이언트와 Gateway 노드 사이의 접속이 끊기면 아래의 그림과 같이 접속 복구(Connection Recovery)가 진행됩니다. 재접속을 하는 과정에서 클라이언트는 여러대의 Gateway 노드 중 이전과 다른 곳에 접속을 시도할 수도 있습니다. 이 경우 유저 객체가 존재하는 Game 노드에 대한 위치 정보를 바탕으로 새롭게 세션을 복구합니다. 그러므로 유저는 게임 진행 중에 재접속을 하더라도 이전의 게임 상태를 이어갈 수 있습니다.
+
+![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/ConnectionRecovery.png)
+
+
+
+### 6-2. Location Node
+
+앞서 살펴본 접속 복구(Connection Recovery) 그림에서 Location 노드가 보입니다. 이 Location 노드는 GameAnvil이 내부적으로 유저와 방 등의 위치 정보를 관리하는 용도로 사용합니다. 사용자는 Location 노드에 대해 직접 구현하거나 사용할 수 없습니다. 하지만 위치 정보를 관리하는 Location 노드의 존재를 알야아 전체적인 GameAnvil 시스템의 흐름을 이해할 수 있기 때문에 여기에서 간단하게 언급을 하고자 합니다.
+
+위의 접속 복구(Connection Recovery)를 예로 들어 보겠습니다. 클라이언트가 최초 접속을 하여 Game 노드로 로그인을 시도하는 과정에서 이와 관련된 세션과 유저에 대한 위치 정보는 모두 Location 노드에 저장됩니다. 그러므로 재접속을 진행할 경우에는 이전 접속 과정에서 저장해 두었던 이 위치 정보를 조회할 수 있습니다. 이러한 위치 정보는 GameAnvil 내부적으로 유저나 방의 위치 정보를 조회하고 이를 바탕으로 메시지를 전달하는 용도 등으로 매우 중요하게 사용됩니다.
+
+<br>
+
+## 7.핵심 라이브러리
 
 아래의 네 가지가 GameAnvil에서 사용하는 핵심 라이브러리입니다. Qusar와 ZeroMQ 그리고 Netty는 엔진 내부에서 사용하므로 GameAnvil 사용자가 직접 사용할 일은 없습니다. Protocol Buffers는 메시지를 직렬화/역직렬화 하는 과정에서 사용하게 됩니다. 직접 사용 여부와 관계없이 아래의 네 가지 라이브러이에 대해 잘 이해하고 있다면 엔진 사용에 많은 도움이 될 것입니다.
 
@@ -143,4 +200,59 @@ void someCaller() throws SuspendExeuction {
 | ZeroMQ           | 서버의 IPC                     |
 | Netty            | 서버-클라이언트 통신           |
 | Protocol Buffers | 서버-클라이언트 메시지 직렬화  |
+
+<br>
+
+## 8.ByteCode Instrumentation
+
+GameAnvil은 Fiber 기반의 서버 엔진입니다. 이를 위해 Quasar 라이브러리를 사용합니다.  비동기 지원에서 설명하였듯이 Fiber 기반의 비동기 처리를 위해서 미리 약속된 특수한 예외를 사용합니다. 혹은 @Suspendable 어노테이션을 사용할 수도 있습니다.
+
+```
+throws SuspendExecution
+```
+
+미리 약속된 이런 코드를 해석하기 위해 GameAnvil 서버 코드는 반드시 Quasar 라이브러리를 이용하여 ByteCode Instrumentation을 진행해야 합니다. ByteCode Instrumentation은 두 가지 방식 중 한 가지를 이용해서 진행할 수 있습니다.
+
+### 8-1.Runtime Instrumentation
+
+서버 실행 VM 옵션의 가장 앞 부분에 아래와 같이 Quasar 바이너리를 javaagent로 추가합니다. 이렇게만 해주면 런타임에 ByteCode Instrumentaion을 진행합니다. 
+
+```
+-javaagent:MY_PATH\quasar-core-0.7.10-jdk8.jar=bm
+```
+
+### Note
+
+이 항목은 반드시 VM 옵션의 가장 앞 부분에 추가해야 합니다. 이 때, quasar-core의 경로는 본인의 quasar-core를 복사해둔 경로로 설정하세요.
+
+### 8-2.AOT Instrumentation
+
+AOT(Ahead-Of-Time) Instrumentation을 진행하고 싶다면 아래의 내용을 프로젝트 객체 관리 파일(pom.xml)에 추가한 후, Maven을 통해 서버 바이너리를 package나 install 혹은 deploy 하면 컴파일 완료 후 Instrumentation을 진행합니다. 이 경우에는 당연히 첫째 경우처럼 VM 옵션에서 javaagent가 필요치 않습니다.
+
+```xml
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-antrun-plugin</artifactId>
+
+	<executions>
+		<execution>
+			<id>instrument-classes</id>
+			<phase>compile</phase>
+
+			<configuration>
+				<tasks>
+					<taskdef name="instrumentationTask" classname="co.paralleluniverse.fibers.instrument.InstrumentationTask" classpathref="maven.dependency.classpath"/>
+					<instrumentationTask>
+						<fileset dir="${project.build.directory}/classes/" includes="**/*.class"/>
+					</instrumentationTask>
+				</tasks>
+			</configuration>
+
+			<goals>
+				<goal>run</goal>
+			</goals>
+		</execution>
+	</executions>
+</plugin>
+```
 
