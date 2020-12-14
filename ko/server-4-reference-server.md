@@ -1,4 +1,7 @@
-## Game > GameAnvil > 서버 개발 가이드 > Reference Server 가이드
+## Game > GameAnvil > 서버 개발 가이드 > 레퍼런스 서버
+
+
+
 ## 다운받기
 
 * [https://github.nhnent.com/game-server-engine/sample-game-server.git](https://github.nhnent.com/game-server-engine/sample-game-server.git)
@@ -6,27 +9,30 @@
 
 <br>
 
-## 샘플 개발 환경
+## 레퍼런스 개발 환경
 
 * IDE : IntelliJ 2019.3
 * JDK : AdoptOpenJDK build 1.8.0\_192-b12
-* <span style="color:#e11d21">**<span style="color:#e11d21">GameAnvil : 1.0.1</span>**</span>
-* protocol : google protobuf 3.0
+* <span style="color:#e11d21">**<span style="color:#e11d21">GameAnvil 1.0.1</span>**</span>
 * DB
-    * mybatis 3.5.3
-    * 팀내 머신 사용 10.77.14.22
-    * mySQL 5.7.29
+    * MyBatis 3.5.3
+    * 각자의 환경에 맞게 IP주소를 설정
+    * MySQL 5.7.29
 * Redis
-    * GameAnvil에서 제공하는 lettuce 사용
-    * 팀내 머신 사용 10.77.14.22
+    * GameAnvil에서 제공하는 Lettuce API를 사용
+    * 각자의 환경에 맞게 IP주소를 설정
+
+<br>
 
 ## GameAnvil API Java doc
 
 [GameAnvil Server API - Java doc](http://10.162.4.61:9090/gameanvil)
 
+<br>
+
 ## 실행환경 설정 with IntelliJ
 
-* Git 저장소에서 Clone한 프로젝트를 IntelliJ로 실행
+* Git 저장소에서 Clone한 프로젝트를 IntelliJ로 실행합니다.
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-2.png)
 * sample\_game\_sever 설정확인- 기본 로컬에서 실행항 기본환경
     * Maven 설정 Dependencies에 <span style="color:#e11d21">**com.nhn.gameanvil:gameanvil:1.0.1**</span> 확인
@@ -35,16 +41,16 @@
     * 프로젝트 설정
         * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-3.png)
         * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-4.png)
-        * GameAnvil은 JDK 1.8로 만들어져있어서 여러가지 버전의 JDK가 설치 되어 있을경우 1.8로 설정이 되어 있는지 확인을 하고 지정을한다.
-            * 1.8이 아닐경우 maven package나 install시에 에러가 발생한다.
+        * GameAnvil은 JDK 1.8로 만들어져있어서 여러가지 버전의 JDK가 설치 되어 있을경우 1.8로 설정이 되어 있는지 확인을 하고 지정을 합니다.
+            * 1.8이 아닐경우 maven package나 install시에 에러가 발생합니다.
     * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-5.png)
     * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-6.png)
-    * 순서대로 설정
+    * 아래의 내용을 순서대로 설정합니다.
         * 1 : 클릭으로 새로운 빌드 환경 설정추가
         * 2 : +로 Application 추가 -> 3이 생성
         * 4 : 빌드 환경 이름 설정 sample\_server
         * 5 : 프로젝트 Main 클래스 선택 (com.nhn.gameanvil.sample.Main)
-        * 6 : resources/setting.txt 에 있는 # VM Options 에 있는 내용 입력(Mac 에서 개발할경우 패스 형식 주의)
+        * 6 : resources/setting.txt 에 있는 # VM Options 에 있는 내용 입력 (Mac 에서 개발할경우 패스 형식 주의)
 
 ```
 -Dco.paralleluniverse.fibers.detectRunawayFibers=false
@@ -56,31 +62,37 @@
 -XX:+UseStringDeduplication
 ```
 
-* 7 : resources/setting.txt 에 있는 # Program Arguments 에 있는 내용 입력
+* 7 : resources/setting.txt 파일에서 # Program Arguments 항목의 내용을 입력
 
 ```
 src/main/resources/
 ```
 
 * 8 : JRE 1.8로 설정
-* 9: 설정저장
+* 9: 설정 저장
 
-## 서버 실행 with IntelliJ
+<br>
 
-* Maven clean 으로 제대로인스톨 안될수있으므로 지워준다.
-* Maven install로 AOT 컴파일 타임에 미리 Instrumentation을 해서 만듬
+## IntelliJ로 서버 실행하기
+
+* Maven탭의  install 명령으로 서버를 설치합니다. 이 때, 컴파일 타임에 AOT  Instrumentation을 진행합니다.
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-7.png) 
+
+
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-8.png)
-* "sample\_server" 빌드환경 설정한것으로 서버실행
+
+
+* 앞서 설정해두었던 "sample\_server" 구성을 이용하여 서버를 실행합니다.
     * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-9.png)
-* 서버 정상 동작 확인.
-    * IntelliJ 상의 log 창에 onReady가 출력되었다면 서버가 성공적으로 기동이되었다
-        * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-10.png)
-    * [http://127.0.0.1:25150/management/nodeInfoPage](http://127.0.0.1:25150/management/nodeInfoPage) 해당 페이지에서 현재 로컬에 띄운 sample\_game\_server의 상태를 확인 할수 있다.
-        * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-11.png)
+* 서버가 정상적으로 구동되면 아래와 같이 모든 노드에 대해 onReady 로그가 출력됩니다.
+	* ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-10.png)
+  * [http://127.0.0.1:25150/management/nodeInfoPage](http://127.0.0.1:25150/management/nodeInfoPage) URL을 통해 현재 로컬에 띄운 sample\_game\_server의 상태를 확인 할수 있습니다.
+      * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-11.png)
 * 오류 확인
     * 정상적으로 서버가 샐행되지 않았다면 설정을 다시한번 확인을 해보거나 log의 에러 부분을 확인해서 문의 부탁 드립니다.
-    * DB나 Redis의 경우에는 팀내 머신(10.77.24.22)에 설정이되어 있어서 다른 곳에서는 접속이 안될수 있습니다.
+    * DB나 Redis의 경우에는 직접 사용할 IP 주소를 설정해주어야 합니다.
+
+<br>
 
 ## Maven 빌드 & Command실행
 
@@ -88,7 +100,7 @@ src/main/resources/
 
 * GameAnvil 버전
 
-```
+```xml
     <!-- gameanvil-->
     <dependency>
       <groupId>com.nhn.gameanvil</groupId>
@@ -99,7 +111,7 @@ src/main/resources/
 
 * AOT 설정
 
-```
+```xml
 <!--Quasar AOT Instrumentation-->
 <plugin>
     <groupId>com.vlkan</groupId>
@@ -123,7 +135,7 @@ src/main/resources/
 * pom.xml에 Sample Main클래스 지정확인
 * build 설정
 
-```
+```xml
 <build>
 
 <plugins>
@@ -293,11 +305,11 @@ src/main/resources/
 ##### Maven package 빌드 실행
 
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-12.png)
-* 정상적으로 실행이된다면 ./target/ 폴더에 빌드된 파일들이 위치한다.
+* 정상적으로 실행이된다면 ./target/ 폴더에 빌드된 파일들이 위치합니다.
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-13.png)
-* 서버를 기동하기위해서는 sample\_game\_server-1.0.1.jar파일과 config, query폴더의 파일들을 복사해서 사용하면된다.
+* 서버를 기동하기위해서는 sample\_game\_server-1.0.1.jar파일과 config, query폴더의 파일들을 복사해서 사용하면 됩니다.
 * 명령프롬프트에서 실행
-    * cmd 창실행해서 빌드된 target 폴더로 이동한다. ( 각자 환경의 패스확인 )
+    * cmd 창실행해서 빌드된 target 폴더로 이동합니다. (각자 자신의 환경에 맞는 경로에서 진행)
         * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-14.png)
     * command 실행
         * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-15.png)
@@ -312,41 +324,48 @@ src/main/resources/
         * onReady가 나오게 되면 정상
 * 개발시에 매번 maven빌드를 헤서 테스트하기 번거로운게 있기 때문에 개발시에 로컬에서 테스트 하실때는 Vm Option에 `-javaagent:.\src\main\resources\META-INF\quasar-core-0.7.10-jdk8.jar=bm ` 옵션을 추가하고intelliJ에서 바로 실행해서 로컬 서버를 실행할수 있습니다.
 
+<br>
+
 ## JIT 설정(Optional)
 
-* 현재 GameAnvil는 0.10.0.2부터 AOT를 기본 설정으로 제공한다.
-* 이전처럼 JIT으로 설정 해서 사용 할 수 있다.
+* GameAnvil는 AOT Instrumentation 뿐만 아니라 JIT Instrumentation도 지원합니다.
 
-##### pom 설정
+### pom 설정
 
-* AOT 설정된 부분 삭제
+* 아래의 AOT Instrumentation 플러그인 부분을 주석 처리 하거나 삭제합니다.
 
+```xml
+<!-- Ant task for Quasar AOT instrumentation -->
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-antrun-plugin</artifactId>
+	<executions>
+		<execution>
+			<id>Running AOT instrumentation</id>
+			<phase>compile</phase>
+
+			<configuration>
+				<tasks>
+					<taskdef name="instrumentationTask" classname="co.paralleluniverse.fibers.instrument.InstrumentationTask" classpathref="maven.dependency.classpath"/>
+					<instrumentationTask>
+						<fileset dir="${project.build.directory}/classes/" includes="**/*.class"/>
+					</instrumentationTask>
+				</tasks>
+			</configuration>
+
+			<goals>
+				<goal>run</goal>
+			</goals>
+		</execution>
+	</executions>
+</plugin>
 ```
-<!--Quasar AOT Instrumentation-->
-<!--<plugin>-->
-    <!--<groupId>com.vlkan</groupId>-->
-    <!--<artifactId>quasar-maven-plugin</artifactId>-->
-    <!--<version>0.7.9</version>-->
-    <!--<configuration>-->
-        <!--<check>true</check>-->
-        <!--<debug>true</debug>-->
-        <!--<verbose>true</verbose>-->
-    <!--</configuration>-->
-    <!--<executions>-->
-        <!--<execution>-->
-            <!--<goals>-->
-                <!--<goal>instrument</goal>-->
-            <!--</goals>-->
-        <!--</execution>-->
-    <!--</executions>-->
-<!--</plugin>-->
-```
 
-##### VM option설정
+### VM option설정
 
-* quasar 옵션 추가
+* JIT 모드의 경우 반드시 VM옵션에 아래와 같은 javaagent 항목을 추가해서 quasar agent가 구동될 수 있도록 해야 합니다.
 
-```
+```java
 -Dco.paralleluniverse.fibers.detectRunawayFibers=false
 -Dco.paralleluniverse.fibers.verifyInstrumentation=false
 -javaagent:.\src\main\resources\META-INF\quasar-core-0.7.10-jdk8.jar=bm
@@ -357,16 +376,17 @@ src/main/resources/
 -XX:+UseStringDeduplication
 ```
 
-##### 빌드 & 실행
+### 빌드 & 실행
 
 * IntelliJ
-    * maven clean
-    * intelliJ Run
-* command
+    * intelliJ를 이용한 run
+* CLI
     * maven clean
     * maven package
-    * command 실행
+    * command 실행 (스크립트 혹은 배치 파일을 작성해서 구동할 것을 추천)
         * `java -javaagent:.\lib\quasar-core-0.7.10-jdk8.jar=bm -Dco.paralleluniverse.fibers.detectRunawayFibers=false -Dconfig.file=.\config\GameAnvilConfig.json -Dlogback.configurationFile=.\config\logback.xml -DmybatisConfig=.\config\mybatis-config.xml -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar .\sample_game_server-1.0.1.jar`
+
+<br>
 
 ## sample\_game\_server 살펴보기
 
@@ -380,7 +400,7 @@ src/main/resources/
 ### Session
 
 * 인증
-    * Gamebase의 userId, token을 전달받아 token검증
+    * Gamebase의 userId, token을 전달받아 token 검증
 
 ### Space
 
@@ -405,7 +425,7 @@ src/main/resources/
             * 바뀐덱, 재화 잔액 응답
     * 싱글게임 랭킹 정보 요청
         * 전달받은 범위로 Redis에서 싱글게임 랭킹 리스트 검색
-        * 로그인할때마다 저장해두었던 Redis의 유저 정보에서 랭킹 리스트의 닉네임 설정해서 랭킹목록 만듬
+        * 로그인할때마다 저장해두었던 Redis의 유저 정보에서 랭킹 리스트의 닉네임 설정해서 랭킹목록 생성
         * 만들어진 랭킹 리스트 응답
 * 싱글게임
     * 혼자서 방을 만들어서 들어가 게임
@@ -419,61 +439,59 @@ src/main/resources/
         * 제임종료 패킷 처리해서 현재 방에서 플레이한 점수 응답
 * 멀티게임
     * TapBird
-        * 룸매치로 1\~4인까지 플레이가 가능하다. 룸에서 모두 나갈때까지 플레이하는 점수를 모든 사용자가 받는다.
+        * 룸매치로 1\~4인까지 플레이가 가능합니다. 룸에서 모두 나갈때까지 플레이하는 점수를 모든 사용자가 받습니다.
         * 룸이 하나도 없다면 룸을 만들어서 입장
             * 룸에 유저와 점수 정보를 등록
-            * 룸정보에 룸 아이디와 현재 입장한 유저 명수를 갱신한다.
+            * 룸정보에 룸 아이디와 현재 입장한 유저 명수를 갱신합니다.
         * 룸이있다면 기존에 있는 룸에 입장
             * 룸에 유저와 점수 정보를 등록
-            * 룸정보에 현재 유저명수를 갱신한다.
+            * 룸정보에 현재 유저명수를 갱신합니다.
         * 룸에서 나갈때
-            * 룸에 유저와 점수 정보를 삭제한다.
-            * 룸정보의 유저명수를 갱신한다.
+            * 룸에 유저와 점수 정보를 삭제합니다.
+            * 룸정보의 유저명수를 갱신합니다.
         * 유저 점수 증가 패킷 처리
             * 응답이 필요없는 형태로 전달받은 점수를 룸의 유저 정보를 갱신
-            * 유저 점수 리스트를 만들어서 현재 룸안에있는 모든 유저에게 점수를 전달한다.
+            * 유저 점수 리스트를 만들어서 현재 룸안에있는 모든 유저에게 점수를 전달합니다.
     * Snake
         * 유저 매치로 2명이 동시에 룸에 입장해서게임 플레이
-        * 둘이 매치되었을떄 한명은 룸을 만들고 들어가고 한명은 만들어진 룸에 들어간다.
-            * 첫번째 유저 위치 지정후 룸에 유저정보와 점수 정보를 등록한다.
-            * 두번째 입장할때 위치지정과 룸에 유저정보와 점수 정보를 등록한다.
+        * 둘이 매치되었을떄 한명은 룸을 만들고 들어가고 한명은 만들어진 룸에 들어갑니다.
+            * 첫번째 유저 위치 지정후 룸에 유저정보와 점수 정보를 등록합니다.
+            * 두번째 입장할때 위치지정과 룸에 유저정보와 점수 정보를 등록합니다.
             * 유저가 2명되었을때 유저에게 게임 정보를 전송
-            * 룸에서 food생성 타이머를 시작한다.
+            * 룸에서 food생성 타이머를 시작합니다.
         * 룸에서 food 갯수가 max가 될때까지 1초에 한번씩 food를 생성해서 유저들에게 응답이 필요없는 데이터로 전송
         * 룸에서 나갈때
-            * 룸에 유저정보와 점수 정보를 삭제한다.
-            * 타이머를 정지한다.
-            * 모든 유저를 방에서 내보낸다.
+            * 룸에 유저정보와 점수 정보를 삭제합니다.
+            * 타이머를 정지합니다.
+            * 모든 유저를 방에서 내보냅니다.
         * food삭제 패킷 처리
-            * 삭제할 food 정보를 받아서 룸에있는 food 정보를 삭제한다.
-            * 상대에게 삭제된 food를 전달한다.
+            * 삭제할 food 정보를 받아서 룸에있는 food 정보를 삭제합니다.
+            * 상대에게 삭제된 food를 전달합니다.
         * user 이동 패킷 처리
-            * 유저가 이동할때의 정보를 전달 받아 룸에 유저정보를 저장하고
-            * 상대방에게 이동된 유저정보를 전달 한다.
+            * 유저가 이동할때의 정보를 전달 받아 룸에 유저정보를 저장하고 상대방에게 이동된 유저정보를 전달 합니다.
 
 ### Service - rest service
 
 * 게임서버 접속전 게임세션 정보를 얻어오기위한 서비스
 * [http://127.0.0.1:10080/launching?platform=Editor&appStore=GOOGLE&appVersion=1.2.0&deviceId=4D34C127-9C56-5BAB-A3C2-D8F18C0B7B6E](http://127.0.0.1:10080/launching?platform=Editor&appStore=GOOGLE&appVersion=1.2.0&deviceId=4D34C127-9C56-5BAB-A3C2-D8F18C0B7B6E) 이런 형식으로 요청
 * 런칭 정보 요청 패킷 처리
-    * 전달 받은 데이터를 파싱하고확인하고
-    * 게임서버 세션서버의 IP, PORT를 응답해 준다.
+    * 전달 받은 데이터를 파싱하고확인하고 게임서버 세션서버의 IP, PORT를 응답해 줍니다.
 
 ### Redis
 
 * <span style="color:#4a4c59">GameAnvil에서 제공하는 lettuce 연동</span>
 * GameNode의 onInit()에서 Redis연결 설정 Node마다 만들어서 연결
-    * Singleton으로 만들어서 모든 노드에서 하나의 레디스 연결을 사용하면 안된다.
-* GameNode의 onShutdown()에서 Redis의 연결 shutdown처리를 해주어야 한다.
+    * Singleton으로 만들어서 모든 노드에서 하나의 레디스 연결을 사용하면 안됩니다.
+* GameNode의 onShutdown()에서 Redis의 연결 shutdown처리를 해주어야 합니다.
 * 예제 기능
     * hmget 으로 유저 데이터 리스트 검색
     * zadd 로 싱글게임 랭킹 저장
     * zreverangeWithScores 로 랭킹 정보 검색
 
-### DB - mybatis
+### DB - MyBatis
 
-* resources/mybatis 에 DB 설정정보만있음
-* com.nhn.gameanvil.sample.mybatis.mappers 패키지 안에 mapper.xml파일이 존재한다.
+* resources/mybatis 에 DB 설정정보만 있습니다.
+* com.nhn.gameanvil.sample.mybatis.mappers 패키지 안에 mapper.xml파일이 존재합니다.
 * 예제기능
     * 유저정보 INSERT
     * uuid로 유저정보 SELECT
@@ -482,7 +500,7 @@ src/main/resources/
 ### protocol -google protobuf 3.0
 
 * 클라이언트와 사용하는 모든 패킷은 google protobuf로 작성
-* .proto파일은 클라이언트와 공용으로 제작하며 build.bat에 있는것처럼 서버에서 사용하기위한 .java 파일로 변환을 해서 사용한다.
+* .proto파일은 클라이언트와 공용으로 제작하며 build.bat에 있는것처럼 서버에서 사용하기위한 .java 파일로 변환을 해서 사용합니다.
 * 예제 사용 프로토콜
     * Authentication.proto : 인증,로그인
     * GameMulti.proto : 멀티게임
@@ -490,13 +508,13 @@ src/main/resources/
     * Result.proto : 응답 코드
     * User.proto : 유저
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-17.png)
-    * 플러그인이 설치되어있다면 다음과 같이 build.bat파일 우클릭으로 다음과 같은 명령으로 intelliJ에서 바로 변환 할 수 있다.
+    * 플러그인이 설치되어있다면 다음과 같이 build.bat파일 우클릭으로 다음과 같은 명령으로 intelliJ에서 바로 변환 할 수 있습니다.
     * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-18.png)
     * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-19.png)
 
 ### GameAnvilBootstrap : com.nhn.gameanvil.sample.Main
 
-```
+```java
 public static void main(String[] args) {
     GameAnvilBootstrap bootstrap = GameAnvilBootstrap.getInstance();
 
@@ -556,7 +574,7 @@ public static void main(String[] args) {
         * onTransferIn() / onTransferOut() : 유저가 서버를 옮겨갈때 유저 객체의 데이터를 전송하고 복원 처리
 * SingleGameRoom - 싱글룸
     * com.nhn.gameanvil.sample.game.single.SingleGameRoom
-        * onCreateRoom() : 클라이언트 싱글룸 생성 내용처리, 룸을 만들고 룸에 입장한다.
+        * onCreateRoom() : 클라이언트 싱글룸 생성 내용처리, 룸을 만들고 룸에 입장합니다.
         * onLeaveRoom() : 싱글 룸을 나갈때에 대한 처리 구현,
 * UnlimitedTapRoom - 멀티 룸 매치, 최대4인
     * com.nhn.gameanvil.sample.game.multi.roommatch
@@ -569,7 +587,7 @@ public static void main(String[] args) {
     * com.nhn.gameanvil.sample.game.multi.usermatch
         * onCreateRoom() : 최초 룸매치용 룸을 생성하고 입장 하는부분 처리
         * onJoinRoom() : 두번째 이후 입장하는 유저에 대한 처리
-        * onPostLeaveRoom(): 룸 나가고 난후에 대한 처리, 둘이서 게임 하는 룸이기에 한명이 나가면 타이머 제거하고, 상대편도 내보낸다
+        * onPostLeaveRoom(): 룸 나가고 난후에 대한 처리, 둘이서 게임 하는 룸이기에 한명이 나가면 타이머 제거하고, 상대편도 내보냅니다
         * onTransferIn() / onTransferOut() : 룸이 다른서버로 옮겨 질때 룸안에있는 데이터 전송하고 복원 처리
         * onTimer() : 서버에서 주기적으로food 생성해서 룸에 있는 유저들에게 데이터 전송
 * SnakeRoomMatchMaker : 2인 매치 하는 로직 처리
@@ -578,10 +596,10 @@ public static void main(String[] args) {
 
 * 클라이언트가 전송하는 패킷 등록
 * 게임 컨텐츠에서 정의해서 처리하는 패킷
-* 처리하는 클래스는 등록된 종류에 맞는 패킷 핸들러 인터페이스를 구현해야 한다.
+* 처리하는 클래스는 등록된 종류에 맞는 패킷 핸들러 인터페이스를 구현해야 합니다.
 * 유저가 로그인 상태에서 처리하는 패킷 : com.nhn.gameanvil.sample.space.user.GameUser
 
-```
+```java
 static private PacketDispatcher packetDispatcher = new PacketDispatcher();
 
 static {
@@ -592,10 +610,10 @@ static {
 // 처리하는 클래스는 implements IPacketHandler<GameUser> 를 구현해서 만들어야 한다.
 ```
 
-* 클라이언트에서 request로 요청온 패킷에 대해서는 클라이언트에서 응답을 대기하고 있기 때문에 서버에서 처리를 하고 전달받은 유저객체를 통해서 gameUser.reply() 로 응답처리를 해야한다.
+* 클라이언트에서 request로 요청온 패킷에 대해서는 클라이언트에서 응답을 대기하고 있기 때문에 서버에서 처리를 하고 전달받은 유저객체를 통해서 gameUser.reply() 로 응답처리를 해야합니다.
 * 룸안에있을때 처리하는 패킷 : com.nhn.gameanvil.sample.game.multi.usermatch.SnakeRoom
 
-```
+```java
 private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
 
 static {
@@ -605,10 +623,10 @@ static {
 // 처리하는 클래스는 implements IRoomPacketHandler<SnakeRoom, GameUser> 를 구현해서 만들어야 한다.
 ```
 
-* 서버에서 클라이언트로 전달하는 패킷은 gameUser.send()로 응답대기없이 전송한다.
+* 서버에서 클라이언트로 전달하는 패킷은 gameUser.send()로 응답대기없이 전송합니다.
 * rest 패킷 : com.nhn.gameanvil.sample.support.LaunchingSupport
 
-```
+```java
 private static RestPacketDispatcher restMsgHandler = new RestPacketDispatcher();
 
 static {
@@ -618,14 +636,16 @@ static {
 // 처리하는 클래스는 implements IRestPacketHandler 를 구현해서 만들어야 한다.
 ```
 
-* rest요청에 대해서는 전달받은 restObject.writeString()으로 응답메세지를 전달한다.
+* rest요청에 대해서는 전달받은 restObject.writeString()으로 응답메세지를 전달합니다.
+
+<br>
 
 ### 외부 http 요청처리 사용 : com.nhn.gameanvil.sample.gateway.GameConnection
 
 * 게임서버 --> 외부 서버 예)Gamebase token 검증
 * Session 서버 onAutenticate() 에서 검증 요청 처리
 
-```
+```java
 // Gamebse 인증
 //----------------------------------- 토큰 유효한지에 대한 검증 Gamebase
 String gamebaseUrl = String.format(GameConstants.GAMEBASE_DEFAULT_URL + "/tcgb-gateway/v1.2/apps/X2bqX5du/members/%s/tokens/%s", accountId, authenticationReq.getAccessToken());
@@ -651,7 +671,7 @@ if (gamebaseResponse.getHeader().isSuccessful())
 
 * 연결
 
-```
+```java
 private RedisClusterClient clusterClient;
 private StatefulRedisClusterConnection<String, String> clusterConnection;
 private RedisAdvancedClusterAsyncCommands<String, String> clusterAsyncCommands;
@@ -672,7 +692,7 @@ public void connect(String url, int port) throws SuspendExecution {    // 레디
 
 * 종료
 
-```
+```java
 /**
  * 접속 종료 서버가 내려가기전에 호출되어야 한다,
  */
@@ -684,7 +704,7 @@ public void shutdown() {
 
 * 사용
 
-```
+```java
 /**
  * 유저 데이터 레디스에 저장
  *
@@ -711,7 +731,7 @@ public boolean setUserData(GameUserInfo gameUserInfo) throws SuspendExecution {
 * 설정 : resources/maybatis-config.xml
     * DB 연결정보
 
-```
+```java
 <!-- MySQL 접속 정보를 지정한다. -->
 <properties>
   <property name="hostname" value="10.77.14.22" />
@@ -725,9 +745,9 @@ public boolean setUserData(GameUserInfo gameUserInfo) throws SuspendExecution {
 </properties>
 ```
 
-* 사용할 쿼리 등록 - 외부xml을 사용 하려면 아래 주석 부분을 참고해서 사용 하면된다,
+* 사용할 쿼리 등록 - 외부xml을 사용 하려면 아래 주석 부분을 참고해서 사용 하면됩니다,
 
-```
+```java
   <mappers>
     <!-- 정의된 SQL구문을 맵핑해준다. 기본적으로 리소스 안에 있는 mapper.xml을 사용 할때-->
     <mapper resource="query/UserDataMapper.xml"/>
@@ -738,7 +758,7 @@ public boolean setUserData(GameUserInfo gameUserInfo) throws SuspendExecution {
 
 * 쿼리 : resources/query/UserDataMapper.xml
 
-```
+```java
 <select id="selectUserByUuid" resultType="com.nhn.gameanvil.sample.mybatis.dto.UserDto">
       SELECT        uuid,
         login_type AS loginType,
@@ -764,7 +784,7 @@ public boolean setUserData(GameUserInfo gameUserInfo) throws SuspendExecution {
 
 * DB연결 설정 : com.nhn.gameanvil.sample.mybatis.GameSqlSessionFactory
 
-```
+```java
 /**
  * 게임에서 사용하는 DB 연결 객체
  */
@@ -810,14 +830,14 @@ public class GameSqlSessionFactory {
 }
 ```
 
-* 실행시 -DmybatisConfig= 를 사용 하지않는 경우 session을 만들때 다음과 같이 빌드할때 들어가 있는 내부에 저장된 환경 파일을 가지고 설정되는 로그가 기록된다.
+* 실행시 -DmybatisConfig= 를 사용 하지않는 경우 session을 만들때 다음과 같이 빌드할때 들어가 있는 내부에 저장된 환경 파일을 가지고 설정되는 로그가 기록됩니다.
 
-```
+```java
 [2020-05-22 11:31:17,725] [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:30] mybatisConfigPath : null
 [2020-05-22 11:31:17,731] [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:39] load to resource : mybatis/mybatis-config.xml
 ```
 
-* 실행시 -DmybatisConfig= 를 사용해서 지정했을경우 session을 만들때 다음과 같 지정된 위치의 정보를 가지고 설정되는 로그가 기록된다.
+* 실행시 -DmybatisConfig= 를 사용해서 지정했을경우 session을 만들때 다음과 같 지정된 위치의 정보를 가지고 설정되는 로그가 기록됩니다.
 
 ```
 [0;39m[2020-05-22 11:32:35,068] [[34mINFO [0;39m] [GameAnvil-DB_THREAD_POOL-0] [[36mGameSqlSessionFactory.java:30[0;39m] [33mmybatisConfigPath : .\config\mybatis-config.xml
@@ -826,7 +846,7 @@ public class GameSqlSessionFactory {
 
 * 사용 : com.nhn.gameanvil.sample.mybatis.UserDbHelperService
 
-```
+```java
 /**
  * 유저 정보 DB에 저장
  *
@@ -858,7 +878,7 @@ public int insertUser(GameUserInfo gameUserInfo) throws TimeoutException, Suspen
 
 * 샘플 사용 DB 스키마
 
-```
+```java
 CREATE TABLE `users` (
   `uuid` varchar(40) NOT NULL,
   `login_type` int(11) NOT NULL,
@@ -883,7 +903,7 @@ CREATE TABLE `users` (
 
 ## GameAnvilConfig : resources/GameAnvilConfig.json
 <br>
-```
+```java
 {
   //-------------------------------------------------------------------------------------
   // 공통 정보.
@@ -990,9 +1010,9 @@ CREATE TABLE `users` (
 
 ## logback : resources/logback.xml
 
-* logger 를 패키지 이름 단위로 구분해서 지정할수 있다. 따로 지정을 하면 해당 패키지 이름은 지정된 레벨로 적용이되고, 없는것들은 root로 지정된 설정으로 적용된다,
+* logger 를 패키지 이름 단위로 구분해서 지정할수 있다. 따로 지정을 하면 해당 패키지 이름은 지정된 레벨로 적용이되고, 없는것들은 root로 지정된 설정으로 적용됩니다.
 
-```
+```xml
     <logger name="com.nhn.gameanvil" level="INFO"/>
     <logger name="com.nhn.gameanvil.sample" level="DEBUG"/>
 
