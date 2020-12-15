@@ -8,6 +8,8 @@ GameAvil 통합 솔루션의 강력한 기능중 하나로,  GameAvlil 엔진을
 
 ### 시스템 요구사항
 
+GameHammer를 사용하기위해서는 다음과 같은 사항이 필요합니다. 
+
 * 지원하는 언어
   * Java
 * 타겟 개발환경
@@ -24,6 +26,8 @@ GameAvil 통합 솔루션의 강력한 기능중 하나로,  GameAvlil 엔진을
 
 
 ### Features
+
+GameHammer는 다음과 같은 기능을 지원합니다.
 
 * Connector와 대응하는 모든 기능 지원
 * Sync/Async 방식 모두 지원
