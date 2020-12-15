@@ -5,17 +5,63 @@
 * CocosCreator : 2.2.2.
 * Node.js : 10.16.3 
 * Visual Studio Code : 1.43.0
-* GameAnvil Connector : 1.0.0
+* GameAnvil Connector : 1.1.0
 
 
 
 ## GameAnvil Connector 설치
 
-Node.js의 install 기능을 이용해 GameAnvil Connector 모듈을 프로젝트에 포함시킵니다. (게임 개발에 Node.js의 기능을 활용할 수 있기 때문에 npm init으로 초기화하고 시작하는 것을 권장합니다. )
-VSCode 터미널에서 다음 코드를 입력합니다.
-`npm i  'git+https://github.nhnent.com/game-server-engine/GameAnvil-connector-typescript.git#1.0.0'`
+먼저 새 CocosCreator 프로젝트를 생성합니다. Cocos Creator Dashboard > New Project > Empty Project 를 선택하고 새 프로젝트를 생성합니다. 
 
-1.0.0 이외의 버전을 설치하거나 추후 업데이트를 하려면 '#1.0.0.' 부분을 원하는 버전으로 바꾸면 됩니다.
+![new-project](http://static.toastoven.net/prod_gameanvil/images/client-2-new-project.png)
+
+![new-project-empty](http://static.toastoven.net/prod_gameanvil/images/client-2-new-project-empty.png)
+
+이제 생성된 프로젝트에 GameAnvil Connector를 추가합니다. GameAnvil Connector 는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript.zip)에서 다운로드 받을 수 있습니다. 다운로드 받은 파일의 압축을 풀어 assets 아래에 폴더를 만들어 넣어줍니다. 이때 다음과 같은 알람이 뜨면 'no'를 선택합니다.
+
+![set-as-a-plugin](http://static.toastoven.net/prod_gameanvil/images/client-2-set-as-a-plugin.png)
+
+![gameanvil-project](http://static.toastoven.net/prod_gameanvil/images/client-2-gameanvil-project.png)
+
+GameAnvil Connector는 protobufjs를 사용합니다. 그래서 GameAnvil Connector를 프로젝트에 포함시키면 위와 같은 오류가 나오는것을 볼수 있습니다. 
+
+protobufjs는 Node.js의 install 기능을 이용해 프로젝트에 포함시킵니다. VSCode 터미널에서 다음 코드를 입력하여 package.json 파일을 생성합니다.
+
+```powershell
+npm init
+```
+
+위 코드를 입력하면 package.json 파일 생성 프로세스가 시작되고 패키지 이름을 입력받습니다.  이때 그냥 엔터를 누르면 기본 값으로 프로젝트 이름을 사용합니다. 이후로 입력을 받는 값들도 엔터를 누르면 기본값을 사용합니다. 자세한 내용은 [여기](https://docs.npmjs.com/cli/v6/commands/npm-init)를 참고하세요.  
+
+![npm-init](http://static.toastoven.net/prod_gameanvil/images/client-2-npm-init.png)
+
+기본값으로 생성한  package.json 파일을 열어보면 다음과 같습니다. 
+
+```json
+{
+  "name": "newproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+```
+
+
+
+package.json 파일을 생성했으면 이제 터미널에서 다음 코드를 입력하여 protobufjs를 설치합니다.
+
+```powershell
+npm i protobufjs --save
+```
+
+![protobufjs](http://static.toastoven.net/prod_gameanvil/images/client-2-protobufjs.png)
+
+
 
 설치가 완료되었다면 프로젝트 폴더 아래에 다음과 같은 폴더가 생성된 걸 확인 할 수 있습니다.
 
@@ -23,36 +69,31 @@ VSCode 터미널에서 다음 코드를 입력합니다.
   * .bin
   * @protobufjs
   * @types
-  * acorn
-  * core-js
-  * gameanvil-connector
   * long
   * protobufjs
-  * regenerator-runtime
 
-npm init으로 초기화하고 진행했다면 package.json 파일의 dependencies에  gameanvil_connector가 추가된 것을 확인할 수 있습니다.
+그리고 package.json 파일의 dependencies에  gameanvil_connector가 추가된 것을 확인할 수 있습니다.
 ``` json
 {
   "name": "newproject",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {
-    "gameanvil_connector": "git+https://github.nhnent.com/game-server-engine/GameAnvil-connector-typescript.git#1.0.0"
-  },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "protobufjs": "^6.10.2"
+  }
 }
 
 ```
 
 IE 등 구버전 브라우저를 지원하려면 core-js, regenerator-runtime를 추가로 설치합니다.
 
-```
+```powershell
 npm i core-js regenerator-runtime
 ```
 
@@ -60,8 +101,33 @@ npm i core-js regenerator-runtime
 
 ## Connector 생성 및 기본 설정
 
-Connector를 사용하기 위해 Connector 모듈을 import 합니다. IE 등 구버전 브라우저를 지원하려면 core-js, regenerator-runtime를 추가로 import 합니다.
+Connector를 사용하기 위해 Connector와 ProtocolManager 모듈을 import 합니다. 
+
 ``` Typescript
+import { Connector, ProtocolManager} from 'GameAnvil/gameanvil';
+```
+
+그리고 게임에서 사용할 [메시지](##메시지)를 등록하고, Connector 객체를 생성합니다.
+``` Typescript
+export default class GameAnvilManager {
+    private connector: Connector;
+    constructor() {
+        // 프로토콜 등록.
+        ProtocolManager.RegisterProtocol(0, GameMessages);
+        
+        // Connector 생성.
+        this.connector = Connector.Create();
+    }
+}
+```
+
+서버와의 주고받는 [메시지](##메시지)의 처리를 위해 Update() 함수를 주기적으로 호출해야 합니다. Update() 함수의 호출 주기는 자유롭게 설정해도 무방하나 호출하지 않을 경우 서버로부터 [메시지](##메시지)를 받더라도 이에 대한 알림을 받을 수 없습니다.
+```Typescript
+setInterval(() => { this.connector.Update(); }, 10);
+```
+
+다음과 같은 싱글턴 클래스를 만들어 사용하면 편리합니다. 
+```typescript
 /*
     IE등 구버전 브라우저에서 Connector를 사용하기 위해서는 
     core-js, regenerator-runtime 등의 플러그인을 사용해야 한다.
@@ -69,32 +135,15 @@ Connector를 사용하기 위해 Connector 모듈을 import 합니다. IE 등 �
 import 'core-js';
 import 'regenerator-runtime';
 
-import { GameMessages } from '../Protocols/GameMessages';
-import { Connector, ProtocolManager } from 'gameanvil_connector';
-```
+import { Connector, ProtocolManager } from 'GameAnvil/gameanvil';
 
-그리고 Connector 객체를 생성합니다.
-``` Typescript
-export default class GameAnvilManager {
-    private connector: Connector;
-    constructor() {
-        // Connector 생성.
-        this.connector = Connector.Create();
-    }
-}
-```
-
-서버와의 주고받는 메시지의 처리를 위해 Update() 함수를 주기적으로 호출해야 합니다. Update() 함수의 호출 주기는 자유롭게 설정해도 무방하나 호출하지 않을 경우 서버로부터 메시지를 받더라도 이에 대한 알림을 받을 수 없습니다.
-```Typescript
-setInterval(() => { this.connector.Update(); }, 10);
-```
-
-다음과 같은 싱글턴 클래스를 만들어 사용하면 편리합니다.
-```
 export default class GameAnvilManager {
     private static manager: GameAnvilManager;
     private connector: Connector;
     private constructor() {
+        // 프로토콜 등록.
+        ProtocolManager.RegisterProtocol(0, GameMessages);
+        
         // Connector 생성.
         this.connector = Connector.Create();
 
@@ -127,7 +176,7 @@ export default class GameAnvilManager {
 
 ## 서버 접속 및 인증
 
-서버 접속 및 인증은 ConnectionAgent를 이용해 진행합니다. ConnectionAgent는 GameAnvil Server의 Connection Node와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 서버 구현에 따라 채널 정보를 제공하거나 사용자 정의 메시지를 주고받을 수 있습니다. ConnectionAgent는 Connector가 초기화 될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다. 
+서버 접속 및 인증은 ConnectionAgent를 이용해 진행합니다. ConnectionAgent는 GameAnvil Server의 Connection Node와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 서버 구현에 따라 채널 정보를 제공하거나 사용자 정의 [메시지](##메시지)를 주고받을 수 있습니다. ConnectionAgent는 Connector가 초기화 될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다. 
 ``` typescript
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
 // 서버 접속
@@ -311,10 +360,47 @@ ConnectionAgent, UserAgent의 기본 기능 외에 Request()와 Send()를 이용
 
 ### 메시지 생성
 
-GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/overview)를 사용하고 있습니다.  .proto파일에 메시지를 정의하고, protoc 컴파일러로 실제 클래스 소스 코드를 생성하게 됩니다. 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. 
+GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/overview)를 사용하고 있습니다. .proto파일에 메시지를 정의하고, pbjs 로 실제 클래스 소스 코드를 생성하게 됩니다. 그리고 GameAnvil에서 사용할 추가 코드를 생성된 코드에 삽입합니다. 이렇게 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. 
 
-```protobuf
-// Messages.proto
+추가코드를 삽입하려면 `CodeInserter ` 를 설치해야합니다. `CodeInserter `는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-CodeInserter.zip)에서 다운로드 받을 수 있습니다. 다운로드 받은 파일의 압축을 풀어 프로젝트 루트 아래(assets 폴더 밖에)에 폴더를 만들어 넣어줍니다.
+
+![codeInserter](http://static.toastoven.net/prod_gameanvil/images/client-2-codeInserter.png)
+
+`CodeInserter`는 acorn을 사용합니다. 터미널에서 다음 코드를 입력하여 acorn을 설치합니다. 
+
+```powershell
+npm i acorn@5.5.3 --save-dev
+```
+
+package.json의 devDependencies에 acorn이 추가된것을 확인할 수 있습니다.
+
+```
+{
+  "name": "newproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "protobufjs": "^6.10.2"
+  },
+  "devDependencies": {
+    "acorn": "^5.5.3"
+  }
+}
+
+```
+
+
+
+이제 메시지를 만들어 보도록 하겠습니다.  먼저 assets 폴더 아래에 protocols 폴더를 생성하고 다음과 같이 messages.proto파일을 생성합니다.
+
+```
+// messages.proto
 syntax = "proto3";
 
 package Messages;
@@ -328,7 +414,58 @@ message SampleResponse
 {
   repeated string msgs = 1;
 }
+
+message SampleSend
+{
+  string msg = 1;
+}
+
+message SampleReceive
+{
+  repeated string msgs = 1;
+}
 ```
+
+
+
+다음으로 messages.proto파일을 컴파일 하기위한 스크립트를 package.json에 추가합니다. 
+
+```json
+{
+  "name": "newproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"messages.js": "pbjs --force-message --no-verify --no-convert --no-delimited -t static-module -w default -r base -o assets/protocols/messages.js assets/protocols/messages.proto",
+    "messages.codeInsert": "node codeInserter/CodeInserter assets/protocols/messages.js",
+    "messages.ts": "pbts --no-comments -o assets/protocols/messages.d.ts assets/protocols/messages.js",
+    "messages": "npm run messages.js && npm run messages.codeInsert && npm run messages.ts",
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "protobufjs": "^6.10.2"
+  },
+  "devDependencies": {
+    "acorn": "^5.5.3"
+  }
+}
+
+```
+
+
+
+그리고 터미널에서 다음 코드를 입력하여 메시지를 생성합니다.
+
+```powershell
+npm run messages
+```
+
+다음과 같이 `message.js`, `message.d.ts` 파일이 생성된것을 확인할 수 있습니다.
+
+![messages](http://static.toastoven.net/prod_gameanvil/images/client-2-messages.png)
 
 
 
@@ -337,7 +474,7 @@ message SampleResponse
 새로 생성한 메시지를 사용하기 위해서는 사용하려는 메시지를 ProtocolManager에 서버와 같은 값으로 미리 등록해야합니다. 등록하지 않거나 서버와 다를 경우 동작하지 않거나 오동작 하거나 예외가 발생 할 수 있습니다
 ``` typescript
 // 서버와 같은 값으로 등록해야한다.
-ProtocolManager.RegisterProtocol(0, GameMessages);
+ProtocolManager.RegisterProtocol(0, message);
 ```
 
 
@@ -349,30 +486,43 @@ RequestPb()로 메시지를 전송하면 서버 응답을 기다립니다. 서�
 SendPb()로 메시지를  전송하면 SendPb()의 호출 즉시 서버로 전송되며 별도의 응답을 기다리지 않습니다. RequestPb() 에 대한 응답을 기다리는 중에도 SendPb()를 사용한 메시지는 바로 서버로 전송됩니다.
 ``` typescript
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
-let sampleConnectionSend= new GameMessages.SampleConnectionSend (); 
-connection.SendPb(sampleConnectionSend);
 
-connection.AddCallback(GameMessages.SampleConnectionResponse, this.onSampleConnectionResponse);
-let sampleConnectionRequest = new GameMessages.SampleConnectionRequest();
-connection.RequestPb(sampleConnectionRequest);
-// onSampleConnectionResponse 응답
+connection.AddCallback(Messages.SampleReceive, (connectionAgent, receive)=>{
+    // Messages.SampleReceive
+});
+let sampleSend= new Messages.SampleSend (); 
+connection.SendPb(sampleSend);
 
-connection.RequestPb<GameMessages.SampleConnectionResponse>(sampleConnectionRequest, (connectionAgent, response)=>{
-    // 여기로 응답
+
+connection.AddCallback(Messages.SampleResponse, (connectionAgent, response)=>{
+    // Messages.SampleResponse
+});
+let sampleRequest = new Messages.SampleRequest();
+connection.RequestPb(sampleRequest);
+// 응답으로 Messages.SampleResponse.
+
+connection.RequestPb<Messages.SampleResponse>(sampleRequest, (connectionAgent, response)=>{
+    // Messages.SampleResponse
 });
 ```
 ```typescript
 let user = GameAnvilManager.GetInstance().GetUserAgent(this.ServiceName);
-let sampleUserSend = new GameMessages.SampleUserSend (); 
-user.SendPb(sampleUserSend);
+user.AddCallback(Messages.SampleReceive, (connectionAgent, receive)=>{
+    // Messages.SampleReceive
+});
+let sampleSend= new Messages.SampleSend (); 
+user.SendPb(sampleSend);
 
-user.AddCallback(GameMessages.SampleUserResponse, this.onSampleUserResponse);
-let SampleUserRequest = new GameMessages.SampleUserRequest();
-user.RequestPb(SampleUserRequest);
-// onSampleUserResponse로 응답
 
-user.RequestPb<GameMessages.SampleUserResponse>(SampleUserRequest, (userAgent, response)=>{
-    // 여기로 응답
+user.AddCallback(Messages.SampleResponse, (connectionAgent, response)=>{
+    // Messages.SampleResponse
+});
+let sampleRequest = new Messages.SampleRequest();
+user.RequestPb(sampleRequest);
+// 응답으로 Messages.SampleResponse.
+
+user.RequestPb<Messages.SampleResponse>(sampleRequest, (connectionAgent, response)=>{
+    // Messages.SampleResponse
 });
 
 ```
@@ -428,10 +578,10 @@ user.Request(packet, (connectionAgent, packet) => {
 GameAnvil Connector는 Google Protocol Buffer를 기본 프로토콜로 사용하고 있습니다 . Google Protocol Buffer를 이용하는 Packet 생성은 다음과 같습니다.
 
 ```typescript
-let sampleMessage = new GameMessages.sampleMessage ();
+let sampleMessage = new Messages.SampleMessage();
 let packet= Packet.CreateFromPbMsg(sampleMessage);
 
-let sampleMessage2 = packet.GetPbMessage<GameMessages.sampleMessage>();
+let sampleMessage2 = packet.GetPbMessage<Messages.SampleMessage>();
 ```
 
 Google Protocol Buffer를 사용하지 않고도 Packet을 생성할 수 있습니다 .
@@ -460,14 +610,14 @@ let obj = JsonUtil.Deserialize(bytes);
 패킷 크기가 클경우 압축하여 데이터 사용량을 줄일 수 있습니다 .  
 
 ```typescript
-let sampleMessage = new GameMessages.sampleMessage ();
+let sampleMessage = new Messages.SampleMessage();
 let packet= Packet.CreateFromPbMsg(sampleMessage);
 packet.compress();
 
 if (packet.IsCompress())
     packet.Decompress();
 
-let responseMsg = packet.GetPbMessage<GameMessages.sampleMessage>();
+let responseMsg = packet.GetPbMessage<Messages.SampleMessage>();
 
 ```
 
@@ -478,25 +628,25 @@ let responseMsg = packet.GetPbMessage<GameMessages.sampleMessage>();
 GameAnvil에서 제공하는 기본 API를 이용할 때 추가적인 데이터가 필요할 수 있습니다. 이를 위해 기본 API들에는 추가 데이터를 넘겨줄 수 있는 Payload라는 파라메터가 포함되어 있습니다. 이 Payload에 필요한 데이터를 Packet에 담아 List형식으로 저장할 수 있습니다. 여기에 추가 데이터를 넣어 서버로 보내거나, 서버에서 보낸 메시지를 꺼낼 수 있습니다. 
 
 ```typescript
-let userInfo = Packet.CreateFromPbMsg(new GameMessages.UserInfo());
-let roomInfo = Packet.CreateFromPbMsg(new GameMessages.RoomInfo());
+let userInfo = Packet.CreateFromPbMsg(new Messages.UserInfo());
+let roomInfo = Packet.CreateFromPbMsg(new Messages.RoomInfo());
 
 let payload = Payload.CreateFromPackets([userInfo, roomInfo]);
 
-let userInfoPacket: Packet = payload.GetPacket(GameMessages.UserInfo);
-let roomInfo2: GameMessages.RoomInfo = payload.GetPBMessage(GameMessages.RoomInfo);
+let userInfoPacket: Packet = payload.GetPacket(Messages.UserInfo);
+let roomInfo2: Messages.RoomInfo = payload.GetPBMessage(Messages.RoomInfo);
 ```
 
 ```typescript
-let userInfo = Packet.CreateFromPbMsg(new GameMessages.UserInfo());
+let userInfo = Packet.CreateFromPbMsg(new Messages.UserInfo());
 let roomInfo = Packet.CreateFromPbMsg(new GameMessages.RoomInfo());
 
 let payload = Payload.CreateDefault();
 payload.add(userInfo);
 payload.add(roomInfo);
 
-let userInfoPacket: Packet = payload.GetPacket(GameMessages.UserInfo);
-let roomInfo2: GameMessages.RoomInfo = payload.GetPBMessage(GameMessages.RoomInfo);
+let userInfoPacket: Packet = payload.GetPacket(Messages.UserInfo);
+let roomInfo2: Messages.RoomInfo = payload.GetPBMessage(Messages.RoomInfo);
 ```
 
 

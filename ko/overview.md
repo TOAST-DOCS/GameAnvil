@@ -15,12 +15,10 @@ GameAnvil을 이용하여 풍부한 Java 생태계의 혜택을 누리며 쉽고
 * 방 매치메이킹 지원
 * No SPOF (Single Point Of Failure)
 * 런타임 서버 스케일링 지원
-  * 서버간 유저&방 전송
+* 서버간 유저&방 전송
 * 전용 테스트 시스템 지원
 * 전용 웹 콘솔 지원
-* 클라이언트 커넥터 지원
-  * 유니티 엔진용
-  * TypeScript용
+* 클라이언트 커넥터 지원 (Unity, CocosCreator)
 * 무정지 점검과 패치 지원
 
 ## GameAnvil 사용 라이브러리
