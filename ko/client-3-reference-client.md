@@ -1,4 +1,4 @@
-## Game > GameAnvil > 클라이언트 개발 가이드 > Reference Client 가이드
+## Game > GameAnvil > 클라이언트 개발 가이드 > 레퍼런스 클라이언트
 ## 다운받기
 
 * [https://github.nhnent.com/game-server-engine/sample-game-client-unity.git](https://github.nhnent.com/game-server-engine/sample-game-client-unity.git)
@@ -7,9 +7,8 @@
 ## 샘플 개발 환경
 
 * Unity3d : 2018.4.1f1
-    * unity Standalone으로 제작되어 Editor환경에서만 동작 확인이 되었습니다.
+    * Unity Standalone으로 제작되었습니다. 본 샘플은 개발 참고용으로서 Editor 환경에서만 동작이 확인 되었습니다.
 * GameAnvil Connector : 1.0.0.0
-* protocol : google protobuf 3.0
 
 ## Connector API doc - C#
 
@@ -42,7 +41,7 @@
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-4.png)
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-5.png)
 * 클라이언트 정상 동작 확인
-    * Gamebase 연동 되어 있어서 시작하자마자 초기화와 게스트 로그인 처리가 되어 아래에 정보가 표시된다.
+    * Gamebase 연동 되어 있어서 시작하자마자 초기화와 게스트 로그인 처리가 되어 아래에 정보가 표시됩니다.
     * log console에 에러가 없으면 정상 동작
 
 ## sample\_game\_client\_unity 살펴보기
@@ -82,15 +81,21 @@
 * SingleGameScene : 싱글룸 게임 화면
     * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-18.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-19.png)
 
+<br>
+
 #### Plugins : GameAnvil에서 사용 하는 Library 위치
 
 #### Protocols : 서버와 통신할 프로토콜,서버에서 사용한것과 같은 .proto 파일을 proto\_gen\_client.bat 파일을 사용해서 변환
+
+<br>
 
 #### Snake : 유저 매치 게임, 2인 동시에 서버에서 보내준 food를 화면에보여주고, 유저의 이동값을 표시, food먹었을때의처리, 게임 end조건 판단
 
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-20.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-21.png)
 
 #### StreamingAssets : Gamebase용 폴더
+
+<br>
 
 #### TapBird : 싱글게임 & 4명까지 최고스코어를 기록하는 게임, 같이 게임하는 유저의 점수를 모두 표시
 
@@ -101,6 +106,8 @@
 
 #### TOAST : Gamebase용 폴더
 
+<br>
+
 ## Sample Code
 
 ### ConnectHandler : Assets/GameAnvil/
@@ -110,7 +117,7 @@
 * GameAnvil Connector초기화 밎 프로토콜 등록 Assets/GameAnvil/ConnectHandler.cs
 
 ```C#
-            connector = new GameAnvil.Connector(config);
+connector = new GameAnvil.Connector(config);
             // 커넥터 로그 추가
             connector.Logger += (level, log) =>
             {
@@ -400,6 +407,8 @@
             }
         });
 ```
+
+<br>
 
 ### 게임에서 정의한 프로토콜 처리
 

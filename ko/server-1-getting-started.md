@@ -13,7 +13,29 @@ GameAnvil을 이용하여 게임 서버를 개발하는 방법에 대해서 쉽�
 
 GameAnvil은 기본적인 골격 작업을 빠르게 완료하기 위해 자체 템플릿을 제공합니다. 템플릿을 사용하면 몇 번의 클릭만으로 기본적인  게임 서버가 완성됩니다. 이렇게 생성된 서버는 간단한 채팅 기능을 포함하고 있습니다. 자세한 사항은 아래의 서버 템플릿 사용법을 참고하세요.
 
-[서버 템플릿 사용법](server-link-gameanvil-template)
+* [템플릿 다운로드](./files/GameAnvil-Templates.zip)
+
+* 따라하기
+  
+  * IntelliJ를 열어서 File 메뉴를 통해 Import Settings 대화상자를 엽니다.  
+    ![GameAnvilTemplate-1](http://static.toastoven.net/prod_gameanvil/images/GameAnvilTemplate-1.png)
+  
+  * 대화상자에서 앞서 다운로드한 **GameAnvil-Template.zip** 파일을 선택하여 Import 합니다.
+    ![GameAnvilTemplate-2](http://static.toastoven.net/prod_gameanvil/images/GameAnvilTemplate-2.png)
+  
+  * Import가 완료되면 IntelliJ를 Restart할 것인지 묻습니다. 이 때, 재시작을 합니다.
+  
+  * 재시작이 완료되면 아래와 같은 대화상자가 나타납니다. 이 때, Create New Project를 선택합니다.
+    ![GameAnvilTemplate-3](http://static.toastoven.net/prod_gameanvil/images/GameAnvilTemplate-3.png)
+  
+  * 이제 앞서 등록한 템플릿을 선택할 수 있습니다. Next 버튼을 누르면 적용이 됩니다.
+    ![GameAnvilTemplate-4](http://static.toastoven.net/prod_gameanvil/images/GameAnvilTemplate-4.png)
+  
+  * 적용 과정에서 아래와 같이 Enable Auto-Import을 묻는 창이 뜨면 Enable 합니다.
+    ![GameAnvilTemplate-5](http://static.toastoven.net/prod_gameanvil/images/GameAnvilTemplate-5.png)
+  
+  * 모두 완료되고 나면 서버 템플릿 프로젝트의 소스 코드가 나타납니다. 그리고 Run을 해보면 아래와 같이 채팅 서버가 구동됩니다.
+    ![GameAnvilTemplate-6](http://static.toastoven.net/prod_gameanvil/images/GameAnvilTemplate-6.png)
 
 <br>
 
@@ -32,9 +54,9 @@ GameAnvil은 기본적인 골격 작업을 빠르게 완료하기 위해 자체 
 
 ## 레퍼런스
 
-GameAnvil은 템플릿 뿐만 아니라 레퍼런스 프로젝트를 제공하고 있습니다. GameAnvil 사용자가 참고할 수 있도록 템플릿으로 구성한 기본 골격에 다양한 기능이 구현해 두었습니다. 서버와 클라이언트에 대한 레퍼런스 프로젝트는 아래의 링크를 통해 확인할 수 있습니다. 그와 더불어 GameAnvil API와 UML 다이어그램을 JavaDoc 문서로 제공하고 있으니 함께 참고하시면 도움이 될 것입니다.
+GameAnvil은 템플릿 뿐만 아니라 레퍼런스 프로젝트를 제공하고 있습니다. GameAnvil 사용자가 참고할 수 있도록 템플릿으로 구성한 기본 골격에 다양한 기능을 구현해 두었습니다. 이러한 서버와 클라이언트에 대한 레퍼런스 프로젝트는 별도의 메뉴에서 확인 가능합니다. 그와 더불어 GameAnvil API와 UML 다이어그램을 JavaDoc 문서로 제공하고 있으니 함께 참고하시면 도움이 될 것입니다.
 
-| 서버 | 클라이언트 | GameAnvil API Reference |
-| --- | ---- | --- |
-| [참고](server-link-reference-server) | [참고](server-link-reference-client) | [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil) |
+[GameAnvil JavaDoc API Reference Site](http://10.162.4.61:9090/gameanvil) (JavaDoc 사이트를 TOAST 내에 포함시킬 경우 해당 도메인으로 교체할 예정)
+
+
 
