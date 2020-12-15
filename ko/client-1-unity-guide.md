@@ -3,17 +3,15 @@
 
 * Unity 2018.4.1f1
 * Visual Studio 2017
-* GameAnvil Connector : 1.0.0
+* GameAnvil Connector : 1.1.0
 
 
 
 ## GameAnvil Connector 설치
 
-GameAnvil Connector DLL 파일들을 프로젝트에 포함시킵니다. 필요한 파일 목록은 다음과 같습니다. 위치는 Assets폴더 아래면 어디에 넣어도 상관 없지만 보통 Plugins 폴더 아래에 놓습니다. 이 DLL파일들은 C#으로 만들어진 DLL이므로 Andoid, iOS, PC 등의 플렛폼에서 모두 사용가능합니다. 
-* Google.Protobuf.dll
-* LZ4.dll
-* SuperSocket.ClientEngine.dll
-* GameAnvil.dll
+Unity 프로젝트에 GameAnvil.unitypackage를 설치합니다. GameAnvil.unitypackage는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)에서 다운받을 수 있습니다. 패키지를 설치하면 다음과 같이 GameAnvil 폴더 아래에 DLL파일들이 설치됩니다.  이 DLL파일들은 C#으로 만들어진 DLL이므로 Andoid, iOS, PC 등의 플렛폼에서 모두 사용가능합니다. 
+
+![unitypackage](http://static.toastoven.net/prod_gameanvil/images/client-1-unitypackage.png)
 
 
 
@@ -164,10 +162,12 @@ ConnectionAgent, UserAgent의 기본 기능 외에 Request()와 Send()를 이용
 
 ### 메시지 생성
 
-GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/overview)를 사용하고 있습니다.  .proto파일에 메시지를 정의하고, protoc 컴파일러로 실제 클래스 소스 코드를 생성하게 됩니다. 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. 
+GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/overview)를 사용하고 있습니다.  .proto파일에 메시지를 정의하고, protoc 컴파일러로 실제 클래스 소스 코드를 생성하게 됩니다. 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. protoc 컴파일러는 GameAnvil/protoc 폴더에서 찾을 수 있습니다.  protoc에 대한 자세한 설명은 [여기](https://developers.google.com/protocol-buffers/docs/proto3#generating)를 참고하세요.
+
+이제 메시지를 만들어 보도록 하겠습니다.  먼저 Assets 폴더 아래에 protocols 폴더를 생성하고 다음과 같이 messages.proto파일을 생성합니다.
 
 ```protobuf
-// Messages.proto
+// messages.proto
 syntax = "proto3";
 
 package Messages;
@@ -181,7 +181,25 @@ message SampleResponse
 {
   repeated string msgs = 1;
 }
+
+message SampleSend
+{
+  string msg = 1;
+}
+
+message SampleReceive
+{
+  repeated string msgs = 1;
+}
 ```
+
+그리고 윈도우 cmd 창을 띄우고 protocols 폴더로 이동한 다음 아래와 같이 입력합니다.
+
+```
+../GameAnvil/protoc/protoc --csharp_out=./ messages.proto
+```
+
+그러면 protocols 폴더에 Messages.cs파일이 생성된 것을 확인할 수 있습니다. 
 
 
 
@@ -205,25 +223,25 @@ Send()로 메시지를  전송하면 Send()의 호출 즉시 서버로 전송되
 ```c#
 Connector connector = new Connector();
 ConnectionAgent connection = connector.GetConnectionAgent();
-connection.AddListener((ConnectionAgent connection, Messages.SampleConnectionReceive msg)=> { });
+connection.AddListener((ConnectionAgent connection, Messages.SampleReceive msg)=> { });
 
-Messages.SampleConnectionSend sampleConnectionSend= new Messages.SampleConnectionSend (); 
-connection.Send(sampleConnectionSend);
+Messages.SampleSend sampleSend= new Messages.SampleSend (); 
+connection.Send(sampleSend);
 
-Messages.SampleConnectionRequest sampleConnectionRequest = new Messages.SampleConnectionRequest();
-connection.Request(sampleConnectionRequest);
+Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
+connection.Request(sampleRequest);
 ```
 
 ```c#
 Connector connector = new Connector();
 UserAgent user = connector.CreateUser(serviceId, subId);
-user.AddListener((UserAgent user, Messages.SampleUserReceive msg)=> { });
+user.AddListener((UserAgent user, Messages.SampleReceive msg)=> { });
 
-Messages.SampleUserRequest SampleUserRequest = new Messages.SampleUserRequest();
-user.Request(SampleUserRequest);
-    
-Messages.SampleUserSend sampleUserSend = new Messages.SampleUserSend (); 
-user.Send(sampleUserSend);
+Messages.SampleSend sampleSend = new Messages.SampleSend (); 
+user.Send(sampleSend);
+
+Messages.SampleRequest SampleRequest = new Messages.SampleRequest();
+user.Request(SampleRequest);
 ```
 
 
@@ -240,14 +258,14 @@ int resMsgId = 2;
 
 connection.AddListener(resMsgId, (ConnectionAgent connection, Packet packet)=> { });
 
-Messages.SampleConnectionSend sampleConnectionSend= new Messages.SampleConnectionSend (); 
-Packet sampleConnectionSendPacket = new Packet(reqMsgId, sampleConnectionSend.ToByteArray())
-connection.Send(sampleConnectionSendPacket);
+Messages.SampleSend sampleSend= new Messages.SampleSend (); 
+Packet sampleSendPacket = new Packet(reqMsgId, sampleSend.ToByteArray())
+connection.Send(sampleSendPacket);
 
-Messages.SampleConnectionRequest sampleConnectionRequest = new Messages.SampleConnectionRequest();
-Packet sampleConnectionRequestPacket = new Packet(reqMsgId, sampleConnectionRequest.ToByteArray())
-connection.Request(sampleConnectionRequestPacket);
-connection.Request(sampleConnectionRequestPacket, (ConnectionAgent connection, Packet packet)=> { });
+Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
+Packet sampleRequestPacket = new Packet(reqMsgId, sampleRequest.ToByteArray())
+connection.Request(sampleRequestPacket);
+connection.Request(sampleRequestPacket, (ConnectionAgent connection, Packet packet)=> { });
 ```
 
 ```c#
@@ -258,14 +276,14 @@ int resMsgId = 2;
 
 user.AddListener(resMsgId, (UserAgent user, Packet packet)=> { });
 
-Messages.SampleUserSend sampleUserSend = new Messages.SampleUserSend (); 
-Packet sampleUserSendPacket = new Packet(reqMsgIndex, sampleUserSend.ToByteArray())
-user.Send(sampleUserSendPacket);
+Messages.SampleSend sampleSend = new Messages.SampleSend (); 
+Packet sampleSendPacket = new Packet(reqMsgIndex, sampleSend.ToByteArray())
+user.Send(sampleSendPacket);
 
-Messages.SampleUserRequest sampleUserRequest = new Messages.SampleUserRequest();
-Packet sampleUserRequestPacket = new Packet(reqMsgIndex, sampleUserRequest.ToByteArray())
-user.Request(sampleUserRequestPacket);
-user.Request(sampleUserRequestPacket, (UserAgent user, Packet packet)=> { });
+Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
+Packet sampleRequestPacket = new Packet(reqMsgIndex, sampleRequestPacket.ToByteArray())
+user.Request(sampleRequestPacket);
+user.Request(sampleRequestPacket, (UserAgent user, Packet packet)=> { });
 ```
 
 ## Packet
