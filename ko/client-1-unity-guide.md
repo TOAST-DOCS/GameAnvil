@@ -9,7 +9,7 @@
 
 ## GameAnvil Connector 설치
 
-Unity 프로젝트에 GameAnvil.unitypackage를 설치합니다. GameAnvil.unitypackage는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)에서 다운받을 수 있습니다. 패키지를 설치하면 다음과 같이 GameAnvil 폴더 아래에 DLL파일들이 설치됩니다.  이 DLL파일들은 C#으로 만들어진 DLL이므로 Andoid, iOS, PC 등의 플렛폼에서 모두 사용가능합니다. 
+Unity 프로젝트에 gameanvil-connector.unitypackage를 설치합니다. gameanvil-connector.unitypackage는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)에서 다운받을 수 있습니다. 패키지를 설치하면 다음과 같이 GameAnvil 폴더 아래에 DLL파일들이 설치됩니다.  이 DLL파일들은 C#으로 만들어진 DLL이므로 Andoid, iOS, PC 등의 플렛폼에서 모두 사용가능합니다. 
 
 ![unitypackage](http://static.toastoven.net/prod_gameanvil/images/client-1-unitypackage.png)
 
