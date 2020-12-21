@@ -1,4 +1,4 @@
-## Game > GameAnvil > 서버 개발 가이드 > 레퍼런스 서버
+##  Game > GameAnvil > 서버 개발 가이드 > 레퍼런스 서버
 
 
 
@@ -12,8 +12,8 @@
 ## 레퍼런스 개발 환경
 
 * IDE : IntelliJ 2019.3
-* JDK : AdoptOpenJDK build 1.8.0\_192-b12
-* <span style="color:#e11d21">**<span style="color:#e11d21">GameAnvil 1.0.1</span>**</span>
+* JDK : AdoptOpenJDK build 1.8.0_275-b01
+* <span style="color:#e11d21">**<span style="color:#e11d21">GameAnvil 1.1.0</span>**</span>
 * DB
     * MyBatis 3.5.3
     * 각자의 환경에 맞게 IP주소를 설정
@@ -35,7 +35,10 @@
 * Git 저장소에서 Clone한 프로젝트를 IntelliJ로 실행합니다.
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-2.png)
 * sample\_game\_sever 설정확인- 기본 로컬에서 실행항 기본환경
-    * Maven 설정 Dependencies에 <span style="color:#e11d21">**com.nhn.gameanvil:gameanvil:1.0.1**</span> 확인
+    * Maven 설정 Dependencies에 <span style="color:#e11d21">**com.nhn.gameanvil:gameanvil:1.1.0-jdk8**</span> 확인
+      * GameAnvile은 JDK8 / JDK11을 지원
+        * JDK8   : 1.1.0-jdk8 를 사용
+        * JDK11 : 1.1.0-jdk11를 사용
     * resources/GameAnvilConfig.json 파일에 ip들이 가 127.0.0.1로 되어 있는지 확인
 * IntelliJ 서버 실행 환경 설정
     * 프로젝트 설정
@@ -105,39 +108,14 @@ src/main/resources/
     <dependency>
       <groupId>com.nhn.gameanvil</groupId>
       <artifactId>gameanvil</artifactId>
-      <version>1.0.1</version>
+      <version>1.1.0-jdk8</version>
     </dependency>
 ```
 
-* AOT 설정
-
-```xml
-<!--Quasar AOT Instrumentation-->
-<plugin>
-    <groupId>com.vlkan</groupId>
-    <artifactId>quasar-maven-plugin</artifactId>
-    <version>0.7.9</version>
-    <configuration>
-        <check>true</check>
-        <debug>true</debug>
-        <verbose>true</verbose>
-    </configuration>
-    <executions>
-        <execution>
-            <goals>
-                <goal>instrument</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
-```
-
-* pom.xml에 Sample Main클래스 지정확인
 * build 설정
 
 ```xml
 <build>
-
 <plugins>
   <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
@@ -165,109 +143,107 @@ src/main/resources/
     </configuration>
   </plugin>
 
-<plugin>
-  <groupId>org.apache.maven.plugins</groupId>
-  <artifactId>maven-shade-plugin</artifactId>
-  <version>3.2.4</version>
-  <executions>
-    <execution>
-      <phase>package</phase>
-      <goals>
-        <goal>shade</goal>
-      </goals>
-      <configuration>
-        <transformers>
-          <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-            <mainClass>com.nhn.gameanvil.sample.Main</mainClass>
-          </transformer>
-          <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-            <resource>META-INF/io.netty.versions.properties</resource>
-          </transformer>
-          <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-            <resource>META-INF/services/java.sql.Driver</resource>
-          </transformer>
-          <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-            <resource>META-INF/LICENSE</resource>
-          </transformer>
-          <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-            <resource>META-INF/NOTICE</resource>
-          </transformer>
-          <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-            <resource>META-INF/services/reactor.blockhound.integration.BlockHoundIntegration</resource>
-          </transformer>
-        </transformers>
-        <artifactSet>
-          <excludes>
-            <exclude>javax.activation:javax.activation-*</exclude>
-            <exclude>org.javassist:javassist*</exclude>
-          </excludes>
-        </artifactSet>
-        <filters>
-          <filter>
-            <artifact>*:*</artifact>
-            <excludes>
-              <exclude>module-info.class</exclude>
-              <exclude>META-INF/*.SF</exclude>
-              <exclude>META-INF/*.DSA</exclude>
-              <exclude>META-INF/*.RSA</exclude>
-              <exclude>META-INF/*.MF</exclude>
-              <exclude>META-INF/*.txt</exclude>
-              <exclude>about.html</exclude>
-            </excludes>
-          </filter>
-        </filters>
-        <createDependencyReducedPom>false</createDependencyReducedPom>
-      </configuration>
-    </execution>
-  </executions>
-</plugin>
-
-<plugin>
-  <groupId>org.codehaus.mojo</groupId>
-  <artifactId>exec-maven-plugin</artifactId>
-  <version>3.0.0</version>
-  <executions>
-    <execution>
-      <goals>
-        <goal>exec</goal>
-      </goals>
-    </execution>
-  </executions>
-  <configuration>
-    <executable>java</executable>
-    <arguments>
-      <argument>-classpath</argument>
-      <!-- automatically creates the classpath using all project dependencies, also adding the project build directory -->
-      <classpath/>
-      <!-- Main class -->
-      <argument>com.nhn.gameanvil.sample.Main</argument>
-
-    </arguments>
-  </configuration>
-</plugin>
-
-    <!-- Quasar AOT Instrumentation  -->
     <plugin>
-      <groupId>com.vlkan</groupId>
-      <artifactId>quasar-maven-plugin</artifactId>
-      <version>0.7.9</version>
-      <configuration>
-        <check>true</check>
-        <debug>true</debug>
-        <verbose>true</verbose>
-      </configuration>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-shade-plugin</artifactId>
+      <version>3.2.4</version>
       <executions>
         <execution>
+          <phase>package</phase>
           <goals>
-            <goal>instrument</goal>
+            <goal>shade</goal>
           </goals>
+          <configuration>
+            <transformers>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <mainClass>com.nhn.gameanvil.sample.Main</mainClass>
+              </transformer>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                <resource>META-INF/io.netty.versions.properties</resource>
+              </transformer>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                <resource>META-INF/services/java.sql.Driver</resource>
+              </transformer>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                <resource>META-INF/LICENSE</resource>
+              </transformer>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                <resource>META-INF/NOTICE</resource>
+              </transformer>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                <resource>META-INF/services/reactor.blockhound.integration.BlockHoundIntegration</resource>
+              </transformer>
+            </transformers>
+            <artifactSet>
+              <excludes>
+                <exclude>javax.activation:javax.activation-*</exclude>
+                <exclude>org.javassist:javassist*</exclude>
+              </excludes>
+            </artifactSet>
+            <filters>
+              <filter>
+                <artifact>*:*</artifact>
+                <excludes>
+                  <exclude>module-info.class</exclude>
+                  <exclude>META-INF/*.SF</exclude>
+                  <exclude>META-INF/*.DSA</exclude>
+                  <exclude>META-INF/*.RSA</exclude>
+                  <exclude>META-INF/*.MF</exclude>
+                  <exclude>META-INF/*.txt</exclude>
+                  <exclude>about.html</exclude>
+                </excludes>
+              </filter>
+            </filters>
+            <createDependencyReducedPom>false</createDependencyReducedPom>
+          </configuration>
         </execution>
       </executions>
     </plugin>
 
     <plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>exec-maven-plugin</artifactId>
+      <version>3.0.0</version>
+      <executions>
+        <execution>
+          <goals>
+            <goal>exec</goal>
+          </goals>
+        </execution>
+      </executions>
+      <configuration>
+        <executable>java</executable>
+        <arguments>
+          <argument>-classpath</argument>
+          <!-- automatically creates the classpath using all project dependencies, also adding the project build directory -->
+          <classpath/>
+          <!-- Main class -->
+          <argument>com.nhn.gameanvil.sample.Main</argument>
+
+        </arguments>
+      </configuration>
+    </plugin>
+
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-antrun-plugin</artifactId>
       <executions>
+        <!-- Ant task for Quasar AOT instrumentation -->
+        <execution>
+          <id>Running AOT instrumentation</id>
+          <phase>compile</phase>
+          <configuration>
+            <tasks>
+              <taskdef name="instrumentationTask" classname="co.paralleluniverse.fibers.instrument.InstrumentationTask" classpathref="maven.dependency.classpath"/>
+              <instrumentationTask>
+                <fileset dir="${project.build.directory}/classes/" includes="**/*.class"/>
+              </instrumentationTask>
+            </tasks>
+          </configuration>
+          <goals>
+            <goal>run</goal>
+          </goals>
+        </execution>
         <execution>
           <phase>package</phase>
           <configuration>
@@ -313,7 +289,7 @@ src/main/resources/
         * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-14.png)
     * command 실행
         * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-15.png)
-        * `java -Dco.paralleluniverse.fibers.detectRunawayFibers=false -Dco.paralleluniverse.fibers.verifyInstrumentation=false -Dconfig.file=.\config\GameAnvilConfig.json -Dlogback.configurationFile=.\config\logback.xml -DmybatisConfig=.\config\mybatis-config.xml -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar .\sample_game_server-1.0.1.jar`
+        * `java -Dco.paralleluniverse.fibers.detectRunawayFibers=false -Dco.paralleluniverse.fibers.verifyInstrumentation=false -Dconfig.file=.\config\GameAnvilConfig.json -Dlogback.configurationFile=.\config\logback.xml -DmybatisConfig=.\config\mybatis-config.xml -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar .\sample_game_server-1.1.0.jar`
             * 기본적으로 실행시에 별도의 옵션이 지정되지 않으면 빌드할때 지정되어 있는 환경 파일들이 적용.
             * GameAnvilConfig.json은 -Dconfig.file 옵션으로 패스와 파일이름을 지정.
             * logback.xml은 -Dlogback.configurationFile 옵션으로 패스와 파일이름을 지정.
@@ -332,7 +308,7 @@ src/main/resources/
 
 ### pom 설정
 
-* 아래의 AOT Instrumentation 플러그인 부분을 주석 처리 하거나 삭제합니다.
+* 아래의 AOT Instrumentation (<execution> </execution>)플러그인 부분을 주석 처리 하거나 삭제합니다.
 
 ```xml
 <!-- Ant task for Quasar AOT instrumentation -->
@@ -366,14 +342,7 @@ src/main/resources/
 * JIT 모드의 경우 반드시 VM옵션에 아래와 같은 javaagent 항목을 추가해서 quasar agent가 구동될 수 있도록 해야 합니다.
 
 ```java
--Dco.paralleluniverse.fibers.detectRunawayFibers=false
--Dco.paralleluniverse.fibers.verifyInstrumentation=false
 -javaagent:.\src\main\resources\META-INF\quasar-core-0.7.10-jdk8.jar=bm
--Xms6g
--Xmx6g
--XX:+UseG1GC
--XX:MaxGCPauseMillis=100
--XX:+UseStringDeduplication
 ```
 
 ### 빌드 & 실행
@@ -384,7 +353,7 @@ src/main/resources/
     * maven clean
     * maven package
     * command 실행 (스크립트 혹은 배치 파일을 작성해서 구동할 것을 추천)
-        * `java -javaagent:.\lib\quasar-core-0.7.10-jdk8.jar=bm -Dco.paralleluniverse.fibers.detectRunawayFibers=false -Dconfig.file=.\config\GameAnvilConfig.json -Dlogback.configurationFile=.\config\logback.xml -DmybatisConfig=.\config\mybatis-config.xml -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar .\sample_game_server-1.0.1.jar`
+        * `java -javaagent:.\lib\quasar-core-0.7.10-jdk8.jar=bm -Dco.paralleluniverse.fibers.detectRunawayFibers=false -Dconfig.file=.\config\GameAnvilConfig.json -Dlogback.configurationFile=.\config\logback.xml -DmybatisConfig=.\config\mybatis-config.xml -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar .\sample_game_server-1.1.0.jar`
 
 <br>
 
@@ -397,12 +366,12 @@ src/main/resources/
 * Toast Cloud의 게임 베이스 등록
     * 서버에서 앱ID, SecretKey가 필요
 
-### Session
+### Gateway
 
 * 인증
     * Gamebase의 userId, token을 전달받아 token 검증
 
-### Space
+### Game
 
 * 유저
     * 로그인
@@ -470,7 +439,7 @@ src/main/resources/
         * user 이동 패킷 처리
             * 유저가 이동할때의 정보를 전달 받아 룸에 유저정보를 저장하고 상대방에게 이동된 유저정보를 전달 합니다.
 
-### Service - rest service
+### Support - rest service
 
 * 게임서버 접속전 게임세션 정보를 얻어오기위한 서비스
 * [http://127.0.0.1:10080/launching?platform=Editor&appStore=GOOGLE&appVersion=1.2.0&deviceId=4D34C127-9C56-5BAB-A3C2-D8F18C0B7B6E](http://127.0.0.1:10080/launching?platform=Editor&appStore=GOOGLE&appVersion=1.2.0&deviceId=4D34C127-9C56-5BAB-A3C2-D8F18C0B7B6E) 이런 형식으로 요청
@@ -497,7 +466,7 @@ src/main/resources/
     * uuid로 유저정보 SELECT
     * 덱, 닉네임, 최고점수 UPDATE
 
-### protocol -google protobuf 3.0
+### protocol - google protobuf 3.0
 
 * 클라이언트와 사용하는 모든 패킷은 google protobuf로 작성
 * .proto파일은 클라이언트와 공용으로 제작하며 build.bat에 있는것처럼 서버에서 사용하기위한 .java 파일로 변환을 해서 사용합니다.
@@ -526,9 +495,9 @@ public static void main(String[] args) {
     bootstrap.addProtoBufClass(4, User.getDescriptor());
 
     // 게임에서 사용하는 DB 쓰레드풀 지정
-    bootstrap.createExecutorService(GameConstants.DB_THREAD_POOL, 20);
+    bootstrap.createExecutorService(GameConstants.DB_THREAD_POOL, 100);
     // 게임에서 사용하는 레디스 쓰레드풀 지정
-    bootstrap.createExecutorService(GameConstants.REDIS_THREAD_POOL, 20);
+    bootstrap.createExecutorService(GameConstants.REDIS_THREAD_POOL, 100);
 
     // 세션설정
     bootstrap.setGateway()
@@ -564,7 +533,7 @@ public static void main(String[] args) {
 ### GameAnvil 내부에서 처리되는 메소드
 
 * GameSession - 세션
-    * com.nhn.gameanvil.sample.session.GameSession
+    * com.nhn.gameanvil.sample.gateway.GameSession
         * onAutenticate() : 클라이언트 인증요청에 대한 검증 내용 구현
 * GameUser - 유저
     * com.nhn.gameanvil.sample.game.user.GameUser
@@ -577,27 +546,29 @@ public static void main(String[] args) {
         * onCreateRoom() : 클라이언트 싱글룸 생성 내용처리, 룸을 만들고 룸에 입장합니다.
         * onLeaveRoom() : 싱글 룸을 나갈때에 대한 처리 구현,
 * UnlimitedTapRoom - 멀티 룸 매치, 최대4인
-    * com.nhn.gameanvil.sample.game.multi.roommatch
+    * com.nhn.gameanvil.sample.game.multi.roommatch.UnlimitedTapRoom 
         * onCreateRoom() : 최초 룸매치용 룸을 생성하고 입장 하는부분 처리
         * onJoinRoom() : 두번째 이후 입장하는 유저에 대한 처리
         * onLeaveRoom(): 룸 나갈때 대한 처리
         * onTransferIn() / onTransferOut() : 룸이 다른서버로 옮겨 질때 룸안에있는 데이터 전송하고 복원 처리
 * UnlimitedTapRoomMatchMaker : 룸매치 로직 처리
+    * com.nhn.gameanvil.sample.game.multi.roommatch.UnlimitedTapRoomMatchMaker 
 * SnakeRoom - 유저 매치, 2인
-    * com.nhn.gameanvil.sample.game.multi.usermatch
+    * com.nhn.gameanvil.sample.game.multi.usermatch.SnakeRoom 
         * onCreateRoom() : 최초 룸매치용 룸을 생성하고 입장 하는부분 처리
         * onJoinRoom() : 두번째 이후 입장하는 유저에 대한 처리
         * onPostLeaveRoom(): 룸 나가고 난후에 대한 처리, 둘이서 게임 하는 룸이기에 한명이 나가면 타이머 제거하고, 상대편도 내보냅니다
         * onTransferIn() / onTransferOut() : 룸이 다른서버로 옮겨 질때 룸안에있는 데이터 전송하고 복원 처리
         * onTimer() : 서버에서 주기적으로food 생성해서 룸에 있는 유저들에게 데이터 전송
 * SnakeRoomMatchMaker : 2인 매치 하는 로직 처리
+    * com.nhn.gameanvil.sample.game.multi.usermatch.SnakeRoomMatchMaker 
 
 ### 패킷 등록
 
 * 클라이언트가 전송하는 패킷 등록
 * 게임 컨텐츠에서 정의해서 처리하는 패킷
 * 처리하는 클래스는 등록된 종류에 맞는 패킷 핸들러 인터페이스를 구현해야 합니다.
-* 유저가 로그인 상태에서 처리하는 패킷 : com.nhn.gameanvil.sample.space.user.GameUser
+* 유저가 로그인 상태에서 처리하는 패킷 : com.nhn.gameanvil.sample.game.user.GameUser
 
 ```java
 static private PacketDispatcher packetDispatcher = new PacketDispatcher();
@@ -643,7 +614,7 @@ static {
 ### 외부 http 요청처리 사용 : com.nhn.gameanvil.sample.gateway.GameConnection
 
 * 게임서버 --> 외부 서버 예)Gamebase token 검증
-* Session 서버 onAutenticate() 에서 검증 요청 처리
+* Gateway서버 onAutenticate() 에서 검증 요청 처리
 
 ```java
 // Gamebse 인증
@@ -833,15 +804,15 @@ public class GameSqlSessionFactory {
 * 실행시 -DmybatisConfig= 를 사용 하지않는 경우 session을 만들때 다음과 같이 빌드할때 들어가 있는 내부에 저장된 환경 파일을 가지고 설정되는 로그가 기록됩니다.
 
 ```java
-[2020-05-22 11:31:17,725] [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:30] mybatisConfigPath : null
-[2020-05-22 11:31:17,731] [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:39] load to resource : mybatis/mybatis-config.xml
+[2020-12-18 17:36:35,634] [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:30] mybatisConfigPath : null
+[2020-12-18 17:36:35,636] [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:39] load to resource : mybatis-config.xml
 ```
 
 * 실행시 -DmybatisConfig= 를 사용해서 지정했을경우 session을 만들때 다음과 같 지정된 위치의 정보를 가지고 설정되는 로그가 기록됩니다.
 
 ```
-[0;39m[2020-05-22 11:32:35,068] [[34mINFO [0;39m] [GameAnvil-DB_THREAD_POOL-0] [[36mGameSqlSessionFactory.java:30[0;39m] [33mmybatisConfigPath : .\config\mybatis-config.xml
-[0;39m[2020-05-22 11:32:35,069] [[34mINFO [0;39m] [GameAnvil-DB_THREAD_POOL-0] [[36mGameSqlSessionFactory.java:32[0;39m] [33mload to mybatisConfigPath : .\config\mybatis-config.xml
+[2020-12-18 17:43:37,871] [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:30] mybatisConfigPath : .\src\main\resources\mybatis-config.xml
+[2020-12-18 17:43:37,871] [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:32] load to mybatisConfigPath : .\src\main\resources\mybatis-config.xml
 ```
 
 * 사용 : com.nhn.gameanvil.sample.mybatis.UserDbHelperService
@@ -908,21 +879,18 @@ CREATE TABLE `users` (
   //-------------------------------------------------------------------------------------
   // 공통 정보.
 
-  "common": {    "ip": "127.0.0.1", // 노드마다 공통으로 사용하는 IP. (머신의 IP를 지정)
+  "common": {
+    "ip": "127.0.0.1", // 노드마다 공통으로 사용하는 IP. (머신의 IP를 지정)
     "meetEndPoints": ["127.0.0.1:16000"], // 대상 노드의 common IP와 communicatePort 등록. (해당 서버 endpoint 포함가능 , 리스트로 여러개 가능)
-    "communicatePort": 16000, // 다른 communication node 와 통신할때 사용되는 port
+    "ipcPort": 16000, // 다른 ipc node 와 통신할때 사용되는 port
     "publisherPort" : 13300, // publish socket 을 위한 port
-    "debugMode": false, //디버깅시 각종 timeout 이 발생안하도록 하는 옵션 , 리얼에서는 반드시 false 이어야 한다.
-    "allocatorType": 4
-//    ("1") POOLED_DIRECT_BUFFER,
-//    ("2") POOLED_HEAP_BUFFER,
-//    ("3") UNPOOLED_DIRECT_BUFFER,
-//    ("4") UNPOOLED_HEAP_BUFFER,
+    "debugMode": false //디버깅시 각종 timeout 이 발생안하도록 하는 옵션 , 리얼에서는 반드시 false 이어야 한다.
   },
 
   //-------------------------------------------------------------------------------------
   // LocationNode 설정
-  "location": {    "clusterSize": 1, // 총 몇개의 머신(VM)으로 구성되는가?
+  "location": {
+    "clusterSize": 1, // 총 몇개의 머신(VM)으로 구성되는가?
     "replicaSize": 3, // 복제 그룹의 크기 (master + slave의 개수)
     "shardFactor": 3  // sharding을 위한 인수 (아래의 주석 참고)
     // 전체 shard의 개수 = clusterSize x replicaSize x shardFactor
@@ -933,26 +901,20 @@ CREATE TABLE `users` (
   // 매치 노드 설정
   "match": {
     "nodeCnt": 1,
-
-    "scaleOutLimit": { // OPTINAL
-      "cycleSec": 300,    // 평균값을 측정하기 위한 주기
-      "cpuPct": 90,       // 프로세스의 CPU 사용량이 이 값을 초과할 경우
-      "queueSize": 500000, // UserMatchMaker의 평균 매칭큐 사이즈가 50만개를 초과할 경우
-      "roomSize": 1000000, // RoomMatchMaker의 평균 전체방의 개수가 100만개를 초과할 경우
-      "cpuWarningPct": 75 // 프로세스의 CPU 사용량이 이 값을 초과할 경우 워닝 로그를 출력
-    }
+    "useLocationDirect": true
   },
 
   //-------------------------------------------------------------------------------------
   // 클라이언트와의 커넥션을 관리하는 노드.
-  "session": {
+  "gateway": {
     "nodeCnt": 4, // 노드 개수. (노드 번호는 0 부터 부여 됨)
     "ip": "127.0.0.1", // 클라이언트와 연결되는 IP.
     "dns": "", // 클라이언트와 연결되는 도메인 주소.
     "maintenance": false,
     "tcpNoDelay": false, // Netty Bootstrap 설정시 사용 됨. (디폴트로 필드 미사용 및 기본 값 false)
     "connectGroup": { // 커넥션 종류.
-      "TCP_SOCKET": {        "port": 11200, // 클라이언트와 연결되는 포트.
+      "TCP_SOCKET": {
+        "port": 11200, // 클라이언트와 연결되는 포트.
         "idleClientTimeout": 240000 // 데이터 송수신이 없는 상태 이후의 타임아웃. (0 이면 사용하지 않음)
         //        ,"secure": { // 보안 설정.
         //          "useSelf": true
@@ -974,18 +936,20 @@ CREATE TABLE `users` (
 
   //-------------------------------------------------------------------------------------
   // 게임 로비 역할을 하는 노드. (게임 룸, 유저를 포함 하고있음)
-  "space": [    {
+  "game": [
+    {
       "nodeCnt": 4,
-      "serviceId": 0,
+      "serviceId": 1,
       "serviceName": "TapTap",
       "channelIDs": ["","","","",""], // 노드마다 부여할 채널 ID. (유니크하지 않아도 됨. "" 문자열로 채널 구분없이 중복사용도 가능)
       "userTimeout": 5000 // disconnect 이후의 유저객체 제거 타임아웃.
     }
   ],
 
-  "service": [    {
+  "support": [
+    {
       "nodeCnt": 2,
-      "serviceId": 1,
+      "serviceId": 2,
       "serviceName": "Launching",
       "restIp": "127.0.0.1",
       "restPort": 10080
@@ -994,13 +958,15 @@ CREATE TABLE `users` (
 
   //-------------------------------------------------------------------------------------
   // JMX 또는 REST API 사용하여 다른 노드에 대한 관리를 할 수 있는 노드. (서비스 포즈, 전체 유저 카운트 등)
-  "management": {    "nodeCnt": 2,
+  "management": {
+    "nodeCnt": 2,
     "restIp": "127.0.0.1",
     "restPort": 25150,
     "consoleProxyPort" : 18081, // admin web console port
     "logProxyPort" : 18082,     // admin log download port
 
-    "db": {      "user": "root",
+    "db": {
+      "user": "root",
       "password": "1234",
       "url": "jdbc:h2:mem:gameanvil_admin;DB_CLOSE_DELAY=-1"
     }

@@ -8,7 +8,7 @@
 
 * Unity3d : 2018.4.1f1
     * Unity Standalone으로 제작되었습니다. 본 샘플은 개발 참고용으로서 Editor 환경에서만 동작이 확인 되었습니다.
-* GameAnvil Connector : 1.0.0.0
+* GameAnvil Connector : 1.1.0.0
 
 ## Connector API doc - C#
 
@@ -20,31 +20,29 @@
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-2.png)
 * sample\_game\_client\_unity 설정확인
     * GameAnvil Library - 필요한 라이브러리 확인
-        * Assets/Plugins
+        * Assets/GameAnvil
             * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-3.png)
-            * GameAnvil.dll
-            * GameAnvil.xml
-            * Google.Protobuf.dll
-            * Google.Protobuf.xml
-            * Google.Protobuf.pdb
-            * link.xml
-            * LZ4.dll
-            * SingleServer.dll
-            * SuperSocket.ClientEngine.dll
-            * SuperSocket.ClientEngine.pdb
-            * WebSocket4Net.dll
-            * WebSocket4Net.pdb
+            * GameAnvil
+            * Google.Protobuf
+            * K4os.Compression.LZ4
+            * log4net
+            * SingleServer
+            * SuperSocket.ClientEngine
+            * System.Buffers
+            * System.Memory
+            * System.Runtime.CompilerServices.Unsafe
 
 ## 클라이언트 실행 with Unity3d
 
 * Unity3d 실행
-* ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-4.png)
-* ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-5.png)
+    * StartScenene 선랙으로 왼쪽아래 화면처럼 신을 선택 합니다.
+        * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-4.png)
+    * Unity 프로젝트의 가운데 Play 버튼 으로 클라이언트 실행합니다.
 * 클라이언트 정상 동작 확인
     * Gamebase 연동 되어 있어서 시작하자마자 초기화와 게스트 로그인 처리가 되어 아래에 정보가 표시됩니다.
     * log console에 에러가 없으면 정상 동작
 
-## sample\_game\_client\_unity 살펴보기
+## sample\_game\_client\_unity 폴더 구조살펴보기
 
 * 게임개발에 참고 할 수있게 만든 GameAnvil샘플 서버와 연동하기 위한 클라이언트로 제작된 프로젝트 입니다.
     * 기능 사용성에 목적을 두어서 게임자체에대한 에러나 버그가 많을수 있습니다.
@@ -52,69 +50,83 @@
 
 ### Assets
 
-* StartScene : 처음 시작하는 신으로 기본 Gamebase초기화와 게스트로그인처리, 플랫폼테스트와 게임테스트 분기
-    * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-6.png)
-* LoadingScene : 신이 변경될때마다 보이는 로딩
-    * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-7.png)
+#### GameAnvil  : GameAnvil에서 사용 하는 Library 위치
 
-#### Data : 데이터성 객체
+<br>
 
-#### Gamebase : Gamebase용 폴더
+#### GameAnvilSample : GameAnvil Sample 폴더
 
-#### GameTest : 게임테스트
+- StartScene : 처음 시작하는 화면으로 기본 Gamebase초기화와 게스트로그인처리, 플랫폼테스트와 게임테스트 분기
+  * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-6.png)
+- LoadingScene : 화면이 변경될때마다 보이는 로딩
+  * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-7.png)
+
+##### Data : 데이터성 객체 폴더
+
+##### GameTest : 게임테스트 폴더
+
+###### Scenes : 게임테스트 화면 폴더
 
 * GameLoginScene : 아이디 입력 받아 전체적인 로그인 처리하는 화면
-    * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-8.png)
+  * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-8.png)
 * GameLobbyScene  : 유저가 로그인하고나서의 화면, TapBird(1인), 멀티TapBird(4인), Snake(2인) 게임과, 랭킹, 유저 정보, 닉네임 변경를 확인
-    * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-9.png)
+  * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-9.png)
 
-#### PlatformTest : GameAnvil API 테스트
+##### PlatformTest : GameAnvil API Test 폴더
+
+###### Scenes : GameAnvil API 화면 폴더
 
 * AuthScene ; launching(rest), connect, auth, login 처리하는 화면
-    * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-10.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-11.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-12.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-13.png)
+  * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-10.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-11.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-12.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-13.png)
 * LobbyScene : 로그인이후 게임 로비 화면, 싱글게임, 룸매치 멀티(4인), 유저매치(2), 랭킹, 셔플덱 가능 화면
-    * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-14.png)
+  * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-14.png)
 * MultiSnakeGameScene : 유저 매치 2인 게임 화면
-    * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-15.png)  ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-16.png)
+  * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-15.png)  ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-16.png)
 * MultiTapBirdGameScene : 룸매치 4명 게임 화면
-    * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-17.png)
+  * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-17.png)
 * SingleGameScene : 싱글룸 게임 화면
-    * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-18.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-19.png)
+  * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-18.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-19.png)
 
-<br>
 
-#### Plugins : GameAnvil에서 사용 하는 Library 위치
 
-#### Protocols : 서버와 통신할 프로토콜,서버에서 사용한것과 같은 .proto 파일을 proto\_gen\_client.bat 파일을 사용해서 변환
+##### Protocols : 서버와 통신할 프로토콜 폴더
 
-<br>
+##### Snake : Snake 게임 폴더, 유저 매치 게임, 2인 동시에 서버에서 보내준 food를 화면에보여주고, 유저의 이동값을 표시, food먹었을때의처리, 게임 end조건 판단
 
-#### Snake : 유저 매치 게임, 2인 동시에 서버에서 보내준 food를 화면에보여주고, 유저의 이동값을 표시, food먹었을때의처리, 게임 end조건 판단
+###### Scenes : Snake 게임 화면 폴더
 
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-20.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-21.png)
 
-#### StreamingAssets : Gamebase용 폴더
+##### TapBird : TapBird 게임 폴더, 싱글게임 & 4명까지 최고스코어를 기록하는 게임, 같이 게임하는 유저의 점수를 모두 표시
 
-<br>
-
-#### TapBird : 싱글게임 & 4명까지 최고스코어를 기록하는 게임, 같이 게임하는 유저의 점수를 모두 표시
+###### Scenes : TapBird 게임 화면 폴더
 
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-22.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-23.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-24.png)
 * ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-25.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-26.png)
 
-#### GameAnvil : 클라이언트용 connector 객체 설정
+<br>
 
-#### TOAST : Gamebase용 폴더
+#### Gamebase : Gamebase용 폴더
+
+<br>
+
+#### Plugins : IOS / Android 용 폴더
+
+<br>
+
+#### StreamingAssets : Gamebase 사용 폴더
+
+<br>
+
+#### TOAST : Gamebase 사용 폴더
 
 <br>
 
 ## Sample Code
 
-### ConnectHandler : Assets/GameAnvil/
+### ConnectHandler : Assets/GameAnvilSample/
 
-![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-27.png)
-
-* GameAnvil Connector초기화 밎 프로토콜 등록 Assets/GameAnvil/ConnectHandler.cs
+* GameAnvil Connector초기화 밎 프로토콜 등록 Assets/GameAnvilSample/ConnectHandler.cs
 
 ```C#
 connector = new GameAnvil.Connector(config);
@@ -138,7 +150,7 @@ connector = new GameAnvil.Connector(config);
 
 ### GameAnvil Connector 리스너 등록
 
-* Assets/PlatformTest/Scripts/AuthUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/AuthUi.cs
 
 ```C#
         // 연결 끊기는 부분 처리 리스너 등록
@@ -151,7 +163,7 @@ connector = new GameAnvil.Connector(config);
 
 ### Connect
 
-* Assets/PlatformTest/Scripts/AuthUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/AuthUi.cs
 
 ```C#
         // 서버에 접속 시도.
@@ -178,7 +190,7 @@ connector = new GameAnvil.Connector(config);
 
 ### Auth
 
-* Assets/PlatformTest/Scripts/AuthUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/AuthUi.cs
 
 ```C#
             // 인증에 필요한 프로토콜 데이터 설정
@@ -209,7 +221,7 @@ connector = new GameAnvil.Connector(config);
 
 ### Login
 
-* Assets/PlatformTest/Scripts/AuthUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/AuthUi.cs
 
 ```C#
         // 로그인에 필요한 프로토콜 데이터 설정
@@ -218,7 +230,7 @@ connector = new GameAnvil.Connector(config);
             // 임의로 필요한 데이터 설정
             Uuid = inputFieldUUID.text,
             LoginType = Com.Nhn.Gameanvil.Sample.Protocol.LoginType.LoginGuest,
-            AppVersion = "0.0.1",
+            AppVersion = Application.version,
             AppStore = "None",
             DeviceModel = SystemInfo.deviceModel,
             DeviceCountry = "KR",
@@ -266,7 +278,7 @@ connector = new GameAnvil.Connector(config);
 
 ### GetUserAgent
 
-* Assets/PlatformTest/Scripts/LobbyUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
 ```C#
         // 커넥터로 부터 유저 객체 저장
@@ -275,7 +287,7 @@ connector = new GameAnvil.Connector(config);
 
 ### CreateRoom : 싱글룸 생성및 입장
 
-* Assets/PlatformTest/Scripts/LobbyUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
 ```C#
         // 게임 싱글룸 생성
@@ -296,7 +308,7 @@ connector = new GameAnvil.Connector(config);
 
 ### MatchRoom : 멀티 룸매치
 
-* Assets/PlatformTest/Scripts/LobbyUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
 ```C#
         // 만들어 져있는 방에 들어가는 룸매치 요청 - 혼자서도 플레이가 가능하다. 최대 인원수 까지 모두 입장
@@ -316,7 +328,7 @@ connector = new GameAnvil.Connector(config);
 
 ### MatchUserStart : 멀티 유저 매치
 
-* Assets/PlatformTest/Scripts/LobbyUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
 ```C#
         // 유저 매치 두명이서 방을 만들어서 동시에 입장해서 게임진행
@@ -349,7 +361,7 @@ connector = new GameAnvil.Connector(config);
         };
 ```
 
-* 유저 매치 타임아웃시 onMatchUserTimeout이 호출된다. : Assets/PlatformTest/Scripts/MultiSnakeGameUi.cs
+* 유저 매치 타임아웃시 onMatchUserTimeout이 호출된다. : Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs
 
 ```C#
         // 유저 매치 요청 타임 아웃 리스너
@@ -363,9 +375,9 @@ connector = new GameAnvil.Connector(config);
 
 ### LeaveRoom : 룸에서 나갈때 호출
 
-* Assets/PlatformTest/Scripts/MultiSnakeGameUi.cs
-* Assets/PlatformTest/Scripts/MultiTapBirdGameUI.cs
-* Assets/PlatformTest/Scripts/SingleGameUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/MultiTapBirdGameUI.cs
+* Assets/GameAnvilSample/PlatformTest/Scripts/SingleGameUi.cs
 
 ```C#
         // 게임종료 프로토콜 정의
@@ -412,7 +424,7 @@ connector = new GameAnvil.Connector(config);
 
 ### 게임에서 정의한 프로토콜 처리
 
-* Send : Assets/PlatformTest/Scripts/SingleGameUi.cs : 응답을 대기하지않고 서로보 패킷을 보내고 끝난다.
+* Send : Assets/GameAnvilSample/PlatformTest/Scripts/SingleGameUi.cs : 응답을 대기하지않고 서로보 패킷을 보내고 끝난다.
 
 ```C#
         // 전송할 패킷
@@ -427,7 +439,7 @@ connector = new GameAnvil.Connector(config);
         tapBirdUser.Send(new Packet(tapMsg));
 ```
 
-* Request : Assets/PlatformTest/Scripts/LobbyUi.cs : 서버로 요청을 보내고 응답을 받을때까지 대기
+* Request : Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs : 서버로 요청을 보내고 응답을 받을때까지 대기
 
 ```C#
         // 게임유저가 서버로 request로 response를 받아 처리 한다.
@@ -451,7 +463,7 @@ connector = new GameAnvil.Connector(config);
         });
 ```
 
-* 리스너 등록 : Assets/PlatformTest/Scripts/MultiSnakeGameUi.cs : 서버 --> 클라이언트로 오는 패킷 리스너 등록
+* 리스너 등록 : Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs : 서버 --> 클라이언트로 오는 패킷 리스너 등록
 
 ```C#
         snakeGameUser.AddListener((UserAgent userAgent, Com.Nhn.Gameanvil.Sample.Protocol.SnakeFoodMsg msg) =>
