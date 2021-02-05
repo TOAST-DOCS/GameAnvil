@@ -1,7 +1,7 @@
-## Game > GameAnvil > 관리 > 머신
+# Game > GameAnvil > 관리 > 머신
 
 
-### 머신
+## 머신
 
 GameAnvil 프로세스가 실행 될 장비를 등록하는 메뉴입니다. 
 
@@ -9,7 +9,7 @@ GameAnvil 프로세스가 실행 될 장비를 등록하는 메뉴입니다.
 
 ![management_machine_1.png](http://static.toastoven.net/prod_gameanvil/images/management_machine_1.png)
 
-#### 머신 등록
+### 머신 등록
 
 ![management_machine_2.png](http://static.toastoven.net/prod_gameanvil/images/management_machine_2.png)
 * 입력 타입 : 콘솔 창에 직접 머신 정보를 입력하여 등록 할 수 있고 .csv 형식 파일을 업로드 하여 다수의 머신을 등록 할 수 있습니다.
@@ -19,7 +19,7 @@ GameAnvil 프로세스가 실행 될 장비를 등록하는 메뉴입니다.
     * 파일 업로드 : 템플릿 예시 파일을 다운로드 받아 등록 할 머신 정보를 입력 후 파일을 업로드 합니다. [ [Template File]()]
 
 
-#### 머신 설정 
+### 머신 설정 
 
 머신 등록 후 마스터 머신과 로케이션 관리 머신을 설정합니다. 
 
@@ -33,7 +33,7 @@ GameAnvil 프로세스가 실행 될 장비를 등록하는 메뉴입니다.
 Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드이지만 콘텐츠 구현 및 제어가 불가한 노드입니다. 
 머신 설정 / 머신 초기화 기능을 통해 Management Node 와 Location Node 를 관리할 수 있습니다. 
 
-#### 머신 설정 초기화
+### 머신 설정 초기화
 
 머신 설정 기능을 통해 등록 한 마스터 머신과 로케이션 관리 머신 설정을 초기화 해주는 기능입니다.
 
@@ -46,15 +46,15 @@ Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드�
 ![management_machine_5.png](http://static.toastoven.net/prod_gameanvil/images/management_machine_5.png)
 
 
-## Game > GameAnvil > 관리 > 인스턴스
+# Game > GameAnvil > 관리 > 인스턴스
 
-### 인스턴스
+## 인스턴스
 
 머신 관리를 통해 등록한 머신에 띄울 인스턴스를 관리합니다.
 
 인스턴스는 여러 [노드](server-2-basic) 들로 구성되며 게임 환경에 따라 인스턴스를 원하는 형태로 구성할 수 있습니다.
 
-#### 목록
+### 목록
 
 등록된 인스턴스의 목록을 확인할 수 있습니다.
 
@@ -74,7 +74,7 @@ Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드�
 
 ![ManagementInstance-2](https://static.toastoven.net/prod_gameanvil/images/management_instance_2.png)
 
-#### 등록
+### 등록
 
 인스턴스 등록 화면입니다.
 
@@ -156,7 +156,6 @@ Port 중복 확인이 정상적으로 완료가 되면, 인스턴스 등록 화�
 
 **설정 불러오기** 기능입니다.
 
-
 ![ManagementInstance-13](https://static.toastoven.net/prod_gameanvil/images/management_instance_13.png)
 
 **설정 불러오기**는 먼저 등록된 인스턴스의 설정을 그대로 복사하는 기능입니다.
@@ -167,7 +166,7 @@ Port 중복 확인이 정상적으로 완료가 되면, 인스턴스 등록 화�
 
 동일한 구성의 인스턴스를 추가 등록할 때 유용하게 사용될 수 있는 기능입니다.
 
-#### 수정 및 삭제
+### 수정 및 삭제
 
 등록된 인스턴스를 수정하거나 삭제할 수 있습니다.
 
@@ -179,7 +178,7 @@ Port 중복 확인이 정상적으로 완료가 되면, 인스턴스 등록 화�
 
 ![ManagementInstance-16](https://static.toastoven.net/prod_gameanvil/images/management_instance_16.png)
 
-### 설정
+## 설정
 
 인스턴스의 각 타입별 노드들의 템플릿을 관리합니다.
 
@@ -187,7 +186,7 @@ Port 중복 확인이 정상적으로 완료가 되면, 인스턴스 등록 화�
 
 자주 사용하게 될 각 노드별 설정을 미리 등록하여 인스턴스 등록에 편리하게 사용하실 수 있습니다.
 
-#### 목록
+### 목록
 
 등록된 템플릿의 목록을 확인할 수 있습니다.
 
@@ -201,12 +200,44 @@ Port 중복 확인이 정상적으로 완료가 되면, 인스턴스 등록 화�
 
 ![ManagementTemplate-2](https://static.toastoven.net/prod_gameanvil/images/management_template_2.png)
 
-#### 등록
+### 등록
 
 템플릿 등록 화면입니다.
 
+인스턴스의 각 노드에 적용할 설정을 템플릿으로 등록합니다.
+
+인스턴스 등록 화면에서는 각 노드의 설정을 직접 입력이 불가하고 템플릿으로만 설정이 가능하기 때문에 필요한 설정들을 미리 등록해야 합니다.
+
+해당 상품이 활성화될 때 기본적으로 사용 가능한 **STANDARD** 템플릿을 제공하니 이를 이용하여 인스턴스 등록을 진행할 수 있습니다.
+
+게임 특성에 맞게 템플릿들을 등록하고 활용해보세요.
+
 ![ManagementTemplate-3](https://static.toastoven.net/prod_gameanvil/images/management_template_3.png)
 
+템플릿은 각 노드 타입별로 구분되며, 입력 항목 별로 기본 값과 Min, Max값 제한이 적용된 항목들이 있습니다.
 
-#### 수정 및 삭제
+**설정값 초기화** 기능은 현재 선택된 타입의 전체 설정을 기본 값으로 되돌립니다.
+
+Min, Max 범위를 벗어나는 설정값이 입력된 경우 해당 필드가 FocusOut될 때 필드에 설정된 Min, Max 값으로 자동 변경됩니다.
+
+![ManagementTemplate-4](https://static.toastoven.net/prod_gameanvil/images/management_template_4.png)
+
+
+### 수정 및 삭제
+
+등록된 템플릿을 수정하거나 삭제할 수 있습니다.
+
+템플릿을 수정, 삭제 하려면 해당 템플릿이 적용된 모든 인스턴스의 상태가 **시작 대기, 중지, 에러** 상태일 때만 가능합니다.
+
+템플릿을 사용중인 인스턴스는 **설정 목록**에서 팝업을 통해 확인할 수 있으며, **인스턴스 모니터링**에서 인스턴스의 현재 상태를 확인하거나 변경할 수 있습니다.
+
+![ManagementTemplate-5](https://static.toastoven.net/prod_gameanvil/images/management_template_5.png)
+
+그리고 인스턴스에 적용된 템플릿인 경우 인스턴스 상태와 관계없이 삭제가 불가합니다.
+
+해당 인스턴스에서 템플릿을 변경하거나 인스턴스를 삭제한 후 템플릿을 삭제할 수 있습니다.
+
+![ManagementTemplate-6](https://static.toastoven.net/prod_gameanvil/images/management_template_6.png)
+
+
 
