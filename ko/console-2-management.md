@@ -20,7 +20,7 @@ GameAnvil 서비스를 활성화 시킨 후 가장 먼저 머신 등록 작업�
 * 호스트 이름 : 등록 할 장비의 호스트명을 입력 합니다.
 * IP 주소 : 등록 할 장비의 Public IP 주소를 입력합니다. 해당 주소를 통해 콘솔과 통신하므로 정확한 주소 입력이 필요합니다. 
 * GameAnvil Agent Port : 해당 장비에 설치 된 GameAnvil Agent Port 정보를 입력합니다. ( 기본 값은 19080 입니다. )
-    * 파일 업로드 : 템플릿 예시 파일을 다운로드 받아 등록 할 머신 정보를 입력 후 파일을 업로드 합니다. [ [Template File]()]
+    * 파일 업로드 : 템플릿 예시 파일을 다운로드 받아 등록 할 머신 정보를 입력 후 파일을 업로드 합니다. [ [Template File](https://static.toastoven.net/prod_gameanvil/files/GameAnvil_Machine_Template.csv)]
 
 
 #### 머신 목록
@@ -54,15 +54,15 @@ Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드�
 ![management_machine_setup_none.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_none.png)
 
 
-# Game > GameAnvil > 관리 > 인스턴스
+## Game > GameAnvil > 관리 > 인스턴스
 
-## 인스턴스
+### 인스턴스
 
 머신 관리를 통해 등록한 머신에 띄울 인스턴스를 관리합니다.
 
 인스턴스는 여러 [노드](server-2-basic) 들로 구성되며 게임 환경에 따라 인스턴스를 원하는 형태로 구성할 수 있습니다.
 
-### 목록
+#### 목록
 
 등록된 인스턴스의 목록을 확인할 수 있습니다.
 
@@ -82,7 +82,7 @@ Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드�
 
 ![ManagementInstance-2](https://static.toastoven.net/prod_gameanvil/images/management_instance_2.png)
 
-### 등록
+#### 등록
 
 인스턴스 등록 화면입니다.
 
@@ -174,7 +174,7 @@ Port 중복 확인이 정상적으로 완료가 되면, 인스턴스 등록 화�
 
 동일한 구성의 인스턴스를 추가 등록할 때 유용하게 사용될 수 있는 기능입니다.
 
-### 수정 및 삭제
+#### 수정 및 삭제
 
 등록된 인스턴스를 수정하거나 삭제할 수 있습니다.
 
@@ -186,7 +186,7 @@ Port 중복 확인이 정상적으로 완료가 되면, 인스턴스 등록 화�
 
 ![ManagementInstance-16](https://static.toastoven.net/prod_gameanvil/images/management_instance_16.png)
 
-## 설정
+### 설정
 
 인스턴스의 각 타입별 노드들의 템플릿을 관리합니다.
 
@@ -194,7 +194,7 @@ Port 중복 확인이 정상적으로 완료가 되면, 인스턴스 등록 화�
 
 자주 사용하게 될 각 노드별 설정을 미리 등록하여 인스턴스 등록에 편리하게 사용하실 수 있습니다.
 
-### 목록
+#### 목록
 
 등록된 템플릿의 목록을 확인할 수 있습니다.
 
@@ -208,7 +208,7 @@ Port 중복 확인이 정상적으로 완료가 되면, 인스턴스 등록 화�
 
 ![ManagementTemplate-2](https://static.toastoven.net/prod_gameanvil/images/management_template_2.png)
 
-### 등록
+#### 등록
 
 템플릿 등록 화면입니다.
 
@@ -231,7 +231,7 @@ Min, Max 범위를 벗어나는 설정값이 입력된 경우 해당 필드가 F
 ![ManagementTemplate-4](https://static.toastoven.net/prod_gameanvil/images/management_template_4.png)
 
 
-### 수정 및 삭제
+#### 수정 및 삭제
 
 등록된 템플릿을 수정하거나 삭제할 수 있습니다.
 
