@@ -46,7 +46,7 @@ Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드�
 머신 설정 기능을 통해 등록 한 마스터 머신과 로케이션 관리 머신 설정을 초기화 해주는 기능입니다.
 
 기존에 설정 된 머신 설정값이 초기화 되면서 Management Node 와 Location Node 도 종료됩니다. 
-에
+
 등록 된 모든 인스턴스 상태가 동작 중이 아닌 경우에만 머신 설정 초기화가 가능합니다.
 
 ![management_machine_init.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_init.png)
