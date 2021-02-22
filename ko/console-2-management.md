@@ -46,7 +46,7 @@ Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드�
 머신 설정 기능을 통해 등록 한 마스터 머신과 로케이션 관리 머신 설정을 초기화 해주는 기능입니다.
 
 기존에 설정 된 머신 설정값이 초기화 되면서 Management Node 와 Location Node 도 종료됩니다. 
-
+에
 등록 된 모든 인스턴스 상태가 동작 중이 아닌 경우에만 머신 설정 초기화가 가능합니다.
 
 ![management_machine_init.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_init.png)
@@ -131,7 +131,7 @@ Port는 **18000 ~ 20000** 사이의 값이 사용되며, 동일 머신 내에서
 
 ![ManagementInstance-6](https://static.toastoven.net/prod_gameanvil/images/management_instance_6.png)
 
-**SUPPORT** 노드가 설정된 호면입니다.
+**SUPPORT** 노드가 설정된 화면입니다.
 
 설정된 **서비스수** 에 따라 Port 입력이 동적으로 구성됩니다.
 
@@ -139,7 +139,7 @@ Port는 **18000 ~ 20000** 사이의 값이 사용되며, 동일 머신 내에서
 
 **GATEWAY, SUPPORT** 설정에 따라 구성된 Port 입력 영역입니다.
 
-구성된 Port 입력을 마친 후 **중복 확인**을 통해 먼저 등록된 인스턴스들과의 Port 중복 체크를 할 수 있습니다. 
+구성된 Port 입력을 마친 후 **중복 확인**을 통해 먼저 등록된 인스턴스들과의 Port 중복 체크를 진행해야 합니다.  
 
 ![ManagementInstance-8](https://static.toastoven.net/prod_gameanvil/images/management_instance_8.png)
 
