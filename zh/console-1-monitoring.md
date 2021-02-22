@@ -10,12 +10,12 @@
     - 관리 페이지에 등록한 전체 머신 수와 머신에 설치한 Agent와 정상적으로 연결된 전체 머신 수를 나타냅니다. 
         - 연결된 머신 수 / 전체 머신 수
     - Agent와 연결에 문제가 있으면, 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[시스템 모니터링](./console-1-monitoring/#game-gameanvil_3)' 페이지로 이동됩니다.
+    - 모니터링 버튼을 통하여 '[시스템 모니터링](./console-1-monitoring/#_5)' 페이지로 이동됩니다.
 - 인스턴스
     - 관리 페이지에 등록한 전체 인스턴스 수와 동작(Running) 중인 인스턴스 수를 표시합니다.
         - 동작 중인 인스턴스 수 / 모든 인스턴스 수
     - 에러인 인스턴가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[인스턴스 모니터링](./console-1-monitoring/#game-gameanvil_4)' 페이지로 이동됩니다.
+    - 모니터링 버튼을 통하여 '[인스턴스 모니터링](./console-1-monitoring/#_9)' 페이지로 이동됩니다.
 - 유저
     - GAME 노드에 접속한 유저 수
 - 룸
@@ -107,7 +107,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 ![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main.png)
 
-#### 트리뷰
+### 트리뷰
 
 관리 페이지에서 등록한 머신과 인스턴스들이 계층구조를 트리 형태로 표시합니다.
 
@@ -120,7 +120,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 또한 호스트명 검색을 통하여 찾고자하는 머신을 쉽게 찾을 수 있습니다.
 
-#### 머신(호스트명)을 선택했을 떄
+### 머신(호스트명)을 선택했을 떄
 
 선택한 머신과 속하는 인스턴스들의 정보를 나타냅니다.
 
@@ -145,7 +145,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
         - GAME 노드가 동작 중(READY)일 때만 표시
         - 그 외에는 '-'으로 표시
 
-#### 인스턴스를 선택했을 떄
+### 인스턴스를 선택했을 떄
 
 선택한 인스턴스에 상세한 정보를 표시합니다.
 
@@ -188,11 +188,11 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
     ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter.png)
 
-#### 인스턴스 테이블
+### 인스턴스 테이블
 
 ![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table.png)
 
-##### 액션<span style='color: #EB4927'>①</span>
+#### 액션<span style='color: #EB4927'>①</span>
 
 테이블의 체크박스에 선택된 인스턴스들에 대해서 액션을 수행할 수 있습니다.
 
@@ -201,14 +201,14 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 - 배포
 
 
-##### 배포파일 업로드<span style='color: #EB4927'>②</span>
+#### 배포파일 업로드<span style='color: #EB4927'>②</span>
 
 관리 > 배포파일 페이지와 동일하게 배포파일을 업로드 할 수 있습니다.
 
 ![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload.png)
 
 
-##### 테이블
+#### 테이블
 
 인스턴스 테이블에서 각 인스턴스에 대한 상태와 시작/중지/배포에 대한 액션을 수행할 수 있습니다.
 
@@ -234,9 +234,9 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 - 액션
     - 하나의 인스턴스에 액션(시작/중지/배포)를 수행할 수 있습니다.
 
-### 노드 모니터링
+## 노드 모니터링
 
-#### ALL
+### ALL
 
 동작 중(READY)인 모든 노드들에 대해서 모니터링 할 수 있습니다.
 
@@ -257,7 +257,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
         - Ready 상태인 노드를 정지시킵니다.
     - ※ MATCH 노드는 Resume, Pause 액션을 수행할 수 없습니다.
 
-##### 필터
+#### 필터
 
 ![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter.png)
 
@@ -266,7 +266,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 - 노드 상태
 - 서비스 이름
 
-#### GATEWAY
+### GATEWAY
 
 동작 중(READY)인 GATEWAY 노드들에 대해서 모니터링 할 수 있습니다.
 
@@ -285,14 +285,14 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
     - Pause
         - Ready 상태인 노드를 정지시킵니다.
 
-##### 필터
+#### 필터
 
 ![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter.png)
 
 동작 중인 GATEWAY 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
 - 노드 상태
 
-#### GAME
+### GAME
 
 동작 중(READY)인 GAME 노드들에 대해서 모니터링 할 수 있습니다.
 
@@ -315,7 +315,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
     - Pause
         - Ready 상태인 노드를 정지시킵니다.
 
-##### 필터
+#### 필터
 
 ![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter.png)
 
@@ -323,7 +323,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 - 노드 상태
 - 서비스 이름
 
-#### SUPPORT
+### SUPPORT
 
 동작 중(READY)인 SUPPORT 노드들에 대해서 모니터링 할 수 있습니다.
 
@@ -342,7 +342,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
     - Pause
         - Ready 상태인 노드를 정지시킵니다.
 
-##### 필터
+#### 필터
 
 ![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter.png)
 
@@ -350,7 +350,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 - 노드 상태
 - 서비스 이름
 
-#### MATCH
+### MATCH
 
 동작 중(READY)인 MATCH 노드들에 대해서 모니터링 할 수 있습니다.
 
@@ -364,7 +364,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 - User Match Queue Size
 - 노드 상태
 
-##### 필터
+#### 필터
 
 ![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter.png)
 
