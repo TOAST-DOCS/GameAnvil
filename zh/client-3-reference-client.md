@@ -118,7 +118,7 @@
 
 <br>
 
-#### TOAST : Gamebase 사용 폴더
+#### NHN Cloud : Gamebase 사용 폴더
 
 <br>
 
