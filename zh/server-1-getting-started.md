@@ -56,7 +56,7 @@ GameAnvil은 기본적인 골격 작업을 빠르게 완료하기 위해 자체 
 
 GameAnvil은 템플릿 뿐만 아니라 레퍼런스 프로젝트를 제공하고 있습니다. GameAnvil 사용자가 참고할 수 있도록 템플릿으로 구성한 기본 골격에 다양한 기능을 구현해 두었습니다. 이러한 서버와 클라이언트에 대한 레퍼런스 프로젝트는 별도의 메뉴에서 확인 가능합니다. 그와 더불어 GameAnvil API와 UML 다이어그램을 JavaDoc 문서로 제공하고 있으니 함께 참고하시면 도움이 될 것입니다.
 
-[GameAnvil JavaDoc API Reference Site](http://10.162.4.61:9090/gameanvil) (JavaDoc 사이트를 TOAST 내에 포함시킬 경우 해당 도메인으로 교체할 예정)
+[GameAnvil JavaDoc API Reference Site](http://10.162.4.61:9090/gameanvil) (JavaDoc 사이트를 NHN Cloud 내에 포함시킬 경우 해당 도메인으로 교체할 예정)
 
 
 
