@@ -363,7 +363,7 @@ src/main/resources/
 
 ### Gamebase
 
-* Toast Cloud의 게임 베이스 등록
+* NHN Cloud의 게임 베이스 등록
     * 서버에서 앱ID, SecretKey가 필요
 
 ### Gateway
