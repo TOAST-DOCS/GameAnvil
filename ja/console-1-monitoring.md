@@ -176,7 +176,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 ## 인스턴스 모니터링
 
-관리 페이지에서 등록한 인스턴스의 정보와 시작/중지/배포를 하실 수 있습니다.
+관리 페이지에서 인스턴스의 정보를 확인하고 설정된 각 노드를 시작/중지/배포 할 수 있습니다.
 
 ![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main.png)
 
