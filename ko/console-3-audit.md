@@ -1,4 +1,4 @@
-## Game > GameAnvil > Audit
+## Game > GameAnvil > 콘솔 사용 가이드 > Audit
 
 ### 이벤트 로그
 
