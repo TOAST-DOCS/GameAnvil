@@ -1,11 +1,11 @@
-## Game > GameAnvil > 관리
+## Game > GameAnvil > 콘솔 사용 가이드 > 관리
 
 
 ## 머신
 
 GameAnvil 프로세스가 실행 될 장비를 등록하고 등록 된 머신을 관리하는 메뉴 입니다. 
 
-머신 등록 전 해당 머신에 GameAnvil Agent 를 설치해야 합니다. [ [GameAnvil Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.2.jar) ] 
+머신 등록 전 해당 머신에 GameAnvil Agent 를 설치해야 합니다. [ [GameAnvil Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.2.tar) ] 
 
 ![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main.png)
 
@@ -75,7 +75,7 @@ Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드�
 
 ![ManagementInstance-1](https://static.toastoven.net/prod_gameanvil/images/management_instance_1.png)
 
-인스턴스에 구성된 노드들의 상세 설정을 **확인**버튼을 클릭하여 팝업을 통해 확인할 수 있습니다.
+인스턴스에 구성된 노드들의 상세 설정을 **확인** 버튼을 클릭하여 팝업을 통해 확인할 수 있습니다.
 
 상단에 구성된 탭을 통해 노드별 확인이 가능합니다.
 
