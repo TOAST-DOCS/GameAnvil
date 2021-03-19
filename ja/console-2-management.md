@@ -5,7 +5,7 @@
 
 GameAnvil 프로세스가 실행 될 장비를 등록하고 등록 된 머신을 관리하는 메뉴 입니다. 
 
-머신 등록 전 해당 머신에 GameAnvil Agent 를 설치해야 합니다. [ [GameAnvil Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.2.tar) ] 
+머신 등록 전 해당 머신에 GameAnvil Agent 를 설치해야 합니다. [ [GameAnvil Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.3.tar) ] 
 
 ![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main.png)
 
