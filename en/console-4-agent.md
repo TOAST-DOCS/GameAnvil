@@ -4,7 +4,7 @@ Console을 통해 GameAnvil 서버를 실행/중지/배포 하기위해 Agent의
 
 ### Agent 다운로드 및 실행하기
 
-* [Agent  다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.2.tar)
+* [Agent  다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.3.tar)
 
 * 다운 받은 tar 파일을 풀면 아래의 파일들을 볼 수 있습니다.
 
