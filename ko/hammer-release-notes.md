@@ -1,318 +1,94 @@
-## Game > GameAnvil > Connector > 릴리스 노트
-
-
-
-### 1.0.1
-#### TS
-
-##### FIX
-
-* Request를 동시에 여러번 호출할 경우 호출 순서의 역순으로 패킷을 전송하는 버그 수정
-
-------
-
-
-
-### 1.0.0
-
-#### C#
-
-##### Change
-
-* MoveService 제거
-* Reconnect, Retry 기능 제거
-* PacketHelper의 GetMessage에 Type을 파라메터로 받는 API추가.
-* 각 ResultCode에 고유 숫자 적용
-* ResultCode 추가 및 이름 변경([세부항목](client-link-resultCode-change))
-    * <span style="color:#eb6420">현제 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 FORCE_CLOSE_BY_NEW_CONNECTION 가 넘어오는 문제가 있다.
-        다음 릴리즈 때 수정 될 예정.</span>
-
-##### Fix
-
-* Disconnect시에도 UserAgent의 isLogin이 true를 리턴하는 이슈 수정
-
-
-
-#### TS
-
-##### Change
-
-* MoveService 제거
-
-* Reconnect, Retry 기능 제거
-
-* 각 ResultCode에 고유 숫자 적용
-
-* ResultCode 추가 및 이름 변경([세부항목](client-3-release-notes-1.0.0-resultCode-change))
-
-    * <span style="color:#eb6420">현제 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 FORCE_CLOSE_BY_NEW_CONNECTION 가 넘어오는 문제가 있다.
-        다음 릴리즈 때 수정 될 예정.</span>
-
-
------
-
-
-
-### 1.0.0-EA3
-
-#### TS
-##### Change
-
-* ConnectionAgent에 IsReconnecting() 추가.
-
-##### FIX
-
-* UserAgent가 로그인 된 후 disconnect되었을 때 isLogin()이 true를 리턴하는 문제 수정
-* UserAgent를 여러개 사용할때 request에 대한 응답을 받지 못하고 disconnect된 경우 request에 같이 넘겨준  callback이 지워지지 않고 남아서 다음 request시 callback이 2번 호출 되는 문제 수정
-
------
-
-
-
- ### 1.0.0-EA2
-
-#### C#
-##### Change
-
-* 이름 변경 : Gameflex -> GameAnvil
-* RemoveAllListeners() 
-    * bool 파라미터 추가.
-    * false일 경우 userListener, connectonListener는 제거하지 않음.
-    * defalult = true,
-* RemoveAllUserListeners() 추가.
-* RemoveAllConnectionListeners() 추가.
-
-##### TS
-##### Change
-
-* 이름 변경 : Gameflex -> GameAnvil
-* RemoveAllCallback () 추가.
-
------
-
-
-
-
-### 1.0.0-EA
-
-
-#### C#
-##### Change
-
-* 이름 변경 : Tardis -> Gameflex
-    * TardisSocket -> Socket
-    * SessionAgent -> ConnectionAgent
-* Type 변경
-    * UserId의 type이 string에서 int로 변경
-    * SubId의 type이 string에서 int로 변경
-    * RoomId의 type이 string에서 int로 변경
-* CreateUserAgent(), GetUserAgent()
-    * 파라미터 `string SubId` -> `int SubId` 로 변경
-    * SubId > 0 이어야 한다.
-* LoginedUserInfo
-    * UserId 항목 추가.
-    * Payload 항목 추가.
-* LoginInfo
-    * userId 항목 추가.
-    * userType 항목 추가.
-    * roomName 항목 추가.
-* UserAgent
-    *  파라미터 `string roomId` -> `int roomId` 로 변경.
-    * RequestToSessionActor() ->RequestToGatewaySession()
-    * SendToSessionActor() -> SendToGatewaySession()
-    * RequestToSessionActor() -> RequestToGatewaySession()
-    * CreateRoom() - 파라미터 `string roomName` 추가.
-    * onCreateRoom() - 파라미터 `string roomName` 추가.
-    * onJoinRoom() - 파라미터 `string roomName` 추가.
-    * onMatchRoom() 
-        * 파라미터 `string roomName` 추가.
-        * 파라미터 `bool created` 추가.
-    * onNamedRoom()
-        * 파라미터 `string roomName` 추가.
-        * 파라미터 `bool created` 추가.
-
-##### New
-
-*  에러코드
-    * ResultCodeLogin
-        * LOGIN_FAIL_EMPTY_SUB_ID
-        * LOGIN_FAIL_TIMEOUT_GAME_SERVER
-    * ResultCodeMoveChannel
-        * MOVE_CHANNEL_FAIL_NODE_NOT_FOUND
-        * MOVE_CHANNEL_FAIL_ALREADY_JOINED_CHANNEL
-        * MOVE_CHANNEL_FAIL_ALREADY_JOINED_ROOM
-* Exception
-    * InvalidSubId
-
-#### TS
-
-##### Change
-
-* 이름 변경 : Tardis -> Gameflex
-    * SessionAgent -> ConnectionAgent
-* Type 변경
-    * UserId의 type이 string에서 number로 변경
-    * SubId의 type이 string에서 number로 변경
-    * RoomId의 type이 string에서 number로 변경
-* CreateUserAgent(), GetUserAgent()
-    * 파라미터 `SubId: string` -> `SubId: number` 로 변경
-    * SubId > 0 이어야 한다.
-* LoginedUserInfo
-    * UserId 항목 추가.
-    * Payload 항목 추가.
-* LoginInfo
-    * userId 항목 추가.
-    * userType 항목 추가.
-    * roomName 항목 추가.
-* UserAgent
-    *  파라미터 `roomId: string` -> `roomId: number` 로 변경.
-    * MultiSendToSessionActor()->MultiSendToGatewaySession()
-    * SendToSessionActor() -> SendToGatewaySession()
-    * SendPbToSessionActor() -> SendPbToGatewaySession()
-    * RequestToSessionActor() -> RequestToGatewaySession()
-    * MultiRequestToSessionActor() -> MultiRequestToGatewaySession()
-    * RequestToSessionActor() -> RequestToGatewaySession()
-    * RequestPbToSessionActor() -> RequestPbToGatewaySession()
-    * RequestPbAsyncToSesstionActor() -> RequestPbAsyncToGatewaySession()
-    * RequestAsyncToSessionActor() -> RequestAsyncToGatewaySession()
-    * CreateRoom() - 파라미터 `roomName: string` 추가.
-    * onCreateRoom() - 파라미터 `roomName: string` 추가.
-    * onJoinRoom() - 파라미터 `roomName: string` 추가.
-    * onMatchRoom() 
-        * 파라미터 `roomName: string` 추가.
-        * 파라미터 `created: boolean` 추가.
-    * onNamedRoom()
-        * 파라미터 `roomName: string` 추가.
-        * 파라미터 `created: boolean` 추가.
-
-##### New
-
-* 에러코드
-    * ResultCodeLogin
-        * LOGIN_FAIL_EMPTY_SUB_ID
-        * LOGIN_FAIL_TIMEOUT_GAME_SERVER
-    * ResultCodeMoveChannel
-        * MOVE_CHANNEL_FAIL_NODE_NOT_FOUND
-        * MOVE_CHANNEL_FAIL_ALREADY_JOINED_CHANNEL
-        * MOVE_CHANNEL_FAIL_ALREADY_JOINED_ROOM
-
------
-
-
-
-### 0.12.1.1
-
-#### C#
-
-##### Change
-
-* ProtocolManger.unregister()사용시 exception발생하는 버그 수정
-
-#### TS
-
-##### Change
-
-* onDisconnect() 콜백에서 바로 connect() 를 호출할 경우 에러 발생 이슈 수정
-
------
-
-
-
-### 0.12.1
-
-#### C#
-
-##### Change
-
-* XML 문서 주석 적용
-* Agent.LvNetLogger, Logger 삭제.
-* Agent.ContainsListener(int customMsgId) -> AgentHelper로 이동
-* SessionAgent.AddCustomMsgListener, RemoveCustomMsgListener -> AgentHelper.RemoveListener() 로 대체
-* UserAgent.AddCustomMsgListener, RemoveCustomMsgListener -> AgentHelper.AddListener, RemoveListener로 대체
-* Agent.FlushQueue 제거
-* Connector.FlushNetworkQueue 제거
-* Packet.GetMsgId, GetRetryCount, SetRetryCount, setUncompressSize, GetServiceId, GetSubId -> 제거
-* ProtocolManager.RegisterProtocol()에서 protocolId의 최대값 체크 (최대 510)
-* 잘못된 ProtocolId사용시 InvalidProtocolId Exception 발생하도록 수정
-* OnNamedRoom에서 RoomName -> RoomId 이름 변경
-
-##### Fix
-
-* MatchUserDone일때 isJoinRoom 셋팅 안되던 버그 수정
-
-#### TS
-
-##### Change
-
-* JSDoc 적용
-* UserAgent.isJoinRoom 추가.
-* IUserListener.OnMatchPartyCancel()에서 Payload 제거.
-* IUserListener.OnNamedRoom() 에서 roomName-> RoomId로 이름 변경
-* Payload.createDefault() 제거. CreateEmpty() 로 대체함
-* SessionAgent.addOnDisconnect()
-    * AddOnDisconnect(callback: (agent: SessionAgent, message: string) => void): void; =>
-    AddOnDisconnect(callback: (session: SessionAgent, resultCode: ResultCodeDisconnect, reason: string, force: boolean, payload: Payload) => void): void;
-
------
-
-
-
-### 0.12.0
-
-#### C#
-
-##### Change
-
-* 파라미터 이름 변경 : msgIndex -> customMsgId
-    * Agent
-        * public bool ContainsListener(int customMsgId)
-    * SessionAgent
-        * public void AddCustomMsgListener(int custonMsgId, Action\<SessionAgent, Packet> listener)
-        * public void RemoveCustomMsgListener(int customMsgId, Action\<SessionAgent, Packet> listener)
-    * UserAgent
-        * public void AddCustomMsgListener(int custonMsgId, Action\<UserAgent, Packet> listener)
-        * public void RemoveCustomMsgListener(int customMsgId, Action\<UserAgent, Packet> listener)
-    * Payload
-        * public Packet getPacket(int customMsgId)
-
-* Packet
-    * public Packet(int descId, int msgIndex, byte[] buffer) 삭제
-    * public Packet(int msgIndex, byte[] buffer) 삭제
-    * public string GetFileDescriptorName() 삭제
-    * public void SetDescId(int descId) 삭제
-    * public int GetDescId() 삭제
-    * public int GetMsgIndex() 삭제
-    * public Packet setTimeout(int timeout) 삭제
-    * public int GetTimeout() 삭제
-
-##### New
-
-* ResultCodeMatchRoom
-  * MATCH\_ROOM\_FAIL\_UNKNOWN\_ERROR = 6,
-  * MATCH\_ROOM\_FAIL\_MATCHED\_ROOM\_DOES\_NOT\_EXIST = 7
-* Packet
-  * public static Packet CreateWithCustomMsg(int customMsgId, byte[] buffer)
-  * public int GetMsgId()
-
-#### TS
-
-##### Change
-
-* Packet
-  * GetDescId(): number; 삭제
-  * GetMsgIndex(): number; 삭제
-  * GetTimeOut(): number; 삭제
-  * SetTimeOut(timeOut: number): void; 삭제
-
-##### New
-
-* ResultCodeMatchRoom
-    * MATCH\_ROOM\_FAIL\_UNKNOWN\_ERROR = 6,
-    * MATCH\_ROOM\_FAIL\_MATCHED\_ROOM\_DOES\_NOT\_EXIST = 7
-* Packet
-    * GetMsgId(): number;
-* ProtocolManager
-    * static getMsgId(descId: number, msgIndex: number): number;
-    * static getMsgIdFromPb\(msg: IMessage \| \(new \(\) =\> T\)\): any;
-    * static getCustomMsgId(customMsgId: number): number;
-
+## Game > GameAnvil > GameHammer> 릴리스 노트
+
+
+
+### 1.0.2 (2020.02.10)
+
+#### Fix
+* 클라이언트에서 게임 노드로 지정된 시간(default 10초)동안 아무런 패킷을 보내지 않을 경우 서버에서 클라이언트로 상태 확인 요청을 보내게 되는데, GameHammer에서 이 상태 확인 요청에 잘못된 응답을 하여 접속이 끊어지는 문제 수정
+* 시나리오 테스트를 장시간 유지하여 요청한 패킷의 수가 아주 많아질 경우 packetSeq 가 overflow되어 서버에서 응답을 주지 않는 문제 수정  
+* send시에도 packetSeq를 증가시키는 문제 수정
+
+#### Change
+* 로그 내용 강화.
+    * accountId, userId 추가.
+    * 마지막으로 받은 패킷 추가.
+    * Ping/Pong 마지막 패킷에서 제외
+* 패킷의 크기를 줄이기 위해 
+    * packetSeq 최대값 16383으로 제한
+    * subId 최대값 127, 최소값 1로 제한
+
+### 1.0.1 (2020.12.28)
+
+#### Fix
+* 같은 Message에 대해 waitFor를 중첩하여 사용할 경우 첫번째 응답시에 모든 중첩된 대기가 풀리는 버그 수정
+* ResultAuthentication의 getPayloads()가 null을 리턴하는 버그 수정
+* 테스트 종료시 간헐적으로 HandlerPing.onPingTime()에서 NullPointerException발생하는 이슈 수정
+* 테스트중 간헐적으로 Statistics.record()에서 ConcurrentModificationException발생하는 이슈 수정
+
+#### Change
+* GameHammerConfig.json파일이 없을 경우 출력되는 로그를 error에서 warn으로 변경.
+
+### 1.0.0 (2020.12.18)
+
+#### Fix
+* EA버전에서 장시간 테스트 실패하는 이슈 수정.
+* EA버전 대비 TPS 성능 대폭 개선(약 2배)
+* 누락된 기능 추가.
+    * Connector
+        * getChannelInfo
+        * addListenerAdminKickoutNoti
+        * addListenerForceCloseNoti
+        * addListenerDisconnect
+    * User
+        * moveChannel
+        * snapShot
+        * addListenerMatchPartyStartNoti
+        * addListenerMatchPartyCancelNoti
+        * addListenerForceLogoutNoti
+        * addListenerForceLeaveRoomNoti
+        * addListenerMoveChannelNoti
+        * addListenerNotice
+
+#### Change
+* Tester
+    * 모든 요청 방식 기능에 Sync/Async 방식을 지원
+        * Sync : 요청시 Future를 리턴값으로 받아 Fureture.get()으로 완료될때까지 대기하고 결과를 받아 처리하는 방식.
+        * Async : 요청시 callback을 인자로 넘겨주고, callback에서 완료 결과를 받아 처리하는 방식.
+* Scenario
+    * TRANSACTION과 EVENT 개념 제거
+        * 대신 각 State에서 changeState()를 사용해 원하는 State로 직접 이동
+
+#### New
+* 서버에서 보내는 noti를 기다려 처리할 수 있도록 waitForXXX 기능 추가.
+
+### 1.0.0-EA (2020.08.03)
+
+#### New
+* Tester - GameAnvil Connector를 대신하여 서버와의 연동 기능 테스트를 지원
+    * Connection - GameAnvil Connector의 ConnectionAgent가 담당하는 기능 지원
+        * connect
+        * authenticate
+        * getChannelList
+        * send
+        * request
+        * createUser
+    * User - GameAnvil Connector의 UserAgent가 담당하는 기능 지원
+        * login
+        * logout
+        * createRoom
+        * namedRoom
+        * joinRoom
+        * leaveRoom
+        * matchRoom
+        * matchUser
+        * matchPartyStart/Cancel
+        * moveChannelStart/Cancel
+        * send
+        * request
+        * addListenerMatchUserTimeout
+        * addListenerMatchUserDone
+* ScenarioTest - Tester를 사용한 시나리오 테스트를 지원. 
+    * ScenarioMachine - 시나리오를 구성하는 여러 상태의 모음
+    * State - 사용자가 정의하는 전체 시나리오 중 특정 상태를 표현
+    * ScenarioActor - 시나리오를 수행하는 하나의 가상 유저
