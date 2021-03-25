@@ -2,7 +2,7 @@
 
 
 
-# 1.1.1 (2021.02.10)
+### 1.1.1 (2021.02.10)
 ##### TS
 * git : [client\_connector\_type\_script](https://github.nhnent.com/game-server-engine/client-connector-typescript)
 * tag : 1.1.1
@@ -17,7 +17,7 @@
 		* 등록된 콜백에서 에러가 발생 할 경우 callstack 정보가 사용자에게 올라 갈 수 있도록 다시 throw
 
 
-# 1.1.0 (2020.12.18)
+### 1.1.0 (2020.12.18)
 ##### C#
 * git : [client\_connector\_cshap](https://github.nhnent.com/game-server-engine/client-connector-charp)
 * tag : 1.1.0
