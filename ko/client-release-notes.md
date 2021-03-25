@@ -1,38 +1,30 @@
 ## Game > GameAnvil > Connector > 릴리스 노트
 
-
-
 ### 1.1.1 (2021.02.10)
-##### TS
-* git : [client\_connector\_type\_script](https://github.nhnent.com/game-server-engine/client-connector-typescript)
-* tag : 1.1.1
-* 변경
-	* SingleServer 
-		* onMatchRoom 사용 시 payload에 null이 넘어오는 이슈 수정
-		* OnLogin에 id: string 파라메터를 subId: number로 변경
-		* OnCreateRoom, OnJoinRoom, OnMatchRoom, OnNamedRoom에 누락된 roomName 파라메터 추가.
-		* OnMatchRoom, OnNamedRoom에 누락된 created파라메터 추가. 
-		* OnXXX 등록 시 기존에 등록된 콜백 제거.
-		* OnLogin() 응답으로 loginInfo에 null을 넘길 경우 serviceId에 요청받은 serviceId를 넣어 응답하도록 예외 처리 추가.
-		* 등록된 콜백에서 에러가 발생 할 경우 callstack 정보가 사용자에게 올라 갈 수 있도록 다시 throw
-
+#### Typescript
+##### Change
+* SingleServer 
+	* onMatchRoom 사용 시 payload에 null이 넘어오는 이슈 수정
+	* OnLogin에 id: string 파라메터를 subId: number로 변경
+	* OnCreateRoom, OnJoinRoom, OnMatchRoom, OnNamedRoom에 누락된 roomName 파라메터 추가.
+	* OnMatchRoom, OnNamedRoom에 누락된 created파라메터 추가. 
+	* OnXXX 등록 시 기존에 등록된 콜백 제거.
+	* OnLogin() 응답으로 loginInfo에 null을 넘길 경우 serviceId에 요청받은 serviceId를 넣어 응답하도록 예외 처리 추가.
+	* 등록된 콜백에서 에러가 발생 할 경우 callstack 정보가 사용자에게 올라 갈 수 있도록 다시 throw
 
 ### 1.1.0 (2020.12.18)
-##### C#
-* git : [client\_connector\_cshap](https://github.nhnent.com/game-server-engine/client-connector-charp)
-* tag : 1.1.0
-* 변경 
-	* .Net 4.5 이상 지원으로 완전 전환
-		* 사용 라이브러리 모두 .Net 4.5 용 최신 버전으로 교체
-	* ConnectionAgent 
-		* IsConnected() : 접속 여부 확인 API 추가.
-		* IsAuthenticated() : 인증되었는지 확인 API 추가.
-	* SingleServer의 GameAnvil.Action -> GameAnvil.Handler로 이름 변경.
-##### TS
-* git : [client\_connector\_type\_script](https://github.nhnent.com/game-server-engine/client-connector-typescript)
-* tag : 1.1.0
-* 변경
-    * 호환성 이슈로 수정하여 GitEnterprize에 올려놓고 사용하던 protobufjs를 이슈가 수정된 공식 최신버전으로 교체
+#### C-Sharp
+##### Change
+* .Net 4.5 이상 지원으로 완전 전환
+	* 사용 라이브러리 모두 .Net 4.5 용 최신 버전으로 교체
+* ConnectionAgent 
+	* IsConnected() : 접속 여부 확인 API 추가.
+	* IsAuthenticated() : 인증되었는지 확인 API 추가.
+* SingleServer의 GameAnvil.Action -> GameAnvil.Handler로 이름 변경.
+
+#### Typescript
+##### Change
+* 호환성 이슈로 수정하여 GitEnterprize에 올려놓고 사용하던 protobufjs를 이슈가 수정된 공식 최신버전으로 교체
 
 ### 1.0.1 (2020.10.08)
 #### Typescript
@@ -40,6 +32,9 @@
 ##### FIX
 
 * Request를 동시에 여러번 호출할 경우 호출 순서의 역순으로 패킷을 전송하는 버그 수정
+
+------
+
 
 ------
 
