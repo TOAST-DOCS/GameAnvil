@@ -1,27 +1,27 @@
-## Game > GameAnvil > 클라이언트 개발 가이드 > 레퍼런스 클라이언트
+## Game > GameAnvil > クライアント開発ガイド > リファレンスクライアント
 
-## 다운로드
+## ダウンロード
 
 https://github.nhnent.com/game-server-engine/sample-game-client-unity.git
 
 - ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-1.png)
 
-## 샘플 개발 환경
+## サンプル開発環境
 
 - Unity3d: 2018.4.1f1
-  - Unity Standalone으로 제작되었습니다. 본 샘플은 개발 참고용으로서 에디터환경에서만 동작이 확인되었습니다.
-- GameAnvil 커넥터: 1.1.0.0
+  - Unity Standaloneで製作しました。このサンプルは開発の参考用で、エディタ環境でのみ動作が確認されました。
+- GameAnvilコネクタ: 1.1.0.0
 
 ## Connector API doc - C
 
 - [Connector API C#](http://10.162.4.61:9090/csharp)
 
-## 실행 환경 설정 with Unity3d
+## 実行環境設定with Unity3d
 
-- Git 저장소에서 클론한 프로젝트를 Unity3d로 실행합니다.
+- Git保存場所でクローンしたプロジェクトをUnity3dで実行します。
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-2.png)
-- sample_game_client_unity 설정 확인
-  - GameAnvil Library - 필요한 라이브러리 확인
+- sample_game_client_unityの設定確認
+  - GameAnvil Library - 必要なライブラリを確認
     - Assets/GameAnvil
       - ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-3.png)
       - GameAnvil
@@ -34,103 +34,103 @@ https://github.nhnent.com/game-server-engine/sample-game-client-unity.git
       - System.Memory
       - System.Runtime.CompilerServices.Unsafe
 
-## Unity3d로 클라이언트 실행
+## Unity3dでクライアント実行
 
-- Unity3d 실행
-  - StartScenene 선택해 왼쪽 아래 화면처럼 신(scene)을 선택합니다.
+- Unity3d実行
+  - StartSceneneを選択し、左下の画面のようにシーン(scene)を選択します。
     ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-4.png)
-  - Unity 프로젝트의 가운데 Play 버튼을 클릭해 클라이언트를 실행합니다.
-- 클라이언트 정상 동작 확인
-  - Gamebase와 연동되어 있어서 시작하자마자 초기화와 게스트 로그인 처리가 되어 아래에 정보가 표시됩니다.
-  - log console에 오류가 없으면 정상 동작
+  - Unityプロジェクトの中のPlayボタンをクリックしてクライアントを実行します。
+- クライアント正常動作を確認
+  - Gamebaseと連携しており、起動するとすぐに初期化とゲストログイン処理が行われ、下に情報が表示されます。
+  - log consoleにエラーがなければ正常動作
 
-## sample_game_client_unity 폴더 구조살펴보기
+## sample_game_client_unityフォルダ構造を確認する
 
-- 게임 개발에 참고할 수 있게 만든 GameAnvil 샘플 서버와 연동하기 위한 클라이언트로 제작된 프로젝트입니다.
-  - 기능 사용성에 목적을 두어서 게임 자체에 대한 에러나 버그가 많을 수 있습니다.
-  - 궁금한 점이 있다면 [고객센터](https://alpha.toast.com/kr/support/inquiry) 로 문의해 주시기 바랍니다.
+- ゲーム開発の参考用に作ったGameAnvilサンプルサーバーと連携するためのクライアントとして作られたプロジェクトです。
+  - 機能ユーザビリティに主眼を置いており、ゲーム自体のエラーやバグが多いことがあります。
+  - 気になる点がある場合は[サポート](https://alpha.toast.com/kr/support/inquiry)へお問い合わせください。
 
 ### Assets
 
-#### GameAnvil: GameAnvil에서 사용하는 Library 위치
+#### GameAnvil：GameAnvilで使用するLibraryの位置
 
 
 
-#### GameAnvilSample: GameAnvil Sample 폴더
+#### GameAnvilSample：GameAnvil Sampleフォルダ
 
-- StartScene: 처음 시작하는 화면으로 기본 Gamebase 초기화와 게스트 로그인 처리, 플랫폼 테스트와 게임 테스트 분기
+- StartScene：開始画面。基本Gamebase初期化とゲストログイン処理、プラットフォームテストとゲームテストの分岐
 - ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-6.png)
-- LoadingScene: 화면이 변경될 때마다 보이는 로딩
+- LoadingScene：画面が変わるたびに表示されるローディング画面
 - ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-7.png)
 
-##### Data: 데이터성 객체 폴더
+##### Data：データ性オブジェクトフォルダ
 
-##### GameTest: 게임 테스트 폴더
+##### GameTest：ゲームテストフォルダ
 
-###### Scenes: 게임 테스트 화면 폴더
+###### Scenes：ゲームテスト画面フォルダ
 
-- GameLoginScene : 아이디 입력 받아 전체적인 로그인 처리하는 화면
+- GameLoginScene ： IDを入力して全体的なログイン処理を行う画面
 - ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-8.png)
-- GameLobbyScene : 유저가 로그인하고나서의 화면, TapBird(1인), 멀티TapBird(4인), Snake(2인) 게임과, 랭킹, 유저 정보, 닉네임 변경를 확인
+- GameLobbyScene：ユーザーがログインした後の画面、TapBird(1人)、マルチTapBird(4人)、Snake(2人)ゲームと、ランキング、ユーザー情報、ニックネーム変更を確認
 - ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-9.png)
 
-##### PlatformTest : GameAnvil API Test 폴더
+##### PlatformTest ： GameAnvil API Testフォルダ
 
-###### Scenes : GameAnvil API 화면 폴더
+###### Scenes ： GameAnvil API画面フォルダ
 
-- AuthScene ; launching(rest), 커넥트, 인증, 로그인 처리하는 화면
+- AuthScene ： launching(rest)、コネクタ、認証、ログイン処理を行う画面
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-10.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-11.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-12.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-13.png)
-- LobbyScene: 로그인 이후 게임 로비 화면, 싱글 게임, 룸 매치 멀티(4인), 유저 매치(2), 랭킹, 셔플덱 가능 화면
+- LobbyScene：ログイン後、ゲームロビー画面、シングルゲーム、ルームマッチマルチ(4人)、ユーザーマッチ(2)、ランキング、シャッフルデッキ可能画面
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-14.png)
-- MultiSnakeGameScene: 유저 매치 2인 게임 화면
+- MultiSnakeGameScene：ユーザーマッチ2人ゲーム画面
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-15.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-16.png)
-- MultiTapBirdGameScene: 룸 매치 4명 게임 화면
+- MultiTapBirdGameScene：ルームマッチ4人ゲーム画面
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-17.png)
-- SingleGameScene: 싱글 룸 게임 화면
+- SingleGameScene：シングルルームゲーム画面
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-18.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-19.png)
 
-##### Protocols: 서버와 통신할 프로토콜 폴더
+##### Protocols：サーバーと通信するプロトコルフォルダ
 
-##### Snake: Snake 게임 폴더, 유저 매치 게임, 2인 동시에 서버에서 보내준 food를 화면에보여주고, 유저의 이동값을 표시, food 먹었을 때의 처리, 게임 end 조건 판단
+##### Snake：Snakeゲームフォルダ、ユーザーマッチゲーム、2人同時にサーバーから送ったfoodを画面に表示し、ユーザーの移動値を表示、foodを食べた時の処理、ゲームend条件を判断
 
-###### Scenes: Snake 게임 화면 폴더
+###### Scenes： Snakeゲーム画面フォルダ
 
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-20.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-21.png)
 
-##### TapBird: TapBird 게임 폴더, 싱글 게임 & 4명까지 최고 스코어를 기록하는 게임, 같이 게임하는 유저의 점수를 모두 표시
+##### TapBird：TapBirdゲームフォルダ、シングルゲーム& 4人まで最高スコアを記録するゲーム、一緒にプレイするユーザーのスコアを全て表示
 
-###### Scenes: TapBird 게임 화면 폴더
+###### Scenes：TapBirdゲーム画面フォルダ
 
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-22.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-23.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-24.png)
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-25.png) ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-26.png)
 
 
 
-#### Gamebase: Gamebase용 폴더
+#### Gamebase： Gamebase用フォルダ
 
 
 
-#### Plugins: IOS / Android 용 폴더
+#### Plugins： IOS / Android用フォルダ
 
 
 
-#### StreamingAssets: Gamebase 사용 폴더
+#### StreamingAssets： Gamebase使用フォルダ
 
 
 
-#### TOAST: Gamebase 사용 폴더
+#### TOAST： Gamebase使用フォルダ
 
 
 
 ## Sample Code
 
-### ConnectHandler : Assets/GameAnvilSample/
+### ConnectHandler ： Assets/GameAnvilSample/
 
-- GameAnvil 커넥터초기화 밎 프로토콜 등록 Assets/GameAnvilSample/ConnectHandler.cs
+- GameAnvilコネクタ初期化、プロトコル登録Assets/GameAnvilSample/ConnectHandler.cs
 
 ```
 connector = new GameAnvil.Connector(config);
-            // 커넥터 로그 추가
+            // コネクタログ追加
             connector.Logger += (level, log) =>
             {
                 Debug.Log(string.Format("Log[{0}]:{1}", level, log));
@@ -140,7 +140,7 @@ connector = new GameAnvil.Connector(config);
                 Debug.Log(string.Format("Net[{0}]:{1}", level, log));
             };
 
-            // 서버와 같은 순서로 프로토콜 등록
+            // サーバーと同じ順序でプロトコル登録
             GameAnvil.ProtocolManager.getInstance().RegisterProtocol(0, Com.Nhn.Gameanvil.Sample.Protocol.AuthenticationReflection.Descriptor);
             GameAnvil.ProtocolManager.getInstance().RegisterProtocol(1, Com.Nhn.Gameanvil.Sample.Protocol.GameMultiReflection.Descriptor);
             GameAnvil.ProtocolManager.getInstance().RegisterProtocol(2, Com.Nhn.Gameanvil.Sample.Protocol.GameSingleReflection.Descriptor);
@@ -148,12 +148,12 @@ connector = new GameAnvil.Connector(config);
             GameAnvil.ProtocolManager.getInstance().RegisterProtocol(4, Com.Nhn.Gameanvil.Sample.Protocol.UserReflection.Descriptor);
 ```
 
-### GameAnvil Connector 리스너 등록
+### GameAnvil Connectorリスナー登録
 
 - Assets/GameAnvilSample/PlatformTest/Scripts/AuthUi.cs
 
 ```
-        // 연결 끊기는 부분 처리 리스너 등록
+        // 接続が切れる部分処理リスナーの登録
         ConnectHandler.Instance.GetConnectionAgent().onDisconnectListeners += (SessionAgent sessionAgent, ResultCodeDisconnect result, bool force, Payload payload) =>
         {
             Debug.LogFormat("onDisconnect - {0}", result);
@@ -166,7 +166,7 @@ connector = new GameAnvil.Connector(config);
 - Assets/GameAnvilSample/PlatformTest/Scripts/AuthUi.cs
 
 ```
-        // 서버에 접속 시도.
+        // サーバーに接続試行。
         ConnectHandler.Instance.GetConnectionAgent().Connect(textIP.text, int.Parse(textPort.text),
             (SessionAgent sessionAgent, ResultCodeConnect result) =>
             {
@@ -174,14 +174,14 @@ connector = new GameAnvil.Connector(config);
 
                 if (result == ResultCodeConnect.CONNECT_SUCCESS)
                 {
-                    // 성공 시 입력 UI 처리
+                    // 成功時、入力UI処理
                     buttonConnect.gameObject.SetActive(false);
                     buttonAuth.gameObject.SetActive(true);
                     textID.gameObject.SetActive(true);
                 }
                 else
                 {
-                    // 서버 접속 실패 처리
+                    // サーバー接続失敗処理
                 }
                 buttonConnect.interactable = true;
             }
@@ -193,27 +193,27 @@ connector = new GameAnvil.Connector(config);
 - Assets/GameAnvilSample/PlatformTest/Scripts/AuthUi.cs
 
 ```
-            // 인증에 필요한 프로토콜 데이터 설정
+            // 認証に必要なプロトコルデータ設定
             var authenticationReq = new Com.Nhn.Gameanvil.Sample.Protocol.AuthenticationReq
             {
                 AccessToken = Constants.AUTH_ACCESS_TOKEN
             };
             Debug.Log("authenticationReq " + authenticationReq);
 
-            // 서버에 인증 시도. 현재는 디바이스아이디, 아이디, 패스워드 모두 uuid값으로 전달
+            // サーバーに認証試行。現在はデバイスID、ID、パスワードを全てuuid値で伝達
             ConnectHandler.Instance.GetConnectionAgent().Authenticate(inputFieldUUID.text, inputFieldID.text, inputFieldID.text, new Payload().add(new Packet(authenticationReq)),
                 (SessionAgent sessionAgent, ResultCodeAuth result, List<SessionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) =>
                 {
                     Debug.Log("Auth " + result);
 
-                    // 성공인 경우 다음 단계로 진행.
+                    // 成功の場合、次の段階に進む。
                     if (result == ResultCodeAuth.AUTH_SUCCESS)
                     {
-                        // 성공 시 입력 UI 처리
+                        // 成功時、入力UI処理
                     }
                     else
                     {
-                        // 실패 시 처리
+                        // 失敗時の処理
                     }
                 }
             );
@@ -224,10 +224,10 @@ connector = new GameAnvil.Connector(config);
 - Assets/GameAnvilSample/PlatformTest/Scripts/AuthUi.cs
 
 ```
-        // 로그인에 필요한 프로토콜 데이터 설정
+        // ログインに必要なプロトコルデータ設定
         var loginReq = new Com.Nhn.Gameanvil.Sample.Protocol.LoginReq
         {
-            // 임의로 필요한 데이터 설정
+            // 任意で必要なデータ設定
             Uuid = inputFieldUUID.text,
             LoginType = Com.Nhn.Gameanvil.Sample.Protocol.LoginType.LoginGuest,
             AppVersion = Application.version,
@@ -239,22 +239,22 @@ connector = new GameAnvil.Connector(config);
         };
         Debug.Log("loginReq " + loginReq);
 
-        // 서버에 로그인
+        // サーバーにログイン
         ConnectHandler.Instance.CreateUserAgent(Constants.GAME_SPACE_NAME, string.Empty).Login(Constants.SPACE_USER_TYPE, string.Empty, new Payload().add(new Packet(loginReq)),
             (UserAgent userAgent, ResultCodeLogin result, UserAgent.LoginInfo loginInfo) =>
             {
                 Debug.Log("Login " + result + ", " + loginInfo);
 
-                // 성공 시 다음 단계.
+                // 成功時、次の段階。
                 if (result == ResultCodeLogin.LOGIN_SUCCESS)
                 {
                     if (loginInfo.Payload.contains<Com.Nhn.Gameanvil.Sample.Protocol.LoginRes>())
                     {
-                        // 로그인 응답 프로토콜 처리
+                        // ログインレスポンスプロトコル処理
                         Com.Nhn.Gameanvil.Sample.Protocol.LoginRes loginRes = Com.Nhn.Gameanvil.Sample.Protocol.LoginRes.Parser.ParseFrom(loginInfo.Payload.getPacket<Com.Nhn.Gameanvil.Sample.Protocol.LoginRes>().GetBytes());
                         Debug.Log("LoginRes " + loginRes);
 
-                        // 서버에서 받은 게임 데이터 설정
+                        // サーバーから受け取ったゲームデータ設定
                         UserInfo.Instance.Uuid = inputFieldUUID.text;
                         UserInfo.Instance.Nickname = loginRes.Userdata.Nickname;
                         UserInfo.Instance.Heart = loginRes.Userdata.Heart;
@@ -265,12 +265,12 @@ connector = new GameAnvil.Connector(config);
                         UserInfo.Instance.HighScore = loginRes.Userdata.HighScore;
                         UserInfo.Instance.CurrentDeck = loginRes.Userdata.CurrentDeck;
 
-                        // 신 전환시 버튼 리스너 모두 해재
+                        // シーン切り替え時、ボタンリスナーを全て解除
                     }
                 }
                 else
                 {
-                    // 실패 처리
+                    // 失敗処理
                 }
             }
        );
@@ -281,75 +281,75 @@ connector = new GameAnvil.Connector(config);
 - Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
 ```
-        // 커넥터로부터 유저 객체 저장
+        // コネクタからユーザーオブジェクトを保存
         gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, string.Empty);
 ```
 
-### CreateRoom : 혼자 게임 하는 방 생성및 입장
+### CreateRoom：一人でゲームするルームの作成と入場
 
 - Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
 ```
-        // 혼자 게임 하는 방 생성
+        // 一人でゲームするルームの作成
         gameUser.CreateRoom(Constants.SPACE_ROOM_TYPE_SINGLE, new Payload().add(new Packet(startGameReq)), (UserAgent userAgent, ResultCodeCreateRoom result, string roomId, Payload payload) =>
         {
             Debug.Log("CreateRoom " + result);
 
             if (result == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)
             {
-                // 성공 시 게임 신으로 변경, 등록된 리스너 제거
+                // 成功時、ゲームシーンに変更、登録されたリスナーを削除
             }
             else
             {
-                // 실패 처리
+                // 失敗処理
             }
         });
 ```
 
-### MatchRoom : 멀티 룸 매치 메이킹
+### MatchRoom ：マルチルームマッチメイキング
 
 - Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
 ```
-        // 만들어진 룸에 들어가는 매치 요청 - 혼자서도 플레이 가능. 최대 인원수까지 모두 입장
+        // 作られたルームに入るマッチリクエスト - 一人でもプレイ可能。最大人数まで全員入場
         gameUser.MatchRoom(Constants.SPACE_ROOM_TYPE_MULTI_ROOM_MATCH, true, false, (UserAgent userAgent, ResultCodeMatchRoom result, string roomId, Payload payload) =>
         {
             Debug.Log("MatchRoom " + result);
             if (result == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
             {
-                // 성공 시 게임 신으로 변경, 등록된 리스너 제거
+                // 成功時、ゲームシーンに変更、登録されたリスナーを削除
             }
             else
             {
-                // 실패 처리
+                // 失敗処理
             }
         });
 ```
 
-### MatchUserStart : 멀티 유저 매치메이킹
+### MatchUserStart ：マルチユーザーマッチメイキング
 
 - Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
 ```
-        // 2명 단위로 매칭하여 룸을 만들고 동시에 입장한 후 게임 진행
+        // 2人単位でマッチングしてルームを作り、同時に入場した後、ゲーム進行
         gameUser.MatchUserStart(Constants.SPACE_ROOM_TYPE_MULTI_USER_MATCH, (UserAgent userAgent, ResultCodeMatchUserStart result, Payload payload) =>
         {
             Debug.Log("MatchUser " + result);
             if (result == ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS)
             {
-                // 성공 시 게임 신으로 변경, 등록된 리스너 제거
+                // 成功時、ゲームシーンに変更、登録されたリスナーを削除
             }
             else
             {
-                // 실패 처리
+                // 失敗処理
             }
         });
 ```
 
-- 유저가 매치될 때 서버로부터 onMatchUserDone이 호출됩니다.
+- ユーザーがマッチする時、サーバーでonMatchUserDoneが呼び出されます。
 
 ```
-        // 타이밍 이슈상 리스너를 미리 등록, 유저가 게임 룸에 들어갔을 때 게임 레디 flag 설정
+        // タイミングの問題上、リスナーを事前に登録、ユーザーがゲームルームに入った時、ゲームレディflag設定
         gameUser.onMatchUserDoneListeners += (UserAgent userAgent, ResultCodeMatchUserDone result, bool created, string roomId, Payload payload) =>
         {
             Debug.Log("onMatchUserDoneListeners!!!!!! " + userAgent.GetUserId());
@@ -361,32 +361,32 @@ connector = new GameAnvil.Connector(config);
         };
 ```
 
-- 유저 매치 타임아웃 시 onMatchUserTimeout이 호출됩니다.  Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs
+- ユーザーマッチがタイムアウトすると、onMatchUserTimeoutが呼び出されます。  Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs
 
 ```
-        // 유저 매치 요청 타임 아웃 리스너
+        // ユーザーマッチリクエストタイムアウトリスナー
         snakeGameUser.onMatchUserTimeoutListeners += (UserAgent userAgent) =>
         {
             Debug.Log("onMatchUserTimeoutListeners!!!!!! " + userAgent.GetUserId());
 
-            // 로비 신으로 이동
+            // ロビーシーンに移動
         };
 ```
 
-### LeaveRoom: 룸에서 나갈 때 호출
+### LeaveRoom：ルームから出る時に呼び出し
 
 - Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs
 - Assets/GameAnvilSample/PlatformTest/Scripts/MultiTapBirdGameUI.cs
 - Assets/GameAnvilSample/PlatformTest/Scripts/SingleGameUi.cs
 
 ```
-        // 게임 종료 프로토콜 정의
+        // ゲーム終了プロトコル定義
         var endGameReq = new Com.Nhn.Gameanvil.Sample.Protocol.EndGameReq
         {
             EndType = gameEndType
         };
 
-        // 게임 룸 나가는 요청
+        // ゲームルームを出るリクエスト
         tapBirdUser.LeaveRoom(new Payload().add(new Packet(endGameReq)), (UserAgent userAgent, ResultCodeLeaveRoom result, bool force, string roomId, Payload payload) =>
         {
             Debug.Log("LeaveRoom " + result);
@@ -411,23 +411,23 @@ connector = new GameAnvil.Connector(config);
                     Debug.Log("GameResult " + endGameRes);
                 }
 
-                // 로비 신으로 이동
+                // ロビーシーンに移動
             }
             else
             {
-                // 실패 시 처리
+                // 失敗時の処理
             }
         });
 ```
 
 
 
-### 게임에서 정의한 프로토콜 처리
+### ゲームで定義したプロトコル処理
 
-- Send: Assets/GameAnvilSample/PlatformTest/Scripts/SingleGameUi.cs : 응답을 대기하지 않고 서버로 패킷을 보내고 끝난다.
+- Send: Assets/GameAnvilSample/PlatformTest/Scripts/SingleGameUi.cs：レスポンスを待機せず、サーバーにパケットを送って終える。
 
 ```
-        // 전송할 패킷
+        // 送信するパケット
         var tapMsg = new Com.Nhn.Gameanvil.Sample.Protocol.TapMsg
         {
             Combo = tapCount,
@@ -435,35 +435,35 @@ connector = new GameAnvil.Connector(config);
             TapScore = 100
         };
 
-        // 응답 없이 서버로 데이터 성으로 전달하는 패킷
+        // レスポンスせず、サーバーにデータ性で伝達するパケット
         tapBirdUser.Send(new Packet(tapMsg));
 ```
 
-- Request: Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs : 서버로 요청을 보내고 응답을 받을 때까지 대기.
+- Request: Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs：サーバーへリクエストを送り、レスポンスを受け取るまで待機。
 
 ```
-        // 게임 유저가 서버로 request로 response를 받아 처리한다.
+        // ゲームユーザーがサーバーへrequestでresponseを受け取って処理する。
         gameUser.Request<Com.Nhn.Gameanvil.Sample.Protocol.ShuffleDeckRes>(shuffleDeckReq, (userAgent, shuffleDeckRes) =>
         {
             Debug.Log("shuffleDeckRes" + shuffleDeckRes);
 
             if (shuffleDeckRes.ResultCode == Com.Nhn.Gameanvil.Sample.Protocol.ErrorCode.None)
             {
-                // 서버에 셔플 성공하고 응답값 갱신
+                // シャッフルが成功し、サーバーにレスポンス値を更新
                 UserInfo.Instance.CurrentDeck = shuffleDeckRes.Deck;
                 UserInfo.Instance.Coin = shuffleDeckRes.BalanceCoin;
                 UserInfo.Instance.Ruby = shuffleDeckRes.BalanceRuby;
 
-                // 유저 정보 UI 갱신
+                // ユーザー情報UI更新
             }
             else
             {
-                // 실패 시 처리
+                // 失敗時の処理
             }
         });
 ```
 
-- 리스너 등록: Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs : 서버 -> 클라이언트로 오는 패킷 리스너 등록.
+- リスナー登録： Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs ：サーバー -> クライアントに来るパケットリスナーの登録。
 
 ```
         snakeGameUser.AddListener((UserAgent userAgent, Com.Nhn.Gameanvil.Sample.Protocol.SnakeFoodMsg msg) =>
