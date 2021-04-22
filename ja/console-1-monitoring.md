@@ -1,372 +1,372 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 모니터링
+## Game > GameAnvil > コンソール使用ガイド > モニタリング
 
-## 대시보드 모니터링
+## ダッシュボードモニタリング
 
-관리 페이지에서 등록한 머신과 인스턴스, 각각의 노드들에 대한 상태를 확인할 수 있습니다.
+管理ページで登録したマシンとインスタンス、各ノードの状態を確認できます。
 
 ![monitoring_dashboard_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_main.png)
 
-- 머신
-    - 관리 페이지에 등록한 전체 머신 수와 머신에 설치한 Agent와 정상적으로 연결된 전체 머신 수를 나타냅니다. 
-        - 연결된 머신 수 / 전체 머신 수
-    - Agent와 연결에 문제가 있으면, 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[시스템 모니터링](./console-1-monitoring/#_5)' 페이지로 이동됩니다.
-- 인스턴스
-    - 관리 페이지에 등록한 전체 인스턴스 수와 동작(Running) 중인 인스턴스 수를 표시합니다.
-        - 동작 중인 인스턴스 수 / 모든 인스턴스 수
-    - 에러인 인스턴가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[인스턴스 모니터링](./console-1-monitoring/#_9)' 페이지로 이동됩니다.
-- 유저
-    - GAME 노드에 접속한 유저 수
-- 룸
-    - GAME 노드에 생성된 룸 수
-- 세션
-    - GATEWAY 노드에서 확인 된 세션 수
+- マシン
+    - 管理ページに登録した全体マシン数と、マシンにインストールしたAgentと正常に接続された全体マシン数を表します。
+        - 接続されたマシン数 / 全体マシン数
+    - Agentと接続に問題がある場合、赤色状態表示になります。
+    - モニタリングボタンを押すと「[システムモニタリング](./console-1-monitoring/#_5)」ページに移動します。
+- インスタンス
+    - 管理ページに登録した全てのインスタンス数と、動作(Running)中のインスタンス数を表示します。
+        - 動作中のインスタンス数 / すべてのインスタンス数
+    - エラーのインスタンスが1つでもあれば、赤色状態表示になります。
+    - モニタリングボタンを押すと「[インスタンスモニタリング](./console-1-monitoring/#_9)」ページに移動します。
+- ユーザー
+    - GAMEノードに接続したユーザー数
+- ルーム
+    - GAMEノードに作成されたルーム数
+- セッション
+    - GATEWAYノードで確認されたセッション数
 - GATEWAY
-    - 전체 GATEWAY 노드 수와 READY 상태인 GATEWAY 노드 수를 표시합니다. 
-        - READY 상태인 GATEWAY 노드 수 / 전체 GATEWAY 노드 수
-    - DISABLE 상태인 GATEWAY 노드가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[GATEWAY 노드 모니터링](./console-1-monitoring/#gateway)' 페이지로 이동됩니다.
+    - 全体GATEWAYノード数と、READY状態のGATEWAYノード数を表示します。 
+        - READY状態のGATEWAYノード数 / 全体GATEWAYノード数
+    - DISABLE状態のGATEWAYノードが1つでもある場合、赤色状態表示になります。
+    - モニタリングボタンを押すと「[GATEWAYノードモニタリング](./console-1-monitoring/#gateway)」ページに移動します。
 - GAME
-    - 전체 GAME 노드 수와 READY 상태인 GAME 노드 수를 표시합니다. 
-        - READY 상태인 GAME 노드 수 / 전체 GAME 노드 수
-    - DISABLE 상태인 GAME 노드가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[GAME 노드 모니터링](./console-1-monitoring/#game)' 페이지로 이동됩니다.
+    - 全体GAMEノード数とREADY状態のGAMEノード数を表示します。 
+        - READY状態のGAMEノード数 / 全体GAMEノード数
+    - DISABLE状態のGAMEノードが1つでもある場合、赤色状態表示になります。
+    - モニタリングボタンを押すと「[GAMEノードモニタリング](./console-1-monitoring/#game)」ページに移動します。
 - SUPPORT
-    - 전체 SUPPORT 노드 수와 READY 상태인 SUPPORT 노드 수를 표시합니다.
-        - READY 상태인 SUPPORT 노드 수 / 전체 SUPPORT 노드 수
-    - DISABLE 상태인 SUPPORT 노드가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[SUPPORT 노드 모니터링](./console-1-monitoring/#support)' 페이지로 이동됩니다.
+    - 全体SUPPORTノード数と、READY状態のSUPPORTノード数を表示します。
+        - READY状態のSUPPORTノード数 / 全体SUPPORTノード数
+    - DISABLE状態のSUPPORTノードが1つでもある場合、赤色状態表示になります。
+    - モニタリングボタンを押すと「[SUPPORTノードモニタリング](./console-1-monitoring/#support)」ページに移動します。
 - MATCH
-    - 전체 MATCH 노드 수와 READY 상태인 MATCH 노드 수를 표시합니다.
-        - READY 상태인 MATCH 노드 수 / 전체 MATCH 노드 수
-    - DISABLE 상태인 MATCH 노드가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[MATCH 노드 모니터링](./console-1-monitoring/#match)' 페이지로 이동됩니다.
+    - 全体MATCHノード数とREADY状態のMATCHノード数を表示します。
+        - READY状態のMATCHノード数 / 全体MATCHノード数
+    - DISABLE状態のMATCHノードが1つでもある場合、赤色状態表示になります。
+    - モニタリングボタンを押すと「[MATCHノードモニタリング](./console-1-monitoring/#match)」ページに移動します。
 
-### 동시 접속자 변화 그래프
+### 同時接続者変化グラフ
 
-GAME 노드에 접속한 사용자의 수를 그래프를 통하여 한 눈에 확인할 수 있습니다.
+GAMEノードに接続したユーザーの数をグラフでひと目で確認できます。
 
 ![monitoring_dashboard_graph](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_graph.png)
 
-- 그래프는 1분마다 자동 갱신되며, 오늘과 어제 그리고 지난 주의 그래프를 확인할 수 있습니다.
-- 어제 또는 지난 주 데이터가 없으면 그래프는 표시되지 않습니다.
-- 필터를 통하여 특정 GAME 노드 서비스의 동시 접속자 그래프를 확인할 수 있습니다.
+- グラフは1分毎に自動更新され、今日と昨日、そして先週のグラフを確認できます。
+- 昨日または先週のデータがない場合、グラフは表示されません。
+- フィルタを利用して、特定GAMEノードサービスの同時接続者グラフを確認できます。
 
 
 
-## 유저분포 모니터링
+## ユーザー分布モニタリング
 
-GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스턴스, 노드의 수를 확인할 수 있습니다.
+GAMEノードの接続した同時接続者、分布平均、そしてマシン、インスタンス、ノードの数を確認できます。
 
 ![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main.png)
 
-- 동시접속자
-    - 동작 중(READY)인 GAME 노드에서 집계된 동시접속자 수를 의미합니다.
-    - 필터에 따라서 동시접속자 수는 달라집니다.
+- 同時接続者
+    - 動作中(READY)のGAMEノードで集計された同時接続者数を意味します。
+    - フィルタによって同時接続者数は異なります。
 
-- 머신
-    - GAME 노드가 동작 중(READY)인 머신의 수를 의미합니다.
-    - 필터에 따라서 머신 수는 달라집니다.
+- マシン
+    - GAMEノードが動作中(READY)のマシンの数を意味します。
+    - フィルタによってマシンの数は異なります。
 
-- 인스턴스
-    - GAME 노드가 동작 중(READY)인 인스턴스 수를 의미합니다.
-    - 필터에 따라서 인스턴스 수는 달라집니다.
+- インスタンス
+    - GAMEノードが動作中(READY)のマシンの数を意味します。
+    - フィルタによってインスタンス数は異なります。
 
-- GAME 노드
-    - GAME 노드가 동작 중(READY)인 노드 수를 의미합니다.
-    - 필터에 따라서 노드 수는 달라집니다.
+- GAMEノード
+    - GAMEノードが動作中(READY)のノード数を意味します。
+    - フィルタによってノード数は異なります。
 
-- 노드별 유저 분포 평균
-    - 동시접속자를 전체 구동 중인 GAME 노드 수로 나는 평균입니다.
-    - 필터에 따라서 평균은 달라집니다.
-        - 동시접속자 / 전체 구동 중인 GAME 노드의 수
+- 各ノードのユーザー分布の平均
+    - 同時接続者を全ての起動中のGAMEノード数で割った平均です。
+    - フィルタによって平均は異なります。
+        - 同時接続者 / 全ての起動中のGAMEノードの数
 
-※ 유저 모니터링 페이지는 자동 새로고침을 지원하지 않습니다.<br>
-데이터 갱신이 필요할 때에는 새로고침 버튼을 통하여 갱신하면 됩니다.
+※ユーザーモニタリングページは自動更新をサポートしません。<br>
+データの更新が必要な時は、更新ボタンを押して更新してください。
 
-### 유저분포 그래프
+### ユーザー分布グラフ
 
-그래프는 탭<span style='color: #EB4927'>①</span>을 통하여 머신, 인스턴스, 노드별로 유저분포 상태를 확인할 수 있습니다.
+グラフはタブ<span style='color: #EB4927'>①</span>でマシン、インスタンス、ノードごとにユーザー分布状態を確認できます。
 
-- 머신
-    - GAME 노드가 동작 중(READY)인 머신들만 나타납니다.
-    - 세로 축 레이블은 '호스트명'으로 표시됩니다.
-- 인스턴스
-    - GAME 노드가 동작 중(READY)인 인스턴스만 나타납니다.
-    - 세로 축 레이블은 '인스턴스 이름@호스트명'으로 표시됩니다.
-- 노드
-    - 동작 중(READY)인 GAME 노드만 나타납니다.
-    - 세로 축 레이블은 '노드 ID@호스트명'으로 표시됩니다.
+- マシン
+    - GAMEノードが動作中(READY)のマシンのみ表示されます。
+    - 縦軸のラベルは、「ホスト名」に表示されます。
+- インスタンス
+    - GAMEノードが動作中(READY)のインスタンスのみ表示されます。
+    - 縦軸のラベルは、「インスタンス名@ホスト名」に表示されます。
+- ノード
+    - 動作中(READY)のGAMEノードのみ表示されます。
+    - 縦軸のラベルは、「ノードID@ホスト名」に表示されます。
 
-그래프의 데이터는 기본적으로 50개만 보여지며, 50개 이상의 정보는 '더보기'<span style='color: #EB4927'>②</span>으로 확인이 가능합니다.
+グラフのデータは基本的に50個のみ表示され、50個以上の情報は「さらに表示」<span style='color: #EB4927'>②</span>を押して確認できます。
 
-## 시스템 모니터링
+## システムモニタリング
 
-시스템 모니터링에서는 머신과 인스턴스들의 상태와 간략한 정보들을 쉽게 확인할 수가 있습니다.
+システムモニタリングでは、マシンとインスタンスの状態と簡略な情報を簡単に確認できます。
 
 ![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main.png)
 
-### 트리뷰
+### ツリービュー
 
-관리 페이지에서 등록한 머신과 인스턴스들이 계층구조를 트리 형태로 표시합니다.
+管理ページで登録したマシンとインスタンスの階層構造をツリー形式で表示します。
 
-트리의 구조는 아래와 같이 구성되어 있습니다.
+ツリーの構造は、次のように構成されています。
 
 ![monitoring_system_tree](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_tree.png)
 
-머신과 각각의 머신에 속하는 인스턴스들이 표시됩니다.
-호스트 이름 또는 인스턴스 이름를 선택하면 각각의 머신 또는 인스턴스 상세 페이지가 보여집니다.
+マシンとそれぞれのマシンに属すインスタンスが表示されます。
+ホスト名またはインスタンス名を選択すると、それぞれのマシンまたはインスタンス詳細ページが表示されます。
 
-또한 호스트명 검색을 통하여 찾고자하는 머신을 쉽게 찾을 수 있습니다.
+またホスト名検索を利用して、マシンを簡単に探せます。
 
-### 머신(호스트명)을 선택했을 때
+### マシン(ホスト名)を選択した時
 
-선택한 머신과 속하는 인스턴스들의 정보를 나타냅니다.
+選択したマシンと、属すインスタンスの情報を表示します。
 
 ![monitoring_system_machine](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_machine.png)
 
-- 머신과 인스턴스에 대한 정보
+- マシンとインスタンスの情報
 
-1. 머신
-    - 호스트 이름: 머신의 호스트 명
-    - 머신 상태: Agent와의 연결 상태
-    - IP 주소: 머신의 IP 주소
-    - GameAnvil Agent Port: Agent의 포트번호
+1. マシン
+    - ホスト名：マシンのホスト名
+    - マシン状態： Agentとの接続状態
+    - IPアドレス：マシンのIPアドレス
+    - GameAnvil Agent Port： Agentのポート番号
 
-2. 인스턴스
-    - 인스턴스 이름
-    - 인스턴스 상태
-    - 총 연결 노두 개수: READY 상태인 노드 수 / 모든 노드 수
-    - 유저 수: 인스턴스에 속한 GAME 노드에 접속한 사용자 수
-        - GAME 노드가 동작 중(READY)일 때만 표시
-        - 그 외에는 '-'으로 표시
-    - 룸 수: 인스턴스에 속한 GAME 노드에 생성된 룸 수
-        - GAME 노드가 동작 중(READY)일 때만 표시
-        - 그 외에는 '-'으로 표시
+2. インスタンス
+    - インスタンス名
+    - インスタンス状態
+    - 総接続ノード数：READY状態のノード数 / すべてのノード数
+    - ユーザー数：インスタンスに属すGAMEノードに接続したユーザー数
+        - GAMEノードが動作中(READY)の時のみ表示
+        - その他は「-」で表示
+    - ルーム数：インスタンスに属すGAMEノードに作成されたルーム数
+        - GAMEノードが動作中(READY)の時のみ表示
+        - その他は「-」で表示
 
-### 인스턴스를 선택했을 때
+### インスタンスを選択した時
 
-선택한 인스턴스에 상세한 정보를 표시합니다.
+選択したインスタンスに詳細な情報を表示します。
 
 ![monitoring_system_instance](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_instance.png)
 
-- 인스턴스에 대한 정보
-    - 인스턴스 이름
-    - 인스턴스 상태
-    - 인스턴스 설정: 인스턴스 설정 정보를 팝업창으로 확인
+- インスタンスの情報
+    - インスタンス名
+    - インスタンスの状態
+    - インスタンス設定：インスタンス設定情報をポップアップウィンドウで確認
     - GATEWAY
-        - 동작 중인 GATEWAY 노드 수 / 전체 GATEWAY 노드 수
-        - 해당 노드가 없는 경우에는 '-/-'로 표기
+        - 動作中のGATEWAYノード数 / 全体GATEWAYノード数
+        - 該当のノードがない場合は「-/-」と表記
     - GAME
-        - 동작 중인 GAME 노드 수 / 전체 GAME 노드 수
-        - 해당 노드가 없는 경우에는 '-/-'로 표기
+        - 動作中のGAMEノード数 / 全体GAMEノード数
+        - 該当のノードがない場合は「-/-」と表記
     - SUPPORT
-        - 동작 중인 SUPPORT 노드 수 / 전체 MASUPPORTTCH 노드 수
-        - 해당 노드가 없는 경우에는 '-/-'로 표기
+        - 動作中のSUPPORTノード数 / 全体MASUPPORTTCHノード数
+        - 該当のノードがない場合は「-/-」と表記
     - MATCH
-        - 동작 중인 MATCH 노드 수 / 전체 MATCH 노드 수
-        - 해당 노드가 없는 경우에는 '-/-'로 표기됩니다.
-    - 유저 수: 인스턴스에 속한 GAME 노드에 접속한 사용자 수
-        - GAME 노드가 동작 중(READY)일 때만 표시
-        - 그 외에는 '-'으로 표시
-    - 룸 수: 인스턴스에 속한 GAME 노드에 생성된 룸 수
-        - GAME 노드가 동작 중(READY)일 때만 표시
-        - 그 외에는 '-'으로 표시
+        - 動作中のMATCHノード数 / 全体MATCHノード数
+        - 該当のノードがない場合は「-/-」と表記されます。
+    - ユーザー数：インスタンスに属すGAMEノードに接続したユーザー数
+        - GAMEノードが動作中(READY)の時のみ表示
+        - それ以外は「-」と表示
+    - ルーム数：インスタンスに属すGAMEノードに作成されたルーム数
+        - GAMEノードが動作中(READY)の時のみ表示
+        - それ以外は「-」と表示
 
-## 인스턴스 모니터링
+## インスタンスモニタリング
 
-관리 페이지에서 인스턴스의 정보를 확인하고 설정된 각 노드를 시작/중지/배포 할 수 있습니다.
+管理ページでインスタンスの情報を確認し、設定された各ノードを開始/中止/配布できます。
 
 ![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main.png)
 
-1. 검색
-    - 호스트 이름이나 인스턴스 이름으로 특정 인스턴스를 찾을 수 있습니다.
+1. 検索
+    - ホスト名やインスタンス名で特定のインスタンスを検索できます。
 
-2. 필터
-    - 인스턴스 및 배포 상태와 인스턴스 설정 타입에 따라서 특정 인스턴스를 필터할 수 있습니다.
+2. フィルタ
+    - インスタンスおよび配布状態とインスタンス設定タイプに応じて特定のインスタンスをフィルタできます。
 
     ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter.png)
 
-### 인스턴스 테이블
+### インスタンステーブル
 
 ![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table.png)
 
-#### 액션<span style='color: #EB4927'>①</span>
+#### アクション<span style='color: #EB4927'>①</span>
 
-테이블의 체크박스에 선택된 인스턴스들에 대해서 액션을 수행할 수 있습니다.
+テーブルのチェックボックスが選択されたインスタンスに対して、アクションを実行できます。
 
-- 시작
-- 중지
-- 배포
+- 開始
+- 中止
+- 配布
 
 
-#### 배포파일 업로드<span style='color: #EB4927'>②</span>
+#### 配布ファイルアップロード<span style='color: #EB4927'>②</span>
 
-관리 > 배포파일 페이지와 동일하게 배포파일을 업로드 할 수 있습니다.
+管理 > 配布ファイルページと同じように配布ファイルをアップロードできます。
 
 ![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload.png)
 
 
-#### 테이블
+#### テーブル
 
-인스턴스 테이블에서 각 인스턴스에 대한 상태와 시작/중지/배포에 대한 액션을 수행할 수 있습니다.
+インスタンステーブルで各インスタンスの状態と、開始/中止/配布アクションを実行できます。
 
-- 인스턴스 이름
-- 호스트 이름
-- 인스턴스 설정
+- インスタンス名
+- ホスト名
+- インスタンス設定
 - GATEWAY
-    - 동작 중인 GATEWAY 노드 수 / 전체 GATEWAY 노드 수
-    - 해당 노드가 없는 경우에는 '-'로 표기
+    - 動作中のGATEWAYノード数 / 全体GATEWAYノード数
+    - 該当のノードがない場合は「-」と表記
 - GAME
-    - 동작 중인 GAME 노드 수 / 전체 GAME 노드 수
-    - 해당 노드가 없는 경우에는 '-'로 표기
+    - 動作中のGAMEノード数 / 全体GAMEノード数
+    - 該当のノードがない場合は「-」と表記
 - SUPPORT
-    - 동작 중인 SUPPORT 노드 수 / 전체 SUPPORT 노드 수
-    - 해당 노드가 없는 경우에는 '-'로 표기
+    - 動作中のSUPPORTノード数 / 全体SUPPORTノード数
+    - 該当のノードがない場合は「-」と表記
 - MATCH
-    - 동작 중인 MATCH 노드 수 / 전체 MATCH 노드 수
-    - 해당 노드가 없는 경우에는 '-'로 표기
-- 인스턴스 상태
-    - '에러' 상태에서는 '에러'<span style='color: #EB4927'>③</span>를 클릭하면 상세 에러 메시지를 확인 할 수 있습니다.
-- 배포 상태
-    - '에러' 상태에서는 '에러'<span style='color: #EB4927'>③</span>를 클릭하면 상세 에러 메시지를 확인 할 수 있습니다.
-- 액션
-    - 하나의 인스턴스에 액션(시작/중지/배포)를 수행할 수 있습니다.
+    - 動作中のMATCHノード数 / 全体MATCHノード数
+    - 該当のノードがない場合は「-」と表記
+- インスタンス状態
+    - 「エラー」状態では「エラー」<span style='color: #EB4927'>③</span>をクリックすると、詳細エラーメッセージを確認できます。
+- 配布状態
+    - 「エラー」状態では「エラー」<span style='color: #EB4927'>③</span>をクリックすると、詳細エラーメッセージを確認できます。
+- アクション
+    - 1つのインスタンスにアクション(開始/中止/配布)を実行できます。
 
-## 노드 모니터링
+## ノードモニタリング
 
 ### ALL
 
-동작 중(READY)인 모든 노드들에 대해서 모니터링 할 수 있습니다.
+動作中(READY)のすべてのノードをモニタリングできます。
 
 ![monitoring_node_all](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all.png)
 
-- 노드 ID
-- 서비스 ID
-    - GAME, SUPPORT 노드에 한해서만 표시됩니다.
-- 서비스 이름
-- 노드 타입
-- 인스턴스 이름
-- 호스트 이름
-- 노드 상태
-- 액션
+- ノードID
+- サービスID
+    - GAME、SUPPORTノードに限り表示されます。
+- サービス名
+- ノードタイプ
+- インスタンス名
+- ホスト名
+- ノードの状態
+- アクション
     - Resume
-        - Pause 상태인 노드를 시작할 수 있습니다.
+        - Pause状態のノードを開始できます。
     - Pause
-        - Ready 상태인 노드를 정지시킵니다.
-    - ※ MATCH 노드는 Resume, Pause 액션을 수행할 수 없습니다.
+        - Ready状態のノードを停止させます。
+    - ※ MATCHノードはResume、Pauseアクションを実行できません。
 
-#### 필터
+#### フィルタ
 
 ![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter.png)
 
-동작 중인 전체 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 타입
-- 노드 상태
-- 서비스 이름
+動作中の全てのノードに次のフィルタを適用して特定のノードをフィルタできます。
+- ノードタイプ
+- ノードの状態
+- サービス名
 
 ### GATEWAY
 
-동작 중(READY)인 GATEWAY 노드들에 대해서 모니터링 할 수 있습니다.
+動作中(READY)のGATEWAYノードをモニタリングできます。
 
 ![monitoring_node_gateway](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway.png)
 
-- 노드 ID
-- 노드 타입
-- 인스턴스 이름
-- 호스트 이름
-- 세션 수
-    - 각 GATEWAY 노드에 연결된 세션 수를 표시합니다.
-- 노드 상태
-- 액션
+- ノードID
+- ノードタイプ
+- インスタンス名
+- ホスト名
+- セッション数
+    - 各GATEWAYノードに接続されたセッション数を表示します。
+- ノードの状態
+- アクション
     - Resume
-        - Pause 상태인 노드를 시작할 수 있습니다.
+        - Pause状態のノードを開始できます。
     - Pause
-        - Ready 상태인 노드를 정지시킵니다.
+        - Ready状態のノードを停止させます。
 
-#### 필터
+#### フィルタ
 
 ![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter.png)
 
-동작 중인 GATEWAY 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 상태
+動作中のGATEWAYノードに次のフィルタを適用して特定のノードをフィルタできます。
+- ノードの状態
 
 ### GAME
 
-동작 중(READY)인 GAME 노드들에 대해서 모니터링 할 수 있습니다.
+動作中(READY)のGAMEノードをモニタリングできます。
 
 ![monitoring_node_game](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game.png)
 
-- 노드 ID
-- 노드 타입
-- 서비스 ID
-- 채널 ID
-- 인스턴스 이름
-- 호스트 이름
-- 유저 수
-    - 각 GAME 노드에 접속한 사용자 수를 표시합니다.
-- 룸 수
-    - 각 GAME 노드에 생성된 룸 개수를 표시합니다.
-- 노드 상태
-- 액션
+- ノードID
+- ノードタイプ
+- サービスID
+- チャンネルID
+- インスタンス名
+- ホスト名
+- ユーザー数
+    - 各GAMEノードに接続したユーザー数を表示します。
+- ルーム数
+    - 各GAMEノードに作成されたルーム数を表示します。
+- ノードの状態
+- アクション
     - Resume
-        - Pause 상태인 노드를 시작할 수 있습니다.
+        - Pause状態のノードを開始できます。
     - Pause
-        - Ready 상태인 노드를 정지시킵니다.
+        - Ready状態のノードを停止させます。
 
-#### 필터
+#### フィルタ
 
 ![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter.png)
 
-동작 중인 GAME 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 상태
-- 서비스 이름
+動作中のGAMEノードに次のフィルタを適用して特定のノードをフィルタできます。
+- ノードの状態
+- サービス名
 
 ### SUPPORT
 
-동작 중(READY)인 SUPPORT 노드들에 대해서 모니터링 할 수 있습니다.
+動作中(READY)のSUPPORTノードをモニタリングできます。
 
 ![monitoring_node_support](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support.png)
 
-- 노드 ID
-- 노드 타입
-- 서비스 ID
-- 서비스 이름
-- 인스턴스 이름
-- 호스트 이름
-- 노드 상태
-- 액션
+- ノードID
+- ノードタイプ
+- サービスID
+- サービス名
+- インスタンス名
+- ホスト名
+- ノードの状態
+- アクション
     - Resume
-        - Pause 상태인 노드를 시작할 수 있습니다.
+        - Pause状態のノードを開始できます。
     - Pause
-        - Ready 상태인 노드를 정지시킵니다.
+        - Ready状態のノードを停止させます。
 
-#### 필터
+#### フィルタ
 
 ![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter.png)
 
-동작 중인 SUPPORT 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 상태
-- 서비스 이름
+動作中のSUPPORTノードに次のフィルタを適用して特定のノードをフィルタできます。
+- ノードの状態
+- サービス名
 
 ### MATCH
 
-동작 중(READY)인 MATCH 노드들에 대해서 모니터링 할 수 있습니다.
+動作中(READY)のMATCHノードをモニタリングできます。
 
 ![monitoring_node_match](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match.png)
 
-- 노드 ID
-- 노드 타입
-- 인스턴스 이름
-- 호스트 이름
+- ノードID
+- ノードタイプ
+- インスタンス名
+- ホスト名
 - Room Match Room Count
 - User Match Queue Size
-- 노드 상태
+- ノードの状態
 
-#### 필터
+#### フィルタ
 
 ![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter.png)
 
-동작 중인 MATCH 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 상태
+動作中のMATCHノードに次のフィルタを適用して特定のノードをフィルタできます。
+- ノードの状態
