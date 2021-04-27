@@ -1,88 +1,88 @@
-## Game > GameAnvil > 서버 개발 가이드 > 구현 가이드
+## Game > GameAnvil > Server Development Guide > Implementation Guide
 
-기본적인 서버를 구현하기 위해 알아야 할 엔진의 핵심적인 부분을 중심으로, 기본 요소들과 이를 구현하는 방법에 대해 설명합니다. 코드 레벨의 자료는 [GameAnvil 레퍼런스 서버](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server)를 참고합니다. 또한, [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)를 통해 JavaDoc 문서도 이용 가능합니다. 가능하다면 레퍼런스 서버 프로젝트와 이 가이드 문서를 함께 살펴보시기를 추천드립니다.
+engine that are needed to implement a basic server. For code level materials, refer to [GameAnvil reference server](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server). In addition, JavaDoc documents can be used through [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil). If possible, it is recommended to refer to reference server projects and this guide document.
 
 
 
 ### Note
 
-*GameAnvil은 엔진 내부는 물론 모든 샘플 코드에서 메시지 핸들러에 대해 _로 시작하는 네이밍을 사용합니다. 즉, 앞으로 등장하는 예제 코드에서도 _로 시작하는 모든 클래스는 메시지 핸들러입니다. 이러한 메시지 핸들러에 대한 구현은 이 글에서 별도로 설명하지 않습니다. 앞서 알려드린 레퍼런스 서버 프로젝트나 JavaDoc을 통해 코드를 확인하는 것이 가장 쉽고 정확한 방법입니다.*
+*GameAnvil uses a naming convention that begins with _ to the message handlers in the engine and for all sample code. In other words, all the classes that starts with _ in example code are message handlers. The implementation for these message handlers is not covered in this article. The easiest and the most correct way is checking code through the previous reference server project or JavaDoc.*
 
 
 
-GameAnvil 대부분의 기능은 콜백 방식으로 제공합니다. 즉, 엔진 사용자는 **GameAnvil이 제공하는 기본 클래스(Base Classes)를 상속한 후 콜백 메서드를 재정의**하는 형태로 대부분의 기능을 사용하게 됩니다. 이 과정에서 엔진 사용자가 필요한 콜백 메서드만 구현하면 되므로 일부 콜백 메서드는 무시할 수도 있습니다. 이 문서는 이러한 콜백 메서드의 실제 구현 방법까지는 안내하지 않습니다. 코드 레벨의 참고는 앞서 설명한 레퍼런스 서버 프로젝트를 참고하는 것이 가장 좋은 방법입니다.
+The most of GameAnvil's features are provided in callback. In other words, the engine users inherit **GameAnvil's base classes and redefine** the callback method to access the most of the features. Because the engine users can implement only the needed callback methods, some callback methods can be ignored. This document does not explain actual implementation of these callback methods. For the code level, it is best refer to the reference server project mentioned earlier.
 
 
 
-## 1. Node 공통
+## 1. Node common
 
-모든 종류의 노드는 공통적으로 아래의 콜백 메서드들을 재정의해야 합니다. 그와 더불어 각 노드는 용도에 맞춰 추가 콜백 메서드를 구현하게 됩니다. 아래 코드의 GatewayNode는 추가 콜백이 없으므로 공통 콜백 메서드를 보여주기에 적합합니다. 특히, onPrepare()에서 호출한 setReady() API는 엔진에게 노드가 모두 준비되었으니 실제 구동을 시작하라는 명령입니다. 일반적으로 onPrepare()에서 호출합니다. 하지만 다른 노드와의 통신을 통하거나 임의의 비동기 결과를 바탕으로 준비 명령을 내리고 싶을 경우에는 다른 코드 블록에서 호출해도 무방합니다.
+All kinds of nodes must redefine the callback methods below. In addition, each node implements additional callback methods fit for their purposes. As the GatewayNode of the code below does not have additional callback, it is fit to show the common callback methods. Especially, the setReady() API called by onPrepare() is a command for actually running the engine as the nodes are fully prepared. Generally, it is called by onPrepare(). However, if users want to communicate with other nodes or send a ready command based on an arbitrary asynchronous result, calling it from another code block is fine as well.
 
 ```
 public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
-     * 초기화할 때 발생.
+     * Occurs while initializing.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onInit() throws SuspendExecution {        
     }
 
     /**
-     * Prepare 시에 호출된다.
+     * Called while Preparing.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPrepare() throws SuspendExecution {
-        setReady(); // 주의!
+        setReady(); // caution!
     }
 
     /**
-     * Ready 단계에서 호출된다.
+     * Called in the Ready step.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onReady() throws SuspendExecution {        
     }
 
     /**
-     * 패킷이 전달될 때 호출된다.
+     * Called when packet is passed.
      *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param packet A packet to be processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDispatch(Packet packet) throws SuspendExecution {        
     }
 
     /**
-     * pause 될때에 호출된다.
+     * Called when paused.
      *
-     * @param payload contents 에서 전달하고자 하는 추가 정보
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * The additional information that @param payload contents wants to pass
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPause(Payload payload) throws SuspendExecution {        
     }
 
     /**
-     * resume 될때에 호출된다.
+     * Called when resumed.
      *
-     * @param payload contents에서 전달하고자 하는 추가 정보
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * The additional information that @param payload contents wants to pass
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onResume(Payload payload) throws SuspendExecution {        
     }
 
     /**
-     * NonNetworkNode 종료를 위해 shutdown 명령시 호출된다.
+     * Called when the shutdown command is issued to end NonNetworkNode.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onShutdown() throws SuspendExecution {        
@@ -94,31 +94,31 @@ public class SampleGatewayNode extends BaseGatewayNode {
 
 ## 2. Gateway Node
 
-GatewayNode는 클라이언트가 접속하는 노드입니다. BaseGatewayNode 클래스를 상속하여 공통 콜백 메서드만 재정의하면 됩니다. 그 외 GatewayNode 자체에 특별히 추가로 필수 구현할 사항은 없습니다.  GatewayNode는 클라이언트로부터의 커넥션과 세션들을 관리하는데 이들의 관계는 다음의 그림과 같습니다.
+GatewayNode is the node that the client is connected to. The BaseGatewayNode class is inherited and redefine the common callback method. There is nothing else to be implemented to GatewayNode itself. GatewayNode manages the connections and sessions from the client. The relationship among them are explained in the picture below:
 
 ![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
-일반적으로 클라이언트는 GatewayNode로 하나의 커넥션을 맺습니다. 이때, 해당 커넥션에 대해 인증 절차를 진행하여 성공한 경우에 한해 하나 이상의 세션을 생성할 수 있습니다. 각각의 세션은 서로 다른 게임 서비스에 대한 논리적 연결 단위입니다. 위의 그림은 클라이언트가 하나의 커넥션을 통해 Game 서비스와 Chat 서비스 각각에 대해 세션을 생성한 모습입니다.
+Generally, the client establishes a single connection to GatewayNode. At this time, additional sessions can be created only when the connection is successfully authenticated. Each session is a logical connection unit for different game services. The picture above depicts the client creating sessions for Game service and Chat service.
 
 
 
-### 2-1. 커넥션 (Connection)
+### 2-1. Connection
 
-커넥션은 클라이언트의 물리적 접속 자체를 의미합니다. 클라이언트는 고유한 AccountId를 이용하여 커넥션 상에서 인증 절차를 진행할 수 있습니다. 인증이 성공할 경우 해당 AccountId는 생성된 커넥션에 매핑됩니다. 커넥션은 아래와 같은 콜백 메서드를 재정의 합니다. 이때, AccountId는 임의의 플랫폼에서 인증한 후 획득하는 유저의 키값 등을 사용할 수 있습니다. 예를 들어 Gamebase를 통해 인증한 후 UserId를 획득하면 이 값을 GameAnvil의 인증 과정에서 AccountId로 사용할 수 있습니다.
+Connection means the physical connection to the client itself. The client can authenticate from the connection using a unique AccountId. If authentication is successful, AccountId is mapped to the created connection. Connection redefines callback method as below. At this time, AccountId is authenticated on an arbitrary platform and the acquired key value of the user can be used. For example, when authenticated through Gamebase and acquire UserId, this value can be used as AccountId in authenticating GameAnvil.
 
 ```
 public class SampleConnection extends BaseConnection<SampleGameSession> {
 
     /**
-     * authenticate 시에 호출된다.
+     * Called when authenticating.
      *
-     * @param accountId  계정의 아이디
-     * @param password   계정 패스워드
-     * @param deviceId   클라이언트의 기기 아이디
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return false 시 클라이언트와의 접속이 종료
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param accountId  The ID of the account
+     * @param password   The password of the account
+     * @param deviceId   The device ID of the client
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * The connection to the client ends when @return is false
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onAuthenticate(final String accountId, final String password, final String deviceId, final Payload payload, final Payload outPayload) throws SuspendExecution {        
@@ -129,30 +129,30 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
     }
 
     /**
-     * login 호출 이전에 호출된다.
+     * Called before login is called.
      *
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param outPayload The payload to pass to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPreLogin(Payload outPayload) throws SuspendExecution {        
     }
 
     /**
-     * 로그인 성공 이후에 호출된다.
+     * Called when successfully logged in.
      *
-     * @param session 로그인에 사용한 세션 객체
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param session The session object used while logging in
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostLogin(U session) throws SuspendExecution {        
     }
 
     /**
-     * 로그아웃 이후에 호출된다.
+     * Called after logged out.
      *
-     * @param session 게임 노드의 유저에 연결된 세션 객체
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param session The session object that is connected to the game node's user
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostLogout(U session) throws SuspendExecution {
@@ -167,9 +167,9 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
     }
 
     /**
-     * 클라이언트와 연결이 끊어졌을 때 호출된다.
+     * Called when the connection to the client is lost.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     public void onDisconnect() throws SuspendExecution {        
     }
@@ -178,9 +178,9 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
 
 
 
-### 2-2. 세션 (Session)
+### 2-2. Session
 
-커넥션을 성공적으로 맺은 클라이언트는 해당 커넥션 상에서 서비스별로 한 개씩 GameNode로 논리적인 세션을 맺을 수 있습니다. GameAnvil은 내부적으로 커넥션의 AccountId와 세션의 SubId를 "AccoundId:SubId" 형태로 조합해서 고유한 세션과 해당 세션을 사용 중인 유저를 구분합니다. 이러한 세션은 아래와 같이 해당 세션에서 처리할 메시지와 핸들러를 등록한 후 콜백 메서드를 통해 디스패치할 수 있습니다. 이때, subId는 사용자가 임의로 정한 규칙에 맞추어 해당 커넥션 내에서 고유한 값으로 할당하면 됩니다.
+The client that successfully established connection can form a logical session with GameNode per service on the connection. GameAnvil internally combine the AccountId of connection and the SubId of session in the form of "AccoundId:SubId" to distinguish unique sessions and the users using them. These sessions can then register messages and handlers in the session and dispatch them using the callback method. At this time, a unique value needs to be assigned to subId in the connection according to the rules arbitrarily defined by users.
 
 ```
 public class SampleSession extends BaseSession {
@@ -192,10 +192,10 @@ public class SampleSession extends BaseSession {
     }
 
     /**
-     * 세션으로 패킷이 전달될 때 호출된다.
+     * Called when a packet is passed to session.
      *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param packet A packet to be processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDispatch(final Packet packet) throws SuspendExecution {
@@ -208,7 +208,7 @@ public class SampleSession extends BaseSession {
 
 ### 2-3. Bootstrap
 
-이렇게 생성한 GatewayNode와 커넥션 그리고 세션은 Bootstrap 단계에서 아래와 같이 등록할 수 있습니다.
+The GatewayNode, connection, and session created in this way can be registered in the following method in the Bootstrap step.
 
 ```
 public class Main {
@@ -216,7 +216,7 @@ public class Main {
     public static void main(String[] args) {
 
         GameAnvilBootstrap bootstrap = GameAnvilBootstrap.getInstance();
-        // 등록
+        // Register
         bootstrap.setGateway()
             .connection(SampleConnection.class)
             .session(SampleSession.class)
@@ -232,17 +232,17 @@ public class Main {
 
 ## 3. Game Node
 
-GameNode는 실제 게임 객체가 생성되고 게임 콘텐츠를 구현하는 노드입니다. GameNode는 기본적으로 BaseGameNode 추상 클래스를 상속 구현합니다. GameNode가 관리하는 대표적인 객체는 GameUser와 GameRoom입니다. 이에 관해서는 아래에서 더욱 자세하게 살펴봅니다. 아래 코드는 GameNode에서 기본적으로 재정의할 수 있는 콜백 메서드를 보여줍니다. 노드 공통 콜백에 채널 간 동기화를 위한 콜백이 추가되었습니다. 또한 GameNode에서 처리하고 싶은 프로토콜은 임의의 핸들러와 매핑한 후 onDispatch() 콜백을 통해 해당 패킷을 처리할 수 있습니다. 아래 코드에서 1~3에 해당하는 주석 아래 코드가 이를 위한 처리 흐름을 순서대로 보여줍니다.
+GameNode is a node that is used to create actual game object and implement game content. GameNode basically inherits and implements the BaseGameNode abstract class. GameUser and GameRoom are some of the major objects that are managed by GameNode. Let's take a look at this in depth. The code below shows the callback method that can be redefined in GameNode. The callback that is used to synchronize channels to the common node callback. In addition, the protocol that users want to process in GameNode can be mapped to an arbitrary handler to process the packet using the onDispatch() callback.
 
 
 
 ```
 public class SampleGameNode extends BaseGameNode {
 
-    // 1.패킷 디스패처 생성    
+    // 1.Create packet dispatcher    
     private static PacketDispatcher packetDispatcher = new PacketDispatcher();
 
-    // 2.SampleGameNode에서 처리하고 싶은 프로토콜과 핸들러를 매핑
+    // 2.Map the protocol and handler that need to be processed by SampleGameNode
     static {
         packetDispatcher.registerMsg(SampleGame.GameNodeTest.getDescriptor(), _GameNodeTest.class);
     }
@@ -253,18 +253,18 @@ public class SampleGameNode extends BaseGameNode {
 
     @Override
     public void onPrepare() throws SuspendExecution {
-        setReady(); // 주의
+        setReady(); // caution
     }
 
     /**
-     * 패킷이 전달될 때 호출된다.
+     * Called when packet is passed.
      *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param packet A packet to be processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDispatch(Packet packet) throws SuspendExecution {
-        // 3.SampleGameNode의 메시지 처리
+        // 3.Process the message of SampleGameNode
         if (packetDispatcher.isRegisteredMessage(packet))
             packetDispatcher.dispatch(this, packet);
     }
@@ -282,39 +282,39 @@ public class SampleGameNode extends BaseGameNode {
     }
 
     /**
-     * 같은 채널의 다른 node 에 유저 변화가 있을때 호출되는 콜백
+     * A callback that is called when users are changed in different nodes in the same channel
      * <p>
-     * updateChannelUser() 호출시 발생.
+     * updateChannelUser() Occurs when called.
      *
-     * @param type            채널 정보 변경 타입(갱신/삭제)
-     * @param channelUserInfo 변경될 유저 정보
-     * @param userId          변경 대상의 유저 Id
-     * @param accountId       변경 대상의 Account Id
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param type            Channel information change type(update/delete)
+     * @param channelUserInfo The user information to be changed
+     * @param userId          The user ID of the item to be changed
+     * @param accountId       The account ID of the item to be changed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onChannelUserUpdate(ChannelUpdateType type, ChannelUserInfo channelUserInfo, final int userId, final String accountId) throws SuspendExecution {        
     }
 
     /**
-     * 같은 채널의 다른 node 에 room 상태 변화가 있을때 호출되는 콜백
+     * A callback that is called when the room status is changed in a different node of the same channel
      * <p>
-     * updateChannelRoomInfo() 호출 시 발생.
+     * updateChannelRoomInfo() Occurs when called.
      *
-     * @param type            채널 정보 변경 타입(갱신/삭제)
-     * @param channelRoomInfo 변경될 Room 정보
-     * @param roomId          변경 대상의 Room Id
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param type            Channel information change type(update/delete)
+     * @param channelRoomInfo The room information to be changed
+     * @param roomId          The Room ID of the item to be changed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onChannelRoomUpdate(ChannelUpdateType type, RoomInfo channelRoomInfo, final int roomId) throws SuspendExecution {        
     }
 
     /**
-     * 클라이언트에서 채널 정보를 요청 시 호출되는 콜백 (Base.GetChannelInfoReq)
+     * A callback that is called when the client requests channel information (Base.GetChannelInfoReq)
      *
-     * @param outPayload 클라이언트로 전달될 Channel 정보
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param outPayload The channel information to be passed to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onChannelInfo(Payload outPayload) throws SuspendExecution {        
@@ -326,11 +326,11 @@ public class SampleGameNode extends BaseGameNode {
 
 ### 3-1. GameUser
 
-게임상의 유저를 나타내는 GameUser 객체는 로그인 과정을 거쳐 GameNode에 생성됩니다. 유저 단위의 모든 메시지는 이곳에서 처리할 수 있습니다. 그러므로 유저 관련 콘텐츠는 이 클래스를 중심으로 구현하는 것이 바람직합니다. 앞서 살펴본 모든 예제와 마찬가지로 GameUser 또한 처리할 프로토콜과 핸들러를 매핑할 수 있습니다.
+The GameUser object, which represents the users in the game, is created in GameNode during login. All the messages in the user level can be processed here. Therefore, implementing user-related content centered around this class is recommended. Like all the previous examples, GameUser can map the protocols and handlers to be processed.
 
-아래의 예제 코드는 GameUser의 전체 콜백 메서드 목록을 보여줍니다. 이 중 일부는 기본 구현이 제공되므로 필요한 상황이 아니면 재정의할 필요는 없습니다. 이는 GameUser뿐만 아니라 엔진에서 제공하는 대부분의 콜백 메서드에 해당하는 사항입니다. 이러한 부분은 상속받는 각각의 기본 클래스(e.g.BaseUser)에 대해  [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)에서 JavaDoc 문서를 확인하거나 [레퍼런스 서버 프로젝트](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server)를 참고하는 것이 좋습니다.
+The example code below shows the entire list of callback methods of GameUser. Some of them provides basic implementation, users do not have to redefine them unless it is necessary. This is applied to GameUser and the most of the callback methods provided by the engine. For this part, refer to the JavaDoc document for each base class (e.g. BaseUser) in [GameAnvil API Reference ](http://10.162.4.61:9090/gameanvil) or [reference server project](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server).
 
-아래의 콜백 메서드 중 onLogin()은 최초에 게임 유저를 생성하기 위해 로그인을 시도하는 과정에서 호출됩니다. 이 onLogin() 콜백이 성공하면 GameNode 상에 해당 게임 유저 객체가 생성됩니다. 로그인이 완료된 후에는 사용자가 작성한 프로토콜을 기반으로 클라이언트와 직접 메시지를 주고 받으며 여러 가지 콘텐츠를 처리할 수 있습니다.
+Among the callback methods below, onLogin() is called while logging into the game for the first time to create a game user. When this onLogin() callback succeeds, a game user object is created on GameNode. Once login is complete, many different contents can be processed by transferring messages with the client based on the user-created protocol.
 
 ```
 public class SampleGameUser extends BaseUser {
@@ -342,13 +342,13 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * login 시 발생하는 콜백
+     * A callback that occurs when logging in
      *
-     * @param payload        클라이언트에서 전달한 임의의 페이로드
-     * @param sessionPayload onPreLogin에서 전달된 페이로드
-     * @param outPayload     클라이언트로 전달할 임의의 페이로드
-     * @return boolean type으로 true: 로그인 성공. false: 로그인 실패 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param payload        The arbitrary payload passed by the client
+     * The payload passed by @param sessionPayload onPreLogin
+     * @param outPayload     An arbitrary payload to pass to the client
+     * true with @return boolean type: login succeeds. false: Returns login fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onLogin(final Payload payload,
@@ -357,9 +357,9 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * Login 처리 이후에 발생하는 콜백
+     * A callback that occurs after the login process
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostLogin() throws SuspendExecution {
@@ -367,12 +367,12 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 한 아이디로 유저가 로그인된 상황에서 다른 디바이스에서 같은 유저가 로그인할 때 호출되는 콜백
+     * A callback that is called when a user logs into a different device with a duplicate ID
      *
-     * @param newDeviceId           새로 접속한 유저의 deviceId 값
-     * @param outPayloadForKickUser 클라이언트로 전달할 페이로드
-     * @return boolean type으로 true:새로 접속한 유저가 login success, 현재 유저는 forceLogout. false: 새로 접속한 유저가 login fail을 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다/
+     * @param newDeviceId           The deviceId value of the newly connected user
+     * @param outPayloadForKickUser The payload to pass to the client
+     * true with @return boolean type: Newly connected user login succeeds, the current user is forceLogout. false: Newly connected user returns login fails.
+     * @throws SuspendExecution This method cannot suspend Fiber/
      */
     @Override
     public boolean onLoginByOtherDevice(final String newDeviceId,
@@ -381,12 +381,12 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * MultiType 유저를 사용할 때 어떤 type의 유저가 login된 상황에서 다른 type의 유저가 login할 때 호출되는 콜백
+     * A callback that is called when another type of user is logging in when a different user is already logged in while using the MultiType user
      *
-     * @param userType   새로 로그인을 시도하는 유저의 타입
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return boolean type으로 true: 새 로그인 성공. false: 새 로그인 실패를 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param userType   The type of the user who tries a new login
+     * @param outPayload The payload to pass to the client
+     * true with @return boolean type: New login successful. false: Returns new login failure.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onLoginByOtherUserType(final String userType,
@@ -395,23 +395,23 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * Login 한 상황에서 동일 device 동일 id로 login할 때 호출되는 콜백
+     *  A callback that is called when a duplicate ID is logged on the same device
      *
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param outPayload The payload to pass to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onLoginByOtherConnection(Payload outPayload) throws SuspendExecution {        
     }
 
     /**
-     * 서버에 유저 객체가 살아 있는 상태에서 login 이 호출되었을 경우 호출되는 콜백
+     * A callback that is called when login is called while user object is active in the server
      *
-     * @param payload        클라이언트에서 전달한 임의의 페이로드
-     * @param sessionPayload onPreLogin에서 전달된 페이로드
-     * @param outPayload     클라이언트로 전달할 임의의 페이로드
-     * @return boolean type으로 true: ReLogin 성공, false: ReLogin 실패를 반환.
-     * @throws SuspendExecution: 이 메서드는 파이버가 suspend될 수 있다.
+     * @param payload        The arbitrary payload passed by the client
+     * The payload passed by @param sessionPayload onPreLogin
+     * @param outPayload     An arbitrary payload to pass to the client
+     * true with @return boolean type: ReLogin succeeds, false: Returns ReLogin fails.
+     * @throws SuspendExecution: This method cannot suspend Fiber.
      */
     @Override
     public boolean onReLogin(final Payload payload,
@@ -420,19 +420,19 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트와의 연결이 끊어졌을때 호출되는 콜백
+     * A callback that is called when the connection with the client is severed
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDisconnect() throws SuspendExecution {        
     }
 
     /**
-     * 유저로 전달되는 패킷이 있을 때 호출되는 콜백
+     * A callback that is called when there is a packet to be passed to a user
      *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param packet A packet to be processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDispatch(final Packet packet) throws SuspendExecution {
@@ -440,51 +440,51 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * node가 pause될 때 node가 관리하고 있는 유저에게 호출되는 콜백
+     * A callback that is called to the user when node is paused
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber
      */
     @Override
     public void onPause() throws SuspendExecution {        
     }
 
     /**
-     * node가 resume될 때 node가 관리하고 있는 유저에게 호출되는 콜백
+     * A callback that is called to the user when node is resumed
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onResume() throws SuspendExecution {        
     }
 
     /**
-     * 유저가 logout 시 호출되는 콜백
+     * A callback that is called when the user logs out
      *
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onLogout(final Payload payload, Payload outPayload) throws SuspendExecution {        
     }
 
     /**
-     * 유저가 로그아웃 가능한지 확인하는 콜백.
+     * A callback that is used to check if the user can log out.
      *
-     * @return boolean type으로 반환: false일 경우 로그아웃이 안되며 이 후에 주기적으로 다시 확인을 한다. : true일 경우 유저는 로그아웃이 된다.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * Returns to @return boolean type: If false, logout fails and it is checked later at an interval: If true, the user is logged out.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean canLogout() throws SuspendExecution {        
     }
 
     /**
-     * 클라이언트에서 룸 매이메이킹를 요청했을 경우 발생하는 콜백
+     * A callback that occurs when room matchmaking is requested from the client
      *
-     * @param roomType 매칭되는 룸의 타입
-     * @param payload  클라이언트로부터 전달받은 페이로드
-     * @return 매칭된 룸의 정보 반환, null을 반환할시 클라이언트의 요청 옵션에 따라 새로운 룸이 생성될 수도 있고 실패 처리될 수도 있음
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param roomType The type of matched room
+     * @param payload  The payload received from the client
+     * @return Returns the information of the matched room, if it returns null, a new room can be created or processed as failure according to the client's request option
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public MatchRoomResult onMatchRoom(final String roomType,
@@ -493,13 +493,13 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트에서 유저 매치메이킹을 요청했을 경우 호출되는 콜백
+     * A callback that is called when user matchmaking is requested by the client
      *
-     * @param roomType   매칭되는 룸의 타입
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return true: 유저 매치메이킹 요청 성공, false: 유저 매치메이킹 요청 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param roomType   The type of the matched room
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * @return true: User matchmaking request succeeds, false: User matchmaking request fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onMatchUser(final String roomType,
@@ -509,11 +509,11 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트에서 userMatch가 취소되었을 때 호출되는 콜백
+     * A callback that is called when userMatch is canceled from the client
      *
-     * @param reason 취소된 이유(TIMEOUT/CANCEL)
-     * @return boolean type으로 반환. true: 유저 매치메이킹 취소 성공, false: 유저 매치메이킹 취소 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param reason Reason of cancel (TIMEOUT/CANCEL)
+     * Returns to @return boolean type. true: User matchmaking cancel successful, false: User matchmaking cancel fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onMatchUserCancel(final MatchCancelReason reason) throws SuspendExecution {
@@ -521,64 +521,64 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 타이머 핸들러가 등록되고 호출되는 콜백
+     * A callback that is called after timer handler is registered
      */
     @Override
     public void onRegisterTimerHandler() {        
     }
 
     /**     
-	 * 유저가 다른 노드로 이동할 때 임의의 데이터를 전달하기 위해서 호출되는 콜백
+	 * A callback that is called to pass arbitrary data when the user moves to another node
      *
-     * @param transferPack 필요한 데이터를 설정할 객체
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param transferPack The object that is used to configure the required data
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onTransferOut(final TransferPack transferPack) throws SuspendExecution {        
     }
 
     /**
-     * 유저가 다른 node로 이동한 후 user define을 복구하기 위해 호출되는 콜백
+     * A callback that is called to recover user define after the user moved to another node
      * <p>
-     * 이 시점에는 유저가 완전히 복구되기 전이기 때문에 다른 곳으로 request 호출이 제한된다.
+     * Request calls to a different object is limited as the user is not completely recovered at this point.
      *
-     * @param transferPack 이동 전 전달되었던 객체. 해당 객체에서 설정값을 가져온다.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param transferPack The object passed before moving. Retrieves the set value from the object.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onTransferIn(final TransferPack transferPack) throws SuspendExecution {        
     }
 
     /**
-     * 유저의 node 간 transfer가 완료된 후 호출되는 콜백
+     * A callback that is called after the user's inter-node transfer
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostTransferIn() throws SuspendExecution {        
     }
 
     /**
-     * 클라이언트에서 snapshot 요청 시 호출되는 콜백
+     * A callback that is called when the client requests snapshot
      * <p>
-     * 주로 접속이 끊어지고  서버 상태가 변할 확률이 있을 경우 호출해서 클라이언트와 서버의 상태정보를 동기화하는 데 사용된다.
+     * It is used to the status information of the client and server by calling it when the connection is lost  and there is a possibility of the server status changing.
      *
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onSnapshot(final Payload payload, Payload outPayload) throws SuspendExecution {        
     }
 
     /**
-     * 클라이언트에서 user에게 다른 채널로 이동 요청을 할 경우 호출되는 콜백
+     * A callback that is called when the client requests the user to move to another channel
      *
-     * @param destinationChannelId 이동하려고 하는 대상 channel ID
-     * @param payload              클라이언트로부터 전달받은 페이로드
-     * @param errorPayload         channel 이동 실패 시 서버에서 클라이언트로 전달하는 페이로드. 성공일 경우 전달 안 됨.
-     * @return false: 채널 이동 요청 실패, true: 채널 이동 요청 성공.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param destinationChannelId The target channel ID to switch
+     * @param payload              The payload received from the client
+     * @param errorPayload         The payload that is passed from the server to the client when channel switching fails. It is not passed when it succeeds.
+     * @return false: Channel switch request fails, true: Channel switch request successful.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onCheckMoveOutChannel(final String destinationChannelId,
@@ -588,13 +588,13 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트에서 채널 이동 요청이 들어온 경우  onCheckMoveOutChannel()에서 true 반환한 경우 호출되는 콜백
+     * A callback that is called if   onCheckMoveOutChannel() returns true when the client receives a channel switch request
      * <p>
-     * 채널 이동 시 이동할 채널로 정보를 전달하기 위해서 호출 서버의 moveChannel() 호출 시 onCheckMoveOutChannel()가 호출이 안 되고 바로 호출이 된다.
+     * When switching channels, onCheckMoveOutChannel() is not called and the moveChannel() of the called server is immediately called.
      *
-     * @param destinationChannelId 이동할 channel ID
-     * @param outPayload           이동할 channel에 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param destinationChannelId The channel ID to switch
+     * @param outPayload           The payload that needs to be passed to the channel to switch
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onMoveOutChannel(final String destinationChannelId,
@@ -602,21 +602,21 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * onMoveOutChannel() 호출후 호출되는 콜백
+     * onMoveOutChannel() A callback that is called after the call
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostMoveOutChannel() throws SuspendExecution {
     }
 
     /**
-     * 이동한 채널로 입장할 때 발생하는 콜백
+     * A callback that occurs when entering the switched channel
      *
-     * @param sourceChannelId 이동하기 전 channel ID
-     * @param payload         클라이언트로부터 전달받은 페이로드
-     * @param outPayload      클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param sourceChannelId The channel ID before switching
+     * @param payload         The payload received from the client
+     * @param outPayload      The payload to be passed to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onMoveInChannel(final String sourceChannelId,
@@ -625,19 +625,19 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * onMoveInChannel() 수행 후 호출되는 콜백
+     * onMoveInChannel() A callback that is called after execution
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostMoveInChannel() throws SuspendExecution {
     }
 
     /**
-     * User Transfe 가 가능한지 확인.
+     * Check if User Transfer is possible.
      *
-     * @return boolean type으로 반환. true: Transfer 가능, false: Transfer 불가능, Transfer가 불가능일 경우 NonStopPatch가 종료되기 전까진 지속적으로 호출된다.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * Returns to @return boolean type. true: Transfer possible, false: Transfer impossible, It is called continuously before NonStopPatch is ended if transfer is impossible.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean canTransfer() throws SuspendExecution;
@@ -648,7 +648,7 @@ public class SampleGameUser extends BaseUser {
 
 ### 3-2. GameRoom
 
-2명 이상의 게임 유저는 GameRoom을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 게임 유저들의 요청은 GameRoom 내에서 모두 순서가 보장됩니다. 물론 1명의 게임 유저를 위한 GameRoom 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. GameRoom을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다. 이러한 GameRoom은 GameUser와 마찬가지로 기본 클래스(BaseRoom)을 바탕으로 여러 가지 자체 콜백 메서드를 재정의할 수 있으며 자체적으로 프로토콜을 처리할 수도 있습니다. 아래의 예제 코드는 SampleGameUser를 위한 SampleGameRoom 클래스입니다.
+Two or more game users can create a message flow through GameRoom. In order words, the requests from game users are processed in GameRoom as they are received. Of course, creation of GameRoom for one game user may have a meaning, depending on content. Using GameRoom is entirely dependent on the user. Like GameUser, GameRoom can redefine a variety of callback methods based on the base class (BaseRoom) and can process protocols on its own. The example code below is the SampleGameRoom class for SampleGameUser.
 
 ```
 public class SampleGameRoom extends BaseRoom<SampleGameUser> {
