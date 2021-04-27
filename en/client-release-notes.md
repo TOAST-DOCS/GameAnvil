@@ -1,4 +1,4 @@
-## Game > GameAnvil > Connector > 릴리스 노트
+## Game > GameAnvil > Connector > Release Note
 
 
 
@@ -7,7 +7,7 @@
 
 ##### FIX
 
-* Request를 동시에 여러번 호출할 경우 호출 순서의 역순으로 패킷을 전송하는 버그 수정
+* Fixed a bug in which packets were sent in the reverse order when a request is called several times at the same time
 
 ------
 
@@ -19,19 +19,18 @@
 
 ##### Change
 
-* MoveService 제거
-* Reconnect, Retry 기능 제거
-* PacketHelper의 GetMessage에 Type을 파라메터로 받는 API추가.
-* 각 ResultCode에 고유 숫자 적용
+* Removed MoveService
+* Removed the Reconnect and Retry feature
+* Added the API that receives Type as a parameter for GetMessage of PacketHelper.
+* Applied a unique number to each ResultCode
 
-* ResultCode 추가 및 이름 변경
+* Added and renamed ResultCode
 
-  * <span style="color:#eb6420">현제 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 FORCE_CLOSE_BY_NEW_CONNECTION 가 넘어오는 문제가 있다.
-    다음 릴리즈 때 수정 될 예정.</span>
+  * <span style="color:#eb6420">Currently, there is an issue where FORCE_CLOSE_BY_NEW_CONNECTION comes to the FORCE_CLOSE_DUPLICATE_LOGIN case. It will be fixed on the next release.</span>
 
 ##### Fix
 
-* Disconnect시에도 UserAgent의 isLogin이 true를 리턴하는 이슈 수정
+* Fixed an issue in which the isLogin of UserAgent returns true even when disconnected
 
 
 
@@ -39,71 +38,69 @@
 
 ##### Change
 
-* MoveService 제거
+* Removed MoveService
 
-* Reconnect, Retry 기능 제거
+* Removed the Reconnect and Retry feature
 
-* 각 ResultCode에 고유 숫자 적용
+* Applied a unique number to each ResultCode
 
-* ResultCode 추가 및 이름 변경
+* Added and renamed ResultCode
 
-    * <span style="color:#eb6420">현제 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 FORCE_CLOSE_BY_NEW_CONNECTION 가 넘어오는 문제가 있다.
-        다음 릴리즈 때 수정 될 예정.</span>
-
+    * <span style="color:#eb6420">Currently, there is an issue where FORCE_CLOSE_BY_NEW_CONNECTION comes to the FORCE_CLOSE_DUPLICATE_LOGIN case. It will be fixed on the next release.</span>
 
 
-#### ResultCode 세부 변경사항
+
+#### Detailed ResultCode changes
 
 * ResultCodeAuth
-  * 추가
+  * Add
     * AUTH_FAIL_INVALID_ACCOUNT_ID
 * ResultCodeLogin
-  * 이름변경
+  * Rename
     * LOGIN_FAIL_EMPTY_SUB_ID -> LOGIN_FAIL_INVALID_SUB_ID
-  * 제거
+  * Remove
     * LOGIN_FAIL_LOGINED_SAME_SERVICE
-  * 추가.
-    * LOGIN_FAIL_INVALID_USERID : 잘못된 유저 아이디.
-    * LOGIN_FAIL_LOGINED_OTHER_USER_TYPE : 동일 Account 아이디로 다른 UserType이 로그인 되어있음.
-    * LOGIN_FAIL_LOGINED_OTHER_DEVICE : 동일 Account 아이디로 다른 DeviceId가 로그인 되어있음.
+  * Add.
+    * LOGIN_FAIL_INVALID_USERID : An invalid user ID.
+    * LOGIN_FAIL_LOGINED_OTHER_USER_TYPE : Another UserType is logged in with the same account ID.
+    * LOGIN_FAIL_LOGINED_OTHER_DEVICE : Another DeviceId is logged in with the same account ID.
 * ResultCodeMatchRoom
-  * 제거
+  * Remove
     * MATCH_ROOM_FAIL_UNKNOWN_ERROR
 * ResultCodeMatchUserStart
-  * 제거
+  * Remove
     * MATCH_USER_START_FAIL_MATCH_UNKNOWN_ERROR
 * ResultCodeMatchUserCancel
-  * 제거
+  * Remove
     * MATCH_USER_CANCEL_FAIL_MATCH_UNKNOWN_ERROR
 * ResultCodeMatchPartyStart
-  * 제거
+  * Remove
     * MATCH_PARTY_START_FAIL_MATCH_UNKNOWN_ERROR
 * ResultCodeMatchPartyCancel
-  * 제거
+  * Remove
     * MATCH_PARTY_CANCEL_FAIL_MATCH_UNKNOWN_ERROR        
 * ResultCodeNamedRoom
-  * 추가.
-    * NAMED_ROOM_FAIL_INVALID_ROOM_NAME : 잘못된 방 이름을 보냈을 경우.
+  * Add.
+    * NAMED_ROOM_FAIL_INVALID_ROOM_NAME : When the wrong room name is sent.
 * ResultCodeDisconnect
-  * 이름 변경
+  * Rename
     * FORCE_CLOSE_SYSTEM -> FORCE_CLOSE_SYSTEM_ERROR
     * FORCE_CLOSE_CONTENT -> 
-      FORCE_CLOSE_BASE_CONNECTION : 서버에서 BaseConnection의 close() 호출
-      FORCE_CLOSE_BASE_USER : 서버에서 BaseUser의 closeConnection() 호출
-  * 추가.
-    * FORCE_CLOSE_INVALID_NODE : GameNode가 invalid 상태로 변경된 경우.
-    * FORCE_CLOSE_USER_TRANSFER_FAIL : 유저 트렌스퍼가 실패한 경우.
-    * FORCE_CLOSE_USER_TRANSFER_ERROR : 유저 트렌스퍼중 시스템 에러가 발생한 경우.
-  * 추가되었으나 클라이언트에서 받을 수 없는 경우.
-    서버에서는 클라이언트의 연결이 이미 끊겨있을것으로 예상하고 접속을 강제 종료하면서 아래 코드를 사용한다.
-    클라이언트의 연결이 끈겨 있기 때문에 아래 코드는 받을 수 없어야 한다.
-    이 코드를 받았다면 GameAnvil 개발팀에 제보해 주시길 바란다.
-      * FORCE_CLOSE_BY_NEW_CONNECTION : 같은 계정 정보로 새로운 로그인 요청이 들어온 경우. 
-        * <span style="color:#eb6420">현제 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 이 코드가 넘어오는 문제가 있다.
-          다음 릴리즈 때 수정 될 예정.</span>
-      * FORCE_CLOSE_DISCONNECT_ALARM : 클라이언트가 서버의 상태 체크에 응답을 하지 않은 경우.
-      * FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL : 클라이언트가 서버의 상태 체크에 응답을 하지 않은 경우.
-      * FORCE_CLOSE_GHOST_USER : 고스트 유저인 경우.
+      FORCE_CLOSE_BASE_CONNECTION : Calls the close() of BaseConnection from server
+      FORCE_CLOSE_BASE_USER : Calls the closeConnection() of BaseUser from server
+  * Add.
+    * FORCE_CLOSE_INVALID_NODE : When GameNode is changed to the invalid status.
+    * FORCE_CLOSE_USER_TRANSFER_FAIL : When user transfer fails.
+    * FORCE_CLOSE_USER_TRANSFER_ERROR : When a system error occurs during user transfer.
+  * If it is added but the client cannot receive it,
+    the server determines that the client is already disconnected and forcibly disconnects the client and uses the code below.
+    As the client is disconnected from the server, the code below cannot be received.
+    If you received this code, please contact the GameAnvil development team.
+      * FORCE_CLOSE_BY_NEW_CONNECTION : When a new login request is received from the same account information. 
+        * <span style="color:#eb6420">Currently, there is an issue in which this code would be passed to the FORCE_CLOSE_DUPLICATE_LOGIN case. It will be fixed on the next release.</span>
+      * FORCE_CLOSE_DISCONNECT_ALARM : When the client does not respond to the server's status check.
+      * FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL : When the client does not respond to the server's status check.
+      * FORCE_CLOSE_GHOST_USER : If it is a ghost user.
 
 
 -----
@@ -115,12 +112,12 @@
 #### Typescript
 ##### Change
 
-* ConnectionAgent에 IsReconnecting() 추가.
+* Added IsReconnecting() to ConnectionAgent.
 
 ##### FIX
 
-* UserAgent가 로그인 된 후 disconnect되었을 때 isLogin()이 true를 리턴하는 문제 수정
-* UserAgent를 여러개 사용할때 request에 대한 응답을 받지 못하고 disconnect된 경우 request에 같이 넘겨준  callback이 지워지지 않고 남아서 다음 request시 callback이 2번 호출 되는 문제 수정
+* Fixed an issue in which isLogin() would return true when UserAgent was logged in and then disconnected
+* Fixed an issue in which the passed callback would remain and cause the callback to be called twice when requested when the response to a request was not received and disconnected while using multiple UserAgents
 
 -----
 
@@ -131,19 +128,19 @@
 #### C-Sharp
 ##### Change
 
-* 이름 변경 : Gameflex -> GameAnvil
+* Name change : Gameflex -> GameAnvil
 * RemoveAllListeners() 
-    * bool 파라미터 추가.
-    * false일 경우 userListener, connectonListener는 제거하지 않음.
+    * Added bool parameter.
+    * If false, userListener and connectionListener are not removed.
     * defalult = true,
-* RemoveAllUserListeners() 추가.
-* RemoveAllConnectionListeners() 추가.
+* Added RemoveAllUserListeners().
+* Added RemoveAllConnectionListeners().
 
 #### Typescript
 ##### Change
 
-* 이름 변경 : Gameflex -> GameAnvil
-* RemoveAllCallback () 추가.
+* Name change : Gameflex -> GameAnvil
+* Added RemoveAllCallback ().
 
 -----
 
@@ -156,41 +153,41 @@
 #### C-Sharp
 ##### Change
 
-* 이름 변경 : Tardis -> Gameflex
+* Name change : Tardis -> Gameflex
     * TardisSocket -> Socket
     * SessionAgent -> ConnectionAgent
-* Type 변경
-    * UserId의 type이 string에서 int로 변경
-    * SubId의 type이 string에서 int로 변경
-    * RoomId의 type이 string에서 int로 변경
+* Type change
+    * Changed the type of UserId from string to int
+    * Changed the type of SubId from string to int
+    * Changed the type of RoomId from string to int
 * CreateUserAgent(), GetUserAgent()
-    * 파라미터 `string SubId` -> `int SubId` 로 변경
-    * SubId > 0 이어야 한다.
+    * Changed parameter `string SubId` -> `int SubId`
+    * SubId must be > 0.
 * LoginedUserInfo
-    * UserId 항목 추가.
-    * Payload 항목 추가.
+    * Added the UserId item.
+    * Added the Payload item.
 * LoginInfo
-    * userId 항목 추가.
-    * userType 항목 추가.
-    * roomName 항목 추가.
+    * Added the userId item.
+    * Added the userType item.
+    * Added the roomName item.
 * UserAgent
-    *  파라미터 `string roomId` -> `int roomId` 로 변경.
+    *  Changed parameter `string roomId` -> `int roomId`.
     * RequestToSessionActor() ->RequestToGatewaySession()
     * SendToSessionActor() -> SendToGatewaySession()
     * RequestToSessionActor() -> RequestToGatewaySession()
-    * CreateRoom() - 파라미터 `string roomName` 추가.
-    * onCreateRoom() - 파라미터 `string roomName` 추가.
-    * onJoinRoom() - 파라미터 `string roomName` 추가.
+    * Added CreateRoom() - parameter `string roomName`.
+    * Added onCreateRoom() - parameter `string roomName`.
+    * Added onJoinRoom() - parameter `string roomName`.
     * onMatchRoom() 
-        * 파라미터 `string roomName` 추가.
-        * 파라미터 `bool created` 추가.
+        * Added parameter `string roomName`.
+        * Added parameter `bool created`.
     * onNamedRoom()
-        * 파라미터 `string roomName` 추가.
-        * 파라미터 `bool created` 추가.
+        * Added parameter `string roomName`.
+        * Added parameter `bool created`.
 
 ##### New
 
-*  에러코드
+*  Error code
     * ResultCodeLogin
         * LOGIN_FAIL_EMPTY_SUB_ID
         * LOGIN_FAIL_TIMEOUT_GAME_SERVER
@@ -205,24 +202,24 @@
 
 ##### Change
 
-* 이름 변경 : Tardis -> Gameflex
+* Name change : Tardis -> Gameflex
     * SessionAgent -> ConnectionAgent
-* Type 변경
-    * UserId의 type이 string에서 number로 변경
-    * SubId의 type이 string에서 number로 변경
-    * RoomId의 type이 string에서 number로 변경
+* Type change
+    * Changed the type of UserId from string to number
+    * Changed the type of SubId from string to number
+    * Changed the type of RoomId from string to number
 * CreateUserAgent(), GetUserAgent()
-    * 파라미터 `SubId: string` -> `SubId: number` 로 변경
-    * SubId > 0 이어야 한다.
+    * Changed parameter `SubId: string` -> `SubId: number`
+    * SubId must be > 0.
 * LoginedUserInfo
-    * UserId 항목 추가.
-    * Payload 항목 추가.
+    * Added the UserId item.
+    * Added the Payload item.
 * LoginInfo
-    * userId 항목 추가.
-    * userType 항목 추가.
-    * roomName 항목 추가.
+    * Added the userId item.
+    * Added the userType item.
+    * Added the roomName item.
 * UserAgent
-    *  파라미터 `roomId: string` -> `roomId: number` 로 변경.
+    *  Changed parameter `roomId: string` -> `roomId: number`.
     * MultiSendToSessionActor()->MultiSendToGatewaySession()
     * SendToSessionActor() -> SendToGatewaySession()
     * SendPbToSessionActor() -> SendPbToGatewaySession()
@@ -232,19 +229,19 @@
     * RequestPbToSessionActor() -> RequestPbToGatewaySession()
     * RequestPbAsyncToSesstionActor() -> RequestPbAsyncToGatewaySession()
     * RequestAsyncToSessionActor() -> RequestAsyncToGatewaySession()
-    * CreateRoom() - 파라미터 `roomName: string` 추가.
-    * onCreateRoom() - 파라미터 `roomName: string` 추가.
-    * onJoinRoom() - 파라미터 `roomName: string` 추가.
+    * Added CreateRoom() - parameter `roomName: string`.
+    * Added onCreateRoom() - parameter `roomName: string`.
+    * Added onJoinRoom() - parameter `roomName: string`.
     * onMatchRoom() 
-        * 파라미터 `roomName: string` 추가.
-        * 파라미터 `created: boolean` 추가.
+        * Added parameter `roomName: string`.
+        * Added parameter `created: boolean`.
     * onNamedRoom()
-        * 파라미터 `roomName: string` 추가.
-        * 파라미터 `created: boolean` 추가.
+        * Added parameter `roomName: string`.
+        * Added parameter `created: boolean`.
 
 ##### New
 
-* 에러코드
+* Error code
     * ResultCodeLogin
         * LOGIN_FAIL_EMPTY_SUB_ID
         * LOGIN_FAIL_TIMEOUT_GAME_SERVER
@@ -263,13 +260,13 @@
 
 ##### Change
 
-* ProtocolManger.unregister()사용시 exception발생하는 버그 수정
+* Fixed an issue in which an exception would occur when ProtocolManager.unregister() is used
 
 #### Typescript
 
 ##### Change
 
-* onDisconnect() 콜백에서 바로 connect() 를 호출할 경우 에러 발생 이슈 수정
+* Fixed an issue in which an error would occur when calling connect() directly from the onDisconnect() callback
 
 -----
 
@@ -281,31 +278,31 @@
 
 ##### Change
 
-* XML 문서 주석 적용
-* Agent.LvNetLogger, Logger 삭제.
-* Agent.ContainsListener(int customMsgId) -> AgentHelper로 이동
-* SessionAgent.AddCustomMsgListener, RemoveCustomMsgListener -> AgentHelper.RemoveListener() 로 대체
-* UserAgent.AddCustomMsgListener, RemoveCustomMsgListener -> AgentHelper.AddListener, RemoveListener로 대체
-* Agent.FlushQueue 제거
-* Connector.FlushNetworkQueue 제거
-* Packet.GetMsgId, GetRetryCount, SetRetryCount, setUncompressSize, GetServiceId, GetSubId -> 제거
-* ProtocolManager.RegisterProtocol()에서 protocolId의 최대값 체크 (최대 510)
-* 잘못된 ProtocolId사용시 InvalidProtocolId Exception 발생하도록 수정
-* OnNamedRoom에서 RoomName -> RoomId 이름 변경
+* Applied the XML document comment
+* Agent.LvNetLogger and Logger removed.
+* Moved Agent.ContainsListener(int customMsgId) to> AgentHelper
+* SessionAgent.AddCustomMsgListener, RemoveCustomMsgListener -> Replaced with AgentHelper.RemoveListener()
+* UserAgent.AddCustomMsgListener, RemoveCustomMsgListener -> Replaced with AgentHelper.AddListener and RemoveListener
+* Agent.FlushQueue removed
+* Connector.FlushNetworkQueue removed
+* Packet.GetMsgId, GetRetryCount, SetRetryCount, setUncompressSize, GetServiceId, GetSubId -> Removed
+* Checks the maximum value of protocolId from ProtocolManager.RegisterProtocol() (Up to 510)
+* Edited so that InvalidProtocolId Exception would occur when using invalid ProtocolId
+* Changed the name RoomName -> RoomId in OnNamedRoom
 
 ##### Fix
 
-* MatchUserDone일때 isJoinRoom 셋팅 안되던 버그 수정
+* Fixed a bug in which isJoinRoom would not be set when MatchUserDone
 
 #### Typescript
 
 ##### Change
 
-* JSDoc 적용
-* UserAgent.isJoinRoom 추가.
-* IUserListener.OnMatchPartyCancel()에서 Payload 제거.
-* IUserListener.OnNamedRoom() 에서 roomName-> RoomId로 이름 변경
-* Payload.createDefault() 제거. CreateEmpty() 로 대체함
+* Applied JSDoc
+* Added UserAgent.isJoinRoom.
+* Removed payload from IUserListener.OnMatchPartyCancel().
+* Changed the name roomName-> RoomId from IUserListener.OnNamedRoom()
+* Removed Payload.createDefault(). Replaced by CreateEmpty()
 * SessionAgent.addOnDisconnect()
     * AddOnDisconnect(callback: (agent: SessionAgent, message: string) => void): void; =>
     AddOnDisconnect(callback: (session: SessionAgent, resultCode: ResultCodeDisconnect, reason: string, force: boolean, payload: Payload) => void): void;
@@ -320,7 +317,7 @@
 
 ##### Change
 
-* 파라미터 이름 변경 : msgIndex -> customMsgId
+* Parameter name change: msgIndex -> customMsgId
     * Agent
         * public bool ContainsListener(int customMsgId)
     * SessionAgent
@@ -333,14 +330,14 @@
         * public Packet getPacket(int customMsgId)
 
 * Packet
-    * public Packet(int descId, int msgIndex, byte[] buffer) 삭제
-    * public Packet(int msgIndex, byte[] buffer) 삭제
-    * public string GetFileDescriptorName() 삭제
-    * public void SetDescId(int descId) 삭제
-    * public int GetDescId() 삭제
-    * public int GetMsgIndex() 삭제
-    * public Packet setTimeout(int timeout) 삭제
-    * public int GetTimeout() 삭제
+    * public Packet(int descId, int msgIndex, byte[] buffer) removed
+    * public Packet(int msgIndex, byte[] buffer) removed
+    * public string GetFileDescriptorName() removed
+    * public void SetDescId (int descId) removed
+    * public int GetDescId() removed
+    * public int GetMsgIndex() removed
+    * public Packet setTimeout (int timeout) removed
+    * public int GetTimeout() removed
 
 ##### New
 
@@ -356,10 +353,10 @@
 ##### Change
 
 * Packet
-  * GetDescId(): number; 삭제
-  * GetMsgIndex(): number; 삭제
-  * GetTimeOut(): number; 삭제
-  * SetTimeOut(timeOut: number): void; 삭제
+  * GetDescId(): number; removed
+  * GetMsgIndex(): number; removed
+  * GetTimeOut(): number; removed
+  * SetTimeOut(timeOut: number): void; removed
 
 ##### New
 
