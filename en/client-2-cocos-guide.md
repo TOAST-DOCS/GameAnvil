@@ -1,39 +1,38 @@
-## Game > GameAnvil > 클라이언트 개발 가이드 > CocosCreator 개발 가이드
+## Game > GameAnvil > Client Development Guide > CocosCreator Development Guide
 
-가이드 환경
+Guide Environment
 
 - CocosCreator : 2.2.2.
 - Node.js : 10.16.3
 - Visual Studio Code : 1.43.0
 - GameAnvil Connector : 1.1.0
 
-## GameAnvil 커넥터설치
+## Installing GameAnvil Connector
 
-먼저 새 CocosCreator 프로젝트를 생성합니다. **Cocos Creator Dashboard > New Project > Empty Project**를 선택하고 새 프로젝트를 생성합니다. 
+First, create a new CocosCreator project. Select **Cocos Creator Dashboard > New Project > Empty Project** and create a new project. 
 
 ![new-project](http://static.toastoven.net/prod_gameanvil/images/client-2-new-project.png)
 
 ![new-project-empty](http://static.toastoven.net/prod_gameanvil/images/client-2-new-project-empty.png)
 
-이제 생성된 프로젝트에 GameAnvil 커넥터를 추가합니다. GameAnvil 커넥터는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript.zip)에서 다운로드 받을 수 있습니다. 다운로드한 파일의 압축을 풀어 assets 아래에 폴더를 만들어 넣습니다. 이때 다음과 같은 알림이 나타나면 **No**를 클릭합니다.
+Now, Add GameAnvil connector to the created project. GameAnvil connector can be downloaded from [here](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript.zip). Uncompress the downloaded file, create a folder in the assets folder, and place the file there. When the dialog box shown below appears, click **No**.
 
 ![set-as-a-plugin](http://static.toastoven.net/prod_gameanvil/images/client-2-set-as-a-plugin.png)
 
 ![gameanvil-project](http://static.toastoven.net/prod_gameanvil/images/client-2-gameanvil-project.png)
 
-GameAnvil 커넥터는 protobufjs를 사용합니다. 그래서 GameAnvil 커넥터를 프로젝트에 포함하면 위와 같은 오류가 나오는 것을 볼수 있습니다. 
-
-protobufjs는 Node.js의 install 기능을 이용해 프로젝트에 포함시킵니다. VSCode 터미널에서 다음 코드를 입력하여 package.json 파일을 생성합니다.
+The GameAnvil connector uses protobufjs. Therefore, if the GameAnvil connector is included in a project, the following error will occur.
+protobufjs needs to be included in a project using the install feature of Node.js. Enter the following code in the VSCode terminal to create the package.json file.
 
 ```
 npm init
 ```
 
-위 코드를 입력하면 package.json 파일 생성 프로세스가 시작되고 패키지 이름을 입력받습니다. 이때 그냥 Enter를 누르면 기본값으로 프로젝트 이름을 사용합니다. 이후로 입력받는 값들도 Enter를 누르면 기본값을 사용합니다. 자세한 내용은 [여기](https://docs.npmjs.com/cli/v6/commands/npm-init)를 참고하세요.  
+When the code above is entered, a package.json file creation process is started and the user is prompted to enter the name of the package. Press the Enter key to use the default project name. Other input items also take the default value when the user presses the Enter key. For more information, visit [here](https://docs.npmjs.com/cli/v6/commands/npm-init).  
 
 ![npm-init](http://static.toastoven.net/prod_gameanvil/images/client-2-npm-init.png)
 
-기본값으로 생성한  package.json 파일을 열어보면 다음과 같습니다. 
+The default package.json file contains the following: 
 
 ```
 {
@@ -49,7 +48,7 @@ npm init
 }
 ```
 
-package.json 파일을 생성했으면 이제 터미널에서 다음 코드를 입력하여 protobufjs를 설치합니다.
+When the package.json file is created, enter the following code in the terminal to install protobufjs.
 
 ```
 npm i protobufjs --save
@@ -57,7 +56,7 @@ npm i protobufjs --save
 
 ![protobufjs](http://static.toastoven.net/prod_gameanvil/images/client-2-protobufjs.png)
 
-설치가 완료되면 프로젝트 폴더 아래에 다음과 같은 폴더가 생성됩니다.
+When the installation is complete, the following folder will be created in the project folder.
 
 - node_modules
 - .bin
@@ -66,7 +65,7 @@ npm i protobufjs --save
 - long
 - protobufjs
 
-package.json 파일의 dependencies에  gameanvil_connector가 추가된 것도 확인할 수 있습니다.
+gameanvil_connector will be added in the dependencies of the package.json file as well.
 
 ```
 {
@@ -85,47 +84,47 @@ package.json 파일의 dependencies에  gameanvil_connector가 추가된 것도 
 }
 ```
 
-Internet Explorer 등 구버전 브라우저를 지원하려면 core-js, regenerator-runtime를 추가로 설치합니다.
+core-js and regenerator-runtime need to be installed to support older versions of browsers such as Internet Explorer.
 
 ```
 npm i core-js regenerator-runtime
 ```
 
-## 커넥터생성 및 기본 설정
+## Creating and setting the preferences of the connector
 
-커넥터를 사용하려면 커넥터와 ProtocolManager 모듈을 가져옵니다(import). 
+To use a connector, import a connector and the ProtocolManager module. 
 
 ```
 import { Connector, ProtocolManager} from 'GameAnvil/gameanvil';
 ```
 
-게임에서 사용할 [메시지](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##메시지)를 등록하고, 커넥터 객체를 생성합니다.
+Register the [message](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/## )to be used in the game and create a connector object.
 
 ```
 export default class GameAnvilManager {
     private connector: Connector;
     constructor() {
-        // 프로토콜 등록.
+        // Register the protocol.
         ProtocolManager.RegisterProtocol(0, GameMessages);
 
-        // 커넥터 생성.
+        // Create a connector.
         this.connector = Connector.Create();
     }
 }
 ```
 
-서버와 주고받는 [메시지](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##메시지) 처리를 위해 Update() 함수를 주기적으로 호출해야 합니다. Update() 함수의 호출 주기는 자유롭게 설정해도 무방하나 호출하지 않을 경우 서버로부터 [메시지](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##메시지)를 받더라도 이에 대한 알림을 받을 수 없습니다.
+To process the [messages](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/## ) transferred among the servers, the Update() function need to be called regularly. The interval of the Update() function calling can be freely set, but if it is not called, the user will not receive a notification when the server sends a [message](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/## ).
 
 ```
 setInterval(() => { this.connector.Update(); }, 10);
 ```
 
-다음과 같은 싱글 턴 클래스를 만들어 사용하면 편리합니다. 
+Create and use the following single-turn class for convenience. 
 
 ```
 /*
-    Internet Explorer 등 구버전 브라우저에서 커넥터 사용하기 위해서는 
-    core-js, regenerator-runtime 등의 플러그인을 사용해야 한다.
+    To use a connector on older versions of browsers such as Internet Explorer, 
+    the user must use plugins such as core-js and regenerator-runtime.
 */
 import 'core-js';
 import 'regenerator-runtime';
@@ -136,13 +135,13 @@ export default class GameAnvilManager {
     private static manager: GameAnvilManager;
     private connector: Connector;
     private constructor() {
-        // 프로토콜 등록.
+        // Register the protocol.
         ProtocolManager.RegisterProtocol(0, GameMessages);
 
-        // 커넥터 생성.
+        // Create a connector.
         this.connector = Connector.Create();
 
-        // 메세지 루프. 10ms 마다 호출.
+        // A message loop. Call every 10ms.
         let updater = setInterval(() => { this.connector.Update(); }, 10);
     }
 
@@ -167,42 +166,42 @@ export default class GameAnvilManager {
 }
 ```
 
-## 서버 접속 및 인증
+## Connecting to and Authenticating the Server
 
-서버 접속 및 인증은 ConnectionAgent를 이용해 진행합니다. ConnectionAgent는 GameAnvil 서버의 커넥션 노드와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 서버 구현에 따라 채널 정보를 제공하거나 사용자 정의 [메시지](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##메시지)를 주고받을 수 있습니다. ConnectionAgent는 커넥터가 초기화될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다. 
+ConnectionAgent is used to connect to a server and authenticate it. ConnectionAgent is responsible for tasks related to the connection node of the GameAnvil server. It provides basic session management features including Connect, Authentication and the channel list. It can also provide channel information or send and receive custom [messages](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/## )depending on the server implementation. ConnectionAgent is automatically created when the connector is initialized or can be obtained by using the Connector.GetConnectionAgent() function.
 
 ```
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
-// 서버 접속
+// Connecting to Server
 // Connect(ipAdress: string, callback?: (agent: ConnectionAgent, resultCode: ResultCodeConnect) => void): void;
-//  ipAddress : 접속할 서버 주소. 
-//  callback : 결과를 전달 받을 콜백.(선택 사항)
-//    agent : Connect()를 호출한 ConnectionAgent 객체.
-//    resultCode : Connect 결과.
+//  ipAddress : The address of the server to be connected. 
+//  callback : The callback to which the result is received (Optional).
+//    agent : The ConnectionAgent object that called Connect().
+//    resultCode : The result of Connect.
 connection.Connect(
     this.edtIPAddress.string,
     (agent, resultCode) => {
         console.log("Connect : " + ResultCodeConnect[resultCode]);
         if (ResultCodeConnect.CONNECT_SUCCESS == resultCode) {
-            // 접속 성공
+            // Connection successful
         } else {
-            // 접속 실패
+            // Connection failed
         }
     }
 );
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
-// 인증. 
+// Authentication. 
 // Authenticate(deviceId: string, accountId: string, password: string, payload?: Payload, callback?: (agent: ConnectionAgent, resultCode: ResultCodeAuth, loginedUserInfoList: Array<LoginedUserInfo>, message: string, payload: Payload) => void): void;
-//  deviceId : 중복 접속을 체크하기 위해 사용.
-//  accountId : 사용자 계정. 
-//  password : 패스워드.
-//  payload : 추가적으로 필요한 데이터가 있을 경우 사용.(선택 사항)
-//  callback : 결과를 전달받을 콜백.(선택 사항)
-//   agent : Authenticate를 호출한 ConnectionAgent 객체.
-//   resultCode : Authenticate 결과
-//   loginedUserInfoList : 이 어카운트 Id를 이용중인 로그인된 유저 정보.
-//   message : 서버에서 보내주는 추가 메세지. 
-//   payload: 서버 콘텐츠에서 보내주는 추가 데이터.
+//  deviceId : Used to check for duplicate logins
+//  accountId : User account. 
+//  password : Password.
+//  payload : Used when additional data is required (Optional).
+//  callback : The callback to which the result is received (Optional).
+//   agent : The ConnectionAgent object that called Authenticate.
+//   resultCode : The result of Authenticate
+//   loginedUserInfoList : The information of the user who is using this account ID.
+//   message : The additional message sent by server. 
+//   payload: The additional data sent by the server content.
 connection.Authenticate(
     "deviceId",
     this.edtAccountId.string,
@@ -210,33 +209,33 @@ connection.Authenticate(
     null,
     (agent, resultCode, loginedUserInfoList: Array<LoginedUserInfo>, message: string, payload: Payload) => {
         if (ResultCodeAuth.AUTH_SUCCESS == resultCode) {
-            // 인증 성공
+            // Authentication successful
         } else {
-            // 인증 실패
+            // Authentication failed
         }
     }
 );
 ```
 
-접속을 종료할 때는 Disconnect()를 호출합니다.
+To disconnect, call Disconnect().
 
 ```
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
-// 접속 종료
+// Disconnect
 // Disconnect(reason: string, callback?: (agent: ConnectionAgent, resultCode: ResultCodeDisconnect, reason: string) => void, force: boolean, payload: Payload): void;
-//   reason : 접송 종료 이유. Disconnect()를 호출하는 경우가 다양할 경우, 콜백에서 각각의 경우를 구분하기위해 사용.
-//   callback : 결과를 전달 받음. (선택 사항)
-//     agent : Disconnect() 호출한 ConnectionAgent 객체.
-//     resultCode : Disconnect() 결과.
-//     reason : 접속 종료 이유.
-//     force : 서버에서의 강제종료 여부. 중복접속, Kick, AdminKick 등.
-//     payload : 서버 컨텐츠에서 보내주는 추가 데이터.
+//   reason : The reason of disconnection. If there are many reasons for calling Disconnect(), it is used to distinguish each instance in callback.
+//   callback : Receives the result (optional).
+//     agent : The ConnectionAgent object that called Disconnect().
+//     resultCode : The result of Disconnect().
+//     reason : The reason of disconnection.
+//     force : Whether it is forcibly disconnected from the server; duplicate login, Kick, AdminKick etc.
+//     payload : The additional data sent by the server content.
 connection.Disconnect("click Disconnect");
 ```
 
-Disconnect() 호출 외에도 네트워크 환경으로 인한 접속 종료 등의 경우를 처리하기 위해 ConnectionAgent.AddOnDisconnect()를 이용해 별도로 콜백을 등록해 사용합니다.
+To process the disconnection instances besides calling Disconnect(), use ConnectionAgent.AddOnDisconnect() to separately register callback.
 
-IConnectionListener 인터페이스를 구현하여 등록하면 ConnectionAgent의 모든 알림을 받을 수도 있습니다.
+If the IConnectionListener interface is implemented and registered, all the notifications from ConnectionAgent can be received.
 
 ```
 class ConnectionListener implements IConnectionListener{
@@ -252,50 +251,50 @@ class ConnectionListener implements IConnectionListener{
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
 connection.AddListener(new ConnectionListener());
 
-// address      : 서버 주소
+// address      : Server Address
 connection.Connect(address);
-// ConnectionListener.OnConnect 로 응답
+// Respond with ConnectionListener.OnConnect
 
 
-//  deviceId : 중복 접속을 체크하기 위해 사용.
-//  accountId : 사용자 계정. 
-//  password : 패스워드.
-//  payload : 추가적으로 필요한 데이터가 있을 경우 사용.(선택 사항)
+//  deviceId : Used to check for duplicate logins
+//  accountId : User account. 
+//  password : Password.
+//  payload :  Used when additional data is required (Optional).
 connection.Authenticate(deviceId, accountId, password, payload);
-// ConnectionListener.OnAuthenticate 로 응답
+// Respond with ConnectionListener.OnAuthenticate
 ```
 
-## 로그인 및 기본 기능 사용
+## Using Login and Default Features
 
-로그인/로그아웃 및 기본 기능은 UserAgent를 통해 사용할 수 있습니다. UserAgent는 GameAnvil 서버의 게임 노드와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 룸 관리 등 기본 기능을 제공하며, 서버 구현에 따라 사용자 정의 기능을 추가적으로 제공할 수도 있습니다. UserAgent를 사용하기 위해서는 Connector.CreateUserAgent() 함수를 이용해 새로운 UserAgent를 생성해야 합니다. ServiceId 와 SubId로 구분되는 여러 개의 UserAgent를 생성할 수 있으며 생성된 각 UserAgent는 독립적으로 사용할 수 있습니다. 생성된 UserAgent는 커넥터에서 내부적으로 관리되며 Connector.GetUser() 함수를 이용해 다시 사용할 수 있습니다.
+Login/Logout and basic features can be used through UserAgent. UserAgent is responsible for the tasks related to the game node of GameAnvil server. It provides basic features such as Login, Logout and room management, and may provide custom features depending on the server implementation. To use UserAgent, you must create a new UserAgent using the Connector.CreateUserAgent() function. Several UserAgents, either ServiceId or SubId, and each created UserAgent can be used independently. Created UserAgents are internally managed in Connector and can be reused using the Connector.GetUser() function.
 
 ```
-// serviceId    : UserAgent가 사용할 serviceId. 
-// subId        : 서비스별 UserAgent 식별할 수 있는 고유 ID. 서버 구현에 따라 사용하지 않을 수 있음.
+// serviceId    : The serviceId to be used by UserAgent. 
+// subId        : A unique ID that can be used to identify UserAgent of each service. It may not be used depending on the server implementation
 let user = GameAnvilManager.GetInstance().GetUserAgent(this.ServiceName);
 if (user == null) {
     user = GameAnvilManager.GetInstance().CreateUserAgent(this.ServiceName);
 }
 let user = GameAnvilManager.GetInstance().GetUserAgent(this.ServiceName);
-// Service에 로그인합니다.
+//  Log into Service.
 // Login(userType: string, payload?: Payload, channelId?: string, callback?: (agent: UserAgent, resultCode: ResultCodeLogin, loginInfo: LoginInfo) => void): void;
-//   userType : 서버에 등록된 UserType. 
-//   payload : 추가적으로 필요한 데이터가 있을 경우 사용.(선택 사항)
-//   channelId : 사용할 할 채널. (선택 사항. 입력하지 않을 경우 빈 문자열로 처리되며, 서버에 빈 문자열로된 채널이 설정되어야 합니다.)
-//   callback : 결과를 전달받을 콜백.(선택 사항)
-//     agent : Login()을 호출한 UserAgent 객체.
-//     resultCode : Login() 결과
-//     loginInfo : 로그인된 유저 정보.
+//   userType : UserType registered to the server. 
+//   payload : Used when additional data is required (Optional).
+//   channelId : The channel to be used (Optional. If it is left empty, it will be processed as an empty character string, the server must have a channel composed of an empty character string).
+//   callback : The callback to which the result is received (Optional).
+//     agent : The UserAgent object that called Login().
+//     resultCode : The result of Login()
+//     loginInfo : The information of the logged in user.
 user.Login(this.UserType, null, this.editBoxChannel.string, (UserAgent, resultCode, loginInfo) => {
     if(resultCode == ResultCodeLogin.LOGIN_SUCCESS){
-        // 로그인 성공
+        // Login successful
     }else{
-        // 로그인 실패
+        // Login failed
     }
 });
 ```
 
-IUserListener 인터페이스를 구현하여 등록하면 UserAgent의 모든 알림을 받을 수도 있습니다.
+If the IUserListener interface is implemented and registered, all the notifications from UserAgent can be received.
 
 ```
 class UserListener : IUserListener{
@@ -324,50 +323,50 @@ let user = connector.GetUserAgent(serviceId, subId);
 user.AddUserListener(new UserListener())
 
 
-// payload     : 서버로 전달할 추가적인 값. 서버 구현에 따라 사용하지 않을 수 있음.
-// channelId   : UserAgent가 로그인할 채널 ID. 서버 구현에 따라 사용하지 않을 수 있음.
+// payload     :  An additional value to be delivered to the server. It may not be used depending on the server.
+// channelId   : The channel ID with which UserAgent logs in. It may not be used depending on the server.
 user.Login(payload, channelId);
-// UserListener.OnLogin으로 응답
+// Respond with UserListener.OnLogin
 
 
 user.Logout();
-// UserListener.OnLogout으로 응답
+// Respond with UserListener.OnLogout
 
 
 user.CreateRoom();
-// UserListener.OnCreateRoom으로 응답
+// Respond with UserListener.OnCreateRoom
 
 
 user.MatchRoom();
-// UserListener.OnMatchRoom으로 응답
+// Respond with UserListener.OnMatchRoom
 
 
 user.LeaveRoom();
-// UserListener.OnLeaveRoom으로 응답
+// Respond with UserListener.OnLeaveRoom
 
 
 ...
 ```
 
-## 메시지
+## Message
 
-ConnectionAgent, UserAgent의 기본 기능 외에 Request()와 Send()를 이용하여 메시지를 서버로 전송할 수 있습니다. 메시지를 전송하려면 메시지를 생성하고 등록하는 과정이 필요합니다.
+In addition to the default feature such as ConnectionAgent and UserAgent, a message can be sent to the server using Request() and Send(). To send a message, one must be created and registered.
 
-### 메시지 생성
+### Creating Message
 
-GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/overview)를 사용하고 있습니다. .proto파일에 메시지를 정의하고, pbjs 로 실제 클래스 소스 코드를 생성하게 됩니다. 그리고 GameAnvil에서 사용할 추가 코드를 생성된 코드에 삽입합니다. 이렇게 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. 
+GameAnvil uses [ProtocolBuffer ](https://developers.google.com/protocol-buffers/docs/overview) as its default message protocol. A message is defined in the .proto file and actual class source code is created using pbjs. Insert the additional code to be used on GameAnvil to the created code. The source code created as such can be added to and used for a project. 
 
-추가 코드를 삽입하려면 `CodeInserter` 를 설치해야합니다. `CodeInserter`는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-CodeInserter.zip)에서 다운로드 받을 수 있습니다. 다운로드 받은 파일의 압축을 풀어 프로젝트 루트 아래(assets 폴더 밖에)에 폴더를 만들어 넣어줍니다.
+To insert additional code, `CodeInserter` needs to be installed. `CodeInserter` can be downloaded from [here](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-CodeInserter.zip). Uncompress the downloaded file and place in a folder outside the assets folder under the project's root.
 
 ![codeInserter](http://static.toastoven.net/prod_gameanvil/images/client-2-codeInserter.png)
 
-`CodeInserter`는 acorn을 사용합니다. 터미널에서 다음 코드를 입력하여 acorn을 설치합니다. 
+`CodeInserter` uses acorn. Enter the following code in the terminal to install acorn. 
 
 ```
 npm i acorn@5.5.3 --save-dev
 ```
 
-package.json의 devDependencies에 acorn이 추가된 것을 확인할 수 있습니다.
+acorn will be added to the devDependencies of package.json.
 
 ```
 {
@@ -389,7 +388,7 @@ package.json의 devDependencies에 acorn이 추가된 것을 확인할 수 있�
 }
 ```
 
-이제 메시지를 만들어 보도록 하겠습니다. 먼저 assets 폴더 아래에 protocols 폴더를 생성하고 다음과 같이 messages.proto 파일을 생성합니다.
+Now, let's create a message. First, create the protocols folder under the Assets folder and create the messages.proto file as follows.
 
 ```
 // messages.proto
@@ -418,7 +417,7 @@ message SampleReceive
 }
 ```
 
-다음으로 messages.proto 파일을 컴파일하기 위한 스크립트를 package.json에 추가합니다. 
+Next, add the script for compiling the messages.proto file to package.json. 
 
 ```
 {
@@ -444,30 +443,29 @@ message SampleReceive
 }
 ```
 
-그리고 터미널에서 다음 코드를 입력하여 메시지를 생성합니다.
+Then enter the following code in the terminal to create a message.
 
 ```
 npm run messages
 ```
 
-다음과 같이 `message.js`, `message.d.ts` 파일이 생성된 것을 확인할 수 있습니다.
+The `message.js` and `message.d.ts` files will be created.
 
 ![messages](http://static.toastoven.net/prod_gameanvil/images/client-2-messages.png)
 
-### 메시지 등록
+### Registering Message
 
-새로 생성한 메시지를 사용하려면 사용하려는 메시지를 ProtocolManager에 서버와 같은 값으로 미리 등록해야 합니다. 등록하지 않거나 서버와 다를 경우 동작하지 않거나 오동작 하거나 예외가 발생 할 수 있습니다.
+To use the newly created message, it must be pre-registered to ProtocolManager with a value identical to that of the server. If the value is not registered or different than that of the server, it may not work or work erroneously, or triggers an exception.
 
 ```
-// 서버와 같은 값으로 등록해야한다.
+// The value registered must be equal to that of the server.
 ProtocolManager.RegisterProtocol(0, message);
 ```
 
-### 메시지 전송
+### Transferring Message
 
-RequestPb()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 응답을 기다리는 동안 추가적인 RequestPb()는 큐에 저장되고 서버 응답을 처리한 후 순차적으로 처리하게 됩니다. 서버 응답을 받아 처리하려면 리스너를 등록해야 합니다. 리스너를 등록하지 않을 경우 서버 응답을 받아도 별도의 알림을 주지 않고 다음 메시지를 처리하게 됩니다. 지정된 시간 내에 응답이 오지 않으면 타임아웃을 발생시키고 다음 메시지를 처리합니다. 타임아웃은 OnError() 리스너에 ErrorCode.TIMEOUT으로 전달이 됩니다.
-
-SendPb()로 메시지를  전송하면 SendPb()의 호출 즉시 서버로 전송되며 별도의 응답을 기다리지 않습니다. RequestPb()에 대한 응답을 기다리는 중에도 SendPb()를 사용한 메시지는 바로 서버로 전송됩니다.
+Send a message using RequestPb() and wait for the server to respond. While waiting for the server response, additional RequestPb()is stored in the queue and processed later after the server response is processed. To receive and process a server response, you must register a listener. If no listener is registered, the next message is processed without separate notification even with a server response. If there is no response within a set time, a timeout occurs and the next message is processed. The timeout is transferred to the OnError() listener as ErrorCode.TIMEOUT.
+When a message is sent via SendPb(), it is instantly delivered to the server when SendPb() is called and does not wait for separate response. Messages sent by using SendPb() are immediately transferred to the server even while waiting for the response of RequestPb().
 
 ```
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
@@ -484,7 +482,7 @@ connection.AddCallback(Messages.SampleResponse, (connectionAgent, response)=>{
 });
 let sampleRequest = new Messages.SampleRequest();
 connection.RequestPb(sampleRequest);
-// 응답으로 Messages.SampleResponse.
+// Messages.SampleResponse as a response
 
 connection.RequestPb<Messages.SampleResponse>(sampleRequest, (connectionAgent, response)=>{
     // Messages.SampleResponse
@@ -502,16 +500,16 @@ user.AddCallback(Messages.SampleResponse, (connectionAgent, response)=>{
 });
 let sampleRequest = new Messages.SampleRequest();
 user.RequestPb(sampleRequest);
-// 응답으로 Messages.SampleResponse.
+// Messages.SampleResponse as a response.
 
 user.RequestPb<Messages.SampleResponse>(sampleRequest, (connectionAgent, response)=>{
     // Messages.SampleResponse
 });
 ```
 
-### 커스텀 메시지
+### Custom Message
 
-패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [여기](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##Packet)를 참고합니다.
+Arbitrary data except ProtocolBuffer can be serialized as byte stream and used via packet class. For more information on packet, visit [here](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##Packet).
 
 ```
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
@@ -522,10 +520,10 @@ let enc = new TextEncoder();
 connection.AddUndefinedProtocolCallback(resMsgId, this.onUndefinedProtocolResponse);
 let packet = Packet.CreateFromBuffer(reqMsgId, enc.encode("Test Data"));
 connection.Request(packet);
-// onUndefinedProtocolResponse 응답
+// onUndefinedProtocolResponse response
 
 connection.Request(packet, (connectionAgent, packet) => {
-    // 여기로 응답
+    // Respond here
 });
 let user = GameAnvilManager.GetInstance().GetUserAgent(this.ServiceName);
 let reqMsgId = 1;
@@ -535,20 +533,20 @@ let enc = new TextEncoder();
 user.AddUndefinedProtocolCallback(resMsgId, this.onUndefinedProtocolResponse);
 let packet = Packet.CreateFromBuffer(reqMsgId, enc.encode("Test Data"));
 user.Request(packet);
-// onUndefinedProtocolResponse 응답
+// onUndefinedProtocolResponse response
 
 user.Request(packet, (connectionAgent, packet) => {
-    // 여기로 응답
+    // Respond here
 });
 ```
 
-## 패킷
+## Packet
 
-서버와 주고받는 모든 메시지는 패킷 모듈에 실려서 처리되며 패킷 모듈이 제공하는 인터페이스를 이용하게 됩니다.
+All the messages transferred between server are processed in a packet module and use the interface provided by packet module.
 
-### 생성
+### Creation
 
-GameAnvil 커넥터는 Google Protocol Buffer를 기본 프로토콜로 사용하고 있습니다 . Google Protocol Buffer를 이용하는 패킷생성은 다음과 같습니다.
+The GameAnvil connector uses Google Protocol Buffer as the default protocol. Creating a packet using Google Protocol Buffer is as below:
 
 ```
 let sampleMessage = new Messages.SampleMessage();
@@ -557,7 +555,7 @@ let packet= Packet.CreateFromPbMsg(sampleMessage);
 let sampleMessage2 = packet.GetPbMessage<Messages.SampleMessage>();
 ```
 
-Google Protocol Buffer를 사용하지 않고도 패킷을 생성할 수 있습니다 .
+A packet can be created without using Google Protocol Buffer.
 
 ```
 let enc = new TextEncoder();
@@ -573,9 +571,9 @@ let bytes = packet.GetBytes();
 let obj = JsonUtil.Deserialize(bytes);
 ```
 
-### 압축
+### Compression
 
-패킷 크기가 클 경우 압축하여 데이터 사용량을 줄일 수 있습니다 .  
+If the size of a packet is too large, it can be compressed to reduce data usage.  
 
 ```
 let sampleMessage = new Messages.SampleMessage();
@@ -590,7 +588,7 @@ let responseMsg = packet.GetPbMessage<Messages.SampleMessage>();
 
 ## Payload
 
-GameAnvil에서 제공하는 기본 API를 이용할 때 추가적인 데이터가 필요할 수 있습니다. 이를 위해 기본 API들에는 추가 데이터를 넘겨줄 수 있는 payload라는 매개변수가 포함되어 있습니다. 이 payload에 필요한 데이터를 패킷에 담아 list 형식으로 저장할 수 있습니다. 여기에 추가 데이터를 넣어 서버로 보내거나, 서버에서 보낸 메시지를 꺼낼 수 있습니다.  
+When using the default API provided by GameAnvil, you may need additional data. For this, the default API includes the payload parameter to deliver additional data. The data required for the payload can be stored in a packet in a list form. You can add more data here and send it to the server or extract the message sent to the server.  
 
 ```
 let userInfo = Packet.CreateFromPbMsg(new Messages.UserInfo());
@@ -611,6 +609,6 @@ let userInfoPacket: Packet = payload.GetPacket(Messages.UserInfo);
 let roomInfo2: Messages.RoomInfo = payload.GetPBMessage(Messages.RoomInfo);
 ```
 
-## GameAnvil 커넥터종료
+## Ending GameAnvil Connector
 
-게임 플레이 종료 전 Connector.CloseSoket() 함수를 호출해 연결을 종료하는 것이 좋습니다. 종료하지 않으면 서버에서 클라이언트의 종료를 인지하지 못할 수 있으며, 그럴 경우 불필요한 동작을 계속할 수 있습니다. 
+Disconnecting via calling the Connector.CloseSocket() function before shutting down the game play is recommended. Otherwise, the server may not recognize that the client has shut down and keep performing unnecessary tasks.

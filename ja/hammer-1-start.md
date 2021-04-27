@@ -1,46 +1,46 @@
-## Game > GameAnvil > 테스트 개발 가이드 > 시작하기
+## Game > GameAnvil > テスト開発ガイド > 始める
 
 ## GameHammer
 
-GameHammer는 GameAvlil 엔진을 이용한 게임 서버 개발 도구로 강력하고 편리한 테스트 도구입니다. 실제 커넥터에서 제공하는 모든 기능을 사용할 수 있으며, 다양한 테스트 케이스를 만들 수 있는 API를 제공하고 있습니다. 또한, 스트레스 테스트를 위해 다수의 GameHammer를 동시에 실행하고, 그 결과를 취합해 바로 확인할 수 있습니다.
+GameHammerは、GameAvlilエンジンを利用したゲームサーバー開発ツールで、強力で便利なテストツールです。実際のコネクタで提供するすべての機能を使用することができ、多様なテストケースを作成できるAPIを提供しています。またストレステストを行うための複数のGameHammerを同時に実行し、その結果をまとめて確認できます。
 
-### 시스템 요구 사항
+### システム要求事項
 
-GameHammer를 사용하려면 다음과 같은 사항이 필요합니다. 
+GameHammerを使用するには次のような事項が必要です。 
 
-- 지원하는 언어
+- サポートする言語
     - Java
-- 타깃 개발 환경
+- ターゲット開発環境
     - InteliJ
-- 지원하는 네트워크 프로토콜
+- サポートするネットワークプロトコル
     - TCP/IP
     - SSL over TCP/IP
-- 사용 가능한 응용 프로토콜 형식
+- 使用可能な応用プロトコル形式
     - Google Protocol Buffers
-    - Google FlatBuffers(예정)
-    - 커스텀 바이트 스트림
-    - HTTP/HTTPS(특정한 용도로 한정)
+    - Google FlatBuffers(予定)
+    - カスタムバイトストリーム
+    - HTTP/HTTPS(特定の用途に限定)
 
-### 특장점
+### 特徴
 
-GameHammer는 다음과 같은 기능을 지원합니다.
+GameHammerは次のような機能をサポートします。
 
-- 커넥터와 대응하는 모든 기능 지원
-- Sync/Async 방식 모두 지원
-    - Async 방식의 API 제공
-    - Sync 방식을 위한 future 제공
-- 수천 개 또는 그 이상의 커넥셕 동시에 사용 가능
-- 상태 기반의 시나리오 관리 기능 지원
+- コネクタと対応するすべての機能をサポート
+- Sync/Async方式を全てサポート
+    - Async方式のAPIを提供
+    - Sync方式用のfutureを提供
+- 数千個以上のコネクションを同時に使用可能
+- 状態ベースのシナリオ管理機能をサポート
 
-### 레퍼런스 프로젝트
+### リファレンスプロジェクト
 
-| 서버                                                         | 테스트 코드                                                  | 설명                                             |
+| サーバー                                                     | テストコード                                              | 説明                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------ |
-| [RPS](https://github.nhnent.com/game-server-engine/GameAnvil-rps) | [RPS-test](https://github.nhnent.com/game-server-engine/GameHammer-rps-test) | 실제 게임 서버와 GameHammer를 사용한 테스트 코드 |
+| [RPS](https://github.nhnent.com/game-server-engine/GameAnvil-rps) | [RPS-test](https://github.nhnent.com/game-server-engine/GameHammer-rps-test) | 実際のゲームサーバーとGameHammerを使用したテストコード |
 
-## 프로젝트에 GameHamer 추가하기
+## プロジェクトにGameHamerを追加する
 
-GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.xml 파일의 dependencies 요소에 다음과 같이 추가하시면 GameHammer를 사용할 수 있습니다. 만일 GameHammer 설치에 실패할 경우에는 repository 요소에 사내 nexus의 URL이 아래와 같이 제대로 등록되었는지 확인하세요
+GameHammerはGameAnvilと同様にMavenを介して配布されます。pom.xmlファイルのdependencies要素に次のように追加するとGameHammerを使用できます。GameHammerのインストールに失敗した場合は、repository要素に社内nexusのURが下記のように正しく登録されているかを確認してください。
 
 ```
 ...
