@@ -10,7 +10,13 @@
 
 Unity 프로젝트에 gameanvil-connector.unitypackage를 설치합니다. gameanvil-connector.unitypackage는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)에서 다운로드할 수 있습니다. 패키지를 설치하면 다음과 같이 GameAnvil 폴더 아래에 DLL 파일들이 설치됩니다. DLL 파일들은 C#으로 만든 것으로 Andoid, iOS, PC 등의 플렛폼에서 모두 사용 가능합니다. 
 
-![unitypackage](http://static.toastoven.net/prod_gameanvil/images/client-1-unitypackage.png)
+![unitypackage](http://static.toastoven.net/prod_gameanvil/images/client-1-gameanvil.png)
+
+gameanvil-sample-template.unitypackage는 서버 템플릿에 포함된 채팅 서버에 대응하는 채팅 클라이언트로 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-sample-template.unitypackage)에서 다운로드할 수 있다. gameanvil-sample-template.unitypackage를 설치하면 다음과 같이 GameAnvilSampleForTemplate 폴더에 샘플 파일들이 설치됩니다. 여기에 포함된 Login Scene을 열고 실행하면 서버 템플릿의 채팅 서버에 접속하여 채팅을 할 수 있다.
+
+![unitypackage](http://static.toastoven.net/prod_gameanvil/images/client-1-gameanvil-sample-template.png)
+
+![unitypackage](http://static.toastoven.net/prod_gameanvil/images/client-1-chatting-client.png)
 
 ## 커넥터 생성
 
