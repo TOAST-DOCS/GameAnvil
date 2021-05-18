@@ -1,4 +1,4 @@
-## Game > GameAnvil > 콘솔 > 릴리스 노트
+## Game > GameAnvil > 릴리스 노트 > Console
 
 ### 1.0.2 (2021.04.27)
 

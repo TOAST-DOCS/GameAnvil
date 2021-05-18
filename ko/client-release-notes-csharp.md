@@ -1,4 +1,4 @@
-## Game > GameAnvil > Connector-CSharp > 릴리스 노트
+## Game > GameAnvil > 릴리스 노트 > Connector-CSharp 
 
 ### 1.1.2 (2021.04.15) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.2.unitypackage)
 #### New

@@ -1,4 +1,4 @@
-## Game > GameAnvil > Connector-Typescript > 릴리스 노트
+## Game > GameAnvil > 릴리스 노트 > Connector-Typescript
 
 
 ### 1.1.3 (2021.04.07) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.3.zip)
