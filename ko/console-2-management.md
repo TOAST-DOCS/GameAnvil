@@ -252,7 +252,7 @@ Min, Max 범위를 벗어나는 설정값이 입력된 경우 해당 필드가 F
 
 GameAnvil 인스턴스에 배포되는 프로세스 파일을 관리하는 메뉴 입니다. 
 
-![management_deployfile.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile.png)
+![management_deployfile_kor.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile.png)
 
 ### 파일 업로드
 
@@ -262,7 +262,7 @@ GameAnvil 인스턴스에 배포되는 프로세스 파일을 관리하는 메�
 
 업로드 버튼 클릭시 파일 업로드만 수행되며 인스턴스 모니터링 메뉴에서 **배포하기** 기능을 실행하여야 배포가 완료됩니다.
 
-![management_deployfile_upload.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload.png)
+![management_deployfile_upload_kor.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload.png)
 
 ### 배포 이력
 
@@ -271,4 +271,4 @@ GameAnvil 인스턴스에 배포되는 프로세스 파일을 관리하는 메�
 배포가 수행 된 인스턴스, 머신, 배포 일시 등의 정보를 확인할 수 있습니다. 
 
 
-![management_deployfile_history.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history.png)
+![management_deployfile_history_kor.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history.png)

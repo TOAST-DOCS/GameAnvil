@@ -251,7 +251,7 @@ A template can be deleted after it is changed or deleted from the instance.
 
 This is the menu that is used to manage the process file deployed to the GameAnvil instance. 
 
-![management_deployfile.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile.png)
+![management_deployfile_en.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile.png)
 
 ### Upload File
 
@@ -261,7 +261,7 @@ Only files of which extension is .jar are supported. The allowed size of a file 
 
 Only file upload is done when the upload button is clicked and the deployment is completed only when the **Deploy** feature is run from the instance monitoring menu.
 
-![management_deployfile_upload.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload.png)
+![managment_deployfile_upload_en.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload.png)
 
 ### Deployment history
 
@@ -270,4 +270,4 @@ The deployment history of the deployment file is exposed when the Check Deployme
 Can check the information of the deployed instances, machines, and date of deployment and others. 
 
 
-![management_deployfile_history.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history.png)
+![managment_deployfile_history_en.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history.png)

@@ -252,7 +252,7 @@ Min、Max範囲を超える設定値が入力された場合、該当のフィ�
 
 GameAnvilインスタンスに配布されるプロセスファイルを管理するメニューです。
 
-![management_deployfile.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile.png)
+![management_deployfile_jp.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile.png)
 
 ### ファイルのアップロード
 
@@ -262,7 +262,7 @@ GameAnvilインスタンスに配布されるプロセスファイルを管理�
 
 アップロードボタンを押すと、ファイルのアップロードが実行され、インスタンスモニタリングメニューで**配布する**機能を実行すると配布が完了します。
 
-![management_deployfile_upload.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload.png)
+![management_deployfile_upload_jp.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload.png)
 
 ### 配布履歴
 
@@ -271,4 +271,4 @@ GameAnvilインスタンスに配布されるプロセスファイルを管理�
 配布が行われたインスタンス、マシン、配布日時などの情報を確認できます。 
 
 
-![management_deployfile_history.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history.png)
+![management_deployfile_history_jp.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history.png)
