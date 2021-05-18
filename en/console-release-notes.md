@@ -4,17 +4,17 @@
 
 #### New
 
-* 영문 번역 적용
+* Applied the English translation
 
 #### Change
 
-* VM Option 입력 메시지를 512까지 입력할 수 있도록 변경
-* Toast UI Chart Vue 버전 4.2.1로 적용
+* Changed VM Option input message to allow up to 512 bytes
+* Applied Toast UI Chart Vue version 4.2.1
 
 #### Fix
 
-* 머신 설정 오류 발생 시 재시도 버튼을 누르면 무조건 Java 11로 셋팅되는 문제 수정
-* 인스턴스 등록에서 머신 선택 시 필터링 된 상태의 전체선택 문제 수정
+* Fixed an issue where the machine would be forcibly set to Java 11 if Retry button was clicked after the occurrence of a machine setting error
+* Fixed an issue where all filtered machines would be selected when a machine was selected from Register Instance
 
 ### 1.0.1 (2021.03.23)
 
@@ -33,7 +33,7 @@
 
 #### New
 
-##### GameAnvil Console 출시
+##### Release GameAnvil Console
 
 * Can check the changes in concurrent users and monitor user distribution.
 * Can manage the GameAnvil engine server.
