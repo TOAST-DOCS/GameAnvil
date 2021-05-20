@@ -2,6 +2,7 @@
 
 
 ### 1.1.3 (2021.04.07) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.3.zip)
+#### GameAnvil 1.1.0 이상
 #### Change
 * ContainsCallback, ContainsUndefinedProtocolCallback, ContainsListener 추가.
 * RemoveCallback, RemoveUndefinedProtocolCallback에 callback개별로 삭제 가능하도록 callback 옵셔널 파라메터 추가.
@@ -18,7 +19,7 @@
 
 
 ### 1.1.2 (2021.03.16) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.2.zip)
-
+#### GameAnvil 1.1.0 이상
 #### Change
 * Connector.config의 default값 변경.
 	* PingInterval : 10 -> 3
@@ -31,7 +32,7 @@
 
 
 ### 1.1.1 (2021.02.10) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.1.zip)
-
+#### GameAnvil 1.1.0 이상
 #### Change
 * SingleServer 
 	* onMatchRoom 사용 시 payload에 null이 넘어오는 이슈 수정
@@ -45,6 +46,7 @@
 ------
 
 ### 1.1.0 (2020.12.18) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.0.zip)
+#### GameAnvil 1.1.0 이상
 #### Change
 * 호환성 이슈로 수정하여 GitEnterprize에 올려놓고 사용하던 protobufjs를 이슈가 수정된 공식 최신버전으로 교체
 
@@ -54,7 +56,7 @@
 
 
 ### 1.0.1 (2020.10.08) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.1.zip)
-
+#### GameAnvil 1.0.0 이상
 #### FIX
 
 * Request를 동시에 여러번 호출할 경우 호출 순서의 역순으로 패킷을 전송하는 버그 수정
@@ -64,7 +66,7 @@
 
 
 ### 1.0.0 (2020.08.31) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.0.zip)
-
+#### GameAnvil 1.0.0 이상
 #### Change
 * MoveService 제거
 * Reconnect, Retry 기능 제거

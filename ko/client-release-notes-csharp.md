@@ -1,6 +1,7 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-CSharp 
 
 ### 1.1.2 (2021.04.15) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.2.unitypackage)
+#### GameAnvil 1.1.0 이상
 #### New
 * GameAnvil Server의 ClientStateCheck기능을 일시 정지시키는 ConnectionAgent.PauseClientStateCheck() 추가. 앱이 백그라운드로 진입하는 등 메시지 루프가 동작하지 않게 되는 경우 호출해준다.
 * 일시 정지했던 ClientStateCheck기능을 다시 동작 시키는 ConnectionAgent.ResumeClientStateCheck() 추가. 앱이 백그라운드에서 복귀하는 등 메시지 루프가 다시 동작하게 되는 경우 호출해준다.
@@ -14,7 +15,7 @@
 
 
 ### 1.1.1 (2021.04.07) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.1.unitypackage)
-
+#### GameAnvil 1.1.0 이상
 #### Change
 * listener개별 등록 여부를 확인 할 수 있는 ContainsListener 오버 로딩 추가. 
 * 메시지 별 모든 listener를 삭제할 수 있는 RemoveAllListenersForMsg, RemoveAllListenersForMsgId 추가
@@ -29,6 +30,7 @@
 
 ### 1.1.0 (2020.12.18) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.0.unitypackage)
 
+#### GameAnvil 1.1.0 이상
 #### Change
 * .Net 4.5 이상 지원으로 완전 전환
 	* 사용 라이브러리 모두 .Net 4.5 용 최신 버전으로 교체
@@ -46,6 +48,7 @@
 
 ### 1.0.0 (2020.08.31) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
 
+#### GameAnvil 1.0.0 이상
 #### Change
 
 * MoveService 제거
