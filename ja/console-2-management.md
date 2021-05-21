@@ -7,7 +7,7 @@ GameAnvilプロセスが実行される機器を登録し、登録されたマ�
 
 マシン登録前に、該当のマシンにGameAnvil Agentをインストールする必要があります。[ [GameAnvil-Agent Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.tar) ] 
 
-![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main.png)
+![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main_ja.png)
 
 ### マシン登録
 
@@ -15,7 +15,7 @@ GameAnvilプロセスが実行される機器を登録します。
 
 GameAnvilサービスを有効化した後、まず最初にマシン登録作業を行う必要があります。
 
-![management_machine_register.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_register.png)
+![management_machine_register.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_register_ja.png)
 * 入力タイプ：コンソールウィンドウに直接マシン情報を入力して登録できます。.csv形式ファイルをアップロードして、複数のマシンを登録できます。
 * ホスト名：登録する機器のホスト名を入力します。
 * IPアドレス：登録する機器のPublic IPアドレスを入力します。このアドレスでコンソールと通信するため、正確に入力する必要があります。
@@ -25,7 +25,7 @@ GameAnvilサービスを有効化した後、まず最初にマシン登録作�
 
 ### マシンリスト
 登録されたマシンリストを確認できます。ホスト名、IPアドレス、説明検索機能を提供します。 
-![management_machine_list.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_list.png)
+![management_machine_list.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_list_ja.png)
 
 ### マシン設定 
 
@@ -33,7 +33,7 @@ GameAnvilサービスを有効化した後、まず最初にマシン登録作�
 
 登録したマシンの中から1つのマスターマシンと1つ以上のロケーション管理マシンを選択します。 
 
-![management_machine_setup.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup.png)
+![management_machine_setup.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_ja.png)
 * マスターマシン： Management Nodeが実行されるマシンを選択します。マスターマシンが登録されている時のみインスタンス / ノードの制御が可能です。 
 * ロケーション管理マシン： Location Nodeが実行されるマシンを選択します。
 * Javaバージョン： GameAnvilサーバービルドに使用されているJavaのバージョンを選択します。 
@@ -49,9 +49,9 @@ Management NodeとLocation Nodeは、GameAnvilを構成する必須ノードで�
 
 登録されたすべてのインスタンスの状態が動作中ではない場合にのみ、マシン設定の初期化を行えます。
 
-![management_machine_init.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_init.png)
+![management_machine_init.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_init_ja.png)
 
-![management_machine_setup_none.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_none.png)
+![management_machine_setup_none.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_none_ja.png)
 
 
 
@@ -67,19 +67,19 @@ Management NodeとLocation Nodeは、GameAnvilを構成する必須ノードで�
 
 インスタンスの基本的な情報と構成されたノード情報が表示されます。
 
-![ManagementInstance-0](https://static.toastoven.net/prod_gameanvil/images/management_instance_0.png)
+![ManagementInstance-0](https://static.toastoven.net/prod_gameanvil/images/management_instance_list_ja.png)
 
 ノードタイプごとにフィルタ機能とインスタンス名、ホスト名検索機能を提供します。
 
 フィルタと検索ワードはAND条件で動作します。
 
-![ManagementInstance-1](https://static.toastoven.net/prod_gameanvil/images/management_instance_1.png)
+![ManagementInstance-1](https://static.toastoven.net/prod_gameanvil/images/management_instance_filter_ja.png)
 
 インスタンスに構成されたノードの詳細設定は**確認**ボタンを押して確認できます。
 
 上部にあるタブからノードごとに確認できます。
 
-![ManagementInstance-2](https://static.toastoven.net/prod_gameanvil/images/management_instance_2.png)
+![ManagementInstance-2](https://static.toastoven.net/prod_gameanvil/images/management_instance_config_popup_ja.png)
 
 ### 登録
 
@@ -252,7 +252,7 @@ Min、Max範囲を超える設定値が入力された場合、該当のフィ�
 
 GameAnvilインスタンスに配布されるプロセスファイルを管理するメニューです。
 
-![management_deployfile_jp.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile.png)
+![ManagementDeployFile-1](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_ja.png)
 
 ### ファイルのアップロード
 
@@ -262,7 +262,7 @@ GameAnvilインスタンスに配布されるプロセスファイルを管理�
 
 アップロードボタンを押すと、ファイルのアップロードが実行され、インスタンスモニタリングメニューで**配布する**機能を実行すると配布が完了します。
 
-![management_deployfile_upload_jp.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload.png)
+![ManagementDeployFile-2](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload_ja.png)
 
 ### 配布履歴
 
@@ -271,4 +271,4 @@ GameAnvilインスタンスに配布されるプロセスファイルを管理�
 配布が行われたインスタンス、マシン、配布日時などの情報を確認できます。 
 
 
-![management_deployfile_history_jp.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history.png)
+![ManagementDeployFile-3](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history_ja.png)

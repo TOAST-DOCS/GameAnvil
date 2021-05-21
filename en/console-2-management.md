@@ -7,7 +7,7 @@ It is the menu that is used to register the machines on which GameAnvil processe
 
 GameAnvil Agent must be installed before registering machines. [ [GameAnvil-Agent Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.tar) ] 
 
-![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main.png)
+![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main_en.png)
 
 ### Register Machine
 
@@ -15,7 +15,7 @@ Registers the machine on which GameAnvil processes would be run.
 
 Machines must be registered right after the GameAnvil service is activated.
 
-![management_machine_register.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_register.png)
+![management_machine_register.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_register_en.png)
 * Input type: Can register by directly enter the machine information on the console window or register multiple machines at once by uploading a .csv file.
 * Host name: Enter the host name of the machine to be registered.
 * IP address: Enter the Public IP of the machine to be registered. The address is used to communicate with the console, so it must be accurate. 
@@ -25,7 +25,7 @@ Machines must be registered right after the GameAnvil service is activated.
 
 ### Machine List
 Can check the list of registered machines and provides a feature to be used to search host names, IP addresses, and descriptions.  
-![management_machine_list.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_list.png)
+![management_machine_list.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_list_en.png)
 
 ### Machine settings 
 
@@ -33,7 +33,7 @@ Sets the master machine and location management machine after the machines are r
 
 Select one or more master machine and location management machine among the registered machines. 
 
-![management_machine_setup.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup.png)
+![management_machine_setup.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_ja.png)
 * Master machine: Select the machine on which Management Node would be run. Instances and nodes can be controlled only if a master machine is registered. 
 * Location management machine: Select the machine on which Location Node would be run. 
 * Java version: Select the version of Jana in which GameAnvil server build was used. 
@@ -48,9 +48,9 @@ It is a feature that is used to reset the settings of the master machine and loc
 When the settings of existing machine is reset, Management Node and Location Node are closed as well.  
 To reset machine settings, all the instances registered to it must not be running.
 
-![management_machine_init.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_init.png)
+![management_machine_init.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_init_en.png)
 
-![management_machine_setup_none.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_none.png)
+![management_machine_setup_none.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_none_en.png)
 
 
 
@@ -66,19 +66,19 @@ Can check the list of registered instances.
 
 The basic information of an instance and the information of the configured nodes are exposed.
 
-![ManagementInstance-0](https://static.toastoven.net/prod_gameanvil/images/management_instance_0.png)
+![ManagementInstance-0](https://static.toastoven.net/prod_gameanvil/images/management_instance_list_en.png)
 
 Provides filters per node type, and the instance name and host name search feature.
 
 Filters and keywords work with the AND condition.
 
-![ManagementInstance-1](https://static.toastoven.net/prod_gameanvil/images/management_instance_1.png)
+![ManagementInstance-1](https://static.toastoven.net/prod_gameanvil/images/management_instance_filter_en.png)
 
 The detailed information of the nodes configured in an instance can be checked with a popup by clicking the **Confirm** button.
 
 Can check individual node with the tab located on the top of the screen.
 
-![ManagementInstance-2](https://static.toastoven.net/prod_gameanvil/images/management_instance_2.png)
+![ManagementInstance-2](https://static.toastoven.net/prod_gameanvil/images/management_instance_config_popup_en.png)
 
 ### Register
 
@@ -94,7 +94,7 @@ The entered value per item is checked in real time and displays a notification i
 
 Note that **Server build upload paths** and **machines** cannot be edited once they are registered.
 
-![ManagementInstance-3](https://static.toastoven.net/prod_gameanvil/images/management_instance_3.png)
+![ManagementInstance-3](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_1_en.png)
 
 The machine to deploy an instance can be selected by entering the basic information of the instance (instance name and server build upload path).
 
@@ -102,7 +102,7 @@ Machine management displays the list of registered machines with a popup.
 
 Instances that share the same configuration can be selected and registered.
 
-![ManagementInstance-12](https://static.toastoven.net/prod_gameanvil/images/management_instance_12.png)
+![ManagementInstance-12](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_2_en.png)
 
 As the basic information is covered, let's move onto the node settings.
 
@@ -110,7 +110,7 @@ As the basic information is covered, let's move onto the node settings.
 
 Nodes can be configured only through a template.
 
-![ManagementInstance-4](https://static.toastoven.net/prod_gameanvil/images/management_instance_4.png)
+![ManagementInstance-4](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_3_en.png)
 
 A new template can be directly added and specified by either selecting a registered template or by **Add Setup Template** among setup selection.
 
@@ -251,7 +251,7 @@ A template can be deleted after it is changed or deleted from the instance.
 
 This is the menu that is used to manage the process file deployed to the GameAnvil instance. 
 
-![management_deployfile_en.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile.png)
+![ManagementDeployFile-1](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_en.png)
 
 ### Upload File
 
@@ -261,7 +261,7 @@ Only files of which extension is .jar are supported. The allowed size of a file 
 
 Only file upload is done when the upload button is clicked and the deployment is completed only when the **Deploy** feature is run from the instance monitoring menu.
 
-![managment_deployfile_upload_en.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload.png)
+![ManagementDeployFile-2](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload_en.png)
 
 ### Deployment history
 
@@ -270,4 +270,4 @@ The deployment history of the deployment file is exposed when the Check Deployme
 Can check the information of the deployed instances, machines, and date of deployment and others. 
 
 
-![managment_deployfile_history_en.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history.png)
+![ManagementDeployFile-3](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history_en.png)

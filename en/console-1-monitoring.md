@@ -4,7 +4,7 @@
 
 The machines and instances registered from the management page and the status of each node can be checked.
 
-![monitoring_dashboard_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_main.png)
+![monitoring_dashboard_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_main_en.png)
 
 - Machine
     - Represents the total number of the machines registered to the management page and the total number of the machines that are normally connected to the Agent installed on machine.
@@ -47,7 +47,7 @@ The machines and instances registered from the management page and the status of
 
 The number of users who are connected to GAME node can be checked at a glance using a graph.
 
-![monitoring_dashboard_graph](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_graph.png)
+![monitoring_dashboard_graph](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_graph_en.png)
 
 - The graph is automatically updated every minute, and you can check the graphs for today, yesterday, and the last week.
 - If there is no data for yesterday or the last week, no graph will be displayed.
@@ -105,7 +105,7 @@ Up to 50 pieces of data are shown in the graph by default. To display more than 
 
 In System monitoring, the status of machines and instances can be checked with simple information.
 
-![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main.png)
+![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main_en.png)
 
 ### Tree view
 
@@ -113,7 +113,7 @@ The hierarchy of the machines and instances registered from the management page 
 
 The tree is composed of the following:
 
-![monitoring_system_tree](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_tree.png)
+![monitoring_system_tree](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_tree_en.png)
 
 Displays machines and the instances belong to each machine. 
 By selecting a host name or instance name, the detailed information page of each machine is displayed.
@@ -124,7 +124,7 @@ In addition, machines can be easily found by using the host name search feature.
 
 The information on the selected machine and the instances belong to that machine is displayed.
 
-![monitoring_system_machine](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_machine.png)
+![monitoring_system_machine](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_machine_en.png)
 
 - Information on machine and instance
 
@@ -149,7 +149,7 @@ The information on the selected machine and the instances belong to that machine
 
 it displays the detailed information on the selected instance.
 
-![monitoring_system_instance](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_instance.png)
+![monitoring_system_instance](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_instance_en.png)
 
 - Information on instance
     - Instance name
@@ -178,7 +178,7 @@ it displays the detailed information on the selected instance.
 
 The instance information can be checked and each configured node can be started/stopped/deployed from the management page.
 
-![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main.png)
+![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main_en.png)
 
 1. Search
     - A specific instance can be searched using a host name or instance name.
@@ -186,11 +186,11 @@ The instance information can be checked and each configured node can be started/
 2. Filter
     - A specific instance can be filtered using the status of an instance or deploy or instance setting type.
 
-    ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter.png)
+    ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter_en.png)
 
 ### Instance table
 
-![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table.png)
+![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table_en.png)
 
 #### Action<span style='color: #EB4927'>①</span>
 
@@ -205,7 +205,7 @@ An action can be performed on the instances selected from the checkbox of the ta
 
 Deployment files can be uploaded in the same way as Management > Deployment File page.
 
-![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload.png)
+![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload_en.png)
 
 
 #### Table
@@ -240,7 +240,7 @@ The status of each instance can be checked and take action on start/stop/deploy 
 
 Can monitor all the nodes of which status is READY.
 
-![monitoring_node_all](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all.png)
+![monitoring_node_all](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_en.png)
 
 - Node ID
 - Service ID
@@ -259,7 +259,7 @@ Can monitor all the nodes of which status is READY.
 
 #### Filter
 
-![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter.png)
+![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter_en.png)
 
 Specific nodes can be filtered using the filters below to all Ready nodes.
 - Node type
@@ -270,7 +270,7 @@ Specific nodes can be filtered using the filters below to all Ready nodes.
 
 Can monitor the GATEWAY nodes of which status is READY while running.
 
-![monitoring_node_gateway](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway.png)
+![monitoring_node_gateway](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_en.png)
 
 - Node ID
 - Node type
@@ -287,7 +287,7 @@ Can monitor the GATEWAY nodes of which status is READY while running.
 
 #### Filter
 
-![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter.png)
+![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter_en.png)
 
 Specific nodes can be filtered using the filters below to all running GATEWAY nodes.
 - Node status
@@ -296,7 +296,7 @@ Specific nodes can be filtered using the filters below to all running GATEWAY no
 
 Can monitor the GAME nodes of which status is READY while running.
 
-![monitoring_node_game](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game.png)
+![monitoring_node_game](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_en.png)
 
 - Node ID
 - Node type
@@ -317,7 +317,7 @@ Can monitor the GAME nodes of which status is READY while running.
 
 #### Filter
 
-![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter.png)
+![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter_en.png)
 
 Specific nodes can be filtered using the filters below to all running GAME nodes.
 - Node status
@@ -327,7 +327,7 @@ Specific nodes can be filtered using the filters below to all running GAME nodes
 
 Can monitor the SUPPORT nodes of which status is READY while running.
 
-![monitoring_node_support](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support.png)
+![monitoring_node_support](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_en.png)
 
 - Node ID
 - Node type
@@ -344,7 +344,7 @@ Can monitor the SUPPORT nodes of which status is READY while running.
 
 #### 필터
 
-![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter.png)
+![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter_en.png)
 
 Specific nodes can be filtered using the filters below to all running SUPPORT nodes.
 - Node status
@@ -354,7 +354,7 @@ Specific nodes can be filtered using the filters below to all running SUPPORT no
 
 Can monitor the MATCH nodes of which status is READY while running.
 
-![monitoring_node_match](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match.png)
+![monitoring_node_match](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_en.png)
 
 - Node ID
 - Node type
@@ -366,7 +366,7 @@ Can monitor the MATCH nodes of which status is READY while running.
 
 #### Filter
 
-![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter.png)
+![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter_en.png)
 
 Specific nodes can be filtered using the filters below to all running MATCH nodes.
 - Node status
