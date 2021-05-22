@@ -301,6 +301,54 @@ Min, Max 범위를 벗어나는 설정값이 입력된 경우 해당 필드가 F
 
 ![ManagementTemplate-17](https://static.toastoven.net/prod_gameanvil/images/management_template_delete_ko.png)
 
+## 서비스
+
+서비스란 **GameAnvil**로 제작된 서버 코드의 부트스트랩 과정에서 **GAME**, **SUPPORT** 노드에서 사용하게 될 식별자 입니다.
+
+### 목록
+
+등록된 서비스 목록을 볼 수 있는 화면입니다.
+
+서비스 타입(GAME, SUPPORT 순)으로 정렬되고 그 후 서비스 ID로 정렬됩니다.
+
+해당 서비스가 사용되고 있는 템플릿이 있는지 있다면 어떤 템플릿인지 확인할 수 있습니다.
+
+서비스이름으로 검색 기능이 제공됩니다.
+
+![ManagementService-1](https://static.toastoven.net/prod_gameanvil/images/management_service_list_ko.png)
+
+### 등록
+
+**서비스 ID**는 1~99 중에서 원하는 숫자로 입력하면 되고 중복해서 사용할 수 없습니다.
+
+**서비스 이름**은 서버 코드의 부트스트랩에 사용 된 식별자와 동일해야 하고 대소문자를 구분하기 때문에 오타에 주의해야하고 서비스 ID와 마찬가지로 중복해서 사용할 수 없습니다.
+
+서비스 등록 방식은 두가지가 있습니다. 직접 입력 방식과 파일 업로드 방식입니다.
+
+**직접 입력**은 아래와 같이 직접 입력을 클릭 후 원하는 값을 직접 입력하는 방식입니다.
+
+![ManagementService-2](https://static.toastoven.net/prod_gameanvil/images/management_service_add_ko.png)
+
+**파일 업로드** 방식은 아래와 같이 파일 업로드를 클릭 후 ***템플릿 예시 파일***을 클릭하여 템플릿 양식에 맞춰 원하는 데이터를 입력 후 파일 선택 혹은 드래그 앤 드롭 하여 여러개의 서비스를 한꺼번에 저장 할 수 있습니다.
+
+이때 주의 할 점이 파일 업로드 시 서비스 타입은 한가지만 가능하기 때문에 GAME과 SUPPORT를 나눠서 저장하셔야 합니다.
+
+![ManagementService-3](https://static.toastoven.net/prod_gameanvil/images/management_service_fileupload_1_ko.png)
+
+저장을 누른 후 아래와 같은 화면이 나타나는 데 화면에 입력된 값이 올바른지 확인 후 맨 아래의 저장버튼을 다시 한번 눌러 입력된 값을 서버로 전송하게 됩니다.
+
+![ManagementService-4](https://static.toastoven.net/prod_gameanvil/images/management_service_fileupload_2_ko.png)
+
+### 수정 및 삭제
+
+**서비스 이름**을 수정, 삭제해야 할 경우 목록에서 해당 서비스를 클릭하면 상세화면 보기로 전환됩니다.
+
+수정은 해당 서비스가 등록된 템플릿을 이용하여 동작 중인 인스턴스가 없을 때 수정이 가능합니다.
+
+삭제는 해당 서비스가 등록된 템플릿이 없을 때 서비스를 삭제가 가능합니다.
+
+![ManagementService-5](https://static.toastoven.net/prod_gameanvil/images/management_service_detail_ko.png)
+
 ## 배포파일
 
 GameAnvil 인스턴스에 배포되는 프로세스 파일을 관리하는 메뉴 입니다. 
