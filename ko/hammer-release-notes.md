@@ -1,4 +1,4 @@
-## Game > GameAnvil > GameHammer> 릴리스 노트
+## Game > GameAnvil > 릴리스 노트 > GameHammer
 
 
 
