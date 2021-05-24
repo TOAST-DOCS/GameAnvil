@@ -59,7 +59,7 @@ GAMEノードに接続したユーザーの数をグラフでひと目で確認�
 
 GAMEノードの接続した同時接続者、分布平均、そしてマシン、インスタンス、ノードの数を確認できます。
 
-![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main.png)
+![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main_ja.png)
 
 - 同時接続者
     - 動作中(READY)のGAMEノードで集計された同時接続者数を意味します。

@@ -59,7 +59,7 @@ The number of users who are connected to GAME node can be checked at a glance us
 
 Can check the number of concurrent users on GAME node, distribution average, and the number of machines, instances, and nodes.
 
-![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main.png)
+![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main_en.png)
 
 - Concurrent users
     - It means the number of concurrent users aggregated from READY GAME nodes.

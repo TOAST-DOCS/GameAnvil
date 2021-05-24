@@ -59,7 +59,7 @@ GAME 노드에 접속한 사용자의 수를 그래프를 통하여 한 눈에 �
 
 GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스턴스, 노드의 수를 확인할 수 있습니다.
 
-![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main.png)
+![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main_ko.png)
 
 - 동시접속자
     - 동작 중(READY)인 GAME 노드에서 집계된 동시접속자 수를 의미합니다.
