@@ -1,24 +1,40 @@
-## Game > GameAnvil > 콘솔 > 릴리스 노트
+## Game > GameAnvil > Console > Release Note
+
+### 1.0.2 (2021.04.27)
+
+#### New
+
+* Applied the English translation
+
+#### Change
+
+* Changed VM Option input message to allow up to 512 bytes
+* Applied Toast UI Chart Vue version 4.2.1
+
+#### Fix
+
+* Fixed an issue where the machine would be forcibly set to Java 11 if Retry button was clicked after the occurrence of a machine setting error
+* Fixed an issue where all filtered machines would be selected when a machine was selected from Register Instance
 
 ### 1.0.1 (2021.03.23)
 
 #### Change
 
-* 등록된 머신이 없을 때 인스턴스 등록화면 접근 시 머신등록 페이지를 안내하도록 변경
-* 머신 파일 업로드 후 머신 목록 리스트로 이동하도록 변경
-* 모니터링 대시보드 동시접속자 변화 그래프 데이터가 몇시 몇분 데이터인지 표시하도록 변경
-* 인스턴스 등록 / 수정 화면에서 Port 입력란 아래 중복 체크 버튼을 Port 중복 체크로 문구 변경
+* Changed the system so that it shows the machine registration page if the instance registration screen is accessed while there is no registered machine.
+* Changed the system so that the user would be redirected to the machine list after a machine file is uploaded.
+* Changed the system so that the monitoring dashboard concurrent user influx graph data would display the hour and minute of the data
+* Changed the text of the Check for Duplicates button to Check for Port Duplicates in the instance registration/edit screen
 
 #### Fix
 
-* 노드 모니터링에서 선택 안하고 Resume / Pause 눌렀을 때 안내 팝업 나오도록 수정
+* Changed the system so that a popup window would appear if Resume/Pause is clicked without selecting node monitoring
 
 ### 1.0.0 (2021.02.23)
 
 #### New
 
-##### GameAnvil Console 출시
+##### Release GameAnvil Console
 
-* 동시접속자 변화를 확인할 수 있으며 유저 분포를 모니터링 할 수 있습니다.
-* GameAnvil 엔진 서버를 관리할 수 있습니다.
-* 인스턴스, 노드에 발생 한 이벤트를 조회할 수 있습니다.
+* Can check the changes in concurrent users and monitor user distribution.
+* Can manage the GameAnvil engine server.
+* Can check the events occurred from instances and nodes.

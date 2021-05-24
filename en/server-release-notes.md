@@ -1,4 +1,4 @@
-## Game > GameAnvil > 릴리스 노트
+## Game > GameAnvil > Release Note
 
 
 
@@ -6,7 +6,7 @@
 
 #### Fix
 
-- RoomMatchReq에서 에러 응답 시 패킷 헤더 복원(restore)이 안 되는 문제 수정
+- Fixed an issue in which packet header would not restored when responding to the error in RoomMatchReq
 
 
 
@@ -14,11 +14,11 @@
 
 #### Fix
 
-- 임의의 Session에 아직 아무런 패킷이 전달된 적이 없을 경우에 이 Session으로 send 호출 시 NPE(Null Pointer Exception) 발생하는 문제 수정
-- publishToClient 사용 시 문제 발생(Notice 포함)
-- Room에서 사용하는 반복 Timer로 인해 방 파괴가 지연되는 문제 수정
-- protobuf 구조체를 변수로 가지고 있는 Class를 deserialize할 때 예외 발생하는 이슈 수정
-- java.lang.UnsupportedOperationException이 발생
+- Fixed an issue in which NPE (Null Pointer Exception) would occur when no packet was passed to an arbitrary Session
+- An issue would occur when using publishToClient (included Notice)
+- Fixed an issue in which room destruction would be delayed because of the repeat Timer used by Room
+- Fixed an issue in which an exception would occur when de-serializing the Class that has the protobuf structure as a variable
+- java.lang.UnsupportedOperationException occurs
 
 
 
@@ -26,7 +26,7 @@
 
 #### Change
 
-- 이전에 스펙에서 제외되었던 공지 기능 API를 다시 활성화
+- Reactivated the notification API that was previously excluded from specifications
 
 
 
@@ -34,21 +34,21 @@
 
 #### New
 
-- Log에 표시되는 Node 정보를 사용자가 원하는 대로 설정할 수 있는 기능 추가
-- HostId를 직접 입력할 수 있는 기능 추가
-- nodeInfoByHostId에서 HostId별로 정보를 보내주는 기능 추가
+- Added a feature that is used to allow users to freely set the Node information displayed in Log
+- Added a feature that is used to manually enter HostId
+- Added a feature that is used to pass information to each HostId from nodeInfoByHostId
 
 #### Fix
 
-- IP 0.0.0.0을 바인딩할 때 에러가 발생하는 이슈 수정
-- ConfigModule의 /config/get 사용 시 성공 여부 값이 실패로 응답하는 문제 수정
-- GameNode가 구동된 상태에서 다른 GameNode가 구동될 경우, Publish Packet 처리로 인해 에러가 발생할 수 있는 문제 예외 처리 추가
+- Fixed an issue in which an error would occur while binding IP 0.0.0.0
+- Fixed an issue in which the success value would respond as failure when using the /config/get of ConfigModule
+- Added the exception handling for the problems that would cause an error while processing Publish Packet when another GameNode is active while a GameNode is already running
 
 #### Change
 
-- UserId, RoomId 생성 시 마지막 자리에 사용하는 ShardIndex값 범위를 지정할 수 있도록 수정
-- RestObject의 getRemoteAddress 값 추가
-- NodeKey 요청 개수를 지정할 수 있도록 수정
+- Edited so that the value range of ShardIndex that is used in the last digit when creating UserId or RoomId can be specified
+- Added the getRemoteAddress value of RestObject
+- Edited so that the number of NodeKey requests can be specified
 
 
 
@@ -56,8 +56,8 @@
 
 ### Fix
 
-- onLogin()에서 false를 리턴할 경우 Payload가 클라이언트로 전달되지 안는 이슈 수정
-- Debug와 Trace 로그문 앞의 로그 레벨 확인 조건문 누락된 부분 추가
+- Fixed an issue in which Payload would not be passed to the client when onLogin() returned false
+- Added the missing part of the log level check statement in front of the Debug and Trace log statements
 
 
 
@@ -65,51 +65,51 @@
 
 #### New
 
-- 성능과 안정성 대폭 향상 (0.9버전 대비 약 7배)
-- 성능에 직접적인 영향을 주는 다수의 로직을 최적화하고 문제점 수정
-- 완전히 새로워진 GameNode 로드밸런싱
-- 클라우드 VM의 상태를 반영하여 빠르고 정확하게 최적의 GameNode로 부하를 분산
-- Integer형 ID 도입
-- 기존에 String으로 되어 있던 핵심 ID들을 모두 Integer로 교체하여 최적화 진행
-- 서버 Log 레벨을 런타임에 변경할 수 있는 API 추가
-- Node 단위로 서비스 중에 Log 레벨을 변경 가능
+- Dramatically increased performance and stability (approximately 7 times better than those of version 0.9)
+- Fixed issues and optimized several logics that directly affect performance
+- Overhauled the GameNode load balancing
+- Distributed load to the optimal GameNodes quickly and accurately, reflecting the status of cloud VM
+- Introduced Integer type ID
+- Optimized the core IDs by replacing them from String to Integer
+- Added the API that can be used to allow the server Log level to be changed during runtime
+- Log level can be changed while servicing in Node unit
 
 #### Fix
 
-- 유저 전송 문제 수정, 사용법 개선 그리고 최적화
-- GameAnvil 사용자는 더욱 쉽게 유저 전송을 사용 가능
-- 무점검 패치 완벽 수정
-- 그동안 방 전송과 무점검 패치가 제대로 동작하지 않던 문제 모두 수정
-- 서버 구동 시에 알 수 없는 타이밍 이슈로 일부 Node가 제대로 뜨지 않던 문제 수정
-- Node의 일부 Timer 객체가 해제되지 않고 지속적으로 누적되던 Memory Leak 수정
-- 클라이언트 접속 체크 과정에서 새롭게 접속하는 유저가 의도하지 않게 끊기던 문제 수정
+- Fixed a user transfer problem, improved usage, and optimization
+- GameAnvil users can easily use the user transfer feature
+- Completely fixed uninterrupted patch
+- Fixed all the issues in which room transfer and uninterrupted patch would not work correctly
+- Fixed an issue in which some Nodes would not correctly appear due to an unknown timing issue when running the server
+- Fixed memory leak in which some of the Timer objects of Node persist instead of being disabled
+- Fixed an issue in which newly connected user would be unintentionally disconnected while checking the client connection
 
 #### Change
 
-- Node 이름을 아래의 표와 같이 더욱 직관적으로 변경
+- Changed the Node name into more intuitive one as shown in the table below
 
-| v1.0       | ~ v0.10       | 필수 | 기능                                        | 콘텐츠 구현 | 네트워크 접근     |
+| v1.0       | ~ v0.10       | Required | Feature                                       | Implement content | Network access     |
 | ---------- | ------------- | ---- | ------------------------------------------- | ----------- | ----------------- |
-| Gateway    | Session       | 필수 | 클라이언트 접속과 인증을 처리               | 가능        | public            |
-| Game       | Space         | 필수 | 실제 게임 서버로서 콘텐츠를 처리            | 가능        | private           |
-| Support    | Service       | 선택 | 필요에 따라 독립된 서비스로 구현하도록 지원 | 가능        | private or public |
-| Match      | Match         | 선택 | 매치메이킹을 수행                           | 가능        | private           |
-| Location   | Location      | 필수 | 유저와 방 등의 위치 정보를 저장 및 관리     | 불가능      | private           |
-| Management | Management    | 필수 | 서버 정보 취합 및 Admin/Agent와 통신        | 불가능      | private           |
-| Ipc        | Communication | 필수 | Gameflex 서버의 Inter-process 통신 처리     | 불가능      | private           |
+| Gateway    | Session       | Required | Handles client connection and authentication             | Possible        | public            |
+| Game       | Space         | Required | Handles content as actual game server            | Possible        | private           |
+| Support    | Service       | Optiona | Supports independent services as necessary | Possible        | private or public |
+| Match      | Match         | Optiona | Performs matchmaking                           | Possible        | private           |
+| Location   | Location      | Required | Store and manage user and room location information     | Impossible      | private           |
+| Management | Management    | Required | Collect server information and communicate with Admin/Agent        | Impossible      | private           |
+| Ipc        | Communication | Required | Process the Inter-process communication of the Gameflex server     | Impossible      | private           |
 
-- GameAnvil 코드 가독성과 사용성 향상
-- 패키지 구조를 효율적으로 개선
-- 클래스 상속/포함 구조 개선
-- 네이밍을 직관적이고 일관성 있게 수정
-- Node의 비활성화 상태는 Invalid와 Disable로 세분화
-- Invalid는 일시적으로 반응을 하지 않는 상태
-- Disable은 영구적으로 비활성화된 상태
-- 이제 Loopback 주소는 자동으로 바인딩
-- GameAnvil에서 사용하는 모든 라이브러리를 최신 버전으로 업데이트
-- 전체 ErrorCode를 하나로 통합
-- 불필요한 ReConnect와 MoveService 기능 제거
-- 등록 시점이 아닌 구동 시점부터 다음 시간을 측정하는 새로운 Timer 추가
+- Improved the readability and usability of the GameAnvil code
+- Effectively improved package structure
+- Improved the class inherit/include structure
+- Modified naming to make it more intuitive and consistent
+- The disable status of Node is subdivided by Invalid and Disable
+- Invalid is a state in which the node is temporarily non-responsive
+- Disable is a state in which the node is permanently disabled
+- The Loopback address is now automatically bound
+- Updated all the libraries used by GameAnvil to the latest version
+- Integrated entire ErrorCode
+- Removed the required ReConnect and MoveService feature
+- Added a new timer that is used to measure the next time from the time of running instead of from the time of registering
 
 
 
@@ -117,23 +117,23 @@
 
 #### New
 
-- GameAnvil API 레퍼런스 (JavaDoc) 사이트 오픈
+- GameAnvil API Reference (JavaDoc) Site Open
 
-- AOT Instrumentation 지원
+- Support AOT Instrumentation
 
-- 엔진을 런타임에 매번 JIT Instrumentation할 필요 없이 컴파일 타임에 AOT로 진행
+- AOT at compile time without having to JIT Instrumentation the engine at runtime
 
-- 공식 GC로 G1GC를 사용하도록 가이드 시작
+- Start the guide so that it will use G1GC as the official GC
 
-- 가장 기본적인 VM 옵션
+- The most basic VM option
 
   `java -javaagent:QUASAR_PATH\quasar-core-0.7.10-jdk8.jar=bm -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication`
 
 #### Fix
 
-- Quasar 스택 버그를 수정
-- 룸 매칭 유저들이 서로 다른 방으로 매칭되는 버그 수정
-- 압축된 패킷이 전송 안 되는 문제 수정
+- Edited the Quasar stack bug
+- Fixed an issue in which room matching users would be matched to different rooms
+- Fixed an issue in which compressed packets would not be transferred
 
 
 
@@ -141,12 +141,12 @@
 
 #### New
 
-- 사용자에게 제공하는 도구를 모아둔 Util 클래스를 제공
-- 기존에는 엔진 여러 곳에 흩어져있던 도구들을 해당 클래스 한 군데로 정리
+- Provided the Util class that were provided to users
+- Organized the tools that were previously scattered throughout the engine into a single class
 
 #### Change
 
-- Topic 처리 코드 성능 개선
+- Improved the Topic process code performance
 
 
 
@@ -154,22 +154,22 @@
 
 #### New
 
-- 기존에 문제가 많던 비동기 지원 API를 새롭게 리팩토링
-- Redis Cluster 지원 및 Lettuce 공식 지원에 따른 새로운 비동기 API 추가
-- 비동기 HttpRequest와 HttpResponse API 추가
-- ByteString 기반의 커스텀 프로토콜 기능 지원
-- Google protobuf 외의 사용자가 원하는 방식으로 메시지를 직렬화 가능
+- Newly refactored the asynchronous support API that was previously problematic
+- Added new asynchronous API as support Redis Cluster and official support Lettuce become available
+- Added asynchronous HttpRequest and HttpResponse API
+- Support custom protocol based on ByteString
+- Can serialize messages in a way the user other than Google protobuf
 
 #### Fix
 
-- 이전 버전에서 가장 심각한 문제였던 파이버의 상태가 망가지는 문제 모두 수정
+- Fixed all the issues in which the status of Fiber would be broken, which was the most critical problem in the previous version
 
 #### Change
 
-- 엔진에서 사용하는 패킷과 헤더 크기 최적화
-- 0.9버전 대비 성능이 약 2.5배 향상
+- Optimized the size of the packet and header used by the engine
+- Performance improved by 2.5 times compared to version 0.9
 - Embedded Redis Spec-out
-- 인프라에서 제공하는 서비스를 사용하도록 가이드
+- Guided users so that they would need the service provided by infrastructure
 
 
 
@@ -177,20 +177,20 @@
 
 #### New
 
-- 프로세스 단위로 WatchDog을 연동할 수 있도록 포트를 추가로 개방
+- Opened additional port so that WatchDog can be linked in the unit of process
 
 #### Fix
 
-- 고스트 유저 버그 수정
-- SpaceNode에서 발생하는 Concurrent Modification 에러 수정
-- NodeInfoManager의 Comparator 오류 수정
-- 로그아웃한 유저의 세션 객체가 정리되지 않는 문제 수정
-- 매칭 그룹이 서로 다른 채널의 유저들에게 제대로 적용되지 않던 문제 수정
-- 파티 매치 메이킹 시에 Timeout에 대한 콜백을 제대로 받지 못하던 문제 수정
+- Fixed the ghost user bug
+- Fixed a Concurrent Modification error that would occur in SpaceNode
+- Fixed a Comparator error in NodeInfoManager
+- Fixed an issue in which the session object of logged out user would not be organized
+- Fixed an issue in which matching groups would not be correctly applied to the users in many different channels
+- Fixed an issue in which the callback for Timeout would not be correctly received when party matchmaking
 
 #### Change
 
-- 룸 매치 메이킹을 이미 진행 중인 상태에서 중복 요청이 왔을 경우에 대한 에러 코드 추가
+- Added error code used when a duplicate request is received while room matchmaking is in progress
 - MATCH_ROOM_FAIL_IN_PROGRESS
 
 
@@ -199,18 +199,18 @@
 
 #### New
 
-- Session에 ClientTopic을 추가하고 삭제할 수 있는 addTopic(), removeTopic() API 추가
-- Packet TTL 기능 추가
-- Dangling Location을 주기적으로 체크해서 정리하는 로직 추가
+- Added addTopic() and removeTopic() API that is used to add or remove ClientTopic to Session
+- Added the Packet TTL feature
+- Added a logic that periodically checks and organizes Dangling Location
 
 #### Fix
 
-- Admin에서 유저를 Kick할 경우 클라이언트로 ForceLogoutNoti를 전송하지 않도록 수정
-- LocationNode의 Spot 오동작 수정
+- Fixed the system so that ForceLogoutNoti would not be transferred to the client when kicking a user in Admin
+- Fixed all Spot malfunctions of LocationNode
 
 #### Change
 
-- onAuthenticate() 콜백 실패 시에 해당 소켓을 닫기 전에 ForceCloseNoti를 클라이언트로 전송하도록 변경
+- Changed the system so that ForceCloseNoti would be transferred before the socket is closed when onAuthenticate() callback failed
 
 
 
@@ -218,25 +218,25 @@
 
 #### New
 
-- 비정상적으로 남아있는 Room을 주기적으로 체크하고 정리하는 로직 추가
-- 유저 매치 메이킹은 요청을 한 후에 재로그인을 하더라도 이전의 매치 요청이 취소되지 않고 진행 중일 수 있는데, 이러한 이전의 유저 매치 메이킹 처리 상태를 알려주기 위해 재로그인 응답에 새로운 플래그를 추가
-- Packet Expire 가능 추가(기본값 30초)
+- Added a logic that is used to regularly check the Rooms that abnormally remain
+- As previous user matchmaking may not be canceled and remain when a user matchmaking is requested after logging in again, added a new flag that responds to the status of previous user matchmaking process to re-login response
+- Added the Packet Expire feature (default: 30 seconds)
 
 #### Fix
 
-- Connection ID(CID)가 중복되는 문제 수정
-- Disconnection된 유저의 의해 방 파이버가 close되는 버그 수정
-- 로그인이 실패인 경우 응답 메시지에 serviceId 필드가 제대로 세팅되지 않는 문제 수정
-- 콘텐츠 콜백 처리부 중 try-catch가 누락된 부분 수정
-- 클라이언트 Reconnect가 약 3초 이상 걸리던 문제를 바로 처리되도록 수정
-- 고스트 유저 체크 시 발생하는 스레드 동시성 문제 수정
-- 룸 매치 메이킹 중복 처리 버그 수정
-- 룸에 연결이 끊긴 유저가 남는 문제 수정
+- Fixed an issue in which Connection ID (CID) would be duplicated
+- Fixed a bug in which room Fiber would be closed by a disconnected user
+- Fixed an issue in which the serviceId field would not be correctly set in the response message if login failed
+- Fixed the part where try-catch is missing in the content callback process
+- Fixed an issue in which the client would take more than 3 seconds to reconnect
+- Fixed an issue in which thread simultaneity would occur when checking ghost users
+- Fixed an issue in which room matchmaking would be processed in duplication
+- Fixed an issue in which disconnected users would remain in the room
 
 #### Change
 
-- Session Disconnect의 모든 경우에 대해 로그 추가
-- CreateRoom은 현재의 노드에 바로 방을 생성하도록 변경
+- Added a log for every instance of Session Disconnect
+- Changed CreateRoom so that it would directly create room in the current node
 
 
 
@@ -244,24 +244,24 @@
 
 #### New
 
-- 전송 가능한 시점을 콘텐츠에서 조율할 수 있도록 User와 Room에 canTransfer() 인터페이스를 추가
+- Added the canTransfer() interface to User and Room so that the time of transfer could be adjusted in content
 
 #### Fix
 
-- 엔진 내부 코드에 존재하던 메모리 릭 수정
-- ZMQ Router, Publiser 소켓의 연결 버그 수정
-- Login이 무한 반복되는 문제 수정
-- isLogined() API가 제대로 동작하지 않는 문제 수정
-- NodeInfoManager 동기화 문제 수정
-- 유저 객체가 제대로 정리되지 않는 문제 수정
+- Fixed memory leak that would exist in internal engine code
+- Fixed a connection bug of the ZMQ Router and Publisher socket
+- Fixed an issue in which Login would be infinitely repeated
+- Fixed an issue in which isLogined() API would not work correctly
+- Fixed a NodeInfoManager synchronization issue
+- Fixed an issue in which user objects would not be properly organized
 
 #### Change
 
-- 기존의 AsyncAwaitHttpRequest를 FiberHttpRequest로 이름 변경
-- FiberHttpRequest와 HttpRequest에 비동기 함수 추가
-- Location Index 관련 로그 추가
-- SpaceNode 분배 방식을 idle에서 roundRobin으로 변경
-- NodeStarter에서 LocationNode가 있을 경우에만 sleep하도록 변경
+- Changed the name of AsyncAwaitHttpRequest to FiberHttpRequest
+- Added an asynchronous function to FiberHttpRequest and HttpRequest
+- Added a log related to Location Index
+- Changed the SpaceNode distribution method from idle to roundRobin
+- Changed the system so that it would sleep only when there is LocationNode in NodeStarter
 
 
 
@@ -269,13 +269,13 @@
 
 #### Fix
 
-- 무점검 패치 시에 새로운 유저가 로그인하거나 유저 전송 중일 경우 Pause된 노드에서 해당 유저가 정리되지 않는 오류 수정
+- Fixed an issue in which the corresponding user would not be organized in a paused node when a new user logs in or a user is being transferred while performing uninterrupted patch
 
 #### Change
 
-- 문자열 형식의 serviceId를 정수형으로 변경
-- 프로토콜의 service_code를 service_id로 변경하고 관련 코드 수정
-- RESTful 지원 API의 내부 구현과 사용법 변경
+- Changed the serviceId from string to integer
+- Changed the service_code of a protocol to service_id and changed the related code
+- Changed the internal implementation and usage of APIs supporting RESTful
 
 
 
@@ -283,19 +283,19 @@
 
 #### New
 
-- 콘텐츠에서 사용하는 프로토콜을 파일 단위로 등록할 수 있는 기능 추가
-- 내부 패킷 처리를 효율적으로 하기 위함
-- MoveService 기능 추가
+- Added a feature that can be used to register the protocol used by content in the file unit
+- It is to effectively process internal packets
+- Added the MoveService feature
 
 #### Fix
 
-- 룸 매치 메이킹에서 사용하는 비교 연산자(Comparator)의 오류 수정
+- Fixed an error that would occur in the Comparator used in room matchmaking
 
 #### Change
 
-- Authentication 응답에 최근 로그인 정보를 추가하여 다음 로그인 시에 활용 가능
-- setReady()를 명시적으로 호출해서 onReady 상태로 넘어가도록 변경
-- LocationNode가 CommunicationNode의 onPrepare 시점에 초기화 되도록 변경
+- By adding the latest login information to the Authentication response so that it could be used in the next login
+- Changed setReady() so that it can be explicitly called and passed with the onReady status
+- Changed LocationNode so that it can be reset at CommunicationNode's onPrepare
 
 
 
@@ -303,15 +303,15 @@
 
 #### Fix
 
-- AsyncAwait.call() API에서 timeout이 발생하면 NPE(Null Pointer Exception)도 발생하는 문제 수정
-- Epoll이 활성화되면서 멈추는 문제 수정
-- 로그인 시 발생하는 Invalid System Target Location 오류 수정
+- Fixed an issue in which NPE (Null Pointer Exception) would occur when timeout occurred in AsyncAwait.call() API
+- Fixed an issue in which Epoll would stop when it was enabled
+- Fixed an Invalid System Target Location error that would occur while logging in
 
 #### Change
 
-- ManagementNode는 이제 더 이상 엔진 사용자가 확장해서 사용할 수 없음
-- 대신 ServiceNode를 사용
-- Admin에서 Machine 정보의 등록, 수정, 삭제가 요청하는 순간 바로 적용되도록 변경
+- ManagementNode can no longer be expanded by engine users
+- Use ServiceNode instead
+- Changed the system so that the Machine information registration, edit, or deletion request can be instantly applied in Admin
 
 
 
@@ -319,23 +319,25 @@
 
 #### New
 
-- Admin을 이용한 예약 공지, 예약 점검 기능 추가
-- Admin을 이용한 White IP, White User, White Device 기능 추가
+- Added the scheduled notification and scheduled maintenance feature using Admin
+- Added the White IP, White User, and White Device features using Admin
 
 #### Fix
 
-- AsyncAwait.run() API에서 잘못된 방식으로 예외가 처리되던 코드 수정
-- ManagementNode가 다른 Node들보다 먼저 초기화가 되도록 수정
-- 채널 ID를 사용하지 않는 경우, 일부 채널 관련 publish가 누락되는 문제 수정
-- CreateRoom, JoinRoom에 대해 콘텐츠가 실패를 반환할 경우에 잘못된 에러코드가 헤더에 실려가던 문제 수정
-- 패킷 헤더 생성 시에 발생하던 메모리 릭 수정
-- 룸 매치 메이킹에서 발생하던 메모리 릭 수정
+- Fixed a piece of code that used to process exceptions in a wrong way in AsyncAwait.run() API
+- Changed ManagementNode so that it will be reset before other Nodes
+- Fixed an issue in which publish related to some channels would be missing when channel ID was not used
+- Fixed an issue in which incorrect error code would be added to header when content returns fail on CreateRoom and JoinRoom
+- Fixed memory leak that would occur when creating packet header
+- Fixed memory leak that would occur in room matchmaking
 
 #### Change
 
-- onLogout() 콜백에 payload 추가
-- ResultCode를 수정함에 따라 몇몇 프로토콜에서 중복 필드를 제거
-- Dynamic Module 사용성 개선
+#### Change
+
+- Added payload to the onLogout() callback
+- Removed duplicate fields from some protocols as ResultCode was edited
+- Improved the usability of Dynamic Module
 
 
 
@@ -343,27 +345,27 @@
 
 #### New
 
-- 매치 메이킹을 전담하는 MatchNode 추가
-- 유저 매치 메이킹에 refill 기능 추가
-- 유저 매치 메이킹의 새로운 타입인 파티 매치 메이킹을 추가
-- Admin의 Machine 정보에서 노드 종류별로 부가정보를 추가
-- 유저가 동일한 DeviceId와 UserId로 재로그인 할 때 호출되는 onLoginByOtherConnection() 콜백 추가
+- Added MatchNode dedicated to matchmaking
+- Added the refill function to user matchmaking
+- Added party matchmaking, a new type of user matchmaking
+- Added additional information by node type to the Machine of Admin
+- Added the onLoginByOtherConnection() callback that is called when the user logs in again using the same DeviceId and UserId
 
 #### Fix
 
-- Dynamic Module 버그 수정
-- Admin 접속이 안되는 문제 수정
-- User의 reply 버그 수정
-- Timer 추가/삭제 오류 수정
-- AsyncAwait.run()에 누락된 timeout 적용
-- 노드 Shutdown 시에 발생하던 오류 수정
-- 룸 매치 메이킹을 사용하지 않음에도 불구하고 매칭 정보를 삭제하면서 NPE(Null Pointer Exception)가 발생하는 문제 수정
+- Fixed a Dynamic Module bug
+- Fixed an issue in which Admin would not be connected
+- Fixed a reply bug of User
+- Fixed a Timer add/delete error
+- Applied the previously missing timeout to AsyncAwait.run()
+- Fixed an error that would occur when a node is shutdown
+- Fixed an issue in which NPE (Null Pointer Exception) would occur when matching information was deleted while not using room matchmaking
 
 #### Change
 
-- 일부 인터페이스의 위치 변경
-- 서로 다른 DeviceId로 로그인 시에 중복 로그인 처리 대신 재로그인 처리가 되도록 변경
-- 룸 매치 메이킹의 onMatchRoom() 콜백에서 추가한 payload가 이후의 흐름에 포함되도록 수정
+- Relocated some interface components
+- Changed the system so that it uses re-login instead of processing as duplicate logins when the user logs into different DeviceIds
+- Modified the payload added by the onMatchRoom() callback of room matchmaking would be included in the flow afterward
 
 
 
@@ -371,20 +373,20 @@
 
 #### New
 
-- 유저 매치 메이킹 기능 추가
-- 채널별 유저와 방 목록 기능 추가
-- Embedded Redis 추가
-- Reconnect 기능 추가
-- (구) Test Agent 추가
+- Added the user matchmaking feature
+- Added the user and room list per channel feature
+- Added Embedded Redis
+- Added the Reconnect feature
+- (Added the old) Test Agent
 
 #### Fix
 
-- Account 단위의 중복 로그인 처리 이슈 수정
+- Fixed a duplicate login in the Account unit issue
 
 #### Change
 
-- OracleJDK에서 AdpotOpenJDK로 변경
-- Node(스레드) 단위로 ZMQ 통신하던 것을 프로세스 단위로 변경
+- Changed OracleJDK to AdpotOpenJDK
+- Changed the ZMQ communication unit from Node (thread) to process
 
 
 
@@ -392,46 +394,46 @@
 
 #### New
 
-- Send from Session to Management 기능 추가
-- Request from Session to Management 기능 추가
-- User MatchMaker 추가
-- Channel User List 기능 추가
-- Custom Serializer 기능 추가
-- RoomFinder에 Custom Serializer를 plug-in 가능
+- Added the Send from Session to Management feature
+- Added the Request from Session to Management feature
+- Added User MatchMaker
+- Added the Channel User List feature
+- Added the Custom Serializer feature
+- Custom Serializer can be plugged into RoomFinder
 
 #### Fix
 
-- 채널 유저 매니저에서 채널이 topic으로 사용되는 publish에 대한 빈 문자열 예외 처리 추가
-- 채널이 topic으로 사용되는 publish에 대한 빈 문자열 예외 처리 추가
-- AutoJoinRoom을 사용하지 않는 환경에서 delNamedRoomInfo() 와 delRoomInfo() 호출 시에 DefaultRoomFinder로 인해 발생하는 문제 수정
-- RoomFinder에서 null 체크 누락으로 발생하는 NullPointerException 수정
-- 유저 매치메이킹에서 timeout된 요청이 제거되지 않는 문제 수정
-- redis에 password가 설정되어 있는 경우에 대한 처리 추가
-- cfgManagement의 setRestIp() 오류 수정
-- Service 노드에서 Http 핸들링이 안되는 이슈 수정.
-- 브랜치: 0.8.6.2_fix_service_node_rest_handling
-- 태그: tardis-0.8.6.2.1
-- AutoJoinRoom 처리 시에 gameId가 설정된 경우의 오류 수정
-- MatchMaker 수정 및 예제 보강
-- ISession::onDisconnect() 누락 수정
-- Communication Node 간 Node 정보 교환 오류 수정
-- FindRoomList 성능 이슈 해결
-- Shutdown 버그 수정
-- BaseNode가 publishToNode 메시지를 못 받는 문제 수정
-- FindRoomList 성능 이슈 해결
-- Shutdown 버그 수정
-- BaseNode가 publishToNode 메시지를 못 받는 문제 수정
-- NamedAutoJoinRoom 버그 수정
-- UpdateRoomInfo/DelRoomInfo가 해당 Node에서 즉시 반영되도록 수정
-- 파이버 내에서 blocking call을 호출하는 부분에 의해 출력되던 Error 수정
+- Added an empty string exception process for the publish in which a channel is used as a topic in the channel user manager
+- Added an empty string exception process for the publish in which a channel is used as a topic
+- Fixed an issue that would be occurred by DefaultRoomFinder when calling delNamedRoomInfo() and delRoomInfo() in an environment that does not use AutoJoinRoom
+- Fixed the NullPointerException that would occur due to missing null check in RoomFinder
+- Fixed an issue in which a timed out request would not be removed in user matchmaking
+- Added an exception that is used to be processed if password is set in redis
+- Fixed a setRestIp() error of cfgManagement
+- Fixed an issue in which HTTP handling would not be done in the Service node.
+- Branch: 0.8.6.2_fix_service_node_rest_handling
+- Tag: tardis-0.8.6.2.1
+- Fixed an issue related to the set gameId while processing AutoJoinRoom
+- Edited MatchMaker and strengthened examples
+- Added the previously missing ISession::onDisconnect()
+- Fixed a Node information exchange error among Communication Nodes
+- Fixed a FindRoomList performance issue
+- Fixed a Shutdown bug
+- Fixed an issue in which BaseNode would not receive publishToNode messages
+- Fixed a FindRoomList performance issue
+- Fixed a Shutdown bug
+- Fixed an issue in which BaseNode would not receive publishToNode messages
+- Fixed a NamedAutoJoinRoom bug
+- Changed UpdateRoomInfo/DelRoomInfo so that they can be instantly applied to the corresponding Node
+- Fixed an error in which blocking call would be displayed in Fiber
 
 #### Change
 
-- FindRoomList는 전체 방 목록 container를 한번에 serialize/deserialize하도록 수정
-- 기존의 LocationException, TardisException 등을 RuntimeException으로 변경, Exception 정리
-- forceLeaveRoom은 kickOutRoom으로 rename
-- forceLogout은 kickOut으로 rename
-- tardisConfig 구성 변경
+- Changed FindRoomList so that it serializes/de-serializes the container for the entire room list
+- Changed the existing LocationException, TardisException and others to RuntimeException, organized Exceptions
+- Renamed forceLeaveRoom to kickOutRoom
+- Renamed forceLogout to kickOut
+- Changed the tardisConfig configuration
 
 
 
@@ -439,23 +441,23 @@
 
 #### New
 
-- JWT 인증토큰을 사용한 HTTP 세션 인증 및 관리 기능 추가
-- 동일 ID 사용하여, 여러 Service 중복 로그인할 수 있는 기능 추가
-- 하나의 GameNode에 여러 개의 RoomType을 사용할 수 있느 기능 추가
-- Server의 모든 정보를 웹으로 볼 수 있는 기능 추가 (NodeInfoPage)
+- Added a feature to be used to authenticate and manage HTTP sessions with the JWT authentication token
+- Added a feature to be used to allow multiple services to log in using the same ID
+- Added a feature to be used to allow a single GameNode to use multiple RoomTypes
+- Added a feature to be used to view all the information of Server on the web (NodeInfoPage)
 
 #### Fix
 
-- 타이머 제거가 안되는 버그 수정
-- onPostLeaveRoom 이 2번 호출되는 버그 수정
+- Fixed a bug in which timers would not be removed
+- Fixed a bug in which onPostLeaveRoom would be called twice
 
 #### Change
 
-- 고스트 유저 처리 개선
-- 고스트 유저 로깅 추가
-- Packet compress 로직 개선
-- RestObject 개선, 사용 함수 추가
-- 패킷의 에러 처리 변경, 프로토콜 헤더에 에러코드를 담아서 처리
+- Improved ghost user handling
+- Added ghost user logging
+- Improved packet compress logic
+- Improved RestObject, added a function to be used with it
+- Changed the error handling of a packet, it now places error code to protocol header and processes it
 
 
 
@@ -463,22 +465,22 @@
 
 #### New
 
-- Bootstrap 적용
-- NGB Bootstrap 과 같은 형태로 구현
-- 구현부 각각의 클래스의 class 인스턴스만 명시하여 코드를 단순화
-- 여러 개의 메시지를 주고받을 수 있는 Multi Dispatch 기능 추가
-- ServiceNodeSender(이전 CustomServiceSender) publishToLobby 메서드 추가
+- Applied Bootstrap
+- Implemented like NGB Bootstrap
+- Simplified code by specifying only the class instance of each class in the implementing part
+- Added the Multi Dispatch feature that is used to send and receive multiple messages
+- Added the ServiceNodeSender (previously CustomServiceSender) publishToLobby method
 
 #### Change
 
-- AsyncAwait, RAsyncAwait 이름 변경
-- Bootstrap RoomFinder 설정을 space로 옮김
-- Cache, Custom Exception 이름 변경 (Location, Service)
-- Payload 클래스에서 getFirst 메서드를 통해 첫 번째 Packet 을 가져올 수 있도록 수정
-- ServiceNodeSender 의 requestToLobby 메서드 제거(동일 기능의 requestToNode 메서드와 중복 되는 이슈)
-- Packet 클래스의 makeDecompress 메서드 호출 시 async 사용하지 않도록 수정
-- UserSender의 reply 메서드 오버로딩(Packet 리스트 처리)
-- 일부 클래스 이름 변경
+- Renamed AsyncAwait and RAsyncAwait
+- Moved the Bootstrap RoomFinder settings to space
+- Renamed Cache and Custom Exception (Location, Service)
+- Changed the Payload class so that it retrieves the first packet using the getFirst method
+- Removed the requestToLobby method from ServiceNodeSender (the requestToNode method works the same)
+- Changed the makeDecompress method so that it does not use async when it is called by the Packet class
+- Overloaded the reply method of UserSender (Packet list handling)
+- Renamed some classes
 - AsyncCall -> AsyncWaitingCall
 - AsyncRun -> AsyncWaitingRun
 - ReverseAsyncCall -> RAsyncWaitingCall
@@ -486,7 +488,7 @@
 
 #### Fix
 
-- Session IP 오류 수정
+- Fixed a Session IP error
 
 
 
@@ -494,41 +496,41 @@
 
 #### New
 
-- REST 핸들링 기능 추가
-- TardisConfig.json 에 permissionGroups 으로 REST 핸들링에 대해, Path & IP 기반의 ACL 기능 구현
-- Channel List (채널 이름 목록), Channel Information (특정 채널의 상세 정보)
-- Space LobbySender 에 requestToCustom, sendToCustom 메서드 추가
-- Space 노드 Management 정보에 "State" 항목 추가
-- Ilobby , ISessionLobby, IService 인터페이스에 아래 void onShutdown() throws SuspendExecution 추가
-- Node 가 shutdown될 때 contents에서 resource를 해지할 수 있도록 onShutdown() 인터페이스가 추가
-- ServiceNodeSender에 publishToNode 함수 추가
+- Added the REST handling feature
+- Implemented the ACL feature based on Path & IP for the REST handling with permissionGroups in TardisConfig.json
+- Channel List (channel name list), Channel Information (detailed information of a specific channel)
+- Added the requestToCustom and sendToCustom method to Space LobbySender
+- Added the "State" item to the Management information of Space node
+- Added void onShutdown() throws SuspendExecution to the Ilobby , ISessionLobby, and IService interface
+- Added the onShutdown() interface so that contents can disable resource when a node is shutdown
+- Added the publishToNode function to ServiceNodeSender
 
 #### Fix
 
-- Management의 JMX Management API 수정 및 추가(SessionGateway, CustomGateway)
-- Channel List(채널 이름 목록), Channel Information(특정 채널의 상세 정보) 기능 추가
-- Session, Custom 노드의 REST 핸들링 로직 수정
-- Gateway 노드(Session, Custom) isConnectableType 메서드의 리턴값 수정
-- SessionGateway 및 CustomGateway 라운드 로빈 이슈 및 JMX 리턴 정보 수정
-- 캐시 노드 targetMap 키값 사용하는 코드 수정
-- SessionGateway 노드 REST RoundRobin 코드 수정
-- 로그인 프로세스 개선 (Invalid Target Location 에러 로그 관련 수정)
-- 룸을 삭제하는 delRoomInfo 호출 시, 해당 노드 상태가 READY 가 아니라면 리턴 처리
+- Changed and added the JMX Management API of Management (SessionGateway, CustomGateway)
+- Added the Channel List (channel name list) and Channel Information (detailed information of a specific channel) feature
+- Changed the REST handling logic of the Session and Custom node
+- Changed the return value of the Gateway node (Session, Custom) isConnectableType method
+- Fixed a round-robin issue of SessionGateway and CustomGateway, changed the JMX return information
+- Changed the code that uses the key value of cache node targetMap
+- Changed the SessionGateway node REST RoundRobin code
+- Improved login process (changed related to the Invalid Target Location error log)
+- Returns the node if its status is not READY when the room deleting delRoomInfo is called
 
 #### Change
 
-- Session 노드와 클라이언트의 End-Point를 하나로 통합 (Session Gateway)
-- Custom 노드의 REST End-Point를 하나로 통합 (Custom Gateway)
-- 파이버 직접 사용 코드를 ReverseAsyncCall로 변경
-- SpaceSingular Dispatch 타임스탬프 추가
-- onTimer 등록하고, 주기적으로 체크 (10분)
-- 타임스탬프가 초과된 유저는 internalLogout 처리
-- Async 타임아웃 적용
-- 고스트 유저 처리 로직 추가 및 개선, TardisConfig.json에 필요한 값들 추가
-- 각 Response 프로토콜의 result_code 형식을 기존 integer 값에서 enum으로 변경하고, 종류를 간소화. is_payload 필드를 제거
-- 클래스, 패키지, 함수들과 cfg 내용이 rename
-- Request, Response 프로토콜에서 복수의 payload를 처리할 수 있도록 class Payload 데이터 타입이 Packet 으로 변경, class OutPayload 제거
-- 유저 Transfer-In 인터페이스의 파라미터 타입을 byte 배열로 변경
+- Integrated Session node and client's End-Point (Session Gateway)
+- Integrated the REST End-Points of custom nodes (Custom Gateway)
+- Changed code that directly uses Fiber to ReverseAsyncCall
+- Added the SpaceSingular Dispatch time stamp
+- Register onTimer and periodically check it (every 10 minutes)
+- Applied internalLogout to timed out users
+- Applied Async timeout
+- Added and improved ghost user handling logic, added the needed values to TardisConfig.json
+- Changed the result_code format of each Response protocol from the existing integer value to enum, reduced the number of formats. removed the is_payload field
+- Renamed classes, packages, functions, and cfg contents
+- Changed the class Payload data type to Packet to allow the Request and Response protocols to handle multiple payloads, removed class OutPayload
+- Changed the parameter type of the user Transfer-In interface to byte array
 
 
 
@@ -536,18 +538,18 @@
 
 #### New
 
-- CustomService에 RestObject 기능 추가
-- CustomService에 RestHandler 추가
+- Added the RestObject feature to CustomService
+- Added RestHandler to CustomService
 
 #### Fix
 
-- Cache에서 유저 정보가 지워지지 않는 버그 수정
-- 엔진 내부에서 발생하던 NPE(Null Pointer Exception)에 대한 예외 처리 추가
-- 패킷 전송에 CID(Connection ID)를 제대로 적용하지 못하던 문제 수정
+- Fixed a bug in which user information would not be deleted from Cache
+- Added an exception handling for the NPE (Null Pointer Exception) that would occur in the engine
+- Fixed an issue in which CID (Connection ID) would not be correctly applied while transferring packet
 
 #### Change
 
-- Custom 모듈 네이밍을 모두 새롭게 변경
-- 예) CustomLobby -> CustomService
-- Custom 모듈 인터페이스 일부 변경
-- CustomServiceSender의 sendToUser()와 requestToUser() API에 serviceId 매개변수 추가
+- Changed the Custom module naming
+- Ex) CustomLobby -> CustomService
+- Changed some part of the Custom module interface
+- Added the serviceId parameter to the sendToUser() and requestToUser() API of CustomServiceSender

@@ -1,13 +1,13 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > Audit
+## Game > GameAnvil > Console User Guide > Audit
 
-### 이벤트 로그
+### Event log
 
-콘솔에서 발생한 이벤트 내역을 조회하는 메뉴 입니다. 
+This is the menu used to look up the events occurred from the console. 
 
-인스턴스, 노드에 발생한 이벤트 조회가 가능하며 이벤트타입, 계정권한, 노드타입 별 조회가 가능 합니다. 
+The events occurred from instances and nodes can be looked up and can search by event type, account permission, and node type. 
 
 ![audit_main.png](https://static.toastoven.net/prod_gameanvil/images/audit_main.png)
 
-인스턴스 중지 / 시작 이벤트일 경우 해당 이벤트 발생 시점의 인스턴스 설정값을 확인할 수 있습니다. 
+For stop/start instance events, the instance setting values at the time of an event occurrence can be checked. 
 
 ![audit_instance_setup.png](https://static.toastoven.net/prod_gameanvil/images/audit_instance_setup.png)

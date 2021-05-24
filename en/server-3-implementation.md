@@ -1,88 +1,88 @@
-## Game > GameAnvil > 서버 개발 가이드 > 구현 가이드
+## Game > GameAnvil > Server Development Guide > Implementation Guide
 
-기본적인 서버를 구현하기 위해 알아야 할 엔진의 핵심적인 부분을 중심으로, 기본 요소들과 이를 구현하는 방법에 대해 설명합니다. 코드 레벨의 자료는 [GameAnvil 레퍼런스 서버](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server)를 참고합니다. 또한, [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)를 통해 JavaDoc 문서도 이용 가능합니다. 가능하다면 레퍼런스 서버 프로젝트와 이 가이드 문서를 함께 살펴보시기를 추천드립니다.
+engine that are needed to implement a basic server. For code level materials, refer to [GameAnvil reference server](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server). In addition, JavaDoc documents can be used through [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil). If possible, it is recommended to refer to reference server projects and this guide document.
 
 
 
 ### Note
 
-*GameAnvil은 엔진 내부는 물론 모든 샘플 코드에서 메시지 핸들러에 대해 _로 시작하는 네이밍을 사용합니다. 즉, 앞으로 등장하는 예제 코드에서도 _로 시작하는 모든 클래스는 메시지 핸들러입니다. 이러한 메시지 핸들러에 대한 구현은 이 글에서 별도로 설명하지 않습니다. 앞서 알려드린 레퍼런스 서버 프로젝트나 JavaDoc을 통해 코드를 확인하는 것이 가장 쉽고 정확한 방법입니다.*
+*GameAnvil uses a naming convention that begins with _ to the message handlers in the engine and for all sample code. In other words, all the classes that starts with _ in example code are message handlers. The implementation for these message handlers is not covered in this article. The easiest and the most correct way is checking code through the previous reference server project or JavaDoc.*
 
 
 
-GameAnvil 대부분의 기능은 콜백 방식으로 제공합니다. 즉, 엔진 사용자는 **GameAnvil이 제공하는 기본 클래스(Base Classes)를 상속한 후 콜백 메서드를 재정의**하는 형태로 대부분의 기능을 사용하게 됩니다. 이 과정에서 엔진 사용자가 필요한 콜백 메서드만 구현하면 되므로 일부 콜백 메서드는 무시할 수도 있습니다. 이 문서는 이러한 콜백 메서드의 실제 구현 방법까지는 안내하지 않습니다. 코드 레벨의 참고는 앞서 설명한 레퍼런스 서버 프로젝트를 참고하는 것이 가장 좋은 방법입니다.
+The most of GameAnvil's features are provided in callback. In other words, the engine users inherit **GameAnvil's base classes and redefine** the callback method to access the most of the features. Because the engine users can implement only the needed callback methods, some callback methods can be ignored. This document does not explain actual implementation of these callback methods. For the code level, it is best refer to the reference server project mentioned earlier.
 
 
 
-## 1. Node 공통
+## 1. Node common
 
-모든 종류의 노드는 공통적으로 아래의 콜백 메서드들을 재정의해야 합니다. 그와 더불어 각 노드는 용도에 맞춰 추가 콜백 메서드를 구현하게 됩니다. 아래 코드의 GatewayNode는 추가 콜백이 없으므로 공통 콜백 메서드를 보여주기에 적합합니다. 특히, onPrepare()에서 호출한 setReady() API는 엔진에게 노드가 모두 준비되었으니 실제 구동을 시작하라는 명령입니다. 일반적으로 onPrepare()에서 호출합니다. 하지만 다른 노드와의 통신을 통하거나 임의의 비동기 결과를 바탕으로 준비 명령을 내리고 싶을 경우에는 다른 코드 블록에서 호출해도 무방합니다.
+All kinds of nodes must redefine the callback methods below. In addition, each node implements additional callback methods fit for their purposes. As the GatewayNode of the code below does not have additional callback, it is fit to show the common callback methods. Especially, the setReady() API called by onPrepare() is a command for actually running the engine as the nodes are fully prepared. Generally, it is called by onPrepare(). However, if users want to communicate with other nodes or send a ready command based on an arbitrary asynchronous result, calling it from another code block is fine as well.
 
 ```
 public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
-     * 초기화할 때 발생.
+     * Occurs while initializing.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onInit() throws SuspendExecution {        
     }
 
     /**
-     * Prepare 시에 호출된다.
+     * Called while Preparing.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPrepare() throws SuspendExecution {
-        setReady(); // 주의!
+        setReady(); // caution!
     }
 
     /**
-     * Ready 단계에서 호출된다.
+     * Called in the Ready step.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onReady() throws SuspendExecution {        
     }
 
     /**
-     * 패킷이 전달될 때 호출된다.
+     * Called when packet is passed.
      *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param packet A packet to be processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDispatch(Packet packet) throws SuspendExecution {        
     }
 
     /**
-     * pause 될때에 호출된다.
+     * Called when paused.
      *
-     * @param payload contents 에서 전달하고자 하는 추가 정보
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * The additional information that @param payload contents wants to pass
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPause(Payload payload) throws SuspendExecution {        
     }
 
     /**
-     * resume 될때에 호출된다.
+     * Called when resumed.
      *
-     * @param payload contents에서 전달하고자 하는 추가 정보
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * The additional information that @param payload contents wants to pass
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onResume(Payload payload) throws SuspendExecution {        
     }
 
     /**
-     * NonNetworkNode 종료를 위해 shutdown 명령시 호출된다.
+     * Called when the shutdown command is issued to end NonNetworkNode.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onShutdown() throws SuspendExecution {        
@@ -94,31 +94,31 @@ public class SampleGatewayNode extends BaseGatewayNode {
 
 ## 2. Gateway Node
 
-GatewayNode는 클라이언트가 접속하는 노드입니다. BaseGatewayNode 클래스를 상속하여 공통 콜백 메서드만 재정의하면 됩니다. 그 외 GatewayNode 자체에 특별히 추가로 필수 구현할 사항은 없습니다.  GatewayNode는 클라이언트로부터의 커넥션과 세션들을 관리하는데 이들의 관계는 다음의 그림과 같습니다.
+GatewayNode is the node that the client is connected to. The BaseGatewayNode class is inherited and redefine the common callback method. There is nothing else to be implemented to GatewayNode itself. GatewayNode manages the connections and sessions from the client. The relationship among them are explained in the picture below:
 
 ![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
-일반적으로 클라이언트는 GatewayNode로 하나의 커넥션을 맺습니다. 이때, 해당 커넥션에 대해 인증 절차를 진행하여 성공한 경우에 한해 하나 이상의 세션을 생성할 수 있습니다. 각각의 세션은 서로 다른 게임 서비스에 대한 논리적 연결 단위입니다. 위의 그림은 클라이언트가 하나의 커넥션을 통해 Game 서비스와 Chat 서비스 각각에 대해 세션을 생성한 모습입니다.
+Generally, the client establishes a single connection to GatewayNode. At this time, additional sessions can be created only when the connection is successfully authenticated. Each session is a logical connection unit for different game services. The picture above depicts the client creating sessions for Game service and Chat service.
 
 
 
-### 2-1. 커넥션 (Connection)
+### 2-1. Connection
 
-커넥션은 클라이언트의 물리적 접속 자체를 의미합니다. 클라이언트는 고유한 AccountId를 이용하여 커넥션 상에서 인증 절차를 진행할 수 있습니다. 인증이 성공할 경우 해당 AccountId는 생성된 커넥션에 매핑됩니다. 커넥션은 아래와 같은 콜백 메서드를 재정의 합니다. 이때, AccountId는 임의의 플랫폼에서 인증한 후 획득하는 유저의 키값 등을 사용할 수 있습니다. 예를 들어 Gamebase를 통해 인증한 후 UserId를 획득하면 이 값을 GameAnvil의 인증 과정에서 AccountId로 사용할 수 있습니다.
+Connection means the physical connection to the client itself. The client can authenticate from the connection using a unique AccountId. If authentication is successful, AccountId is mapped to the created connection. Connection redefines callback method as below. At this time, AccountId is authenticated on an arbitrary platform and the acquired key value of the user can be used. For example, when authenticated through Gamebase and acquire UserId, this value can be used as AccountId in authenticating GameAnvil.
 
 ```
 public class SampleConnection extends BaseConnection<SampleGameSession> {
 
     /**
-     * authenticate 시에 호출된다.
+     * Called when authenticating.
      *
-     * @param accountId  계정의 아이디
-     * @param password   계정 패스워드
-     * @param deviceId   클라이언트의 기기 아이디
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return false 시 클라이언트와의 접속이 종료
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param accountId  The ID of the account
+     * @param password   The password of the account
+     * @param deviceId   The device ID of the client
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * The connection to the client ends when @return is false
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onAuthenticate(final String accountId, final String password, final String deviceId, final Payload payload, final Payload outPayload) throws SuspendExecution {        
@@ -129,30 +129,30 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
     }
 
     /**
-     * login 호출 이전에 호출된다.
+     * Called before login is called.
      *
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param outPayload The payload to pass to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPreLogin(Payload outPayload) throws SuspendExecution {        
     }
 
     /**
-     * 로그인 성공 이후에 호출된다.
+     * Called when successfully logged in.
      *
-     * @param session 로그인에 사용한 세션 객체
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param session The session object used while logging in
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostLogin(U session) throws SuspendExecution {        
     }
 
     /**
-     * 로그아웃 이후에 호출된다.
+     * Called after logged out.
      *
-     * @param session 게임 노드의 유저에 연결된 세션 객체
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param session The session object that is connected to the game node's user
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostLogout(U session) throws SuspendExecution {
@@ -167,9 +167,9 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
     }
 
     /**
-     * 클라이언트와 연결이 끊어졌을 때 호출된다.
+     * Called when the connection to the client is lost.
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     public void onDisconnect() throws SuspendExecution {        
     }
@@ -178,9 +178,9 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
 
 
 
-### 2-2. 세션 (Session)
+### 2-2. Session
 
-커넥션을 성공적으로 맺은 클라이언트는 해당 커넥션 상에서 서비스별로 한 개씩 GameNode로 논리적인 세션을 맺을 수 있습니다. GameAnvil은 내부적으로 커넥션의 AccountId와 세션의 SubId를 "AccoundId:SubId" 형태로 조합해서 고유한 세션과 해당 세션을 사용 중인 유저를 구분합니다. 이러한 세션은 아래와 같이 해당 세션에서 처리할 메시지와 핸들러를 등록한 후 콜백 메서드를 통해 디스패치할 수 있습니다. 이때, subId는 사용자가 임의로 정한 규칙에 맞추어 해당 커넥션 내에서 고유한 값으로 할당하면 됩니다.
+The client that successfully established connection can form a logical session with GameNode per service on the connection. GameAnvil internally combine the AccountId of connection and the SubId of session in the form of "AccoundId:SubId" to distinguish unique sessions and the users using them. These sessions can then register messages and handlers in the session and dispatch them using the callback method. At this time, a unique value needs to be assigned to subId in the connection according to the rules arbitrarily defined by users.
 
 ```
 public class SampleSession extends BaseSession {
@@ -192,10 +192,10 @@ public class SampleSession extends BaseSession {
     }
 
     /**
-     * 세션으로 패킷이 전달될 때 호출된다.
+     * Called when a packet is passed to session.
      *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param packet A packet to be processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDispatch(final Packet packet) throws SuspendExecution {
@@ -208,7 +208,7 @@ public class SampleSession extends BaseSession {
 
 ### 2-3. Bootstrap
 
-이렇게 생성한 GatewayNode와 커넥션 그리고 세션은 Bootstrap 단계에서 아래와 같이 등록할 수 있습니다.
+The GatewayNode, connection, and session created in this way can be registered in the following method in the Bootstrap step.
 
 ```
 public class Main {
@@ -216,7 +216,7 @@ public class Main {
     public static void main(String[] args) {
 
         GameAnvilBootstrap bootstrap = GameAnvilBootstrap.getInstance();
-        // 등록
+        // Register
         bootstrap.setGateway()
             .connection(SampleConnection.class)
             .session(SampleSession.class)
@@ -232,17 +232,17 @@ public class Main {
 
 ## 3. Game Node
 
-GameNode는 실제 게임 객체가 생성되고 게임 콘텐츠를 구현하는 노드입니다. GameNode는 기본적으로 BaseGameNode 추상 클래스를 상속 구현합니다. GameNode가 관리하는 대표적인 객체는 GameUser와 GameRoom입니다. 이에 관해서는 아래에서 더욱 자세하게 살펴봅니다. 아래 코드는 GameNode에서 기본적으로 재정의할 수 있는 콜백 메서드를 보여줍니다. 노드 공통 콜백에 채널 간 동기화를 위한 콜백이 추가되었습니다. 또한 GameNode에서 처리하고 싶은 프로토콜은 임의의 핸들러와 매핑한 후 onDispatch() 콜백을 통해 해당 패킷을 처리할 수 있습니다. 아래 코드에서 1~3에 해당하는 주석 아래 코드가 이를 위한 처리 흐름을 순서대로 보여줍니다.
+GameNode is a node that is used to create actual game object and implement game content. GameNode basically inherits and implements the BaseGameNode abstract class. GameUser and GameRoom are some of the major objects that are managed by GameNode. Let's take a look at this in depth. The code below shows the callback method that can be redefined in GameNode. The callback that is used to synchronize channels to the common node callback. In addition, the protocol that users want to process in GameNode can be mapped to an arbitrary handler to process the packet using the onDispatch() callback.
 
 
 
 ```
 public class SampleGameNode extends BaseGameNode {
 
-    // 1.패킷 디스패처 생성    
+    // 1.Create packet dispatcher    
     private static PacketDispatcher packetDispatcher = new PacketDispatcher();
 
-    // 2.SampleGameNode에서 처리하고 싶은 프로토콜과 핸들러를 매핑
+    // 2.Map the protocol and handler that need to be processed by SampleGameNode
     static {
         packetDispatcher.registerMsg(SampleGame.GameNodeTest.getDescriptor(), _GameNodeTest.class);
     }
@@ -253,18 +253,18 @@ public class SampleGameNode extends BaseGameNode {
 
     @Override
     public void onPrepare() throws SuspendExecution {
-        setReady(); // 주의
+        setReady(); // caution
     }
 
     /**
-     * 패킷이 전달될 때 호출된다.
+     * Called when packet is passed.
      *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param packet A packet to be processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDispatch(Packet packet) throws SuspendExecution {
-        // 3.SampleGameNode의 메시지 처리
+        // 3.Process the message of SampleGameNode
         if (packetDispatcher.isRegisteredMessage(packet))
             packetDispatcher.dispatch(this, packet);
     }
@@ -282,39 +282,39 @@ public class SampleGameNode extends BaseGameNode {
     }
 
     /**
-     * 같은 채널의 다른 node 에 유저 변화가 있을때 호출되는 콜백
+     * A callback that is called when users are changed in different nodes in the same channel
      * <p>
-     * updateChannelUser() 호출시 발생.
+     * updateChannelUser() Occurs when called.
      *
-     * @param type            채널 정보 변경 타입(갱신/삭제)
-     * @param channelUserInfo 변경될 유저 정보
-     * @param userId          변경 대상의 유저 Id
-     * @param accountId       변경 대상의 Account Id
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param type            Channel information change type(update/delete)
+     * @param channelUserInfo The user information to be changed
+     * @param userId          The user ID of the item to be changed
+     * @param accountId       The account ID of the item to be changed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onChannelUserUpdate(ChannelUpdateType type, ChannelUserInfo channelUserInfo, final int userId, final String accountId) throws SuspendExecution {        
     }
 
     /**
-     * 같은 채널의 다른 node 에 room 상태 변화가 있을때 호출되는 콜백
+     * A callback that is called when the room status is changed in a different node of the same channel
      * <p>
-     * updateChannelRoomInfo() 호출 시 발생.
+     * updateChannelRoomInfo() Occurs when called.
      *
-     * @param type            채널 정보 변경 타입(갱신/삭제)
-     * @param channelRoomInfo 변경될 Room 정보
-     * @param roomId          변경 대상의 Room Id
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param type            Channel information change type(update/delete)
+     * @param channelRoomInfo The room information to be changed
+     * @param roomId          The Room ID of the item to be changed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onChannelRoomUpdate(ChannelUpdateType type, RoomInfo channelRoomInfo, final int roomId) throws SuspendExecution {        
     }
 
     /**
-     * 클라이언트에서 채널 정보를 요청 시 호출되는 콜백 (Base.GetChannelInfoReq)
+     * A callback that is called when the client requests channel information (Base.GetChannelInfoReq)
      *
-     * @param outPayload 클라이언트로 전달될 Channel 정보
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param outPayload The channel information to be passed to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onChannelInfo(Payload outPayload) throws SuspendExecution {        
@@ -326,11 +326,11 @@ public class SampleGameNode extends BaseGameNode {
 
 ### 3-1. GameUser
 
-게임상의 유저를 나타내는 GameUser 객체는 로그인 과정을 거쳐 GameNode에 생성됩니다. 유저 단위의 모든 메시지는 이곳에서 처리할 수 있습니다. 그러므로 유저 관련 콘텐츠는 이 클래스를 중심으로 구현하는 것이 바람직합니다. 앞서 살펴본 모든 예제와 마찬가지로 GameUser 또한 처리할 프로토콜과 핸들러를 매핑할 수 있습니다.
+The GameUser object, which represents the users in the game, is created in GameNode during login. All the messages in the user level can be processed here. Therefore, implementing user-related content centered around this class is recommended. Like all the previous examples, GameUser can map the protocols and handlers to be processed.
 
-아래의 예제 코드는 GameUser의 전체 콜백 메서드 목록을 보여줍니다. 이 중 일부는 기본 구현이 제공되므로 필요한 상황이 아니면 재정의할 필요는 없습니다. 이는 GameUser뿐만 아니라 엔진에서 제공하는 대부분의 콜백 메서드에 해당하는 사항입니다. 이러한 부분은 상속받는 각각의 기본 클래스(e.g.BaseUser)에 대해  [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)에서 JavaDoc 문서를 확인하거나 [레퍼런스 서버 프로젝트](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server)를 참고하는 것이 좋습니다.
+The example code below shows the entire list of callback methods of GameUser. Some of them provides basic implementation, users do not have to redefine them unless it is necessary. This is applied to GameUser and the most of the callback methods provided by the engine. For this part, refer to the JavaDoc document for each base class (e.g. BaseUser) in [GameAnvil API Reference ](http://10.162.4.61:9090/gameanvil) or [reference server project](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server).
 
-아래의 콜백 메서드 중 onLogin()은 최초에 게임 유저를 생성하기 위해 로그인을 시도하는 과정에서 호출됩니다. 이 onLogin() 콜백이 성공하면 GameNode 상에 해당 게임 유저 객체가 생성됩니다. 로그인이 완료된 후에는 사용자가 작성한 프로토콜을 기반으로 클라이언트와 직접 메시지를 주고 받으며 여러 가지 콘텐츠를 처리할 수 있습니다.
+Among the callback methods below, onLogin() is called while logging into the game for the first time to create a game user. When this onLogin() callback succeeds, a game user object is created on GameNode. Once login is complete, many different contents can be processed by transferring messages with the client based on the user-created protocol.
 
 ```
 public class SampleGameUser extends BaseUser {
@@ -342,13 +342,13 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * login 시 발생하는 콜백
+     * A callback that occurs when logging in
      *
-     * @param payload        클라이언트에서 전달한 임의의 페이로드
-     * @param sessionPayload onPreLogin에서 전달된 페이로드
-     * @param outPayload     클라이언트로 전달할 임의의 페이로드
-     * @return boolean type으로 true: 로그인 성공. false: 로그인 실패 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param payload        The arbitrary payload passed by the client
+     * The payload passed by @param sessionPayload onPreLogin
+     * @param outPayload     An arbitrary payload to pass to the client
+     * true with @return boolean type: login succeeds. false: Returns login fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onLogin(final Payload payload,
@@ -357,9 +357,9 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * Login 처리 이후에 발생하는 콜백
+     * A callback that occurs after the login process
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostLogin() throws SuspendExecution {
@@ -367,12 +367,12 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 한 아이디로 유저가 로그인된 상황에서 다른 디바이스에서 같은 유저가 로그인할 때 호출되는 콜백
+     * A callback that is called when a user logs into a different device with a duplicate ID
      *
-     * @param newDeviceId           새로 접속한 유저의 deviceId 값
-     * @param outPayloadForKickUser 클라이언트로 전달할 페이로드
-     * @return boolean type으로 true:새로 접속한 유저가 login success, 현재 유저는 forceLogout. false: 새로 접속한 유저가 login fail을 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다/
+     * @param newDeviceId           The deviceId value of the newly connected user
+     * @param outPayloadForKickUser The payload to pass to the client
+     * true with @return boolean type: Newly connected user login succeeds, the current user is forceLogout. false: Newly connected user returns login fails.
+     * @throws SuspendExecution This method cannot suspend Fiber/
      */
     @Override
     public boolean onLoginByOtherDevice(final String newDeviceId,
@@ -381,12 +381,12 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * MultiType 유저를 사용할 때 어떤 type의 유저가 login된 상황에서 다른 type의 유저가 login할 때 호출되는 콜백
+     * A callback that is called when another type of user is logging in when a different user is already logged in while using the MultiType user
      *
-     * @param userType   새로 로그인을 시도하는 유저의 타입
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return boolean type으로 true: 새 로그인 성공. false: 새 로그인 실패를 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param userType   The type of the user who tries a new login
+     * @param outPayload The payload to pass to the client
+     * true with @return boolean type: New login successful. false: Returns new login failure.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onLoginByOtherUserType(final String userType,
@@ -395,23 +395,23 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * Login 한 상황에서 동일 device 동일 id로 login할 때 호출되는 콜백
+     *  A callback that is called when a duplicate ID is logged on the same device
      *
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param outPayload The payload to pass to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onLoginByOtherConnection(Payload outPayload) throws SuspendExecution {        
     }
 
     /**
-     * 서버에 유저 객체가 살아 있는 상태에서 login 이 호출되었을 경우 호출되는 콜백
+     * A callback that is called when login is called while user object is active in the server
      *
-     * @param payload        클라이언트에서 전달한 임의의 페이로드
-     * @param sessionPayload onPreLogin에서 전달된 페이로드
-     * @param outPayload     클라이언트로 전달할 임의의 페이로드
-     * @return boolean type으로 true: ReLogin 성공, false: ReLogin 실패를 반환.
-     * @throws SuspendExecution: 이 메서드는 파이버가 suspend될 수 있다.
+     * @param payload        The arbitrary payload passed by the client
+     * The payload passed by @param sessionPayload onPreLogin
+     * @param outPayload     An arbitrary payload to pass to the client
+     * true with @return boolean type: ReLogin succeeds, false: Returns ReLogin fails.
+     * @throws SuspendExecution: This method cannot suspend Fiber.
      */
     @Override
     public boolean onReLogin(final Payload payload,
@@ -420,19 +420,19 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트와의 연결이 끊어졌을때 호출되는 콜백
+     * A callback that is called when the connection with the client is severed
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDisconnect() throws SuspendExecution {        
     }
 
     /**
-     * 유저로 전달되는 패킷이 있을 때 호출되는 콜백
+     * A callback that is called when there is a packet to be passed to a user
      *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param packet A packet to be processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDispatch(final Packet packet) throws SuspendExecution {
@@ -440,51 +440,51 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * node가 pause될 때 node가 관리하고 있는 유저에게 호출되는 콜백
+     * A callback that is called to the user when node is paused
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber
      */
     @Override
     public void onPause() throws SuspendExecution {        
     }
 
     /**
-     * node가 resume될 때 node가 관리하고 있는 유저에게 호출되는 콜백
+     * A callback that is called to the user when node is resumed
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onResume() throws SuspendExecution {        
     }
 
     /**
-     * 유저가 logout 시 호출되는 콜백
+     * A callback that is called when the user logs out
      *
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onLogout(final Payload payload, Payload outPayload) throws SuspendExecution {        
     }
 
     /**
-     * 유저가 로그아웃 가능한지 확인하는 콜백.
+     * A callback that is used to check if the user can log out.
      *
-     * @return boolean type으로 반환: false일 경우 로그아웃이 안되며 이 후에 주기적으로 다시 확인을 한다. : true일 경우 유저는 로그아웃이 된다.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * Returns to @return boolean type: If false, logout fails and it is checked later at an interval: If true, the user is logged out.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean canLogout() throws SuspendExecution {        
     }
 
     /**
-     * 클라이언트에서 룸 매이메이킹를 요청했을 경우 발생하는 콜백
+     * A callback that occurs when room matchmaking is requested from the client
      *
-     * @param roomType 매칭되는 룸의 타입
-     * @param payload  클라이언트로부터 전달받은 페이로드
-     * @return 매칭된 룸의 정보 반환, null을 반환할시 클라이언트의 요청 옵션에 따라 새로운 룸이 생성될 수도 있고 실패 처리될 수도 있음
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param roomType The type of matched room
+     * @param payload  The payload received from the client
+     * @return Returns the information of the matched room, if it returns null, a new room can be created or processed as failure according to the client's request option
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public MatchRoomResult onMatchRoom(final String roomType,
@@ -493,13 +493,13 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트에서 유저 매치메이킹을 요청했을 경우 호출되는 콜백
+     * A callback that is called when user matchmaking is requested by the client
      *
-     * @param roomType   매칭되는 룸의 타입
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return true: 유저 매치메이킹 요청 성공, false: 유저 매치메이킹 요청 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param roomType   The type of the matched room
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * @return true: User matchmaking request succeeds, false: User matchmaking request fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onMatchUser(final String roomType,
@@ -509,11 +509,11 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트에서 userMatch가 취소되었을 때 호출되는 콜백
+     * A callback that is called when userMatch is canceled from the client
      *
-     * @param reason 취소된 이유(TIMEOUT/CANCEL)
-     * @return boolean type으로 반환. true: 유저 매치메이킹 취소 성공, false: 유저 매치메이킹 취소 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param reason Reason of cancel (TIMEOUT/CANCEL)
+     * Returns to @return boolean type. true: User matchmaking cancel successful, false: User matchmaking cancel fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onMatchUserCancel(final MatchCancelReason reason) throws SuspendExecution {
@@ -521,64 +521,64 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 타이머 핸들러가 등록되고 호출되는 콜백
+     * A callback that is called after timer handler is registered
      */
     @Override
     public void onRegisterTimerHandler() {        
     }
 
     /**     
-	 * 유저가 다른 노드로 이동할 때 임의의 데이터를 전달하기 위해서 호출되는 콜백
+	 * A callback that is called to pass arbitrary data when the user moves to another node
      *
-     * @param transferPack 필요한 데이터를 설정할 객체
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param transferPack The object that is used to configure the required data
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onTransferOut(final TransferPack transferPack) throws SuspendExecution {        
     }
 
     /**
-     * 유저가 다른 node로 이동한 후 user define을 복구하기 위해 호출되는 콜백
+     * A callback that is called to recover user define after the user moved to another node
      * <p>
-     * 이 시점에는 유저가 완전히 복구되기 전이기 때문에 다른 곳으로 request 호출이 제한된다.
+     * Request calls to a different object is limited as the user is not completely recovered at this point.
      *
-     * @param transferPack 이동 전 전달되었던 객체. 해당 객체에서 설정값을 가져온다.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param transferPack The object passed before moving. Retrieves the set value from the object.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onTransferIn(final TransferPack transferPack) throws SuspendExecution {        
     }
 
     /**
-     * 유저의 node 간 transfer가 완료된 후 호출되는 콜백
+     * A callback that is called after the user's inter-node transfer
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostTransferIn() throws SuspendExecution {        
     }
 
     /**
-     * 클라이언트에서 snapshot 요청 시 호출되는 콜백
+     * A callback that is called when the client requests snapshot
      * <p>
-     * 주로 접속이 끊어지고  서버 상태가 변할 확률이 있을 경우 호출해서 클라이언트와 서버의 상태정보를 동기화하는 데 사용된다.
+     * It is used to the status information of the client and server by calling it when the connection is lost  and there is a possibility of the server status changing.
      *
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onSnapshot(final Payload payload, Payload outPayload) throws SuspendExecution {        
     }
 
     /**
-     * 클라이언트에서 user에게 다른 채널로 이동 요청을 할 경우 호출되는 콜백
+     * A callback that is called when the client requests the user to move to another channel
      *
-     * @param destinationChannelId 이동하려고 하는 대상 channel ID
-     * @param payload              클라이언트로부터 전달받은 페이로드
-     * @param errorPayload         channel 이동 실패 시 서버에서 클라이언트로 전달하는 페이로드. 성공일 경우 전달 안 됨.
-     * @return false: 채널 이동 요청 실패, true: 채널 이동 요청 성공.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param destinationChannelId The target channel ID to switch
+     * @param payload              The payload received from the client
+     * @param errorPayload         The payload that is passed from the server to the client when channel switching fails. It is not passed when it succeeds.
+     * @return false: Channel switch request fails, true: Channel switch request successful.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onCheckMoveOutChannel(final String destinationChannelId,
@@ -588,13 +588,13 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트에서 채널 이동 요청이 들어온 경우  onCheckMoveOutChannel()에서 true 반환한 경우 호출되는 콜백
+     * A callback that is called if   onCheckMoveOutChannel() returns true when the client receives a channel switch request
      * <p>
-     * 채널 이동 시 이동할 채널로 정보를 전달하기 위해서 호출 서버의 moveChannel() 호출 시 onCheckMoveOutChannel()가 호출이 안 되고 바로 호출이 된다.
+     * When switching channels, onCheckMoveOutChannel() is not called and the moveChannel() of the called server is immediately called.
      *
-     * @param destinationChannelId 이동할 channel ID
-     * @param outPayload           이동할 channel에 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param destinationChannelId The channel ID to switch
+     * @param outPayload           The payload that needs to be passed to the channel to switch
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onMoveOutChannel(final String destinationChannelId,
@@ -602,21 +602,21 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * onMoveOutChannel() 호출후 호출되는 콜백
+     * onMoveOutChannel() A callback that is called after the call
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostMoveOutChannel() throws SuspendExecution {
     }
 
     /**
-     * 이동한 채널로 입장할 때 발생하는 콜백
+     * A callback that occurs when entering the switched channel
      *
-     * @param sourceChannelId 이동하기 전 channel ID
-     * @param payload         클라이언트로부터 전달받은 페이로드
-     * @param outPayload      클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param sourceChannelId The channel ID before switching
+     * @param payload         The payload received from the client
+     * @param outPayload      The payload to be passed to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onMoveInChannel(final String sourceChannelId,
@@ -625,19 +625,19 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * onMoveInChannel() 수행 후 호출되는 콜백
+     * onMoveInChannel() A callback that is called after execution
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostMoveInChannel() throws SuspendExecution {
     }
 
     /**
-     * User Transfe 가 가능한지 확인.
+     * Check if User Transfer is possible.
      *
-     * @return boolean type으로 반환. true: Transfer 가능, false: Transfer 불가능, Transfer가 불가능일 경우 NonStopPatch가 종료되기 전까진 지속적으로 호출된다.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * Returns to @return boolean type. true: Transfer possible, false: Transfer impossible, It is called continuously before NonStopPatch is ended if transfer is impossible.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean canTransfer() throws SuspendExecution;
@@ -648,7 +648,7 @@ public class SampleGameUser extends BaseUser {
 
 ### 3-2. GameRoom
 
-2명 이상의 게임 유저는 GameRoom을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 게임 유저들의 요청은 GameRoom 내에서 모두 순서가 보장됩니다. 물론 1명의 게임 유저를 위한 GameRoom 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. GameRoom을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다. 이러한 GameRoom은 GameUser와 마찬가지로 기본 클래스(BaseRoom)을 바탕으로 여러 가지 자체 콜백 메서드를 재정의할 수 있으며 자체적으로 프로토콜을 처리할 수도 있습니다. 아래의 예제 코드는 SampleGameUser를 위한 SampleGameRoom 클래스입니다.
+Two or more game users can create a message flow through GameRoom. In order words, the requests from game users are processed in GameRoom as they are received. Of course, creation of GameRoom for one game user may have a meaning, depending on content. Using GameRoom is entirely dependent on the user. Like GameUser, GameRoom can redefine a variety of callback methods based on the base class (BaseRoom) and can process protocols on its own. The example code below is the SampleGameRoom class for SampleGameUser.
 
 ```
 public class SampleGameRoom extends BaseRoom<SampleGameUser> {
@@ -660,29 +660,29 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * Room이 초기화될 때 발생하는 콜백
+     * A callback that occurs when Room is initialized
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onInit() throws SuspendExecution {        
     }
 
     /**
-     * Room 이 삭제될 때 발생하는 콜백
+     * A callback that occurs when Room is deleted
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDestroy() throws SuspendExecution {        
     }
 
     /**
-     * Room으로 {@link Packet}이 전달될 때 호출되는 콜백
+     * A callback that is called when {@link Packet} is passed to Room
      *
-     * @param user   해당 패킷을 처리할 유저 객체. 해당 패킷을 처리할 유저가 없을 경우 null.
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param user   he user packet that will process the packet. null if there is no user to process the packet.
+     * @param packet A packet to be processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onDispatch(SampleGameUser user, final Packet packet) throws SuspendExecution {
@@ -690,13 +690,13 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * 클라이언트에서 방 생성을 요청할 때 발생하는 콜백
+     * A callback that occurs when the client requests room creation
      *
-     * @param user       방 생성을 요청한 유저 객체
-     * @param inPayload  클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return true: 방 생성 성공, false: 방 생성 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param user       The user object that requested room creation
+     * @param inPayload  The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * @return true: Room creation succeeds, false: Room creation fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onCreateRoom(SampleGameUser user,
@@ -705,13 +705,13 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * 클라이언트에서 Room 입장 요청을 할 때 발생하는 콜백
+     * A callback that occurs when the client requests to join Room
      *
-     * @param user       Room 입장을 요청하는 유저 객체
-     * @param inPayload  클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return true: Room 입장 성공, false: Room 입장 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param user       The user object that requests to join Room
+     * @param inPayload  The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * @return true: Room join successful, false: Room join fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onJoinRoom(SampleGameUser user,
@@ -720,13 +720,13 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * 클라이언트에서 Room 나가기 요청을 할 때 발생하는 콜백
+     * A callback that occurs when the client requests to leave Room
      *
-     * @param user       나가기 요청을 한 유저 객체
-     * @param inPayload  클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return boolean type으로 반환. true Room 나가기 성공, false Room 나기기 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param user       The user object that requested to leave Room
+     * @param inPayload  The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * Returns to @return boolean type. true: Leave Room succeeds, false: Leave Room fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onLeaveRoom(SampleGameUser user,
@@ -735,49 +735,49 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * onLeaveRoom 호출 후 반환값이 true인 경우 호출되는 콜백
+     * A callback that is called when the return value is true after onLeaveRoom is called
      *
-     * @param user onLeaveRoom 처리가 끝난 유저 객체
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param user onLeaveRoom The user object that is processed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPostLeaveRoom(SampleGameUser user) throws SuspendExecution {
     }
 
     /**
-     * 유저가 Room에 있는 상태에서 ReJoin될 경우 호출되는 콜백
+     * A callback that is called when ReJoin is executed while users are in Room
      *
-     * @param user       ReJoin을 한 유저 객체
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param user       The user object that executed ReJoin
+     * @param outPayload The payload to pass to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onRejoinRoom(SampleGameUser user, Payload outPayload) throws SuspendExecution {        
     }
 
     /**
-     * 타이머 핸들러가 등록되고 호출되는 콜백
+     * A callback that is called after timer handler is registered
      */
     @Override
     public void onRegisterTimerHandler() {
     }
 
     /**
-     * room transfer 발생 시 room의 define을 serialize하기 위해 호출되는 콜백
+     *  A callback that is called to serialize the define of room when room transfer occurs
      *
-     * @param transferPack 이동 전 전달 되었던 정보 꾸러미. 해당 객체에서 정보를 가져온다.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param transferPack The information package that was passed before switching. Retrieves information from the object.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
     }
 
     /**
-     * room transfer 발생 시 room의 define을 복원하기 위해서 호출되는 콜백
+     * A callback that is called to recover the define of room when room transfer occurs
      *
-     * @param userList     해당 Room에 있는 유저 객체 리스트.
-     * @param transferPack 복원할 Room 정보 꾸러미
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param userList     The list of user objects that are in the Room.
+     * @param transferPack The Room information package to be recovered
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onTransferIn(List<SampleGameUser> userList,
@@ -785,32 +785,32 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * node가 pause되고 난 후 각 room 객체에서 호출되는 콜백
+     * A callback that is called by each room object after the node is paused
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onPause() throws SuspendExecution {
     }
 
     /**
-     * node가 resume되고 난 후 각 room에서 호출되는 콜백
+     * A callback that is called by each room after the node is resumed
      *
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public void onResume() throws SuspendExecution {
     }
 
     /**
-     * 클라이언트에서 partyMatch 를 요청했을 경우 호출되는 콜백
+     * A callback that is called when the client requests partyMatch
      *
-     * @param roomType   룸의 타입
-     * @param user       파티 매칭을 요청한 방장
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return boolean type 으로 반환. true: user matching 요청 성공,false: user matching 요청 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param roomType   The type of room
+     * @param user       The room host who requested party matching
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * Returns to @return boolean type. true: user matching request succeeds, false: user matching request fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onMatchParty(final String roomType,
@@ -821,12 +821,12 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * room transfer 를 현재 할 수 있는 지 체크.
+     * Check if room transfer is possible.
      * <p>
-     * 최초 콜백 호출 후 NonNetworkNode 상태가 Ready 가 되기 전까지 지속적으로 체크.
+     * Check continuously until the status of NonNetworkNode becomes Ready after the initial callback.
      *
-     * @return boolean type 으로 반환. true: room transfer 가능, false: room transfer 불가능.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * Returns to @return boolean type. true: room transfer possible, false: room transfer impossible.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean canTransfer() throws SuspendExecution {        
@@ -836,9 +836,9 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
 
 
 
-### 3-3. 부트스트랩 (Bootstrap)
+### 3-3. Bootstrap
 
-이렇게 생성한 GameNode와 GameUser 그리고 GameRoom은 Bootstrap 단계에서 아래와 같이 등록할 수 있습니다.
+The GameNode, GameUser, and GameRoom created in this way can be registered as below in the Bootstrap step.
 
 ```
 public class Main {
@@ -866,27 +866,26 @@ public class Main {
 
 ## 4. 유저 전송 (UserTransfer)
 
-게임 노드에는 게임 유저 객체가 생성됩니다. 이 게임 유저 객체는 게임 노드 사이에서 언제든지 전송될 수 있습니다. 예를 들면 1번 게임 노드의 유저 객체가 2번 게임 노드에 생성된 방으로 들어가는 과정에서 게임 노드 간 유저 객체 전송이 일어납니다. 이 기술은 GameAnvil의 가장 핵심이자 근간이 되며 유저 객체를 잘 직렬화/역직렬화해야 의도한 대로 동작합니다. 이러한 직렬화/역직렬화 대상은 GameAnvil 사용자가 직접 구현할 수 있습니다. 즉, 해당 게임 유저 객체의 어떤 값을 전송할 것인지 결정하는 것이죠.
+User objects are created in game node. This game user object can be transferred at any time among game nodes. For example, user objects are transferred among game nodes while the user object of #1 game node is entering the room created by the user object of #2 game node. This technology is the core of GameAnvil and it works as intended only when user object is correctly serialized/de-serialized. The target of serialize/de-serialize can be directly implemented by GameAnvil users. In order words, they decide what values of the game user object should be transferred.
 
-이러한 유저 전송이 발생하는 경우는 크게 세 가지로 나눌 수 있습니다.
+This type of user transfers can be categorized in three types.
 
-- 첫째, 매치 메이킹을 포함한 방 생성이나 방 참여 로직에 의해 유저 객체는 다른 게임 노드로 전송될 수 있습니다. 이때, 구현에 따라 다른 채널의 방으로 진입할 수도 있습니다.
-- 둘째, 다른 채널로 이동할 때 발생합니다. 하나의 게임 노드는 하나의 채널에 속할 수 있습니다. 그러므로 채널을 이동하는 것은 게임 노드 사이의 이동을 의미합니다.
-- 첫 번째 경우처럼 매치 메이킹 등을 이용해서 다른 채널의 방으로 진입할 경우에는 엔진 내부에서 묵시적으로 처리합니다.
-- 클라이언트는 명시적으로 채널 이동을 요청할 수도 있습니다.
-- 셋째, 임의의 게임 노드에 대해 무정지 점검(NonStopPatch)을 진행하면 해당 노드의 유저 객체들은 다른 유효한 게임 노드들로 분산되어 전송됩니다. 이 경우는 운영 측면에서 GameAnvil Console을 통해 명시적으로 명령을 내린 경우입니다.
+- First, user objects can be transferred to a different game node by room creation or room join logic including matchmaking. At this time, the objects can enter the room in a different channel, according to implementation.
+- Second, it occurs when switching channels. A game node can belong to a channel. Therefore, switching channels means moving through game nodes.
+- When entering the room in a different channel using matchmaking as in the first case, it is processed implicitly inside the engine.
+- The client can request channel switch explicitly.
+- Third, when uninterrupted maintenance for arbitrary game nodes (NonStopPatch) is executed, the user objects of the node are distributed to other valid game nodes and transferred. In this case, explicit command is issued on GameAnvil Console by admins.
 
 
 
-### 4-1. 유저 전송 구현
+### 4-1. User Transfer Implementation
 
-실제 유저 전송은 GameAnvil이 내부적으로 조용하게 처리합니다. 이때, 클라이언트는 자신의 게임 유저 객체가 서버 사이에서 전송되는지 인지하지 못합니다. 즉, 다른 게임 노드의 방으로 들어가더라도 클라이언트는 단지 하나의 GameAnvil 서버군에서 임의의 방으로 들어간 것뿐이죠.
+Actual user transfer is internally processed by GameAnvil. At this time, the client does not recognize that its own game user object is being transferred among servers. In other words, even when it enters the room of a different game node, the client enters an arbitrary room in the sole GameAnvil server family.
+However, when user objects are being transferred to a different game node, the user can determine which data to be transferred with them. Simply specifying the data allows it to be serialized with the user object as part of it. If done, the objects can easily be accessed and used without concerning de-serialization from the game node to which transfer the data.
 
-단, 다른 게임 노드로 유저 객체를 전송할 때 어떤 데이터를 함께 전송할지는 사용자가 지정할 수 있습니다. 간단히 지정만 해두면 이 데이터는 유저 객체의 일부로 함께 직렬화됩니다. 전송할 대상 게임 노드에서는 역직렬화를 신경 쓸 필요 없이 쉽게 해당 객체들에 접근해서 사용할 수 있습니다.
+The following are the callback methods related to user transfer. First to do is 'specifying the data to be transferred at the same time.' To do this, inherit the BaseUser abstract class and implement the callback below in the game user class. The user simply has to place the data to be transferred in the transferPack passed as the key-value pair using the key value that the user wants.
 
-다음은 이러한 유저 전송에 관련된 콜백 메서드들입니다. 우선 '함께 전송할 데이터 지정하기'입니다. 이를 위해 BaseUser 추상 클래스를 상속받은 게임 유저 클래스에 아래의 콜백을 구현합니다. 방법은 간단합니다. 아래의 예제와 같이 전송할 데이터를 사용자가 원하는 key 값을 이용하여 key-value 쌍으로 매개변수로 넘겨받은 transferPack에 넣기만 하면 됩니다.
-
-만일 여기에서 전송할 데이터를 지정하지 않으면 대상 게임 노드로 전송된 유저 객체의 해당 데이터는 모두 기본값으로 초기화되므로 주의가 필요합니다.
+If the data to be transferred is not specified at this time, be careful as the data of the user object that is transferred to the target game node is reset to default.
 
 ```
 @Override
@@ -897,7 +896,7 @@ public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
 }
 ```
 
-이제 유저 전송이 완료된 후 대상 게임 노드에서 처리할 콜백 메서드를 살펴보겠습니다. 아래와 같이 전송 전에 지정한 key를 이용해서 원하는 객체에 접근할 수 있습니다. 이와 같은 방법으로 전송 완료된 유저 객체의 해당 데이터를 원래 상태로 만들어 줍니다.
+Now, let's take a look at the callback method to be processed in the target game node after user transfer is complete. The desired object can be accessed by using the key specified before the transfer. Restore the data of the user object that is transferred in this way.
 
 ```
 @Override
@@ -908,13 +907,13 @@ public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
 }
 ```
 
-위의 2가지 메서드는 GameAnvil이 알아서 호출합니다. 사용자는 그냥 구현만 하면 됩니다.
+The two methods above are automatically called by GameAnvil. The user only has to implement them.
 
 
 
-### 4-2. 전송 가능한 유저 타이머
+### 4-2. Transferable User Timer
 
-유저가 전송될 때 유저에 등록해둔 타이머도 함께 전송할 수 있습니다. 전송 가능한 타이머를 사용하기 위해서는 별도로 아래의 콜백 메서드에서 원하는 key를 이용해서 미리 등록해두어야 합니다. Timer 핸들러를 다음과 같이 원하는 key로 매핑해둡니다.
+When transferring user, the timer registered to the user can also be transferred. To use the transferable timer, it must be pre-registered using the desired key from the callback methods below. Map the timer handler to the desired key.
 
 ```
  @Override
@@ -927,82 +926,82 @@ public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
  }
 ```
 
-등록이 완료된 타이머 객체는 언제든 해당 key를 이용해서 아래와 같이 게임 유저 구현부에서 사용할 수 있습니다. 단순히 등록만 한 타이머는 효과가 없으므로 실제 사용을 위해서는 반드시 아래와 같이 유저 객체에 추가해야 타이머가 발동합니다.
+The registered timer object can be used in the game user implementation part using the key. The timer that only registered does not take effect, for actual use, the timer must be added to the user object below for it to trigger.
 
 ```
 addTimer(1, TimeUnit.SECONDS, 20, "transferRoomTimerHandler1", false);
 addTimer(2, TimeUnit.SECONDS, 0, "transferRoomTimerHandler2", false);
 ```
 
-이렇게 유저 객체에 추가해 둔 타이머는 별도로 전송에 대한 처리를 하지 않아도 모두 자동으로 전송됩니다. 즉, 대상 게임 노드에서 해당 유저 객체에 대해 동일한 타이머 추가 과정을 거칠 필요가 없습니다.
+The timer added to the user object is automatically transferred without having to do anything with the transfer. In other words, the user object does not have to go through the timer adding process from the target game node.
 
 
 
-## 5. 아이디 (ID)
+## 5. ID
 
-GameAnvil은 여러 종류의 아이디를 사용합니다. 그 중 일부는 서버가 자체 발급하고 다른 일부는 사용자가 GameAnvilConfig에 직접 설정합니다. 접속에 필요한 계정 정보 등은 클라이언트에서 입력받은 정보를 서버로 전달합니다. 다음은 GameAnvil에서 사용하는 대표적인 아이디에 대한 설명입니다.
+GameAnvil uses many different IDs. Some of them are issued by the server and the rest are configured by the user in GameAnvilConfig. The account information needed to connect passes the information received from the client to the server. Following is the description of the popular ID used by GameAnvil.
 
-| 이름      | 설명                                                         | 자료형 | 범위      |
+| Name      | Description                                                         | Material | Range      |
 | --------- | ------------------------------------------------------------ | ------ | --------- |
-| ServiceId | - 설정한 각각의 서비스를 구분하기 위한 아이디 - 하나의 서비스 아이디는 여러 개의 노드로 구성할 수 있음 | int    | 0<id< 100 |
-| HostId    | - 호스트의 고유 아이디 - 하나의 호스트에 여러 개의 GameAnvil 프로세스를 구동할 경우에는 GameAnvilConfig에 별도의 vmId를 설정 | long   | -         |
-| NodeId    | - 노드의 고유 아이디 - HostId + ServiceId + 내부Counter 값으로 구성 | long   | -         |
-| AccountId | - 클라이언트가 접속할 때 입력 - 커넥션(Connection) 하나당 하나의 계정 아이디가 매핑 | string | -         |
-| UserId    | - 게임 유저 객체의 고유 아이디 - 게임 유저 객체가 생성될 때 서버가 발급 - 동일한 유저가 재접속 할 경우라도 새로운 게임 유저 객체가 생성되면 새로운 아이디 발급 | int    | -         |
-| RoomId    | - 방의 고유 아이디 - 방 객체가 생성될 때 서버가 발급         | int    | -         |
-| SubId     | - 하나의 계정(accountId) 내에서 고유한 보조 아이디 - 세션(Session) 하나당 AccountId + SubId가 매핑 - 커넥션(Connection) 단위로 여러개의 세션(Session)을 사용할 때 하나의 접속 내에서 각각의 세션 유저를 구분하는 아이디 - 클라이언트가 접속할 때 입력 | int    | 0 < id    |
+| ServiceId | - The ID that is used to distinguish each configured service - Single service ID can be configured to several nodes | int    | 0<id< 100 |
+| HostId    | - The unique ID of host - When running several GameAnvil processes in a single host, configure a separate vmId in GameAnvilConfig| long   | -         |
+| NodeId    | - The unique ID of node - Consists of HostId + ServiceId + internal Counter value | long   | -         |
+| AccountId | - Map each input - Connection to a single account ID when the client is connecting | string | -         |
+| UserId    | - The unique ID of game user object - Issued by server when game user object is created - Issue a new ID if a new gamer user object is created when the same user is trying to reconnect | int    | -         |
+| RoomId    | - The unique ID of room - Issued by server when room object is created         | int    | -         |
+| SubId     | - Map AccountId + SubId to each unique secondary ID Session in a single account (accountId) When using several Sessions in the - Connection unit, enter it while the ID - client used to distinguish each session user in a single connection | int    | 0 < id    |
 
-### 5-1.아이디 지원 API
+### 5-1.ID Support API
 
-앞서 살펴본 ID에 관한 일부 기능을 아래의 표와 같이 엔진 사용자에게 제공합니다. 해당 ID를 획득하거나 확인하기 위해서는 반드시 아래의 API를 사용해야 합니다.
+Some of the features related to the ID mentioned above are provided to engine users as shown in the list below. To obtain or confirm the ID, the API below must be used.
 
-- ServiceId 클래스
+- ServiceId class
 
-| 메서드                                | 설명                                    |
+| Method                                | Description                                    |
 | ------------------------------------- | --------------------------------------- |
-| boolean isValid(int serviceId)        | 유효한 serviceId인지 확인               |
-| int findServiceId(String serviceName) | ServiceName에 해당하는 ServiceId을 획득 |
-| String findServiceName(int serviceId) | ServiceId에 해당하는 ServiceName을 획득 |
+| boolean isValid(int serviceId)        | Checks if serviceId is valid               |
+| int findServiceId(String serviceName) | Obtains the ServiceId corresponding to ServiceName |
+| String findServiceName(int serviceId) | Acquires the ServiceName corresponding to ServiceId |
 
-- HostId 클래스
+- HostId class
 
-| 메서드                       | 설명                     |
+| Method                       | Description                     |
 | ---------------------------- | ------------------------ |
-| boolean isValid(long hostId) | 유효한 hostId인지 확인   |
-| long get()                   | 프로세스의 hostId를 획득 |
+| boolean isValid(long hostId) | Checks if hostId is valid   |
+| long get()                   | Obtains the hostId of a process |
 
-- NodeId 클래스
+- NodeId class
 
-| 메서드                        | 이름                          |
+| Method                       | Name                          |
 | ----------------------------- | ----------------------------- |
-| boolean isValid(long nodeId)  | 유효한 nodeId인지 확인        |
-| long getHostId(long nodeId)   | nodeId로부터 hostId를 획득    |
-| int getServiceId(long nodeId) | nodeId로부터 serviceId를 획득 |
-| int getNodeNum(long nodeId)   | nodeId로부터 nodeNum을 획득   |
+| boolean isValid(long nodeId)  | Checks if nodeId is valid        |
+| long getHostId(long nodeId)   | Obtains hostId from nodeId    |
+| int getServiceId(long nodeId) | Obtains serviceId from nodeId |
+| int getNodeNum(long nodeId)   | Obtains nodeNum from nodeId   |
 
-- UserId 클래스
+- UserId class
 
-| 메서드                      | 설명                   |
+| Method                      | Description               |
 | --------------------------- | ---------------------- |
-| boolean isValid(int userId) | 유효한 userId인지 확인 |
+| boolean isValid(int userId) | Checks if userId is valid |
 
-- RoomId 클래스
+- RoomId class
 
-| 메서드                      | 설명                   |
+| Method                      | Description               |
 | --------------------------- | ---------------------- |
-| boolean isValid(int roomId) | 유효한 roomId인지 확인 |
+| boolean isValid(int roomId) | Checks if roomId is valid |
 
-- SubId 클래스
+- SubId class
 
-| 메서드                     | 설명                  |
+| Method                     | Description              |
 | -------------------------- | --------------------- |
-| boolean isValid(int subId) | 유효한 subId인지 확인 |
+| boolean isValid(int subId) | Checks if subId is valid |
 
 
 
-## 6. 채널 (Channel)
+## 6. Channel
 
-채널은 단일 서버군을 논리적으로 나눌 수 있는 방법 중 하나입니다. GameAnvil은 한 개 이상의 게임 노드를 포함할 경우에 채널을 설정할 수 있습니다. 기본적으로 GameAnvilConfig을 통해 게임 노드에 아래의 예제처럼 채널을 설정합니다. 이 예제에서 4개의 게임 노드에 대해 각각 ch1,ch1,ch2,ch2를 설정합니다.
+Channel is one of the ways used to logically divide a single server family. GameAnvil can configure a channel if it includes one or more game nodes. Basically, configure a channel in game node as below using GameAnvilConfig. In this example, configure ch1, ch1, ch2, and ch2 for each four game nodes.
 
 ```
 "game": [
@@ -1019,7 +1018,7 @@ GameAnvil은 여러 종류의 아이디를 사용합니다. 그 중 일부는 �
     }
 ```
 
-이때, 동일한 채널의 게임 노드는 서로 채널 관련 정보를 공유합니다. 예를 들면 채널에 새로운 유저가 진입하거나 떠날 때 GameAnvil 엔진이 미리 구현한 콜백을 호출합니다. 채널 간 유저와 방 정보 동기화를 위해 다음과 같이 GameUserInfo 그리고 GameRoomInfo를 사용합니다. 앞서 살펴본 GameNode에 대한 Bootstrap의 내용에 추가로 SampleChannelUserInfo와 SampleChannelRoomInfo가 등록되는 것을 확인할 수 있습니다.
+At this time, the game nodes in the same channel share channel-related information. For example, the GameAnvil engine calls the pre-implemented callback when a new user enters or leaves the channel. Use GameUserInfo and GameRoomInfo as below to synchronize the user and room information among channels. As mentioned earlier, SampleChannelUserInfo and SampleChannelRoomInfo are additionally registered to the content of Bootstrap for GameNode.
 
 ```
 public class Main {
@@ -1037,7 +1036,7 @@ public class Main {
 }
 ```
 
-그럼 이러한 ChannelUserInfo와 ChannelRoomInfo를 구현하는 방법에 대해 살펴보겠습니다. 우선 채널 유저 정보는 GameAnvil이 제공하는 ChannelUserInfo 인터페이스와 Serializable 인터페이스를 구현합니다. 동일한 채널에 속한 GameNode 사이에서 전송되어야 하므로 Serializable은 필수입니다. 나머지는 엔진 사용자가 원하는 정보로 채우면 됩니다.
+Let's take a look at how to implement ChannelUserInfo and ChannelRoomInfo. First, channel user information implements the ChannelUserInfo and Serializable interface provided by GameAnvil. As they need to be transferred among the GameNodes in the same channel, Serializable is a must. The rest can be filled with the information desired by engine users.
 
 ```
 public class SampleChannelUserInfo implements ChannelUserInfo, Serializable {
@@ -1067,9 +1066,9 @@ public class SampleChannelUserInfo implements ChannelUserInfo, Serializable {
     }
 
     /**
-     * {@link KryoSerializer} 를 가지고 직렬화 한다.
+     * Serializes with {@link KryoSerializer}
      *
-     * @return ByteBuffer 로 직렬화 된 객체 반환.
+     * Returns the object serialized by @return ByteBuffer.
      */
     @Override
     public ByteBuffer serialize() {
@@ -1077,10 +1076,10 @@ public class SampleChannelUserInfo implements ChannelUserInfo, Serializable {
     }
 
     /**
-     * {@link KryoSerializer} 를 가지고 역직렬화 한다.
+     * De-serializes with {@link KryoSerializer}.
      *
-     * @param inputStream 직렬화된 스트림
-     * @return ChannelUserInfo 으로 역직렬화된 객체를 반환.
+     * @param inputStream A serialized stream
+     * Returns an object that is de-serialized by @return ChannelUserInfo.
      */
     @Override
     public ChannelUserInfo deserialize(InputStream inputStream) {
@@ -1088,9 +1087,9 @@ public class SampleChannelUserInfo implements ChannelUserInfo, Serializable {
     }
 
     /**
-     * 변경될 Channel User 정보의 User Id.
+     * The User Id of the Channel User information to be changed.
      *
-     * @return int type 으로 UserId 반환.
+     * Returns UserId to @return int type.
      */
     @Override
     public int getUserId() {
@@ -1098,9 +1097,9 @@ public class SampleChannelUserInfo implements ChannelUserInfo, Serializable {
     }
 
     /**
-     * 변경될 Channel User 정보의 Account Id.
+     * The Account Id of the Channel User information to be changed.
      *
-     * @return String type 으로 AccountId 반환.
+     * Returns AccountId to @return String type.
      */
     @Override
     public String getAccountId() {
@@ -1118,7 +1117,7 @@ public class SampleChannelUserInfo implements ChannelUserInfo, Serializable {
 }
 ```
 
-채널 방 정보도 동일한 방법으로 구현합니다. GameAnvil이 제공하는 RoomInfo 인터페이스와 Serializable을 구현합니다. 인터페이스명이 ChannelRoomInfo가 아닌 RoomInfo임에 주의하세요. 이 클래스는 채널 유저 정보와 마찬가지로 엔진 사용자가 채널 간 동기화에 사용할 정보를 바탕으로 구현하면 됩니다.
+The channel room information is implemented in the same way. Implement the RoomInfo interface and Serializable provided by GameAnvil. Note that the name of the interface is not ChannelRoomInfo but RoomInfo. This class can be implemented based on the information that will be used by the engine users to synchronize channels like channel user information.
 
 ```
 public class SampleChannelRoomInfo implements Serializable, RoomInfo {
@@ -1133,12 +1132,12 @@ public class SampleChannelRoomInfo implements Serializable, RoomInfo {
     public SampleChannelRoomInfo() {
     }
 
-    //... 콘텐츠에서 필요한 정보로 클래스 구현
+    //... Implement class using the information needed by content
 
     /**
-     * Room 정보의 Room Id.
+     * The Room Id of the Room information.
      *
-     * @return int type 으로 RoomId 반환.
+     * Returns RoomId to @return int type.
      */
     @Override
     public int getRoomId() {
@@ -1146,9 +1145,9 @@ public class SampleChannelRoomInfo implements Serializable, RoomInfo {
     }
 
     /**
-     * Room 정보를 {@link KryoSerializer} 이용해서 serialize 처리를 한다.
+     * Serializes using the Room information {@link KryoSerializer}.
      *
-     * @return ByteBuffer type 으로 serialize 된 내용을 반환.
+     * Returns the serialized content to @return ByteBuffer type.
      */
     @Override
     public ByteBuffer serialize() {
@@ -1156,10 +1155,10 @@ public class SampleChannelRoomInfo implements Serializable, RoomInfo {
     }
 
     /**
-     * 전달받은 정보를 {@link KryoSerializer} 이용해서 deserialize 처리를 한다.
+     * De-serializes using the received information {@link KryoSerializer}.
      *
-     * @param inputStream deserialize 할 데이터
-     * @return RoomInfo 로 Room 정보를 반환.
+     * @param inputStream The data to be de-serialized
+     * Returns the Room information to @return RoomInfo.
      */
     @Override
     public RoomInfo deserialize(InputStream inputStream) {
@@ -1167,10 +1166,10 @@ public class SampleChannelRoomInfo implements Serializable, RoomInfo {
     }
 
     /**
-     * Room 정보를 복사 한다.
+     * Copies the Room information.
      *
-     * @return RoomInfo 로 복사된 Room 정보를 반환.
-     * @throws CloneNotSupportedException 복사가 안되는 경우.
+     * Returns the copied Room information to @return RoomInfo.
+     * When @throws CloneNotSupportedException cannot be copied.
      */
     @Override
     public RoomInfo copy() throws CloneNotSupportedException {
@@ -1182,49 +1181,49 @@ public class SampleChannelRoomInfo implements Serializable, RoomInfo {
 }
 ```
 
-앞서 살펴본 채널의 유저,방 정보는 실제 해당 유저나 방에 대한 갱신이 필요할 때마다 동일한 채널 내의 GameNode 사이에 전파됩니다. 이때, 관련 GameNode는 아래의 2가지 콜백 메서드를 각각 채널 유저 정보와 채널 방 정보 갱신에 대해 호출합니다.
+The user and room information of the channel mentioned earlier is distributed to the GameNodes in the same channel whenever the actual user or room needs to be updated. At this time, the related GameNode calls the two callback methods below with each channel user information and channel room information update.
 
 ```
     /**
-     * 같은 채널의 다른 node 에 유저 변화가 있을때 호출되는 콜백
+     * A callback that is called when users are changed in different nodes in the same channel
      * <p>
-     * updateChannelUser() 호출시 발생.
+     * updateChannelUser() Occurs when called.
      *
-     * @param type            Channel 정보 변경 타입(갱신/삭제)
-     * @param channelUserInfo 변경될 유저 정보
-     * @param userId          변경 대상의 User Id
-     * @param accountId       변경 대상의 Account Id
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param type            Channel information change type(update/delete)
+     * @param channelUserInfo The user information to be changed
+     * @param userId          The User Id of the target to be changed
+     * @param accountId       The account ID of the item to be changed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
-    public void onChannelUserUpdate(ChannelUpdateType type, ChannelUserInfo channelUserInfo, final int userId, final String accountId) throws SuspendExecution {        
+    Engine users can implement them based on the channel user and room information received as parameters. {        
     }
 ```
 
-파라메터로 전달받은 채널 유저,방 정보를 바탕으로 엔진 사용자가 원하는 방식으로 구현하면 됩니다.
+Engine users can implement them based on the channel user and room information received as parameters.
 
 ```
     /**
-     * 같은 채널의 다른 node 에 room 상태 변화가 있을때 호출되는 콜백
+     * A callback that is called when the room status is changed in a different node of the same channel
      * <p>
-     * updateChannelRoomInfo() 호출시 발생.
+     * updateChannelRoomInfo() Occurs when called.
      *
-     * @param type            Channel 정보 변경 타입(갱신/삭제)
-     * @param channelRoomInfo 변경될 Room 정보
-     * @param roomId          변경 대상의 Room Id
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param type            Channel information change type(update/delete)
+     * @param channelRoomInfo The room information to be changed
+     * @param roomId          The Room ID of the item to be changed
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     public void onChannelRoomUpdate(ChannelUpdateType type, RoomInfo channelRoomInfo, final int roomId) throws SuspendExecution {        
     }
 ```
 
-마지막으로 클라이언트는 서버로 채널 정보를 요청할 수 있습니다. 이때, 아래의 콜백 메서드가 호출됩니다. 이 또한 엔진 사용자가 원하는 방식으로 적절하게 구현합니다.
+Lastly, the client can request channel information to the server. At this time, the callback method below is called. Engine users can also implement this as they want.
 
 ```
     /**
-     * 클라이언트에서 Channel 정보를 요청 시 호출되는 콜백 (Base.GetChannelInfoReq)
+     * A callback that is called when the client requests the Channel information (Base.GetChannelInfoReq)
      *
-     * @param outPayload 클라이언트로 전달될 Channel 정보
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param outPayload The channel information to be passed to the client
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     public void onChannelInfo(Payload outPayload) throws SuspendExecution {        
     }
@@ -1232,19 +1231,19 @@ public class SampleChannelRoomInfo implements Serializable, RoomInfo {
 
 
 
-## 7. 매칭그룹 (MatchingGroup)
+## 7. Matching Group
 
-매칭 그룹도 채널과 마찬가지로 단일 서버군을 논리적으로 나눌 수 있는 방법 중 하나입니다. 단, 매칭 그룹은 채널과 달리 명시적으로 미리 설정하지 않습니다. 또한 채널은 GameNode를 논리적으로 나누기 위한 방법인 반면에 매칭 그룹은 매치메이킹을 논리적으로 나누기 위한 방법입니다. 앞서 살펴본 유저 매치메이킹 콜백 메서드를 다시 한번 살펴보겠습니다. 이 예제에서 설정한 매칭 그룹은 "Newbie"입니다. 이 "Newbie"라는 값은 클라이언트에서 서버로 payload를 통해 전달할 수도 있고 엔진 사용자가 서버 상에 해당 유저에 대해 미리 저장해둔 값일 수도 있습니다. 아래와 같이 하드코딩한 값을 쓸 수도 있으나 실제 게임 서버 코드에는 바람직하지 않습니다. 어쨌든  "Newbie"라는 매칭 그룹에 대해 하나의 매치메이커가 생성되고 이 후의 모든 "Newbie" 요청은 이 매치 메이커에 쌓여서 함께 처리되는 것이 보장됩니다.
+Like channels, matching group is one of the ways to logically separate a single server family. However, matching group is not explicitly predefined like channels do. In addition, while channel is a way to logically divide GameNode, matching group is a way to logically divide matchmaking. Let's take a look at the user matchmaking callback method again. The matching group configured in this example is "Newbie." This value of "Newbie" can be passed from the client to the server using payload or it can be a pre-stored value for the user by engine users on the server. Users can use the hardcoded value as below, but it is not recommended to use it to actual game server code. Anyway, a single matchmaker is created for the matching group named "Newbie" and all the "Newbie" requests afterward are guaranteed to be stacked in this matchmaker.
 
 ```
     /**
-     * 클라이언트에서 userMatch를 요청했을 경우 호출되는 콜백
+     * A callback that is called when the client requests userMatch
      *
-     * @param roomType   매칭되는 room의 타입
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return boolean type으로 반환. true: user matching 요청 성공,false: user matching 요청 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend될 수 있다.
+     * @param roomType   The type of matched room
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * Returns to @return boolean type. true: user matching request succeeds, false: user matching request fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     public boolean onMatchUser(final String roomType,
                                final Payload payload, Payload outPayload) throws SuspendExecution {
@@ -1257,25 +1256,25 @@ public class SampleChannelRoomInfo implements Serializable, RoomInfo {
     }
 ```
 
-매치 메이킹 관련한 모든 프로토콜에는 매칭 그룹 필드가 존재합니다. 그러므로 클라이언트와 서버 사이에 미리 매칭 그룹을 정의해두고 사용하는 것이 가장 이상적입니다. 예를 들어, "초보", "중수", "고수"처럼 실력을 기반으로 한 매칭 그룹을 정의할 수도 있고 "한국", "일본", "미국"처럼 국가별 매칭 그룹을 정의할 수도 있습니다. 이는 어디까지나 엔진 사용자가 원하는 대로 사용할 수 있는 부분입니다.
+In every protocol related to matchmaking, there is the matching group field. Therefore, it is ideal to predefine the matching groups to use between the client and the server. For example, users can define matching groups based on skill level such as "Beginner", "Intermediate", or "Expert" or define matching groups based on country such as "Korea", "Japan", or "United States." This is entirely up to the engine users.
 
 
 
 ## 8. MatchNode & MatchMaker
 
-엔진 사용자는 간단하게 매칭 로직만 구현함으로써 매치메이킹을 적용할 수 있습니다. 매치메이커는 로직에 기반하여 유저들을 동일한 방으로 입장시켜줍니다. GameAnvil은 RoomMatchMaker와 UserMatchMaker의 2가지의 매치메이커를 제공합니다. 이 매치메이커는 MatchNode에서 독자적으로 구동됩니다. 이러한 MatchNode는 매치메이킹을 수행하는 용도 외에 추가적인 콘텐츠를 구현할 수 없습니다. 그러므로 유저는 MatchNode가 아닌 매치메이커에만 집중하면 됩니다.
+Engine users can apply matchmaking by simply implementing matching logic. Matchmaker allows users to enter the same room based on logic. GameAnvil provides two matchmakers: RoomMatchMaker and UserMatchMaker. These matchmakers are separately run on MatchNode. These MatchNodes cannot implement additional content except matchmaking. Therefore, users can focus on the matchmakers instead of MatchNode.
 
 ### Note
 
-*매치메이커는 매칭 그룹 단위로 생성됩니다. 즉, 동일한 매칭 그룹끼리 매치메이킹을 수행합니다.*
+*Matchmaker is created in the unit of matching group. In other words, matchmaking is done with same matching groups.*
 
 
 
 ### 6-1. UserMatchMaker
 
-유저 매치메이킹은 게임 유저들의 매칭 요청을 큐에 적재합니다. 특정 시간 주기로 이 요청 큐의 내용을 비교, 분석하여 사용자가 원하는 기준으로 임의의 유저들을 하나의 방으로 입장시켜줍니다. 여기에서 엔진 사용자는 요청 큐의 내용을 어떻게 비교하고 분석해서 어떤 기준으로 유저들을 매칭할지에 대한 로직에만 집중하면 됩니다. 참고로 가장 대표적인 유저 매치메이킹 게임은 "*리그 오브 레전드*"가 있습니다.
+User matchmaking places game users' matching requests on the queue. It compares and analyzes the content of this request queue at a specific interval and allows arbitrary users to enter a room based on the standard that is desired by the user. Here, engine users can focus on the logic that determines how to compare and analyze the content of the request queue and how to match users. For reference, the most popular user matchmaking game is "*League of Legends*."
 
-이러한 유저 매치메이킹의 가장 기본은 바로 매칭 요청 그 자체입니다. 이러한 매칭 요청을 아래와 같이 엔진에서 제공하는 UserMatchInfo 추상 클래스를 상속하여 구현합니다.  요청자를 구분할 수 있는 게임 유저의 ID를 제공할 수 있도록 getId() 메서드는 반드시 구현해야 합니다. 아래의 예제는 매칭 요청 사이의 비교를 위해 Comparable 인터페이스를 추가로 구현하고 있습니다.
+The basic of user matchmaking is the matching request itself. Implement these matching requests by inheriting the UserMatchInfo abstract class provided by the engine. The getId() method must be implemented to provide the game user ID that can be used to identify requester. The example below additionally implement the Comparable interface to compare matching requests.
 
 ```
 public class SampleUserMatchInfo extends UserMatchInfo implements Serializable, Comparable<SampleUserMatchInfo> {
@@ -1293,9 +1292,9 @@ public class SampleUserMatchInfo extends UserMatchInfo implements Serializable, 
     }
 
     /**
-     * 파티매칭 요청인경우 RoomId, 유저매칭 요청인경우 UserId를 반환 해준다.
+     * Returns RoomId if it is a party matching request, returns UserId if it is a user matching request.
      *
-     * @return int type 으로 파티매칭 요청인경우 RoomId, 유저매칭 요청인경우 UserId 를 반환.
+     * If it is a party matching request to @return int type, returns RoomId, if it is a user matching request, returns UserId.
      */
     @Override
     public int getId() {
@@ -1303,16 +1302,16 @@ public class SampleUserMatchInfo extends UserMatchInfo implements Serializable, 
     }
 
     /**
-     * 파티매칭 요청인경우 파티의 크기(인원수), 유저매칭 요청인경우 0을 반환 해준다.
+     * If it is a party matching request, returns the party size (number of people), if it is a user matching request, returns 0.
      *
-     * @return int type 으로 파티매칭 요청인경우 파티의 크기(인원수), 유저매칭 요청인경우 0을 반환.
+     * If it is a party matching request to @return int type, returns the party size (number of people), if it is a user matching request, returns 0
      */
     @Override
     public int getPartySize() {
         return 0;
     }
 
-    // 만일 SampleUserMatchInfo 객체 사이에 비교가 필요하다면 Comparable 인터페이스를 구현합니다.
+    // If SampleUserMatchInfo objects need to be compared, implement the Comparable interface.
     @Override
     public int compareTo(SampleUserMatchInfo o) {
         if (this.rating < o.getRating())
@@ -1331,7 +1330,7 @@ public class SampleUserMatchInfo extends UserMatchInfo implements Serializable, 
 
 
 
-이제 유저 매치메이커를 만들 차례입니다. 유저 매치메이커는 엔진에서 제공하는 UserMatchMaker 추상 클래스를 상속 구현합니다. 특히, match() 메서드는 실제 매칭을 수행하기 위해 호출되는 콜백이므로 주의 깊게 살펴보세요.  refill() 메서드는 이미 완료된 매치 메이킹에 대해 충원 요청이 왔을 때 호출되는 콜백입니다. 예를 들어 4명이 매치메이킹 된 상태에서 1명이 게임을 종료해버렸을 때 1명을 더 충원하기 위해 사용할 수 있습니다. 아래의 예제 코드는 이러한 UserMatchMaker를 어떤 식으로 구현할 수 있는지 보여줍니다.
+Now it is time to create the user matchmaker. The user matchmaker inherits the UserMatchMaker abstract class provided by the engine. Especially the match() method needs to be monitored as it is a callback that is called to execute actual matching. The refill() method is a callback that is called when a reinforce request is received for the completed matchmaking. For example, when one of the four users who are matched ends the game, it can be used to add one more user. The example code below shows how to implement this UserMatchMaker.
 
 ```
 public class SampleUserMatchMaker extends UserMatchMaker<SampleUserMatchInfo> {
@@ -1343,7 +1342,7 @@ public class SampleUserMatchMaker extends UserMatchMaker<SampleUserMatchInfo> {
     }
 
     private Multiset<SampleUserMatchInfo> ratingSet = TreeMultiset.create();
-    private final int matchMultiple = 1; // match 정원의 몇 배수까지 인원을 모은 후에 rating 별로 정렬해서 매칭할 것인가?
+    private final int matchMultiple = 1; // match How many people will you gather in the multiple of the maximum number before matching them by rating?
     private int currentMultiple = matchMultiple;
     private long lastMatchTime = System.currentTimeMillis();
     private int totalMatchMakings = 0;
@@ -1352,7 +1351,7 @@ public class SampleUserMatchMaker extends UserMatchMaker<SampleUserMatchInfo> {
     public void match() {
         List<SampleUserMatchInfo> matchRequests = getMatchRequests(matchSize * currentMultiple);
 
-        // 최소 개수(minAmount)만큼 적재되지 않았음
+        // Not loaded to the minimum number (minAmount)
         if (matchRequests == null) {
             if (System.currentTimeMillis() - lastMatchTime >= 10000)
                 currentMultiple = Math.max(--currentMultiple, 1);
@@ -1360,14 +1359,14 @@ public class SampleUserMatchMaker extends UserMatchMaker<SampleUserMatchInfo> {
             return;
         }
 
-        // matching이 성사되지 않은 항목들은 ratingSet에 그대로 남아있을 수 있으나 따로 보관할 필요는 없다.
-        // 이 항목들은 다음 getMatchRequests()에서 다시 전달받는다.
+        // The items that are not matched may remain in ratingSet, they do not need to be stored separately.
+        // These items are received from the next getMatchRequests().
         ratingSet.clear();
         ratingSet.addAll(matchRequests);
 
         if (ratingSet.size() >= matchSize) {
 
-            // ratingSet의 순서대로 matchingAmount*matchSize 만큼 항목들을 소비API
+            // Consume matchingAmount*matchSize in the order of ratingSets API
             int matchingAmount = matchSingles(ratingSet);
 
             if (matchingAmount > 0) {
@@ -1390,9 +1389,9 @@ public class SampleUserMatchMaker extends UserMatchMaker<SampleUserMatchInfo> {
             }
 
             for (SampleUserMatchInfo refillInfo : refillRequests) {
-                // 100점 이상 차이나지 않으면 리필
+                // Refills if the gap is less than 100 points
                 if (Math.abs(matchReq.getRating() - refillInfo.getRating()) < 100) {
-                    if (refillRoom(matchReq, refillInfo)) { // 해당 매칭 요청을 리필이 필요한 방으로 매칭
+                    if (refillRoom(matchReq, refillInfo)) { // Matches the matching request to the room that needs to be refilled
                         return true;
                     }
                 }
@@ -1408,7 +1407,7 @@ public class SampleUserMatchMaker extends UserMatchMaker<SampleUserMatchInfo> {
 
 
 
-이렇게 생성한 UserMatchMaker와 UserMatchInfo는 Bootstrap 단계에서 등록해야 합니다. 한 가지 주의할 점은 매치메이커는 아래와 같이 게임 노드 구성의 연장선 상에 있다는 점입니다. 즉, GameNode에서 사용할 GameUser와 GameRoom을 구성하는 것과 더불어 이들을 매칭하기 위해 어떤 UserMatchMaker를 사용할지 구성하는 것입니다.
+The UserMatchMaker and UserMatchInfo that are created in this way must be registered in the Bootstrap step. Note that matchmaker is in the line of game node configuration. In other words, in addition to configuring the GameUser and GameRoom used by GameNode and configure to determine which UserMatchMaker to use to match them.
 
 ```
 public class Main {
@@ -1421,7 +1420,7 @@ public class Main {
             .user("SampleGameUserType", SampleGameUser.class)
             .room("SampleUserMatchType", SampleGameRoom.class)
 
-            // 등록
+            // Register
             .userMatchMaker("MyUserMatchRoomType", SampleUserMatchMaker.class, SampleUserMatchInfo.class);
 
         bootstrap.run();
@@ -1431,17 +1430,17 @@ public class Main {
 
 
 
-이제 클라이언트는 서버로 유저 매치메이킹을 요청할 수 있습니다. 이 요청은 GameUser에 전달된 후 엔진에 의해 아래의 콜백 메서드를 호출합니다. 이 콜백 메서드는 엔진 사용자로 하여금 GameAnvil이 제공하는 유저 매치메이커 뿐만 아니라 제3의 솔루션을 사용할 기회를 제공합니다. 아래의 예제는 엔진에서 제공하는 유저 매치메이커를 사용하기 위해 matchUser() API를 호출하는 모습입니다. 엔진 사용자는 자체적으로 매치메이커를 만들어서 사용하거나 다른 라이브러리 등을 사용할 수도 있습니다. 이 경우에는 그에 알맞게 아래의 콜백 메서드를 구현하도록 합니다. 특히, 이 예제 코드에서 유심히 봐야할 부분은 매칭 그룹입니다. 매칭 그룹은 매치메이킹을 논리적으로 나눌 수 있는 개념으로 이 문서의 중급 개념에서 좀 더 자세하게 설명합니다. 예제에서 사용한 "Newbie" 매칭 그룹은 동일한 "Newbie" 매칭 그룹끼리 같은 매칭 큐를 공유하게 됩니다.
+Now the client can request user matchmaking to the server. This request is passed to GameUser and calls the callback method below by the engine. This callback method provides engine users with an opportunity to use not only the user matchmaker provided by GameAnvil but also a third solution. The example below shows calling the matchUser() API to use the user matchmaker provided by the engine. Engine users either create their own matchmaker or use a different library. In this case, implement the callback method below to fit the situation. The thing to pay attention in this example code is matching group. Matching group is a concept that is used to logically divide matchmaking and it will be discussed in detail later in the intermediate concepts. The "Newbie" matching group used in the example shares the same matching queue among the same "Newbie" matching groups.
 
 ```
     /**
-     * 클라이언트에서 userMatch 를 요청했을 경우 호출되는 콜백
+     * A callback that is called when the client requests userMatch
      *
-     * @param roomType   매칭되는 룸의 타입
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return boolean type 으로 반환. true: user matching 요청 성공,false: user matching 요청 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param roomType   The type of the matched room
+     * @param payload    The payload received from the client
+     * @param outPayload The payload to pass to the client
+     * Returns to @return boolean type. true: user matching request succeeds, false: user matching request fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     public boolean onMatchUser(final String roomType,
                                final Payload payload, Payload outPayload) throws SuspendExecution {
@@ -1456,15 +1455,15 @@ public class Main {
 
 
 
-마지막으로 클라이언트는 언제든 앞서 요청한 매치메이킹에 대해 취소를 할 수 있습니다. 이때, 엔진은 취소 처리가 성공적으로 진행되면 아래와 같은 GameUser의 콜백 메서드를 호출합니다. 엔진 사용자는 이 콜백에서 취소 타이밍에 처리하고 싶은 부분을 구현하면 됩니다.
+Lastly, the client can cancel the previously requested matchmaking at any time. At this time, the engine calls the callback method of GameUser below if the cancel process succeeds. Engine users can implement what they want to process at the cancel timing.
 
 ```
     /**
-     * 클라이언트에서 userMatch 가 취소되었을 때 호출되는 콜백
+     * A callback that is called when the client cancels userMatch
      *
-     * @param reason 취소된 이유(TIMEOUT/CANCEL)
-     * @return boolean type 으로 반환. true: user matching 취소 성공, false: user matching 취소 실패.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param reason Reason of cancel (TIMEOUT/CANCEL)
+     * Returns to @return boolean type. true: user matching cancel succeeds false: user matching cancel fails.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     public boolean onMatchUserCancel(final MatchCancelReason reason) throws SuspendExecution {
     }
@@ -1474,11 +1473,11 @@ public class Main {
 
 ### 6-2. RoomMatchMaker
 
-룸 매치메이킹은 게임 유저들을 적합한 방으로 자동 입장시켜줍니다. 룸 매치메이킹을 요청한 게임 유저를 어떤 방으로 입장시킬지는 엔진 사용자가 구현하기에 달렸습니다. 가장 유저수가 많은 방으로 입장시킬 수도 있고, 가장 한산한 방으로 입장시킬 수도 있습니다. 혹은 평균 점수가 가장 높은 방으로 입장시킬 수도 있습니다. 엔진 사용자는 이러한 매칭 로직에만 집중하면 됩니다. 참고로 가장 대표적인 룸 매치메이킹 게임은 "*한게임 포커*"나 "*카트라이더*" 등이 있습니다.
+Room matchmaking automatically sends game users to appropriate rooms. How the game users are sent to rooms depends on the implementation of engine users. They can be sent to a room with the most users, or a room with the least users. Or they can be sent to a room with the highest average score. Engine users can focus only on the matching logic. Well-known games that use room matchmaking include “*Hangame Poker*" and "*KartRider*."
 
-- 주의> RoomMatchMaker와 UserMatchMaker는 서로 독립적으로 운영됩니다. 즉, 동일한 매칭 그룹으로 유저 매칭과 룸 매칭을 각각 요청하더라도 이 두 요청이 함께 매칭되는 일은 없습니다.
+- Note> RoomMatchMaker and UserMatchMaker are run independently. In other words, even when the same matching group requests the user matching and room matching separately, these requests are never matched to each other.
 
-이러한 룸 매치 메이킹의 가장 기본은 바로 매칭 요청 그 자체입니다. 이러한 매칭 요청을 아래와 같이 엔진에서 제공하는 RoomMatchInfo 인테페이스를 구현합니다.  요청자를 구분할 수 있는 게임 유저의 ID를 제공할 수 있도록 getId() 메서드는 반드시 구현해야 합니다.
+The foundation of this room matchmaking is the matching request itself. Implement the RoomMatchInfo interface provided by the engine for these matching requests. The getId() method must be implemented to provide the game user ID that can be used to identify requester.
 
 ```
 public class SampleRoomMatchInfo implements Serializable, RoomMatchInfo {
@@ -1507,19 +1506,19 @@ public class SampleRoomMatchInfo implements Serializable, RoomMatchInfo {
     }
 
     /**
-     * RoomId를 얻는다.
+     * Obtains RoomId.
      * <p>
-     * 상황에 따라 다른 의미로 사용된다.
+     * It is used to mean different things in different situations.
      * <p>
-     * RoomMatchInfo가 매칭 가능한 Room 또는 매칭된 Room의 정보를 의미하는 경우 해당 Room의 RoomId를 의미한다.
+     * If RoomMatchInfo means the information of a matchable Room or a matched Room, it means the RoomId of the Room.
      * <p>
-     * RoomMatchInfo가 매칭 조건을 의미하는 경우 컨탠츠에서 지정한 RoomId를 반환한다.
+     * If RoomMatchInfo means a matching condition, it returns the RoomId specified by content.
      * <p>
-     * 콘텐츠에서 원하는 방식으로 사용할 수 있다.
+     * It can be used in a way desired by content.
      * <p>
-     * ex) 매칭에서 제외할 RoomId.
+     * ex) The RoomId to be excluded from matching.
      *
-     * @return int type 으로 RoomId를 반환.
+     * Returns RoomId to @return int type.
      */
     int getRoomId();
     @Override
@@ -1531,29 +1530,29 @@ public class SampleRoomMatchInfo implements Serializable, RoomMatchInfo {
 
 
 
-이제 룸 매치메이커를 만들 차례입니다. 룸 매치메이커는 엔진에서 제공하는 RoomMatchMaker 추상 클래스를 상속 구현 합니다. 특히, match() 메서드는 실제 매칭을 수행하기 위해 호출되는 콜백이므로 주의 깊게 살펴보세요. 아래의 예제 코드는 이러한 RoomMatchMaker를 어떤식으로 구현할 수 있는지 보여줍니다. UserMatchMaker는 UserMatchInfo가 Comparable 인터페이스를 구현한 반면에 RoomMatchMaker는 Comparator를 제공하고 있습니다. 이는 단순히 엔진 사용자가 유연하게 원하는 방식대로 구현할 수 있음을 부여주기 위함입니다.
+Now it is time to create the room matchmaker. The room matchmaker inherits the RoomMatchMaker abstract class provided by the engine. Especially the match() method needs to be monitored as it is a callback that is called to execute actual matching. The example code below shows how to implement RoomMatchMaker. While UserMatchMaker implements the UserMatchInfo and Comparable interface, RoomMatchMaker provides Comparator. This is to simply show engine users that they can implement it as they desire.
 
 ```
 public class SampleGameRoomMatchMaker extends RoomMatchMaker<SampleGameRoomMatchRoomInfo> {
 
     /**
-     * MatchRoom 요청을 처리한다.
+     * Processes the MatchRoom request.
      * <p>
-     * 등록된 Room들 중에 매칭 조건과 맞는 Room을 찾아 매칭결과를 반환 한다.
+     * Finds the Room that meets the matching condition and returns the matching result.
      * <p>
-     * {@link BaseUser#onMatchRoom(String, Payload)} 에서 {@link BaseUser#matchRoom(String, String, RoomMatchInfo)}을 호출하면 호출되어 매칭을 처리할 수 있다.
+     * If {@link BaseUser#matchRoom(String, String, RoomMatchInfo)} is called {@link BaseUser#onMatchRoom(String, Payload)}, it is called to process matching.
      * <p>
-     * 매칭 조건 RoomMatchInfo 이 terms 로 전달 된다.
+     * Passes RoomMatchInfo, the matching condition, to terms.
      * <p>
-     * {@link #getRooms()}를 사용해 얻어온 RoomMatchInfo 의 목록이 매칭가능한 Room 의 정보이다.
+     * The list of RoomMatchInfos obtained using {@link #getRooms()} is the information of matchable Room.
      * <p>
-     * 이 정보와 terms 를 비교하여 매칭 가능한 Room 을 찾는다.
+     * Finds matchable Room by comparing this information and terms.
      * <p>
-     * 매칭 가능한 Room 을 찾았다면 그 Room 의 RoomMatchInfo 를 반환하고 못찾았을 경우 null 을 반환한다.
+     * If a matchable Room is found, returns the RoomMatchInfo of the Room and returns null if not found.
      *
-     * @param terms 매칭 조건
-     * @param args  추가로 전달받은 데이터
-     * @return {@link RoomMatchInfo} 으로 매칭된 Room 의 정보 반환. 없을 경우 null 반환.
+     * @param terms Matching condition
+     * @param args  The data additionally passed
+     * Returns the Room information matched with @return {@link RoomMatchInfo}. Returns null if there is no matched items.
      */
     @Override
     public SampleGameRoomMatchRoomInfo match(SampleGameRoomMatchRoomInfo terms, Object... args) {
@@ -1562,7 +1561,7 @@ public class SampleGameRoomMatchMaker extends RoomMatchMaker<SampleGameRoomMatch
         List<SampleGameRoomMatchRoomInfo> rooms = getRooms();
 
         for (SampleGameRoomMatchRoomInfo info : rooms) {
-            // moveRoom 옵션이 true 일 경우 참여중인 방은 제외하기
+            // Excludes the room the user is participating if the moveRoom option is true
             if (info.getRoomId() == bypassRoomId)
                 continue;
 
@@ -1592,7 +1591,7 @@ public class SampleGameRoomMatchMaker extends RoomMatchMaker<SampleGameRoomMatch
 
 
 
-이렇게 생성한 RoomMatchMaker와 RoomMatchInfo는 Bootstrap 단계에서 등록해야 합니다. 주의할 점은 유저 매치메이커와 동일합니다. 룸 매치메이커 역시 아래와 같이 게임 노드 구성의 연장선 상에 있습니다. 즉, GameNode에서 사용할 GameUser와 GameRoom을 구성하는 것과 더불어 이들을 매칭하기 위해 어떤 RoomMatchMaker를 사용할지 구성하는 것입니다. 또한, 유저 매치메이커와 룸 매치메이커를 함께 사용할 수 있습니다. 아래의 예제 코드는 이를 보여주기 위해 2가지 매치메이커를 함께 등록하고 있습니다. 단, 두 매치메이커가 사용하는 Room과 MatchInfo 클래스가 나뉘어져 있음에 주의하십시요.
+The RoomMatchMaker and RoomMatchInfo created in this way must be registered during the Bootstrap step. Note that they are similar to the user matchmaker. Note that room matchmaker is in the line of game node configuration. In other words, in addition to configuring the GameUser and GameRoom used by GameNode and configure to determine which RoomMatchMaker to use to match them. The user matchmaker and the room matchmaker can be used simultaneously. The example code below shows it by registering the two matchmakers. However, note that the Room and MatchInfo classes used by the two matchmakers are separate.
 
 ```
 public class Main {
@@ -1607,7 +1606,7 @@ public class Main {
             .room("SampleGameUserMatchRoomType", SampleUserMatchRoom.class)
             .userMatchMaker("SampleGameUserMatchRoomType", SampleUserMatchMaker.class, SampleUserMatchInfo.class)
 
-            // 등록
+            // Register
             .room"SampleGameRoomMatchRoomType", SampleRoomMatchRoom.class)
             .roomMatchMaker("SampleGameRoomMatchRoomType", SampleRoomMatchMaker.class, SampleRoomMatchInfo.class);
 
@@ -1618,16 +1617,16 @@ public class Main {
 
 
 
-이제 클라이언트는 서버로 룸 매치메이킹을 요청할 수 있습니다. 이 요청은 GameUser에 전달된 후 엔진에 의해 아래의 콜백 메서드를 호출합니다. 이 콜백 메서드는 엔진 사용자로 하여금 GameAnvil이 제공하는 룸 매치메이커 뿐만 아니라 제3의 솔루션을 사용할 기회를 제공합니다. 아래의 예제는 엔진에서 제공하는 룸 매치메이커를 사용하기 위해 matchRoom() API를 호출하는 모습입니다. 엔진 사용자는 자체적으로 매치메이커를 만들어서 사용하거나 다른 라이브러리 등을 사용할 수도 있습니다. 이 경우에는 그에 알맞게 아래의 콜백 메서드를 구현하도록 합니다. 특히, 이 예제 코드에서 유심히 봐야할 부분은 매칭 그룹입니다. 매칭 그룹은 매치메이킹을 논리적으로 나눌 수 있는 개념으로 이 문서의 중급 개념에서 좀 더 자세하게 설명합니다. 예제에서 사용한 "Newbie" 매칭 그룹은 동일한 "Newbie" 매칭 그룹끼리 같은 매칭 큐를 공유하게 됩니다.
+Now the client can request room matchmaking to the server. This request is passed to GameUser and the callback method is called by the engine. This callback method provides engine users with an opportunity to use a third solution as well as the room matchmaker provided by GameAnvil. The example below shows calling the matchRoom() API to use the room matchmaker provided by the engine. Engine users can create and use matchmaker or use a different library. In this case, implement the callback method below appropriately. The thing to pay attention in this example code is matching group. Matching group is a concept that is used to logically divide matchmaking and it will be discussed in detail later in the intermediate concepts. The "Newbie" matching group used in the example shares the same matching queue among the same "Newbie" matching groups.
 
 ```
     /**
-     * 클라이언트에서 roomMatch 를 요청했을 경우 발생하는 콜백
+     * A callback that occurs when the client requests roomMatch
      *
-     * @param roomType 매칭되는 룸의 타입
-     * @param payload  클라이언트로부터 전달받은 페이로드
-     * @return {@link MatchRoomResult} 으로 matching 된 room 의 정보 반환, null 을 반환 할시  클라이언트 요청 옵션에 따라서 새로운 Room 이 생성되거나,요청 실패 처리 된다.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param roomType The type of matched room
+     * @param payload  The payload received from the client
+     * Returns the room information matched with @return {@link MatchRoomResult}, if null is returned,   a new Room is created or the request fails according to the client request option.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     public MatchRoomResult onMatchRoom(final String roomType,
                                        final Payload payload) throws SuspendExecution {
@@ -1646,19 +1645,19 @@ public class Main {
 
 ## 7. Support Node
 
-SupportNode는 보조적인 기능을 수행하기 위한 노드입니다. 게임 유저나 방 객체와 상관없이 임의의 기능을 구현할 수 있습니다. 예를 들어 로그를 취합해서 전송하거나 빌링 서버와 통신을 전담하는 등의 역할로 사용할 수 있습니다. 또한 엔진의 RESTful 기능을 사용하여 간단한 웹 서버 대용으로 사용하는 것도 가능합니다.
+SupportNode is a node for executing secondary features. An arbitrary feature can be implemented regardless of game user or room object. For example, logs can be collected and transferred or communicate with the billing server. In addition, it is possible to use the RESTful feature as a simple web server.
 
-이러한 SupportNode는 기본적으로 BaseSupportNode 추상 클래스를 상속 구현합니다. 노드 공통 콜백 메서드에 추가로 RESTful 처리를 위한 onDispatch() 콜백이 제공됩니다. 아래 코드에서 1~3에 해당하는 주석 아래 코드가 이를 위한 처리 흐름을 순서대로 보여줍니다.
+This SupportNode basically inherits and implements the BaseSupportNode abstract class. The onDispatch() callback for processing RESTful is provided for the node common callback method.
 
 ```
 public class SampleSupportNode extends BaseSupportNode {
 
-    // 1.REST 디스패처 생성
+    // 1.Create REST dispatcher
     private static RestPacketDispatcher restMsgHandler = new RestPacketDispatcher<>();
 
-    // 2.SampleSupportNode에서 처리하고 싶은 URL과 핸들러를 매핑
+    // 2.Map the URL and handler that the user wants to process in SampleSupportNode
     static {
-        // path 와 method(GET, POST, ...) 조합으로 등록.
+        // Register a combination of path and method (GET, POST, etc.)
         restMsgHandler.registerMsg("/auth", RestObject.GET, _RestAuthReq.class);
         restMsgHandler.registerMsg("/echo", RestObject.GET, _RestEchoReq.class);
     }
@@ -1683,15 +1682,15 @@ public class SampleSupportNode extends BaseSupportNode {
 
 
     /**
-     * rest call 이 전달될 때 호출된다.
+     * Called when rest call is passed.
      *
-     * @param restObject 전달된 {@link RestObject}
-     * @return boolean type 으로 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param restObject The passed {@link RestObject}
+     * Returns to @return boolean type.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
     @Override
     public boolean onDispatch(RestObject restObject) throws SuspendExecution {
-        // 3.SampleSupportNode의 REST 요청 처리        
+        // 3.Handle the REST request of SampleSupportNode        
         if (!restMsgHandler.isRegisteredMessage(restObject))
             return false;
 
@@ -1712,7 +1711,7 @@ public class SampleSupportNode extends BaseSupportNode {
 
 
 
-이렇게 생성한 SupportNode는 Bootstrap 단계에서 아래와 같이 등록할 수 있습니다.
+The SupportNode created in this way can be registered during the Bootstrap step as below:
 
 ```
 public class Main {
@@ -1732,25 +1731,25 @@ public class Main {
 
 
 
-## 8. 방 전송 (RoomTranfer)
+## 8. Room Transfer (RoomTransfer)
 
-방 전송은 중급 개념에서 설명한 유저 전송과 매우 비슷한 기능입니다. 유저 보다 큰 개념인 방이 전송되는 차이가 있을 뿐입니다. 게임 노드에는 한 명 이상의 게임 유저가 참여한 방 객체가 생성될 수 있습니다. 이 방 객체는 유저 객체와 마찬가지로 게임 노드 사이에서 전송될 수 있습니다. 예를 들면 1번 게임 노드의 방 객체가 2번 게임 노드로 전송이 되는 것이죠. 이렇게 방이 전송될 때 당연하게도 방 안에 존재하는 유저들도 함께 전송이 일어납니다. 그 덕분에 방이 전송되기 전/후의 게임 흐름은 연속되어 진행될 수 있습니다. 즉, 해당 방 객체가 전송되는 과정은 매우 빠르게 진행되므로 방 안의 유저들은 인지하지 못한 상태에서 게임을 지속할 수 있습니다.  이 기술은 GameAnvil 무점검 패치(NonStopPatch)의 핵심이자 근간이 되며 방 객체를 잘 직렬화/역직렬화해야 의도한대로 동작합니다. 이러한 직렬화/역직렬화 대상은 GameAnvil 사용자가 직접 구현할 수 있습니다. 즉, 해당 방 객체의 어떤 값을 전송할 것인지 결정하는 것이죠.
+Room transfer is a feature similar to the user transfer that is explained in the intermediate concepts. It is different only in that room, a bigger concept than user, is transferred. In game node, a room object with one or more game users can be created. This room object can be transferred among game nodes just like user object. For example, the room object of #1 game node can be transferred to the #2 game node. When the room is being transferred, the users in that room are also transferred. For this reason, the game can be played without interruption before and after the room is transferred. As the room is transferred quickly, the users in the room can continue playing the game without noticing the transfer. This technology is the core of GameAnvil's NonStopPatch and it only works when the room object is serialized/de-serialized well. The target of serialize/de-serialize can be directly implemented by GameAnvil users. In other words, the users determine which value will be transferred to the room object.
 
-이러한 방 전송을 발생시키는 것은 오직 무점검 패치(NonStopPatch) 명령 뿐입니다. 이 명령은 일반적으로 GameAnvil Console을 통해 게임 운영자가 명시적으로 전달합니다.
+Only the NonStopPatch command can trigger this type of room transfer. This command is explicitly transferred by the game operator through GameAnvil Console.
 
 
 
-### 8-1. 방 전송 구현
+### 8-1. Implementing Room Transfer
 
-실제 방 전송은 GameAnvil이 내부적으로 조용하게 처리합니다. 이때, 클라이언트는 자신의 게임 유저와 더불어 자신이 속한 방 객체가 서버 사이에서 전송되는지 인지하지 못할 가능성이 높습니다. 특별한 문제가 발생하지 않는 한 전체 흐름이 매우 빠르게 진행되기 때문에 전송 전의 게임 흐름을 전송 후에 계속 이어감에 있어 무리가 없습니다.
+The actual room transfer is internally processed by GameAnvil. At this time, the client is not likely to recognize the room object being transferred among the servers with game users. Unless a special problem occurs, the overall flow is quickly progressed and the game flow before the transfer can be continued after the transfer.
 
-이때, 다른 게임 노드로 방 객체를 전송할 때 어떤 데이터를 함께 전송할지는 사용자가 지정할 수 있습니다. 간단히 지정만 해두면 이 데이터는 방 객체의 일부로 함께 직렬화됩니다. 전송할 대상 게임 노드에서는 역직렬화를 신경 쓸 필요 없이 쉽게 해당 객체들에 접근해서 사용할 수 있습니다.
+At this time, when transferring room object to a different game node, the user can specify which data will be transferred as well. Simply specifying the data allows it to be serialized as part of the room object. In the game node to be transferred, the user can easily access those objects without considering de-serialization.
 
-다음은 이러한 유저 전송에 관련된 콜백 메서드들입니다. 우선 "함께 전송할 데이터 지정하기"입니다. 이를 위해 BaseRoom 추상 클래스를 상속받은 게임 룸 클래스에 아래의 콜백을 구현합니다. 방법은 간단합니다. 아래의 예제와 같이 전송할 데이터를 사용자가 원하는 key값을 이용하여 key-value 쌍으로 매개변수로 넘겨받은 transferPack에 넣기만 하면 됩니다.
+The following are the callback methods related to user transfer. First is "specifying the data to be transferred with." To do this, implement the callback below in the game room class that inherited the BaseRoom abstract class. Simply place the data to be transferred to the passed transferPack as a key-value pair using the key value desired by the user.
 
-만일 여기에서 전송할 데이터를 지정하지 않으면 대상 게임 노드로 전송된 방 객체의 해당 데이터는 모두 기본값으로 초기화되므로 주의가 필요합니다.
+If the data to be transferred is not specified at this time, be careful as the data of the room object that is transferred to the target game node is reset to default.
 
-**참고**> *앞서 설명하였듯이 방이 전송될 때는 당연하게도 방 안의 유저들이 함께 전송됩니다. 유저 전송에 관해서는 중급 개념에서 설명했으므로 여기에서는 따로 설명하지 않습니다.*
+**Note**> *As explained earlier, when room is transferred, the users in the room are transferred as well. As user transfer is explained in the intermediate concepts, it will not covered here.*
 
 ```
 @Override
@@ -1760,7 +1759,7 @@ public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
 }
 ```
 
-이제 방 전송이 완료된 후 대상 게임 노드에서 처리할 콜백 메서드를 살펴보겠습니다. 아래와 같이 전송 전에 지정한 key를 이용해서 원하는 객체에 접근할 수 있습니다. 이와 같은 방법으로 전송 완료된 방 객체의 해당 데이터를 원래 상태로 만들어 줍니다. 특히, 전송된 방 안의 유저 객체 리스트를 매개 변수로 전달받고 있음을 확인할 수 있습니다. 이 부분만 제외하면 전체적인 흐름은 유저 전송과 매우 흡사합니다.
+Let's take a look at the callback methods that need to be processed by the target game node after the transfer. Users can access the desired object before it is transferred using the specified key. Restore the data of the room object that is transferred in this way. Especially, users can see that the list of the user objects in the room transferred is passed as a parameter. Except this, the overall flow is very similar to that of user transfer.
 
 ```
 @Override
@@ -1776,9 +1775,9 @@ public void onTransferIn(List<GameUser> userList, TransferPack transferPack) thr
 
 
 
-### 8-2. 전송 가능한 방 타이머
+### 8-2. Transferable Room Timer
 
-방이 전송될 때 방에 등록해둔 타이머도 함께 전송할 수 있습니다. 전송 가능한 타이머를 사용하기 위해서는 별도로 아래의 콜백 메서드에서 원하는 key를 이용해서 미리 등록해두어야 합니다. Timer 핸들러를 다음과 같이 원하는 key로 매핑해둡니다. 이는 유저 전송과 완전히 동일합니다.
+When transferring room, the registered timer can be transferred as well. To use a transferable timer, it must be separately pre-registered among the callback methods below using a desired key. Map the Timer handler to a desired key. The process is the same as that of user transfer.
 
 ```
  @Override
@@ -1791,31 +1790,31 @@ public void onTransferIn(List<GameUser> userList, TransferPack transferPack) thr
  }
 ```
 
-등록이 완료된 타이머 객체는 언제든 해당 key를 이용해서 아래와 같이 게임 룸 구현부에서 사용할 수 있습니다. 단순히 등록만 한 타이머는 효과가 없으므로 실제 사용을 위해서는 반드시 아래와 같이 유저 객체에 추가해야 타이머가 발동합니다.
+The registered timer object can be used in the game user implementation part using the key. The timer that only registered does not take effect, for actual use, the timer must be added to the user object below for it to trigger.
 
 ```
 addTimer(1, TimeUnit.SECONDS, 20, "transferRoomTimerHandler1", false);
 addTimer(2, TimeUnit.SECONDS, 0, "transferRoomTimerHandler2", false);
 ```
 
-이렇게 방 객체에 추가해 둔 타이머는 별도로 전송에 대한 처리를 하지 않아도 모두 자동으로 전송됩니다. 즉, 대상 게임 노드에서 해당 방 객체에 대해 동일한 타이머 추가 과정을 거칠 필요가 없습니다.
+The timer added to a room object in this way is automatically transferred without processing for a separate transfer. In other words, the same timer adding process does not need to be done to the corresponding room object in the target game node.
 
 
 
-## 9. 무정지 점검 (NonStopPatch)
+## 9. Uninterrupted Maintenance (NonStopPatch)
 
-일반적으로 점검을 할 때에는 게임 서비스 전체에 대해 명시적으로 점검을 걸고 유저들의 게임 플레이를 차단합니다. 그 후 필요한 패치를 진행하죠. 하지만 GameAnvil을 사용하면 서버 바이너리의 호환성이 깨지는 경우가 아닌 이상 서비스를 멈출 필요 없이 패치를 진행할 수 있습니다. 이를 무점검 패치라고 하며 기본적으로 GameAnvil Console 운영 도구를 이용해서 진행할 수 있습니다.
+During maintenance in general, explicitly apply maintenance to entire game service and stop users from playing the game. The needed patch is done afterward. However, if GameAnvil is used, patch can be done without interruption as long as it does not break the compatibility of server binary. This is called the uninterrupted patch and can be done using the GameAnvil Console management tool.
 
-무점검 패치의 핵심은 앞서 설명했던 유저 전송과 방 전송 기술입니다. 이 두 기능을 기반으로 패치를 진행할 게임 서버의 유저와 방을 모두 유효한 타 게임 서버로 전송시킨 후 게임 서버가 빈 상태가 되었을 때 패치를 진행하는 것이죠. 이러한 무점검 패치는 서비스 과정에서 진행할 부분이므로 반드시 서비스 전에 선 테스트를 진행하여 문제가 없는지 확인하는 과정을 거치시기 바랍니다. 또한 패치할 서버 바이너리와 이전 서버 바이너리 사이의 호환성이 깨지지 않는지 반드시 체크해보아야 합니다.
+The key of uninterrupted patch is the technology used to transfer users and rooms. Transfer the users and rooms of the game server to be patched to a valid, different game server using these two features and apply the patch when the game server is empty. As this uninterrupted patch needs to be done during service, it must be tested before servicing. In addition, the binary of the server to be patched and the binary of the existing server need to be checked to see if the compatibility between them is broken.
 
-무점검 패치를 이용하기 위해서 사용자는 GameNode 클래스에 관련 콜백 메서드들을 재정의해야 합니다.
+To use uninterrupted patch, the user needs to re-define the related callback methods in the GameNode class.
 
 ```
     /**
-     * 무정지 점검 시작 시 해당 node 가 출발지 node 일 경우 호출되는 콜백
+     * A callback that is called if the node is originating node when starting uninterrupted maintenance
      *
-     * @return boolean type 으로 성공 여부 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * Returns whether it is successful to @return boolean type.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
 @Override
 public boolean onNonStopPatchSrcStart() throws SuspendExecution {
@@ -1823,10 +1822,10 @@ public boolean onNonStopPatchSrcStart() throws SuspendExecution {
 }
 
     /**
-     * 무정지 점검이 종료되면 해당 node 가 출발지 node 일 경우 호출되는 콜백
+     * A callback that is called if the node is originating node when ending uninterrupted maintenance
      *
-     * @return boolean type 으로 성공 여부 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * Returns whether it is successful to @return boolean type.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
 @Override
 public boolean onNonStopPatchSrcEnd() throws SuspendExecution {
@@ -1834,10 +1833,10 @@ public boolean onNonStopPatchSrcEnd() throws SuspendExecution {
 }
 
     /**
-     * 무정지 점검이 시작되고 해당 node 가 출발지 node 일 경우 무정지 점검을 끝낼지 확인하기 위해 호출되는 콜백
+     * A callback that is called to determine whether or not to end uninterrupted maintenance if the node is originating node when uninterrupted maintenance is started
      *
-     * @return boolean type 으로 성공 여부 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * Returns whether it is successful to @return boolean type.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
 @Override
 public boolean canNonStopPatchSrcEnd() throws SuspendExecution {
@@ -1845,10 +1844,10 @@ public boolean canNonStopPatchSrcEnd() throws SuspendExecution {
 }
 
     /**
-     * 무정지 점검 시작 시 해당 node 가 도착지 node 일 경우 호출되는 콜백
+     * A callback that is called if the node is destination node when starting uninterrupted maintenance
      *
-     * @return boolean type 으로 성공 여부 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * Returns whether it is successful to @return boolean type.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
 @Override
 public boolean onNonStopPatchDstStart() throws SuspendExecution {
@@ -1856,10 +1855,10 @@ public boolean onNonStopPatchDstStart() throws SuspendExecution {
 }
 
     /**
-     * 무정지 점검이 종료되면 해당 node 가 도착지 node 일 경우 호출되는 콜백
+     * A callback that is called if the node is destination node when uninterrupted maintenance ended
      *
-     * @return boolean type 으로 성공 여부 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * Returns whether it is successful to @return boolean type.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
 @Override
 public boolean onNonStopPatchDstEnd() throws SuspendExecution {
@@ -1867,10 +1866,10 @@ public boolean onNonStopPatchDstEnd() throws SuspendExecution {
 }
 
     /**
-     * 무정지 점검이 시작되고 해당 node 가 도착지 node 일 경우 무정지 점검을 끝낼지 확인하기 위해 호출되는 콜백
+     * A callback that is called to determine whether or not to end uninterrupted maintenance if the node is destination node when uninterrupted maintenance is started
      *
-     * @return boolean type 으로 성공 여부 반환.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * Returns whether it is successful to @return boolean type.
+     * @throws SuspendExecution This method can suspend Fiber.
      */
 @Override
 public boolean canNonStopPatchDstEnd() throws SuspendExecution {
@@ -1880,21 +1879,21 @@ public boolean canNonStopPatchDstEnd() throws SuspendExecution {
 
 
 
-### 3-1. 무점검 패치 가이드
+### 3-1. Uninterrupted Patch Guide
 
-무점검 패치는 GameAnvil의 여러 요소가 복합적으로 잘 맞물려 돌아갔을 때 좋은 결과가 나옵니다. 그러므로 반드시 아래의 가이드 문서를 읽어보고 모든 내용을 이해한 후에 사용할 수 있도록 하세요.
+Uninterrupted patch is successful only when the various elements of GameAnvil are working in harmony. Therefore, use it after reading and understanding the guide document below.
 
-#### [무점검 패치 가이드](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-nonstop-patch)
+#### [Uninterrupted Patch Guide](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-nonstop-patch)
 
-## 10. 프로토콜 정의와 컴파일
+## 10. Protocol Definition and Compile
 
-GameAnvil은 [Google Protocol Buffers](https://developers.google.com/protocol-buffers)를 사용하여 프로토콜을 정의하고 빌드합니다. 아래의 예제는 이러한 프로토콜을 정의하는 법과 빌드하는 법을 설명합니다. 우선 SampleGame.proto 파일을 텍스트 에디터로 생성한 후 원하는 프로토콜을 정의합니다. 프로토콜 버퍼의 자세한 문법은 [공식 Protocol Buffers 가이드](https://developers.google.com/protocol-buffers/docs/overview)를 참고할 수 있습니다.
+GameAnvil defines and builds protocol using [Google Protocol Buffers](https://developers.google.com/protocol-buffers). The example below explains how to define and build this type of protocol. First, create the SampleGame.proto file using a text editor and define a desired protocol. The detailed syntax of protocol buffer can be referred from [Official Protocol Buffers Guide](https://developers.google.com/protocol-buffers/docs/overview). 
 
 ```
-package [패키지명];
+package [package name];
 
-// 참조해야할 다른 proto파일이 있다면 import
-import [proto 파일 명]
+// Imports if there is another proto file to be referenced
+import [proto file name]
 
 enum SampleUserTypeEnum {
     USER_TYPE_NONE = 0;
@@ -1934,7 +1933,7 @@ message SampleRoomMessage {
 
 
 
-그리고 아래와 같은 명령줄로 작성한 프로토콜 스크립트를 컴파일할 수 있습니다. 이때, build.bat와 같은 배치 파일을 생성해두면 편리합니다. 만일 GameAnvil 템플릿을 이용하여 프로젝트를 구성했다면 프로젝트 내의 proto 폴더에서 프로토콜 스크립트와 배치파일을 참고할 수 있습니다. 컴파일이 완료되면 하면 프로토콜 처리에 필요한 모든 Java 클래스가 자동으로 생성됩니다.
+The protocol script written with the command line below can be compiled. At this time, it is convenient if a batch file such as build.bat is created. If the project is configured using the GameAnvil template, protocol scripts and batch files can be referenced inside the proto folder in a project. Once compiling is finished, all the Java classes required to process the protocol are automatically created.
 
 ```
 protoc  ./MyGame.proto --java_out=../java
@@ -1944,7 +1943,7 @@ protoc  ./MyGame.proto --java_out=../java
 
 ## 11. Configurations
 
-GameAnvil은 GameAnvilConfig.json 파일을 통해 서버 구성을 변경할 수 있습니다. 이러한 구성 파일은 총 7개의 항목으로 분류되며 common을 제외하면 각각 한 종류의 노드를 설정합니다. 이때, 설정하는 값 중 일부는 Bootstrap 단계에서 사용하는 값과 일치해야 합니다. 예를 들면 앞서 우리는 아래와 같이 GameNode를 구성했습니다. 여기에 사용된 ServiceName인 "SampleGameService"는 반드시 GameAnvilConfig.json에 설정되어 있어야 합니다. 그렇지 않으면 해당 서비스를 찾지 못하여 서버 구동 과정에서 오류가 발생합니다.
+GameAnvil can change the server configuration through the GameAnvilConfig.json file. This configuration file is categorized in 7 items. Except common, each node is configured. At this time, some of the values being configured must be identical to the values used during the Bootstrap step. For example, we configured GameNode as below. "SampleGameService," the ServiceName used here must be configured in GameAnvilConfig.json. If not, the service cannot be found and an error occurs while running server.
 
 ```
 bootstrap.setGame("SampleGameService")
@@ -1955,39 +1954,39 @@ bootstrap.setGame("SampleGameService")
 
 ### common
 
-- 필수적인 공통 설정
+- Essential Common Settings
 
-| 이름                            | 설명                                                         | 기본값  |
-| ------------------------------- | ------------------------------------------------------------ | ------- |
-| vmId                            | 하나의 machine에서 여러 개의 JVM을 띄울 경우 사용하는 고유식별 ID ( 0 <= vmId < 100) | 0       |
-| ip                              | 노드마다 공통으로 사용하는 IP. (머신의 IP를 지정) 값이 없을 경우 private ip로 자동 지정된다. |         |
-| meetEndPoints                   | 대상 노드의 common IP와 communicatePort 등록 해당 서버 endpoint 포함 가능 리스트로 여러 개 등록 가능 |         |
-| keepAliveTime                   | communicateNode 연결 지속 시간 (ms)                          | 60000   |
-| nodeTimeout                     | 노드 상태 체크 타임아웃(ms) 0이면 체크하지 않음.             | 180000  |
-| msgExpiredTime                  | 메시지 만료 시간                                             | 30000   |
-| defaultReqTimeout               | 노드간 메시지 라우팅 타임아웃(ms)0이면 체크하지 않음.        | 30000   |
-| defaultAsyncAwaitTimeout        | 블로킹 호출 시 타임아웃(ms)                                  | 30000   |
-| ipcPort                         | 다른 ipc node 와 통신할때 사용되는 포트                      | 11100   |
-| publisherPort                   | publish socket을 위한 포트                                   | 11101   |
-| debugMode                       | 디버깅 시 각종 timeout 이 발생안하도록 하는 옵션리얼에서는 반드시 false 이어야 한다. | false   |
-| nodeInfoUpdateTime              | JVM에 있는 노드 정보를 다른 JVM에게 전파하는 주기            | 500(ms) |
-| nodeInfoUpdateBusyTime          | 노드 정보가 업데이트될 때 이 시간보다 오래 걸렸을 경우 해당 노드는 BUSY 상태라고 판단함. | 510(ms) |
-| nodeInfoManagerRefreshTime      | 전달받은 노드 정보를 이용해 NodeInfoManager를 갱신하는 주기. | 100(ms) |
-| loopInfoSamplingCount           | Message Loop의 상태를 체크할 때 Sampling할 loop 횟수         | 100(회) |
-| enableLoopInfoMonitor           | NodeInfoPage에서 loop 정보 갱신 여부                         | true    |
-| maxUserCount                    | IdleNode 판단 시 idle로 판단할 최대 User 수                   | 2500    |
-| addLocWeight                    | UserLoc 할당 시 정보 보정을 위해 사용할 배수. 예) 게임 노드가 8개일 경우 1명이 할당되었지만 8명의 유저가 할당되었다고 임의로 지정. | 1       |
-| allocatorType                   | 사용할 bytebuf type 1 (POOLED_DIRECT_BUFFER) 2 (POOLED_HEAP_BUFFER) 3 (UNPOOLED_DIRECT_BUFFER) 4 (UNPOOLED_HEAP_BUFFER) | 4       |
-| httpClientOption                | Gameflex에서 사용하는 httpClientOption                       |         |
-| httpClientOption-keepAlive      | httpClientOption 연결 지속 여부                              | true    |
-| httpClientOption-connTimeout    | httpClientOption connection 타임아웃                         | 5000    |
-| httpClientOption-requestTimeout | httpClientOption  request 타임아웃                           | 10000   |
-| httpClientOption-maxConnPerHost | httpClientOption host당 최대 connection 개수                 | 10000   |
-| httpClientOption-maxConn        | httpClientOption connection 최대 개수                        | 12000   |
-| moduleURL                       | config, dynamicModule 정보를 읽어올 URL 정보 해당 옵션이 설정될 경우 URL을 사용해서 module 정보를 불러온다. | ""      |
-| configPath                      | config를 File로 읽어올 시 config의 Json 파일을 읽어올 경로 moduleURL이 설정될 경우 무시 | /config |
+| Name                             | Description                                                  | Default     |
+| ------------------------------- | ------------------------------------------------------------ | ----------- |
+| vmId                            | A unique ID that is used when multiple JVMs are run on a single machine (0<=vmId<100) | 0       |
+| ip                              | The IP that is commonly used by nodes. Automatically specifies private ip if there is no value for (specifying machine IP) |             |
+| meetEndPoints                   | Registers the common IP and communicatePort of the target node, can include the endpoint of the server, can register multiple items using a list |             |
+| keepAliveTime                   | communicateNode connection duration (ms)                     | 60000   |
+| nodeTimeout                     | Node status check timeout (ms) not checked if 0.             | 180000   |
+| msgExpiredTime                  | Message expiration time                                      | 30000   |
+| defaultReqTimeout               | Inter node message routing timeout (ms) not checked if 0.    | 30000   |
+| defaultAsyncAwaitTimeout        | Timeout (ms)                                   when blocking is called | 30000   |
+| ipcPort                         | A port used when communicating with ipc node                 | 11100   |
+| publisherPort                   | A port for publish socket                                    | 11101   |
+| debugMode                       | An option that is used to prevent various timeouts from occurring while debugging. it must be false in actual implementation. | false       |
+| nodeInfoUpdateTime              | An interval for transferring the node information of JVM to a different JVM | 500 (ms) |
+| nodeInfoUpdateBusyTime          | The node status is determined as BUSY if node information update lasts for more than this time. | 510 (ms) |
+| nodeInfoManagerRefreshTime      | An interval for updating NodeInfoManager using the passed node information. | 100 (ms) |
+| loopInfoSamplingCount           | The number of loops to be sampled when checking the status of Message Loop | 100 (times) |
+| enableLoopInfoMonitor           | Whether or not to update the loop information from NodeInfoPage | true        |
+| maxUserCount                    | The maximum number of Users to be considered as idle when determining IdleNode | 2500   |
+| addLocWeight                    | The multiplier that is used to compensate information while assigning UserLoc. Ex) If there are 8 game nodes, it arbitrarily assigns 8 users even though only 1 user is assigned to them. | 1       |
+| allocatorType                   | bytebuf type 1 to be used (POOLED_DIRECT_BUFFER) 2 (POOLED_HEAP_BUFFER) 3 (UNPOOLED_DIRECT_BUFFER) 4 (UNPOOLED_HEAP_BUFFER) | 4       |
+| httpClientOption                | The httpClientOption used by Gameflex                        |         |
+| httpClientOption-keepAlive      | Whether or not to maintain the httpClientOption connection   | true    |
+| httpClientOption-connTimeout    | httpClientOption connection timeout                          | 5000    |
+| httpClientOption-requestTimeout | httpClientOption request timeout                             | 10000    |
+| httpClientOption-maxConnPerHost | The maximum number of connections per httpClientOption host  | 10000    |
+| httpClientOption-maxConn        | httpClientOption connection maximum number                   | 12000    |
+| moduleURL                       | The information of the URL to read the config and dynamicModule information, the module information is called using the URL if the option is configured. | ""       |
+| configPath                      | The path that is used to read the Json file of config when it is read as a file, ignored when moduleURL is configured | /config |
 
-- 사용 예시
+- Usage example
 
 ```
 "common": {
@@ -2024,15 +2023,15 @@ bootstrap.setGame("SampleGameService")
 
 ### location
 
-- 설정값이 없거나 clusterSize가 0이면 LocationNode를 생성하지 않습니다.
+- Does not create LocationNode if there is no configuration value or clusterSize is 0.
 
-| 이름        | 설명                                                         | 기본값 |
+| Name        | Description                                                         | Default |
 | ----------- | ------------------------------------------------------------ | ------ |
-| clusterSize | 구성되는 서버의 수(VM)                                       |        |
-| replicaSize | 복제 그룹의 크기 master + slave의 개수                       |        |
-| shardFactor | sharding을 위한 인수 <br />-전체 shard의 개수 = clusterSize x replicaSize x shardFactor <br />-하나의 머신(VM)에서 구동할 shard의 개수 = replicaSize x shardFactor <br />-고유한 shard의 총 개수 (master 샤드의 개수) = clusterSize x shardFactor |        |
+| clusterSize | The number of configured servers (VM)                                       |        |
+| replicaSize | The size of the duplicated group, the number of masters + slaves                       |        |
+| shardFactor | The factor for sharding - the total number of shards = clusterSize x replicaSize x shardFactor - The number of shards to be run in a single machine (VM) = replicaSize x shardFactor - the total number of unique shards (the number of master shards) = clusterSize x shardFactor |        |
 
-- 사용 예시
+- Usage example
 
 ```
 "location": {
@@ -2046,13 +2045,13 @@ bootstrap.setGame("SampleGameService")
 
 ### match
 
-- 설정값이 없거나 nodeCnt가 0이면 MatchNode를 생성하지 않습니다.
+- Does not create MatchNode if there is no configuration value or nodeCnt is 0.
 
-| 이름    | 설명            | 기본값 |
+| Name    | Description            | Default |
 | ------- | --------------- | ------ |
-| nodeCnt | match node 개수 |        |
+| nodeCnt | The number of match nodes |        |
 
-- 사용 예시
+- Usage example
 
 ```
 "match": {
@@ -2064,25 +2063,25 @@ bootstrap.setGame("SampleGameService")
 
 ### gateway
 
-- 설정값이 없거나 nodeCnt가 0이면 GatewayNode를 생성하지 않습니다.
+- Does not create GatewayNode if there is no configuration value or nodeCnt is 0.
 
-| 이름                                     | 설명                                                         | 기본값 |
-| ---------------------------------------- | ------------------------------------------------------------ | ------ |
-| nodeCnt                                  | 노드 개수                                                    |        |
-| ip                                       | 클라이언트와 연결되는 IP 설정값이 없을 경우 private ip로 자동 설정 |        |
-| dns                                      | 클라이언트와 연결되는 도메인 주소                            |        |
-| maintenance                              | 서버 시작 시 점검 여부                                       | false  |
-| checkWhiteListBeforeOnAuth               | onAuthenticate 콜백 호출 전 WhiteList 체크 여부              | true   |
-| connectGroup                             | TCP_SOCKET WEB_SOCKET                                        |        |
-| connectGroup - port                      | 클라이언트와 연결되는 포트                                   |        |
-| connectGroup - idleClientTimeout         | 데이터 송수신이 없는 상태 이후의 타임아웃.0 이면 사용하지 않음 | 4000   |
-| connectGroup - secure                    | 보안 설정 설정값이 없을 경우 사용하지 않음.                  |        |
-| connectGroup - secure - useSelf          | keyCertChainPath, privateKeyPath 설정값과 상관없이 보안 설정 사용여부 | false  |
-| connectGroup - secure - keyCertChainPath | 인증서 경로 <br />-Dsecure 설정 경로에서 시작됨              |        |
-| connectGroup - secure - privateKeyPath   | 개인키 경로 <br />-Dsecure 설정 경로에서 시작됨              |        |
-| duplicateLoginServices                   | 중복 로그인 가능 서비스 지정                                 |        |
+| Name                                     | Description                                                  | Default |
+| ---------------------------------------- | ------------------------------------------------------------ | ------- |
+| nodeCnt                                  | Number of nodes                                              |         |
+| ip                                       | Sets automatically as private ip if there is no IP value that is linked to the client |         |
+| dns                                      | The domain address linked to the client                      |         |
+| maintenance                              | Whether or not to check when starting server                 | false   |
+| checkWhiteListBeforeOnAuth               | Whether or not to check WhiteList before calling the onAuthenticate callback | true    |
+| connectGroup                             | TCP_SOCKET WEB_SOCKET                                        |         |
+| connectGroup - port                      | The port linked to the client                                |         |
+| connectGroup - idleClientTimeout         | The timeout after no data transfer, not used if 0            | 4000    |
+| connectGroup - secure                    | Not used if there is no security setting value.              |         |
+| connectGroup - secure - useSelf          | Whether or not to use security settings regardless of the keyCertChainPath and privateKeyPath value | false   |
+| connectGroup - secure - keyCertChainPath | Certificate path - Started from the Dsecure setting path     |         |
+| connectGroup - secure - privateKeyPath   | Private key path - Started from the Dsecure setting path     |         |
+| duplicateLoginServices                   | Specify the service that allows multiple logins              |         |
 
-- 사용 예시
+- Usage example
 
 ```
 "gateway": {
@@ -2118,17 +2117,17 @@ bootstrap.setGame("SampleGameService")
 
 ### game
 
-- 설정값이 없거나 nodeCnt가 0이면 GameNode를 생성하지 않습니다. 앞서 설명했듯이 엔진의 Bootstrap 단계에서 사용한 ServiceName을 이 곳에 설정해야 합니다.
+- Does not create GameNode if there is no configuration value or nodeCnt is 0. As explained earlier, the ServiceName used during the Bootstrap step can be configured here.
 
-| 이름        | 설명                                                         | 기본값 |
-| ----------- | ------------------------------------------------------------ | ------ |
-| nodeCnt     | 노드 개수                                                    |        |
-| serviceId   | Service ID                                                   |        |
-| serviceName | Service 이름                                                 |        |
-| channelIDs  | 노드마다 부여할 채널 ID. 유니크하지 않아도 됨, "" 문자열로 채널 구분없이 중복사용도 가능 |        |
-| userTimeout | disconnect 이후의 유저객체 제거 타임아웃                     | 10000  |
+| Name        | Description                                                  | Default |
+| ----------- | ------------------------------------------------------------ | ------- |
+| nodeCnt     | Number of nodes                                              |         |
+| serviceId   | Service ID                                                   |         |
+| serviceName | Service name                                                 |         |
+| channelIDs  | The channel ID to be assigned to each node. They do not have to be unique. Can be used duplicate without distinguishing channels with the "" character string |         |
+| userTimeout | User object removal timeout after disconnect                 | 10000   |
 
-- 사용 예시
+- Usage example
 
 ```
 "game": [
@@ -2153,24 +2152,24 @@ bootstrap.setGame("SampleGameService")
 
 ### support
 
-- 설정값이 없거나 nodeCnt가 0이면 SupportNode를 생성하지 않습니다. SupportNode도 GameNode와 마찬가지로 Bootstrap 단계에서 사용한 ServiceName이 반드시 설정되어야 합니다.
+- Does not create SupportNode if there is no configuration value or nodeCnt is 0. Like GameNode, SupportNode must have the ServiceName used during the Bootstrap step configured.
 
-| 이름                             | 설명                                                         | 기본값 |
-| -------------------------------- | ------------------------------------------------------------ | ------ |
-| nodeCnt                          | 노드 개수                                                    |        |
-| serviceId                        | service ID                                                   |        |
-| serviceName                      | service 이름                                                 |        |
-| restIp                           | rest ip 설정값이 없을 경우 private ip로 자동 설정            |        |
-| restPort                         | rest port                                                    |        |
-| restPermissionGroups             | ACL 설정 허용할 특정 Path와 IP를 등록. 비어 있을 경우 모든 접속 허용 |        |
-| restSecure                       | 설정값이 없을 경우 사용하지 않음                             |        |
-| restSecure - keyCertChainPath    | 인증서 경로 -Dsecure 설정 경로에서 시작됨                    |        |
-| restSecure - privateKeyPath      | 개인키 경로 -Dsecure 설정 경로에서 시작됨                    |        |
-| restSecure - authorizationSecret | 인증토큰(JWT) 사용하는 경우만 필요, 암호화 시그니처 키       |        |
-| restSecure - authorizationPath   | 인증토큰(JWT) 사용하는 경우만 필요, 인증을 진행할 경로       |        |
-| restCorsAllowDomains             | CORS 허용 domain 예-127.0.0.1:1234                           |        |
+| Name                             | Description                                                  | Default |
+| -------------------------------- | ------------------------------------------------------------ | ------- |
+| nodeCnt                          | Number of nodes                                              |         |
+| serviceId                        | service ID                                                   |         |
+| serviceName                      | service name                                                 |         |
+| restIp                           | Automatically configures to private IP if there is no set rest IP value |         |
+| restPort                         | rest port                                                    |         |
+| restPermissionGroups             | Registers a specific Path and IP to allow the ACL setting. Allows all the connections if it is empty. |         |
+| restSecure                       | It is not used if there is no set value                      |         |
+| restSecure - keyCertChainPath    | Certificate path - Started from the Dsecure setting path     |         |
+| restSecure - privateKeyPath      | Private key path - Started from the Dsecure setting path     |         |
+| restSecure - authorizationSecret | Required only when authentication token (JWT) is used, encryption signature key |         |
+| restSecure - authorizationPath   | Required only when authentication token (JWT) is used, the path on which authentication will be performed |         |
+| restCorsAllowDomains             | CORS allowed domain Ex -127.0.0.1:1234                       |         |
 
-- 사용 예시
+- Usage example
 
 ```
 "support": [
@@ -2216,22 +2215,22 @@ bootstrap.setGame("SampleGameService")
 
 ### management
 
-- 설정값이 없거나 nodeCnt가 0이면 ManagementNode를 생성하지 않습니다.
+- Does not create ManagementNode if there is no configuration value or nodeCnt is 0.
 
-| 이름          | 설명                                                         | 기본값                          |
+| Name          | Description                                                  | Default                         |
 | ------------- | ------------------------------------------------------------ | ------------------------------- |
-| nodeCnt       | 노드 개수                                                    |                                 |
-| restIp        | rest ip 설정값이 없을 경우 private ip로 자동 설정            |                                 |
+| nodeCnt       | Number of nodes                                              |                                 |
+| restIp        | Automatically configures to private IP if there is no set rest IP value |                                 |
 | restPort      | rest port                                                    |                                 |
-| db            | management에서 사용하는 db 설정                              |                                 |
-| db - user     | db 접속 ID                                                   |                                 |
-| db - password | db 접속 비밀번호                                             |                                 |
-| db - url      | db 접속 url - h2db : jdbc:h2:mem:gameflex_admin;DB_CLOSE_DELAY=-1 - mysql : jdbc:mysql://localhost:3306/gameflex_admin?useSSL=false - mariadb : jdbc:mariadb://localhost:3306/gameflex_admin?useSSL=false |                                 |
-| db - driver   | db 접속 driver- h2db : org.h2.Driver- mysql : com.mysql.jdbc.Driver- mariadb : org.hibernate.dialect.MySQLDialect | org.h2.Driver                   |
-| db - dialect  | db 접속 dialect- h2db : org.hibernate.dialect.H2Dialect- mysql : org.hibernate.dialect.MySQLDialect- mariadb : org.hibernate.dialect.MySQLDialect | org.hibernate.dialect.H2Dialect |
-| db - ddlAuto  | ddl 옵션 - update : 자동으로 Table 생성 - none : 자동으로 Table을 생성하지 않음. | update                          |
+| db            | The DB setting that is used by management                    |                                 |
+| db - user     | db connection ID                                             |                                 |
+| db - password | db connection password                                       |                                 |
+| db - url      | db connection url - h2db : jdbc:h2:mem:gameflex_admin;DB_CLOSE_DELAY=-1 - mysql : jdbc:mysql://localhost:3306/gameflex_admin?useSSL=false - mariadb : jdbc:mariadb://localhost:3306/gameflex_admin?useSSL=false |                                 |
+| db - driver   | db connection driver- h2db : org.h2.Driver- mysql : com.mysql.jdbc.Driver- mariadb : org.hibernate.dialect.MySQLDialect | org.h2.Driver                   |
+| db - dialect  | db connection dialect- h2db : org.hibernate.dialect.H2Dialect- mysql : org.hibernate.dialect.MySQLDialect- mariadb : org.hibernate.dialect.MySQLDialect | org.hibernate.dialect.H2Dialect |
+| db - ddlAuto  | ddl option - update: Automatically creates Table - none: Does not automatically create Table. | update                          |
 
-- 사용 예시
+- Usage example
 
 ```
 "management": {
@@ -2249,107 +2248,107 @@ bootstrap.setGame("SampleGameService")
 
 
 
-## 12. 비동기 지원 API
+## 12. Asynchronous Support API
 
-앞서 설명한 파이버 상에서의 비동기 처리를 위해 GameAnvil은 Async 클래스를 제공합니다. 아래와 같은 import문을 통해 Async 클래스를 이용하면 일반적인 블로킹/논블로킹 호출을 모두 파이버화 할 수 있습니다.
+GameAnvil provides the Async class for the asynchronous process on Fiber as explained earlier. General blocking/non-blocking calls can be Fibered if the Async class through the import command.
 
 ```
 import com.nhn.gameanvil.async.Async;
 ```
 
-*모든 API에 대한 설명은 [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)에서 JavaDoc으로 작성된 문서를 확인할 수 있습니다.*
+*The description of all APIs can be found at [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil) in a JavaDoc document.*
 
-호출용 API는 크게 call과 run으로 나뉘며 각각 반환값이 있는 경우와 그렇지 않은 경우에 사용합니다. 그 외 스레드 기반의 future를 파이버 기반으로 사용할 수 있도록 전환해줍니다. 각각의 용도에 따른 사용법은 문서의 다음 부분에서 더 자세하게 다루도록 합니다.
+The API for calling can be categorized as call and run, and they are used for when there is no return value or there is a return value. In addition, the thread-based future can be converted so that they can use Fiber. The usage for each purpose will be explained in the next part of this document.
 
-### **12-1.블로킹 호출 처리**
+### **12-1.Blocking Call Process**
 
-일반적인 블로킹 호출은 스레드 블로킹을 의미합니다. 즉, 현재 코드가 수행 중인 파이버 뿐만 아니라 이 파이버를 스케줄링하는 스레드까지 블로킹 시킨다는 뜻입니다. 이 말은 곧 노드가 멈춘다는 의미이므로 절대 블로킹 호출을 직접적으로 사용해서는 안 됩니다. GameAnvil은 이러한 스레드 블로킹 호출을 파이버 블로킹으로 전환해 주는 Async API를 제공합니다. 이 API는 외부 executor를 사용하여 해당 블로킹 호출을 처리한 후 완료 이후의 코드 흐름을 다시 파이버화 합니다. 반환값 유무에 따라 runBlocking()과 callBlocking() 중 하나를 사용하면 됩니다. 또한 기본 개념에서 설명했듯이 이러한 파이버 블로킹 API는 Suspendable하므로 API 호출 메서드는 반드시 SuspendExecution 예외 시그니처를 명시해야 합니다.
+Blocking call in general means thread blocking. In other words, it blocks not only the Fiber executed by code but also the thread used to schedule this Fiber. This means that the node will soon stop, never directly use the blocking calls. GameAnvil provides Async API that is used to convert these thread-blocking calls into Fiber blocking. This API processes the blocking call using external executor and converts the code flow after the completion into Fiber. Use either runBlocking() or callBlocking() depending on the existence of return value. As explained in the basic concepts, these Fiber-blocking APIs can be suspended, the API calling methods must specify the SuspendExecution exception signature.
 
 ```
 import com.nhn.gameanvil.async.Async;
 
 void runningBlockingMethod() throws SuspendExecution {
 
-    Async.runBlocking(executor, runnable); // 스레드 블로킹 호출을 파이버 블로킹 호출로 전환
+    Async.runBlocking(executor, runnable); // thread blocking calls into blocking calls
 
 }
 import com.nhn.gameanvil.async.Async;
 
 int callingBlockingMethod() throws SuspendExecution {
 
-    return Async.callBlocking(executor, callable);  // 스레드 블로킹 호출을 파이버 블로킹 호출로 전환
+    return Async.callBlocking(executor, callable);  // thread blocking calls into blocking calls
 
 }
 ```
 
-### **12-2.Future 처리**
+### **12-2.Future Handling**
 
-Future에 대한 대기는 스레드 블로킹을 유발합니다. 예를 들어 아래와 같은 코드는 호출 스레드를 블로킹합니다.
-
-```
-Future<SomeObject> future = someAsyncJob();
-
-SomeObject ret = future.get(); // 스레드 블로킹을 유발
-```
-
-GameAnvil은 이런 future에 대한 대기를 스레드 블로킹에서 파이버 블로킹으로 전환해주는 API를 제공합니다. 단, 이 API들은 Java의 CompletableFuture와 Guava의 ListenableFuture만 지원합니다. 다행히도 대부분의 라이브러리는 이 2가지의 future를 기반으로 비동기를 지원하기 때문에 큰 무리 없이 적용 가능할 것입니다. 아래의 코드는 이러한 Async API를 이용해서 future에 대한 대기를 파이버 블로킹으로 처리하는 예입니다.
+The wait on Future triggers thread blocking. For example, the code below blocks call threads.
 
 ```
 Future<SomeObject> future = someAsyncJob();
 
-SomeObject ret = Async.awaitFuture(future); // 해당 파이버만 블로킹
+SomeObject ret = future.get(); // Triggers thread blocking
 ```
 
-### **12-3.블로킹 처리 위임**
+GameAnvil provides API that is used to convert this wait on Future from thread blocking to Fiber blocking. However, these APIs support the ListenableFuture of Java's CompletableFuture and Guava. Fortunately, most libraries support asynchronization based on these two futures, there won't be a problem applying them. The code below is an example of processing the wait on future to Fiber blocking using these Async APIs.
 
-앞서 블로킹 호출에 대한 처리를 살펴보았습니다. Async API의 runBlocking()이나 callBlocking()은 블로킹 처리를 완료한 이후에 다시 해당 파이버의 실행 흐름을 이어가는 경우에 사용합니다. 반면 외부 스레드로 블로킹 호출을 위임한 후 그 결과에 대해 신경 쓸 필요가 없다면 실행 흐름을 계속 이어갈 수 있을 것입니다. 이런 경우에는 아래의 API를 사용하면 됩니다. 이 API는 블로킹 호출의 결과를 대기하지 않으므로 Suspendable하지 않음에 주의하세요.
+```
+Future<SomeObject> future = someAsyncJob();
+
+SomeObject ret = Async.awaitFuture(future); // Blocks only the corresponding Fiber
+```
+
+### **12-3.Delegation of Blocking Handling**
+
+The process for blocking calls is covered earlier. The runBlocking() or callBlocking() of Async API is used only when continuing the execution flow of the corresponding Fiber after blocking process is finished. However, if the user does not need to concern after delegating blocking calls to an external thread, the execution flow can be continued. In this case, use the API below. This API does not wait for the result of blocking call and cannot be suspended.
 
 ```
 import com.nhn.gameanvil.async.Async;
 
 void runningBlockingMethod() { // NOT suspendable
 
-    Async.exec(executor, runnable); // 외부 스레드로 블로킹 호출을 위임했으므로 이 파이버는 블로킹되지 않는다.
+    Async.exec(executor, runnable); // As blocking calls are delegated to the external thread, this Fiber is not blocked.
 
 }
 import com.nhn.gameanvil.async.Async;
 
 int callingBlockingMethod() {  // NOT suspendable
 
-    return Async.exec(executor, callable);  // 외부 스레드로 블로킹 호출을 위임했으므로 이 파이버는 블로킹되지 않는다.
+    return Async.exec(executor, callable);  // As blocking calls are delegated to the external thread, this Fiber is not blocked.
 
 }
 ```
 
 
 
-## 13. 비동기 Redis 지원
+## 13. Asynchronous Redis Support
 
-그동안 어떤 종류의 Redis 클라이언트를 사용할지는 전적으로 GameAnvil 사용자의 선택이었습니다. 하지만 이로 인해 Redis 관련 이슈의 종류와 복잡도가 사용자가 선택한 Redis 클라이언트 종류와 사용 방식의 차이에 비례해서 증가한다는 사실을 알게 되었습니다. 우리는 이를 방지하고자 GameAnvil의 기본적인 가이드라인에 Redis 클라이언트에 관한 사용법을 포함하기로 결정했습니다. 이 가이드라인은 GameAnvil에서 지원하는 Redis 클라이언트의 종류와 그 기본적인 사용법을 API화하여 통일시키는 것을 목표로 합니다. 물론 제공되는 API가 아닌 다른 종류의 Redis 클라이언트를 선택해서 별도로 사용하는 것도 가능하지만 틀별한 이유가 없다면 지양하길 권합니다.
+Previously, it was entirely GameAnvil user's responsibility to determine which type of Redis client to be used. However, it is learned that the type and complexity of the issues related to Redis increase proportionate to the difference in the type and usage of the Redis client selected by the user. To prevent this, we decided to include the information on how to use the Redis client to the basic guideline of GameAnvil. This guideline aims to consolidate the Redis clients supported by GameAnvil by turning the Redis clients and the basic usage into API. Of course, it is possible to use a Redis client other than the provided API, this should be avoided if possible.
 
 ### **[Note]**
 
-*이후의 내용에서 GameAnvil에서 제공하는 Lettuce 클래스와 제품명인 "Lettuce"를 구분하기 위해 전자의 경우는 가능한 "Lettuce 클래스"라고 표기하고 일부 내용상 필요에 의해 그냥 "Lettuce"로 표기할 수도 있습니다. 이와 구분하기 위해 제품명은 전체 대문자 ***LETTUCE***로 표기합니다. 이 글에서 설명하는 LETTUCE는 GameAnvil에서의 사용 방법에 포커스를 두기 때문에 그 이상의 설명이 필요할 경우에는 [LETTUCE 공식 페이지](https://github.com/lettuce-io/lettuce-core)를 참고하세요.*
+*To distinguish the Lettuce class provided by GameAnvil and the product name "Lettuce," the former is designated as "Lettuce class," but it can be designated as plain "Lettuce" if necessary. To distinguish it from the other Lettuce, the product name is written as ***LETTUCE***. The LETTUCE used in this document is focused on the usage on GameAnvil, if more information is needed, refer to [LETTUCE Official Page](https://github.com/lettuce-io/lettuce-core).*
 
-GameAnvil은 Redis 클라이언트로 LETTUCE의 사용을 권장합니다. GameAnvil에서 제공하는 Redis 래핑 API 또한 LETTUCE를 사용합니다. 참고로 LETTUCE는 비동기 Redis 클라이언트로서 대부분의 비동기 API는 CompletableFuture를 기반으로 합니다. 이는 곧 GameAnvil의 Async API를 이용해서 파이버 기반의 비동기화로 전환할 수 있음을 의미합니다.
+GameAnvil recommends using LETTUCE as the Redis client. The Redis wrapping API provided by GameAnvil uses LETTUCE as well. For reference, LETTUCE is as an asynchronous Redis client and the most of asynchronous APIs are based on CompletableFuture. This means that GameAnvil's Async API can be converted into Fiber-based asynchronization.
 
-GameAnvil에서 제공하는 Redis 래핑 API는 크게 3가지의 클래스인 Lettuce, RedisCluster 그리고 RedisSingle로 나뉩니다. Lettuce는 가장 일반적인 형태의 사용법을 제공하며 내부적으로 LETTUCE 객체를 관리하지 않는 static 클래스입니다. 그러므로 LETTUCE를 가장 일반적인 형태로 사용하고 싶을 경우에는 이 Lettuce 클래스가 가장 적합합니다. RedisCluster와 RedisSingle은 각각 Redis 클러스터와 스탠드얼론에 대응하기 위한 클래스로서 내부적으로 LETTUCE 객체들을 관리합니다.
+The Redis wrapping API provided by GameAnvil can be categorized into the Lettuce, RedisCluster, and RedisSingle classes. Lettuce provides the most common usage and it is a static class that does not internally manage the LETTUCE object. Therefore, if the user wants to use LETTUCE in the most common form, this Lettuce class is the most proper. RedisCluster and RedisSingle are the classes for responding to the Redis cluster and standalone and they internally manage the LETTUCE objects.
 
 ### **13-1.Lettuce**
 
-Lettuce 클래스는 파이버 단위의 처리를 위한 가장 핵심적인 static API들을 제공합니다. 내부적으로 Redis에 관한 그 어떤 상태도 보관하지 않으므로 별도의 객체를 만들 필요가 없이 바로 사용이 가능합니다. 만일 Lettuce 라이브러리에 대해 어느 정도 익숙하다면 Lettuce 클래스를 직접 사용하는 것이 가장 좋습니다.
+The Lettuce class provides the most essential static APIs used to process Fiber-units. Internally, no status related to Redis are stored, it can be used without having to create a separate object. If the user is familiar with the Lettuce library, it is best to use the Lettuce class directly.
 
 ```
 import com.nhn.gameanvil.async.redis.Lettuce;
 ```
 
-다음의 3가지 주의 사항 외에는 기본적인 Lettuce 사용법을 그대로 유지할 수 있습니다.
+The basic Lettuce usage can be maintained except the following three cautions.
 
-- 첫째, 반드시 connect는 GameAnvil의 Lettuce.connect() 혹은 Lettuce.connectAsync()를 사용한다. 커넥션은 기본적으로 스레드를 블로킹하므로 이에 대한 파이버화 처리를 포함합니다.
-- 둘째, shutdown 또한 커넥션과 동일한 이유로 Lettuce.shutdown()을 사용해야 합니다.
-- 셋째, RedisFuture에 대한 대기는 반드시 Lettuce.awaitFuture()를 사용해서 파이버 블로킹화해야 합니다.
+- First, connect must use the Lettuce.connect() or Lettuce.connectAsync() of GameAnvil. As connection basically blocks threads, it includes the Fiber process.
+- Second, shutdown must use Lettuce.shutdown() as well for the same reason with connection.
+- Third, the wait for RedisFuture must use Lettuce.awaitFuture() to block Fiber.
 
-이런 Lettuce 클래스를 사용하여 Redis에 접속하는 코드는 아래와 같습니다.
+The code that is used to connect to Redis using the Lettuce class.
 
 ```
 RedisURI clusterURI = RedisURI.Builder.redis(IP_ADDRESS, 7500).build();
@@ -2367,9 +2366,9 @@ if (clusterConnection.isOpen()) {
 import com.nhn.gameanvil.async.redis.RedisCluster;
 ```
 
-Redis Cluster에 대한 API를 래핑합니다. 기본적으로 앞서 설명한 Lettuce 와 사용법은 크게 다르지 않습니다. 하지만 이 클래스는 Lettuce 관련 객체들(e.g.RedisClusterClient, StatefulRedisClusterConnection 등)을 자체적으로 관리합니다. 이러한 Lettuce 객체들을 직접 관리하기 보다 RedisCluster를 통해 관리하고 싶다면 사용을 고려해보세요.
+Wraps the API for Redis Cluster. The usage is basically not different from the usage for Lettuce. However, this class manages the objects related to Lettuce (e.g. RedisClusterClient, StatefulRedisClusterConnection etc.) on its own. Consider using this API if the user wants to manage these Lettuce objects through RedisCluster.
 
-주의 사항은 Lettuce의 경우와 완전히 동일합니다. 아래는 RedisCluster를 이용해서 Redis에 접속하는 코드입니다.
+The cautions to be observed are the same with Lettuce. Below is the code that is used to connect to Redis using RedisCluster.
 
 ```
 redisClient = RedisSingle.create("redis://IP_ADDRESS:6379");
@@ -2386,9 +2385,9 @@ if (redisClient.isOpen()) {
 import com.nhn.gameanvil.async.redis.RedisSingle;
 ```
 
-RedisCluster와 비교했을 때, 대상 Redis가 스탠드얼론이라는 차이점 밖에 없습니다.
+When compared to RedisCluster, the only difference is that the target Redis is standalone.
 
-주의 사항은 Lettuce의 경우와 완전히 동일합니다. 아래는 RedisSingle을 이용해서 Redis에 접속하는 코드입니다.
+The cautions to be observed are the same with Lettuce. Below is the code that is used to connect to Redis using RedisCluster.
 
 ```
 redisCluster = new RedisCluster<>(IP_ADDRESS, 7500);
@@ -2399,9 +2398,9 @@ if (redisCluster.isConnected()) {
 }
 ```
 
-### **13-4.RedisFuture를 파이버에서 사용하기**
+### **13-4.Using RedisFuture in Fiber**
 
-Lettuce, RedisCluster 그리고 RedisSingle은 모두 Lettuce 라이브러리가 지원하는 RedisFuture를 파이버 상에서 대기할 수 있는 API를 제공합니다. 내부 구현은 모두 엔진에서 제공하는 Async.awaitFuture()를 동일하게 사용하므로 혼용해도 무방합니다. 아래의 4가지 코드는 모두 동일한 코드입니다. GameAnvil의 파이버 상에서 RedisFuture에 대한 get()은 반드시 이 4가지 중 하나의 방법을 사용해야 합니다.
+Lettuce, RedisCluster, and RedisSingle provide the API that can make the RedisFuture supported by the Lettuce library wait on Fiber. As the internal implementation uses the Async.awaitFuture() provided by the engine, they can be interchangeably used. The four code below are the same code. The get() of the RedisFuture on the Fiber of GameAnvil must use one of the four methods.
 
 - Async.awaitFuture()
 
@@ -2443,7 +2442,7 @@ try {
 }
 ```
 
-- **잘못된 사용법**: 직접 Future에 대한 대기를 할 경우 해당 Node(Thread)가 블로킹되므로 절대 아래와 같은 코드는 사용하면 안됩니다.
+- **Incorrect usage**: If directly wait for Future, the Node(Thread) is blocked, so never use the code below.
 
 ```
 try {
@@ -2456,23 +2455,23 @@ try {
 
 ### **13-5.set/get**
 
-가장 기본이 되는 set과 get은 RedisCluser와 RedisSingle에서 기본 제공합니다.
+Set and get, the most basic components, are provided by RedisCluster and RedisSingle by default.
 
-- RedisCluster를 이용한 set/get 예제
+- An example of set/get using RedisCluster
 
 ```
 String setResult = redisCluster.set(key, value);
 String getResult = redisCluster.get(key);
 ```
 
-- RedisSingle을 이용한 set/get 예제
+- An example of set/get using RedisSingle
 
 ```
 String setResult = redisSingle.set(key, value);
 String getResult = redisSingle.get(key);
 ```
 
-- 직접 LETTUCE의 RedisAsyncCommands 객체를 사용한 예제
+- An example of directly using the RedisAsyncCommands of LETTUCE
 
 ```
 RedisFuture<String> setFuture = redisAsyncCommands.set(key, value);
@@ -2482,26 +2481,26 @@ String setResult = Async.awaitFuture(setFuture);
 String getResult = Async.awaitFuture(getFuture);
 ```
 
-### **13-6.본격적인 LETTUCE 비동기 처리**
+### **13-6.Asynchronous Process of LETTUCE**
 
-Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 통해 사용 가능합니다. 기본적으로 LETTUCE는 Sync방식의 Commands 객체과 Async방식의 Commands 객체를 제공하는데 GameAnvil은 그 중 Aync방식의 사용을 권장합니다. 기본적으로 AsyncCommands는 Redis Cluster인 경우와 StandAlone인 경우에 대해 각각 아래와 같습니다.
+The various commands provided by Redis can be used through the Commands object of LETTUCE. Basically, LETTUCE provides the Commands object in Sync and the Commands object in Async. GameAnvil recommends using the Async method. Basically, AsyncCommands for Redis Cluster and StandAlone are as below:
 
 - RedisAdvancedClusterAsyncCommands
 - RedisAsyncCommands
 
-아래의 예제들은 이런 AsyncCommands 객체를 이용하여 mget을 수행하는 예제들입니다. LETTUCE의 비동기 처리는 기본적으로 RedisFuture를 사용하고 이 RedisFuture는 CompletableFuture입니다. CompletableFuture에 대한 자세한 내용은 [Java 공식 레퍼런스](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에서 확인 가능합니다. 참고로 아래의 예제들은 LETTUCE에 대한 비동기 처리의 극히 일부 방식만을 보여주고 있으므로 그대로 사용하기 보다는 개발중인 코드에 알맞게 작성하세요. 완벽한 비동기 코드의 제어를 위해서는 반드시 [LETTUCE](https://github.com/lettuce-io/lettuce-core)와 [CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에 대한 내용을 숙지해야 합니다.
+The examples below use this AsyncCommands object to perform mget. The asynchronous process of LETTUCE uses RedisFuture by default. This RedisFuture is CompletableFuture. The detailed information of CompletableFuture can be found at [Java Official Reference](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html). For your information, the examples below show only a part of the asynchronous process for LETTUCE, adjust it to fit the code in development rather than using it as it is. For complete control of asynchronous code, understand the information on [LETTUCE](https://github.com/lettuce-io/lettuce-core) and [CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html).
 
 ### **[Note]**
 
-thenApply()와 thenAccept() 등은 임의의 외부 스레드에서 호출되므로 Node에서 관리하는 내부 리소스에 대한 접근을 하거나 리소스에 대한 Lock을 사용하면 안됩니다.
+thenApply(), thenAccept() and others are called by arbitrary external thread, do not access the internal resources managed by Node or use Lock on such resources.
 
-- 예제1> key1과 key2에 대한 값을 비동기로 획득
+- Example 1> Asynchronously obtains the value for key1 and key2
 
 ```
 Lettuce.awaitFuture(asyncCommands.mget("key1", "key2"));
 ```
 
-- 예제2> 이 후의 코드 흐름과 상관없는 경우 future chain으로 외부 스레드에 처리를 위임 (즉, mget으로 값 획득을 완료할 때까지 대기할 필요가 없을 경우)
+- Example 2> Delegates the process to an external thread with future chain if it does not affect the code flow afterward (in other words, when it does not have to wait until obtaining the value using mget)
 
 ```
 RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
@@ -2517,7 +2516,7 @@ future.thenApplyAsync(r -> {
 });
 ```
 
-- 예제3> 이후의 코드 흐름과 상관있는 경우에 해당 future를 대기한 후 처리
+- Example 3> Waits for the future and processes if it does not affect the code flow afterward
 
 ```
 RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
@@ -2532,7 +2531,7 @@ CompletionStage<Map<String, String>> cs = future.thenApplyAsync(r -> {
 // do something here
 
 try {
-    // 파이버 상에서 해당 future를 대기하기 위해 Lettuce.awaitFuture()를 사용해야 함을 명심하세요
+    // Remember that Lettuce.awaitFuture() must be used to have the future wait on Fiber
     Map<String, String> map = Lettuce.awaitFuture(cs);
 
     for (Entry<String, String> entry : map.entrySet())
@@ -2544,24 +2543,24 @@ try {
 
 
 
-## 14. 비동기 HttpReqeust & HttpResponse 사용법
+## 14.  How to Use Asynchronous HttpRequest & HttpResponse
 
-Http 처리에 관한 부분도 Redis와 마찬가지로 GameAnvil에서 기본적인 API와 가이드라인을 제공합니다. 물론 다른 종류의 Http 사용법 역시 선택이 가능하지만 특별한 이유가 없다면 지양하길 권합니다. GameAnvil은 비동기 기반의 Http 사용을 위해 내부적으로 [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client)를 사용합니다. 다음에서 설명할 API와 그 사용 범위를 넘는 경우에는 저희가 제공하는 API 보다 직접 [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client)를 사용하길 권합니다. LETTUCE와 마찬가지로 AsyncHttpClient도 내부적으로 CompletableFuture를 사용하므로 future에 대한 대기를 Async.awaitFuture()를 이용해서 파이버화 해주기만 하면 나머지는 일반 스레드 상에서의 사용법과 완전히 동일합니다.
+Like Redis, GameAnvil provides basic API and guideline for processing HTTP. Of course, the user can choose a different HTTP usage, it is not recommended unless there is a special reason. GameAnvil internally uses [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client) to use async-based HTTP. It is recommended to directly use [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client) rather than using the API provided by us if the API that will be explained later and the range of usage exceed. As AsyncHttpClient internally uses CompletableFuture like LETTUCE, use Async.awaitFuture() to Fiber for future wait. The rest are the same as using it on a thread.
 
 ```
-Async.awaitFuture(future.get()); // 파이버 상에서 해당 future를 대기합니다.
+Async.awaitFuture(future.get()); // Waits the corresponding future on Fiber.
 ```
 
-GameAnvil에서 제공하는 Http API는 요청과 응답을 위한 HttpRequest, HttpResponse 클래스 그리고 결과에 대한 일반적인 처리를 위한 HttpResultTemplate 클래스로 이루어집니다. 이 클래스들을 이용하면 간단하고 직관적으로 Http 요청과 응답을 처리할 수 있으며 그 결과를 원하는 형태로 취할 수도 있습니다. 또한 모든 코드는 비동기이므로 특별한 처리가 필요없습니다. 다음은 이를 사용한 예제 코드들입니다.
+The HTTP API provided by GameAnvil consists of the HttpRequest and HttpResponse class for requests and responses and the HttpResultTemplate class for common process for the result. HTTP requests and responses can be intuitively processed if these classes are used and the result can be taken in any form. And because all code are asynchronous, there is nothing to do anything with it. The following are examples of using this.
 
-- 예제1> 가장 기본적인 사용법 내부적으로 파이버 단위의 future 처리를 알아서 해주므로 가장 직관적인 방식입니다. 특별한 이유가 없다면 이러한 기본적인 사용법만으로도 충분합니다.
+- Example 1> The most basic usage. It is the most intuitive method as it automatically takes care of the future in Fiber unit. It is enough only using this unless there is a special reason.
 
 ```
 HttpRequest request = new HttpRequest(URL);
 HttpResponse response = request.GET();
 ```
 
-- 예제2> future 기반의 비동기 방식 HTTP 요청과 응답 대기 사이에 다른 작업을 하고 싶을 경우 아래와 같이 future를 직접 이용할 수 있습니다.
+- Example 2> The asynchronous method based on future. If another task needs to be done between HTTP request and response, the user can directly use future as below:
 
 ```
 HttpRequest request = new HttpRequest("abc");
@@ -2572,7 +2571,7 @@ CompletableFuture<Response> future = request.GETAsync();
 HttpResponse response = new HttpResponse(Async.awaitFuture(future, 10000, TimeUnit.MILLISECONDS));
 ```
 
-- 예제3> HTTP 요청 header 구성 아래의 예제와 같이 AsyncHttpClient는 다양한 API를 제공합니다. AsyncHttpClient에 대한 자세한 사용법은 [공식 페이지](https://github.com/AsyncHttpClient/async-http-client)를 참고하세요.
+- Example 3> HTTP request header configuration. AsyncHttpClient provides a variety of APIs as shown in the example. For detailed information on the usage of AsyncHttpClient, visit the [official page](https://github.com/AsyncHttpClient/async-http-client).
 
 ```
 HttpRequest request = new HttpRequest(url);
@@ -2584,7 +2583,7 @@ request.getBuilder()
 HttpResponse httpResponse = request.GET();
 ```
 
-- 예제4> 이후의 코드 흐름과 상관없는 경우 future chain으로 외부 스레드에 처리를 위임 (Lettuce의 경우와 동일한 방식)
+- Example 4> Delegates the external thread to future chain if it does not affect the code flow afterward (The same method as Lettuce)
 
 ```
 HttpRequest request = new HttpRequest("abc");
@@ -2615,7 +2614,7 @@ future.thenApplyAsync(r -> {
 });
 ```
 
-- 예제5> 이후의 코드 흐름과 상관있는 경우에 해당 future를 대기한 후 처리
+- Example 5> Waits for the future and processes if it does not affect the code flow afterward
 
 ```
 RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
@@ -2640,7 +2639,7 @@ CompletionStage<JsonObject> cs = future.thenApplyAsync(r -> {
 // do something here
 
 try {
-    // 파이버 상에서 해당 future를 대기하기 위해 Async.awaitFuture()를 사용해야 함을 명심하자.
+    // Remember that to make the future wait on Fiber, use Async.awaitFuture().
     JsonObject jsonObject = Async.awaitFuture(cs);
     if (jsonObject != null) {
         JsonElement element = jsonObject.get(ELEMENT_NAME);
@@ -2655,25 +2654,25 @@ try {
 
 
 
-## 15. RDBMS 비동기 처리
+## 15. RDBMS Asynchronous Process
 
-RDBMS에 대한 쿼리는 일반적으로 블로킹입니다. 이런 블로킹 쿼리를 GameAnvil 상에서 처리하는 방법은 앞서 살펴보았던 다른 Async 사용법과 크게 다르지 않습니다. 어떤 종류의 RDBMS를 사용하던 SQL 쿼리에 대한 코드는 동일한 방법으로 구현할 수 있습니다. 또한 엔진 사용자는 DB 접근을 위해 자유롭게 SQL Mapper나 ORM 등을 선택할 수 있습니다.
+The query for RDBMS is generally blocking. The way to process this blocking query on GameAnvil is not that different from the usage of other Asyncs. Regardless of the type of RDBMS used, the code for the SQL query can be implemented in the same way. And engine users can freely choose from SQL Mapper, ORM, or others to access DB.
 
 
 
 ### Note
 
-*DB에 대한 쿼리를 구현하는 과정에서 가장 중요하지만 흔히 놓치는 부분은 DB에 대한 CP(ConnectionPool) 크기와 이를 비동기로 처리할 TP(ThreadPool)의 개수에 대한 설정과 이들 사이의 관계에 대한 이해입니다. 일반적으로 이들 두 수치는 처리할 쿼리의 양을 고려하여 동일한 값으로 설정하거나 TP를 CP보다 조금 더 넉넉하게 설정하면 됩니다. 참고로 GameAnvil를 이용한 대규모 성능 테스트 결과, 서버 프로세스 하나 당 6000~8000명 처리 기준 TP와 CP 250개 설정이 가장 좋은 결과를 보여주었습니다. 이는 어디까지나 쿼리 복잡도와 빈도 등 복합적인 요소를 고려하여 가능한 많은 테스트를 거쳐 최적의 값을 찾는 것이 최선입니다.*
+*The most important thing while implementing the query for DB but often overlooked is the size of CP (ConnectionPool) for DB, the number of TPs (ThreadPool) to asynchronously process them, and understanding of the relationship between them. These two values are usually set the same, considering the amount of queries to be processed or set TP slightly larger than CP. For your information, in a large scale performance test using GameAnvil, setting TP for 6000~8000 people and CP for 250 per server process showed the optimal result. It is important to find the optimal value by running as many tests as possible considering the complex elements such as the complexity and frequency of query.*
 
 
 
 ### 15-1.Async Query
 
-우선 쿼리에 대한 비동기 처리는 크게 2가지로 나눌 수 있습니다. 쿼리의 결과가 필요한 경우와 그렇지 않은 경우입니다. 이 두 경우는 쿼리의 결과 유무 차이만 있을 뿐 전체 쿼리 수행이 완료될 때까지 해당 파이버가 대기하는 것은 동일합니다. 즉, 비동기로 요청한 쿼리가 완료된 후 다음 코드로 진행되므로 엔진 사용자는 일반적인 블로킹 코드를 작성하듯이 구현할 수 있습니다.
+The asynchronous process for query can be divided in two cases: Case in which the query result is needed and the case in which the query result is not needed. In both cases, the corresponding Fiber waits until the query process is finished; the only difference is whether or not there is the result for such a query. In other words, as the code is processed after the query requested asynchronously is finished, engine users can implement it as if they are writing general blocking code.
 
 
 
-첫째, 쿼리의 결과를 획득하고자 할 경우에는 다음의 예제와 같이 Async 클래스의 callBlocking API를 사용합니다. callBlocking은 파이버 상에서 임의의 블로킹 호출을 수행한 후 결과를 반환합니다.
+First, when the user wants to obtain the query result, they need to use the callBlocking API of the Async class as shown in the example below. callBlocking calls an arbitrary blocking and returns the result.
 
 ```
 try {
@@ -2690,13 +2689,13 @@ try {
 logger.info("Query has finished.");
 ```
 
-이때, 비동기 처리를 위한 스레드풀은 Bootstrap 단계에서 미리 생성해둘 수 있습니다.
+At this time, the thread pool for processing asynchronously can be created during the Bootstrap step.
 
 ```
 bootstrap.createExecutorService("MyThreadPool", 250);
 ```
 
-혹은 엔진 사용자가 필요에 따라 직접 생성한 외부 스레드풀을 사용할 수도 있습니다.
+Or if it is necessary, engine users may use the external thread pool directly created.
 
 ```
 bootstrap.createExecutorService(myExecutorService, 250);
@@ -2704,7 +2703,7 @@ bootstrap.createExecutorService(myExecutorService, 250);
 
 
 
-둘째, 쿼리의 결과가 필요 없는 경우에는 다음의 예제와 같이 Async 클래스의 runBlocking API를 사용합니다. runBlocking은 파이버 상에서 임의의 블로킹 호출을 수행합니다.
+Second, when the user does not need to obtain the query result, they need to use the runBlocking API of the Async class as shown in the example below. runBlocking calls arbitrary blocking on Fiber.
 
 ```
 try {
@@ -2725,4 +2724,4 @@ try {
 logger.info("Query has finished.");
 ```
 
-이 경우도 마찬가지로 임의의 스레드풀을 runBlocking API에 매개변수로 전달할 수 있습니다.
+In this case, the arbitrary thread pool can be passed to runBlocking API as a parameter.

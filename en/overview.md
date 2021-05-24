@@ -1,47 +1,47 @@
-## Game > GameAnvil > 개요
+## Game > GameAnvil > Overview
 
-GameAvnil은 Java 기반의 실시간 게임 서버 엔진으로, 다수의 게임 프로젝트에서 사용 중입니다.
+GameAnvil is a Java-based, real-time game server engine, used by a number of game projects.
 
-GameAnvil을 이용하여 풍부한 Java 생태계의 혜택을 누리며 쉽고 빠르게 게임 서버를 개발해 보세요. 함께 제공되는 클라이언트 커넥터와 테스트 도구, 웹 콘솔을 사용해 쉽게 게임 서비스를 개발하고 준비할 수 있습니다.
+Use GameAnvil to leap the benefit of the rich Java ecosystem and easily and quickly develop a game server. Use the provided client connector, test tools, and web console to easily develop and prepare game services.
 
 
 
 ## Key Features
 
-- 파이버 기반의 Continuation 지원과 순차적인 코드 흐름
-- 싱글 스레딩과 Lock Free
-- 재접속 시에 이전 세션 자동 복구
-- 유저 매치 메이킹 지원
-- 룸 매치 메이킹 지원
+- Fiber based Continuation support and sequential code flow
+- Single threading and Lock Free
+- Automatically restores previous session when reconnecting
+- Supports user matchmaking
+- Supports room matchmaking
 - No SPOF(Single Point Of Failure)
-- 런타임 서버 스케일링 지원
-- 서버 간 유저 및 방 전송
-- 전용 테스트 시스템 지원
-- 전용 웹 콘솔 지원
-- 클라이언트 커넥터 지원(Unity, CocosCreator)
-- 무정지 점검과 패치 지원
+- Supports run-time server scaling
+- Transfers users and rooms between servers
+- Supports dedicated test systems
+- Supports dedicated the web console
+- Supports client connector (Unity, CocosCreator)
+- Supports uninterrupted maintenance and patch
 
-## 용어
+## Term
 
-GameAnvil에서 사용하는 용어와 설명입니다.
+The explanation of the terms used by GameAnvil.
 
-| 용어               | 설명                                                         |
+| Term               | Description                                                         |
 | ------------------ | ------------------------------------------------------------ |
-| 머신               | GameAnvil 인스턴스(프로세스)가 실행되는 장비                 |
-| 인스턴스           | GameAnvil 프로세스(JVM) 실행 단위                            |
-| 노드               | GameAnvil 서버 구성의 가장 기본이 되는 단위 [세부 설명](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-2-basic) |
-| 마스터 머신        | Management Node가 실행되는 장비                              |
-| 로케이션 관리 머신 | Location Node가 실행되는 장비                                |
-| 머신 설정          | 마스터 머신과 로케이션 관리 머신을 지정하는 작업             |
-| 설정 템플릿        | 노드별 설정값을 저장해 다수의 인스턴스에서 사용할 수 있도록 제공 |
+| Machine               | The machine on which an GameAnvil instance (process) is run                 |
+| Instance           | The run unit of a GameAnvil process (JVM)                            |
+| Node               | The basic units of the GameAnvil server configuration [detailed information](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-2-basic) |
+| Master machine        | The machine on which Management node is run                              |
+| Location management machine | The machine on which Location Node is run                                |
+| Machine settings          | The task that is used to specify master machine and location management machine             |
+| Setup template        | Stores the setting value per node and provides them to be used in multiple instances |
 
-## GameAnvil 사용 라이브러리
+## Libraries using GameAnvil
 
-다음은 GameAnvil에서 사용하는 4가지 핵심 라이브러리입니다. Quasar, ZeroMQ, Netty는 엔진 내부에서 사용하므로 GameAnvil 사용자가 직접 사용할 일은 없습니다. Protocol Buffers는 메시지를 직렬화/역직렬화할 때 사용합니다. 직접 사용 여부와 관계없이 아래 4가지 라이브러리를 이해하면 엔진을 사용할 때 많은 도움이 됩니다.
+There are four key libraries used by GameAnvil: Because Quasar, ZeroMQ, and Netty are used in the engine, GameAnvil users are not likely directly use them. Protocol Buffers is used when parallelize/serialize messages. Understanding the following four libraries, regardless of direct use, helps when using the engine.
 
-| 라이브러리       | 용도                            |
+| Library       | Purpose                            |
 | ---------------- | ------------------------------- |
-| Quasar           | 파이버 기반의 Continuation 지원 |
-| ZeroMQ           | 서버의 IPC                      |
-| Netty            | 서버-클라이언트 통신            |
-| Protocol Buffers | 서버-클라이언트 메시지 직렬화   |
+| Quasar           | Supports Fiber-based Continuation |
+| ZeroMQ           | Server's IPC                      |
+| Netty            | Communication between server and client            |
+| Protocol Buffers | Parallelization of messages between server and client   |
