@@ -5,7 +5,7 @@
 
 It is the menu that is used to register the machines on which GameAnvil processes would be run and manage the registered machines. 
 
-GameAnvil Agent must be installed before registering machines. [ [GameAnvil-Agent Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.tar) ] 
+GameAnvil Agent must be installed before registering machines. [ [GameAnvil-Agent Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.1.tar) ] 
 
 ![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main_en.png)
 

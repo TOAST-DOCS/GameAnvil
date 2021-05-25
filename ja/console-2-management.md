@@ -5,7 +5,7 @@
 
 GameAnvilプロセスが実行される機器を登録し、登録されたマシンを管理するメニューです。 
 
-マシン登録前に、該当のマシンにGameAnvil Agentをインストールする必要があります。[ [GameAnvil-Agent Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.tar) ] 
+マシン登録前に、該当のマシンにGameAnvil Agentをインストールする必要があります。[ [GameAnvil-Agent Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.1.tar) ] 
 
 ![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main_ja.png)
 
