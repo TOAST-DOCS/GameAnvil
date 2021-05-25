@@ -2,9 +2,21 @@
 
 ConsoleからGameAnvilサーバーを実行/停止/配布するためのAgentをインストールする必要があります。
 
+AgentとGameAnvilで製作されたゲームサーバーはJavaプログラムのため、事前にJDKをインストールする必要があります。
+
+GameAnvilはJDK 8とJDK 11をサポートします。サーバーを使用するすべての機器に、任意のJDKバージョンをインストールする必要があります。
+
+```
+yum -y install java-1.8.0-openjdk-devel.x86_64
+```
+または
+```
+yum -y in
+```
+
 ### Agentのダウンロードおよび実行
 
-* [Agentダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.tar)
+* [Agentダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.1.tar)
 
 * ダウンロードしたtarファイルを解凍すると、次のファイルを確認できます。
 
@@ -25,7 +37,7 @@ ConsoleからGameAnvilサーバーを実行/停止/配布するためのAgentを
 
     | 設定名  | 説明              | 例                      | 備考                                                        |
     | -------------- | --------------------- | ----------------------------- | ------------------------------------------------------------ |
-    | server.address | Agentが使用するip   | server.address=10.160.194.108 | この設定値が空白の場合、マシンに割り当てられたすべてのIPで接続できるため、使用するIPを必ず指定します。 |
+    | server.address | Agentが使用するIP   | server.address=10.160.194.108 | IPを設定していない場合、マシンに割り当てられたすべてのIPで接続できるため、使用するIPを指定することを推奨します。 |
     | server.port    | Agentが使用するport | server.port=19080             | consoleで設定されたGameAnvil Agent Portと値が同じでなければいけません。(デフォルト値：19080) |
 
     
