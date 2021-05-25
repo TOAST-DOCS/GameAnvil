@@ -5,9 +5,9 @@
 
 GameAnvilプロセスが実行される機器を登録し、登録されたマシンを管理するメニューです。 
 
-マシン登録前に、該当のマシンにGameAnvil Agentをインストールする必要があります。[ [GameAnvil Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.3.tar) ] 
+マシン登録前に、該当のマシンにGameAnvil Agentをインストールする必要があります。[ [GameAnvil-Agent Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.tar) ] 
 
-![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main.png)
+![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main_ja.png)
 
 ### マシン登録
 
@@ -15,7 +15,7 @@ GameAnvilプロセスが実行される機器を登録します。
 
 GameAnvilサービスを有効化した後、まず最初にマシン登録作業を行う必要があります。
 
-![management_machine_register.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_register.png)
+![management_machine_register.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_register_ja.png)
 * 入力タイプ：コンソールウィンドウに直接マシン情報を入力して登録できます。.csv形式ファイルをアップロードして、複数のマシンを登録できます。
 * ホスト名：登録する機器のホスト名を入力します。
 * IPアドレス：登録する機器のPublic IPアドレスを入力します。このアドレスでコンソールと通信するため、正確に入力する必要があります。
@@ -25,7 +25,7 @@ GameAnvilサービスを有効化した後、まず最初にマシン登録作�
 
 ### マシンリスト
 登録されたマシンリストを確認できます。ホスト名、IPアドレス、説明検索機能を提供します。 
-![management_machine_list.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_list.png)
+![management_machine_list.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_list_ja.png)
 
 ### マシン設定 
 
@@ -33,7 +33,7 @@ GameAnvilサービスを有効化した後、まず最初にマシン登録作�
 
 登録したマシンの中から1つのマスターマシンと1つ以上のロケーション管理マシンを選択します。 
 
-![management_machine_setup.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup.png)
+![management_machine_setup.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_ja.png)
 * マスターマシン： Management Nodeが実行されるマシンを選択します。マスターマシンが登録されている時のみインスタンス / ノードの制御が可能です。 
 * ロケーション管理マシン： Location Nodeが実行されるマシンを選択します。
 * Javaバージョン： GameAnvilサーバービルドに使用されているJavaのバージョンを選択します。 
@@ -49,9 +49,9 @@ Management NodeとLocation Nodeは、GameAnvilを構成する必須ノードで�
 
 登録されたすべてのインスタンスの状態が動作中ではない場合にのみ、マシン設定の初期化を行えます。
 
-![management_machine_init.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_init.png)
+![management_machine_init.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_init_ja.png)
 
-![management_machine_setup_none.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_none.png)
+![management_machine_setup_none.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_none_ja.png)
 
 
 
@@ -67,19 +67,19 @@ Management NodeとLocation Nodeは、GameAnvilを構成する必須ノードで�
 
 インスタンスの基本的な情報と構成されたノード情報が表示されます。
 
-![ManagementInstance-0](https://static.toastoven.net/prod_gameanvil/images/management_instance_0.png)
+![ManagementInstance-0](https://static.toastoven.net/prod_gameanvil/images/management_instance_list_ja.png)
 
 ノードタイプごとにフィルタ機能とインスタンス名、ホスト名検索機能を提供します。
 
 フィルタと検索ワードはAND条件で動作します。
 
-![ManagementInstance-1](https://static.toastoven.net/prod_gameanvil/images/management_instance_1.png)
+![ManagementInstance-1](https://static.toastoven.net/prod_gameanvil/images/management_instance_filter_ja.png)
 
 インスタンスに構成されたノードの詳細設定は**確認**ボタンを押して確認できます。
 
 上部にあるタブからノードごとに確認できます。
 
-![ManagementInstance-2](https://static.toastoven.net/prod_gameanvil/images/management_instance_2.png)
+![ManagementInstance-2](https://static.toastoven.net/prod_gameanvil/images/management_instance_config_popup_ja.png)
 
 ### 登録
 
@@ -95,7 +95,7 @@ Management NodeとLocation Nodeは、GameAnvilを構成する必須ノードで�
 
 **サーバービルドアップロードパス**と**マシン**の場合、一度登録した後は修正できない点に注意する必要があります。
 
-![ManagementInstance-3](https://static.toastoven.net/prod_gameanvil/images/management_instance_3.png)
+![ManagementInstance-3](https://static.toastoven.net/prod_gameanvil/images/management_instance_3_ja_old.png)
 
 インスタンスの基本情報(インスタンス名、サーバービルドアップロードパス)を入力すると、インスタンスを配布するマシンを選択できます。
 
@@ -103,7 +103,7 @@ Management NodeとLocation Nodeは、GameAnvilを構成する必須ノードで�
 
 同じ構成のインスタンスを複数のマシンを選択して登録できます。
 
-![ManagementInstance-12](https://static.toastoven.net/prod_gameanvil/images/management_instance_12.png)
+![ManagementInstance-12](https://static.toastoven.net/prod_gameanvil/images/management_instance_12_ja_old.png)
 
 基本情報に続き、各ノードの設定を行います。
 
@@ -111,11 +111,11 @@ Management NodeとLocation Nodeは、GameAnvilを構成する必須ノードで�
 
 ノードの設定はテンプレートからのみ行うことができます。
 
-![ManagementInstance-4](https://static.toastoven.net/prod_gameanvil/images/management_instance_4.png)
+![ManagementInstance-4](https://static.toastoven.net/prod_gameanvil/images/management_instance_4_ja_old.png)
 
 先に登録されたテンプレートを選択するか、設定選択項目から**設定テンプレート追加**を行って新しいテンプレートを追加して指定できます。
 
-![ManagementInstance-14](https://static.toastoven.net/prod_gameanvil/images/management_instance_14.png)
+![ManagementInstance-14](https://static.toastoven.net/prod_gameanvil/images/management_instance_14_ja_old.png)
 
 ノード設定を行ったら、**COMMON、GATEWAY、SUPPORT**のPort情報を入力する必要があります。
 
@@ -123,31 +123,31 @@ Management NodeとLocation Nodeは、GameAnvilを構成する必須ノードで�
 
 Portは**18000～20000**の間の値が使用され、同じマシン内で重複しないようにする必要があります。
 
-![ManagementInstance-5](http://static.toastoven.net/prod_gameanvil/images/management_instance_5.png)
+![ManagementInstance-5](http://static.toastoven.net/prod_gameanvil/images/management_instance_5_ja_old.png)
 
 **GATEWAY**ノードが設定された画面です。
 
 **TCP/WEB SOCKET**の使用状況に応じてPortの入力が動的に構成されます。
 
-![ManagementInstance-6](https://static.toastoven.net/prod_gameanvil/images/management_instance_6.png)
+![ManagementInstance-6](https://static.toastoven.net/prod_gameanvil/images/management_instance_6_ja_old.png)
 
 **SUPPORT**ノードが設定された画面です。
 
 設定された**サービス数**に応じてPortの入力が動的に構成されます。
 
-![ManagementInstance-7](https://static.toastoven.net/prod_gameanvil/images/management_instance_7.png)
+![ManagementInstance-7](https://static.toastoven.net/prod_gameanvil/images/management_instance_7_ja_old.png)
 
 **GATEWAY、SUPPORT**設定に応じて構成されたPort入力領域です。
 
 構成されたPort入力を終えた後、**重複確認**を行い、先に登録されたインスタンスとのPort重複チェックを行う必要があります。
 
-![ManagementInstance-8](https://static.toastoven.net/prod_gameanvil/images/management_instance_8.png)
+![ManagementInstance-8](https://static.toastoven.net/prod_gameanvil/images/management_instance_8_ja_old.png)
 
 重複したPortが入力されている場合、**重複確認**を行うと、案内ポップアップで重複したPort情報を確認できます。
 
 この情報を元にPortを再入力した後、重複していない入力値が全て入力されるまで**重複確認**プロセスを繰り返す必要があります。
 
-![ManagementInstance-9](https://static.toastoven.net/prod_gameanvil/images/management_instance_9.png)
+![ManagementInstance-9](https://static.toastoven.net/prod_gameanvil/images/management_instance_9_ja_old.png)
 
 Port重複確認が正常に完了したら、インスタンス登録画面内のすべての入力フィールドが**無効**状態になり、最終的に登録ができる状態になります。
 
@@ -155,15 +155,15 @@ Port重複確認が正常に完了したら、インスタンス登録画面内�
 
 **有効**状態になったら、再び**重複確認**プロセスを踏むと登録可能な状態になります。
 
-![ManagementInstance-11](https://static.toastoven.net/prod_gameanvil/images/management_instance_11.png)
+![ManagementInstance-11](https://static.toastoven.net/prod_gameanvil/images/management_instance_11_ja_old.png)
 
-![ManagementInstance-10](https://static.toastoven.net/prod_gameanvil/images/management_instance_10.png)
+![ManagementInstance-10](https://static.toastoven.net/prod_gameanvil/images/management_instance_10_ja_old.png)
 
 上で説明した登録方法の他にもインスタンスを登録できる別の方法があります。
 
 **設定インポート**機能です。
 
-![ManagementInstance-13](https://static.toastoven.net/prod_gameanvil/images/management_instance_13.png)
+![ManagementInstance-13](https://static.toastoven.net/prod_gameanvil/images/management_instance_13_ja_old.png)
 
 **設定インポート**は、既に登録されているインスタンスの設定をそのままコピーする機能です。
 
@@ -181,9 +181,9 @@ Port重複確認が正常に完了したら、インスタンス登録画面内�
 
 **インスタンスモニタリング**でインスタンスの現在の状態を確認、変更できます。
 
-![ManagementInstance-15](https://static.toastoven.net/prod_gameanvil/images/management_instance_15.png)
+![ManagementInstance-15](https://static.toastoven.net/prod_gameanvil/images/management_instance_15_ja_old.png)
 
-![ManagementInstance-16](https://static.toastoven.net/prod_gameanvil/images/management_instance_16.png)
+![ManagementInstance-16](https://static.toastoven.net/prod_gameanvil/images/management_instance_16_ja_old.png)
 
 ## 設定
 
@@ -203,9 +203,9 @@ Port重複確認が正常に完了したら、インスタンス登録画面内�
 
 フィルタと検索ワードはAND条件で動作します。
 
-![ManagementTemplate-1](https://static.toastoven.net/prod_gameanvil/images/management_template_1.png)
+![ManagementTemplate-1](https://static.toastoven.net/prod_gameanvil/images/management_template_1_ja_old.png)
 
-![ManagementTemplate-2](https://static.toastoven.net/prod_gameanvil/images/management_template_2.png)
+![ManagementTemplate-2](https://static.toastoven.net/prod_gameanvil/images/management_template_2_ja_old.png)
 
 ### 登録
 
@@ -219,7 +219,7 @@ Port重複確認が正常に完了したら、インスタンス登録画面内�
 
 ゲーム特性に合わせてテンプレートを登録して活用してください。
 
-![ManagementTemplate-3](https://static.toastoven.net/prod_gameanvil/images/management_template_3.png)
+![ManagementTemplate-3](https://static.toastoven.net/prod_gameanvil/images/management_template_3_ja_old.png)
 
 テンプレートは各ノードタイプごとに区別され、入力項目ごとに基本値とMin、Max値制限が適用された項目があります。
 
@@ -227,7 +227,7 @@ Port重複確認が正常に完了したら、インスタンス登録画面内�
 
 Min、Max範囲を超える設定値が入力された場合、該当のフィールドがフォーカスアウトした時、フィールドに設定されたMin、Max値に自動変更されます。
 
-![ManagementTemplate-4](https://static.toastoven.net/prod_gameanvil/images/management_template_4.png)
+![ManagementTemplate-4](https://static.toastoven.net/prod_gameanvil/images/management_template_4_ja_old.png)
 
 
 ### 修正および削除
@@ -238,13 +238,13 @@ Min、Max範囲を超える設定値が入力された場合、該当のフィ�
 
 テンプレートを使用中のインスタンスは、**設定リスト**からポップアップで確認できます。まt**インスタンスモニタリング**からインスタンスの現在の状態を確認、変更できます。
 
-![ManagementTemplate-5](https://static.toastoven.net/prod_gameanvil/images/management_template_5.png)
+![ManagementTemplate-5](https://static.toastoven.net/prod_gameanvil/images/management_template_5_ja_old.png)
 
 そしてインスタンスに適用されたテンプレートは、インスタンスの状態と関係なく削除ができません。
 
 該当インスタンスでテンプレートを変更するか、インスタンスを削除した後、テンプレートを削除できます。
 
-![ManagementTemplate-6](https://static.toastoven.net/prod_gameanvil/images/management_template_6.png)
+![ManagementTemplate-6](https://static.toastoven.net/prod_gameanvil/images/management_template_6_ja_old.png)
 
 
 
@@ -252,7 +252,7 @@ Min、Max範囲を超える設定値が入力された場合、該当のフィ�
 
 GameAnvilインスタンスに配布されるプロセスファイルを管理するメニューです。
 
-![management_deployfile.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile.png)
+![ManagementDeployFile-1](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_ja.png)
 
 ### ファイルのアップロード
 
@@ -262,7 +262,7 @@ GameAnvilインスタンスに配布されるプロセスファイルを管理�
 
 アップロードボタンを押すと、ファイルのアップロードが実行され、インスタンスモニタリングメニューで**配布する**機能を実行すると配布が完了します。
 
-![management_deployfile_upload.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload.png)
+![ManagementDeployFile-2](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_upload_ja.png)
 
 ### 配布履歴
 
@@ -271,4 +271,4 @@ GameAnvilインスタンスに配布されるプロセスファイルを管理�
 配布が行われたインスタンス、マシン、配布日時などの情報を確認できます。 
 
 
-![management_deployfile_history.png](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history.png)
+![ManagementDeployFile-3](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history_ja.png)

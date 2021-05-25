@@ -4,7 +4,7 @@
 
 管理ページで登録したマシンとインスタンス、各ノードの状態を確認できます。
 
-![monitoring_dashboard_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_main.png)
+![monitoring_dashboard_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_main_ja.png)
 
 - マシン
     - 管理ページに登録した全体マシン数と、マシンにインストールしたAgentと正常に接続された全体マシン数を表します。
@@ -47,7 +47,7 @@
 
 GAMEノードに接続したユーザーの数をグラフでひと目で確認できます。
 
-![monitoring_dashboard_graph](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_graph.png)
+![monitoring_dashboard_graph](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_graph_ja.png)
 
 - グラフは1分毎に自動更新され、今日と昨日、そして先週のグラフを確認できます。
 - 昨日または先週のデータがない場合、グラフは表示されません。
@@ -59,7 +59,7 @@ GAMEノードに接続したユーザーの数をグラフでひと目で確認�
 
 GAMEノードの接続した同時接続者、分布平均、そしてマシン、インスタンス、ノードの数を確認できます。
 
-![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main.png)
+![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main_ja.png)
 
 - 同時接続者
     - 動作中(READY)のGAMEノードで集計された同時接続者数を意味します。
@@ -105,7 +105,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 システムモニタリングでは、マシンとインスタンスの状態と簡略な情報を簡単に確認できます。
 
-![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main.png)
+![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main_ja.png)
 
 ### ツリービュー
 
@@ -113,7 +113,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 ツリーの構造は、次のように構成されています。
 
-![monitoring_system_tree](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_tree.png)
+![monitoring_system_tree](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_tree_ja.png)
 
 マシンとそれぞれのマシンに属すインスタンスが表示されます。
 ホスト名またはインスタンス名を選択すると、それぞれのマシンまたはインスタンス詳細ページが表示されます。
@@ -124,7 +124,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 選択したマシンと、属すインスタンスの情報を表示します。
 
-![monitoring_system_machine](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_machine.png)
+![monitoring_system_machine](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_machine_ja.png)
 
 - マシンとインスタンスの情報
 
@@ -149,7 +149,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 選択したインスタンスに詳細な情報を表示します。
 
-![monitoring_system_instance](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_instance.png)
+![monitoring_system_instance](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_instance_ja.png)
 
 - インスタンスの情報
     - インスタンス名
@@ -178,7 +178,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 管理ページでインスタンスの情報を確認し、設定された各ノードを開始/中止/配布できます。
 
-![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main.png)
+![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main_ja.png)
 
 1. 検索
     - ホスト名やインスタンス名で特定のインスタンスを検索できます。
@@ -186,11 +186,11 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 2. フィルタ
     - インスタンスおよび配布状態とインスタンス設定タイプに応じて特定のインスタンスをフィルタできます。
 
-    ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter.png)
+    ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter_ja.png)
 
 ### インスタンステーブル
 
-![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table.png)
+![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table_ja.png)
 
 #### アクション<span style='color: #EB4927'>①</span>
 
@@ -205,7 +205,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 管理 > 配布ファイルページと同じように配布ファイルをアップロードできます。
 
-![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload.png)
+![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload_ja.png)
 
 
 #### テーブル
@@ -240,7 +240,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 動作中(READY)のすべてのノードをモニタリングできます。
 
-![monitoring_node_all](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all.png)
+![monitoring_node_all](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_ja.png)
 
 - ノードID
 - サービスID
@@ -259,7 +259,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 #### フィルタ
 
-![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter.png)
+![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter_ja.png)
 
 動作中の全てのノードに次のフィルタを適用して特定のノードをフィルタできます。
 - ノードタイプ
@@ -270,7 +270,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 動作中(READY)のGATEWAYノードをモニタリングできます。
 
-![monitoring_node_gateway](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway.png)
+![monitoring_node_gateway](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_ja.png)
 
 - ノードID
 - ノードタイプ
@@ -287,7 +287,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 #### フィルタ
 
-![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter.png)
+![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter_ja.png)
 
 動作中のGATEWAYノードに次のフィルタを適用して特定のノードをフィルタできます。
 - ノードの状態
@@ -296,7 +296,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 動作中(READY)のGAMEノードをモニタリングできます。
 
-![monitoring_node_game](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game.png)
+![monitoring_node_game](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_ja.png)
 
 - ノードID
 - ノードタイプ
@@ -317,7 +317,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 #### フィルタ
 
-![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter.png)
+![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter_ja.png)
 
 動作中のGAMEノードに次のフィルタを適用して特定のノードをフィルタできます。
 - ノードの状態
@@ -327,7 +327,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 動作中(READY)のSUPPORTノードをモニタリングできます。
 
-![monitoring_node_support](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support.png)
+![monitoring_node_support](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_ja.png)
 
 - ノードID
 - ノードタイプ
@@ -344,7 +344,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 #### フィルタ
 
-![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter.png)
+![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter_ja.png)
 
 動作中のSUPPORTノードに次のフィルタを適用して特定のノードをフィルタできます。
 - ノードの状態
@@ -354,7 +354,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 動作中(READY)のMATCHノードをモニタリングできます。
 
-![monitoring_node_match](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match.png)
+![monitoring_node_match](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_ja.png)
 
 - ノードID
 - ノードタイプ
@@ -366,7 +366,7 @@ GAMEノードの接続した同時接続者、分布平均、そしてマシン�
 
 #### フィルタ
 
-![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter.png)
+![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter_ja.png)
 
 動作中のMATCHノードに次のフィルタを適用して特定のノードをフィルタできます。
 - ノードの状態

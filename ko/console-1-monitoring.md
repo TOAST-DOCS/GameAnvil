@@ -4,7 +4,7 @@
 
 관리 페이지에서 등록한 머신과 인스턴스, 각각의 노드들에 대한 상태를 확인할 수 있습니다.
 
-![monitoring_dashboard_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_main.png)
+![monitoring_dashboard_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_main_ko.png)
 
 - 머신
     - 관리 페이지에 등록한 전체 머신 수와 머신에 설치한 Agent와 정상적으로 연결된 전체 머신 수를 나타냅니다. 
@@ -47,7 +47,7 @@
 
 GAME 노드에 접속한 사용자의 수를 그래프를 통하여 한 눈에 확인할 수 있습니다.
 
-![monitoring_dashboard_graph](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_graph.png)
+![monitoring_dashboard_graph](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_graph_ko.png)
 
 - 그래프는 1분마다 자동 갱신되며, 오늘과 어제 그리고 지난 주의 그래프를 확인할 수 있습니다.
 - 어제 또는 지난 주 데이터가 없으면 그래프는 표시되지 않습니다.
@@ -59,7 +59,7 @@ GAME 노드에 접속한 사용자의 수를 그래프를 통하여 한 눈에 �
 
 GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스턴스, 노드의 수를 확인할 수 있습니다.
 
-![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main.png)
+![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main_ko.png)
 
 - 동시접속자
     - 동작 중(READY)인 GAME 노드에서 집계된 동시접속자 수를 의미합니다.
@@ -105,7 +105,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 시스템 모니터링에서는 머신과 인스턴스들의 상태와 간략한 정보들을 쉽게 확인할 수가 있습니다.
 
-![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main.png)
+![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main_ko.png)
 
 ### 트리뷰
 
@@ -113,7 +113,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 트리의 구조는 아래와 같이 구성되어 있습니다.
 
-![monitoring_system_tree](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_tree.png)
+![monitoring_system_tree](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_tree_ko.png)
 
 머신과 각각의 머신에 속하는 인스턴스들이 표시됩니다.
 호스트 이름 또는 인스턴스 이름를 선택하면 각각의 머신 또는 인스턴스 상세 페이지가 보여집니다.
@@ -124,7 +124,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 선택한 머신과 속하는 인스턴스들의 정보를 나타냅니다.
 
-![monitoring_system_machine](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_machine.png)
+![monitoring_system_machine](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_machine_ko.png)
 
 - 머신과 인스턴스에 대한 정보
 
@@ -149,7 +149,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 선택한 인스턴스에 상세한 정보를 표시합니다.
 
-![monitoring_system_instance](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_instance.png)
+![monitoring_system_instance](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_instance_ko.png)
 
 - 인스턴스에 대한 정보
     - 인스턴스 이름
@@ -178,7 +178,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 관리 페이지에서 인스턴스의 정보를 확인하고 설정된 각 노드를 시작/중지/배포 할 수 있습니다.
 
-![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main.png)
+![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main_ko.png)
 
 1. 검색
     - 호스트 이름이나 인스턴스 이름으로 특정 인스턴스를 찾을 수 있습니다.
@@ -186,11 +186,11 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 2. 필터
     - 인스턴스 및 배포 상태와 인스턴스 설정 타입에 따라서 특정 인스턴스를 필터할 수 있습니다.
 
-    ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter.png)
+    ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter_ko.png)
 
 ### 인스턴스 테이블
 
-![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table.png)
+![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table_ko.png)
 
 #### 액션<span style='color: #EB4927'>①</span>
 
@@ -205,7 +205,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 관리 > 배포파일 페이지와 동일하게 배포파일을 업로드 할 수 있습니다.
 
-![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload.png)
+![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload_ko.png)
 
 
 #### 테이블
@@ -240,7 +240,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 동작 중(READY)인 모든 노드들에 대해서 모니터링 할 수 있습니다.
 
-![monitoring_node_all](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all.png)
+![monitoring_node_all](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_ko.png)
 
 - 노드 ID
 - 서비스 ID
@@ -259,7 +259,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 #### 필터
 
-![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter.png)
+![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter_ko.png)
 
 동작 중인 전체 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
 - 노드 타입
@@ -270,7 +270,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 동작 중(READY)인 GATEWAY 노드들에 대해서 모니터링 할 수 있습니다.
 
-![monitoring_node_gateway](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway.png)
+![monitoring_node_gateway](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_ko.png)
 
 - 노드 ID
 - 노드 타입
@@ -287,7 +287,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 #### 필터
 
-![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter.png)
+![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter_ko.png)
 
 동작 중인 GATEWAY 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
 - 노드 상태
@@ -296,7 +296,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 동작 중(READY)인 GAME 노드들에 대해서 모니터링 할 수 있습니다.
 
-![monitoring_node_game](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game.png)
+![monitoring_node_game](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_ko.png)
 
 - 노드 ID
 - 노드 타입
@@ -317,7 +317,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 #### 필터
 
-![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter.png)
+![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter_ko.png)
 
 동작 중인 GAME 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
 - 노드 상태
@@ -327,7 +327,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 동작 중(READY)인 SUPPORT 노드들에 대해서 모니터링 할 수 있습니다.
 
-![monitoring_node_support](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support.png)
+![monitoring_node_support](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_ko.png)
 
 - 노드 ID
 - 노드 타입
@@ -344,7 +344,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 #### 필터
 
-![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter.png)
+![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter_ko.png)
 
 동작 중인 SUPPORT 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
 - 노드 상태
@@ -354,7 +354,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 동작 중(READY)인 MATCH 노드들에 대해서 모니터링 할 수 있습니다.
 
-![monitoring_node_match](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match.png)
+![monitoring_node_match](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_ko.png)
 
 - 노드 ID
 - 노드 타입
@@ -366,7 +366,7 @@ GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스
 
 #### 필터
 
-![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter.png)
+![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter_ko.png)
 
 동작 중인 MATCH 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
 - 노드 상태

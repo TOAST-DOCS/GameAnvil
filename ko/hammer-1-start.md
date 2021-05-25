@@ -36,7 +36,7 @@ GameHammer는 다음과 같은 기능을 지원합니다.
 
 | 서버                                                         | 테스트 코드                                                  | 설명                                             |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------ |
-| [RPS](https://github.nhnent.com/game-server-engine/GameAnvil-rps) | [RPS-test](https://github.nhnent.com/game-server-engine/GameHammer-rps-test) | 실제 게임 서버와 GameHammer를 사용한 테스트 코드 |
+| [sample-game-server](https://github.com/nhn/gameanvil.sample-game-server.git) | [sample-game-test](https://github.com/nhn/gameanvil.sample-game-test.git) | 실제 게임 서버와 GameHammer를 사용한 테스트 코드 |
 
 ## 프로젝트에 GameHamer 추가하기
 

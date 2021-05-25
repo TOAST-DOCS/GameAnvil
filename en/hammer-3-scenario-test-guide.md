@@ -1,23 +1,23 @@
-## Game > GameAnvil > 테스트 개발 가이드 > 시나리오 테스트 개발 가이드
+## Game > GameAnvil > Test Development Guide > Scenario Test Development Guide
 
-## 대규모 부하 테스트와 이를 위한 시나리오 작성
+## Large scale load test and write the scenario for it
 
-GameHammer는 대규모 부하테스트를 위해 대량의 커넥션을 동시에 처리할 수 있는 기능을 제공합니다. 그리고 복잡한 테스트를 좀 더 편하게 관리할 수 있도록 상태 기반의 시나리오 테스트를 지원합니다. 
+GameHammer provides a feature that can be used to simultaneously process a large number of connections for a large scale load test. It also provides scenario tests based on status for more convenient testing. 
 
-### 시나리오 테스트 작성 예제
+### An example of scenario test
 
-다음과 같은 간단한 시나리오 테스트를 작성해 봅시다.
+Let's make a simple scenario test.
 
 ![img](http://static.toastoven.net/prod_gameanvil/images/scenario_1.png)
 
-우선 각 시나리오를 수행할 주체가 될 ScenarioActor를 정의합니다.
+First, define ScenarioActor, which is the main agent of each scenario.
 
 ```
 public static class TestActor extends ScenarioActor<TestActor> {
 }
 ```
 
-각 상태별로 State를 상속받은 클래스를 정의합니다.  
+Define the class that inherits the State for each status.  
 
 ```
 public class StateA extends State<TestActor> {
@@ -66,7 +66,7 @@ public class StateC extends State<TestActor> {
 }
 ```
 
-상태를 관리할 ScenarioMachine을 생성합니다. 그리고 앞서 정의한 StateA, StateB, StateC 객체를 생성해 ScenarioMachine에 추가합니다. 
+Create ScenarioMachine to be used to manage status. And create the StateA, StateB, and StateC objects that are defined earlier and add them to ScenarioMachine. 
 
 ```
 ScenarioMachine<TestActor> scenario = new ScenarioMachine<>("Sample A");
@@ -75,7 +75,7 @@ scenario.addState(new StateB());
 scenario.addState(new StateC());
 ```
 
-이제 시나리오 테스트를 실행합니다.
+Now, run the scenario test.
 
 ```
 Tester tester = Tester.newBuilder()
@@ -90,7 +90,7 @@ scenarioTest.start(tester,
                   );
 ```
 
-실행 결과는 Random을 사용하기 때문에 매번 다르겠지만 대략 아래와 비슷합니다.
+The run results may vary as they use Random, they are similar to the below:
 
 ```
 ScenarioActor 0 - onScenarioTestStart StateA
@@ -107,13 +107,13 @@ ScenarioActor 1 - onEnter StateC
 ScenarioActor 1 - onExit StateC
 ```
 
-## 시나리오 테스트 기본 개념
+## Basic Concepts of Scenario Test
 
-시나리오 테스트는 대규모 부하 테스트를 지원하기 위한 개념으로, 시나리오 테스트를 실행할 때 동시에 실행할 ScenarioActor 수, 시작 상태, 최대 실행 시간을 지정해서 실행합니다. 
+Scenario test is a concept used to support large load tests. It specifies the number of ScenarioActors to be concurrently run, starting status, maximum run time and run them. 
 
 ### ScenarioActor
 
-동시에 실행되는 각각의 주체가  ScenarioActor입니다. 동시에 실행할 개수를 100으로 지정할 경우 100개의 ScenarioActor 객체가 생성되어 각각 시나리오를 수행하게 됩니다. ScenarioActor는 하나의 Connection을 가지고 있어 이를 이용해 GameAnvil 서버의 기능을 실행할 수 있습니다. ScenarioActor를 상속 구현하면서 시나리오 수행에 필요한 기능이나 설정 등을 추가하여 이용할 수 있습니다. `changeState()`를 이용해 현재 상태를 다른 상태로 변경할 수 있고, `finish()`를 이용해 시나리오를 종료할 수 있습니다. 
+The concurrently run agents are ScenarioActors. If the number of concurrent runs is set to 100, 100 ScenarioActor objects are created and they run each scenario. Because ScenarioActor has one Connection, it can be used to run the features of the GameAnvil server. While inheriting and implementing ScenarioActor, the features and settings that are needed to run scenarios can be added and used. The current status can be changed using `changeState()` and the scenario can be closed using `finish()`.
 
 ```
 public static class TestActor extends ScenarioActor<TestActor> {
@@ -128,7 +128,7 @@ public static class TestActor extends ScenarioActor<TestActor> {
 
 #### ChangeState
 
-ScenarioActor를 현재 상태를 다른 상태로 변경합니다. 주의 할점은 `ChangeState()`가 호출된 시점에 바로후 상태가 변경되는것이 아니라는 점 입니다. 실제 상태가 변경되는 시점은 다음 메시지 루프의 시작시점이며, 이때 현재 상태를 구현한 State 객체의 `onExit()`와 다음 상태를 구현한 State 객체의 `onEnter()`가 순차적으로 호출됩니다.
+Change the current status of ScenarioActor to another. Note that the status of `ChangeState()` is not immediately changed when it is called. The time of actual status change is when the next message loop starts. At that time, the `onExit()` of the State object that implements the current status and the `onEnter()` of the State object that implements the next status are called one after another.
 
 ```
 scenarioActor.changeState(NextState.class);
@@ -136,7 +136,7 @@ scenarioActor.changeState(NextState.class);
 
 #### Finish
 
-ScenarioActor가 수행 중인 시나리오를 종료합니다. `ChangeState()` 와 마찬가지로 `Finish()`가 호출된 후 다음 메시지 루프의 시작 시점에 실행되며, 이때 현제 상태를 구현한 State 객체의 `onExit()`가 호출됩니다. 그리고 ScenarioActor가 수행된 횟수가 ScenarioLoopCount보다 적은 경우 시나리오를 다시 수행하여 ScenarioLoopCount만큼 수행할 때 까지 반복합니다. ScenarioLoopCount <= 0일 경우 지정된 TestTime(기본값: 30초) 동안 계속 반복합니다. boolean값을 인자로 받아 시나리오가 성공으로 종료되었는지, 실패로 종료되었는지 구분하여 통계를 기록합니다.
+ScenarioActor ends the running scenario. Similar to `ChangeState()`, it is run when the next message loop starts after `Finish()` is called. At that time, the `onExit()` of the State object that implements the current status is called. If the number of ScenarioActor runs is less than the number of ScenarioLoopCount, the scenario is run again until the number matches to the number of ScenarioLoopCounts. If ScenarioLoopCount<=0, it is repeated for the specified TestTime (default: 30 seconds). It receives boolean value to determine whether the scenario is successfully ended or erroneously ended and records the result as statistics.
 
 ```
 scenarioActor.finish(true);
@@ -144,13 +144,13 @@ scenarioActor.finish(true);
 
 #### Connection
 
-ScenarioActor는 하나의 Connection를 가지고 있어 이를 이용해 GameAnvil 서버의 기능을 실행할 수 있습니다. 
+As ScenarioActor has one Connection, it can be used to run the features of the GameAnvil server. 
 
 ```
 Connection connection = scenarioActor.getConnection();
 ```
 
-시나리오 테스트에서는 기능 테스트에서처럼 Future를 이용해 테스트 코드를 작성할 경우, `Future.get()`에서 블록이 되기 때문에 여러개의 테스트를 동시에 수행할 수 없습니다. 대신 콜백 방식의 API를 사용하여 동시에 수행하도록 할 수 있습니다. 기능 테스트에서 소개한 모든 API에는 대응하는 콜백 방식의 API가 제공되므로 시나리오 테스트에서는 이 콜백 방식 API를 사용하면 됩니다.
+When the user writes test code using Future, like the functionality test, in a scenario test, it is blocked from `Future.get()`. For this reason, multiple tests cannot be run at the same time. Instead, run multiple tests using the API with the callback method. In functionality test, APIs with callback method for all the APIs introduced by functionality test are provided. In a scenario test, use APIs using this method.
 
 ```
 Connection connection = scenarioActor.getConnection();
@@ -167,7 +167,7 @@ connection.connect(new RemoteInfo("127.0.0.1", 11200), resultConnect -> {
 
 ### State
 
-State를 상속 구현하여 각 상태를 나타내는 State를 정의합니다. 
+Inherit and implement State to define the State presenting each status. 
 
 ```
 public class StateA extends State<TestActor> {
@@ -186,11 +186,11 @@ public class StateA extends State<TestActor> {
 }
 ```
 
-ScenarioActor가 각 상태로 변경할 때 마다 각 상태를 나타내는 State의 `onEnert()`가 호출되며 그 상태로 변경된 ScenarioActor가 인자로 넘어옵니다. 각 상태에서 빠져나갈때는`onExit()`가 호출되며 그 상태에서 빠져나간 ScenarioActor가 인자로 넘어옵니다.  
+Whenever the status of ScenarioActor changes, the `onEnert()` of the State that represents each state and the ScenarioActor changed to the corresponding status is passed. `onExit()` is called when leaving from each status and the left ScenarioActor is passed as a factor.
 
 ##### ScenarioMachine
 
-ScenarioMachine으로 하나의 시나리오를 정의하며, 하나의 시나리오는 여러 개의 상태로 정의됩니다. 
+A single scenario is defined by ScenarioMachine and a single scenario can be defined to several states. 
 
 ```
 ScenarioMachine<STATE, EVENT> scenario = new ScenarioMachine("Sample A");
@@ -201,7 +201,7 @@ scenario.setState(new StateC(scenario, STATE.C));
 
 ##### ScenarioTest
 
-먼저 Tester를 생성합니다. 이때 동시에 실행할 ScenarioActor의 수, 반복할 횟수, 테스트 시간 등을 옵션으로 지정할 수 있습니다.  그리고 ScenarioMachine을 인자로 받아 ScenarioTest를 생성합니다. 이제 앞서 생성한 Tester, ScenarioActo의 Class, 시작 상태를 나타내는 State의 Class를 넘겨 실행합니다. 테스트는 모든 ScenarioActor가 지정된 횟수만큼 반복하거나 지정한 테스트 시간이 될 때까지 수행됩니다. 
+First, create Tester. At this time, the user can specify the number of ScenarioActors to be run, number of repeats, and test time as an option. And take ScenarioMachine as a factor and create ScenarioTest. Pass the State of the previously created Tester and ScenarioActor and run them. The test is repeated until ScenarioActor is repeated to the specified number or the specified test time is met.
 
 ```
 Tester tester = Tester.newBuilder()
@@ -216,7 +216,7 @@ scenarioTest.start(tester,
                   );
 ```
 
-테스트를 완료한 후 `printStatistics()`를 이용해 테스트 결과를 얻을 수 있습니다.
+Once the test is done, `printStatistics()` can be used to get the test result.
 
 ```
 logger.info(scenarioTest.printStatistics("Finished"));

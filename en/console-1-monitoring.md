@@ -1,372 +1,372 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 모니터링
+## Game > GameAnvil > Console User Guide > Monitoring
 
-## 대시보드 모니터링
+## Monitoring Dashboard
 
-관리 페이지에서 등록한 머신과 인스턴스, 각각의 노드들에 대한 상태를 확인할 수 있습니다.
+The machines and instances registered from the management page and the status of each node can be checked.
 
-![monitoring_dashboard_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_main.png)
+![monitoring_dashboard_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_main_en.png)
 
-- 머신
-    - 관리 페이지에 등록한 전체 머신 수와 머신에 설치한 Agent와 정상적으로 연결된 전체 머신 수를 나타냅니다. 
-        - 연결된 머신 수 / 전체 머신 수
-    - Agent와 연결에 문제가 있으면, 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[시스템 모니터링](./console-1-monitoring/#_5)' 페이지로 이동됩니다.
-- 인스턴스
-    - 관리 페이지에 등록한 전체 인스턴스 수와 동작(Running) 중인 인스턴스 수를 표시합니다.
-        - 동작 중인 인스턴스 수 / 모든 인스턴스 수
-    - 에러인 인스턴가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[인스턴스 모니터링](./console-1-monitoring/#_9)' 페이지로 이동됩니다.
-- 유저
-    - GAME 노드에 접속한 유저 수
-- 룸
-    - GAME 노드에 생성된 룸 수
-- 세션
-    - GATEWAY 노드에서 확인 된 세션 수
+- Machine
+    - Represents the total number of the machines registered to the management page and the total number of the machines that are normally connected to the Agent installed on machine.
+        - Connected machines/total machines
+    - If there is a problem with the connection to Agent, its status will become red.
+    - Redirects to the '[System monitoring ](https://github.com/TOAST-DOCS/GameAnvil/blob/alpha/en/console-1-monitoring/#_5)' page through the Monitor button.
+- Instance
+    - The total number of instances and (Running) instances registered to the management page.
+        - Active instances/total instances
+    - Its status becomes red if there is even one erroneous instance.
+    - Redirects to the '[Instance monitoring ](https://github.com/TOAST-DOCS/GameAnvil/blob/alpha/en/console-1-monitoring/#_9)' page through the Monitor button.
+- User
+    - Number of users connected to GAME node
+- Room
+    - Number of rooms created in GAME node
+- Session
+    - Number of sessions confirmed in GATEWAY node
 - GATEWAY
-    - 전체 GATEWAY 노드 수와 READY 상태인 GATEWAY 노드 수를 표시합니다. 
-        - READY 상태인 GATEWAY 노드 수 / 전체 GATEWAY 노드 수
-    - DISABLE 상태인 GATEWAY 노드가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[GATEWAY 노드 모니터링](./console-1-monitoring/#gateway)' 페이지로 이동됩니다.
+    - Displays the total number of GATEWAY nodes and the number of the GATEWAY nodes of which status is READY. 
+        - Number of READY GATEWAY nodes/total number of GATEWAY nodes
+    - Its status becomes red if there is even one GATEWAY node of which status is DISABLE.
+    - Redirects to the '[GATEWAY node monitoring ](https://github.com/TOAST-DOCS/GameAnvil/blob/alpha/en/console-1-monitoring/#gateway)' page through the Monitor button.
 - GAME
-    - 전체 GAME 노드 수와 READY 상태인 GAME 노드 수를 표시합니다. 
-        - READY 상태인 GAME 노드 수 / 전체 GAME 노드 수
-    - DISABLE 상태인 GAME 노드가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[GAME 노드 모니터링](./console-1-monitoring/#game)' 페이지로 이동됩니다.
+    - Displays the total number of GAME nodes and the number of the GAME nodes of which status is READY. 
+        - Number of READY GAME nodes/total number of GAME nodes
+    - Its status becomes red if there is even one GAME node of which status is DISABLE.
+    - Redirects to the '[GAME node monitoring ](https://github.com/TOAST-DOCS/GameAnvil/blob/alpha/en/console-1-monitoring/#game)' page through the Monitor button.
 - SUPPORT
-    - 전체 SUPPORT 노드 수와 READY 상태인 SUPPORT 노드 수를 표시합니다.
-        - READY 상태인 SUPPORT 노드 수 / 전체 SUPPORT 노드 수
-    - DISABLE 상태인 SUPPORT 노드가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[SUPPORT 노드 모니터링](./console-1-monitoring/#support)' 페이지로 이동됩니다.
+    - Displays the total number of SUPPORT nodes and the number of the SUPPORT nodes of which status is READY.
+        - Number of READY SUPPORT nodes/total number of SUPPORT nodes
+    - Its status becomes red if there is even one SUPPORT node of which status is DISABLE.
+    - Redirects to the '[SUPPORT node monitoring ](https://github.com/TOAST-DOCS/GameAnvil/blob/alpha/en/console-1-monitoring/#support)' page through the Monitor button.
 - MATCH
-    - 전체 MATCH 노드 수와 READY 상태인 MATCH 노드 수를 표시합니다.
-        - READY 상태인 MATCH 노드 수 / 전체 MATCH 노드 수
-    - DISABLE 상태인 MATCH 노드가 하나라도 있으면 빨간색 상태 표시가 됩니다.
-    - 모니터링 버튼을 통하여 '[MATCH 노드 모니터링](./console-1-monitoring/#match)' 페이지로 이동됩니다.
+    - Displays the total number of MATCH nodes and the number of the MATCH nodes of which status is READY.
+        - Number of READY MATCH nodes/total number of MATCH nodes
+    - Its status becomes red if there is even one MATCH node of which status is DISABLE.
+    - Redirects to the '[MATCH node monitoring ](https://github.com/TOAST-DOCS/GameAnvil/blob/alpha/en/console-1-monitoring/#match)' page through the Monitor button.
 
-### 동시 접속자 변화 그래프
+### Graph showing the change in concurrent users
 
-GAME 노드에 접속한 사용자의 수를 그래프를 통하여 한 눈에 확인할 수 있습니다.
+The number of users who are connected to GAME node can be checked at a glance using a graph.
 
-![monitoring_dashboard_graph](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_graph.png)
+![monitoring_dashboard_graph](https://static.toastoven.net/prod_gameanvil/images/monitoring_dashboard_graph_en.png)
 
-- 그래프는 1분마다 자동 갱신되며, 오늘과 어제 그리고 지난 주의 그래프를 확인할 수 있습니다.
-- 어제 또는 지난 주 데이터가 없으면 그래프는 표시되지 않습니다.
-- 필터를 통하여 특정 GAME 노드 서비스의 동시 접속자 그래프를 확인할 수 있습니다.
+- The graph is automatically updated every minute, and you can check the graphs for today, yesterday, and the last week.
+- If there is no data for yesterday or the last week, no graph will be displayed.
+- The graph for concurrent users on a specific GAME node through a filter.
 
 
 
-## 유저분포 모니터링
+## User distribution monitoring
 
-GAME 노드의 접속한 동시접속자, 분포 평균 그리고 머신, 인스턴스, 노드의 수를 확인할 수 있습니다.
+Can check the number of concurrent users on GAME node, distribution average, and the number of machines, instances, and nodes.
 
-![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main.png)
+![monitoring_userdistribution_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_userdistribution_main_en.png)
 
-- 동시접속자
-    - 동작 중(READY)인 GAME 노드에서 집계된 동시접속자 수를 의미합니다.
-    - 필터에 따라서 동시접속자 수는 달라집니다.
+- Concurrent users
+    - It means the number of concurrent users aggregated from READY GAME nodes.
+    - The number of concurrent users may vary depending on filter.
 
-- 머신
-    - GAME 노드가 동작 중(READY)인 머신의 수를 의미합니다.
-    - 필터에 따라서 머신 수는 달라집니다.
+- Machine
+    - It means the number of the machines of which status is READY while GAME node is running.
+    - The number of machines may vary depending on the filter.
 
-- 인스턴스
-    - GAME 노드가 동작 중(READY)인 인스턴스 수를 의미합니다.
-    - 필터에 따라서 인스턴스 수는 달라집니다.
+- Instance
+    - It means the number of the instances of which status is READY while GAME node is running.
+    - The number of instances may vary depending on the filter.
 
-- GAME 노드
-    - GAME 노드가 동작 중(READY)인 노드 수를 의미합니다.
-    - 필터에 따라서 노드 수는 달라집니다.
+- GAME node
+    - It means the number of the nodes of which status is READY while GAME node is running.
+    - The number of nodes may vary depending on the filter.
 
-- 노드별 유저 분포 평균
-    - 동시접속자를 전체 구동 중인 GAME 노드 수로 나는 평균입니다.
-    - 필터에 따라서 평균은 달라집니다.
-        - 동시접속자 / 전체 구동 중인 GAME 노드의 수
+- User distribution average per node
+    - The average of all active GAME nodes divided by concurrent users.
+    - The average may vary depending on the filter.
+        - Number of concurrent users/total number of active GAME nodes
 
-※ 유저 모니터링 페이지는 자동 새로고침을 지원하지 않습니다.<br>
-데이터 갱신이 필요할 때에는 새로고침 버튼을 통하여 갱신하면 됩니다.
+※ The user monitoring page does not support the automatic refresh feature.<br>
+If data needs to be refreshed, click the Refresh button.
 
-### 유저분포 그래프
+### User distribution graph
 
-그래프는 탭<span style='color: #EB4927'>①</span>을 통하여 머신, 인스턴스, 노드별로 유저분포 상태를 확인할 수 있습니다.
+<span style='color: #EB4927'>①</span>With the graph, the user distribution per machine, instance, and node can be checked through tab<span style='color: #EB4927'>①</span>.
 
-- 머신
-    - GAME 노드가 동작 중(READY)인 머신들만 나타납니다.
-    - 세로 축 레이블은 '호스트명'으로 표시됩니다.
-- 인스턴스
-    - GAME 노드가 동작 중(READY)인 인스턴스만 나타납니다.
-    - 세로 축 레이블은 '인스턴스 이름@호스트명'으로 표시됩니다.
-- 노드
-    - 동작 중(READY)인 GAME 노드만 나타납니다.
-    - 세로 축 레이블은 '노드 ID@호스트명'으로 표시됩니다.
+- Machine
+    - Appears only the machines of which status is READY while GAME node is running.
+    - The label of the vertical axis is displayed as 'Host name.'
+- Instance
+    - Appears only the instances of which status is READY while GAME node is running.
+    - The label of the vertical axis is displayed as 'Instance name@host name.'
+- Node
+    - Appears only the GAME node of which status is READY while running.
+    - The label of the vertical axis is displayed as 'Node Id@host name.'
 
-그래프의 데이터는 기본적으로 50개만 보여지며, 50개 이상의 정보는 '더보기'<span style='color: #EB4927'>②</span>으로 확인이 가능합니다.
+Up to 50 pieces of data are shown in the graph by default. To display more than 50 items, use 'Show More'<span style='color: #EB4927'>②</span>.
 
-## 시스템 모니터링
+## System monitoring
 
-시스템 모니터링에서는 머신과 인스턴스들의 상태와 간략한 정보들을 쉽게 확인할 수가 있습니다.
+In System monitoring, the status of machines and instances can be checked with simple information.
 
-![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main.png)
+![monitoring_system_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_main_en.png)
 
-### 트리뷰
+### Tree view
 
-관리 페이지에서 등록한 머신과 인스턴스들이 계층구조를 트리 형태로 표시합니다.
+The hierarchy of the machines and instances registered from the management page are displayed in the tree form.
 
-트리의 구조는 아래와 같이 구성되어 있습니다.
+The tree is composed of the following:
 
-![monitoring_system_tree](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_tree.png)
+![monitoring_system_tree](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_tree_en.png)
 
-머신과 각각의 머신에 속하는 인스턴스들이 표시됩니다.
-호스트 이름 또는 인스턴스 이름를 선택하면 각각의 머신 또는 인스턴스 상세 페이지가 보여집니다.
+Displays machines and the instances belong to each machine. 
+By selecting a host name or instance name, the detailed information page of each machine is displayed.
 
-또한 호스트명 검색을 통하여 찾고자하는 머신을 쉽게 찾을 수 있습니다.
+In addition, machines can be easily found by using the host name search feature.
 
-### 머신(호스트명)을 선택했을 때
+### When machine (host name) is selected,
 
-선택한 머신과 속하는 인스턴스들의 정보를 나타냅니다.
+The information on the selected machine and the instances belong to that machine is displayed.
 
-![monitoring_system_machine](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_machine.png)
+![monitoring_system_machine](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_machine_en.png)
 
-- 머신과 인스턴스에 대한 정보
+- Information on machine and instance
 
-1. 머신
-    - 호스트 이름: 머신의 호스트 명
-    - 머신 상태: Agent와의 연결 상태
-    - IP 주소: 머신의 IP 주소
-    - GameAnvil Agent Port: Agent의 포트번호
+1. Machine
+    - Host name: The host name of machine
+    - Machine status: The connection status with Agent
+    - IP address: The IP address of machine
+    - GameAnvil Agent Port: The port number of Agent
 
-2. 인스턴스
-    - 인스턴스 이름
-    - 인스턴스 상태
-    - 총 연결 노두 개수: READY 상태인 노드 수 / 모든 노드 수
-    - 유저 수: 인스턴스에 속한 GAME 노드에 접속한 사용자 수
-        - GAME 노드가 동작 중(READY)일 때만 표시
-        - 그 외에는 '-'으로 표시
-    - 룸 수: 인스턴스에 속한 GAME 노드에 생성된 룸 수
-        - GAME 노드가 동작 중(READY)일 때만 표시
-        - 그 외에는 '-'으로 표시
+2. Instance
+    - Instance name
+    - Instance status
+    - Total number of connected nodes: Number of READY nodes/total number of nodes
+    - Number of users: The number of users who are connected the GAME node that belongs to an instance
+        - Displayed only when the status of GAME node is READY while running
+        - In other cases, displays '-'
+    - Number of rooms: The number of rooms created by the GAME node that belongs to an instance
+        - Displayed only when the status of GAME node is READY while running
+        - In other cases, displays '-'
 
-### 인스턴스를 선택했을 때
+### When an instance is selected,
 
-선택한 인스턴스에 상세한 정보를 표시합니다.
+it displays the detailed information on the selected instance.
 
-![monitoring_system_instance](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_instance.png)
+![monitoring_system_instance](https://static.toastoven.net/prod_gameanvil/images/monitoring_system_instance_en.png)
 
-- 인스턴스에 대한 정보
-    - 인스턴스 이름
-    - 인스턴스 상태
-    - 인스턴스 설정: 인스턴스 설정 정보를 팝업창으로 확인
+- Information on instance
+    - Instance name
+    - Instance status
+    - Instance settings: Check the setting information on an instance through a popup window
     - GATEWAY
-        - 동작 중인 GATEWAY 노드 수 / 전체 GATEWAY 노드 수
-        - 해당 노드가 없는 경우에는 '-/-'로 표기
+        - Number of running GATEWAY nodes/total number of GATEWAY nodes
+        - Displays '-/-' if there is no corresponding node
     - GAME
-        - 동작 중인 GAME 노드 수 / 전체 GAME 노드 수
-        - 해당 노드가 없는 경우에는 '-/-'로 표기
+        - Number of running GAME nodes/total number of GAME nodes
+        - Displays '-/-' if there is no corresponding node
     - SUPPORT
-        - 동작 중인 SUPPORT 노드 수 / 전체 MASUPPORTTCH 노드 수
-        - 해당 노드가 없는 경우에는 '-/-'로 표기
+        - Number of running SUPPORT nodes/total number of MASUPPORTTCH nodes
+        - Displays '-/-' if there is no corresponding node
     - MATCH
-        - 동작 중인 MATCH 노드 수 / 전체 MATCH 노드 수
-        - 해당 노드가 없는 경우에는 '-/-'로 표기됩니다.
-    - 유저 수: 인스턴스에 속한 GAME 노드에 접속한 사용자 수
-        - GAME 노드가 동작 중(READY)일 때만 표시
-        - 그 외에는 '-'으로 표시
-    - 룸 수: 인스턴스에 속한 GAME 노드에 생성된 룸 수
-        - GAME 노드가 동작 중(READY)일 때만 표시
-        - 그 외에는 '-'으로 표시
+        - Number of running MATCH nodes/total number of MATCH nodes
+        - Number of running MATCH nodes/total number of MATCH nodes
+    - Number of users: The number of users who are connected the GAME node that belongs to an instance
+        - Displayed only when the status of GAME node is READY while running
+        - In other cases, displays '-'
+    - Number of rooms: The number of rooms created by the GAME node that belongs to an instance
+        - Displayed only when the status of GAME node is READY while running
+        - In other cases, displays '-'
 
-## 인스턴스 모니터링
+## Instance monitoring
 
-관리 페이지에서 인스턴스의 정보를 확인하고 설정된 각 노드를 시작/중지/배포 할 수 있습니다.
+The instance information can be checked and each configured node can be started/stopped/deployed from the management page.
 
-![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main.png)
+![monitoring_instance_main](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_main_en.png)
 
-1. 검색
-    - 호스트 이름이나 인스턴스 이름으로 특정 인스턴스를 찾을 수 있습니다.
+1. Search
+    - A specific instance can be searched using a host name or instance name.
 
-2. 필터
-    - 인스턴스 및 배포 상태와 인스턴스 설정 타입에 따라서 특정 인스턴스를 필터할 수 있습니다.
+2. Filter
+    - A specific instance can be filtered using the status of an instance or deploy or instance setting type.
 
-    ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter.png)
+    ![monitoring_instance_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_filter_en.png)
 
-### 인스턴스 테이블
+### Instance table
 
-![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table.png)
+![monitoring_instance_table](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_table_en.png)
 
-#### 액션<span style='color: #EB4927'>①</span>
+#### Action<span style='color: #EB4927'>①</span>
 
-테이블의 체크박스에 선택된 인스턴스들에 대해서 액션을 수행할 수 있습니다.
+An action can be performed on the instances selected from the checkbox of the table.
 
-- 시작
-- 중지
-- 배포
-
-
-#### 배포파일 업로드<span style='color: #EB4927'>②</span>
-
-관리 > 배포파일 페이지와 동일하게 배포파일을 업로드 할 수 있습니다.
-
-![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload.png)
+- Start
+- Stop
+- Deploy
 
 
-#### 테이블
+#### Upload files to be deployed<span style='color: #EB4927'>②</span>
 
-인스턴스 테이블에서 각 인스턴스에 대한 상태와 시작/중지/배포에 대한 액션을 수행할 수 있습니다.
+Deployment files can be uploaded in the same way as Management > Deployment File page.
 
-- 인스턴스 이름
-- 호스트 이름
-- 인스턴스 설정
+![monitoring_instance_upload](https://static.toastoven.net/prod_gameanvil/images/monitoring_instance_upload_en.png)
+
+
+#### Table
+
+The status of each instance can be checked and take action on start/stop/deploy from an instance table.
+
+- Instance name
+- Host name
+- Instance settings
 - GATEWAY
-    - 동작 중인 GATEWAY 노드 수 / 전체 GATEWAY 노드 수
-    - 해당 노드가 없는 경우에는 '-'로 표기
+    - Number of running GATEWAY nodes/total number of GATEWAY nodes
+    - Displays '-' if there is no corresponding node
 - GAME
-    - 동작 중인 GAME 노드 수 / 전체 GAME 노드 수
-    - 해당 노드가 없는 경우에는 '-'로 표기
+    - Number of running GAME nodes/total number of GAME nodes
+    - Displays '-' if there is no corresponding node
 - SUPPORT
-    - 동작 중인 SUPPORT 노드 수 / 전체 SUPPORT 노드 수
-    - 해당 노드가 없는 경우에는 '-'로 표기
+    - Number of running SUPPORT nodes/total number of SUPPORT nodes
+    - Displays '-' if there is no corresponding node
 - MATCH
-    - 동작 중인 MATCH 노드 수 / 전체 MATCH 노드 수
-    - 해당 노드가 없는 경우에는 '-'로 표기
-- 인스턴스 상태
-    - '에러' 상태에서는 '에러'<span style='color: #EB4927'>③</span>를 클릭하면 상세 에러 메시지를 확인 할 수 있습니다.
-- 배포 상태
-    - '에러' 상태에서는 '에러'<span style='color: #EB4927'>③</span>를 클릭하면 상세 에러 메시지를 확인 할 수 있습니다.
-- 액션
-    - 하나의 인스턴스에 액션(시작/중지/배포)를 수행할 수 있습니다.
+    - Number of running MATCH nodes/total number of MATCH nodes
+    - Displays '-' if there is no corresponding node
+- Instance status
+    - In 'Error' status, click 'Error'<span style='color: #EB4927'>③</span> to check the detailed error message.
+- Deployment status
+    - In 'Error' status, click 'Error'<span style='color: #EB4927'>③</span> to check the detailed error message.
+- Action
+    - Can perform actions (start/stop/deploy) in a single instance.
 
-## 노드 모니터링
+## Node monitoring
 
 ### ALL
 
-동작 중(READY)인 모든 노드들에 대해서 모니터링 할 수 있습니다.
+Can monitor all the nodes of which status is READY.
 
-![monitoring_node_all](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all.png)
+![monitoring_node_all](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_en.png)
 
-- 노드 ID
-- 서비스 ID
-    - GAME, SUPPORT 노드에 한해서만 표시됩니다.
-- 서비스 이름
-- 노드 타입
-- 인스턴스 이름
-- 호스트 이름
-- 노드 상태
-- 액션
+- Node ID
+- Service ID
+    - Displays only for GAME and SUPPORT nodes.
+- Service name
+- Node type
+- Instance name
+- Host name
+- Node status
+- Action
     - Resume
-        - Pause 상태인 노드를 시작할 수 있습니다.
+        - Can start nodes of which status is Pause.
     - Pause
-        - Ready 상태인 노드를 정지시킵니다.
-    - ※ MATCH 노드는 Resume, Pause 액션을 수행할 수 없습니다.
+        - Stops the nodes of which status is Ready.
+    - ※ MATCH nodes cannot perform the Resume and Pause action.
 
-#### 필터
+#### Filter
 
-![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter.png)
+![monitoring_node_all_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_all_filter_en.png)
 
-동작 중인 전체 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 타입
-- 노드 상태
-- 서비스 이름
+Specific nodes can be filtered using the filters below to all Ready nodes.
+- Node type
+- Node status
+- Service name
 
 ### GATEWAY
 
-동작 중(READY)인 GATEWAY 노드들에 대해서 모니터링 할 수 있습니다.
+Can monitor the GATEWAY nodes of which status is READY while running.
 
-![monitoring_node_gateway](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway.png)
+![monitoring_node_gateway](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_en.png)
 
-- 노드 ID
-- 노드 타입
-- 인스턴스 이름
-- 호스트 이름
-- 세션 수
-    - 각 GATEWAY 노드에 연결된 세션 수를 표시합니다.
-- 노드 상태
-- 액션
+- Node ID
+- Node type
+- Instance name
+- Host name
+- Number of sessions
+    - Displays the number of sessions connected to each GATEWAY node.
+- Node status
+- Action
     - Resume
-        - Pause 상태인 노드를 시작할 수 있습니다.
+        - Can start nodes of which status is Pause.
     - Pause
-        - Ready 상태인 노드를 정지시킵니다.
+        - Stops the nodes of which status is Ready.
 
-#### 필터
+#### Filter
 
-![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter.png)
+![monitoring_node_gateway_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_gateway_filter_en.png)
 
-동작 중인 GATEWAY 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 상태
+Specific nodes can be filtered using the filters below to all running GATEWAY nodes.
+- Node status
 
 ### GAME
 
-동작 중(READY)인 GAME 노드들에 대해서 모니터링 할 수 있습니다.
+Can monitor the GAME nodes of which status is READY while running.
 
-![monitoring_node_game](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game.png)
+![monitoring_node_game](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_en.png)
 
-- 노드 ID
-- 노드 타입
-- 서비스 ID
-- 채널 ID
-- 인스턴스 이름
-- 호스트 이름
-- 유저 수
-    - 각 GAME 노드에 접속한 사용자 수를 표시합니다.
-- 룸 수
-    - 각 GAME 노드에 생성된 룸 개수를 표시합니다.
-- 노드 상태
-- 액션
+- Node ID
+- Node type
+- Service ID
+- Channel ID
+- Instance name
+- Host name
+- Number of users
+    - Displays the number of users connected to each GAME node.
+- Number of rooms
+    - Displays the number of rooms created in each GAME node.
+- Node status
+- Action
     - Resume
-        - Pause 상태인 노드를 시작할 수 있습니다.
+        - Can start nodes of which status is Pause.
     - Pause
-        - Ready 상태인 노드를 정지시킵니다.
+        - Stops the nodes of which status is Ready.
 
-#### 필터
+#### Filter
 
-![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter.png)
+![monitoring_node_game_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_game_filter_en.png)
 
-동작 중인 GAME 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 상태
-- 서비스 이름
+Specific nodes can be filtered using the filters below to all running GAME nodes.
+- Node status
+- Service name
 
 ### SUPPORT
 
-동작 중(READY)인 SUPPORT 노드들에 대해서 모니터링 할 수 있습니다.
+Can monitor the SUPPORT nodes of which status is READY while running.
 
-![monitoring_node_support](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support.png)
+![monitoring_node_support](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_en.png)
 
-- 노드 ID
-- 노드 타입
-- 서비스 ID
-- 서비스 이름
-- 인스턴스 이름
-- 호스트 이름
-- 노드 상태
-- 액션
+- Node ID
+- Node type
+- Service ID
+- Service name
+- Instance name
+- Host name
+- Node status
+- Action
     - Resume
-        - Pause 상태인 노드를 시작할 수 있습니다.
+        - Can start nodes of which status is Pause.
     - Pause
-        - Ready 상태인 노드를 정지시킵니다.
+        - Stops the nodes of which status is Ready.
 
 #### 필터
 
-![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter.png)
+![monitoring_node_support_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_support_filter_en.png)
 
-동작 중인 SUPPORT 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 상태
-- 서비스 이름
+Specific nodes can be filtered using the filters below to all running SUPPORT nodes.
+- Node status
+- Service name
 
 ### MATCH
 
-동작 중(READY)인 MATCH 노드들에 대해서 모니터링 할 수 있습니다.
+Can monitor the MATCH nodes of which status is READY while running.
 
-![monitoring_node_match](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match.png)
+![monitoring_node_match](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_en.png)
 
-- 노드 ID
-- 노드 타입
-- 인스턴스 이름
-- 호스트 이름
+- Node ID
+- Node type
+- Instance name
+- Host name
 - Room Match Room Count
 - User Match Queue Size
-- 노드 상태
+- Node status
 
-#### 필터
+#### Filter
 
-![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter.png)
+![monitoring_node_match_filter](https://static.toastoven.net/prod_gameanvil/images/monitoring_node_match_filter_en.png)
 
-동작 중인 MATCH 노드들 중에 아래의 필터를 통하여 특정 노드를 필터할 수 있습니다.
-- 노드 상태
+Specific nodes can be filtered using the filters below to all running MATCH nodes.
+- Node status
