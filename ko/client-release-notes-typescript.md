@@ -1,7 +1,7 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-Typescript
 
 
-### 1.1.3 (2021.04.07) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.3.zip)
+### 1.1.3 (2021.04.07) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.3.zip)
 #### GameAnvil 1.1.0 이상
 #### Change
 * ContainsCallback, ContainsUndefinedProtocolCallback, ContainsListener 추가.
@@ -18,7 +18,7 @@
 
 
 
-### 1.1.2 (2021.03.16) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.2.zip)
+### 1.1.2 (2021.03.16) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.2.zip)
 #### GameAnvil 1.1.0 이상
 #### Change
 * Connector.config의 default값 변경.
@@ -31,7 +31,7 @@
 
 
 
-### 1.1.1 (2021.02.10) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.1.zip)
+### 1.1.1 (2021.02.10) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.1.zip)
 #### GameAnvil 1.1.0 이상
 #### Change
 * SingleServer 
@@ -45,7 +45,7 @@
 
 ------
 
-### 1.1.0 (2020.12.18) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.0.zip)
+### 1.1.0 (2020.12.18) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.0.zip)
 #### GameAnvil 1.1.0 이상
 #### Change
 * 호환성 이슈로 수정하여 GitEnterprize에 올려놓고 사용하던 protobufjs를 이슈가 수정된 공식 최신버전으로 교체
@@ -55,7 +55,7 @@
 
 
 
-### 1.0.1 (2020.10.08) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.1.zip)
+### 1.0.1 (2020.10.08) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.1.zip)
 #### GameAnvil 1.0.0 이상
 #### FIX
 
@@ -65,7 +65,7 @@
 
 
 
-### 1.0.0 (2020.08.31) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.0.zip)
+### 1.0.0 (2020.08.31) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.0.zip)
 #### GameAnvil 1.0.0 이상
 #### Change
 * MoveService 제거
@@ -113,16 +113,16 @@
 	* 이름 변경
 		* FORCE_CLOSE_SYSTEM -> FORCE_CLOSE_SYSTEM_ERROR
 		* FORCE_CLOSE_CONTENT -> 
-FORCE_CLOSE_BASE_CONNECTION : 서버에서 BaseConnection의 close() 호출
-FORCE_CLOSE_BASE_USER : 서버에서 BaseUser의 closeConnection() 호출
+		FORCE_CLOSE_BASE_CONNECTION : 서버에서 BaseConnection의 close() 호출
+		FORCE_CLOSE_BASE_USER : 서버에서 BaseUser의 closeConnection() 호출
 	* 추가.
 		* FORCE_CLOSE_INVALID_NODE : GameNode가 invalid 상태로 변경된 경우.
 		* FORCE_CLOSE_USER_TRANSFER_FAIL : 유저 트렌스퍼가 실패한 경우.
 		* FORCE_CLOSE_USER_TRANSFER_ERROR : 유저 트렌스퍼중 시스템 에러가 발생한 경우.
 	* 추가되었으나 클라이언트에서 받을 수 없는 경우.
-서버에서는 클라이언트의 연결이 이미 끊겨있을것으로 예상하고 접속을 강제 종료하면서 아래 코드를 사용한다.
-클라이언트의 연결이 끈겨 있기 때문에 아래 코드는 받을 수 없어야 한다.
-이 코드를 받았다면 GameAnvil 개발팀에 제보해 주시길 바란다.
+		서버에서는 클라이언트의 연결이 이미 끊겨있을것으로 예상하고 접속을 강제 종료하면서 아래 코드를 사용한다.
+		클라이언트의 연결이 끈겨 있기 때문에 아래 코드는 받을 수 없어야 한다.
+		이 코드를 받았다면 GameAnvil 개발팀에 제보해 주시길 바란다.
 		* FORCE_CLOSE_BY_NEW_CONNECTION : 같은 계정 정보로 새로운 로그인 요청이 들어온 경우. 
 		* <span style="color:#eb6420">현제 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 이 코드가 넘어오는 문제가 있다.
           다음 릴리즈 때 수정 될 예정.</span>
@@ -230,7 +230,7 @@ FORCE_CLOSE_BASE_USER : 서버에서 BaseUser의 closeConnection() 호출
 * Payload.createDefault() 제거. CreateEmpty() 로 대체함
 * SessionAgent.addOnDisconnect()
 	* AddOnDisconnect(callback: (agent: SessionAgent, message: string) => void): void; =>
-AddOnDisconnect(callback: (session: SessionAgent, resultCode: ResultCodeDisconnect, reason: string, force: boolean, payload: Payload) => void): void;
+	AddOnDisconnect(callback: (session: SessionAgent, resultCode: ResultCodeDisconnect, reason: string, force: boolean, payload: Payload) => void): void;
 
 -----
 

@@ -1,6 +1,6 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-CSharp 
 
-### 1.1.2 (2021.04.15) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.2.unitypackage)
+### 1.1.2 (2021.04.15) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.2.unitypackage)
 #### GameAnvil 1.1.0 이상
 #### New
 * GameAnvil Server의 ClientStateCheck기능을 일시 정지시키는 ConnectionAgent.PauseClientStateCheck() 추가. 앱이 백그라운드로 진입하는 등 메시지 루프가 동작하지 않게 되는 경우 호출해준다.
@@ -14,7 +14,7 @@
 
 
 
-### 1.1.1 (2021.04.07) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.1.unitypackage)
+### 1.1.1 (2021.04.07) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.1.unitypackage)
 #### GameAnvil 1.1.0 이상
 #### Change
 * listener개별 등록 여부를 확인 할 수 있는 ContainsListener 오버 로딩 추가. 
@@ -28,7 +28,7 @@
 
 
 
-### 1.1.0 (2020.12.18) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.0.unitypackage)
+### 1.1.0 (2020.12.18) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.0.unitypackage)
 
 #### GameAnvil 1.1.0 이상
 #### Change
@@ -46,7 +46,7 @@
 
 
 
-### 1.0.0 (2020.08.31) [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
+### 1.0.0 (2020.08.31) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
 
 #### GameAnvil 1.0.0 이상
 #### Change
@@ -102,16 +102,16 @@
 	* 이름 변경
 		* FORCE_CLOSE_SYSTEM -> FORCE_CLOSE_SYSTEM_ERROR
 		* FORCE_CLOSE_CONTENT -> 
-FORCE_CLOSE_BASE_CONNECTION : 서버에서 BaseConnection의 close() 호출
-FORCE_CLOSE_BASE_USER : 서버에서 BaseUser의 closeConnection() 호출
+		FORCE_CLOSE_BASE_CONNECTION : 서버에서 BaseConnection의 close() 호출
+		FORCE_CLOSE_BASE_USER : 서버에서 BaseUser의 closeConnection() 호출
 	* 추가.
 		* FORCE_CLOSE_INVALID_NODE : GameNode가 invalid 상태로 변경된 경우.
 		* FORCE_CLOSE_USER_TRANSFER_FAIL : 유저 트렌스퍼가 실패한 경우.
 		* FORCE_CLOSE_USER_TRANSFER_ERROR : 유저 트렌스퍼중 시스템 에러가 발생한 경우.
 	* 추가되었으나 클라이언트에서 받을 수 없는 경우.
-서버에서는 클라이언트의 연결이 이미 끊겨있을것으로 예상하고 접속을 강제 종료하면서 아래 코드를 사용한다.
-클라이언트의 연결이 끈겨 있기 때문에 아래 코드는 받을 수 없어야 한다.
-이 코드를 받았다면 GameAnvil 개발팀에 제보해 주시길 바란다.
+		서버에서는 클라이언트의 연결이 이미 끊겨있을것으로 예상하고 접속을 강제 종료하면서 아래 코드를 사용한다.
+		클라이언트의 연결이 끈겨 있기 때문에 아래 코드는 받을 수 없어야 한다.
+		이 코드를 받았다면 GameAnvil 개발팀에 제보해 주시길 바란다.
 		* FORCE_CLOSE_BY_NEW_CONNECTION : 같은 계정 정보로 새로운 로그인 요청이 들어온 경우. 
 		* <span style="color:#eb6420">현제 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 이 코드가 넘어오는 문제가 있다.
           추후 수정 될 예정.</span>
