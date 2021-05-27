@@ -1,6 +1,10 @@
 ## Game > GameAnvil > Console User Guide > Agent
 
-Agent must be installed to run/stop/deploy the GameAnvil server through the console. 
+Agent must be installed to run/stop/deploy the GameAnvil server through the console.
+
+At a server for games produced with Agent and GameAnvil, JDK shall be installed in advance since these are Java programs.
+
+GameAnvil supports JDK 8 and JDK 11. The desired version of JDK shall be installed in every device that will use the server.
 
 ### Download and Run Agent
 
@@ -25,7 +29,7 @@ Agent must be installed to run/stop/deploy the GameAnvil server through the cons
 
     | Configuration name      | Description                  | Example                          | Note                                                         |
     | -------------- | --------------------- | ----------------------------- | ------------------------------------------------------------ |
-    | server.address | IP used by Agent   | server.address=10.160.194.108 | If the setting value is left empty, all the IPs assigned to the machine can be accessed. Therefore, the IP to be used must be specified. |
+    | server.address | IP used by Agent   | server.address=10.160.194.108 |  If there is no IP setting, it is possible to access through any IP allotted to the machine. It is recommended, therefore, to designate the IP to be used. |
     | server.port    | Port used by Agent | server.port=19080             | The value must be the same as the GameAnvil Agent Port configured on the console (Default value: 19080). |
 
     
