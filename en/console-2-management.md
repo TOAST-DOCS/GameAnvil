@@ -94,7 +94,7 @@ The entered value per item is checked in real time and displays a notification i
 
 Note that **Server build upload paths** and **machines** cannot be edited once they are registered.
 
-![ManagementInstance-3](https://static.toastoven.net/prod_gameanvil/images/management_instance_3_en_old.png)
+![ManagementInstance-3](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_1_en.png)
 
 The machine to deploy an instance can be selected by entering the basic information of the instance (instance name and server build upload path).
 
@@ -102,7 +102,7 @@ Machine management displays the list of registered machines with a popup.
 
 Instances that share the same configuration can be selected and registered.
 
-![ManagementInstance-12](https://static.toastoven.net/prod_gameanvil/images/management_instance_12_en_old.png)
+![ManagementInstance-12](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_2_en.png)
 
 As the basic information is covered, let's move onto the node settings.
 
@@ -110,7 +110,7 @@ As the basic information is covered, let's move onto the node settings.
 
 A node can be set up in a way of selecting a pre-registered template by using **Import Settings**.
 
-![ManagementInstance-4](https://static.toastoven.net/prod_gameanvil/images/management_instance_4_en_old.png)
+![ManagementInstance-4](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_3_en.png)
 
 It is possible to check settings of each node for registered templates by using the popup menu item of Import Settings.
 
@@ -128,13 +128,13 @@ This is the screen where **GATEWAY** node is configured.
 
 The port input is dynamically configured according to the use of **TCP/WEB SOCKET**.
 
-![ManagementInstance-6](https://static.toastoven.net/prod_gameanvil/images/management_instance_6_en_old.png)
+![ManagementInstance-6](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_5_en.png)
 
 This is the screen where **SUPPORT** node is configured.
 
 The port input is dynamically configured according to the **number of services** configured.
 
-![ManagementInstance-7](https://static.toastoven.net/prod_gameanvil/images/management_instance_7_en_old.png)
+![ManagementInstance-7](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_6_en.png)
 
 This is the area configured according to the **GATEWAY and SUPPORT** settings.
 
@@ -142,7 +142,7 @@ Port uses a value between **18000-20000** and there should not be a duplicate va
 
 After the configured port is entered, the user must check any Port duplicates among the registered instances using **Check for Duplicate Ports**. 
 
-![ManagementInstance-11](https://static.toastoven.net/prod_gameanvil/images/management_instance_11_en_old.png)
+![ManagementInstance-11](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_7_en.png)
 
 If it turns out that there is a duplicate port entry as a result of implementing **Check for Duplicate Ports**, a window pops up to notify the information of the duplicate port.
 
@@ -248,7 +248,7 @@ Services may be managed by using the **Manage > Instance> Service** menu.
 
 Once a desired service is selected and confirmed, you can enter more settings necessary for each service. 
 
-![ManagementTemplate-9](https://static.toastoven.net/prod_gameanvil/images/management_template_register_7_.png)  
+![ManagementTemplate-9](https://static.toastoven.net/prod_gameanvil/images/management_template_register_7_en.png)  
 
 To set up the SUPPORT node as well, **Service** needs to be selected.
 
@@ -333,11 +333,11 @@ In the second way, click **Upload a File** as below and then click ***Template E
 
 It should be noted that when a file is uploaded, only one service type is available. Thus, GAME files should be separated from SUPPORT files when saved.
 
-![ManagementService-3](https://static.toastoven.net/prod_gameanvil/images/management_service_fileupload_1_ko.png)
+![ManagementService-3](https://static.toastoven.net/prod_gameanvil/images/management_service_fileupload_1_en.png)
 
 Press the Save button, and then the screen below will be displayed. Check if the value on the screen is correct and then press the Save button at the bottom once again. Now the entered value will be transmitted to the server.
 
-![ManagementService-4](https://static.toastoven.net/prod_gameanvil/images/management_service_fileupload_2_ko.png)
+![ManagementService-4](https://static.toastoven.net/prod_gameanvil/images/management_service_fileupload_2_en.png)
 
 ### Change and Deletion
 
@@ -347,7 +347,7 @@ It is possible to correct a service name only when there is no instance that is 
 
 It is possible to delete a service only when there is no template where the service is registered.
 
-![ManagementService-5](https://static.toastoven.net/prod_gameanvil/images/management_service_detail_ko.png)
+![ManagementService-5](https://static.toastoven.net/prod_gameanvil/images/management_service_detail_en.png)
 
 ## Deployment file
 
