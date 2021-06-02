@@ -1,6 +1,10 @@
 ## Game > GameAnvil > Console User Guide > Agent
 
-Agent must be installed to run/stop/deploy the GameAnvil server through the console. 
+Agent must be installed to run/stop/deploy the GameAnvil server through the console.
+
+At a server for games produced with Agent and GameAnvil, JDK shall be installed in advance since these are Java programs.
+
+GameAnvil supports JDK 8 and JDK 11. The desired version of JDK shall be installed in every device that will use the server.
 
 At a server for games produced with Agent and GameAnvil, JDK shall be installed in advance since these are Java programs.
 
@@ -8,7 +12,7 @@ GameAnvil supports JDK 8 and JDK 11. The desired version of JDK shall be install
 
 ### Download and Run Agent
 
-* [Download Agent](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.tar)
+* [Download Agent](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.1.tar)
 
 * The downloaded tar file contains the following files when it is uncompressed.
 
