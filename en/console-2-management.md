@@ -216,7 +216,7 @@ It is possible to enter settings of each node directly. It is also possible to i
 
 To register a similar template, import settings by using the **Import Settings** function and then enter only certain settings that need to be changed.  
 
-![ManagementTemplate-3](https://static.toastoven.net/prod_gameanvil/images/management_template_register_1_ko.png)
+![ManagementTemplate-3](https://static.toastoven.net/prod_gameanvil/images/management_template_register_1_en.png)
 
 **COMMON, VM_OPTION** must be set among node types and at least one of the following nodes must be set: **GATEWAY, GAME, SUPPORT, and MATCH**.
 
