@@ -1,5 +1,20 @@
 ## Game > GameAnvil > Console > Release Note
 
+### 1.0.3 (2021.05.25)
+
+#### New
+
+* Created a separate page for management as services could only be created but not edited or deleted
+
+#### Change
+
+* Changed the instance settings so that they are now stored and managed as an instance rather than as a node
+* Changed the size of the VM Option input message up to 10,240 bytes
+
+#### Fix
+
+* Fixed an issue in which the user guide of each node would not move to the proper guide page when creating instance settings
+
 ### 1.0.2 (2021.04.27)
 
 #### New
