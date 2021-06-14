@@ -4,7 +4,7 @@ Agent must be installed to run/stop/deploy the GameAnvil server through the cons
 
 ### Download and Run Agent
 
-* [Download Agent](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.tar)
+* [Download Agent](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.1.tar)
 
 * The downloaded tar file contains the following files when it is uncompressed.
 
