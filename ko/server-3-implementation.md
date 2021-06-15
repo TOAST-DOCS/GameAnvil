@@ -1,6 +1,6 @@
 ## Game > GameAnvil > 서버 개발 가이드 > 구현 가이드
 
-기본적인 서버를 구현하기 위해 알아야 할 엔진의 핵심적인 부분을 중심으로, 기본 요소들과 이를 구현하는 방법에 대해 설명합니다. 코드 레벨의 자료는 [GameAnvil 레퍼런스 서버](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server)를 참고합니다. 또한, [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)를 통해 JavaDoc 문서도 이용 가능합니다. 가능하다면 레퍼런스 서버 프로젝트와 이 가이드 문서를 함께 살펴보시기를 추천드립니다.
+기본적인 서버를 구현하기 위해 알아야 할 엔진의 핵심적인 부분을 중심으로, 기본 요소들과 이를 구현하는 방법에 대해 설명합니다. 코드 레벨의 자료는 [GameAnvil 레퍼런스 서버](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-4-reference-server/)를 참고합니다. 또한, [GameAnvil API Reference](https://gameplatform.toast.com/docs/api/)를 통해 JavaDoc 문서도 이용 가능합니다. 가능하다면 레퍼런스 서버 프로젝트와 이 가이드 문서를 함께 살펴보시기를 추천드립니다.
 
 
 
@@ -328,7 +328,7 @@ public class SampleGameNode extends BaseGameNode {
 
 게임상의 유저를 나타내는 GameUser 객체는 로그인 과정을 거쳐 GameNode에 생성됩니다. 유저 단위의 모든 메시지는 이곳에서 처리할 수 있습니다. 그러므로 유저 관련 콘텐츠는 이 클래스를 중심으로 구현하는 것이 바람직합니다. 앞서 살펴본 모든 예제와 마찬가지로 GameUser 또한 처리할 프로토콜과 핸들러를 매핑할 수 있습니다.
 
-아래의 예제 코드는 GameUser의 전체 콜백 메서드 목록을 보여줍니다. 이 중 일부는 기본 구현이 제공되므로 필요한 상황이 아니면 재정의할 필요는 없습니다. 이는 GameUser뿐만 아니라 엔진에서 제공하는 대부분의 콜백 메서드에 해당하는 사항입니다. 이러한 부분은 상속받는 각각의 기본 클래스(e.g.BaseUser)에 대해  [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)에서 JavaDoc 문서를 확인하거나 [레퍼런스 서버 프로젝트](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-link-reference-server)를 참고하는 것이 좋습니다.
+아래의 예제 코드는 GameUser의 전체 콜백 메서드 목록을 보여줍니다. 이 중 일부는 기본 구현이 제공되므로 필요한 상황이 아니면 재정의할 필요는 없습니다. 이는 GameUser뿐만 아니라 엔진에서 제공하는 대부분의 콜백 메서드에 해당하는 사항입니다. 이러한 부분은 상속받는 각각의 기본 클래스(e.g.BaseUser)에 대해  [GameAnvil API Reference](https://gameplatform.toast.com/docs/api/)에서 JavaDoc 문서를 확인하거나 [레퍼런스 서버 프로젝트](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-4-reference-server/)를 참고하는 것이 좋습니다.
 
 아래의 콜백 메서드 중 onLogin()은 최초에 게임 유저를 생성하기 위해 로그인을 시도하는 과정에서 호출됩니다. 이 onLogin() 콜백이 성공하면 GameNode 상에 해당 게임 유저 객체가 생성됩니다. 로그인이 완료된 후에는 사용자가 작성한 프로토콜을 기반으로 클라이언트와 직접 메시지를 주고 받으며 여러 가지 콘텐츠를 처리할 수 있습니다.
 
@@ -2257,7 +2257,7 @@ bootstrap.setGame("SampleGameService")
 import com.nhn.gameanvil.async.Async;
 ```
 
-*모든 API에 대한 설명은 [GameAnvil API Reference](http://10.162.4.61:9090/gameanvil)에서 JavaDoc으로 작성된 문서를 확인할 수 있습니다.*
+*모든 API에 대한 설명은 [GameAnvil API Reference](https://gameplatform.toast.com/docs/api/)에서 JavaDoc으로 작성된 문서를 확인할 수 있습니다.*
 
 호출용 API는 크게 call과 run으로 나뉘며 각각 반환값이 있는 경우와 그렇지 않은 경우에 사용합니다. 그 외 스레드 기반의 future를 파이버 기반으로 사용할 수 있도록 전환해줍니다. 각각의 용도에 따른 사용법은 문서의 다음 부분에서 더 자세하게 다루도록 합니다.
 

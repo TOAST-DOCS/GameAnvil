@@ -2,7 +2,7 @@
 
 ## 다운로드
 
-https://github.nhnent.com/game-server-engine/sample-game-server.git
+https://github.com/nhn/gameanvil.sample-game-server.git
 
 ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-1.png)
 
@@ -25,7 +25,7 @@ https://github.nhnent.com/game-server-engine/sample-game-server.git
 
 ## GameAnvil API Java doc
 
-[GameAnvil Server API - Java doc](http://10.162.4.61:9090/gameanvil)
+[GameAnvil Server API - Java doc](https://gameplatform.toast.com/docs/api/)
 
 
 
@@ -498,7 +498,7 @@ src/main/resources/
   - GameSingle.proto: 싱글 게임
   - Result.proto: 응답 코드
   - User.proto: 유저
--
+  -
   - 플러그인이 설치되어 있다면 다음과 같이 build.bat 파일을 마우스 오른쪽 버튼으로 클릭해 다음과 같은 명령으로 intelliJ에서 바로 변환할 수 있습니다.
   - ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-18.png)
   - ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceServer-19.png)

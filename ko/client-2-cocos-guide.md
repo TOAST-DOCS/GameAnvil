@@ -15,7 +15,7 @@
 
 ![new-project-empty](http://static.toastoven.net/prod_gameanvil/images/client-2-new-project-empty.png)
 
-이제 생성된 프로젝트에 GameAnvil 커넥터를 추가합니다. GameAnvil 커넥터는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript.zip)에서 다운로드 받을 수 있습니다. 다운로드한 파일의 압축을 풀어 assets 아래에 폴더를 만들어 넣습니다. 이때 다음과 같은 알림이 나타나면 **No**를 클릭합니다.
+이제 생성된 프로젝트에 GameAnvil 커넥터를 추가합니다. GameAnvil 커넥터는 [여기](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript.zip)에서 다운로드 받을 수 있습니다. 다운로드한 파일의 압축을 풀어 assets 아래에 폴더를 만들어 넣습니다. 이때 다음과 같은 알림이 나타나면 **No**를 클릭합니다.
 
 ![set-as-a-plugin](http://static.toastoven.net/prod_gameanvil/images/client-2-set-as-a-plugin.png)
 
@@ -99,7 +99,7 @@ npm i core-js regenerator-runtime
 import { Connector, ProtocolManager} from 'GameAnvil/gameanvil';
 ```
 
-게임에서 사용할 [메시지](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##메시지)를 등록하고, 커넥터 객체를 생성합니다.
+게임에서 사용할 [메시지](./client-2-cocos-guide/##메시지)를 등록하고, 커넥터 객체를 생성합니다.
 
 ```
 export default class GameAnvilManager {
@@ -114,7 +114,7 @@ export default class GameAnvilManager {
 }
 ```
 
-서버와 주고받는 [메시지](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##메시지) 처리를 위해 Update() 함수를 주기적으로 호출해야 합니다. Update() 함수의 호출 주기는 자유롭게 설정해도 무방하나 호출하지 않을 경우 서버로부터 [메시지](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##메시지)를 받더라도 이에 대한 알림을 받을 수 없습니다.
+서버와 주고받는 [메시지](./client-2-cocos-guide/##메시지) 처리를 위해 Update() 함수를 주기적으로 호출해야 합니다. Update() 함수의 호출 주기는 자유롭게 설정해도 무방하나 호출하지 않을 경우 서버로부터 [메시지](./client-2-cocos-guide/##메시지)를 받더라도 이에 대한 알림을 받을 수 없습니다.
 
 ```
 setInterval(() => { this.connector.Update(); }, 10);
@@ -169,7 +169,7 @@ export default class GameAnvilManager {
 
 ## 서버 접속 및 인증
 
-서버 접속 및 인증은 ConnectionAgent를 이용해 진행합니다. ConnectionAgent는 GameAnvil 서버의 커넥션 노드와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 서버 구현에 따라 채널 정보를 제공하거나 사용자 정의 [메시지](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##메시지)를 주고받을 수 있습니다. ConnectionAgent는 커넥터가 초기화될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다. 
+서버 접속 및 인증은 ConnectionAgent를 이용해 진행합니다. ConnectionAgent는 GameAnvil 서버의 커넥션 노드와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 서버 구현에 따라 채널 정보를 제공하거나 사용자 정의 [메시지](./client-2-cocos-guide/##메시지)를 주고받을 수 있습니다. ConnectionAgent는 커넥터가 초기화될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다. 
 
 ```
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
@@ -357,9 +357,9 @@ ConnectionAgent, UserAgent의 기본 기능 외에 Request()와 Send()를 이용
 
 GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/overview)를 사용하고 있습니다. .proto파일에 메시지를 정의하고, pbjs 로 실제 클래스 소스 코드를 생성하게 됩니다. 그리고 GameAnvil에서 사용할 추가 코드를 생성된 코드에 삽입합니다. 이렇게 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. 
 
-추가 코드를 삽입하려면 `CodeInserter` 를 설치해야합니다. `CodeInserter`는 [여기](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-CodeInserter.zip)에서 다운로드 받을 수 있습니다. 다운로드 받은 파일의 압축을 풀어 프로젝트 루트 아래(assets 폴더 밖에)에 폴더를 만들어 넣어줍니다.
+추가 코드를 삽입하려면 `CodeInserter` 를 설치해야합니다. `CodeInserter`는 [여기](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-CodeInserter.zip)에서 다운로드 받을 수 있습니다. 다운로드 받은 파일의 압축을 풀어 프로젝트 루트 아래(assets 폴더 밖에)에 폴더를 만들어 넣어줍니다.
 
-![codeInserter](http://static.toastoven.net/prod_gameanvil/images/client-2-codeInserter.png)
+![codeInserter](https://static.toastoven.net/prod_gameanvil/images/client-2-codeInserter.png)
 
 `CodeInserter`는 acorn을 사용합니다. 터미널에서 다음 코드를 입력하여 acorn을 설치합니다. 
 
@@ -511,7 +511,7 @@ user.RequestPb<Messages.SampleResponse>(sampleRequest, (connectionAgent, respons
 
 ### 커스텀 메시지
 
-패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [여기](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-2-cocos-guide/##Packet)를 참고합니다.
+패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [여기](./client-2-cocos-guide/##Packet)를 참고합니다.
 
 ```
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();

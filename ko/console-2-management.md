@@ -1,59 +1,58 @@
 ## Game > GameAnvil > 콘솔 사용 가이드 > 관리
 
-
 ## 머신
 
-GameAnvil 프로세스가 실행 될 장비를 등록하고 등록 된 머신을 관리하는 메뉴 입니다. 
+GameAnvil 프로세스가 실행 될 장비를 등록하고 등록 된 머신을 관리하는 메뉴 입니다.
 
-머신 등록 전 해당 머신에 GameAnvil Agent 를 설치해야 합니다. [ [GameAnvil-Agent Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.tar) ] 
+머신 등록 전 해당 머신에 GameAnvil Agent를 설치해야 합니다. [ [GameAnvil-Agent Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-agent-1.1.4.1.tar) ]
 
 ![management_machine_main.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_main_ko.png)
 
 ### 머신 등록
 
-GameAnvil 프로세스가 실행 될 장비를 등록 합니다. 
+GameAnvil 프로세스가 실행 될 장비를 등록 합니다.
 
 GameAnvil 서비스를 활성화 시킨 후 가장 먼저 머신 등록 작업이 진행되어야 합니다.
 
 ![management_machine_register.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_register_ko.png)
+
 * 입력 타입 : 콘솔 창에 직접 머신 정보를 입력하여 등록 할 수 있고 .csv 형식 파일을 업로드 하여 다수의 머신을 등록 할 수 있습니다.
 * 호스트 이름 : 등록 할 장비의 호스트명을 입력 합니다.
-* IP 주소 : 등록 할 장비의 Public IP 주소를 입력합니다. 해당 주소를 통해 콘솔과 통신하므로 정확한 주소 입력이 필요합니다. 
+* IP 주소 : 등록 할 장비의 Public IP 주소를 입력합니다. 해당 주소를 통해 콘솔과 통신하므로 정확한 주소 입력이 필요합니다.
 * GameAnvil Agent Port : 해당 장비에 설치 된 GameAnvil Agent Port 정보를 입력합니다. ( 기본 값은 19080 입니다. )
-    * 파일 업로드 : 템플릿 예시 파일을 다운로드 받아 등록 할 머신 정보를 입력 후 파일을 업로드 합니다. [ [Template File](https://static.toastoven.net/prod_gameanvil/files/GameAnvil_Machine_Template.csv)]
-
+  * 파일 업로드 : 템플릿 예시 파일을 다운로드 받아 등록 할 머신 정보를 입력 후 파일을 업로드 합니다. [ [Template File](https://static.toastoven.net/prod_gameanvil/files/GameAnvil_Machine_Template.csv)]
 
 ### 머신 목록
-등록 된 머신 리스트를 확인할 수 있으며 호스트 이름, IP 주소, 설명 검색 기능을 제공합니다. 
+
+등록 된 머신 리스트를 확인할 수 있으며 호스트 이름, IP 주소, 설명 검색 기능을 제공합니다.
 ![management_machine_list.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_list_ko.png)
 
-### 머신 설정 
+### 머신 설정
 
-머신 등록 후 마스터 머신과 로케이션 관리 머신을 설정합니다. 
+머신 등록 후 마스터 머신과 로케이션 관리 머신을 설정합니다.
 
-등록 한 머신중 한개의 마스터머신과 한개 이상의 로케이션 관리 머신을 선택합니다. 
+등록 한 머신중 한개의 마스터머신과 한개 이상의 로케이션 관리 머신을 선택합니다.
 
 ![management_machine_setup.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_ko.png)
-* 마스터 머신 : Management Node 가 실행 될 머신을 선택합니다. 마스터 머신이 등록 되어야 인스턴스 / 노드 제어가 가능합니다. 
-* 로케이션 관리 머신 : Location Node 가 실행 될 머신을 선택합니다. 
-* Java 버전 : GameAnvil 서버 빌드  사용 된 Java 버전을 선택합니다. 
 
-Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드이지만 콘텐츠 구현 및 제어가 불가한 노드입니다. 
-머신 설정 / 머신 초기화 기능을 통해 Management Node 와 Location Node 를 관리할 수 있습니다. 
+* 마스터 머신 : Management Node 가 실행 될 머신을 선택합니다. 마스터 머신이 등록 되어야 인스턴스 / 노드 제어가 가능합니다.
+* 로케이션 관리 머신 : Location Node 가 실행 될 머신을 선택합니다.
+* Java 버전 : GameAnvil 서버 빌드  사용 된 Java 버전을 선택합니다.
+
+Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드이지만 콘텐츠 구현 및 제어가 불가한 노드입니다.
+머신 설정 / 머신 초기화 기능을 통해 Management Node 와 Location Node 를 관리할 수 있습니다.
 
 ### 머신 설정 초기화
 
 머신 설정 기능을 통해 등록 한 마스터 머신과 로케이션 관리 머신 설정을 초기화 해주는 기능입니다.
 
-기존에 설정 된 머신 설정값이 초기화 되면서 Management Node 와 Location Node 도 종료됩니다. 
+기존에 설정 된 머신 설정값이 초기화 되면서 Management Node 와 Location Node 도 종료됩니다.
 
 기존에 등록 된 모든 인스턴스 상태가 동작 중이 아닌 경우에만 머신 설정 초기화가 가능합니다.
 
 ![management_machine_init.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_init_ko.png)
 
 ![management_machine_setup_none.png](https://static.toastoven.net/prod_gameanvil/images/management_machine_setup_none_ko.png)
-
-
 
 ## 인스턴스
 
@@ -141,7 +140,7 @@ Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드�
 
 Port는 **18000 ~ 20000** 사이의 값이 사용되며, 동일 머신 내에서 중복되지 않게 사용되어야 합니다.
 
-구성된 Port 입력을 마친 후 **포트 중복 확인**을 통해 먼저 등록된 인스턴스들과의 Port 중복 체크를 진행해야 합니다.  
+구성된 Port 입력을 마친 후 **포트 중복 확인**을 통해 먼저 등록된 인스턴스들과의 Port 중복 체크를 진행해야 합니다.
 
 ![ManagementInstance-14](https://static.toastoven.net/prod_gameanvil/images/management_instance_register_7_ko.png)
 
@@ -211,11 +210,11 @@ Port는 **18000 ~ 20000** 사이의 값이 사용되며, 동일 머신 내에서
 
 게임 특성에 맞게 템플릿들을 등록하고 활용해보세요.
 
-먼저 기본 정보인 템플릿 이름과 설명을 입력합니다. 
+먼저 기본 정보인 템플릿 이름과 설명을 입력합니다.
 
 각 노드별 설정은 직접 설정값을 입력해 등록할 수 있고, **설정 불러오기**를 통해 기존에 등록된 템플릿 설정을 불러와 등록할 수도 있습니다.
 
-유사한 템플릿을 등록하고자 할 때 **설정 불러오기**로 설정을 불러온 후 변경이 필요한 일부 설정값만 직접 입력하여 등록하시면 됩니다.  
+유사한 템플릿을 등록하고자 할 때 **설정 불러오기**로 설정을 불러온 후 변경이 필요한 일부 설정값만 직접 입력하여 등록하시면 됩니다.
 
 ![ManagementTemplate-3](https://static.toastoven.net/prod_gameanvil/images/management_template_register_1_ko.png)
 
@@ -241,29 +240,29 @@ TCP/WEB SOCKET, SSL 사용 여부에 따라 설정값이 달라집니다.
 
 GAME 노드는 **서비스**를 선택하여 설정해야 합니다.
 
-**서비스 선택** 팝업을 통해 최대 99개의 서비스를 선택하여 설정할 수 있습니다. 
+**서비스 선택** 팝업을 통해 최대 99개의 서비스를 선택하여 설정할 수 있습니다.
 
-서비스는 **관리 > 인스턴스 > 서비스** 메뉴에서 관리할 수 있습니다. 
+서비스는 **관리 > 인스턴스 > 서비스** 메뉴에서 관리할 수 있습니다.
 
 ![ManagementTemplate-8](https://static.toastoven.net/prod_gameanvil/images/management_template_register_6_ko.png)
 
-원하는 서비스를 선택한 후 확인하면 각 서비스별로 필요한 설정값을 추가로 입력하게 됩니다. 
+원하는 서비스를 선택한 후 확인하면 각 서비스별로 필요한 설정값을 추가로 입력하게 됩니다.
 
-![ManagementTemplate-9](https://static.toastoven.net/prod_gameanvil/images/management_template_register_7_ko.png)  
+![ManagementTemplate-9](https://static.toastoven.net/prod_gameanvil/images/management_template_register_7_ko.png)
 
 SUPPORT 노드도 **서비스**를 선택하여 설정해야 합니다.
 
-GAME 노드와 동일하게 **서비스 선택** 팝업을 통해 최대 99개의 서비스를 선택한 후 설정값을 추가로 입력하게 됩니다. 
+GAME 노드와 동일하게 **서비스 선택** 팝업을 통해 최대 99개의 서비스를 선택한 후 설정값을 추가로 입력하게 됩니다.
 
 ![ManagementTemplate-10](https://static.toastoven.net/prod_gameanvil/images/management_template_register_8_ko.png)
 
 템플릿 등록 중 미리 등록해두지 못한 서비스가 있다면 **서비스 선택** 팝업에서 바로 등록할 수 있습니다.
 
 **서비스 등록** 버튼을 클릭하면 등록 팝업이 나타납니다.
- 
+
 여기서 서비스 ID, 서비스 이름을 입력하여 서비스를 등록할 수 있습니다.
 
-등록만 가능하며, 수정이나 삭제는 **관리 > 인스턴스 > 서비스** 메뉴에서 진행할 수 있습니다.   
+등록만 가능하며, 수정이나 삭제는 **관리 > 인스턴스 > 서비스** 메뉴에서 진행할 수 있습니다.
 
 ![ManagementTemplate-11](https://static.toastoven.net/prod_gameanvil/images/management_template_register_9_ko.png)
 
@@ -351,7 +350,7 @@ Min, Max 범위를 벗어나는 설정값이 입력된 경우 해당 필드가 F
 
 ## 배포파일
 
-GameAnvil 인스턴스에 배포되는 프로세스 파일을 관리하는 메뉴 입니다. 
+GameAnvil 인스턴스에 배포되는 프로세스 파일을 관리하는 메뉴 입니다.
 
 ![ManagementDeployFile-1](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_ko.png)
 
@@ -359,7 +358,7 @@ GameAnvil 인스턴스에 배포되는 프로세스 파일을 관리하는 메�
 
 파일 업로드 메뉴를 통해 배포파일 업로드가 가능하며 한번에 1개의 파일만 업로드가 가능합니다.
 
-확장자가 .jar 인 파일만 업로드를 지원하고 파일 크기는 최대 1GB 까지 허용됩니다. 
+확장자가 .jar 인 파일만 업로드를 지원하고 파일 크기는 최대 1GB 까지 허용됩니다.
 
 업로드 버튼 클릭시 파일 업로드만 수행되며 인스턴스 모니터링 메뉴에서 **배포하기** 기능을 실행하여야 배포가 완료됩니다.
 
@@ -369,7 +368,6 @@ GameAnvil 인스턴스에 배포되는 프로세스 파일을 관리하는 메�
 
 배포 파일 목록에서 배포이력 확인 클릭 시 해당 배포파일의 배포 이력이 하단에 노출 됩니다.
 
-배포가 수행 된 인스턴스, 머신, 배포 일시 등의 정보를 확인할 수 있습니다. 
-
+배포가 수행 된 인스턴스, 머신, 배포 일시 등의 정보를 확인할 수 있습니다.
 
 ![ManagementDeployFile-3](https://static.toastoven.net/prod_gameanvil/images/management_deployfile_history_ko.png)

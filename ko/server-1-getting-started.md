@@ -14,7 +14,7 @@ GameAnvil을 이용해 게임 서버를 개발하는 방법을 자세하게 설�
 
 GameAnvil은 기본적인 골격 작업을 빠르게 완료하기 위해 자체 템플릿을 제공합니다. 템플릿을 사용하면 몇 번의 클릭만으로 기본적인  게임 서버가 완성됩니다. 이렇게 생성된 서버는 간단한 채팅 기능을 포함하고 있습니다. 자세한 사항은 아래의 서버 템플릿 사용법을 참고하세요.
 
-- [템플릿 다운로드](http://static.toastoven.net/prod_gameanvil/files/GameAnvil-Template.zip)
+- [템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil-Template.zip)
 
 - 따라 하기
 
@@ -54,4 +54,4 @@ GameAnvil은 기본적인 골격 작업을 빠르게 완료하기 위해 자체 
 
 GameAnvil은 템플릿뿐 아니라 레퍼런스 프로젝트를 제공합니다. GameAnvil 사용자가 참고할 수 있도록 템플릿으로 구성한 기본 골격에 다양한 기능을 구현해 두었습니다. 이러한 서버와 클라이언트의 레퍼런스 프로젝트는 별도의 메뉴에서 확인할 수 있습니다. 더불어 GameAnvil API와 UML 다이어그램을 JavaDoc 문서로 제공하고 있으니 함께 참고하시기 바랍니다.
 
-[GameAnvil JavaDoc API Reference Site](http://10.162.4.61:9090/gameanvil)(JavaDoc 사이트를 NHN Cloud 내에 포함시킬 경우 해당 도메인으로 교체할 예정)
+[GameAnvil JavaDoc API Reference Site](https://gameplatform.toast.com/docs/api/) (임시 사이트)

@@ -2,7 +2,7 @@
 
 ## 다운로드
 
-https://github.nhnent.com/game-server-engine/sample-game-client-unity.git
+https://github.com/nhn/gameanvil.sample-game-client-unity.git
 
 - ![image.png](http://static.toastoven.net/prod_gameanvil/images/ReferenceClient-1.png)
 
@@ -14,7 +14,7 @@ https://github.nhnent.com/game-server-engine/sample-game-client-unity.git
 
 ## Connector API doc - C
 
-- [Connector API C#](http://10.162.4.61:9090/csharp)
+- [Connector API C#](https://gameplatform.toast.com/docs/api/connector/csharp)
 
 ## 실행 환경 설정 with Unity3d
 

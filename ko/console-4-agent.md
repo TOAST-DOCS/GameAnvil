@@ -2,9 +2,9 @@
 
 Console을 통해 GameAnvil 서버를 실행/중지/배포 하기위해 Agent의 설치가 필요합니다. 
 
-Agent와 GameAnvil로 제작된 게임서버는 Java 프로그램이기 때문에 사전에 JDK를 설치해야 합니다.
+Agent와 GameAnvil로 제작된 게임 서버는 Java 프로그램이기 때문에 사전에 JDK를 설치해야 합니다.
 
-GameAnvil은 JDK8과 JDK11을 지원하기 때문에 사용하고자 하는 버전을 서버를 띄울 모든 장비에 설치하여야 합니다.
+GameAnvil은 JDK 8과 JDK 11을 지원합니다. 서버를 사용할 모든 장비에 원하는 JDK 버전을 설치해야 합니다.
 
 ```
 yum -y install java-1.8.0-openjdk-devel.x86_64
@@ -37,7 +37,7 @@ yum -y install java-11-openjdk java-11-openjdk-devel
 
     | 설정 이름      | 설명                  | 예시                          | 비고                                                         |
     | -------------- | --------------------- | ----------------------------- | ------------------------------------------------------------ |
-    | server.address | Agent가 사용하는 ip   | server.address=10.160.194.108 | 해당 값을 설정하지 않을 경우 머신에 할당된 모든 IP로 접속할 수 있기 때문에 가급적 사용할 IP를 꼭 지정해줍니다. |
+    | server.address | Agent가 사용하는 IP   | server.address=10.160.194.108 | IP를 설정하지 않으면 머신에 할당된 모든 IP로 접속할 수 있기 때문에, 사용할 IP를 꼭 지정하는 것이 좋습니다. |
     | server.port    | Agent가 사용하는 port | server.port=19080             | console에서 설정된 GameAnvil Agent Port와 값이 동일해야 합니다. (기본값 : 19080) |
 
     
