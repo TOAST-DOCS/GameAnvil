@@ -20,7 +20,7 @@ GameAnvil 서비스를 활성화 시킨 후 가장 먼저 머신 등록 작업�
 * 호스트 이름 : 등록 할 장비의 호스트명을 입력 합니다.
 * IP 주소 : 등록 할 장비의 Public IP 주소를 입력합니다. 해당 주소를 통해 콘솔과 통신하므로 정확한 주소 입력이 필요합니다.
 * GameAnvil Agent Port : 해당 장비에 설치 된 GameAnvil Agent Port 정보를 입력합니다. ( 기본 값은 19080 입니다. )
-  * 파일 업로드 : 템플릿 예시 파일을 다운로드 받아 등록 할 머신 정보를 입력 후 파일을 업로드 합니다. [ [Template File](https://static.toastoven.net/prod_gameanvil/files/GameAnvil_Machine_Template.csv)]
+  * 파일 업로드 : 템플릿 예시 파일을 다운로드 받아 등록 할 머신 정보를 입력 후 파일을 업로드 합니다. [[Template File](https://static.toastoven.net/prod_gameanvil/files/GameAnvil_Machine_Template.csv)]
 
 ### 머신 목록
 
@@ -58,7 +58,7 @@ Management Node 와 Location Node 는 GameAnvil 을 구성하는 필수 노드�
 
 머신 관리를 통해 등록한 머신에 띄울 인스턴스를 관리합니다.
 
-인스턴스는 여러 [노드](server-2-basic) 들로 구성되며 게임 환경에 따라 인스턴스를 원하는 형태로 구성할 수 있습니다.
+인스턴스는 여러 [노드](know-01-node#1-node) 들로 구성되며 게임 환경에 따라 인스턴스를 원하는 형태로 구성할 수 있습니다.
 
 ### 목록
 
