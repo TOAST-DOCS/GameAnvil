@@ -1,10 +1,10 @@
 ## Game > GameAnvil > 클라이언트 개발 가이드 > Unity 개발 가이드
 
-가이드 환경
+## 가이드 환경
 
 - Unity 2018.4.1f1
 - Visual Studio 2017
-- GameAnvil Connector: 1.1.0
+- GameAnvil Connector: 1.2.0
 
 ## GameAnvil 커넥터 설치
 
@@ -18,34 +18,80 @@ gameanvil-sample-template.unitypackage는 서버 템플릿에 포함된 채팅 �
 
 ![unitypackage](http://static.toastoven.net/prod_gameanvil/images/client-1-chatting-client.png)
 
-## 커넥터 생성
+## Connector
+GameAnvil 커넥터를 사용하려면 먼저 Connector를 생성해야 합니다. 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 콜백을 등록할 수 있습니다.
 
-GameAnvilConnector를 사용하려면 먼저 커넥터를 생성해야 합니다. 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 델리게이트를 등록할 수 있습니다.
-
-```
+### 생성
+다음과 같이 Connecor를 생성할 수 있습니다.
+``` C#
 using GameAnvil;
 Connector connector = new Connector();
 ```
 
-서버와 주고받는 메시지 처리를 위해 Update() 함수를 주기적으로 호출합니다. MonoBehaviour의 Update() 에서 호출하도록 하는것이 제일 간편한방법이며, 필요에 따라 다른 방식으로 호출해도 무방합니다. Update() 함수의 호출 주기는 자유롭게 설정해도 되지만 호출하지 않을 경우 서버로부터 메시지를 받더라도 이에 대한 알림을 받을 수 없습니다.
-
+### 설정
+Connector가 동작에 사용되는 설정이 있습니다. 이 설정들은 Connector 생성시 기본값으로 설정되지만 필요하다면 다음과 같이 직접 값을 바꿀 수 있습니다. 
+``` C#
+using GameAnvil;
+Connector connector = new Connector();
+connector.config.packetTimeout = 10;
 ```
+`Connector.Config`를 미리 생성해놓고 이를 인자로 받아서 Connector 를 생성할 수도 있습니다. 또 이렇게 생성한`Connector.Config`를 MonoBehavior의 맴버로 만들어 놓을 경우 Unity의 Inspector 창에서 설정값을 바꿀 수도 있습니다. 
+``` C#
+using GameAnvil;
+var config = new Connector.Config();
+config.packetTimeout = 10;
+Connector connector = new Connector(config);
+```
+
+설정의 종류는 다음과 같습니다.
+| 이름 | 설명 | 기본값|
+|--- | --- | --- |
+|defaultReqestTimeout | TimeOut 기본 대기시간 설정 | 3(sec) |
+| packetTimeout | 패킷이 지정된 시간안에 업데이트 되지 않으면, disconnect 되었다고 판단된다. pingInterval 보다 높게 설정되야 한다. | 5(sec)|
+|pingInterval |서버와의 연결을 확인하기 위한 ping 주기 설정. 0일경우 사용안함 3(sec) |
+| useIPv6 | 접속시 IPv6 주소로 변환 여부 | false |
+| useSocketNoDelay | 소켓의 Nodelay 사용 여부 | true |
+
+
+### 로그
+Connector는 직접 로그를 남기지 않고 콜백을 통해 로그를 전달합니다. 다음과 같이 콜백을 등록해야 Connector에서 발생하는 로그를 받을 수 있습니다. 
+``` c#
+connector = new GameAnvil.Connector();
+connector.Logger += (level, log) =>
+{
+Debug.Log(string.Format("Log[{0}]:{1}", level, log));
+};
+connector.LvNetLogger += (level, log) =>
+{
+Debug.Log(string.Format("Net[{0}]:{1}", level, log));
+};
+```
+Connector.Logger는 Connector에서 발생한 에러나 경고등에 대한 로그를 전달하고, Connector.LvNetLogger는 Connector와 서버가 주고받는 Packet을 처리에 대한 로그를 전달하며 그 양이 많습니다. Connector.LvNetLogger는 개발중에만 사용하길 권장합니다. 
+
+### Update
+서버와 주고받는 메시지 처리를 위해 Update() 함수를 주기적으로 호출해야 합니다. MonoBehaviour의 Update() 에서 호출하도록 하는것이 제일 간편한방법이지만, 필요에 따라 다른 방식으로 호출해도 무방합니다만 Thread safe하지 않으므로 별도의 Thread에서 호출하면 안됩니다. Update() 함수의 호출 주기는 자유롭게 설정해도 되지만 호출하지 않을 경우 서버로부터 메시지를 받더라도 이에 대한 알림을 받을 수 없습니다.
+
+```c#
 connector.Update();
 ```
 
+### ConnectHandler
 간단하게 다음과 같이 MonoBehaviour를 상속받아 커넥터를 관리하는 스크립트를 만들어 사용할 수 있습니다.
 
-```
+```c#
 using GameAnvil;
 
 public class ConnectHandler : MonoBehaviour
 {
     public static Connector connector = null;
 
-    private void Awake()
+	[SerializeField]
+	GameAnvil.Connector.Config config = null;
+
+	private void Awake()
     {
         if(connector == null){
-            connector = new GameAnvil.Connector();
+            connector = new GameAnvil.Connector(config);
             // 커넥터 로그 추가
             connector.Logger += (level, log) =>
             {
@@ -64,6 +110,22 @@ public class ConnectHandler : MonoBehaviour
             connector.Update();
     }
 
+	private void OnApplicationPause(bool pause){
+        if (pause)
+        {
+            // 입력한 시간동안 서버의 clientStateCheck 기능을 정지시킨다
+            // 이시간이 지나면 clientStateCheck 기능이 동작하여 연결이 끊어질 수 있다. 
+            connector.GetConnectionAgent().PauseClientStateCheck(10 * 60);
+          
+            connector.Update();
+        } else {
+            connector.Update();
+
+            // 서버의 clientStateCheck 기능을 다시 동작시킨다.
+            connector.GetConnectionAgent().ResumeClientStateCheck();
+        }
+    }
+    
     private void OnDestroy()
     {
         if (connector != null && connector.IsConnected())
@@ -73,50 +135,160 @@ public class ConnectHandler : MonoBehaviour
     }
 }
 ```
-
 이 코드는 예시이며 필요에 따라 적절하게 변경해 사용하면 됩니다. 이제 GameAnvil 커넥터의 사용 준비가 완료되었습니다.
 
-## 서버 접속 및 인증
-
-서버 접속 및 인증은 ConnectionAgent를 이용해 진행합니다. ConnectionAgent는 GameAnvil 서버의 커넥션 노드와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 서버 구현에 따라 채널 정보를 제공하거나 사용자 정의 메시지를 주고받을 수 있습니다. ConnectionAgent는 커넥터가 초기화될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다. 접속 및 인증 결과는 IConnectionListener를 구현한 리스너를 등록해 알 수 있습니다.
-
+## ConnectionAgent
+ConnectionAgent는 GameAnvil 서버의 커넥션 노드와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 서버 구현에 따라 채널 정보를 제공하거나 사용자 정의 메시지를 주고받을 수 있습니다. ConnectionAgent는 커넥터가 초기화될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다.
+```c#
+ConnectionAgent connectionAgent = connector.GetConnectionAgent();
 ```
-class ConnectionListener : IConnectionListener{
-    ...
+### 서버 접속
+ConnectionAgent의 Connect 함수를 이용해 서버에 접속합니다. 인자로 서버의 ip 주소와 port 번호, 응답을 처리할 콜백을 넘겨줍니다. 콜백의 ResultCodeConnect result 매개변수를 통해 성공/실패를 확인할 수 있습니다.
+```c#
+connector.GetConnectionAgent().Connect(ip, port, (ConnectionAgent connectionAgent, ResultCodeConnect result) => {
+    if (result == ResultCodeConnect.CONNECT_SUCCESS) {
+		// 접속 성공
+    } else {
+	    // 접속 실패
+    }
+});
+```
+
+### 인증
+ConnectionAgent의 Authenticate 함수를 이용해 인증절차를 진행합니다. 인자로 deviceId, accountId, password, payload, 응답을 처리할 콜백을 넘겨줍니다. deviceId는 중복 접속에 대한 처리에 활용되며, accountId와 password를 활용하여 서버에서 인증 처리를 할 수 있습니다. 인증을 위해 deviceId, accountId, password 외의 추가 정보가 필요할 경우 payload에 담아 보낼수 있으며 사용하지 않을 경우 payload 인자는 생략할 수 있습니다.  
+Authenticate 함수를 호출하면 서버에서는 BaseConnection의 onAuthentication() 콜백이 호출되며 이 콜백의 처리 결과로 인증의 성공, 실패가 결정됩니다.
+
+```c#
+connector.GetConnectionAgent().Authenticate(deviceId, accountId, password, payload
+         (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
+    if (result == ResultCodeAuth.AUTH_SUCCESS) {
+		// 인증 성공
+    } else {
+		// 인증 실패
+    }
+});
+```
+
+### 체널 정보
+GameAnvil은 설정으로 자유롭게 채널을 구성할 수 있습니다. 이런 채널구성은 서버와 클라이언트간에 미리 약속하여 고정된 형태로 사용할 수도 있지만, 상황에 따라 다양하게 변경하여 사용할 수도 있습니다. ConnectionAgent에서는 이렇게 변경된 채널 정보를 얻어올 수 있도록 몇가지 함수를 제공합니다. 
+
+GetChannelList()는 특정 서비스의 채널 아이디 목록을 요청하여 받아올 수 있습니다. 인자로 서비스 이름과 응답을 처리할 콜백을 넘겨줍니다. 
+```c#
+connector.GetConnectionAgent().GetChannelList(serviceName, (ConnectionAgent connection, ResultCodeChannelList result, List<string> channelIdList) => {
+	if(result == ResultCodeChannelList.CHANNEL_LIST_SUCCESS){
+		// 채널 목록 요청 성공
+	} else {
+		// 채널 목록 요청 실패
+	}
+});
+```
+GetChannelCountInfo()는 특정 채널의 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 인자로 서비스 이름과 채널 아이디, 응답을 처리할 콜백을 넘겨줍니다. 
+```
+connector.GetConnectionAgent().GetChannelCountInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) => {
+	if(result == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS){
+		// 채널 카운트 정보 요청 성공
+	} else {
+		// 채널 카운트 정보 요청 실패
+	}
+});
+```
+GetChannelInfo()는 특정 채널의 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 인자로 서비스 이름과 채널 아이디, 응답을 처리할 콜백을 넘겨줍니다. 
+```c#
+connector.GetConnectionAgent().GetChannelInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelInfo result, Payload payload) => {
+	if(result == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS){
+		// 채널 정보 요청 성공
+	} else {
+		// 채널 정보 요청 실패
+	}
+});
+```
+GetAllChannelCountInfo()는 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 인자로 서비스 이름과 응답을 처리할 콜백을 넘겨줍니다. 
+```
+connector.GeConnectionAgent().GetAllChannelCountInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) => {
+	if(result == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS){
+		// 모든 채널 카운트 정보 요청 성공
+	} else {
+		// 모든 채널 카운트 정보 요청 실패
+	}
+});
+```
+GetAllChannelInfo()는 특정 서비스의 모든 채널에 대한 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 인자로 서비스 이름과 응답을 처리할 콜백을 넘겨줍니다. 
+```c#
+connector.GetConnectionAgent().GetAllChannelInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelInfo result, Dictionary<string, Payload> payload) => {
+	if(result == ResultCodeChannelInfo.ALL_CHANNEL_INFO_SUCCESS){
+		// 모든 채널 정보 요청 성공
+	} else {
+		// 모든 채널 정보 요청 실패
+	}
+});
+```
+### 접속 종료
+ConnectionAgent의 Disconnect 함수를 이용해 서버와의 접속을 종료합니다. 인자로 응답을 처리할 콜백을 넘겨줍니다. 콜백의 ResultCodeDisconnect result 매개변수를 통해 결과를 알 수 있습니다.
+```c#
+connector.GetConnectionAgent().Disconnect((ConnectionAgent connectionAgent, ResultCodeDisconnect result) => {
+    if (result == ResultCodeDisconnect.SOCKET_DISCONNECT) {
+		// 정상 종료
+    } else {
+	    // 비정상 종료
+    }
+});
+```
+### Listener
+
+ConnectionAgent에는 모든 동작의 결과 또는 알림을 받을 수 있도록 각각의 delegate를 맴버로 가지고 있습니다. 이 delegate에 함수를 등록하면 앞서 설명한 API에 콜백 인자를 생략하고 호출했을 경우 또는 서버에서 일림을 보냈을 경우 등록한 함수로 응답을 받을 수 있습니다.  
+
+```c#
+connector.GetConnectionAgent().onConnectListeners += listener.OnConnect;
+connector.GetConnectionAgent().onAuthenticationListeners += listener.OnAuthentication;
+connector.GetConnectionAgent().onChannelListListeners += listener.OnChannelList;
+connector.GetConnectionAgent().onChannelInfoListeners += listener.OnChannelInfo;
+connector.GetConnectionAgent().onAllChannelInfoListeners += listener.OnAllChannelInfo;
+connector.GetConnectionAgent().onChannelCountInfoListeners += listener.OnChannelCountInfo;
+connector.GetConnectionAgent().onAllChannelCountInfoListeners += listener.OnAllChannelCountInfo;
+connector.GetConnectionAgent().onDisconnectListeners += listener.OnDisconnect;
+connector.GetConnectionAgent().onErrorCommandListeners += listener.OnError;
+connector.GetConnectionAgent().onErrorCustomCommandListeners += listener.OnError;
+```
+
+IConnectionListener는 ConnectionAgent의 모든 동작의 결과 또는 알림을 정의한 인터페이스입니다. 이 인터페이스를 구현한 리스너를 ConnectionAgent.AddConnectionListener()로 등록하면 등록한 리스너로 응답을 받을 수 있습니다. 
+
+```c#
+public class ConnectionListener : IConnectionListener
+{
+    public void OnAllChannelCountInfo(ConnectionAgent connectionAgent, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) { }
+    public void OnAllChannelInfo(ConnectionAgent connectionAgent, ResultCodeAllChannelInfo result, Dictionary<string, Payload> channelInfo) { }
+    public void OnAuthentication(ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) { }
+    public void OnChannelCountInfo(ConnectionAgent connectionAgent, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) { }
+    public void OnChannelInfo(ConnectionAgent connectionAgent, ResultCodeChannelInfo result, Payload channelInfo) { }
+    public void OnChannelList(ConnectionAgent connectionAgent, ResultCodeChannelList result, List<string> channelIdList) { }
+    public void OnConnect(ConnectionAgent connectionAgent, ResultCodeConnect result) { }
+    public void OnDisconnect(ConnectionAgent connectionAgent, ResultCodeDisconnect result, bool force, Payload payload) { }
+    public void OnError(ConnectionAgent connectionAgent, ErrorCode errorCode, Commands commands) { }
+    public void OnError(ConnectionAgent connectionAgent, ErrorCode errorCode, string command) { }
 }
 
-
-ConnectionListener listener = new ConnectionListener();
-
-
-GameAnvil.ConnectionAgent connectionAgent = connector.GetConnectionAgent();
-connectionAgent.AddConnectionListener(listener);
-
-
-// ip    : ip address
-// port    : port
-connectionAgent.Connect(ip, port);
-// ConnectionListener.OnConnect으로 응답
-
-
-// deviceId    : 사용자 기기를 식별 할 수 있는 고유 ID. 서버 구현에 따라 사용하지 않을 수 있음.
-// accountId   : 사용자 계정을 식별 할 수 있는 고유 ID.
-// password    : 사용자 계정의 패스워드. 서버 구현에 따라 사용하지 않을 수 있음.
-connectionAgent.Authentication(deviceId, accountId, password);
-// ConnectionListener.OnAuthentication으로 응답
+connector.GetConnectionAgent().AddConnectionListener(new ConnectionListener);
 ```
 
-## 로그인 및 기본 기능 사용
 
-로그인/로그아웃 및 기본 기능은 UserAgent를 통해 사용할 수 있습니다. UserAgent는 GameAnvil 서버의 게임 노드와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 룸 관리 등 기본 기능을 제공하며, 서버 구현에 따라 사용자 정의 기능을 추가적으로 제공할 수도 있습니다. UserAgent를 사용하기 위해서는 Connector.CreateUserAgent() 함수를 이용해 새로운 UserAgent를 생성해야 합니다. ServiceId 와 SubId로 구분되는 여러개의 UserAgent를 생성할 수 있으며 생성된 각 UserAgent는 독립적으로 사용할 수 있습니다. 생성된 UserAgent는 Connector 에서 내부적으로 관리되며 Connector.GetUser()함수를 이용해 다시 사용할 수 있습니다. 로그인/로그아웃 및 기본 기능의 결과는 IUserListener를 등록해 알 수 있습니다. UserAgent는 Connector.CreateUserAgent() 함수를 이용해 생성할 수 있습니다. ServiceId 와 SubId로 구분되는 여러 개의 UserAgent를 생성할 수 있으며 생성된 각 UserAgent는 독립적으로 사용할 수 있습니다. 생성된 UserAgent는 Connector 내부에서 캐싱하게 되며 Connector.GetUserAgent() 함수를 이용해 다시 사용할 수 있습니다. 
 
+## UserAgent
+
+UserAgent는 GameAnvil 서버의 게임 노드와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 룸 관리 등 기본 기능을 제공하며, 서버 구현에 따라 사용자 정의 기능을 추가적으로 제공할 수도 있습니다. UserAgent를 사용하기 위해서는 Connector.CreateUserAgent() 함수를 이용해 새로운 UserAgent를 생성해야 합니다. ServiceId 와 SubId로 구분되는 여러개의 UserAgent를 생성할 수 있으며 생성된 각 UserAgent는 독립적으로 사용할 수 있습니다. 생성된 UserAgent는 Connector 에서 내부적으로 관리되며 Connector.GetUser()함수를 이용해 다시 사용할 수 있습니다. 로그인/로그아웃 및 기본 기능의 결과는 IUserListener를 등록해 알 수 있습니다. UserAgent는 Connector.CreateUserAgent() 함수를 이용해 생성할 수 있습니다. ServiceId 와 SubId로 구분되는 여러 개의 UserAgent를 생성할 수 있으며 생성된 각 UserAgent는 독립적으로 사용할 수 있습니다. 생성된 UserAgent는 Connector 내부에서 캐싱하게 되며 Connector.GetUserAgent() 함수를 이용해 다시 사용할 수 있습니다. 
 ```
 // serviceId    : UserAgent가 사용할 serviceId. 
 // subId        : 서비스별 UserAgent식별 할 수 있는 고유 ID. 1 이상의 정수.
-UserAgent userAgent = connector.CreateUserAgent(serviceId, subId);
+UserAgent userAgent = connector.GetUserAgent(serviceId, subId);
+if(userAgent == null) {
+	userAgent = connector.CreateUserAgent(serviceId, subId);
+}
 
+```
+### 로그인 및 기본 기능 사용
+로그인/로그아웃 및 기본 기능은 UserAgent를 통해 사용할 수 있습니다. 
 
-userAgent = connector.GetUserAgent(serviceId, subId);
+```
+
 class UserListener : IUserListener{
     ...
 }
@@ -328,3 +500,7 @@ Messages.RoomInfo roomInfo = payload.GetMessage<Messages.RoomInfo>()
 ## GameAnvil Connector 종료
 
 게임 플레이 종료 전 Connector.CloseSoket() 함수를 호출해 연결을 종료하는 것이 좋습니다. 종료하지 않으면 서버에서 클라이언트의 종료를 인지하지 못할 수 있으며, 그럴 경우 불필요한 동작을 계속할 수 있습니다. 
+
+## 백그라운드 접속 끊김 방지
+
+## 재접속

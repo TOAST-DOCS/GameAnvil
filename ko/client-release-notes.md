@@ -1,7 +1,7 @@
-## Game > GameAnvil > Connector > 릴리스 노트
+## Game > GameAnvil > 릴리스 노트 > Connector
 
 ### 1.1.1 (2021.02.10)
-#### Typescript
+#### Typescript [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.1.zip)
 ##### Change
 * SingleServer 
 	* onMatchRoom 사용 시 payload에 null이 넘어오는 이슈 수정
@@ -13,7 +13,7 @@
 	* 등록된 콜백에서 에러가 발생 할 경우 callstack 정보가 사용자에게 올라 갈 수 있도록 다시 throw
 
 ### 1.1.0 (2020.12.18)
-#### C-Sharp
+#### C-Sharp [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.0.unitypackage)
 ##### Change
 * .Net 4.5 이상 지원으로 완전 전환
 	* 사용 라이브러리 모두 .Net 4.5 용 최신 버전으로 교체
@@ -22,12 +22,12 @@
 	* IsAuthenticated() : 인증되었는지 확인 API 추가.
 * SingleServer의 GameAnvil.Action -> GameAnvil.Handler로 이름 변경.
 
-#### Typescript
+#### Typescript [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.0.zip)
 ##### Change
 * 호환성 이슈로 수정하여 GitEnterprize에 올려놓고 사용하던 protobufjs를 이슈가 수정된 공식 최신버전으로 교체
 
 ### 1.0.1 (2020.10.08)
-#### Typescript
+#### Typescript  [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.1.zip)
 
 ##### FIX
 
@@ -42,7 +42,7 @@
 
 ### 1.0.0 (2020.08.31)
 
-#### C-Sharp
+#### C-Sharp [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
 
 ##### Change
 
@@ -62,7 +62,7 @@
 
 
 
-#### Typescript
+#### Typescript [다운로드](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.0.zip)
 
 ##### Change
 
