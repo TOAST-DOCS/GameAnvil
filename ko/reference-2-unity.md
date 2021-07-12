@@ -8,7 +8,7 @@
 
 # 2. 클라이언트 다운로드
 
-[Sample Game Client](https://github.com/nhn/gameanvil.sample-game-client-unity/tree/master)
+[Sample Game Client](https://github.com/nhn/gameanvil.sample-game-client-unity.git)
 
 
 

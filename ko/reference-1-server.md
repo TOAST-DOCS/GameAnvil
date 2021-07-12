@@ -8,7 +8,7 @@
 
 # 2. 서버 다운로드
 
-[Sample Game Server](https://github.com/nhn/gameanvil.sample-game-server/tree/master)
+[Sample Game Server](https://github.com/nhn/gameanvil.sample-game-server.git)
 
 
 
