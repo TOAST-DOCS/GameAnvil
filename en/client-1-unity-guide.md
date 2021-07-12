@@ -189,7 +189,7 @@ Run Windows command prompt (cmd) to navigate to the protocols folder and enter t
 ../GameAnvil/protoc/protoc --csharp_out=./ messages.proto
 ```
 
-Then you can see the Messages.cs file created in the protocols folder. 
+Then you can see the Messages.cs file created in the protocols folder.
 
 ### Registering Message
 
@@ -229,7 +229,7 @@ user.Request(SampleRequest);
 
 ### Custom Message
 
-Arbitrary data except ProtocolBuffer can be serialized as byte stream and used via packet class. For more information on packet, visit [here](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/client-1-unity-guide/##Packet).
+Arbitrary data except ProtocolBuffer can be serialized as byte stream and used via packet class. For more information on packet, visit [here](./unity-06-packet).
 
 ```
 Connector connector = new Connector();
@@ -277,7 +277,7 @@ Messages.SampleRequest requestMsg = new Messages.SampleRequest();
 Packet packet = new Packet(requestMsg);
 ```
 
-Packet 
+Packet
 
 ```
 byte[] requestMsg = Encoding.UTF8.GetBytes(JsonString);
@@ -289,7 +289,7 @@ string JsonString = Encoding.UTF8.GetString(bytes);
 
 ### Compression
 
-If the size of a packet is too large, it can be compressed to reduce data usage.  
+If the size of a packet is too large, it can be compressed to reduce data usage.
 
 ```
 Messages.SampleRequest requestMsg = new Messages.SampleRequest();
@@ -304,7 +304,7 @@ CustomMessage.SampleResponse responseMsg = packet.GetMessage<CustomMessage.Sampl
 
 ## Payload
 
-When using the default API provided by GameAnvil, you may need additional data. For this, the default API includes the payload parameter to deliver additional data. The data required for the payload can be stored in a packet in a list form. You can add more data here and send it to the server or extract the message sent to the server. 
+When using the default API provided by GameAnvil, you may need additional data. For this, the default API includes the payload parameter to deliver additional data. The data required for the payload can be stored in a packet in a list form. You can add more data here and send it to the server or extract the message sent to the server.
 
 ```
 using GameAnvil;
@@ -320,4 +320,5 @@ Messages.RoomInfo roomInfo = payload.GetMessage<Messages.RoomInfo>()
 ```
 
 ## Closing GameAnvil Connector
+
 Disconnecting via calling the Connector.CloseSocket() function before shutting down the game play is recommended. Otherwise, the server may not recognize that the client has shut down and keep performing unnecessary tasks.
