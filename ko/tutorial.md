@@ -22,7 +22,7 @@
 
 파인더 창이 뜨면 다운로드 받은 템플릿을 선택합니다.
 
-![https://static.toastoven.net/prod_gameanvil/images/tutorial/select_import.png]()
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/select_import.png)
 
 파일 템플릿과 프로젝트 템플릿을 모두 체크한 후 임포트합니다. 가져오기가 완료되면 InteliJ를 다시 시작하고 튜토리얼용 프로젝트를 엽니다.
 
@@ -78,13 +78,13 @@ GameAnvil 프로젝트의 VM Option에 아래 내용을 추가합니다. 이는 
 Java 8 버전을 사용할 경우 아래의 내용을 추가합니다.
 
 ```
--javaagent:/[유저의 홈 디렉토리]/.m2/repository/com/nhn/gameanvil/quasar-core/0.7.10/quasar-core-0.7.10-jdk8.jar=bm
+-javaagent:/YOUR_PATH/.m2/repository/com/nhn/gameanvil/quasar-core/0.7.10/quasar-core-0.7.10-jdk8.jar=bm
 ```
 
 Java 11 버전을 사용한다면, 대신 아래 내용을 추가합니다.
 
 ```
--javaagent:/[유저의 홈 디렉토리]/.m2/repository/com/nhn/gameanvil/quasar-core/0.8.0/quasar-core-0.8.0-jdk11.jar=bm
+-javaagent:/YOUR_PATH/.m2/repository/com/nhn/gameanvil/quasar-core/0.8.0/quasar-core-0.8.0-jdk11.jar=bm
 ```
 
 GameAnvil 프로젝트가 구성된 IntelliJ 우측 상단의 Run 아이콘을 클릭해 서버를 실행시킵니다. 혹은 Run 메뉴 > Run 을 선택해서 실행할 수도 있습니다. 이 때, 서버가 정상적으로 구동되면 아래와 같이 onReady 로그들이 다수 출력됩니다. GameAnvil 서버는 여러개의 노드들로 구성되어 있으므로 각각의 노드마다 준비가 완료되면 onReady 로그를 출력합니다. 클라이언트가 직접 접속할 GatewayNode가 onReady 되었다면 GameAnvil 서버는 이제 언제든 접속이 가능한 상태입니다.
@@ -518,7 +518,7 @@ GameAnvil은 GameNode의 유연한 구현을 위해 여러가지 콜백 메서�
   ],
 ```
 
-이런 설정까지 추가한 [GameAnvilConfig.json](https://static.toastoven.net/prod_gameanvil/files/GameAnvilConfig.json)도 필요할 경우 다운로드해서 사용하실 수 있습니다.
+이런 설정까지 추가한 [GameAnvilConfig.json](https://static.toastoven.net/prod_gameanvil/files/GameAnvilConfig.json?disposition=attachment)도 필요할 경우 다운로드해서 사용하실 수 있습니다.
 
 <br>
 
