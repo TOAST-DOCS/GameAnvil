@@ -10,7 +10,7 @@ GameAnvil에서 객체 전송이란 하나의 노드에서 다른 노드로 객�
 
 ## 2. 유저 전송 (UserTransfer)
 
-![gamenode-user-transfer2.png](http://static.toastoven.net/prod_gameanvil/images/gamenode-user-transfer2.png)
+![gamenode-user-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-user-transfer2.png)
 
 게임 노드에는 게임 유저 객체가 생성됩니다. 이 게임 유저 객체는 게임 노드 사이에서 언제든지 전송될 수 있습니다. 예를 들면 1번 게임 노드의 유저 객체가 2번 게임 노드에 생성된 방으로 들어가는 과정에서 게임 노드 간 유저 객체 전송이 일어납니다. 이 기술은 GameAnvil의 가장 핵심이자 근간이 되며 유저 객체를 잘 직렬화/역직렬화해야 의도한 대로 동작합니다. 이러한 직렬화/역직렬화 대상은 GameAnvil 사용자가 직접 구현할 수 있습니다. 즉, 해당 게임 유저 객체의 어떤 값을 전송할 것인지 결정하는 것이죠.
 
@@ -86,7 +86,7 @@ addTimer(2, TimeUnit.SECONDS, 0, "transferRoomTimerHandler2", false);
 
 ## 3. 방 전송 (RoomTranfer)
 
-![gamenode-room-transfer2.png](http://static.toastoven.net/prod_gameanvil/images/gamenode-room-transfer2.png)
+![gamenode-room-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-room-transfer2.png)
 
 방 전송은 중급 개념에서 설명한 유저 전송과 매우 비슷한 기능입니다. 유저 보다 큰 개념인 방이 전송되는 차이가 있을 뿐입니다. 게임 노드에는 한 명 이상의 게임 유저가 참여한 방 객체가 생성될 수 있습니다. 이 방 객체는 유저 객체와 마찬가지로 게임 노드 사이에서 전송될 수 있습니다. 예를 들면 1번 게임 노드의 방 객체가 2번 게임 노드로 전송이 되는 것이죠. 이렇게 방이 전송될 때 당연하게도 방 안에 존재하는 유저들도 함께 전송이 일어납니다. 그 덕분에 방이 전송되기 전/후의 게임 흐름은 연속되어 진행될 수 있습니다. 즉, 해당 방 객체가 전송되는 과정은 매우 빠르게 진행되므로 방 안의 유저들은 인지하지 못한 상태에서 게임을 지속할 수 있습니다.  이 기술은 GameAnvil 무점검 패치(NonStopPatch)의 핵심이자 근간이 되며 방 객체를 잘 직렬화/역직렬화해야 의도한대로 동작합니다. 이러한 직렬화/역직렬화 대상은 GameAnvil 사용자가 직접 구현할 수 있습니다. 즉, 해당 방 객체의 어떤 값을 전송할 것인지 결정하는 것이죠.
 

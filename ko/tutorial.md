@@ -12,35 +12,35 @@
 
 다음 링크를 통해서 InteliJ용 프로젝트 파일 템플릿과 튜토리얼용 프로젝트를 다운로드 받습니다.
 
-[프로젝트 템플릿 다운로드](http://static.toastoven.net/prod_gameanvil/files/GameAnvil Template.zip?disposition=attachment)
+[프로젝트 템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Template.zip?disposition=attachment)
 
-[튜토리얼용 프로젝트 다운로드](http://static.toastoven.net/prod_gameanvil/files/GameAnvil Tutorial Project.zip?disposition=attachment)
+[튜토리얼용 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Tutorial Project.zip?disposition=attachment)
 
 다운로드 받은 템플릿을 적용하기 위해 InteliJ에서 단축키 `Shift Shift` 로 전체 검색창을 띄운 다음 `Import Settings...` 을 검색합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/search_import_settings.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/search_import_settings.png" />
 
 파인더 창이 뜨면 다운로드 받은 템플릿을 선택합니다.
 
-![http://static.toastoven.net/prod_gameanvil/images/tutorial/select_import.png]()
+![https://static.toastoven.net/prod_gameanvil/images/tutorial/select_import.png]()
 
 파일 템플릿과 프로젝트 템플릿을 모두 체크한 후 임포트합니다. 가져오기가 완료되면 InteliJ를 다시 시작하고 튜토리얼용 프로젝트를 엽니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/new_project_gameanvil_tutorial.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/new_project_gameanvil_tutorial.png"/>
 
 
 
 프로젝트 이름과 위치를 확인한 후 Finish를 눌러 프로젝트를 생성합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/new_project_gameanvil_tutorial_finish.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/new_project_gameanvil_tutorial_finish.png" />
 
 Trust Project를 선택합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/trust_project.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/trust_project.png"/>
 
 이제 IntelliJ에 아래와 같은 서버 프로젝트 골격이 구성되었습니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/gameanvil_projectview_init.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/gameanvil_projectview_init.png"/>
 
 <br>
 
@@ -48,26 +48,26 @@ Trust Project를 선택합니다.
 
 Unity Hub를 실행한 후 우상단 New 버튼을 눌러 새로운 프로젝트 생성 창을 띄웁니다. 
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/unityhub.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unityhub.png)
 
 창 좌측의 2D를 선택하고, 프로젝트 이름과 위치를 확인한 후 Create를 눌러 프로젝트 생성을 완료합니다.
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/unityhub_new_project.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unityhub_new_project.png)
 
 다음 링크를 통해서 커넥터와 튜토리얼용 소스들을 다운로드 받습니다. 커넥터는 GameAnvil 서버와의 통신에 필요한 클라이언트 API를 제공합니다.
 
-[[ gameanvil-connector.unitypackage ]](http://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)
-[[ GameAnvilTutorial.unitypacakge ]](http://static.toastoven.net/prod_gameanvil/files/GameAnvil Tutorial.unitypackage)
+[[ gameanvil-connector.unitypackage ]](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)
+[[ GameAnvilTutorial.unitypacakge ]](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Tutorial.unitypackage)
 
-다운로드 받은 파일을 Unity 프로젝트에 드래그해서 프로젝트상에 가져옵니다. 또는 Asset - Import Package - Custom Package... 메뉴를 열어 탐색기에서 다운로드 받은 파일을 선택합니다.![](http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_import_custom_package.png)
+다운로드 받은 파일을 Unity 프로젝트에 드래그해서 프로젝트상에 가져옵니다. 또는 Asset - Import Package - Custom Package... 메뉴를 열어 탐색기에서 다운로드 받은 파일을 선택합니다.![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_import_custom_package.png)
 
 모든 체크 박스를 채운 후 Import 버튼을 클릭합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_import_custom_package_window.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_import_custom_package_window.png"/>
 
 아래와 같이 프로젝트 기본 창 폭과 높이를 각각 1920, 1080으로 설정합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_project_setting_resolution.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_project_setting_resolution.png"/>
 
 ## 2. 서버 구동 및 연결
 
@@ -221,7 +221,7 @@ public void Connect(){
 
 이제 Unity 클라이언트를 플레이하여 콘솔 상에 로그가 제대로 출력되는지 확인합니다. 게임 화면의 텍스트상에 IP, Port의 접속 정보와 더불어 연결 성공 메시지를 확인할 수 있습니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_connection_test.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_connection_test.png"/>
 
 <br>
 
@@ -233,7 +233,7 @@ public void Connect(){
 
 이러한 방을 서버에서 어떻게 구현하고, 클라이언트는 어떻게 방 생성이나 참여를 요청하는지 알아보겠습니다. `Ctrl + N` 또는 `Cmd + N` 으로 새 파일 생성 컨텍스트 메뉴를 열어 GameUser를 선택합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/new_gameuser.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/new_gameuser.png"/>
 
 ```java
 import co.paralleluniverse.fibers.SuspendExecution;
@@ -301,7 +301,7 @@ BasicUser는 GameAnvil에서 제공하는 BaseUser 클래스를 상속하여 간
 
 유저를 구현했으니 이제 방을 구현해 보겠습니다. 서버 프로젝트에 기본적인 형태의 Room 클래스를 생성합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/new_gameroom.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/new_gameroom.png"/>
 
 아래와 같이 유저를 저장할 맵을 추가합니다.
 
@@ -392,7 +392,7 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 이제 유저와 방이 준비되었으니 이들을 처리해줄 GameNode를 구현합니다. 이 노드는 일반적으로 게임 서버가 하는 역할을 수행하는 노드입니다. 
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/new_gamenode.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/new_gamenode.png"/>
 
 ```java
 import co.paralleluniverse.fibers.SuspendExecution;
@@ -518,7 +518,7 @@ GameAnvil은 GameNode의 유연한 구현을 위해 여러가지 콜백 메서�
   ],
 ```
 
-이런 설정까지 추가한 [GameAnvilConfig.json](http://static.toastoven.net/prod_gameanvil/files/GameAnvilConfig.json)도 필요할 경우 다운로드해서 사용하실 수 있습니다.
+이런 설정까지 추가한 [GameAnvilConfig.json](https://static.toastoven.net/prod_gameanvil/files/GameAnvilConfig.json)도 필요할 경우 다운로드해서 사용하실 수 있습니다.
 
 <br>
 
@@ -593,7 +593,7 @@ public void Auth(){
 
 Unity 클라이언트를 플레이 해서 콘솔 상에 로그가 출력됨을 확인합니다. 게임 화면 상에 인증 정보와 인증 성공 여부가 나타남을 확인할 수 있습니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_authentication_test.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_authentication_test.png"/>
 
 <br>
 
@@ -639,7 +639,7 @@ public void Login(){
 
 Unity 테스트 모드를 통해 성공적으로 로그인 되는 것을 확인합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_login_test.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_login_test.png"/>
 
 <br>
 
@@ -672,7 +672,7 @@ public void CreateRoom(){
 
 씬에서 Create Room 버튼의 OnClick 리스너에 ConnectHandler 컴포넌트를 드래그해서 등록하고, 드롭다운에서 CreateRoom메서드를 선택합니다.
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_create_room_on_click.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_create_room_on_click.png)
 
 여기까지 완료 되었으면, 이번에는 ConnectionHandler에 방 참가 코드를 추가합니다. userAgent.JoinRoom 메서드의 첫 번째 인자가 서버에서 사용한 사전 정의된 RoomType 문자열과 일치하는지 확인합니다.
 
@@ -728,7 +728,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그리고 
 
 그 상태로 Unity 플레이모드를 실행한 후, 앞서 생성한 방의 RoomId를 직접 입력해서 방에 참가하도록 합니다.
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_room_test.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_room_test.png)
 
 <br>
 
@@ -903,7 +903,7 @@ public class GameManager : MonoBehaviour
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 빌드된 게임에서 방을 생성하고 서버측 로그를 확인합니다. 그 상태로 Unity 플레이모드를 실행한 후 앞서 생성한 방의 RoomId를 입력하여 해당 방에 참가한 후 채팅이 제대로 동작하는지 확인합니다.
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_chat_test.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_chat_test.png)
 
 간단한 채팅 서버 구현을 통해서 메시지 처리 과정을 학습했습니다. 다음에는 좀 더 실용적인 예제의 구현 과정을 살펴보겠습니다.
 
@@ -921,7 +921,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 빌드된 
 
 서버 프로젝트의 src/main/proto 경로에 Puzzle.proto 파일을 추가한 후 아래와 같이 프로토콜 명세를 작성합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_proto.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_proto.png"/>
 
 ````
 syntax="proto3";
@@ -946,11 +946,11 @@ PuzzlePosition은 퍼즐 조각의 위치를 나타내기 위해서 각 퍼즐 �
 
 이제 src/main/java 경로에 새롭게 Puzzle.java 클래스가 생성된 것을 확인할 수 있습니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_proto_java.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_proto_java.png" />
 
 C# 클래스 파일은 Finder 등의 프로그램을 이용해서 Unity 프로젝트의 Asset/Protocol 경로로 이동합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_proto_csharp.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_proto_csharp.png" />
 
 <br>
 
@@ -1074,7 +1074,7 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
 퍼즐의 위치 정보를 받아서 처리하는 핸들러를 작성합니다. src/main/java에 handler 패키지와 game 패키지를 추가하고, 기존 클래스들을 알맞은 패키지에 옮겨 놓습니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_position_handler.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_position_handler.png"/>
 
 그리고 src/main/java/handler에 PuzzlePositionHandler.java 파일을 생성합니다.
 
@@ -1152,7 +1152,7 @@ public class GameManager : MonoBehaviour{
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 빌드된 게임에서 방을 생성한 후, Unity 플레이모드를 실행하여 생성된 방의 RoomId를 입력해서 방에 참가합니다. 이제 퍼즐 조각을 이동하면, 해당 퍼즐 조각의 위치가 클라이언트 사이에서 동기화 되는 것을 확인할 수 있습니다.
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_puzzle_position_playmode.gif)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_puzzle_position_playmode.gif)
 
 <br>
 
@@ -1280,13 +1280,13 @@ public GameManager : Monobehaviour{
 
 씬 상의 ScatterPuzzle 버튼의 OnClick 리스너에 GameManager 컴포넌트를 드래그해서 등록하고, 드롭다운에서 Scatter메서드를 선택합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/unity_scatter_puzzle_on_click.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_scatter_puzzle_on_click.png"/>
 
 ### 9.3. 서버 측 구현
 
 섞기 요청이 들어왔을 때의 처리 핸들러 ScatterPuzzleHandler를 작성합니다.
 
-<img src="http://static.toastoven.net/prod_gameanvil/images/tutorial/scatter_puzzle_handler.png"/>
+<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/scatter_puzzle_handler.png"/>
 
 ```Java
 package handler;
@@ -1506,9 +1506,9 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 자, 이�
 
 match라는 이름의 패키지를 생성하고, UserMatchInfo 클래스를 생성합니다. 파일명은 BasicUserMatchInfo으로 합니다.
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/new_user_match_info.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_user_match_info.png)
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/user_match_info.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/user_match_info.png)
 
 이 클래스에는 매칭에 사용될 유저의 정보를 담게 됩니다. 매치메이킹에 사용될 요소가 있다면 여기에 추가하면 됩니다. 이번 예제에서는 별다른 요소를 추가하지 않고, 필수적으로 구현해야하는 메서드만을 작성해서 사용하겠습니다. 한 가지 주의할 점은 getId() 메서드가 반드시 요청한 유저의 아이디를 반환하게 구현하도록 합니다. 그리고 파티 매치메이킹 기능은 사용하지 않으므로 0을 반환하도록 설정합니다.
 
@@ -1576,9 +1576,9 @@ public class BasicUser extends BaseUser {
 
 유저 매치메이킹을 사용하기 위한 기본적인 준비가 되었으면, 이제 실제 매치메이킹을 수행하는 매치메이커를 작성합니다. 아래와 같이 match 패키지에 BasicUserMatchmaker 클래스를 추가합니다.
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/new_user_match_maker.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_user_match_maker.png)
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/basic_user_match_maker.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic_user_match_maker.png)
 
 생성자에서는 부모 클래스의 생성자를 호출하면서 인자로 매치 인원수와 매치 신청 유효시간을 전달합니다. 유효 시간이 지나면 해당 매치 요청은 자동으로 취소됩니다. 그리고 실제 매치메이킹을 수행하는 match 메소드는 엔진에 의해 1초에 한번씩 호출됩니다.
 
@@ -1682,7 +1682,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태
 
 우선 매치메이킹 요청을 나타낼 클래스를 구현합니다. match 패키지 안에 BasicRoomMatchForm 클래스를 생성합니다. 
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/new_room_match_maker_form.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_room_match_maker_form.png)
 
 유저가 매치메이킹 요청을 할 때마다 BasicRoomMatchForm 객체가 생성되어 사용됩니다. 생성자에서 부모 생성자로 전달하는  "BASIC_MATCHING_USER_CATEGORY"는 이 문서에서는 신경쓰지 않아도 됩니다.
 
@@ -1702,7 +1702,7 @@ public class BasicRoomMatchForm extends BaseRoomMatchForm implements Serializabl
 
 다음은 매칭 대상이 되는 방의 정보를 표현하는 클래스를 구현합니다. 다음과 같이 BasicRoomMatchInfo 클래스를 생성합니다.
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/new_room_match_info.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_room_match_info.png)
 
 이 때, 방의 최대 정원은 static 필드에 지정된 4명입니다. 이러한 최대 정원과 유저 타입을 반드시 상속받은 BaseRoomMatchInfo의 생성자에 인자로 전달해야 합니다.
 
@@ -1730,7 +1730,7 @@ public class BasicRoomMatchInfo extends BaseRoomMatchInfo implements Serializabl
 
 자, 다음은 실제로 룸 매치메이킹을 처리할 룸 매치메이커를 생성합니다.
 
-![](http://static.toastoven.net/prod_gameanvil/images/tutorial/new_room_match_maker.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_room_match_maker.png)
 
 다음과 같이 BasicRoomMatchMaker를 작성합니다.
 

@@ -4,7 +4,7 @@
 
 GameAnvil은 다음과 같은 목적을 위해 비동기 지원을 합니다.
 
-![async-goal.png](http://static.toastoven.net/prod_gameanvil/images/async-goal.png)
+![async-goal.png](https://static.toastoven.net/prod_gameanvil/images/async-goal.png)
 
 파이버 상에서의 비동기 처리를 위해 GameAnvil은 Async 클래스를 제공합니다. 아래와 같은 import문을 통해 Async 클래스를 이용하면 일반적인 블로킹/논블로킹 호출을 모두 파이버화 할 수 있습니다.
 

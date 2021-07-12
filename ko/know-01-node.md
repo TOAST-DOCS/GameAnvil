@@ -20,7 +20,7 @@ GameAnvil 서버 구성의 가장 기본이 되는 단위는 노드입니다. �
 
 이러한 노드의 계층 구조는 아래의 그림과 같은 모습입니다.
 
-![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/NodeLayer.png)
+![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/NodeLayer.png)
 
 
 

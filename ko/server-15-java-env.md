@@ -20,13 +20,13 @@ GameAnvil은 AdoptOpenJDK를 사용합니다. 지원하는 Java 버전은 8과 1
 
 
 
-![jdk11-settings.png](http://static.toastoven.net/prod_gameanvil/images/jdk11-setting.png)
+![jdk11-settings.png](https://static.toastoven.net/prod_gameanvil/images/jdk11-setting.png)
 
 
 
 - Build, Execution, Deployment -> Build Tools -> Maven -> Importing 선택 후 "JDK for importer" 에서 JDK 11 설정
 
-  ![jdk11-importer.png](http://static.toastoven.net/prod_gameanvil/images/jdk11-importer.png)
+  ![jdk11-importer.png](https://static.toastoven.net/prod_gameanvil/images/jdk11-importer.png)
 
   
 
@@ -34,7 +34,7 @@ GameAnvil은 AdoptOpenJDK를 사용합니다. 지원하는 Java 버전은 8과 1
 
 - Build, Execution, Deployment -> Build Tools -> Maven -> Runner 선택 후 JRE 11 설정
 
-  ![jdk11-maven-runner.png](http://static.toastoven.net/prod_gameanvil/images/jdk11-maven-runner.png)
+  ![jdk11-maven-runner.png](https://static.toastoven.net/prod_gameanvil/images/jdk11-maven-runner.png)
 
   
 
@@ -42,18 +42,18 @@ GameAnvil은 AdoptOpenJDK를 사용합니다. 지원하는 Java 버전은 8과 1
 ### 1.4. Project SDK, Language level 설정
 
 - File -> Project Structure 선택
-  ![jdk11-project-structure.png](http://static.toastoven.net/prod_gameanvil/images/jdk11-project-structure.png)
+  ![jdk11-project-structure.png](https://static.toastoven.net/prod_gameanvil/images/jdk11-project-structure.png)
 
 
 - Project Settings -> Project 선택 후 "Project SDK" 와 "Project language level"을 동일하게 설정 (8 혹은 11)
-  ![jdk11-project-sdk.png](http://static.toastoven.net/prod_gameanvil/images/jdk11-project-sdk.png)
+  ![jdk11-project-sdk.png](https://static.toastoven.net/prod_gameanvil/images/jdk11-project-sdk.png)
 
 
 
 ### 1.5. 사용할 모듈의 Language level 설정
 
 - Project Settings -> Modules 선택 후 사용자의 개발 프로젝트를 지정하여 Language level을 이전의 Project SDK의 그것과 동일하게 설정
-  ![jdk11-lang-level.png](http://static.toastoven.net/prod_gameanvil/images/jdk11-lang-level.png)
+  ![jdk11-lang-level.png](https://static.toastoven.net/prod_gameanvil/images/jdk11-lang-level.png)
 
 
 
@@ -62,5 +62,5 @@ GameAnvil은 AdoptOpenJDK를 사용합니다. 지원하는 Java 버전은 8과 1
 - 마지막으로 프로젝트의 구성을 편집합니다. 다음과 같이 사용자가 생성해둔 구성을 편집하거나 새롭게 작성할 수 있습니다.
 
   사용자의 Application을 선택한 후 JRE 버전을 확인한 후 앞서 설정한 JDK 버전과 같은 값으로 설정합니다.
-  ![jdk11-jre.png](http://static.toastoven.net/prod_gameanvil/images/jdk11-jre.png)
+  ![jdk11-jre.png](https://static.toastoven.net/prod_gameanvil/images/jdk11-jre.png)
 

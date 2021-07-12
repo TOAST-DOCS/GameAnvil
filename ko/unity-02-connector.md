@@ -30,7 +30,7 @@ config.packetTimeout = 10;
 Connector connector = new Connector(config);
 ```
 
-![image-20210710153045251](http://static.toastoven.net/prod_gameanvil/images/unity-02-connector-01-config.png)
+![image-20210710153045251](https://static.toastoven.net/prod_gameanvil/images/unity-02-connector-01-config.png)
 
 설정의 종류는 다음과 같습니다.
 
