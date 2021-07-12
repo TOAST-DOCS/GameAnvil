@@ -8,7 +8,7 @@
 
 GameAnvil 서버는 기본적으로 노드(Node) 단위로 구성합니다. 그 중 사용자의 코드가 구동되는 노드는 아래의 그림과 같이 총 네 가지입니다. 이 네 가지 노드의 구현 방법을 중심으로 서버 개발 방법을 하나씩 살펴보도록 하겠습니다.
 
-![Nodes on Network.png](https://static.toastoven.net/prod_gameanvil/images/user_nodes_on_network.png)
+![Nodes on Network.png](https://static.toastoven.net/prod_gameanvil/images/user_nodes_on_network_.png)
 
 
 
