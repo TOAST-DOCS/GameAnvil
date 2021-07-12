@@ -1,10 +1,12 @@
+## Game > GameAnvil > CocosCreator 개발 가이드 > 패킷
+
 ## 패킷
 
 서버와 주고받는 모든 메시지는 패킷 모듈에 실려서 처리되며 패킷 모듈이 제공하는 인터페이스를 이용하게 됩니다.
 
 ### 생성
 
-GameAnvil 커넥터는 Google Protocol Buffer를 기본 프로토콜로 사용하고 있습니다 . Google Protocol Buffer를 이용하는 패킷생성은 다음과 같습니다.
+GameAnvil 커넥터는 Google Protocol Buffers를 기본 프로토콜로 사용하고 있습니다 . Google Protocol Buffers를 이용하는 패킷생성은 다음과 같습니다.
 
 ```typescript
 let sampleMessage = new Messages.SampleMessage();
@@ -13,7 +15,7 @@ let packet= Packet.CreateFromPbMsg(sampleMessage);
 let sampleMessage2 = packet.GetPbMessage<Messages.SampleMessage>();
 ```
 
-Google Protocol Buffer를 사용하지 않고도 패킷을 생성할 수 있습니다 .
+Google Protocol Buffers를 사용하지 않고도 패킷을 생성할 수 있습니다 .
 
 ```typescript
 let enc = new TextEncoder();

@@ -1,3 +1,5 @@
+## Game > GameAnvil > CocosCreator 개발 가이드 > Connector
+
 ## Connector
 
 GameAnvil 커넥터를 사용하려면 먼저 Connector를 생성해야 합니다. 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 콜백을 등록할 수 있습니다.

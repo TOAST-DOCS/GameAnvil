@@ -149,7 +149,7 @@
 
 * ResultCode 추가 및 이름 변경
 
-	* <span style="color:#eb6420">현제 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 FORCE_CLOSE_BY_NEW_CONNECTION 가 넘어오는 문제가 있다. 추후 수정 될 예정.</span>
+	* <span style="color:#eb6420">현재 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 FORCE_CLOSE_BY_NEW_CONNECTION 가 넘어오는 문제가 있다. 추후 수정 될 예정.</span>
 
 #### Fix
 
@@ -204,7 +204,7 @@
 		클라이언트의 연결이 끈겨 있기 때문에 아래 코드는 받을 수 없어야 한다.
 		이 코드를 받았다면 GameAnvil 개발팀에 제보해 주시길 바란다.
 		* FORCE_CLOSE_BY_NEW_CONNECTION : 같은 계정 정보로 새로운 로그인 요청이 들어온 경우. 
-		* <span style="color:#eb6420">현제 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 이 코드가 넘어오는 문제가 있다.
+		* <span style="color:#eb6420">현재 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 이 코드가 넘어오는 문제가 있다.
           추후 수정 될 예정.</span>
 		* FORCE_CLOSE_DISCONNECT_ALARM : 클라이언트가 서버의 상태 체크에 응답을 하지 않은 경우.
 		* FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL : 클라이언트가 서버의 상태 체크에 응답을 하지 않은 경우.

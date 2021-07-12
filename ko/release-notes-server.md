@@ -9,7 +9,7 @@
 #### New
 
 * 사용자 라이센스 적용
-  * [GameAnvil 사용자 라이센스]([GameAnvil 소프트웨어 사용자 라이센스](https://gameplatform.toast.com/kr/services/gameanvil/license))
+  * [GameAnvil 사용자 라이센스](https://gameplatform.toast.com/kr/services/gameanvil/license)
 
 * 노드 단위 구동 및 스케일링 지원
 

@@ -1,17 +1,19 @@
+## Game > GameAnvil > Unity 개발 가이드 > 패킷
+
 ## 패킷
 
 서버와 주고받는 모든 메시지는 패킷 모듈에 실려서 처리되며 패킷 모듈이 제공하는 인터페이스를 이용합니다.
 
 ### 생성
 
-GameAnvil 커넥터는 Google Protocol Buffer를 기본 프로토콜로 사용합니다. Google Protocol Buffer를 이용하는 패킷 생성은 다음과 같습니다.
+GameAnvil 커넥터는 Google Protocol Buffers를 기본 프로토콜로 사용합니다. Google Protocol Buffers를 이용하는 패킷 생성은 다음과 같습니다.
 
 ```c#
 Messages.SampleRequest requestMsg = new Messages.SampleRequest();
 Packet packet = new Packet(requestMsg);
 ```
 
-패킷 
+Google Protocol Buffers를 사용하지 않고도 패킷을 생성할 수 있습니다.
 
 ```c#
 byte[] requestMsg = Encoding.UTF8.GetBytes(JsonString);

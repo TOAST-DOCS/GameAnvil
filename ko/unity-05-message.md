@@ -1,3 +1,5 @@
+## Game > GameAnvil > Unity 개발 가이드 > 메시지 핸들링
+
 ## 메시지 핸들링
 
 ConnectionAgent, UserAgent의 기본 기능 외에 Request()와 Send()를 이용하여 메시지를 서버로 전송할 수 있습니다. 메시지를 전송하기 위해서는 메시지를 생성하고 등록하는 과정이 필요합니다.

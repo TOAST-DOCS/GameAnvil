@@ -1,3 +1,5 @@
+## Game > GameAnvil > Unity 개발 가이드 > 백그라운드 접속 끊김 방지
+
 ## 백그라운드 접속 끊김 방지
 
 모바일 기기에서 게임이 백그라운드로 전환될 경우 유니티의 Application이 멈추게 됩니다. Application이 멈추면 Connecor.upate()를 호출하지 못하게 되고, 따라서 게임서버와 패킷을 주고받지 못하게 됩니다. 이 상태로 시간이 지나면 연결확인을 위한 ping/pong이나 clientStateCheck 패킷도 주고받지 못하게 되고, 결국 서버에서 연결을 끊어버리게 됩니다. 

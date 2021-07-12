@@ -128,12 +128,14 @@
 
 ------
 
+
+
 ### 1.1.0 (2020.12.18) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.0.zip)
+
 #### GameAnvil 1.1.0 이상
 #### Change
 * 호환성 이슈로 수정하여 GitEnterprize에 올려놓고 사용하던 protobufjs를 이슈가 수정된 공식 최신버전으로 교체
 
-------
 ------
 
 
