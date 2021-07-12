@@ -1,6 +1,6 @@
 ## Game > GameAnvil > 서버 개발 가이드 > 메시지 핸들링
 
-![GatewayNode on Network.png](http://static.toastoven.net/prod_gameanvil/images/three_steps_for_message_process.png)
+![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/three_steps_for_message_process.png)
 
 
 

@@ -8,11 +8,11 @@
 
 다수의 파이버들은 스레드풀(Executor)상에서 스케줄링됩니다. 이때, 스레드풀의 크기를 1로 고정하면 바로 GameAnvil 노드의 모델이 됩니다. 즉, 노드는 다수의 파이버를 동시에 처리하기 위한 애너테이션(annotation) 스케줄러인 것입니다. 이를 그림으로 표현하면 아래와 같습니다.
 
-![image.png](http://static.toastoven.net/prod_gameanvil/images/FiberConcept.png)
+![image.png](https://static.toastoven.net/prod_gameanvil/images/FiberConcept.png)
 
 이와 같이 파이버를 사용할 때의 장점은 순차적인 코드 작성이 가능하다는 점입니다. 서버 코드는 일반적인 블로킹 코드를 작성하는 것과 매우 흡사해집니다. 별도의 콜백 처리나 완료 통보에 신경쓸 필요가 전혀 없습니다. 이런 파이버의 장점에 더해 GameAnvil 사용자는 이 파이버 단위에 대해 크게 신경 쓸 필요가 없습니다. GameAnvil 엔진단에서 모든 파이버를 관리하고 있으므로 사용자는 일반적인 싱글 스레딩 코드를 작성하듯이 개발하면 됩니다.
 
-![fiber-context-switching.png](http://static.toastoven.net/prod_gameanvil/images/fiber-context-switching.png)
+![fiber-context-switching.png](https://static.toastoven.net/prod_gameanvil/images/fiber-context-switching.png)
 
 GameAnvil 서버 코드는 비동기 처리를 기반으로 합니다. 이를 위해 [비동기 지원 API](server-10-async)를 제공합니다. 이러한 비동기 API를 사용하여  임의의 파이버 상에서 블로킹 호출을 할 경우에는 해당 파이버만 suspend(대기 상태)됩니다. 이 내용은 문서 아래에서 더 자세히 다루겠습니다.
 

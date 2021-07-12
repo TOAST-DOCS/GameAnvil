@@ -4,11 +4,11 @@
 
 ## 1. Gateway Node란?
 
-![GatewayNode on Network.png](http://static.toastoven.net/prod_gameanvil/images/node_gatewaynode_on_network.png)
+![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gatewaynode_on_network.png)
 
 GatewayNode는 클라이언트가 접속하는 관문(Gateway)입니다. 즉, 클라이언트의 커넥션과 게임 서비스에 대한 세션을 관리합니다. 이 때, 클라이언트는 게임을 진행하기 위해 반드시 GatewayNode에 접속한 후 인증을 완료해야 합니다. 이들의 관계는 다음 그림과 같습니다.
 
-![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
+![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
 일반적으로 클라이언트는 GatewayNode로 하나의 커넥션을 맺습니다. 이때, 해당 커넥션에 대해 인증 절차를 진행하고, 성공한 경우에 한해 하나 이상의 세션을 생성할 수 있습니다. 각각의 세션은 클라이언트와 유저 사이의 논리적 연결 단위입니다. 위의 그림은 클라이언트가 하나의 커넥션을 통해 Game 서비스와 Chat 서비스로 세션을 생성한 모습입니다. 이러한 구조는 의도치 않게 클라이언트의 접속이 끊기더라도, 간단하게 [접속 복구 (Connection Recovery)](know-05-connection-session)를 가능하게 합니다.
 

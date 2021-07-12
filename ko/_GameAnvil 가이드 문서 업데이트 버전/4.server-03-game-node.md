@@ -4,13 +4,13 @@
 
 ## 1. Game Node란?
 
-![GameNode on Network.png](http://static.toastoven.net/prod_gameanvil/images/node_gamenode_on_network.png)
+![GameNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gamenode_on_network.png)
 
 GameNode는 실제 게임 객체가 생성되고 게임 컨텐츠를 구현하는 노드입니다. 클라이언트는 GatewayNode에서 인증을 완료한 후, GameNode에 로그인을 완료해야 비로소 이러한 게임 컨텐츠를 시작할 수 있습니다.
 
 아래의 이미지에서 보듯이, 클라이언트는 고유한 AccountId로 인증을 완료한 커넥션을 기반으로 여러개의 논리 세션을 생성할 수 있습니다. 이 때, 세션은 클라이언트와 유저 객체 사이에 만들어집니다. 아래의 그림에서 빨간색 점선 화살표가 이러한 세션을 나타냅니다.
 
-![Node Layer.png](http://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
+![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
 각각의 세션은 해당 커넥션 내에서 고유한 값으로 구분할 수 있으며 우리는 이 값을 SubId라고 부릅니다. 즉, AccountId와 SubId의 조합으로 사용자는 원하는 만큼 세션을 생성할 수 있습니다. 이 때, 동일한 서비스에 대한 세션도 마찬가지로 원하는 만큼 생성할 수 있습니다. 즉, 이미지의 Account 1 커넥션은  "Game" 서비스 혹은 "Chat" 서비스에 대한 세션을 얼마든지 추가로 생성할 수도 있습니다.
 

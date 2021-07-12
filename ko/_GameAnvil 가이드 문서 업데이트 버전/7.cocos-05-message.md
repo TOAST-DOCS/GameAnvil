@@ -101,7 +101,7 @@ npm run messages
 
 다음과 같이 `message.js`, `message.d.ts` 파일이 생성된 것을 확인할 수 있습니다.
 
-![messages](http://static.toastoven.net/prod_gameanvil/images/client-2-messages.png)
+![messages](https://static.toastoven.net/prod_gameanvil/images/client-2-messages.png)
 
 ### 메시지 등록
 

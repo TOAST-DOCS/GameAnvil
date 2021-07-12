@@ -58,15 +58,15 @@ IntelliJ JDK 설정은 다음을 확인해 주세요
 
 File > Project Structure > Project Settings > Project 메뉴에서 JDK를 확인 합니다.
 
-![reference-1-server_01](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_01.png) 
+![reference-1-server_01](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_01.png) 
 
 File > Settings > Build, Execution, Deployment > Buil Tools > Maven > Importing 메뉴에서 JDK 를 확인 합니다.
 
-![reference-1-server_02](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_02.png) 
+![reference-1-server_02](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_02.png) 
 
 Maven JDK를 변경 했다면 Maven 탭의 Reload 를 실행해서 프로젝트에 반영을 합니다.
 
-![reference-1-server_03](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_03.png) 
+![reference-1-server_03](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_03.png) 
 
 GameAnvil은 JDK11로 지원을 하고 있기 때문에 JDK11환경이라면 gameanvil:1.2.0-jdk11 버전을 사용 하면됩니다.
 
@@ -74,7 +74,7 @@ GameAnvil은 JDK11로 지원을 하고 있기 때문에 JDK11환경이라면 gam
 
 빌드 환경 설정은 아래의 내용을 순서대로 설정합니다. IntelliJ 버전에 따라 화면은 조금 다를수 있습니다. (스크린샷은 2021.1 버전입니다.)
 
-![reference-1-server_04](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_04.png) 
+![reference-1-server_04](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_04.png) 
 
 - 1: 클릭으로 새로운 빌드 환경 설정 추가
 - 2: +로 Application 추가 -> 3 생성
@@ -345,13 +345,13 @@ Mybatis 연결은 resources/mybatid-config.xml의 접속 설정을 수정해서 
 
 앞서 설정해 두었던 "SampleGameServer" 구성을 이용하여 서버를 실행합니다.
 
-![reference-1-server_05](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_05.png) 
+![reference-1-server_05](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_05.png) 
 
 서버가 정상적으로 구동되면 아래와 같이 모든 노드에 대해 onReady 로그가 출력됩니다.
 
 http://127.0.0.1:18400/management/nodeInfoPage 페이지를 통해서 로컬에서 실행된 노드의 상태를 확인 할수 있습니다. 모든 노드가 READY가 되면 정상 실행 된것입니다.
 
-![reference-1-server_06](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_06.png) 
+![reference-1-server_06](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_06.png) 
 
 구성은 GameNode 4, GatewayNode 4, SupportNode2, IpcNode 1, ManagementNode 1, Locationnode 9, LocationNookupNode1,  MatchNode 1, GatewayNetworkNode 1, SupportNetwotNode1 총 25개 노드가 표시됩니다.
 
@@ -557,11 +557,11 @@ Build 설정
 
 maven 탭의 Lifecycle > package 를 동해서 프로젝트 빌드를 합니다.
 
-![reference-1-server_07](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_07.png) 
+![reference-1-server_07](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_07.png) 
 
 정상적으로 빌드가 완료 되면 프로젝트 폴더 ./target에 빌드된 jar 파일이 생성됩니다.
 
-![reference-1-server_08](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_08.png) 
+![reference-1-server_08](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_08.png) 
 
 
 
@@ -569,7 +569,7 @@ maven 탭의 Lifecycle > package 를 동해서 프로젝트 빌드를 합니다.
 
 Command로 서버를 구동시키려면  Maven으로 빌드된 sample_game_server-1.2.0.jar 파일과 config, query 폴더의 파일을 복사해 사용하면 됩니다.
 
-![reference-1-server_09](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_09.png) 
+![reference-1-server_09](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_09.png) 
 
 ```
 java -Dco.paralleluniverse.fibers.detectRunawayFibers=false -Dco.paralleluniverse.fibers.verifyInstrumentation=false -Dconfig.file=.\config\GameAnvilConfig.json -Dlogback.configurationFile=.\config\logback.xml -DmybatisConfig=.\config\mybatis-config.xml -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar .\sample_game_server-1.2.0.jar
@@ -758,9 +758,9 @@ GameAnvil는 AOT Instrumentation뿐만 아니라 JIT Instrumentation도 지원�
   
   - 플러그인이 설치되어 있다면 다음과 같이 build.bat 파일을 마우스 오른쪽 버튼으로 클릭해 다음과 같은 명령으로 intelliJ에서 바로 변환할 수 있습니다.
   
-    ![reference-1-server_10](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_10.png) 
+    ![reference-1-server_10](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_10.png) 
   
-    ![reference-1-server_11](http://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_11.png) 
+    ![reference-1-server_11](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_11.png) 
 
 ### Gamebase
 
