@@ -1,10 +1,133 @@
 ## Game > GameAnvil > 릴리스 노트 > GameAnvil
 
 
-<br>
-## 1.1.12 (2021.06.07)
 
-### Change
+### 1.2.0 (2021.07.13)
+
+더 자세한 정보는 [배포 노트](https://nhnent.dooray.com/share/posts/sGAj_STlTEWDr5LPgKgIhg)를 참고
+
+#### New
+
+* 사용자 라이센스 적용
+  * [GameAnvil 사용자 라이센스]([GameAnvil 소프트웨어 사용자 라이센스](https://gameplatform.toast.com/kr/services/gameanvil/license))
+
+* 노드 단위 구동 및 스케일링 지원
+
+  * 런타임에서도 새로운 노드를 올릴 수 있는 기능 추가
+  * 기존에 비해 좀더 안정적으로 클러스터링을 맺도록 개선
+  * 노드 상태에 따른 노드 동작 개선
+  * 런타임에 노드 단위로 구동하거나 종료할 수 있음
+
+* 간소화된 부트스트래핑
+  * GameAnvilBootstrap Deprecate 로 설정. 차후 버전에서 삭제될 예정.
+  * GameAnvilBootstrap 대신 GameAnvilServer 인스턴스를 사용하여 GameAnvil 서버 실행.
+  * 제공되는 어노테이션을 사용하여 BaseClass를 GameAnvil에서 읽어오도록 사용성이 개선됨.
+
+  ```java
+  // GameNode 등록
+  @ServiceName("GameNode")
+  public class GameNode extends BaseGameNode {
+  }
+  
+  // GameUser 등록
+  @ServiceName("GameNode")
+  @UserType("GameUserType1")
+  @UseChannelInfo
+  public class GameUser extends BaseUser {
+  }
+  ```
+
+  
+  
+* 
+  비동기 MySQL 쿼리 지원
+  * 비동기 sql 처리를 위해 Jasync-sql / X Dev API 클래스를 추가
+  * 사용자가 쉽게 비동기 sql를 처리하도록 지원
+  
+* 사용자 가이드 문서 보강
+  * 하나의 문서에 함축적으로 나열되어 있던 여러가지 중요한 주제들을 모두 별도의 메뉴로 구성하여 그 내용의 질과 양을 업그레이드 하였습니다
+  * 튜토리얼을 통해 쉽고 간단하지만 꽤 멋진 직소 퍼즐 게임(서버&클라이언트)을 직접 개발해 볼 수 있습니다. 
+  * JavaDoc API 레퍼런스에서 내용이 부족하거나 누락된 부분을 모두 보충하였습니다. 또한 설명이 애매하거나 잘못 이해될 수 있는 문장들을 모두 다듬었습니다.
+
+
+
+#### Fix
+
+* 채널 정보 관리 및 동기화 기능 리팩토링
+
+  * 채널 정보를 효율적으로 관리하도로 개선
+  * 채널 정보를 클라이언트에 보내주는 기능 개선
+  * 채널의 방과 유저의 개수를 얻어오는 기능 추가
+  * 채널 ID를 설정하지 않으면(즉 ""를 사용하면), 더이상 채널 기능을 사용하지 않는 것으로 개선. 채널을 사용하고자 할 경우에는 최소 1이상의 유효한 문자열을 채널 아이디로 사용해야 함.
+
+
+* 방생성시 outPayload가 릴리즈되지 않는 버그 수정
+* 같은 계정의 클라이언트에서 재접속 하기 전까지 룸 매치메이킹이 계속하여 실패하는 버그 수정
+* 유저 매치메이킹 시에 에러가 발생할 경우 클라이언트로 응답을 보내지 않던 버그 수정
+* 발행(publish) API 수정
+
+  * 사용성 개선
+  * 사용자가 의도하지 않은 노드로 publish 메시지가 전달되는 버그를 수정하였습니다. 그와 더불어 publish API의 사용성을 개선하였습니다.
+  * 채널 아이디로 한글을 사용할 때 pushlish 메시지가 대상 노드를 찾지 못하는 버그를 수정하였습니다.
+
+
+
+#### Change
+
+* 클라우드 ACL 환경에 맞춰 기본 포트가 변경되었습니다.
+
+| 이름 | 포트 | 이전포트 |
+| --- | --- | --- |
+| ipcPort | 18000 | 16000 |
+| publisherPort | 18100 | 13300 |
+| gateway tcp | 18200 | 11200 |
+| gateway web | 18300 | 11400 |
+| management | 18400 | 25150 |
+| support | 18600\~18999 | 사용자 정의 |
+| GameAnvil Agent | 19080 |  |
+| GameAnvil Admin | 19090 |  |
+
+* 더 이상 Admin을 지원하지 않습니다. 그로인해 GameAnvil 내부에서는 더 이상 자체 DB를 사용하지 않습니다.
+
+* 더 이상 Dynamic Module을 지원하지 않습니다.
+
+* ZMQ 라이브러리 교체
+	
+	* libzmq 와 jzmq 조합에서 Jeromq로 교체
+	
+* 룸 매치메이킹 리팩토링 및 사용성 개선
+  * 룸매치 메이킹 흐름 개선
+  * 스트레스 테스트 진행 시 방을 찾지 못하는 문제 해결하여 스트레스 테스트 진행이 가능
+  * 방 인원수 정보 관리 기능 추가하여 사용자가 방 인원수 관리 기능을 구현하지 않아도 됨
+  
+* 인증과 로그인 그리고 접속종료 코드 최적화
+
+    * Connection 에서 호출하던 콜백을 Session으로 이동
+    * DisconnectAlarm 원인 파악을 쉽게 하도록 개선
+
+* 사용자 제공 토픽 정리
+
+| 이름 | 설명 | 기본 등록 위치 |
+| --- | --- | --- |
+| GameAnvilTopic.GAME\_NODE | 모든 게임 노드 | GameNode |
+| GameAnvilTopic.GATEWAY\_NODE | 모든 게이트웨이 노드 | GatewayNode |
+| GameAnvilTopic.SUPPORT\_NODE | 모든 서포트 노드 | SupportNode |
+| GameAnvilTopic.ALL\_CLIENT | 접속중인 모든 클라이언트 | Session |
+| GameAnvilTopic.ALL\_GAME\_USER | 게임 노드에 있는 모든 게임 유저 객체 | GameUser |
+
+
+* 예외 처리 및 메소드 시그니쳐 최적화
+
+
+  * 무분별하게 사용된 예외 처리와 메소드 시그니처를 정리하고 사용자에게 필요한 정보만 넘겨주도록 수정
+
+* HttpRequest에 PATCH 메소드 추가
+* 인증서 없이 테스트용으로 SSL를 사용할 수 있는 기능 설정명이 useSelf에서 useSelfSignedCert으로 변경되었습니다.
+
+---
+
+### 1.1.12 (2021.06.07)
+#### Change
 
 * SupportNode에 Gateway 접속정보를 받을 수 있는 API 추가
     * BaseSupportNode.getGatewayConnectionInfoList 함수를 사용하여, Gateway 접속정보 목록을 제공
@@ -29,36 +152,39 @@
   ]
 }
 ```
+---
 
-<br>
-## 1.1.11 (2021.05.06)
+### 1.1.11 (2021.05.06)
 
-### Change
+#### Change
 
 * HttpReqest에 PATCH 메소드를 사용할 수 있는 API 추가
     * httpRequest.PATCH()
     * httpRequest.PATCH(AsyncHttpCompletionHandler asyncHttpCompletionHandler)
     * httpRequest.PATCHAsync()
 
-<br>
-## 1.1.10 (2021-04-21)
+---
 
-### Fix
+### 1.1.10 (2021-04-21)
+
+#### Fix
 
 * RedisSingle에 누락된 password 지원 API 추가
 
-<br>
-## 1.1.9 (2021-04-16)
+---
 
-### Fix
+### 1.1.9 (2021-04-16)
+
+#### Fix
 
 * 클라이언트의 PauseClientStateCheck를 받았을 때 idleClientTimeout 체크도 같이 멈추도록 수정.
 * 클라이언트의 PauseClientStateCheck에서 받은 pauseTime의 단위를 초로 계산하도록 수정.
 
-<br>
-## 1.1.8 (2021-04-15)
+---
 
-### New
+### 1.1.8 (2021-04-15)
+
+#### New
 
 * 클라이언트의 PauseClientStateCheck를 받아 입력받은 시간만큼 해당 클라이언트의 상태체크를 하지 않도록 기능추가.
 * 클라이언트의 ResumeClientStateCheck를 받아 상태 체크를 재개하는 기능 추가.
@@ -66,26 +192,29 @@
     * pauseClientStateCheckMaxDuration = 클라이언트가 보낸 시간값이 해당 수치보다 클경우 해당 수치로 제한
     * pauseClientStateCheckMinDuration = 클라이언트가 보낸 시간값이 해당 수치보다 작을경우 해당 수치로 제한
 
-<br>
-## 1.1.7 (2021-04-02)
+---
 
-### Fix
+### 1.1.7 (2021-04-02)
+
+#### Fix
 
 * /game-data/get 사용시 GameData 값이 JsonObject 가 아니라 String으로 전달되는 문제 수정
 
-<br>
-## 1.1.6 (2021-03-30)
+---
 
-### Change
+### 1.1.6 (2021-03-30)
+
+#### Change
 
 * Dynamic Module 기능이 GameAnvil에서 스펙아웃되어 삭제 되었습니다.
   * 기존에 사용하시는 분들을 위해 Dynamic Module 소스 공개와 사용 가이드를 작성하여 공유 드립니다. 해당 가이드를 참고하셔서 GameAnvil이 아닌 사용자 프로젝트에 Dynamic Module 소스을 추가하여 사용할 수 있습니다.
   * [GameAnvil-Guide/81 Dynamic Module 스펙아웃으로 인한 소스 제공 및 사용법](dooray://1387695619080878080/tasks/2971801626565932016 "closed")
 
-<br>
-## 1.1.5 (2021-03-19)
+---
 
-### Change
+### 1.1.5 (2021-03-19)
+
+#### Change
 
 * GameAnvil DB & Admin 기능(GameData, Dynamic Module 제외) 삭제
 
@@ -108,45 +237,50 @@
 }
 ```
 
-<br>
+---
 
-## 1.1.4 (2021-03-18)
+### 1.1.4 (2021-03-18)
 
-### Fix
+#### Fix
 
 * 룸매칭에 MatchingGroup 적용시 간헐적으로 생성된 방에 Join이 안되는 문제 수정
 
-<br>
-## 1.1.3 (2021-02-05)
+---
 
-### Fix
+### 1.1.3 (2021-02-05)
+
+#### Fix
 
 * 인스턴스 재시작시 Disable상태에서 복구되지 않는 이슈 수정
     * 낮은 확율로 재현될 수 있으나 다시 재시작 할 경우 복구 됨
 
 * ManagementNode에서 nodeInfoByHostId 사용 시 Double.infinity 에러가 뜨는 문제 수정
 
-<br>
+---
 
-## 1.1.2 (2021-01-07)
+### 1.1.2 (2021-01-07)
 
-### Fix
+#### Fix
 
 * DynamicModule에서 SuspendExcution 예외 발생할수 있는 코드 호출시의 예외처리가 누락되어 DynamicModuledml method가 제대로 호출이 안되는 이슈 수정
 
-<br>
-## 1.1.1 (2021-01-05)
+---
 
-### Fix
+### 1.1.1 (2021-01-05)
+
+#### Fix
 
 * GatewayNode 에서 getNodeId()를 호출하면 NPE 발생하는 이슈 수정
 
 * 같은 계정의 클라이언트에서 재접속 하기 전까지 해당 GameUser로 룸 매칭이 계속하여 실패하는 이슈 수정
 
-<br>
-## 1.1.0 (2020-12-17)
+---
 
-### New
+### 1.1.0 (2020-12-17)
+
+더 자세한 정보는 [배포 노트](https://nhnent.dooray.com/share/posts/bWby9jGjQri2cFNR_KYbnw)를 참고
+
+#### New
 
 * Jdk11 지원
 
@@ -177,7 +311,7 @@
     * "-Dalarm.url" VM 옵션을 사용하여, Alarm을 받을 URL을 지정할 수 있습니다.
     * [GameAnvil-Guide/69 Alarm 사용법](dooray://1387695619080878080/tasks/2889206103029829178 "closed")
 
-### Change
+#### Change
 
 * BaseObject의 findAllUserLocsOfAccount 리턴값 UserLoc 로 변경
 
@@ -187,32 +321,36 @@
     * /management/locationLookupNodeInfo
     * /management/matchNodeInfo
 
-### Fix
+#### Fix
 
 * 동일한 AccountId로 다른 SubId를 사용할 경우 로그인은 성공하지만, 그 이후 응답패킷을 받을 수 없는 문제를 수정하였습니다.
 * GatewayNode, MatchNode, SupportNode, ManagementNode의 NodeNum가 1부터 시작하는 문제를 수정하였습니다.
 * Netty의 send,recv buffer 사이즈 최적화와 그에 알맞은 watermark가 적절하게 적용 되도록 수정
 
-<br>
+---
+
 ### 1.0.7 (2021.01.05)
 
 #### Fix
 - GatewayNode 에서 getNodeId()를 호출하면 NPE 발생하는 이슈 수정
 
-<br>
+---
+
 ### 1.0.6 (2020.12.28)
 
 #### Fix
 - `RoomMatchMaking failure. The matched-room({}) does not exist in the game node.` 로그가 남으면서 룸매칭이 실패할 경우 해당 유저는 재접속 학시 전까지 계속하여 룸매칭이 실패하는 이슈 수정
 
-<br>
+---
+
 ### 1.0.5 (2020.11.17)
 
 #### Fix
 
 - RoomMatchReq에서 에러 응답 시 패킷 헤더 복원(restore)이 안 되는 문제 수정
 
-<br>
+---
+
 ### 1.0.4 (2020.10.29)
 
 #### Fix
@@ -223,14 +361,16 @@
 - protobuf 구조체를 변수로 가지고 있는 Class를 deserialize할 때 예외 발생하는 이슈 수정
 - java.lang.UnsupportedOperationException이 발생
 
-<br>
+---
+
 ### 1.0.3 (2020.10.26)
 
 #### Change
 
 - 이전에 스펙에서 제외되었던 공지 기능 API를 다시 활성화
 
-<br>
+---
+
 ### 1.0.2 (2020.10.12)
 
 #### New
@@ -251,7 +391,8 @@
 - RestObject의 getRemoteAddress 값 추가
 - NodeKey 요청 개수를 지정할 수 있도록 수정
 
-<br>
+---
+
 ### 1.0.1 (2020.09.07)
 
 #### Fix
@@ -259,8 +400,11 @@
 - onLogin()에서 false를 리턴할 경우 Payload가 클라이언트로 전달되지 안는 이슈 수정
 - Debug와 Trace 로그문 앞의 로그 레벨 확인 조건문 누락된 부분 추가
 
-<br>
+---
+
 ### 1.0.0 (2020.08.31)
+
+더 자세한 정보는 [배포 노트](https://nhnent.dooray.com/share/posts/5Fvh0aszQ5u6d_ZZxRWPvA)를 참고
 
 #### New
 
@@ -310,7 +454,8 @@
 - 불필요한 ReConnect와 MoveService 기능 제거
 - 등록 시점이 아닌 구동 시점부터 다음 시간을 측정하는 새로운 Timer 추가
 
-<br>
+---
+
 ### 0.10.2 (2020.04.08)
 
 #### New
@@ -333,7 +478,7 @@
 - 룸 매칭 유저들이 서로 다른 방으로 매칭되는 버그 수정
 - 압축된 패킷이 전송 안 되는 문제 수정
 
-
+---
 
 ### 0.10.1 (2020.02.11)
 
@@ -347,6 +492,7 @@
 - Topic 처리 코드 성능 개선
 
 
+---
 
 ### 0.10.0 (2020.02.06)
 
@@ -369,7 +515,7 @@
 - Embedded Redis Spec-out
 - 인프라에서 제공하는 서비스를 사용하도록 가이드
 
-
+---
 
 ### 0.9.9 (2019.10.25)
 
@@ -391,7 +537,7 @@
 - 룸 매치 메이킹을 이미 진행 중인 상태에서 중복 요청이 왔을 경우에 대한 에러 코드 추가
 - MATCH_ROOM_FAIL_IN_PROGRESS
 
-
+---
 
 ### 0.9.8 (2019.09.05)
 
@@ -411,6 +557,7 @@
 - onAuthenticate() 콜백 실패 시에 해당 소켓을 닫기 전에 ForceCloseNoti를 클라이언트로 전송하도록 변경
 
 
+---
 
 ### 0.9.7 (2019.07.27)
 
@@ -437,6 +584,7 @@
 - CreateRoom은 현재의 노드에 바로 방을 생성하도록 변경
 
 
+---
 
 ### 0.9.6 (2019.06.23)
 
@@ -462,6 +610,7 @@
 - NodeStarter에서 LocationNode가 있을 경우에만 sleep하도록 변경
 
 
+---
 
 ### 0.9.5 (2019.06.21)
 
@@ -476,6 +625,7 @@
 - RESTful 지원 API의 내부 구현과 사용법 변경
 
 
+---
 
 ### 0.9.4 (2019.05.24)
 
@@ -496,6 +646,7 @@
 - LocationNode가 CommunicationNode의 onPrepare 시점에 초기화 되도록 변경
 
 
+---
 
 ### 0.9.3 (2019.04.10)
 
@@ -512,6 +663,7 @@
 - Admin에서 Machine 정보의 등록, 수정, 삭제가 요청하는 순간 바로 적용되도록 변경
 
 
+---
 
 ### 0.9.2 (2019.02.11)
 
@@ -536,6 +688,7 @@
 - Dynamic Module 사용성 개선
 
 
+---
 
 ### 0.9.1 (2018.11.12)
 
@@ -564,6 +717,7 @@
 - 룸 매치 메이킹의 onMatchRoom() 콜백에서 추가한 payload가 이후의 흐름에 포함되도록 수정
 
 
+---
 
 ### 0.9.0 (2018.06.27)
 
@@ -584,7 +738,7 @@
 - OracleJDK에서 AdpotOpenJDK로 변경
 - Node(스레드) 단위로 ZMQ 통신하던 것을 프로세스 단위로 변경
 
-
+---
 
 ### 0.8.6 (2018.06.28)
 
@@ -631,7 +785,7 @@
 - forceLogout은 kickOut으로 rename
 - tardisConfig 구성 변경
 
-
+---
 
 ### 0.8.5 (2017.12.18)
 
@@ -655,7 +809,7 @@
 - RestObject 개선, 사용 함수 추가
 - 패킷의 에러 처리 변경, 프로토콜 헤더에 에러코드를 담아서 처리
 
-
+---
 
 ### 0.8.4 (2018.01.10)
 
@@ -686,7 +840,7 @@
 
 - Session IP 오류 수정
 
-
+---
 
 ### 0.8.3 (2017.10.26)
 
@@ -728,7 +882,7 @@
 - Request, Response 프로토콜에서 복수의 payload를 처리할 수 있도록 class Payload 데이터 타입이 Packet 으로 변경, class OutPayload 제거
 - 유저 Transfer-In 인터페이스의 파라미터 타입을 byte 배열로 변경
 
-
+---
 
 ### 0.8.2 (2017.09.21)
 

@@ -41,11 +41,6 @@
 
 ------
 
-
-------
-
-
-
 ### 1.0.0 (2020.08.31) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
 
 #### GameAnvil 1.0.0 이상
@@ -139,11 +134,7 @@
 
 -----
 
-
-
-
 ### 1.0.0-EA (2020.06.29)
-
 
 #### C-Sharp
 ##### Change
