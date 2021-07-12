@@ -27,6 +27,7 @@
   * GetChannelCountInfo() 추가
   * GetAllChannelCountInfo() 추가
 * UserAgent
+  * Login 하지 않은 상태에서 요청을 보낼 경우 NotLoggedIn 예외 발생
   * LoginInfo.Message제거
   * GetChannelInfo() 추가
   * GetAllChannelInfo() 추가
@@ -43,6 +44,10 @@
    * PartyMatch중 PartyMatchCancel 을 제외한 api 호출 시 UserMatchInProgress 예외 발생
    * PartyMatch중이 아닐 때 UserMatchCancel 호출 시 PartyMatchNotInProgress 예외 발생
 * ResultCode
+  * ResultCodeConnect
+    * CONNECT_FAIL_INVALID_IP 추가
+  * ResultCodeAuth
+    * AUTH_FAIL_MAINTENANCE 제거 
   * ResultCodeCreateRoom
     * CREATE_ROOM_FAIL_CREATE_ROOM_ID 추가
     * CREATE_ROOM_FAIL_CREATE_ROOM 추가
