@@ -208,7 +208,7 @@
 
 * Dynamic Module 기능이 GameAnvil에서 스펙아웃되어 삭제 되었습니다.
   * 기존에 사용하시는 분들을 위해 Dynamic Module 소스 공개와 사용 가이드를 작성하여 공유 드립니다. 해당 가이드를 참고하셔서 GameAnvil이 아닌 사용자 프로젝트에 Dynamic Module 소스을 추가하여 사용할 수 있습니다.
-  * [GameAnvil-Guide/81 Dynamic Module 스펙아웃으로 인한 소스 제공 및 사용법](dooray://1387695619080878080/tasks/2971801626565932016 "closed")
+  * [GameAnvil-Guide/81 Dynamic Module 스펙아웃으로 인한 소스 제공 및 사용법](https://nhnent.dooray.com/share/posts/xtwdO6FJTXmr7l28cZSM-w)
 
 ---
 
@@ -219,7 +219,7 @@
 * GameAnvil DB & Admin 기능(GameData, Dynamic Module 제외) 삭제
 
     * GameAnvil 엔진단에서 더이상 DB를 사용하지 않습니다.
-    * 참고: [GameAnvil-Guide/76 Admin 1.1.0 -&gt; 1.1.1 마이그레이션 문서](dooray://1387695619080878080/tasks/2927649576830731642 "closed")
+    * 참고: [GameAnvil-Guide/76 Admin 1.1.0 -&gt; 1.1.1 마이그레이션 문서](https://nhnent.dooray.com/share/posts/GIHoRQ8kTjSi7D4wQjUcWw)
     * 기존에 DB를 사용하던 Admin 기능들은 모두 GameAnvil Admin으로 이동되었습니다.
 
 ```json
@@ -309,7 +309,7 @@
 
     * 서버 내에서 발생한 상황을 지정한 URL로 받을 수 있는 기능 추가했습니다.
     * "-Dalarm.url" VM 옵션을 사용하여, Alarm을 받을 URL을 지정할 수 있습니다.
-    * [GameAnvil-Guide/69 Alarm 사용법](dooray://1387695619080878080/tasks/2889206103029829178 "closed")
+    * [GameAnvil-Guide/69 Alarm 사용법](https://nhnent.dooray.com/share/posts/Ap6DJT9KSaGv916_tj-xAA)
 
 #### Change
 
