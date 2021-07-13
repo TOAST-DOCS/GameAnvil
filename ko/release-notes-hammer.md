@@ -1,6 +1,32 @@
 ## Game > GameAnvil > 릴리스 노트 > GameHammer
 
 
+### 1.1.1 (2021.04.16)
+
+#### New 
+
+* ping 기능 온오프 가능하도록 `Connection.setSendPingPaused()`추가.
+
+#### Fix
+
+* config의 pingIngerval이 적용되지 않는 버그 수정
+* config의 pingIngerval이 0 이면 ping을 안 보내도록 수정
+
+---
+
+### 1.1.0 (2021.04.15)
+
+#### Change
+
+* 서버의 버전과 맞추기위해 1.1.0으로 올림.
+
+#### New
+
+* sendPauseClientStateCheck() 추가.
+* sendResumeClientStateCheck() 추가.
+* 서버에서 오는 상태체크 응답을 켜고 끌 수 있도록 기능 추가
+
+---
 
 ### 1.0.2 (2020.02.10)
 
@@ -18,6 +44,8 @@
     * packetSeq 최대값 16383으로 제한
     * subId 최대값 127, 최소값 1로 제한
 
+---
+
 ### 1.0.1 (2020.12.28)
 
 #### Fix
@@ -28,6 +56,8 @@
 
 #### Change
 * GameHammerConfig.json파일이 없을 경우 출력되는 로그를 error에서 warn으로 변경.
+
+---
 
 ### 1.0.0 (2020.12.18)
 
@@ -61,6 +91,8 @@
 
 #### New
 * 서버에서 보내는 noti를 기다려 처리할 수 있도록 waitForXXX 기능 추가.
+
+---
 
 ### 1.0.0-EA (2020.08.03)
 

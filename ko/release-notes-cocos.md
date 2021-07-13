@@ -1,5 +1,88 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-Typescript
+### 1.2.0 (2021.07.13) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.0.zip)
 
+#### GameAnvil 1.2.0 이상
+
+#### Change
+
+* Request() 또는 다른 API호출시 Callback을 인자로 같이 넘기면 인자로 넘긴 callback으로만 응답이 가도록 변경
+  * Config.useArgumentCallbackOnly 추가 (기본값 true)
+  * Config.useArgumentCallbackOnly 가 false 일경우, Request() 또는 다른 API호출시 Callback을 인자로 같이 넘겨도 인자로 넘긴 callback과 미리 등록한 listener가 동시에 호출.(이전 버전의 동작 방식)
+* ConnectionAgent
+  * 서버에 접속하지 않은 상태에서 요청을 보낼 경우 "Not connected. Connect before call XXX." 에러 발생
+  * Authenticated 되지 않은 상태에서 요청을 보낼 경우 Not authenticated. Authenticate before call XXX." 에러 발생
+    * PauseClientStateCheck(), ResumeClientStateCheck() 는 예외.
+  * LoginedUserInfo.payload 제거
+  * GetAllChannelInfo() 추가
+  * GetChannelCountInfo() 추가
+  * GetAllChannelCountInfo() 추가
+* UserAgent
+  * Login 하지 않은 상태에서 요청을 보낼 경우 "Not loggedIn. Login before call XXX()." 에러 발생
+  * LoginInfo.message제거
+  * GetChannelInfo() 추가
+  * GetAllChannelInfo() 추가
+  * GetChannelCountInfo() 추가
+  * GetAllChannelCountInfo() 추가
+  * CreateRoom() 에 matchingGroup 파라메터 추가
+  * JoinRoom() 에 matchingUserCategory 파라메터 추가
+  * MatchRoom() 에 matchingGroup, matchingUserCategory 파라메터 추가.
+  * MatchUserStart() 에  matchingGroup 파라메터 추가
+  * MatchPartyStart() 에  matchingGroup 파라메터 추가
+  * IsUserMatchInProgress(), IsPartyMatchInProgress(), IsMatchInProgress() 추가
+  * UserMatch중 UserMatchCancel 을 제외한 api 호출 시 "MatchUser is in progress. MatchUserCancel before call XXX." 에러 발생
+   * UserMatch중이 아닐 때 UserMatchCancel 호출 시 "MatchUser is not in progress." 에러 발생
+   * PartyMatch중 PartyMatchCancel 을 제외한 api 호출 시 "MatchParty is in progress. MatchPartyCancel before call XXX." 에러 발생
+   * PartyMatch중이 아닐 때 UserMatchCancel 호출 시 "MatchParty is not in progress." 에러 발생
+* ResultCode
+  * ResultCodeAuth
+    * AUTH_FAIL_MAINTENANCE 제거 
+  * ResultCodeCreateRoom
+    * CREATE_ROOM_FAIL_CREATE_ROOM_ID 추가
+    * CREATE_ROOM_FAIL_CREATE_ROOM 추가
+  * ResultCodeChannelInfo
+    * CHANNEL_INFO_FAIL_NO_CHANNEL_INFO 추가
+    * CHANNEL_INFO_FAIL_INVALID_SERVICE_ID 추가
+    * CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND 추가
+  * ResultCodeAllChannelInfo 추가
+  * ResultCodeChannelCountInfo 추가
+  * ResultCodeAllChannelCountInfo 추가
+  * ResultCodeChannelList
+    * CHANNEL_LIST_FAIL_INVALID_SERVICEID 제거
+    * CHANNEL_LIST_FAIL_NO_CHANNEL_LIST 추가
+  * ResultCodeJoinRoom
+    * JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM 추가
+    * JOIN_ROOM_FAIL_ALREADY_FULL 추가
+    * JOIN_ROOM_FAIL_ROOM_MATCH 추가
+  * ResultCodeLogin
+    * LOGIN_FAIL_MAINTENANCE 제거
+  * ResultCodeMatchUserCancel
+    * MATCH_USER_CANCEL_FAIL_CONTENT -> MATCH_USER_CANCEL_FAIL 이름 변경
+    * MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS 추가
+  * ResultCodeMatchRoom
+    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_ID 추가
+    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM  추가
+    * MATCH_ROOM_FAIL_INVALID_ROOM_ID  추가
+    * MATCH_ROOM_FAIL_INVALID_NODE_ID  추가
+    * MATCH_ROOM_FAIL_INVALID_USER_ID  추가
+    * MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND  추가
+    * MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY 추가
+    * MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY 추가
+    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL  추가
+    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL 추가
+  * ResultCodeMatchUserDone
+    * MATCH_USER_DONE_FAIL_TRANSFER 추가
+    * MATCH_USER_DONE_FAIL_CREATE_ROOM 추가
+  * ResultCodeNamedRoom
+    * NAMED_ROOM_FAIL_CREATE_ROOM 추가
+  * ResultCodeDisconnect
+    * FORCE_CLOSE_MAINTENANCE 제거
+    * FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_ID 추가.
+    * FORCE_CLOSE_DISCONNECT_ALARM 제거
+    * FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT 추가
+    * FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION 추가
+  * ResultCodeSessionClose 추가
+
+------
 
 ### 1.1.3 (2021.04.07) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.3.zip)
 #### GameAnvil 1.1.0 이상
@@ -45,12 +128,14 @@
 
 ------
 
+
+
 ### 1.1.0 (2020.12.18) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.0.zip)
+
 #### GameAnvil 1.1.0 이상
 #### Change
 * 호환성 이슈로 수정하여 GitEnterprize에 올려놓고 사용하던 protobufjs를 이슈가 수정된 공식 최신버전으로 교체
 
-------
 ------
 
 
