@@ -9,8 +9,9 @@
 #### New
 
 * 사용자 라이센스 적용
-  * [GameAnvil 사용자 라이센스](https://gameplatform.toast.com/kr/services/gameanvil/license)
-
+  
+* [GameAnvil 사용자 라이센스](https://gameplatform.toast.com/kr/services/gameanvil/license)
+  
 * 노드 단위 구동 및 스케일링 지원
 
   * 런타임에서도 새로운 노드를 올릴 수 있는 기능 추가
@@ -23,22 +24,22 @@
   * GameAnvilBootstrap 대신 GameAnvilServer 인스턴스를 사용하여 GameAnvil 서버 실행.
   * 제공되는 어노테이션을 사용하여 BaseClass를 GameAnvil에서 읽어오도록 사용성이 개선됨.
 
-  ```java
-  // GameNode 등록
-  @ServiceName("GameNode")
-  public class GameNode extends BaseGameNode {
-  }
-  
-  // GameUser 등록
-  @ServiceName("GameNode")
-  @UserType("GameUserType1")
-  @UseChannelInfo
-  public class GameUser extends BaseUser {
-  }
-  ```
+```java
+// GameNode 등록
+@ServiceName("GameNode")
+public class GameNode extends BaseGameNode {
+}
+
+// GameUser 등록
+@ServiceName("GameNode")
+@UserType("GameUserType1")
+@UseChannelInfo
+public class GameUser extends BaseUser {
+}
+```
 
   
-  
+
 * 
   비동기 MySQL 쿼리 지원
   * 비동기 sql 처리를 위해 Jasync-sql / X Dev API 클래스를 추가
