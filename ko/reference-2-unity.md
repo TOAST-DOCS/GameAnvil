@@ -2,7 +2,7 @@
 
 # 1. Connector API doc - C#
 
-[Connector API C#](https://gameplatform.toast.com/docs/api/connector/csharp)
+[Connector API C#](https://gameplatform.toast.com/docs/api/)
 
 
 
