@@ -1,4 +1,13 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-CSharp 
+### 1.2.1 (2021.08.10) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.1.unitypackage)
+
+#### GameAnvil 1.2.0 이상
+
+#### Fix
+* SocketException 발생시 OnDisconnect가 두번 호출되는 버그 수정
+
+------
+
 ### 1.2.0 (2021.07.13) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.0.unitypackage)
 
 #### GameAnvil 1.2.0 이상
@@ -93,6 +102,14 @@
     * FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT 추가
     * FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION 추가
   * ResultCodeSessionClose 추가
+
+------
+
+### 1.1.3 (2021.08.10) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.3.unitypackage)
+
+#### GameAnvil 1.1.0 이상
+#### Fix
+* SocketException 발생시 OnDisconnect가 두번 호출되는 버그 수정
 
 ------
 
