@@ -1,5 +1,7 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-CSharp 
-### 1.2.2 (2021.11.30) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.2.unitypackage)
+### 1.2.2 (2021.11.30) 
+
+### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.2.unitypackage)
 
 #### GameAnvil 1.2.0 이상
 
@@ -7,7 +9,9 @@
 * 방에 입장한 상태에서 MatchRoom을 호출하여 실패한경우 IsJoinedRoom()이 false로 바뀌는 문제 수정
 
 ------
-### 1.2.1 (2021.08.10) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.1.unitypackage)
+### 1.2.1 (2021.08.10) 
+
+### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.1.unitypackage)
 
 #### GameAnvil 1.2.0 이상
 
@@ -16,7 +20,9 @@
 
 ------
 
-### 1.2.0 (2021.07.13) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.0.unitypackage)
+### 1.2.0 (2021.07.13) 
+
+### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.0.unitypackage)
 
 #### GameAnvil 1.2.0 이상
 
@@ -112,7 +118,9 @@
     * ResultCodeSessionClose 추가
 
 ------
-### 1.1.4 (2021.11.30) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.4.unitypackage)
+### 1.1.4 (2021.11.30) 
+
+### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.4.unitypackage)
 
 #### GameAnvil 1.1.0 이상
 
@@ -120,7 +128,9 @@
 * 방에 입장한 상태에서 MatchRoom을 호출하여 실패한경우 IsJoinedRoom()이 false로 바뀌는 문제 수정
 
 ------
-### 1.1.3 (2021.08.10) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.3.unitypackage)
+### 1.1.3 (2021.08.10) 
+
+### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.3.unitypackage)
 
 #### GameAnvil 1.1.0 이상
 #### Fix
@@ -128,7 +138,10 @@
 
 ------
 
-### 1.1.2 (2021.04.15) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.2.unitypackage)
+### 1.1.2 (2021.04.15) 
+
+### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.2.unitypackage)
+
 #### GameAnvil 1.1.0 이상
 #### New
 * GameAnvil Server의 ClientStateCheck기능을 일시 정지시키는 ConnectionAgent.PauseClientStateCheck() 추가. 앱이 백그라운드로 진입하는 등 메시지 루프가 동작하지 않게 되는 경우 호출해준다.
@@ -142,7 +155,10 @@
 
 
 
-### 1.1.1 (2021.04.07) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.1.unitypackage)
+### 1.1.1 (2021.04.07) 
+
+### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.1.unitypackage)
+
 #### GameAnvil 1.1.0 이상
 #### Change
 * listener개별 등록 여부를 확인 할 수 있는 ContainsListener 오버 로딩 추가. 
@@ -156,7 +172,9 @@
 
 
 
-### 1.1.0 (2020.12.18) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.0.unitypackage)
+### 1.1.0 (2020.12.18) 
+
+### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.0.unitypackage)
 
 #### GameAnvil 1.1.0 이상
 #### Change
@@ -169,7 +187,9 @@
 
 ------
 
-### 1.0.0 (2020.08.31) [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
+### 1.0.0 (2020.08.31) 
+
+### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
 
 #### GameAnvil 1.0.0 이상
 #### Change
