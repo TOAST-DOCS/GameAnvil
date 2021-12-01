@@ -1,7 +1,7 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-Typescript
 ### 1.2.1 (2021.11.30) 
 
-### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.1.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.1.zip)
 
 #### GameAnvil 1.2.0 이상
 
@@ -12,7 +12,7 @@
 
 ### 1.2.0 (2021.07.13) 
 
-### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.0.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.0.zip)
 
 #### GameAnvil 1.2.0 이상
 
@@ -98,7 +98,7 @@
 ------
 ### 1.1.4 (2021.11.30) 
 
-### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.4.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.4.zip)
 
 #### GameAnvil 1.1.0 이상
 
@@ -109,7 +109,7 @@
 
 ### 1.1.3 (2021.04.07) 
 
-### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.3.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.3.zip)
 
 #### GameAnvil 1.1.0 이상
 #### Change
@@ -129,7 +129,7 @@
 
 ### 1.1.2 (2021.03.16) 
 
-### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.2.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.2.zip)
 
 #### GameAnvil 1.1.0 이상
 #### Change
@@ -145,7 +145,7 @@
 
 ### 1.1.1 (2021.02.10) 
 
-### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.1.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.1.zip)
 
 #### GameAnvil 1.1.0 이상
 #### Change
@@ -164,7 +164,7 @@
 
 ### 1.1.0 (2020.12.18) 
 
-### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.0.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.0.zip)
 
 #### GameAnvil 1.1.0 이상
 #### Change
@@ -176,7 +176,7 @@
 
 ### 1.0.1 (2020.10.08) 
 
-### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.1.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.1.zip)
 
 #### GameAnvil 1.0.0 이상
 #### FIX
@@ -189,7 +189,7 @@
 
 ### 1.0.0 (2020.08.31) 
 
-### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.0.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.0.zip)
 
 #### GameAnvil 1.0.0 이상
 #### Change
