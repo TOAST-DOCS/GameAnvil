@@ -1,5 +1,15 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-CSharp 
-### 1.2.2 (2021.11.30) 
+### 1.2.3 (2022.01.28)
+
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.3.unitypackage)
+
+#### GameAnvil 1.2.0 이상
+
+#### Fix
+* 서버에서 보낸 압축 패킷을 처리하지 못하고 오류가 발생하는 문제 수정
+
+------
+### 1.2.2 (2021.11.30)
 
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.2.unitypackage)
 
@@ -116,6 +126,16 @@
         * FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT 추가
         * FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION 추가
     * ResultCodeSessionClose 추가
+
+------
+### 1.1.5 (2022.01.28)
+
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.5.unitypackage)
+
+#### GameAnvil 1.1.0 이상
+
+#### Fix
+* 서버에서 보낸 압축 패킷을 처리하지 못하고 오류가 발생하는 문제 수정
 
 ------
 ### 1.1.4 (2021.11.30) 
