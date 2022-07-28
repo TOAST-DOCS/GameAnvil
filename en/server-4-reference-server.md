@@ -727,11 +727,11 @@ public boolean setUserData(GameUserInfo gameUserInfo) throws SuspendExecution {
 ```
 <!-- Specifies MySQL connection information. -->
 <properties>
-  <property name="hostname" value="10.77.14.22" />
+  <property name="hostname" value="호스트명" />
   <property name="portnumber" value="3306" />
-  <property name="database" value="taptap" />
-  <property name="username" value="taptap" />
-  <property name="password" value="nhn!@#123" />
+  <property name="database" value="데이터베이스명" />
+  <property name="username" value="유저명" />
+  <property name="password" value="패스워드" />
   <property name="poolPingQuery" value="select 1"/>
   <property name="poolPingEnabled" value="true"/>
   <property name="poolPingConnectionsNotUsedFor" value="3600000"/>
