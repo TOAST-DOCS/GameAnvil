@@ -101,7 +101,7 @@ GameAnvil은 JDK11로 지원을 하고 있기 때문에 JDK11환경이라면 gam
 
 ```java
     // 레디스 접속 정보
-    public static final String REDIS_URL = "10.77.14.22"; // GameAnvil 팀 서버
+    public static final String REDIS_URL = "연결 주소";
     public static final int REDIS_PORT = 7500;
 ```
 
@@ -315,11 +315,11 @@ Jasync-sql을 사용하면 `com.nhn.gameanvil.sample.common.GameConstants` 클�
 
 ```java
     // DB 접속 정보
-    public static final String DB_USERNAME = "taptap";
-    public static final String DB_HOST = "10.77.14.22"; // GameAnvil 팀 서버
+    public static final String DB_USERNAME = "유저명";
+    public static final String DB_HOST = "IP"; // GameAnvil 팀 서버
     public static final int DB_PORT = 3306;
-    public static final String DB_PASSWORD = "nhn!@#123";
-    public static final String DB_DATABASE = "taptap";
+    public static final String DB_PASSWORD = "패스워드";
+    public static final String DB_DATABASE = "데이터베이스명";
     public static final int MAX_ACTIVE_CONNECTION = 30;
 ```
 
@@ -332,11 +332,11 @@ Mybatis 연결은 resources/mybatid-config.xml의 접속 설정을 수정해서 
 ```xml
   <!-- MySQL 접속 정보를 지정한다. -->
   <properties>
-    <property name="hostname" value="10.77.14.22" />
+    <property name="hostname" value="호스트명" />
     <property name="portnumber" value="3306" />
-    <property name="database" value="taptap" />
-    <property name="username" value="taptap" />
-    <property name="password" value="nhn!@#123" />
+    <property name="database" value="데이터베이스명" />
+    <property name="username" value="유저명" />
+    <property name="password" value="패스워드" />
   </properties>
 ```
 
@@ -1116,11 +1116,11 @@ DB 연결 정보 설정 : resources/maybatis-config.xml
 ```xml
 <!-- MySQL 접속 정보를 지정한다. -->
 <properties>
-  <property name="hostname" value="10.77.14.22" />
+  <property name="hostname" value="호스트명" />
   <property name="portnumber" value="3306" />
-  <property name="database" value="taptap" />
-  <property name="username" value="taptap" />
-  <property name="password" value="nhn!@#123" />
+  <property name="database" value="데이터베이스명" />
+  <property name="username" value="유저명" />
+  <property name="password" value="패스워드" />
   <property name="poolPingQuery" value="select 1"/>
   <property name="poolPingEnabled" value="true"/>
   <property name="poolPingConnectionsNotUsedFor" value="3600000"/>
