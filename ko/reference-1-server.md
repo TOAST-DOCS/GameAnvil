@@ -316,7 +316,7 @@ Jasync-sql을 사용하면 `com.nhn.gameanvil.sample.common.GameConstants` 클�
 ```java
     // DB 접속 정보
     public static final String DB_USERNAME = "유저명";
-    public static final String DB_HOST = "IP"; // GameAnvil 팀 서버
+    public static final String DB_HOST = "호스트명";
     public static final int DB_PORT = 3306;
     public static final String DB_PASSWORD = "패스워드";
     public static final String DB_DATABASE = "데이터베이스명";
