@@ -26,14 +26,6 @@
 
 파일 템플릿과 프로젝트 템플릿을 모두 체크한 후 임포트합니다. 가져오기가 완료되면 InteliJ를 다시 시작하고 튜토리얼용 프로젝트를 엽니다.
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/new_project_gameanvil_tutorial.png"/>
-
-
-
-프로젝트 이름과 위치를 확인한 후 Finish를 눌러 프로젝트를 생성합니다.
-
-<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/new_project_gameanvil_tutorial_finish.png" />
-
 Trust Project를 선택합니다.
 
 <img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/trust_project.png"/>
@@ -115,7 +107,7 @@ public class ConnectHandler : MonoBehaviour
  		[SerializeField]
     GameAnvil.Connector.Config config;
 
-    static GameAnvil.Connector connector = null;
+    public static GameAnvil.Connector connector = null;
 		private ConnectionAgent connectionAgent;
 
     [Header("Object Reference")]
@@ -178,7 +170,7 @@ public class ConnectHandler : MonoBehaviour
 [SerializeField]
 GameAnvil.Connector.Config config;
 
-static GameAnvil.Connector connector = null;
+public static GameAnvil.Connector connector = null;
 private ConnectionAgent connectionAgent;
 
 public string ip = "127.0.0.1";
@@ -323,7 +315,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class BasicRoom extends BaseRoom<BasicUser> {
     private static final Logger logger = getLogger(BasicRoom.class);
     private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
-    private static Map<Integer, BaseUser> users = new HashMap<>();
+    private Map<Integer, BaseUser> users = new HashMap<>();
 
     @Override
     public boolean onCreateRoom(BasicUser basicUser, Payload inPayload, Payload outPayload) throws SuspendExecution {
@@ -534,7 +526,7 @@ GameAnvil은 GameNode의 유연한 구현을 위해 여러가지 콜백 메서�
 [SerializeField]
 GameAnvil.Connector.Config config;
 
-static GameAnvil.Connector connector = null;
+public static GameAnvil.Connector connector = null;
 private ConnectionAgent connectionAgent;
 
 public string ip = "127.0.0.1";
@@ -623,10 +615,18 @@ public void Auth(){
 			);
 }
 
-public void Login(){
-  	userAgent.Login("BASIC_USER", "", null,
-                        (UserAgent userAgent, ResultCodeLogin result, UserAgent.LoginInfo loginInfo) => {
+public void Login()
+{
+    connector.CreateUserAgent("BASIC_SERVICE", 1).Login("BASIC_USER", "", null, (UserAgent userAgent, ResultCodeLogin result, UserAgent.LoginInfo loginInfo) => {
         Debug.Log(result);
+
+        if (result == ResultCodeLogin.LOGIN_SUCCESS)
+        {
+            logText.text = "로그인 정보 : 로그인 성공";
+        } else
+        {
+            logText.text = "로그인 정보 : 로그인 실패";
+        }
     });
 }
 ```
@@ -655,11 +655,8 @@ using UnityEngine.SceneManagement;
 public int roomId;
 public UserAgent userAgent;
 
-void Start(){
-  	userAgent = CreateUserAgent("BASIC_SERVICE", 1);
-}
 public void CreateRoom(){
-    userAgent.CreateRoom("BASIC_ROOM", (UserAgent ua, ResultCodeCreateRoom resultCode, int roomId, string roomName, Payload payload) => {
+    connector.GetUserAgent("BASIC_SERVICE", 1).CreateRoom("BASIC_ROOM", (UserAgent ua, ResultCodeCreateRoom resultCode, int roomId, string roomName, Payload payload) => {
         Debug.Log(resultCode); 
         if (resultCode == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS){
             this.roomId = roomId;
@@ -687,7 +684,7 @@ private void Update() {
 
 public void JoinRoom(){
     if (!string.IsNullOrEmpty(roomIdInput.text)){
-        userAgent.JoinRoom("BASIC_ROOM", int.Parse(roomIdInput.text), null, (UserAgent userAgent, ResultCodeJoinRoom resultCode, int roomId, string roomName, Payload payload)=>{
+        connector.GetUserAgent("BASIC_SERVICE", 1).JoinRoom("BASIC_ROOM", int.Parse(roomIdInput.text), null, (UserAgent userAgent, ResultCodeJoinRoom resultCode, int roomId, string roomName, Payload payload)=>{
             Debug.Log(resultCode);
             if ( resultCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS){
                 this.roomId = roomId;
@@ -723,6 +720,10 @@ public class GameManager : MonoBehaviour
 <br>
 
 ### 6.2. Room 생성 및 참가 테스트
+
+File > Build Setting에서 아래와 같이 필요한 씬들을 추가합니다.
+
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/add_scene.png)
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그리고 게임에서 방을 하나 생성합니다. 이 때, 생성된 방의 아이디가 함께 출력됩니다.
 
@@ -778,7 +779,7 @@ public class GameManager : MonoBehaviour
 	public void SendMessage(){
         MessageRequest messageRequest = new MessageRequest();
         messageRequest.Message = "\n[" + connectHandler.accountId +  "]:" + ChatInputText.text;
-        connectHandler.userAgent.Send(new Packet(messageRequest));
+        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).Send(new Packet(messageRequest));
         ChatInputText.text = string.Empty;
 	}
 }
@@ -835,7 +836,7 @@ public class BasicHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
 public class BasicRoom extends BaseRoom<BasicUser> {
     private static final Logger logger = getLogger(BasicRoom.class);
     private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
-    private static Map<Integer, BaseUser> users = new HashMap<>();
+    private Map<Integer, BaseUser> users = new HashMap<>();
 
     static {
         dispatcher.registerMsg(BasicProtocol.MessageRequest.getDescriptor(), BasicHandler.class); // 처리할 메시지에 대한 핸들러 등록
@@ -886,8 +887,8 @@ public class GameManager : MonoBehaviour
 
         roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
 
-        ProtocolManager.getInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
-        connectHandler.userAgent.AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
+        ProtocolManager.GetInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
+        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
             ChatLogText.text += messageBroadcast.Message;
         });
     }
@@ -964,14 +965,12 @@ C# 클래스 파일은 Finder 등의 프로그램을 이용해서 Unity 프로�
 public class Main {
 
     public static void main(String[] args) {
-        GameAnvilServer gameAnvilServer = GameAnvilServer.getInstance();
+        GameAnvilBootstrap bootstrap = GameAnvilBootstrap.getInstance();
 
-        gameAnvilServer.addProtoBufClass(0, BasicProtocol.getDescriptor());
-        gameAnvilServer.addProtoBufClass(1, Puzzle.getDescriptor());
+        bootstrap.addProtoBufClass(0, BasicProtocol.getDescriptor());
+        bootstrap.addProtoBufClass(1, Puzzle.getDescriptor());
 
-        // 부트스트랩 실행.
-        gameAnvilServer.run();
-
+        bootstrap.run();
     }
 
 }
@@ -980,17 +979,20 @@ public class Main {
 Unity 프로젝트는 ConnectionHandler.cs의 Start 메서드에 아래와 같이 프로토콜을 추가합니다. 이 때, 서버와 같은 인덱스인 1로 등록합니다.
 
 ```c#
-public class ConnectHandler : MonoBehaviour {
-		void Start () {
-        Connect();
-  
-        serverInfoText.text = "서버정보 : " + ip + ":" + port;
-  	    clientInfoText.text = "클라이언트정보 : " + accountId;
+using Protocol;
 
-        userAgent = connector.CreateUserAgent("BASIC_SERVICE", 1);
+public class ConnectHandler : MonoBehaviour {
+    void Start()
+    {
+        // 시작 시점에 바로 연결을 시도합니다.
+        Connect();
+
+        // 연결 정보를 화면에 출력합니다.
+        serverInfoText.text = "서버정보:" + ip + ":" + port;
+
 
         // 프로토콜 등록
-        ProtocolManager.getInstance().RegisterProtocol(1, PuzzleReflection.Descriptor);
+        ProtocolManager.GetInstance().RegisterProtocol(1, PuzzleReflection.Descriptor);
     }
   
   	...생략...
@@ -1059,7 +1061,7 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         position.PositionY = (int)puzzlePosition.y;
         position.OnEndDrag = onEndDrag;
       
-        connectHandler.userAgent.Send(position);
+        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).Send(position);
     }
 }
 
@@ -1104,7 +1106,7 @@ public class PuzzlePositionHandler implements RoomPacketHandler<BasicRoom, Basic
 public class BasicRoom extends BaseRoom<BasicUser> {
     private static final Logger logger = getLogger(BasicRoom.class);
     private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
-    private static Map<Integer, BaseUser> users = new HashMap<>();
+    private Map<Integer, BaseUser> users = new HashMap<>();
 
     static {
         dispatcher.registerMsg(BasicProtocol.MessageRequest.getDescriptor(), BasicHandler.class);
@@ -1125,19 +1127,25 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 ```c#
 public class GameManager : MonoBehaviour{
   
-    void Start(){
-        ...생략...
-       	// 채팅 메시지 리스너
-        connectHandler.userAgent.AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
+    void Start()
+    {
+        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
+
+        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
+
+        ProtocolManager.GetInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
+
+        // 채팅 메시지 리스너
+        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
             ChatLogText.text += messageBroadcast.Message;
         });
-			
         // 퍼즐 위치 리스너
-        connectHandler.userAgent.AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
-          	Puzzle puzzle = GameObject.Find("Puzzle " + puzzlePosition.Index).GetComponent<Puzzle>();
+        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
+            Puzzle puzzle = GameObject.Find("Puzzle " + puzzlePosition.Index).GetComponent<Puzzle>();
             puzzle.transform.position = new Vector2(puzzlePosition.PositionX, puzzlePosition.PositionY);
-          
-            if ( puzzlePosition.OnEndDrag ){
+
+            if (puzzlePosition.OnEndDrag)
+            {
                 puzzle.FixPosition();
             }
         });
@@ -1167,8 +1175,8 @@ public class BasicRoom extends BaseRoom<BasicUser> {
     private static final Logger logger = getLogger(BasicRoom.class);
     private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
   
-    private static Map<Integer, BaseUser> users = new HashMap<>();
-    public static Map<Integer, Puzzle.PuzzlePosition> puzzlePositions = new HashMap<>();
+    private Map<Integer, BaseUser> users = new HashMap<>();
+    public Map<Integer, Puzzle.PuzzlePosition> puzzlePositions = new HashMap<>();
   
   	...생략...
   
@@ -1273,7 +1281,7 @@ GameManager.cs에 아래와 같이 섞기 요청을 위한 코드를 작성합�
 ```
 public GameManager : Monobehaviour{
 		public void Scatter(){
-        	connectHandler.userAgent.Send(new ScatterPuzzle());
+        	ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).Send(new ScatterPuzzle());
     }
 }
 ```
@@ -1356,8 +1364,8 @@ public class BasicRoom extends BaseRoom<BasicUser> {
     private static final Logger logger = getLogger(BasicRoom.class);
     private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
 
-    private static Map<Integer, BaseUser> users = new HashMap<>();
-    public static Map<Integer, Puzzle.PuzzlePosition> puzzlePositions = new HashMap<>();
+    private Map<Integer, BaseUser> users = new HashMap<>();
+    public Map<Integer, Puzzle.PuzzlePosition> puzzlePositions = new HashMap<>();
 
     static {
         dispatcher.registerMsg(BasicProtocol.MessageRequest.getDescriptor(), BasicHandler.class);
@@ -1425,11 +1433,11 @@ public class GameManager : MonoBehaviour
       
         ProtocolManager.getInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
 
-        connectHandler.userAgent.AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
+        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
             ChatLogText.text += messageBroadcast.Message;
         });
 
-        connectHandler.userAgent.AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
+        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
           	Puzzle puzzle = GameObject.Find("Puzzle " + puzzlePosition.Index).GetComponent<Puzzle>();
             puzzle.transform.position = new Vector2(puzzlePosition.PositionX, puzzlePosition.PositionY);
           
@@ -1438,7 +1446,7 @@ public class GameManager : MonoBehaviour
             }
         });
 
-        connectHandler.userAgent.Send(new PuzzlePositionReq());
+        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).Send(new PuzzlePositionReq());
     }
   
   	...생략...
@@ -1641,7 +1649,7 @@ public class ConnectHandler : MonoBehaviour
   
         ...생략...
       
-        userAgent.onMatchUserDoneListeners += (UserAgent userAgent, ResultCodeMatchUserDone resultCode, bool created, int roomId, Payload payload) =>{
+                connector.GetUserAgent("BASIC_SERVICE", 1).onMatchUserDoneListeners += (UserAgent userAgent, ResultCodeMatchUserDone resultCode, bool created, int roomId, Payload payload) =>{
             this.roomId = roomId;
             SceneManager.LoadScene("GameScene");
         };
@@ -1650,7 +1658,7 @@ public class ConnectHandler : MonoBehaviour
 		...생략...
 
     public void UserMatchMaking(){
-        userAgent.MatchUserStart("BASIC_ROOM", "BASIC_MATCHING_GROUP",(UserAgent userAgent, ResultCodeMatchUserStart resultCode, Payload payload) =>{
+            connector.GetUserAgent("BASIC_SERVICE", 1).MatchUserStart("BASIC_ROOM", "BASIC_MATCHING_GROUP",(UserAgent userAgent, ResultCodeMatchUserStart resultCode, Payload payload) =>{
             Debug.Log(resultCode);
         });
     }
@@ -1873,7 +1881,7 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 ```csharp
 public class ConnectHandler : MonoBehaviour {
     public void RoomMatchMaking(){
-        userAgent.MatchRoom("BASIC_ROOM", "BASIC_MATCHING_GROUP", "BASIC_MATCHING_USER_CATEGORY", true, 
+            connector.GetUserAgent("BASIC_SERVICE", 1).MatchRoom("BASIC_ROOM", "BASIC_MATCHING_GROUP", "BASIC_MATCHING_USER_CATEGORY", true, 
             (UserAgent userAgent, ResultCodeMatchRoom resultCode, int integer, int roomId, string roomName, bool created, Payload payload) =>{
             Debug.Log(resultCode);
             if (resultCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS){
@@ -1894,7 +1902,7 @@ public class ConnectHandler : MonoBehaviour {
 ```c#
 public class ConnectHandler : MonoBehaviour {
 	public void CreateRoom(){
-        userAgent.CreateRoom("", "BASIC_ROOM", "BASIC_MATCHING_GROUP", null (UserAgent ua, ResultCodeCreateRoom resultCode, int roomId, string roomName, Payload payload) => {
+            connector.GetUserAgent("BASIC_SERVICE", 1).CreateRoom("", "BASIC_ROOM", "BASIC_MATCHING_GROUP", null (UserAgent ua, ResultCodeCreateRoom resultCode, int roomId, string roomName, Payload payload) => {
             Debug.Log(resultCode); 
             if (resultCode == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS){
                 this.roomId = roomId;
@@ -1920,7 +1928,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이 상태에서 방을 
 
 ```c#
 public void LeaveRoom(){
-		connectHandler.userAgent.LeaveRoom((userAgent, resultCode, force, roomId, payload) =>{
+		ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).LeaveRoom((userAgent, resultCode, force, roomId, payload) =>{
       	if(resultCode == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS){
       		Destroy(connectHandler.gameObject);
     			SceneManager.LoadScene("ConnectScene");
