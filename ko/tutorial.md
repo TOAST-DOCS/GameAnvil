@@ -70,28 +70,26 @@ GameAnvil 프로젝트의 VM Option에 아래 내용을 추가합니다. 이는 
 Java 8 버전을 사용할 경우 아래의 내용을 추가합니다.
 
 ```
--javaagent:/YOUR_PATH/.m2/repository/com/nhn/gameanvil/quasar-core/0.7.10/quasar-core-0.7.10-jdk8.jar=bm
+-javaagent:./src/main/resources/META-INF/quasar-core-0.7.10-jdk8.jar=bm
 ```
 
 Java 11 버전을 사용한다면, 대신 아래 내용을 추가합니다.
 
 ```
--javaagent:/YOUR_PATH/.m2/repository/com/nhn/gameanvil/quasar-core/0.8.0/quasar-core-0.8.0-jdk11.jar=bm
+-javaagent:./src/main/resources/META-INF/quasar-core-0.8.0-jdk11.jar=bm
 ```
 
 GameAnvil 프로젝트가 구성된 IntelliJ 우측 상단의 Run 아이콘을 클릭해 서버를 실행시킵니다. 혹은 Run 메뉴 > Run 을 선택해서 실행할 수도 있습니다. 이 때, 서버가 정상적으로 구동되면 아래와 같이 onReady 로그들이 다수 출력됩니다. GameAnvil 서버는 여러개의 노드들로 구성되어 있으므로 각각의 노드마다 준비가 완료되면 onReady 로그를 출력합니다. 클라이언트가 직접 접속할 GatewayNode가 onReady 되었다면 GameAnvil 서버는 이제 언제든 접속이 가능한 상태입니다.
 
 <br>
 
-### 2.2. 커넥션 핸들러 작성
+### 2.2. 게임엔빌 커넥터 작성
 
 이제 Unity 프로젝트로 이동하여 GameAnvil 서버와 연결해 보겠습니다. 서버와 연결하려면 먼저 커넥터를 생성해야 합니다.
 
-Connect.scene의 ConnectHandler 게임오브젝트의 스크립트를 수정합니다.
+Connect.scene의 GameAnvilConnector 게임오브젝트의 스크립트를 살펴보겠습니다.
 
 ```c#
-// Client-side
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -101,44 +99,61 @@ using GameAnvil.Defines;
 using GameAnvil.Connection;
 using GameAnvil.Connection.Defines;
 using GameAnvil.User;
+using UnityEngine.SceneManagement;
+using Protocol;
 
-public class ConnectHandler : MonoBehaviour
+public class GameAnvilConnector : MonoBehaviour
 {
- 		[SerializeField]
+    [SerializeField]
     GameAnvil.Connector.Config config;
 
-    public static GameAnvil.Connector connector = null;
-		private ConnectionAgent connectionAgent;
+    private GameAnvil.Connector connector = null;
+    private static GameAnvilConnector instance;
 
     [Header("Object Reference")]
     public Text serverInfoText;
     public Text clientInfoText;
     public Text logText;
 
-    public void Quit(){
+    public GameObject popupCanvas;
+    public InputField roomIdInput;
+
+    public void Quit()
+    {
         Application.Quit();
     }
 
-    public static GameAnvil.Connector getInstance() {
+    public GameAnvil.Connector GetConnector()
+    {
         return connector;
     }
 
-    private void Awake() {
+    public static GameAnvilConnector GetInstance()
+    {
+        return instance;
+    }
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            DestroyImmediate(this.gameObject);
+        }
+        instance = this;
         DontDestroyOnLoad(this.gameObject);
         connector = new GameAnvil.Connector(config);
     }
 
-    private void Update() {
-        connector.Update(); // 메시지 처리를 위해 반드시 주기적으로 처리해야 합니다.
-    }
-
-    private void OnDisable() {
-        if (connector.IsConnected()) {
+    private void OnDisable()
+    {
+        if (connector.IsConnected())
+        {
             connector.CloseSocket();
         }
     }
 
-    private void OnApplicationPause(bool pause){
+    private void OnApplicationPause(bool pause)
+    {
         if (pause)
         {
             // 입력한 시간동안 서버의 clientStateCheck 기능을 정지시킨다
@@ -146,7 +161,9 @@ public class ConnectHandler : MonoBehaviour
             connector.GetConnectionAgent().PauseClientStateCheck(10 * 60);
 
             connector.Update();
-        } else {
+        }
+        else
+        {
             connector.Update();
 
             // 서버의 clientStateCheck 기능을 다시 동작시킨다.
@@ -170,7 +187,7 @@ public class ConnectHandler : MonoBehaviour
 [SerializeField]
 GameAnvil.Connector.Config config;
 
-public static GameAnvil.Connector connector = null;
+public GameAnvil.Connector connector = null;
 private ConnectionAgent connectionAgent;
 
 public string ip = "127.0.0.1";
@@ -186,8 +203,8 @@ void Start () {
     // 시작 시점에 바로 연결을 시도합니다.
     Connect();
   
-  	// 연결 정보를 화면에 출력합니다.
-  	serverInfoText.text = "서버정보:" + ip + ":" + port;
+    // 연결 정보를 화면에 출력합니다.
+    serverInfoText.text = "서버정보:" + ip + ":" + port;
 }
 
 public void Connect(){
@@ -526,7 +543,7 @@ GameAnvil은 GameNode의 유연한 구현을 위해 여러가지 콜백 메서�
 [SerializeField]
 GameAnvil.Connector.Config config;
 
-public static GameAnvil.Connector connector = null;
+public GameAnvil.Connector connector = null;
 private ConnectionAgent connectionAgent;
 
 public string ip = "127.0.0.1";
@@ -540,7 +557,7 @@ public Text connectInfoText;
 public Text accountIdText;
 
 void Start () {
-		Connect();
+    Connect();
   
     serverInfoText.text = "서버정보 : " + ip + ":" + port;
 }
@@ -569,7 +586,7 @@ public void Auth(){
          (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
                 Debug.Log(result);
          
-           			if (result == ResultCodeAuth.AUTH_SUCCESS) {
+                if (result == ResultCodeAuth.AUTH_SUCCESS) {
                     logText.text = "인증 정보 : 인증 성공";
                 } else {
                     logText.text = "인증 정보 : 인증 실패";
@@ -600,19 +617,18 @@ Unity 클라이언트를 플레이 해서 콘솔 상에 로그가 출력됨을 �
 
 public void Auth(){
     accountId = Random.Range(1000,9999) + "";
-		connectionAgent.Authenticate(deviceId, accountId, password,
-         (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
-                Debug.Log(result);
-         
-           			if (result == ResultCodeAuth.AUTH_SUCCESS) {
-                    logText.text = "인증 정보 : 인증 성공";
-                      
-                  	Login(); // 인증에 성공한 경우 바로 로그인을 시도합니다.
-                } else {
-                    logText.text = "인증 정보 : 인증 실패";
-                }
-            }
-			);
+    connectionAgent.Authenticate(deviceId, accountId, password,
+     (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
+        Debug.Log(result);
+ 
+        if (result == ResultCodeAuth.AUTH_SUCCESS) {
+            logText.text = "인증 정보 : 인증 성공";
+              
+            Login(); // 인증에 성공한 경우 바로 로그인을 시도합니다.
+        } else {
+            logText.text = "인증 정보 : 인증 실패";
+        }
+    });
 }
 
 public void Login()
@@ -620,11 +636,9 @@ public void Login()
     connector.CreateUserAgent("BASIC_SERVICE", 1).Login("BASIC_USER", "", null, (UserAgent userAgent, ResultCodeLogin result, UserAgent.LoginInfo loginInfo) => {
         Debug.Log(result);
 
-        if (result == ResultCodeLogin.LOGIN_SUCCESS)
-        {
+        if (result == ResultCodeLogin.LOGIN_SUCCESS) {
             logText.text = "로그인 정보 : 로그인 성공";
-        } else
-        {
+        } else {
             logText.text = "로그인 정보 : 로그인 실패";
         }
     });
@@ -647,7 +661,7 @@ Unity 테스트 모드를 통해 성공적으로 로그인 되는 것을 확인�
 
 ### 6.1. 클라이언트 작업
 
-Unity 프로젝트에서 ConnectionHandler에 방 생성을 요청하는 코드를 추가합니다. 이 때, userAgent.CreateRoom 메서드의 첫 번째 인자인 RoomType은 반드시 서버에서 지정한 값과 같아야 함에 유의합니다. 일반적으로 이러한 RoomType 등은 서버와 클라이언트 개발자가 사전에 값을 미리 정의해두고 사용합니다. 방 생성에 성공하면 roomId를 클라이언트 측에 저장해두고, 게임 씬으로 이동합니다.
+Unity 프로젝트에서 GameAnvilConnector에 방 생성을 요청하는 코드를 추가합니다. 이 때, userAgent.CreateRoom 메서드의 첫 번째 인자인 RoomType은 반드시 서버에서 지정한 값과 같아야 함에 유의합니다. 일반적으로 이러한 RoomType 등은 서버와 클라이언트 개발자가 사전에 값을 미리 정의해두고 사용합니다. 방 생성에 성공하면 roomId를 클라이언트 측에 저장해두고, 게임 씬으로 이동합니다.
 
 ```c#
 using UnityEngine.SceneManagement;
@@ -667,11 +681,11 @@ public void CreateRoom(){
 }
 ```
 
-씬에서 Create Room 버튼의 OnClick 리스너에 ConnectHandler 컴포넌트를 드래그해서 등록하고, 드롭다운에서 CreateRoom메서드를 선택합니다.
+씬에서 Create Room 버튼의 OnClick 리스너에 GameAnvilConnector 컴포넌트를 드래그해서 등록하고, 드롭다운에서 CreateRoom메서드를 선택합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_create_room_on_click.png)
 
-여기까지 완료 되었으면, 이번에는 ConnectionHandler에 방 참가 코드를 추가합니다. userAgent.JoinRoom 메서드의 첫 번째 인자가 서버에서 사용한 사전 정의된 RoomType 문자열과 일치하는지 확인합니다.
+여기까지 완료 되었으면, 이번에는 GameAnvilConnector에 방 참가 코드를 추가합니다. userAgent.JoinRoom 메서드의 첫 번째 인자가 서버에서 사용한 사전 정의된 RoomType 문자열과 일치하는지 확인합니다.
 
 ```c#
 private void Update() {
@@ -707,12 +721,12 @@ public class GameManager : MonoBehaviour
     public Text ChatLogText;
     public Text ChatInputText;
 
-    private ConnectHandler connectHandler;
+    private GameAnvilConnector gameAnvilConnector;
 
     void Start(){
-        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
+        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
 
-        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
+        roomIdText.text = "PuzzleRoom:" + gameAnvilConnector.roomId;
     }
 }
 ```
@@ -762,12 +776,12 @@ public class GameManager : MonoBehaviour
     public Text ChatLogText;
     public Text ChatInputText;
 
-    private ConnectHandler connectHandler;
+    private GameAnvilConnector gameAnvilConnector;
 
     void Start(){
-        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
+        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
 
-        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
+        roomIdText.text = "PuzzleRoom:" + gameAnvilConnector.roomId;
     }
 
     void Update(){
@@ -778,8 +792,8 @@ public class GameManager : MonoBehaviour
 
 	public void SendMessage(){
         MessageRequest messageRequest = new MessageRequest();
-        messageRequest.Message = "\n[" + connectHandler.accountId +  "]:" + ChatInputText.text;
-        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).Send(new Packet(messageRequest));
+        messageRequest.Message = "\n[" + gameAnvilConnector.accountId +  "]:" + ChatInputText.text;
+        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new Packet(messageRequest));
         ChatInputText.text = string.Empty;
 	}
 }
@@ -880,15 +894,15 @@ public class GameManager : MonoBehaviour
     public Text ChatLogText;
     public Text ChatInputText;
 
-    private ConnectHandler connectHandler;
+    private GameAnvilConnector gameAnvilConnector;
 
     void Start(){
-        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
+        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
 
-        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
+        roomIdText.text = "PuzzleRoom:" + gameAnvilConnector.roomId;
 
         ProtocolManager.GetInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
-        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
+        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
             ChatLogText.text += messageBroadcast.Message;
         });
     }
@@ -976,12 +990,12 @@ public class Main {
 }
 ```
 
-Unity 프로젝트는 ConnectionHandler.cs의 Start 메서드에 아래와 같이 프로토콜을 추가합니다. 이 때, 서버와 같은 인덱스인 1로 등록합니다.
+Unity 프로젝트는 GameAnvilConnector의 Start 메서드에 아래와 같이 프로토콜을 추가합니다. 이 때, 서버와 같은 인덱스인 1로 등록합니다.
 
 ```c#
 using Protocol;
 
-public class ConnectHandler : MonoBehaviour {
+public class GameAnvilConnector : MonoBehaviour {
     void Start()
     {
         // 시작 시점에 바로 연결을 시도합니다.
@@ -1025,10 +1039,10 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     public float tolerance;
 
   
-    private ConnectHandler connectHandler;
+    private GameAnvilConnector gameAnvilConnector;
 
     void Start(){
-        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
+        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -1061,7 +1075,7 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         position.PositionY = (int)puzzlePosition.y;
         position.OnEndDrag = onEndDrag;
       
-        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).Send(position);
+        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(position);
     }
 }
 
@@ -1129,18 +1143,18 @@ public class GameManager : MonoBehaviour{
   
     void Start()
     {
-        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
+        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
 
-        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
+        roomIdText.text = "PuzzleRoom:" + gameAnvilConnector.roomId;
 
         ProtocolManager.GetInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
 
         // 채팅 메시지 리스너
-        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
+        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
             ChatLogText.text += messageBroadcast.Message;
         });
         // 퍼즐 위치 리스너
-        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
+        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
             Puzzle puzzle = GameObject.Find("Puzzle " + puzzlePosition.Index).GetComponent<Puzzle>();
             puzzle.transform.position = new Vector2(puzzlePosition.PositionX, puzzlePosition.PositionY);
 
@@ -1281,7 +1295,7 @@ GameManager.cs에 아래와 같이 섞기 요청을 위한 코드를 작성합�
 ```
 public GameManager : Monobehaviour{
 		public void Scatter(){
-        	ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).Send(new ScatterPuzzle());
+        	GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new ScatterPuzzle());
     }
 }
 ```
@@ -1426,18 +1440,18 @@ message PuzzlePositionReq { // 퍼즐 위치 동기화 요청
 public class GameManager : MonoBehaviour
 {
     void Start(){
-        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
+        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
 
-        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
+        roomIdText.text = "PuzzleRoom:" + gameAnvilConnector.roomId;
 
       
         ProtocolManager.getInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
 
-        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
+        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
             ChatLogText.text += messageBroadcast.Message;
         });
 
-        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
+        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
           	Puzzle puzzle = GameObject.Find("Puzzle " + puzzlePosition.Index).GetComponent<Puzzle>();
             puzzle.transform.position = new Vector2(puzzlePosition.PositionX, puzzlePosition.PositionY);
           
@@ -1446,7 +1460,7 @@ public class GameManager : MonoBehaviour
             }
         });
 
-        ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).Send(new PuzzlePositionReq());
+        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new PuzzlePositionReq());
     }
   
   	...생략...
@@ -1637,25 +1651,24 @@ public class BasicUserMatchMaker extends BaseUserMatchMaker<BasicUserMatchInfo> 
 
 ### 11.2. 클라이언트 측 구현
 
-매치메이킹 로직은 모두 서버에 구현되어있기 때문에 클라이언트에서는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 UserMatchMaking 메서드를 추가합니다. 그리고 매치메이킹이 끝난 시점에 씬을 이동하도록 하는 핸들러를 추가합니다.
+매치메이킹 로직은 모두 서버에 구현되어있기 때문에 클라이언트에서는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. GameAnvilConnector에 UserMatchMaking 메서드를 추가합니다. 그리고 매치메이킹이 끝난 시점에 씬을 이동하도록 하는 핸들러를 추가합니다.
 
 ```csharp
-public class ConnectHandler : MonoBehaviour
+public class GameAnvilConnector : MonoBehaviour
 {
-
-		...생략...
+	...생략...
 	
     void Start () {
   
         ...생략...
-      
-                connector.GetUserAgent("BASIC_SERVICE", 1).onMatchUserDoneListeners += (UserAgent userAgent, ResultCodeMatchUserDone resultCode, bool created, int roomId, Payload payload) =>{
+     
+            connector.GetUserAgent("BASIC_SERVICE", 1).onMatchUserDoneListeners += (UserAgent userAgent, ResultCodeMatchUserDone resultCode, bool created, int roomId, Payload payload) =>{
             this.roomId = roomId;
             SceneManager.LoadScene("GameScene");
         };
     }
 	
-		...생략...
+	...생략...
 
     public void UserMatchMaking(){
             connector.GetUserAgent("BASIC_SERVICE", 1).MatchUserStart("BASIC_ROOM", "BASIC_MATCHING_GROUP",(UserAgent userAgent, ResultCodeMatchUserStart resultCode, Payload payload) =>{
@@ -1666,7 +1679,7 @@ public class ConnectHandler : MonoBehaviour
 
 ```
 
-씬에서 User Match Making 버튼의 OnClick 리스너에 ConnectHandler 컴포넌트를 드래그해서 등록하고, 드롭다운에서 UserMatchMaking메서드를 선택합니다.
+씬에서 User Match Making 버튼의 OnClick 리스너에 GameAnvilConnector 컴포넌트를 드래그해서 등록하고, 드롭다운에서 UserMatchMaking메서드를 선택합니다.
 
 <br>
 
@@ -1876,10 +1889,10 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 ### 12.2. 클라이언트 구현
 
-유저 매치메이킹과 마찬가지로 클라이언트는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 RoomMatchMaking 메서드를 추가합니다.
+유저 매치메이킹과 마찬가지로 클라이언트는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. GameAnvilConnector에 RoomMatchMaking 메서드를 추가합니다.
 
 ```csharp
-public class ConnectHandler : MonoBehaviour {
+public class GameAnvilConnector : MonoBehaviour {
     public void RoomMatchMaking(){
             connector.GetUserAgent("BASIC_SERVICE", 1).MatchRoom("BASIC_ROOM", "BASIC_MATCHING_GROUP", "BASIC_MATCHING_USER_CATEGORY", true, 
             (UserAgent userAgent, ResultCodeMatchRoom resultCode, int integer, int roomId, string roomName, bool created, Payload payload) =>{
@@ -1895,12 +1908,12 @@ public class ConnectHandler : MonoBehaviour {
 
 ```
 
-씬 상의 Room Match Making 버튼의 OnClick 리스너에 ConnectHandler 컴포넌트를 드래그해서 등록하고, 드롭다운에서 RoomMatchMaking메서드를 선택합니다.
+씬 상의 Room Match Making 버튼의 OnClick 리스너에 GameAnvilConnector 컴포넌트를 드래그해서 등록하고, 드롭다운에서 RoomMatchMaking메서드를 선택합니다.
 
 매칭 그룹이 있는 방을 만들기 위해서, 방 생성 코드를 수정합니다. 이 때, 매칭 그룹은 매치메이킹 대상 방을 논리적으로 나누기 위해 서버와 클라이언트 사이에 사전 정의한 임의의 문자열입니다. 여기에서는 "BASIC_MATCHING_GROUP"이라는 문자열을 사용합니다.
 
 ```c#
-public class ConnectHandler : MonoBehaviour {
+public class GameAnvilConnector : MonoBehaviour {
 	public void CreateRoom(){
             connector.GetUserAgent("BASIC_SERVICE", 1).CreateRoom("", "BASIC_ROOM", "BASIC_MATCHING_GROUP", null (UserAgent ua, ResultCodeCreateRoom resultCode, int roomId, string roomName, Payload payload) => {
             Debug.Log(resultCode); 
@@ -1928,9 +1941,9 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이 상태에서 방을 
 
 ```c#
 public void LeaveRoom(){
-		ConnectHandler.connector.GetUserAgent("BASIC_SERVICE", 1).LeaveRoom((userAgent, resultCode, force, roomId, payload) =>{
+		GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).LeaveRoom((userAgent, resultCode, force, roomId, payload) =>{
       	if(resultCode == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS){
-      		Destroy(connectHandler.gameObject);
+      		Destroy(gameAnvilConnector.gameObject);
     			SceneManager.LoadScene("ConnectScene");
     		}
     });
@@ -1939,23 +1952,6 @@ public void LeaveRoom(){
 
 씬 상의 Leave Room 버튼의 OnClick 리스너에 GameManager 컴포넌트를 드래그해서 등록하고, 드롭다운에서 LeaveRoom메서드를 선택합니다.
 
-첫 번째 씬으로 돌아왔을 때 connectHandler 객체가 중복해서 생성되지 않도록 하기 위해 코드를 추가합니다.
-
-```
-public class ConnectHandler : MonoBehaviour
-{
-    static ConnectHandler instance;
-
-    private void Awake() {
-        if (instance != null){
-            Destroy(gameObject);
-        } else {
-            instance = this;
-        }
-        DontDestroyOnLoad(this.gameObject);
-        connector = new GameAnvil.Connector(config);
-    }
-```
 
 ## 14. 프로젝트 마무리
 
