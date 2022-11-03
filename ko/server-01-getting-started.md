@@ -120,7 +120,7 @@ public class SampleGatewayNode extends BaseGatewayNode {
 throws SuspendExecution
 ```
 
-이것은 실제 예외가 아닙니다. 파이버의 흐름을 제어하기 위해 [Quasar](https://quasar.dev/introduction-to-quasar#what-is-quasar)에서 사용하는 일종의 우회법입니다. 이 예외 시그니쳐는 해당 메서드가 언제든 파이버를 일시 정지(Suspend)시킬 수 있음을 의미합니다.
+이것은 실제 예외가 아닙니다. 파이버의 흐름을 제어하기 위해 [Quasar](https://docs.paralleluniverse.co/quasar/)에서 사용하는 일종의 우회법입니다. 이 예외 시그니쳐는 해당 메서드가 언제든 파이버를 일시 정지(Suspend)시킬 수 있음을 의미합니다.
 
 그러므로 절대 이 예외를 아래와 같은 방식으로 직접 처리해서는 안됩니다. 더욱 자세한 설명은 [Suspendable](know-03-suspendable)을 참고하세요. 그리고 만일, 지금 이 내용이 이해되지 않더라도 전혀 신경쓰실 필요 없습니다. 편하게 나머지 내용을 읽어보세요.
 

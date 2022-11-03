@@ -2,7 +2,7 @@
 
 # 1. GameAnvil API JavaDoc
 
-[GameAnvil Server API - Java doc](https://gameplatform.toast.com/docs/api/gameanvil)
+[GameAnvil Server API - Java doc](https://gameplatform.toast.com/docs/api/)
 
 
 

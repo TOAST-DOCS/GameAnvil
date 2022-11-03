@@ -1,5 +1,79 @@
 ## Game > GameAnvil > 릴리스 노트 > GameHammer
 
+### 1.2.1 (2021.11.30)
+
+#### New 
+
+* SecureSocket지원 기능 추가.
+	* RemoteInfo class에  useSecureSocket 옵션 추가. (default : false)
+    * GameHammerConfig의 targetServerList의 항목에 useSecureSocket 필드 추가.(default : false)
+	* Tester.Bulder.addRemoteInfo()에 useSecureSocket을 입력 받는 오버로딩 추가.
+
+---
+
+### 1.2.0(2021.07.13)
+#### Change
+* 패키지 구조 정리
+	* 내부용 패키지는 gameanvilcore로 묶음.
+* ResultCode
+  * ResultCodeAuth
+    * AUTH_FAIL_MAINTENANCE 제거 
+  * ResultCodeCreateRoom
+    * CREATE_ROOM_FAIL_CREATE_ROOM_ID 추가
+    * CREATE_ROOM_FAIL_CREATE_ROOM 추가
+  * ResultCodeChannelInfo
+    * CHANNEL_INFO_FAIL_NO_CHANNEL_INFO 추가
+    * CHANNEL_INFO_FAIL_INVALID_SERVICE_ID 추가
+    * CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND 추가
+  * ResultCodeAllChannelInfo 추가
+  * ResultCodeChannelCountInfo 추가
+  * ResultCodeAllChannelCountInfo 추가
+  * ResultCodeChannelList
+    * CHANNEL_LIST_FAIL_INVALID_SERVICEID 제거
+    * CHANNEL_LIST_FAIL_NO_CHANNEL_LIST 추가
+  * ResultCodeJoinRoom
+    * JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM 추가
+    * JOIN_ROOM_FAIL_ALREADY_FULL 추가
+    * JOIN_ROOM_FAIL_ROOM_MATCH 추가
+  * ResultCodeLogin
+    * LOGIN_FAIL_MAINTENANCE 제거
+  * ResultCodeMatchUserCancel
+    * MATCH_USER_CANCEL_FAIL_CONTENT -> MATCH_USER_CANCEL_FAIL 이름 변경
+    * MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS 추가
+  * ResultCodeMatchRoom
+    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_ID 추가
+    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM  추가
+    * MATCH_ROOM_FAIL_INVALID_ROOM_ID  추가
+    * MATCH_ROOM_FAIL_INVALID_NODE_ID  추가
+    * MATCH_ROOM_FAIL_INVALID_USER_ID  추가
+    * MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND  추가
+    * MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY 추가
+    * MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY 추가
+    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL  추가
+    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL 추가
+  * ResultCodeMatchUserDone
+    * MATCH_USER_DONE_FAIL_TRANSFER 추가
+    * MATCH_USER_DONE_FAIL_CREATE_ROOM 추가
+  * ResultCodeNamedRoom
+    * NAMED_ROOM_FAIL_CREATE_ROOM 추가
+  * ResultCodeDisconnect
+    * FORCE_CLOSE_MAINTENANCE 제거
+    * FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_ID 추가.
+    * FORCE_CLOSE_DISCONNECT_ALARM 제거
+    * FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT 추가
+    * FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION 추가
+  * ResultCodeSessionClose 추가
+
+### 1.1.2 (2021.11.30)
+
+#### New 
+
+* SecureSocket지원 기능 추가.
+	* RemoteInfo class에  useSecureSocket 옵션 추가. (default : false)
+    * GameHammerConfig의 targetServerList의 항목에 useSecureSocket 필드 추가.(default : false)
+	* Tester.Bulder.addRemoteInfo()에 useSecureSocket을 입력 받는 오버로딩 추가.
+
+---
 
 ### 1.1.1 (2021.04.16)
 
