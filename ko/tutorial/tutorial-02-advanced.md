@@ -1,4 +1,4 @@
-## Game > GameAnvil > 기초 튜토리얼
+## Game > GameAnvil > 심화 튜토리얼
 
 ### GameAnvil로 게임 서버 쉽게 만들기
 
