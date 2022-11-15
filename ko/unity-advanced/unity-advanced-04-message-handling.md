@@ -14,7 +14,7 @@ Request()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 
 
 [Unity 기초 개발 가이드 > 메세지 핸들링](../unity-basic/unity-basic-06-message-handling) 에서 다루지 않았던 ConnectionAgent를 통한 Request(), Send() 사용 예제를 소개합니다.
 
-```csharp
+```c#
 Connector connector = new Connector();
 ConnectionAgent connection = connector.GetConnectionAgent();
 // ConnectionAgent로 전달되는 서버 알림을 받는 리스너 등록
@@ -31,11 +31,11 @@ connection.Request(sampleRequest, (ConnectionAgent connection, Packet packet)=> 
 
 ### 커스텀 패킷
 
-패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [Unity 심화 개발 가이드 > 패킷](unity-advanced-03-packet)을 참고합니다.
+패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [Unity 심화 개발 가이드 > 패킷](unity-advanced-03-packet) 을 참고합니다.
 
-[Unity 기초 개발 가이드 > 메세지 핸들링](../unity-basic/unity-basic-06-message-handling)에서 다루지 않았던 ConnectionAgent를 통한 Request(), Send() 사용 예제를 소개합니다.
+[Unity 기초 개발 가이드 > 메세지 핸들링](../unity-basic/unity-basic-06-message-handling) 에서 다루지 않았던 ConnectionAgent를 통한 Request(), Send() 사용 예제를 소개합니다.
 
-```csharp
+```c#
 Connector connector = new Connector();
 ConnectionAgent connection = connector.GetConnectionAgent();
 int reqMsgId = 1;

@@ -4,7 +4,7 @@
 
 이를 구현한 코드 예시는 아래와 같습니다.
 
-```csharp
+```c#
 public class ConnectHandler : MonoBehaviour
 {
     ...

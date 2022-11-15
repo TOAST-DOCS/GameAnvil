@@ -16,7 +16,7 @@ GameAnvilConnector는 기본적으로 QuickConnect 과정에서 생성된 하나
 
 GameAnvilConnector에서는 Logout 하면 자동으로 접속 종료까지 처리되며, 로그아웃에 대한 더 자세한 설명은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-04-user-agent) 를 참고해주세요.
 
-```csharp
+```c#
 /// <summary>
 /// 현재 서비스에서 로그아웃 
 /// </summary>
@@ -40,7 +40,7 @@ userAgent.Logout((UserAgent user, Defines.ResultCodeLogout result, bool force, P
 
 CreateRoom()을 호출하여 방을 생성하고 그 방으로 입장합니다.
 
-```csharp
+```c#
 /// <summary>
 /// 임의의 방 생성 후 해당 방에 입장
 /// </summary>
@@ -62,10 +62,11 @@ userAgent.CreateRoom(roomName, roomType, matchingGroup, payload, (UserAgent user
     }
 });
 ```
+<br>
 
 JoinRoom()을 호출하여 이미 생성된 방에 입장합니다. 
 
-``` csharp
+``` c#
 /// <summary>
 /// 지정한 아이디의 방에 입장<para></para>
 /// 지정한 아이디의 방이 없을 경우 실패
@@ -87,10 +88,11 @@ userAgent.JoinRoom(roomType, roomId, matchingUserCategory, payload, (UserAgent u
     }
 });
 ```
+<br>
 
 LeaveRoom()을 호출하여 입장한 방에서 퇴장할 수 있습니다.
 
-``` csharp
+``` c#
 /// <summary>
 /// 유저 에이전트가 속한 방에서 퇴장
 /// </summary>
@@ -109,10 +111,11 @@ userAgent.LeaveRoom(payload, (UserAgent user, Defines.ResultCodeLeaveRoom result
     }
 });
 ```
+<br>
 
 NamedRoom()을 호출하여 지정한 이름의 방에 입장할 수 있습니다. 지정한 이름의 방이 없을 경우에는 방을 생성한 후 그 방으로 입장합니다.
 
-```csharp
+```c#
 /// <summary>
 /// 지정한 이름의 방에 입장<para></para>
 /// 지정한 이름의 방이 없을 경우 지정한 이름의 방을 생성하고 해당 방에 입장
@@ -147,7 +150,7 @@ GameAnvil은 크게 두 가지 매치 메이킹을 제공합니다. 하나는 �
 
 MatchRoom()을 호출하여 룸 매치 메이킹을 요청할 수 있습니다.
 
-```csharp
+```c#
 /// <summary>
 /// 룸 매칭 요청<para></para>
 /// 방이 없을 경우, 임의의 방을 생성하고 해당 방에 입장하거나 매칭 실패 처리
@@ -176,11 +179,11 @@ userAgent.MatchRoom(roomType, matchingGroup, matchingUserCategory, isCreateRoomI
 
 #### 유저 매치 메이킹
 
-유저 메치 메이킹은 유저 풀을 만들고 그 안에서 조건에 맞는 유저들을 찾아 새로 생성한 방으로 입장 시켜주는 방식입니다. 유저풀에 조건에 맞는 유저의 수가 모자랄 경우 매치 메이킹이 완료될 때까지 시간이 걸릴 수 있고, 시간 내에 매치 메이킹이 완료되지 않으면 타임아웃이 되어 매칭이 취소될 수 있습니다. 
+유저 메치 메이킹은 유저풀을 만들고 그 안에서 조건에 맞는 유저들을 찾아 새로 생성한 방으로 입장 시켜주는 방식입니다. 유저풀에 조건에 맞는 유저의 수가 모자랄 경우 매치 메이킹이 완료될 때까지 시간이 걸릴 수 있고, 시간 내에 매치 메이킹이 완료되지 않으면 타임아웃이 되어 매칭이 취소될 수 있습니다. 
 
 MatchUserStart()를 호출하여 유저 매치 메이킹을 시작할 수 있습니다. 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패할 수 있습니다. 
 
-```csharp
+```c#
 /// <summary>
 /// 유저 매칭을 요청<para></para>
 /// 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패<para></para>
@@ -201,10 +204,11 @@ userAgent.MatchUserStart(roomType, matchingGroup, payload, (UserAgent user, Defi
     }
 });
 ```
+<br>
 
 매칭이 성공한 경우 onMatchUserDoneListeners 또는 IUserListener.OnMatchUserDone을 통해 알림을 받을 수 있고, 시간 안에 매칭이 성공하지 못한 경우 onMatchUserTimeoutListeners 또는 IUserListener.OnMatchUserTimeout을 통해 알림을 받을 수 있습니다.
 
-```csharp
+```c#
 /// <summary>
 /// 유저 매칭 결과를 받을 대리자
 /// </summary>
@@ -223,10 +227,11 @@ userAgent.onMatchUserTimeoutListeners  += (UserAgent userAgent) => {
     /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
 };
 ```
+<br>
 
 MatchUserCancel()을 호출하여 유저 매치 메이킹을 취소할 수 있습니다. 유저 매치 요청 중이 아닌 경우, 이미 유저 매치 메이킹이 성공했거나 Timeout이 발생했으면 취소 요청이 실패할 수 있습니다. 
 
-```csharp
+```c#
 /// <summary>
 /// 유저 매칭 요청을 취소<para></para>
 /// 매치 요청 중이 아닌 경우, 이미 매칭이 성공했거나 타임아웃이 발생했을 경우 실패<para></para>
