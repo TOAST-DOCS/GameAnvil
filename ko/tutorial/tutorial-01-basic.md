@@ -1,4 +1,4 @@
-## Game > GameAnvil > 심화 튜토리얼
+## Game > GameAnvil > 기초 튜토리얼
 
 이 문서에서는 게임엔빌 커넥터 사용법을 배웁니다.
 
