@@ -2,7 +2,7 @@
 
 ## QuickConnect
 
-GameAnvilConnector에서는 QuickConnect 기능을 제공하여 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > ConnectionAgent](../unity-advanced/unity-advanced-01-connector.md) 또는 서버 개발 가이드를 참고해주세요.
+GameAnvilConnector에서는 QuickConnect 기능을 제공하여 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > ConnectionAgent](../unity-advanced/unity-advanced-02-connection-agent.md) 또는 서버 개발 가이드를 참고해주세요.
 
 ### QuickConnect 설정
 
