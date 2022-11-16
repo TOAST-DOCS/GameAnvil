@@ -38,7 +38,7 @@ GameAnvilSample 폴더 안의 Scene 폴더에서 IntroScene을 열어서 아래�
 File > Build Setting 메뉴에서 Add Open Scene을 클릭해서 빌드시에 포함되도록 설정합니다.
 
 ## 실습 환경 준비 - 서버 프로젝트
-게임엔빌 커넥터 사용 실습을 위해서 서버 프로젝트를 구성합니다. 서버 프로젝트 구현에는 프로젝트 템플릿을 이용합니다. [프로젝트 템플릿 설치] 방법을 참고하여 환경을 구성합니다.
+게임엔빌 커넥터 사용 실습을 위해서 서버 프로젝트를 구성합니다. 서버 프로젝트 구현에는 프로젝트 템플릿을 이용합니다. [프로젝트 템플릿 설치 방법](tutorial-02-advanced.md)을 참고하여 환경을 구성합니다.
 
 ### 서버 프로젝트 생성
 인텔리제이를 실행한 후 우상단의 버튼 그룹에서 New Project 버튼을 클릭합니다. 
@@ -183,6 +183,7 @@ public class SyncGameNode extends BaseGameNode {
 }
 ```
 모든 노드는 무언가 처리를 시작할 수 있는 루프가 시작 되었는지 여부에 따라서 상태를 가집니다. 아래는 노드가 가질 수 있는 상태 중 일부입니다.
+
 * INIT
 * PREPARE
 * READY
@@ -566,6 +567,7 @@ GameAnvilConnector의 인스펙터 창에서 Login Configuration에 아래와 �
 ![](.https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/quick-connect.gif)
 
 빠른 연결을 시도하면 빠른 연결 상태창에 아래와 같은 순서로 Connect, Authenticate, Login 과정이 진행될 것입니다.
+
 * NOT_CONNECTED
 * CONNECT_IN_PROGRESS
 * CONNECT_COMPLETE
