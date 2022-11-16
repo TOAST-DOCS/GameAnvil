@@ -2,7 +2,7 @@
 
 ## GameAnvilConnector
 
-커넥터는 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 옵션을 설정하거나 콜백을 등록할 수 있습니다. 커넥터를 사용하려면 먼저 GameAnvilConnector 생성해야 합니다.
+GameAnvilConnector는 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 옵션을 설정하거나 콜백을 등록할 수 있습니다. GameAnvilConnector를 사용하려면 먼저 GameAnvilConnector를 생성해야 합니다.
 
 ### 생성
 
@@ -14,7 +14,7 @@ GameObject를 생성하고 GameAnvilConnector 컴포넌트를 추가합니다. A
 
 ### 설정
 
-커넥터 동작에 사용되는 설정값이 있습니다. GameAnvilConnector 생성 시 기본값으로 설정되지만 필요하다면 인스펙터 창에서 직접 값을 변경할 수 있습니다.  
+GameAnvilConnector 동작에 사용되는 설정값이 있습니다. GameAnvilConnector 생성 시 기본값으로 설정되지만 필요하다면 인스펙터 창에서 직접 값을 변경할 수 있습니다.  
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/02-connector/02-config.png)
 
@@ -27,7 +27,7 @@ GameObject를 생성하고 GameAnvilConnector 컴포넌트를 추가합니다. A
 | pingInterval                | 서버와의 연결을 확인하기 위한 ping 주기. 사용하지 않을 경우 0으로 설정.      | 3(sec) |
 | useIPv6                     | IPv6 환경에서 IPv4 주소를 이용하여 서버에 접속할 때 IPv4 주소를 Ipv6 주소로 변환하여 사용 여부  | false  |
 | useSocketNoDelay            | 소켓의 Nodelay 사용 여부                                          | true   |
-| useArgumentDelegateOnly     | 리스너에 등록한 콜백말고 매개변수로 넘긴 콜백만 호출되도록 하는 옵션           | true   |
+| useArgumentDelegateOnly     | 리스너에 등록한 콜백 말고 매개변수로 넘긴 콜백만 호출되도록 하는 옵션          | true   |
 | Request Direct              | Request 호출시 응답 대기 중이 아닐 경우 queue에 넣지 않고 바로 서버로 전송  | true   |
 
 
