@@ -77,7 +77,7 @@ static public void Request<T>(User.UserAgent agent, IMessage message, Action<Use
 static public void Request(User.UserAgent agent, Packet packet, Action<User.UserAgent, Packet> action);
 ```
 
-Request 응답을 받기 위해 리스너를 등록하는 방법도 있는데, 이는 [Unity 심화 개발 가이드 > 메세지 핸들링](../unity-advanced/unity-advanced-05-message-handling)에서 확인하실 수 있습니다.
+Request 응답을 받기 위해 리스너를 등록하는 방법도 있는데, 이는 [Unity 심화 개발 가이드 > 메세지 핸들링](../unity-advanced/unity-advanced-04-message-handling.md)에서 확인하실 수 있습니다.
 
 지정된 시간 내에 응답이 오지 않으면 타임아웃을 발생시키고 다음 메시지를 처리합니다. 타임아웃은 UserAgent.OnErrorCommandListeners 리스너와 UserAgent.OnErrorCustomCommandListeners 리스너에 ErrorCode.TIMEOUT으로 전달됩니다.
 
@@ -100,7 +100,7 @@ user.Request(SampleRequest, (UserAgent user, Messages.SampleResponse res) => { }
 
 ### 커스텀 패킷
 
-패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [Unity 심화 개발 가이드 > 패킷](../unity-advanced/unity-advanced-03-packet)을 참고합니다.
+패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [Unity 심화 개발 가이드 > 패킷](../unity-advanced/unity-advanced-05-packet.md)을 참고합니다.
 
 ```c#
 Connector connector = new Connector();

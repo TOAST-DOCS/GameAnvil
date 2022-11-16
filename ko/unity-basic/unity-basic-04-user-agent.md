@@ -10,11 +10,11 @@ GameAnvilConnector는 기본적으로 QuickConnect 과정에서 생성된 하나
 
 로그인은 클라언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 
 
-로그인은 QuickConnect에서 한 번에 처리되기 때문에 설명을 생략합니다. 자세한 내용은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-02-user-agent) 를 참고해주세요.
+로그인은 QuickConnect에서 한 번에 처리되기 때문에 설명을 생략합니다. 자세한 내용은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md) 를 참고해주세요.
 
 ### 로그아웃
 
-GameAnvilConnector에서는 Logout 하면 자동으로 접속 종료까지 처리되며, 로그아웃에 대한 더 자세한 설명은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-04-user-agent) 를 참고해주세요.
+GameAnvilConnector에서는 Logout 하면 자동으로 접속 종료까지 처리되며, 로그아웃에 대한 더 자세한 설명은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md) 를 참고해주세요.
 
 ```c#
 /// <summary>
@@ -249,4 +249,4 @@ userAgent.MatchUserCancel(Constants.RoomType, (UserAgent user, Defines.ResultCod
 });
 ```
 
-이외에도 파티 매치 메이킹, 채널, 리스너 등 유저 에이전트의 다양한 기능들에 대한 설명이 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-04-user-agent) 에 소개되어 있습니다.
+이외에도 파티 매치 메이킹, 채널, 리스너 등 유저 에이전트의 다양한 기능들에 대한 설명이 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md) 에 소개되어 있습니다.

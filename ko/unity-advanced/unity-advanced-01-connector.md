@@ -4,7 +4,7 @@
 
 커넥터는 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 옵션을 설정하거나 콜백을 등록할 수 있습니다.
 
-[Unity 기초 개발 가이드 > Connector](../unity-basic/unity-basic-02-connector) 문서에서 커넥터의 주요 기능을 간편하게 사용할 수 있는 GameAnvilConnector에 대해서 다루었습니다.
+[Unity 기초 개발 가이드 > Connector](../unity-basic/unity-basic-02-connector.md) 문서에서 커넥터의 주요 기능을 간편하게 사용할 수 있는 GameAnvilConnector에 대해서 다루었습니다.
 
 이번 문서에서는 커넥터를 더욱 확장성있게 사용할 수 있는 Connector에 대하여 설명합니다.
 Connector를 사용하려면 먼저 Connector를 생성해야 합니다.
