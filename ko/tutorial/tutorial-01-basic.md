@@ -70,7 +70,15 @@ Hierarchy 뷰에서 우클릭하여 나오는 컨텍스트 메뉴에서 GameAnvi
 
 ## 기본 서버 구현
 
-게임엔빌에서 제공 되는 세션 기반의 구현을 사용하기 위해서는, **게임 노드**, **게임 유저**와 **게임 룸** 클래스가 필요합니다. 클래스 상속과 어노테이션 부착만으로 쉽게 구현하는 방법을 설명하겠습니다.
+게임엔빌에서 제공 되는 방 기반의 구현을 사용하기 위해서는, **게임 노드**, **게임 유저**와 **게임 룸** 클래스가 필요합니다. 클래스 상속과 어노테이션 부착만으로 쉽게 구현하는 방법을 설명하겠습니다.
+
+### 서비스에 대해
+
+서비스란 하나의 서버가 여러개의 게밍을 제공할 때 각 서버를 구분 지어서 부르는 이름입니다.
+
+### 유저 타입에 대해
+
+각 게임 노드에서 방에 참여해 패킷을 주고 받는 주체가 유저인데, 각 유저 구현을 구분하는 약속된 문자열입니다.
 
 ### 게임 노드
 
@@ -193,7 +201,7 @@ public class SyncGameNode extends BaseGameNode {
 
 자동 생성된 코드에는 각 노드의 상태에 후크된 콜백을 오버라이딩 하는 코드가 포함 되어 있습니다. 예를 들면, onInit() 메서드에 특정 로직을 작성하면 노드가 준비를 시작 하는 이전 단계에서 해당 콜백이 삽입 되어 호출됩니다.
 
-게임엔빌은 대부분의 코드가 미리 준비 되어있기 때문에 이 단계에서 더 작성할 코드는 없습니다. 생성한 그대로 게임 노드를 사용하면 됩니다. 다만, 클래스 상단에 붙은 어노테이션 ServiceName에 입력된 문자열은 서버와 클라이언트 간 프로토콜의 일부이므로 메모해둡니다.
+게임엔빌은 대부분의 코드가 미리 준비 되어있기 때문에 이 단계에서 더 작성할 코드는 없습니다. 생성한 그대로 게임 노드를 사용하면 됩니다. 다만, 클래스 상단에 붙은 어노테이션 ServiceName에 입력된 문자열은 특정 서비스를 나타내는 서버와 클라이언트 간 약속된 문자열 일부이므로 메모해둡니다.
 
 ### 게임 유저
 
@@ -397,7 +405,7 @@ GameAnvilConfig.json 파일의 마지막 부분을 보면, Todo로 표시된 부
 * Auth : 클라이언트가 서버를 통해 데이터를 송수신할 수 있도록 허용할지 여부를 서버에서 결정합니다.
 * Login : 서버의 메모리에 클라이언트의 정보를 표현하는 객체, 즉, 게임 유저를 생성합니다.
 
-각 단계는 순차적으로 진행되며, 이전 단계가 정상적으로 완료되지 않으면 다음 단계를 진행할 수 없습니다. 각 단계의 정상 완료 여부는 콜백으로 전달된 파라미터를 통해 값을 얻을 수 있습니다.
+각 단계는 순차적으로 진행되며, 이전 단계가 정상적으로 완료되지 않으면 다음 단계를 진행할 수 없습니다. 각 단계의 정상 프로토콜여부는 콜백으로 전달된 파라미터를 통해 값을 얻을 수 있습니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/connect-auth-login.gif)
 
@@ -405,7 +413,7 @@ Hierarchy 뷰 상의 Canvas 게임오브젝트에 컴포넌트로 추가 되어 
 
 ### Connect 관련 필드 설정
 
-접속할 서버 정보를 기재합니다. 로컬에서 서버를 직접 띄우는 경우이므로 ip는 127.0.0.1로 설정 합니다. port는 게이트웨이 노드의 기본 포트인 18200으로 설정 해야합니다. 따로 설정할 필요 없이 GameAnvilConnector의 기본값을 그대로 사용하면 됩니다. ip와 port 정보는 필요한 경우 플레이 모드에서 수정할 수 있도록 인풋 필드와 연결하는 코드를 확인해보겠습니다.
+접속할 서버 정보를 기재합니다. 로컬에서 서버를 직접 띄우는 경우이므로 ip는 127.0.0.1로 설정 합니다. port는 게이트웨이 노드의 기본 포트인 18200을 사용하겠습니다. 따로 설정할 필요 없이 GameAnvilConnector의 기본값을 그대로 사용하면 됩니다. ip와 port 정보는 필요한 경우 플레이 모드에서 수정할 수 있도록 인풋 필드와 연결하는 코드를 확인해보겠습니다.
 ```c#
 void Start()
 {
@@ -427,7 +435,7 @@ void portChanged()
 {
     if (!int.TryParse(portInputField.text, out GameAnvilConnector.getInstance().port))
     {
-        GameAnvilConnector.getInstance().port = 0;
+        GameAnvilConnector.getInstance().port = 18200;
     }
 }
 ```
@@ -515,7 +523,7 @@ public void QuickConnect()
 ```c#
 void DelOnQuickConnect(GameAnvilConnector.ResultCodeQuickConnect resultCode, UserAgent userAgent, GameAnvilConnector.QuickConnectResult quickConnectResult)
 {
-    if (quickConnectResult != null && quickConnectResult.resultCodeQuickConnect.Equals(GameAnvilConnector.ResultCodeQuickConnect.QUICK_CONNECT_SUCCESS))
+    if (quickConnectResult.resultCodeQuickConnect.Equals(GameAnvilConnector.ResultCodeQuickConnect.QUICK_CONNECT_SUCCESS))
     {
         state = UIState.QUICK_CONNECT_COMPLETE;
     }
@@ -693,7 +701,7 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
 
 ### 게임 룸 생성 요청 API 사용
 
-서버에서 게임 룸을 생성하게하는 방법은 간단하고 일관성 있습니다. 게임엔빌 커넥터에서 게임 룸 생성 요청 메서드를 호출하면서 서버와 사전에 합의된 룸 타입 프로토콜을 전달하면 됩니다.
+서버에서 게임 룸을 생성하게하는 방법은 간단하고 일관성 있습니다. 게임엔빌 커넥터에서 게임 룸 생성 요청 메서드를 호출하면서 서버와 사전에 합의된 룸 타입 값을 전달하면 됩니다.
 ```c#
 GameAnvilConnector.getInstance().getUserAgent().CreateRoom("ROOM_TYPE_SYNC", DelOnCreateRoom);
 ```
