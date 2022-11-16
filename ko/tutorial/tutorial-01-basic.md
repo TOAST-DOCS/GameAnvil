@@ -35,7 +35,7 @@ GameAnvilSample 폴더 안의 Scene 폴더에서 IntroScene을 열어서 아래�
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/unity-after-import-package.png)
 
-File > Build Setting 메뉴에서 Add Open Scene을 클릭해서 빌드시에 포함되도록 설정합니다.
+File > Build Setting 메뉴에서 Add Open Scene을 클릭해서 빌드 시에 포함되도록 설정합니다.
 
 ## 실습 환경 준비 - 서버 프로젝트
 게임엔빌 커넥터 사용 실습을 위해서 서버 프로젝트를 구성합니다. 서버 프로젝트 구현에는 프로젝트 템플릿을 이용합니다. [프로젝트 템플릿 설치 방법](tutorial-02-advanced.md)을 참고하여 환경을 구성합니다.
@@ -55,7 +55,7 @@ File > Build Setting 메뉴에서 Add Open Scene을 클릭해서 빌드시에 �
 
 ## GameAnvilConnector 추가
 
-계층관계 뷰에서 우클릭하여 나오는 컨텍스트 메뉴에서 GameAnvil > GameAnvilConnector를 클릭합니다. GameAnvilConnector 게임 오브젝트가 생성되고, 인스펙터 상에서 아래와 같이 설정을 수정할 수 있습니다.
+Hierarchy 뷰에서 우클릭하여 나오는 컨텍스트 메뉴에서 GameAnvil > GameAnvilConnector를 클릭합니다. GameAnvilConnector 게임 오브젝트가 생성되고, 인스펙터 상에서 아래와 같이 설정을 수정할 수 있습니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/add-gameanvilconnector-done.png)
 
@@ -66,7 +66,7 @@ File > Build Setting 메뉴에서 Add Open Scene을 클릭해서 빌드시에 �
 * Login Configuration : 빠른 연결 정보를 수정할 수 있습니다.
 * LogListener : 게임엔빌 커넥터 내부에서 발생하는 로그 출력을 관리합니다.
 
-지금은 세부 설정에 대해서 자세히 알고 있지 않아도 괜찮습니다. 튜토리얼을 진행하면서 각 항목에 대한 설명을 진행하겠습니다. 각 설정 항목의 자세한 개별 설명은 이어지는 커넥터 이용 메뉴얼을 참고하세요.
+지금은 세부 설정에 대해서 자세히 알고 있지 않아도 괜찮습니다. 튜토리얼을 진행하면서 각 항목에 대한 설명을 진행하겠습니다. 각 설정 항목의 자세한 개별 설명은 이어지는 [커넥터 이용 메뉴얼](../unity-basic/unity-basic-01-install.md)을 참고하세요.
 
 ## 기본 서버 구현
 
@@ -394,14 +394,14 @@ GameAnvilConfig.json 파일의 마지막 부분을 보면, Todo로 표시된 부
 게임엔빌 클라이언트가 게임엔빌 서버에 접속하기 위해서는, Connect, Authentication, Login의 세 단계를 거쳐야 합니다.
 
 * Connect : 서버와 클라이언트 간에 통신할 수 있도록 소켓을 생성하여 연결합니다.
-* Auth : 클라이언트가 서버를 통해 데이터를 송수신 할 수 있도록 허용할지 여부를 서버에서 결정합니다.
+* Auth : 클라이언트가 서버를 통해 데이터를 송수신할 수 있도록 허용할지 여부를 서버에서 결정합니다.
 * Login : 서버의 메모리에 클라이언트의 정보를 표현하는 객체, 즉, 게임 유저를 생성합니다.
 
-각 단계는 순차적으로 진행되며, 이전 단계가 정상적으로 완료 되지 않으면 다음 단계를 진행할 수 없습니다. 각 단계의 정상 완료 여부는 콜백으로 전달된 파라미터를 통해 값을 얻을 수 있습니다.
+각 단계는 순차적으로 진행되며, 이전 단계가 정상적으로 완료되지 않으면 다음 단계를 진행할 수 없습니다. 각 단계의 정상 완료 여부는 콜백으로 전달된 파라미터를 통해 값을 얻을 수 있습니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/connect-auth-login.gif)
 
-계층관계 뷰 상의 Canvas 게임오브젝트에 컴포넌트로 추가 되어 있는 QuickConnectUIManager 스크립트를 소스 코드 편집기를 통해 열어서 구현을 추가해가면서 각 과정을 직접 실습해보겠습니다.
+Hierarchy 뷰 상의 Canvas 게임오브젝트에 컴포넌트로 추가 되어 있는 QuickConnectUIManager 스크립트를 소스 코드 편집기를 통해 열어서 구현을 추가해가면서 각 과정을 직접 실습해보겠습니다.
 
 ### Connect 관련 필드 설정
 
@@ -761,7 +761,7 @@ public void JoinRoom()
 이제 같은 게임 룸에 접속한 게임 유저 간에는 패킷을 주고 받을 수 있습니다. 이 패킷을 통해서 필요한 정보를 클라이언트 프로세스 간에 동기화하도록 코드를 작성할 수 있습니다. 더 간단한 방법으로는 동기화 하고 싶은 게임 오브젝트에 동기화 컴포넌트를 부착하는 것 만으로도 동기화를 구현할 수 있습니다.
 
 ### 동기화 컨트롤러 추가
-계층관계 뷰에서 우클릭하여 나오는 컨텍스트 메뉴에서 GameAnvil > SyncController를 클릭합니다. SyncController 게임 오브젝트가 생성됩니다.
+Hierarchy 뷰에서 우클릭하여 나오는 컨텍스트 메뉴에서 GameAnvil > SyncController를 클릭합니다. SyncController 게임 오브젝트가 생성됩니다.
 
 이 예제에서는 씬 이동이 일어나기 때문에, 씬 이동 이후에 수동으로 동기화 객체를 생성하기 위해서 인스펙터상에서 Instantiate Sync Object Immediatly를 해제해줍니다.
 
