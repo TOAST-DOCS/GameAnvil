@@ -1,4 +1,56 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-CSharp 
+
+### 1.3.0 (2022.12.27)
+
+#### [다운로드(TODO - 링크 추가)]()
+
+#### GameAnvil 1.3.0 이상
+
+#### New
+* Unity용 동기화 컴포넌트 지원
+
+#### Fix
+
+* 매칭 성공 후 매칭 요청을 다시 보냈을 때 방 입장 여부가 잘못 기록되는 문제 수정
+* packetTimeout 옵션을 0으로 설정시 클라이언트가 자동으로 접속 종료 되지 않도록 수정
+* update() 메서드 호출 시에 가비지가 생성 되는 이슈 해결
+* 에러에 대한 리스너를 등록하지 않은 상태에서 에러가 발생한 경우 예외가 발생하는 현상 수정
+ 
+#### Change
+* API 변경 : 이름 변경 및 인자로 ErrorCode를 받도록 수정
+	| 변경 전 | 변경 후 |
+	|--|--|
+	| OnTimeout(msgId) | OnError(msgId, ErrorCode) |
+	| OnCustomTimeout(command) | OnCustomError(command, ErrorCode)| 
+
+* ErrorCode 추가
+  | 명칭 | 설명 |
+  |--|--|
+  | ErrorCode.PARSE_ERROR | 프로토콜 파싱에 실패하였음을 나타냄|
+* 사용자 정의 프로토콜 콜백에 ResultCode 추가
+  | 명칭 | 설명 |
+  |--|--|
+  | ResultCode.PARSE_ERROR | 패킷 파싱에 실패하였음을 나타냄 |
+  | ResultCode.SYSTEM_ERROR| 서버 시스템 에러 |
+  | ResultCode.TIMEOUT | 타임아웃 |
+  | ResultCode.SUCCESS | 성공 |
+
+* Exception 추가
+  | 명칭 | 설명 |
+  |--|--|
+  | ParseInvalidProtocol | 프로토콜 파싱이 실패하는 경우에 발생 |
+
+* 로깅 시스템 개선
+  * 핑퐁 로그 출력을 옵션으로 정할 수 있는 기능을 추가
+  * 로그에서 메시지 정보를 출력하는 상황에 메시지 아이디 대신에 이름을 출력하도록 수정
+  * 출력할 로그 레벨을 조정할 수 있는 기능을 추가
+
+
+* Request시에 패킷을 바로 전송할 수 있는 옵션 requestDirect 추가
+* seArgumentDelegateOrListenersOnError 옵션 추가
+
+---
+
 ### 1.2.3 (2022.01.28)
 
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.3.unitypackage)
