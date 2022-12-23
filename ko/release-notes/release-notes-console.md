@@ -1,5 +1,35 @@
 ## Game > GameAnvil > 릴리스 노트 > Console
 
+### 1.3.0 (2022.12.27)
+
+#### New
+
+* 서버를 미리 할당받지 않고 바로 생성해서 사용 가능
+  * 인스턴스에 생성에 사용하는 이미지는 Linux CentOS 7.8 에 open  JDK 8, 11, GameAnvil Agent까지 모두 설정
+* 상품 활성화시에 Wizard 를 통해서 GameAnvil 설정에 필요한 시스템 기본 설정 적용
+  * 내부에서사용하는 로케이션과 매니지먼트 노드들, 사용자가 접속하는 로드밸런서, 배포파일을 올리는 오브젝트 스토리지 설정
+* GATEWAY 노드 , GAME 노드 오토스케일 구성 적용
+* Safe Pause 적용
+* 전반적인 화면 디자인과 구성 변경
+  * 서버 상태 ERROR, RUNNING, STANDBY, TRANSIT, PATCHING, not STANDBY로 이름과 색으로 구분해서 동작과 현황, 목록을 한화면에 볼수 있도록 구성 및 다양한 모니터링 화면 제공
+  * 서버 생성 화면에 기본서버와 오토스케일 서버를 한 화면에서 모두 설정과 동시에 생성 하도록 구성
+  * 서버 구성 할 때 노드 설정을 보다 쉽게 적용 할 수 있게 Drag&Drop 형태의 UI 적용
+  * 별도의 서버 Config 설정이 필요하지 않도록 적용
+* 배포파일 등록시에 Default 파일 지정 처리
+* 사용자가 접속 해서 사용 하는 로드밸런서 정보 추가
+  * IP 정보와 사용 하는 포트 정보 표시
+
+#### Fix
+
+
+
+#### Change
+
+* 노드 상태가 INIT, PREPARE, READY, READY(LOCK), PAUSE, RESUME, SAFE PAUSE, INVALID, DISABLE로 더 세분하게 구분 적용
+* 서비스 / 채널 템플릿이 GAME / SUPPORT 구분하여 제공
+
+---
+
 ### 1.0.5 (2021.07.13)
 
 #### Change
