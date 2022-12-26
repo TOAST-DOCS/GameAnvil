@@ -2,7 +2,7 @@
 
 ### 1.3.0 (2022.12.27)
 
-#### [다운로드(TODO - 링크 추가)]()
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.3.0.unitypackage)
 
 #### GameAnvil 1.3.0 이상
 
@@ -11,21 +11,22 @@
 ###### 빠른 연결
 빠른 연결 기능은 게임엔빌 엔진 기반 서버에 접속, 인증, 로그인 하는 세 과정을 한번의 메서드 호출로 이루어지도록 합니다.
 ###### 로그 레벨 변경 기능
-전용 컴포넌트의 인스펙터 창을 통해 로그 레벨을 info, debug, warn, erorr 등으로 설정하여 제공되는 로그의 빈도를 조정할 수 있습니다.
+전용 컴포넌트의 인스펙터 창을 통해 로그 레벨을 info, debug, warn, error 등으로 설정하여 제공되는 로그의 빈도를 조정할 수 있습니다.
 ###### 동기화 컴포넌트 제공
- 컴포넌트 제공으로 Unity 엔진과 연동 편의성이 대폭 강화되었습니다. 서버의 복잡한 로직 구현 없이도 원격의 클라이언트 간에 게임오브젝트의 여러 요소들이 자동으로 동기화 됩니다.
-  * GameObject 생성, 파괴 자동 동기화
-  * Animation 동기화
-    * Animation 파라미터 동기화로 게임오브젝트의 Animation을 동기화 할 수 있습니다.
-  * Transform 동기화
-    * Position, Transform, Scale 등 게임오브젝트의 Transform 요소를 동기화 합니다.
-    * 코드를 통한 변형 외에 어떠한 경로를 통한 변형도 모두 감지합니다.
-  * RigidBody 및 RigidBody2D 동기화
-    * 로컬 클라이언트에서 계산된 강체 상태를 원격 클라이언트에게 전송하여 동기화합니다.
-    * 강체 상태에 변화가 없을 경우에는 패킷을 보내지 않도록 최적화 되어 있습니다.
-  * 커스텀 값 동기화 기능
-    * 방 단위로 key-value 쌍으로 커스텀 값을 설정하여 사용할 수 있습니다.
-    * CAS방식의 값 설정을 지원하므로 타이밍 이슈를 쉽게 해결할 수 있습니다.
+컴포넌트 제공으로 Unity 엔진과 연동 편의성이 대폭 강화되었습니다. 서버의 복잡한 로직 구현 없이도 원격의 클라이언트 간에 게임오브젝트의 여러 요소들이 자동으로 동기화 됩니다.
+ 
+* GameObject 생성, 파괴 자동 동기화
+* Animation 동기화
+  * Animation 파라미터 동기화로 게임오브젝트의 Animation을 동기화 할 수 있습니다.
+* Transform 동기화
+  * Position, Transform, Scale 등 게임오브젝트의 Transform 요소를 동기화 합니다.
+  * 코드를 통한 변형 외에 어떠한 경로를 통한 변형도 모두 감지합니다.
+* RigidBody 및 RigidBody2D 동기화
+  * 로컬 클라이언트에서 계산된 강체 상태를 원격 클라이언트에게 전송하여 동기화합니다.
+  * 강체 상태에 변화가 없을 경우에는 패킷을 보내지 않도록 최적화 되어 있습니다.
+* 커스텀 값 동기화 기능
+  * 방 단위로 key-value 쌍으로 커스텀 값을 설정하여 사용할 수 있습니다.
+  * CAS방식의 값 설정을 지원하므로 타이밍 이슈를 쉽게 해결할 수 있습니다.
 
 #### Fix
 
@@ -35,6 +36,7 @@
 * 에러에 대한 리스너를 등록하지 않은 상태에서 에러가 발생한 경우 예외가 발생하는 현상 수정
  
 #### Change
+
 * API 변경 : 이름 변경 및 인자로 ErrorCode를 받도록 수정
 
 | 변경 전 | 변경 후 |
@@ -70,7 +72,7 @@
 
 
 * Request시에 패킷을 바로 전송할 수 있는 옵션 requestDirect 추가
-* seArgumentDelegateOrListenersOnError 옵션 추가
+* setArgumentDelegateOrListenersOnError 옵션 추가
 
 ---
 
@@ -91,6 +93,7 @@
 #### GameAnvil 1.2.0 이상
 
 #### Fix
+
 * 방에 입장한 상태에서 MatchRoom을 호출하여 실패한경우 IsJoinedRoom()이 false로 바뀌는 문제 수정
 
 ------
@@ -101,6 +104,7 @@
 #### GameAnvil 1.2.0 이상
 
 #### Fix
+
 * SocketException 발생시 OnDisconnect가 두번 호출되는 버그 수정
 
 ------
