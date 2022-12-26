@@ -36,27 +36,32 @@
  
 #### Change
 * API 변경 : 이름 변경 및 인자로 ErrorCode를 받도록 수정
-	| 변경 전 | 변경 후 |
-	|--|--|
-	| OnTimeout(msgId) | OnError(msgId, ErrorCode) |
-	| OnCustomTimeout(command) | OnCustomError(command, ErrorCode)| 
+
+| 변경 전 | 변경 후 |
+|--|--|
+| OnTimeout(msgId) | OnError(msgId, ErrorCode) |
+| OnCustomTimeout(command) | OnCustomError(command, ErrorCode)| 
 
 * ErrorCode 추가
-  | 명칭 | 설명 |
-  |--|--|
-  | ErrorCode.PARSE_ERROR | 프로토콜 파싱에 실패하였음을 나타냄|
+
+| 명칭 | 설명 |
+|--|--|
+| ErrorCode.PARSE_ERROR | 프로토콜 파싱에 실패하였음을 나타냄|
+
 * 사용자 정의 프로토콜 콜백에 ResultCode 추가
-  | 명칭 | 설명 |
-  |--|--|
-  | ResultCode.PARSE_ERROR | 패킷 파싱에 실패하였음을 나타냄 |
-  | ResultCode.SYSTEM_ERROR| 서버 시스템 에러 |
-  | ResultCode.TIMEOUT | 타임아웃 |
-  | ResultCode.SUCCESS | 성공 |
+
+| 명칭 | 설명 |
+|--|--|
+| ResultCode.PARSE_ERROR | 패킷 파싱에 실패하였음을 나타냄 |
+| ResultCode.SYSTEM_ERROR| 서버 시스템 에러 |
+| ResultCode.TIMEOUT | 타임아웃 |
+| ResultCode.SUCCESS | 성공 |
 
 * Exception 추가
-  | 명칭 | 설명 |
-  |--|--|
-  | ParseInvalidProtocol | 프로토콜 파싱이 실패하는 경우에 발생 |
+
+| 명칭 | 설명 |
+|--|--|
+| ParseInvalidProtocol | 프로토콜 파싱이 실패하는 경우에 발생 |
 
 * 로깅 시스템 개선
   * 핑퐁 로그 출력을 옵션으로 정할 수 있는 기능을 추가
