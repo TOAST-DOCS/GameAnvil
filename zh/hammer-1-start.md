@@ -40,31 +40,18 @@ GameHammer는 다음과 같은 기능을 지원합니다.
 
 ## 프로젝트에 GameHamer 추가하기
 
-GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.xml 파일의 dependencies 요소에 다음과 같이 추가하시면 GameHammer를 사용할 수 있습니다. 만일 GameHammer 설치에 실패할 경우에는 repository 요소에 사내 nexus의 URL이 아래와 같이 제대로 등록되었는지 확인하세요
+GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.xml 파일의 dependencies 요소에 다음과 같이 추가하시면 GameHammer를 사용할 수 있습니다.
 
 ```
-...
-<repositories>
-    <repository>
-        <id>releases</id>
-        <name>Nhnent Maven Release Repository</name>
-        <url>http://nexus.nhnent.com/content/repositories/releases/</url>
-    </repository>
-    <repository>
-        <id>snapshots</id>
-        <name>Nhnent Maven Snapshot Repository</name>
-        <url>http://nexus.nhnent.com/content/repositories/snapshots/</url>
-    </repository>
-</repositories>
 ...    
 <dependencies>
         ...
-        <!-- test agent (java connector) -->
+        <!-- GameHammer -->
         <dependency>
-            <groupId>com.nhn.gameanvil</groupId>
-            <artifactId>gameahammer</artifactId>
-            <version>DEV-1.0.0</version>
-        </dependency>
+			<groupId>com.nhn.gameanvil</groupId>
+			<artifactId>gamehammer</artifactId>
+			<version>1.2.1-jdk11</version>
+		</dependency>
         ...
 <dependencies>
 ...        

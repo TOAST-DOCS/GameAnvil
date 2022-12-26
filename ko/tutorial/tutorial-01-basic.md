@@ -35,10 +35,10 @@ GameAnvilSample 폴더 안의 Scene 폴더에서 IntroScene을 열어서 아래�
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/unity-after-import-package.png)
 
-File > Build Setting 메뉴에서 Add Open Scene을 클릭해서 빌드시에 포함되도록 설정합니다.
+File > Build Setting 메뉴에서 Add Open Scene을 클릭해서 빌드 시에 포함되도록 설정합니다.
 
 ## 실습 환경 준비 - 서버 프로젝트
-게임엔빌 커넥터 사용 실습을 위해서 서버 프로젝트를 구성합니다. 서버 프로젝트 구현에는 프로젝트 템플릿을 이용합니다. [프로젝트 템플릿 설치] 방법을 참고하여 환경을 구성합니다.
+게임엔빌 커넥터 사용 실습을 위해서 서버 프로젝트를 구성합니다. 서버 프로젝트 구현에는 프로젝트 템플릿을 이용합니다. [프로젝트 템플릿 설치 방법](tutorial-02-advanced.md)을 참고하여 환경을 구성합니다.
 
 ### 서버 프로젝트 생성
 인텔리제이를 실행한 후 우상단의 버튼 그룹에서 New Project 버튼을 클릭합니다. 
@@ -55,7 +55,7 @@ File > Build Setting 메뉴에서 Add Open Scene을 클릭해서 빌드시에 �
 
 ## GameAnvilConnector 추가
 
-계층관계 뷰에서 우클릭하여 나오는 컨텍스트 메뉴에서 GameAnvil > GameAnvilConnector를 클릭합니다. GameAnvilConnector 게임 오브젝트가 생성되고, 인스펙터 상에서 아래와 같이 설정을 수정할 수 있습니다.
+Hierarchy 뷰에서 우클릭하여 나오는 컨텍스트 메뉴에서 GameAnvil > GameAnvilConnector를 클릭합니다. GameAnvilConnector 게임 오브젝트가 생성되고, 인스펙터 상에서 아래와 같이 설정을 수정할 수 있습니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/add-gameanvilconnector-done.png)
 
@@ -66,11 +66,19 @@ File > Build Setting 메뉴에서 Add Open Scene을 클릭해서 빌드시에 �
 * Login Configuration : 빠른 연결 정보를 수정할 수 있습니다.
 * LogListener : 게임엔빌 커넥터 내부에서 발생하는 로그 출력을 관리합니다.
 
-지금은 세부 설정에 대해서 자세히 알고 있지 않아도 괜찮습니다. 튜토리얼을 진행하면서 각 항목에 대한 설명을 진행하겠습니다. 각 설정 항목의 자세한 개별 설명은 이어지는 커넥터 이용 메뉴얼을 참고하세요.
+지금은 세부 설정에 대해서 자세히 알고 있지 않아도 괜찮습니다. 튜토리얼을 진행하면서 각 항목에 대한 설명을 진행하겠습니다. 각 설정 항목의 자세한 개별 설명은 이어지는 [커넥터 이용 메뉴얼](../unity-basic/unity-basic-01-install.md)을 참고하세요.
 
 ## 기본 서버 구현
 
-게임엔빌에서 제공 되는 세션 기반의 구현을 사용하기 위해서는, **게임 노드**, **게임 유저**와 **게임 룸** 클래스가 필요합니다. 클래스 상속과 어노테이션 부착만으로 쉽게 구현하는 방법을 설명하겠습니다.
+게임엔빌에서 제공 되는 방 기반의 구현을 사용하기 위해서는, **게임 노드**, **게임 유저**와 **게임 룸** 클래스가 필요합니다. 클래스 상속과 어노테이션 부착만으로 쉽게 구현하는 방법을 설명하겠습니다.
+
+### 서비스에 대해
+
+서비스란 하나의 서버가 여러개의 게밍을 제공할 때 각 서버를 구분 지어서 부르는 이름입니다.
+
+### 유저 타입에 대해
+
+각 게임 노드에서 방에 참여해 패킷을 주고 받는 주체가 유저인데, 각 유저 구현을 구분하는 약속된 문자열입니다.
 
 ### 게임 노드
 
@@ -183,6 +191,7 @@ public class SyncGameNode extends BaseGameNode {
 }
 ```
 모든 노드는 무언가 처리를 시작할 수 있는 루프가 시작 되었는지 여부에 따라서 상태를 가집니다. 아래는 노드가 가질 수 있는 상태 중 일부입니다.
+
 * INIT
 * PREPARE
 * READY
@@ -192,7 +201,7 @@ public class SyncGameNode extends BaseGameNode {
 
 자동 생성된 코드에는 각 노드의 상태에 후크된 콜백을 오버라이딩 하는 코드가 포함 되어 있습니다. 예를 들면, onInit() 메서드에 특정 로직을 작성하면 노드가 준비를 시작 하는 이전 단계에서 해당 콜백이 삽입 되어 호출됩니다.
 
-게임엔빌은 대부분의 코드가 미리 준비 되어있기 때문에 이 단계에서 더 작성할 코드는 없습니다. 생성한 그대로 게임 노드를 사용하면 됩니다. 다만, 클래스 상단에 붙은 어노테이션 ServiceName에 입력된 문자열은 서버와 클라이언트 간 프로토콜의 일부이므로 메모해둡니다.
+게임엔빌은 대부분의 코드가 미리 준비 되어있기 때문에 이 단계에서 더 작성할 코드는 없습니다. 생성한 그대로 게임 노드를 사용하면 됩니다. 다만, 클래스 상단에 붙은 어노테이션 ServiceName에 입력된 문자열은 특정 서비스를 나타내는 서버와 클라이언트 간 약속된 문자열 일부이므로 메모해둡니다.
 
 ### 게임 유저
 
@@ -393,18 +402,18 @@ GameAnvilConfig.json 파일의 마지막 부분을 보면, Todo로 표시된 부
 게임엔빌 클라이언트가 게임엔빌 서버에 접속하기 위해서는, Connect, Authentication, Login의 세 단계를 거쳐야 합니다.
 
 * Connect : 서버와 클라이언트 간에 통신할 수 있도록 소켓을 생성하여 연결합니다.
-* Auth : 클라이언트가 서버를 통해 데이터를 송수신 할 수 있도록 허용할지 여부를 서버에서 결정합니다.
+* Auth : 클라이언트가 서버를 통해 데이터를 송수신할 수 있도록 허용할지 여부를 서버에서 결정합니다.
 * Login : 서버의 메모리에 클라이언트의 정보를 표현하는 객체, 즉, 게임 유저를 생성합니다.
 
-각 단계는 순차적으로 진행되며, 이전 단계가 정상적으로 완료 되지 않으면 다음 단계를 진행할 수 없습니다. 각 단계의 정상 완료 여부는 콜백으로 전달된 파라미터를 통해 값을 얻을 수 있습니다.
+각 단계는 순차적으로 진행되며, 이전 단계가 정상적으로 완료되지 않으면 다음 단계를 진행할 수 없습니다. 각 단계의 정상 프로토콜여부는 콜백으로 전달된 파라미터를 통해 값을 얻을 수 있습니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/connect-auth-login.gif)
 
-계층관계 뷰 상의 Canvas 게임오브젝트에 컴포넌트로 추가 되어 있는 QuickConnectUIManager 스크립트를 소스 코드 편집기를 통해 열어서 구현을 추가해가면서 각 과정을 직접 실습해보겠습니다.
+Hierarchy 뷰 상의 Canvas 게임오브젝트에 컴포넌트로 추가 되어 있는 QuickConnectUIManager 스크립트를 소스 코드 편집기를 통해 열어서 구현을 추가해가면서 각 과정을 직접 실습해보겠습니다.
 
 ### Connect 관련 필드 설정
 
-접속할 서버 정보를 기재합니다. 로컬에서 서버를 직접 띄우는 경우이므로 ip는 127.0.0.1로 설정 합니다. port는 게이트웨이 노드의 기본 포트인 18200으로 설정 해야합니다. 따로 설정할 필요 없이 GameAnvilConnector의 기본값을 그대로 사용하면 됩니다. ip와 port 정보는 필요한 경우 플레이 모드에서 수정할 수 있도록 인풋 필드와 연결하는 코드를 확인해보겠습니다.
+접속할 서버 정보를 기재합니다. 로컬에서 서버를 직접 띄우는 경우이므로 ip는 127.0.0.1로 설정 합니다. port는 게이트웨이 노드의 기본 포트인 18200을 사용하겠습니다. 따로 설정할 필요 없이 GameAnvilConnector의 기본값을 그대로 사용하면 됩니다. ip와 port 정보는 필요한 경우 플레이 모드에서 수정할 수 있도록 인풋 필드와 연결하는 코드를 확인해보겠습니다.
 ```c#
 void Start()
 {
@@ -426,7 +435,7 @@ void portChanged()
 {
     if (!int.TryParse(portInputField.text, out GameAnvilConnector.getInstance().port))
     {
-        GameAnvilConnector.getInstance().port = 0;
+        GameAnvilConnector.getInstance().port = 18200;
     }
 }
 ```
@@ -514,7 +523,7 @@ public void QuickConnect()
 ```c#
 void DelOnQuickConnect(GameAnvilConnector.ResultCodeQuickConnect resultCode, UserAgent userAgent, GameAnvilConnector.QuickConnectResult quickConnectResult)
 {
-    if (quickConnectResult != null && quickConnectResult.resultCodeQuickConnect.Equals(GameAnvilConnector.ResultCodeQuickConnect.QUICK_CONNECT_SUCCESS))
+    if (quickConnectResult.resultCodeQuickConnect.Equals(GameAnvilConnector.ResultCodeQuickConnect.QUICK_CONNECT_SUCCESS))
     {
         state = UIState.QUICK_CONNECT_COMPLETE;
     }
@@ -566,6 +575,7 @@ GameAnvilConnector의 인스펙터 창에서 Login Configuration에 아래와 �
 ![](.https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/quick-connect.gif)
 
 빠른 연결을 시도하면 빠른 연결 상태창에 아래와 같은 순서로 Connect, Authenticate, Login 과정이 진행될 것입니다.
+
 * NOT_CONNECTED
 * CONNECT_IN_PROGRESS
 * CONNECT_COMPLETE
@@ -691,7 +701,7 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
 
 ### 게임 룸 생성 요청 API 사용
 
-서버에서 게임 룸을 생성하게하는 방법은 간단하고 일관성 있습니다. 게임엔빌 커넥터에서 게임 룸 생성 요청 메서드를 호출하면서 서버와 사전에 합의된 룸 타입 프로토콜을 전달하면 됩니다.
+서버에서 게임 룸을 생성하게하는 방법은 간단하고 일관성 있습니다. 게임엔빌 커넥터에서 게임 룸 생성 요청 메서드를 호출하면서 서버와 사전에 합의된 룸 타입 값을 전달하면 됩니다.
 ```c#
 GameAnvilConnector.getInstance().getUserAgent().CreateRoom("ROOM_TYPE_SYNC", DelOnCreateRoom);
 ```
@@ -759,7 +769,7 @@ public void JoinRoom()
 이제 같은 게임 룸에 접속한 게임 유저 간에는 패킷을 주고 받을 수 있습니다. 이 패킷을 통해서 필요한 정보를 클라이언트 프로세스 간에 동기화하도록 코드를 작성할 수 있습니다. 더 간단한 방법으로는 동기화 하고 싶은 게임 오브젝트에 동기화 컴포넌트를 부착하는 것 만으로도 동기화를 구현할 수 있습니다.
 
 ### 동기화 컨트롤러 추가
-계층관계 뷰에서 우클릭하여 나오는 컨텍스트 메뉴에서 GameAnvil > SyncController를 클릭합니다. SyncController 게임 오브젝트가 생성됩니다.
+Hierarchy 뷰에서 우클릭하여 나오는 컨텍스트 메뉴에서 GameAnvil > SyncController를 클릭합니다. SyncController 게임 오브젝트가 생성됩니다.
 
 이 예제에서는 씬 이동이 일어나기 때문에, 씬 이동 이후에 수동으로 동기화 객체를 생성하기 위해서 인스펙터상에서 Instantiate Sync Object Immediatly를 해제해줍니다.
 

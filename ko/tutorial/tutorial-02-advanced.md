@@ -87,15 +87,15 @@ Import Unity Package 대화 상자가 뜨면, 리스트 내의 모든 체크 박
 
 ### 2.1. GameAnvil 서버 구동
 
-게임엔빌은 Java 8과 11 두 가지 버전을 지원합니다. 어떤 버전을 사용하는지에 따라 설정 방법이 조금 다릅니다. 서버 프로젝트의 Run Configuration 윈도우를 열고, VM Option에 아래 내용을 추가합니다. 사용 중인 Java 버전에 따라 추가되는 내용이 조금 달라지므로 주의합니다. 
+게임엔빌은 Java 8과 11 두 가지 버전을 지원합니다. 어떤 버전을 사용하는지에 따라 설정 방법이 조금 다릅니다. 서버 프로젝트의 Run Configuration 윈도우를 열고, VM Option에 아래 내용이 있는 것을 확인합니다. 사용 중인 Java 버전에 따라 추가되는 내용이 조금 달라지므로 주의합니다. 
 
-Java 8 버전을 사용할 경우 아래의 내용을 추가합니다.
+Java 8 버전을 사용할 경우 아래의 내용이 있을 것입니다.
 
 ```
 -javaagent:./src/main/resources/META-INF/quasar-core-0.7.10-jdk8.jar=bm
 ```
 
-Java 11 버전을 사용한다면, 대신 아래 내용을 추가합니다.
+Java 11 버전을 사용한다면, 대신 아래 내용이 있을 것입니다.
 
 ```
 -javaagent:./src/main/resources/META-INF/quasar-core-0.8.0-jdk11.jar=bm
@@ -103,11 +103,11 @@ Java 11 버전을 사용한다면, 대신 아래 내용을 추가합니다.
 
 실행 설정이 완료되었으면, GameAnvil 프로젝트가 구성된 IntelliJ 우측 상단의 Run 아이콘을 클릭해 서버를 실행합니다. 혹은 컨텍스트 메뉴의 Run 항목을 선택해서 실행할 수도 있습니다.
 
-서버가 정상적으로 구동되면 아래와 같이 서버 구동 상태 관련 로그들이 다수 출력됩니다. GameAnvil 서버는 수행할 역할을 여러개로 분담하는 이벤트 루프인 노드들로 구성되어 있습니다. 각각의 노드는 코드를 실행하기 위해 준비하는데 시간이 필요합니다. 각 노드가 준비 완료되면 onReady 로그를 출력합니다. 노드 중에 클라이언트가 서버로 접속하는데 직접적인 역할을 수행하는 GatewayNode가 준비 되어 해당 노드에서 onReady로그게 출력 되었다면 GameAnvil 서버는 이제 언제든 접속이 가능한 상태입니다.
+서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다. GameAnvil 서버는 수행할 역할을 여러개로 분담하는 이벤트 루프인 노드들로 구성되어 있습니다. 각각의 노드는 코드를 실행하기 위해 준비하는데 시간이 필요합니다. 각 노드가 준비 완료되면 onReady 로그를 출력합니다. 노드 중에 클라이언트가 서버로 접속하는데 직접적인 역할을 수행하는 GatewayNode가 준비 되어 해당 노드에서 onReady로그게 출력 되었다면 GameAnvil 서버는 이제 언제든 접속이 가능한 상태입니다.
 
 <br>
 
-### 2.2. 게임엔빌 커넥터 작성
+### 2.2. 커넥트 핸들러 작성
 
 이제 Unity 프로젝트로 이동하여 GameAnvil 서버에 접속할 수 있도록 코드를 작성해 보겠습니다. 서버와 연결하려면 먼저 커넥터 객체를 생성해야 합니다.
 
@@ -126,13 +126,13 @@ using GameAnvil.User;
 using UnityEngine.SceneManagement;
 using Protocol;
 
-public class GameAnvilConnector : MonoBehaviour
+public class ConnectHandler : MonoBehaviour
 {
     [SerializeField]
     GameAnvil.Connector.Config config;
 
     private GameAnvil.Connector connector;
-    private static GameAnvilConnector instance;
+    private static ConnectHandler instance;
 
     [Header("Object Reference")]
     public Text serverInfoText;
@@ -147,7 +147,7 @@ public class GameAnvilConnector : MonoBehaviour
         return connector;
     }
 
-    public static GameAnvilConnector GetInstance()
+    public static ConnectHandler GetInstance()
     {
         return instance;
     }
@@ -289,6 +289,15 @@ Connect() 함수에서는 connector를 통해 ConnectionAgent 객체를 참조�
 onLogin 콜백 메서드에서는 로그인 과정에 실행되어야 하는 동작을 구현합니다. 이 예제에서는 별다른 로그인 구현 없이, 무조건 로그인에 성공하도록 true를 반환하도록 합니다.
 
 ```java
+import co.paralleluniverse.fibers.SuspendExecution;
+import com.nhn.gameanvil.annotation.ServiceName;
+import com.nhn.gameanvil.annotation.UserType;
+import com.nhn.gameanvil.node.game.BaseUser;
+import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.packet.Payload;
+import match.BasicUserMatchInfo;
+import org.slf4j.Logger;
+
 @ServiceName("BASIC_SERVICE")
 @UserType("BASIC_USER")
 public class BasicUser extends BaseUser {
@@ -449,6 +458,7 @@ import com.nhn.gameanvil.packet.Packet;
 import com.nhn.gameanvil.packet.Payload;
 import org.slf4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -493,7 +503,12 @@ public class BasicRoom extends BaseRoom<BasicUser> {
     }
 
     @Override
-    public void onPostLeaveRoom(BasicUser user) throws SuspendExecution {
+    public void onLeaveRoom(BasicUser basicUser) throws SuspendExecution {
+        
+    }
+
+    @Override
+    public void onPostLeaveRoom() throws SuspendExecution {
 
     }
 
@@ -536,7 +551,7 @@ import com.nhn.gameanvil.packet.PacketDispatcher;
 import com.nhn.gameanvil.packet.Payload;
 
 @ServiceName("BASIC_SERVICE")
-public class BaiscGameNode extends BaseGameNode {
+public class BasicGameNode extends BaseGameNode {
 
     private static PacketDispatcher packetDispatcher = new PacketDispatcher();
 
@@ -819,7 +834,7 @@ public void CreateRoom(){
 }
 ```
 
-코드를 작성한 후에는 계층관계 패널 에서 Create Room 버튼을 선택합나다. 인스펙터의 Button 컴포넌트에서 OnClick 리스너 항목에 GameAnvilConnector 컴포넌트를 드래그해서 레퍼런스를 등록하고, 드롭다운에서 CreateRoom 메서드를 선택해서 화면 상의 버튼을 통해 메서드를 실행할 수 있도록 설정합니다.
+코드를 작성한 후에는 계층관계 패널 에서 Create Room 버튼을 선택합나다. 인스펙터의 Button 컴포넌트에서 OnClick 리스너 항목에 ConnectHandler 컴포넌트를 드래그해서 레퍼런스를 등록하고, 드롭다운에서 CreateRoom 메서드를 선택해서 화면 상의 버튼을 통해 메서드를 실행할 수 있도록 설정합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_create_room_on_click.png)
 
@@ -861,12 +876,12 @@ public class GameManager : MonoBehaviour
     public Text ChatLogText;
     public Text ChatInputText;
 
-    private GameAnvilConnector gameAnvilConnector;
+    private ConnectHandler connectHandler;
 
     void Start(){
-        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
+        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
 
-        roomIdText.text = "PuzzleRoom:" + gameAnvilConnector.roomId;
+        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
     }
 }
 ```
@@ -927,12 +942,12 @@ public class GameManager : MonoBehaviour
     public Text ChatLogText;
     public Text ChatInputText;
 
-    private GameAnvilConnector gameAnvilConnector;
+    private ConnectHandler connectHandler;
 
     void Start(){
-        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
+        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
 
-        roomIdText.text = "PuzzleRoom:" + gameAnvilConnector.roomId;
+        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
     }
 
     void Update(){
@@ -943,8 +958,8 @@ public class GameManager : MonoBehaviour
 
 	public void SendMessage(){
         MessageRequest messageRequest = new MessageRequest();
-        messageRequest.Message = "\n[" + gameAnvilConnector.accountId +  "]:" + ChatInputText.text;
-        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new Packet(messageRequest));
+        messageRequest.Message = "\n[" + connectHandler.accountId +  "]:" + ChatInputText.text;
+        ConnectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new Packet(messageRequest));
         ChatInputText.text = string.Empty;
 	}
 }
@@ -1074,15 +1089,15 @@ public class GameManager : MonoBehaviour
     public Text ChatLogText;
     public Text ChatInputText;
 
-    private GameAnvilConnector gameAnvilConnector;
+    private ConnectHandler connectHandler;
 
     void Start(){
-        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
+        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
 
-        roomIdText.text = "PuzzleRoom:" + gameAnvilConnector.roomId;
+        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
 
         ProtocolManager.GetInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
-        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
+        connectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
             ChatLogText.text += messageBroadcast.Message;
         });
     }
@@ -1179,12 +1194,12 @@ public class Main {
 }
 ```
 
-Unity 프로젝트는 GameAnvilConnector의 Start 메서드에 아래와 같이 프로토콜을 추가합니다. 이 때, 서버와 같은 인덱스인 1로 등록합니다.
+Unity 프로젝트는 ConnectHandler Start 메서드에 아래와 같이 프로토콜을 추가합니다. 이 때, 서버와 같은 인덱스인 1로 등록합니다.
 
 ```c#
 using Protocol;
 
-public class GameAnvilConnector : MonoBehaviour {
+public class ConnectHandler : MonoBehaviour {
     void Start()
     {
         // 프로토콜 등록
@@ -1223,10 +1238,10 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     public float tolerance;
 
   
-    private GameAnvilConnector gameAnvilConnector;
+    private ConnectHandler connectHandler;
 
     void Start(){
-        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
+        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -1259,7 +1274,7 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         position.PositionY = (int)puzzlePosition.y;
         position.OnEndDrag = onEndDrag;
       
-        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(position);
+        ConnectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(position);
     }
 }
 ```
@@ -1320,18 +1335,18 @@ public class GameManager : MonoBehaviour{
   
     void Start()
     {
-        gameAnvilConnector = GameObject.Find("GameAnvilConnector").GetComponent<GameAnvilConnector>();
+        connectHandler = GameObject.Find("ConnectHandler").GetComponent<ConnectHandler>();
 
-        roomIdText.text = "PuzzleRoom:" + gameAnvilConnector.roomId;
+        roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
 
         ProtocolManager.GetInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
 
         // 채팅 메시지 리스너
-        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
+        ConnectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
             ChatLogText.text += messageBroadcast.Message;
         });
         // 퍼즐 위치 리스너
-        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
+        ConnectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<PuzzlePosition>((sendUserAgent, puzzlePosition) => {
             Puzzle puzzle = GameObject.Find("Puzzle " + puzzlePosition.Index).GetComponent<Puzzle>();
             puzzle.transform.position = new Vector2(puzzlePosition.PositionX, puzzlePosition.PositionY);
 
@@ -1377,8 +1392,6 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 이제 PuzzlePositionHandler 코드를 수정해서 퍼즐 위치를 각 방에 저장하도록 합니다.
 
 ```Java
-package handler;
-
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.node.game.RoomPacketHandler;
 import com.nhn.gameanvil.packet.Packet;
@@ -1474,7 +1487,7 @@ message ScatterPuzzle { } // 퍼즐 섞기 요청 프로토콜
 ```csharp
 public GameManager : Monobehaviour{
 		public void Scatter(){
-        	GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new ScatterPuzzle());
+        	ConnectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new ScatterPuzzle());
     }
 }
 ```
@@ -1491,8 +1504,6 @@ public GameManager : Monobehaviour{
 <img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/scatter_puzzle_handler.png"/>
 
 ```Java
-package handler;
-
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.node.game.RoomPacketHandler;
 import com.nhn.gameanvil.packet.Packet;
@@ -1622,7 +1633,7 @@ public class GameManager : MonoBehaviour
     void Start(){
         ...생략...
 
-        GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new PuzzlePositionReq());
+        ConnectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new PuzzlePositionReq());
     }
   
   	...생략...
@@ -1636,8 +1647,6 @@ public class GameManager : MonoBehaviour
 onJoinRoom에 잘못 구현했던 퍼즐 위치 송신 코드를, 제대로 된 위치로 옮겨와 PuzzlePositionReqHandler에 새롭게 작성합니다.
 
 ```java
-package handler;
-
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.node.game.RoomPacketHandler;
 import com.nhn.gameanvil.packet.Packet;
@@ -1695,7 +1704,6 @@ UserMatchInfo 클래스를 생성합니다. 파일명은 BasicUserMatchInfo으�
 이 클래스에는 매칭에 사용될 유저의 정보를 담게 됩니다. 매치메이킹에 사용될 요소가 있다면 여기에 추가하면 됩니다. 이번 예제에서는 별다른 요소를 추가하지 않고, 필수적으로 구현해야하는 메서드만을 작성해서 사용하겠습니다. 한 가지 주의할 점은 getId() 메서드가 반드시 요청한 유저의 아이디를 반환하게 구현하도록 합니다. 그리고 파티 매치메이킹 기능은 사용하지 않으므로 0을 반환하도록 설정합니다.
 
 ```java
-package match;
 
 import com.nhn.gameanvil.node.match.BaseUserMatchInfo;
 
@@ -1726,7 +1734,6 @@ public class BasicUserMatchInfo extends BaseUserMatchInfo implements Serializabl
 이러한 UserMatchInfo는 클라이언트가 유저 매치메이킹 요청을 할 때, 서버의 게임 유저에서 onMatchUser 콜백을 구현하는 과정에서 생성한 후 사용합니다. GameAnvil은 기본적인 유저 매치메이커를 제공합니다. 아래의 onMatchUser는 이러한 엔진의 기본 유저 매치메이킹을 matchUser API를 통해 사용하고 있습니다.
 
 ```java
-package game;
 
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.exceptions.NodeNotFoundException;
@@ -1767,8 +1774,6 @@ getMatchRequests는 인자로 매칭을 위한 최소 인원수를 받아서 현
 만일 매칭에 충분한 요청이 쌓이지 않았거나, 조건에 맞는 대상이 없을 경우에는 null을 반환합니다. 이 경우에는 다음 1초 후의 match 호출에서 다시 동일한 매칭 검색이 수행됩니다.
 
 ```Java
-package match;
-
 import com.nhn.gameanvil.node.match.BaseUserMatchMaker;
 import org.slf4j.Logger;
 
@@ -1809,10 +1814,10 @@ public class BasicUserMatchMaker extends BaseUserMatchMaker<BasicUserMatchInfo> 
 
 ### 11.2. 클라이언트 측 구현
 
-매치메이킹 로직은 모두 서버에 구현되어있기 때문에 클라이언트에서는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. GameAnvilConnector에 UserMatchMaking 메서드를 추가합니다. 그리고 매치메이킹이 끝난 시점에 씬을 이동하도록 하는 핸들러를 추가합니다.
+매치메이킹 로직은 모두 서버에 구현되어있기 때문에 클라이언트에서는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 UserMatchMaking 메서드를 추가합니다. 그리고 매치메이킹이 끝난 시점에 씬을 이동하도록 하는 핸들러를 추가합니다.
 
 ```csharp
-public class GameAnvilConnector : MonoBehaviour
+public class ConnectHandler : MonoBehaviour
 {
 	...생략...
 	
@@ -1837,7 +1842,7 @@ public class GameAnvilConnector : MonoBehaviour
 
 ```
 
-씬에서 User Match Making 버튼의 OnClick 리스너에 GameAnvilConnector 컴포넌트를 드래그해서 등록하고, 드롭다운에서 UserMatchMaking메서드를 선택합니다.
+씬에서 User Match Making 버튼의 OnClick 리스너에 ConnectHandler 컴포넌트를 드래그해서 등록하고, 드롭다운에서 UserMatchMaking메서드를 선택합니다.
 
 <br>
 
@@ -1866,8 +1871,6 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태
 유저가 매치메이킹 요청을 할 때마다 BasicRoomMatchForm 객체가 생성되어 사용됩니다. 생성자에서 부모 생성자로 전달하는  "BASIC_MATCHING_USER_CATEGORY"는 이 문서에서는 신경쓰지 않아도 됩니다.
 
 ```java
-package match;
-
 import java.io.Serializable;
 
 public class BasicRoomMatchForm extends BaseRoomMatchForm implements Serializable {
@@ -1886,7 +1889,6 @@ public class BasicRoomMatchForm extends BaseRoomMatchForm implements Serializabl
 이 때, 방의 최대 정원은 static 필드에 지정된 4명입니다. 이러한 최대 정원과 유저 타입을 반드시 상속받은 BaseRoomMatchInfo의 생성자에 인자로 전달해야 합니다.
 
 ```java
-package match;
 
 import com.nhn.gameanvil.annotation.RoomType;
 import com.nhn.gameanvil.annotation.ServiceName;
@@ -1912,8 +1914,6 @@ public class BasicRoomMatchInfo extends BaseRoomMatchInfo implements Serializabl
 다음과 같이 BasicRoomMatchMaker를 작성합니다.
 
 ```Java
-package match;
-
 import com.nhn.gameanvil.annotation.RoomType;
 import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.node.game.data.RoomMatchResultCode;
@@ -1963,8 +1963,6 @@ compare 메서드는 매칭 풀에 들어있는 방을 정렬하는 조건을 �
 이제 룸 매치메이킹을 위한 준비가 거의 끝났습니다. 클라이언트가 룸매치 요청을 보내면, 서버의 BasicUser는 onMatchRoom 콜백이 호출됩니다. 이 콜백에서 우리는 앞서 살펴보았던 BasicRoomMatchForm 객체를 생성한 후, matchRoom API에 인자로 전달하여 호출합니다. 즉, 클라이언트가 보낸 룸 매칭 요청을 여기에서 매치메이커로 전달했습니다.
 
 ```java
-package game;
-
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.exceptions.NodeNotFoundException;
 import match.BasicUserMatchInfo;
@@ -2045,10 +2043,10 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 ### 12.2. 클라이언트 구현
 
-유저 매치메이킹과 마찬가지로 클라이언트는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. GameAnvilConnector에 RoomMatchMaking 메서드를 추가합니다.
+유저 매치메이킹과 마찬가지로 클라이언트는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 RoomMatchMaking 메서드를 추가합니다.
 
 ```csharp
-public class GameAnvilConnector : MonoBehaviour {
+public class ConnectHandler : MonoBehaviour {
     public void RoomMatchMaking(){
             connector.GetUserAgent("BASIC_SERVICE", 1).MatchRoom("BASIC_ROOM", "BASIC_MATCHING_GROUP", "BASIC_MATCHING_USER_CATEGORY", true, 
             (UserAgent userAgent, ResultCodeMatchRoom resultCode, int integer, int roomId, string roomName, bool created, Payload payload) =>{
@@ -2064,12 +2062,12 @@ public class GameAnvilConnector : MonoBehaviour {
 
 ```
 
-씬 상의 Room Match Making 버튼의 OnClick 리스너에 GameAnvilConnector 컴포넌트를 드래그해서 등록하고, 드롭다운에서 RoomMatchMaking메서드를 선택합니다.
+씬 상의 Room Match Making 버튼의 OnClick 리스너에 ConnectHandler 컴포넌트를 드래그해서 등록하고, 드롭다운에서 RoomMatchMaking메서드를 선택합니다.
 
 매칭 그룹이 있는 방을 만들기 위해서, 방 생성 코드를 수정합니다. 이 때, 매칭 그룹은 매치메이킹 대상 방을 논리적으로 나누기 위해 서버와 클라이언트 사이에 사전 정의한 임의의 문자열입니다. 여기에서는 "BASIC_MATCHING_GROUP"이라는 문자열을 사용합니다.
 
 ```c#
-public class GameAnvilConnector : MonoBehaviour {
+public class ConnectHandler : MonoBehaviour {
 	public void CreateRoom(){
             connector.GetUserAgent("BASIC_SERVICE", 1).CreateRoom("", "BASIC_ROOM", "BASIC_MATCHING_GROUP", null (UserAgent ua, ResultCodeCreateRoom resultCode, int roomId, string roomName, Payload payload) => {
             Debug.Log(resultCode); 
@@ -2097,9 +2095,9 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이 상태에서 방을 
 
 ```c#
 public void LeaveRoom(){
-		GameAnvilConnector.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).LeaveRoom((userAgent, resultCode, force, roomId, payload) =>{
+		ConnectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).LeaveRoom((userAgent, resultCode, force, roomId, payload) =>{
       	if(resultCode == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS){
-      		Destroy(gameAnvilConnector.gameObject);
+      		Destroy(connectHandler.gameObject);
     			SceneManager.LoadScene("ConnectScene");
     		}
     });

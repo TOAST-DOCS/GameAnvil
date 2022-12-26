@@ -8,7 +8,7 @@
 
 ConnectionAgent의 Connect 함수를 이용해 서버에 접속합니다. 일반적인 경우와 동일합니다. 
 
-```csharp
+```c#
 /// <summary>
 /// GameAnvil 서버에 연결 시도
 /// </summary>
@@ -31,7 +31,7 @@ connector.GetConnectionAgent().Connect(ip, port, (ConnectionAgent connectionAgen
 
 ConnectionAgent의 Authenticate 함수를 이용해 인증절차를 진행합니다. 입력 값은 일반적인 경우와 동일합니다. 다만 인증의 결과로 받아오는 값 중 loginedUserInfoList에 이전에 플레이하던 유저 정보가 포함되어 오게 됩니다. 
 
-```csharp
+```c#
 /// <summary>
 /// GameAnvil 서버에 인증 요청<para></para>
 /// 인증 성공 후 커넥터 사용 가능
@@ -60,7 +60,7 @@ connector.GetConnectionAgent().Authenticate(deviceId, accountId, password, paylo
 
 인증 결과로 받은 유저정보를 이용해 로그인을 진행합니다. 이때 userType이나 channelId등 이전 유저 정보와 동일한 값을 이용해 로그인을 해야합니다. 그렇지 않으면 로그인이 실패할 수 있습니다. 
 
-```csharp
+```c#
 /// <summary>
 /// 유저 에이전트를 찾아 반환
 /// </summary>
