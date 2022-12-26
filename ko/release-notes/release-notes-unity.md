@@ -1,4 +1,74 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-CSharp 
+
+### 1.3.0 (2022.12.27)
+
+#### [다운로드(TODO - 링크 추가)]()
+
+#### GameAnvil 1.3.0 이상
+
+#### New
+빠른 연결, 로그 레벨 변경, 동기화 기능 등이 새롭게 추가되었습니다. 게임엔빌 커넥터 컴포넌트를 통해 새로운 기능을 이용할 수 있습니다.
+###### 빠른 연결
+빠른 연결 기능은 게임엔빌 엔진 기반 서버에 접속, 인증, 로그인 하는 세 과정을 한번의 메서드 호출로 이루어지도록 합니다.
+###### 로그 레벨 변경 기능
+전용 컴포넌트의 인스펙터 창을 통해 로그 레벨을 info, debug, warn, erorr 등으로 설정하여 제공되는 로그의 빈도를 조정할 수 있습니다.
+###### 동기화 컴포넌트 제공
+ 컴포넌트 제공으로 Unity 엔진과 연동 편의성이 대폭 강화되었습니다. 서버의 복잡한 로직 구현 없이도 원격의 클라이언트 간에 게임오브젝트의 여러 요소들이 자동으로 동기화 됩니다.
+  * GameObject 생성, 파괴 자동 동기화
+  * Animation 동기화
+    * Animation 파라미터 동기화로 게임오브젝트의 Animation을 동기화 할 수 있습니다.
+  * Transform 동기화
+    * Position, Transform, Scale 등 게임오브젝트의 Transform 요소를 동기화 합니다.
+    * 코드를 통한 변형 외에 어떠한 경로를 통한 변형도 모두 감지합니다.
+  * RigidBody 및 RigidBody2D 동기화
+    * 로컬 클라이언트에서 계산된 강체 상태를 원격 클라이언트에게 전송하여 동기화합니다.
+    * 강체 상태에 변화가 없을 경우에는 패킷을 보내지 않도록 최적화 되어 있습니다.
+  * 커스텀 값 동기화 기능
+    * 방 단위로 key-value 쌍으로 커스텀 값을 설정하여 사용할 수 있습니다.
+    * CAS방식의 값 설정을 지원하므로 타이밍 이슈를 쉽게 해결할 수 있습니다.
+
+#### Fix
+
+* 매칭 성공 후 매칭 요청을 다시 보냈을 때 방 입장 여부가 잘못 기록되는 문제 수정
+* packetTimeout 옵션을 0으로 설정시 클라이언트가 자동으로 접속 종료 되지 않도록 수정
+* update() 메서드 호출 시에 가비지가 생성 되는 이슈 해결
+* 에러에 대한 리스너를 등록하지 않은 상태에서 에러가 발생한 경우 예외가 발생하는 현상 수정
+ 
+#### Change
+* API 변경 : 이름 변경 및 인자로 ErrorCode를 받도록 수정
+	| 변경 전 | 변경 후 |
+	|--|--|
+	| OnTimeout(msgId) | OnError(msgId, ErrorCode) |
+	| OnCustomTimeout(command) | OnCustomError(command, ErrorCode)| 
+
+* ErrorCode 추가
+  | 명칭 | 설명 |
+  |--|--|
+  | ErrorCode.PARSE_ERROR | 프로토콜 파싱에 실패하였음을 나타냄|
+* 사용자 정의 프로토콜 콜백에 ResultCode 추가
+  | 명칭 | 설명 |
+  |--|--|
+  | ResultCode.PARSE_ERROR | 패킷 파싱에 실패하였음을 나타냄 |
+  | ResultCode.SYSTEM_ERROR| 서버 시스템 에러 |
+  | ResultCode.TIMEOUT | 타임아웃 |
+  | ResultCode.SUCCESS | 성공 |
+
+* Exception 추가
+  | 명칭 | 설명 |
+  |--|--|
+  | ParseInvalidProtocol | 프로토콜 파싱이 실패하는 경우에 발생 |
+
+* 로깅 시스템 개선
+  * 핑퐁 로그 출력을 옵션으로 정할 수 있는 기능을 추가
+  * 로그에서 메시지 정보를 출력하는 상황에 메시지 아이디 대신에 이름을 출력하도록 수정
+  * 출력할 로그 레벨을 조정할 수 있는 기능을 추가
+
+
+* Request시에 패킷을 바로 전송할 수 있는 옵션 requestDirect 추가
+* seArgumentDelegateOrListenersOnError 옵션 추가
+
+---
+
 ### 1.2.3 (2022.01.28)
 
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.3.unitypackage)
