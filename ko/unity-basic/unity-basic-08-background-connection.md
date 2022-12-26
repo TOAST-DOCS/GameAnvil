@@ -8,10 +8,10 @@
 
 서버의 연결 확인 일시정지 시간은 GameAnvilConnector의 pauseClientStateCheckTime 값을 통해 조절할 수 있습니다.
 
-더 자세한 내용은 [Unity 심화 개발 가이드 > 백그라운드 접속 끊김 방지](../unity-advanced/unity-advanced-06-background-connection) 를 참고해주세요.
+더 자세한 내용은 [Unity 심화 개발 가이드 > 백그라운드 접속 끊김 방지](../unity-advanced/unity-advanced-06-background-connection.md) 를 참고해주세요.
 
 ### 재접속
 
 PauseClientStateCheck()에 입력한 시간이 지나면 서버의 연결 확인 기능이 다시 동작하게 되고, 접속이 끊어질 수 있습니다. 이럴 경우에는 재접속을 진행해야 합니다.
 
-재접속과 관련된 자세한 내용은 [Unity 심화 개발 가이드 > 재접속](../unity-advanced/unity-advanced-07-reconnect) 에서 확인하실 수 있습니다.
+재접속과 관련된 자세한 내용은 [Unity 심화 개발 가이드 > 재접속](../unity-advanced/unity-advanced-07-reconnect.md) 에서 확인하실 수 있습니다.

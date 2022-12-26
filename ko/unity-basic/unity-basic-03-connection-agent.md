@@ -2,12 +2,11 @@
 
 ## QuickConnect
 
-GameAnvilConnector에서는 QuickConnect 기능을 제공하여 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > ConnectionAgent](../unity-advanced/unity-advanced-02-connector) 또는 서버 개발 가이드를 참고해주세요.
+GameAnvilConnector에서는 QuickConnect 기능을 제공하여 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > ConnectionAgent](../unity-advanced/unity-advanced-02-connection-agent.md) 또는 서버 개발 가이드를 참고해주세요.
 
 ### QuickConnect 설정
 
-QuickConnect에 사용되는 설정값이 있습니다.
-GameAnvilConnector 생성 시 기본값으로 설정되지만 필요하다면 인스펙터 창에서 직접 값을 변경할 수 있습니다.
+QuickConnect에 사용되는 설정값이 있습니다. GameAnvilConnector 생성 시 기본값으로 설정되지만 필요하다면 인스펙터 창에서 직접 값을 변경할 수 있습니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/03-connection-agent/01-config.png)
 
@@ -26,10 +25,9 @@ GameAnvilConnector 생성 시 기본값으로 설정되지만 필요하다면 �
 
 ### QuickConnect 사용
 
-QuickConnect()를 통해 서버에 접속, 인증, 로그인합니다.
-매개변수로 인증 페이로드, 로그인 페이로드, DelOnQuickConnect 콜백을 넘겨줍니다. 인증 페이로드와 로그인 페이로드는 생략할 수 있습니다.
+QuickConnect()를 통해 서버에 접속, 인증, 로그인합니다. 매개변수로 인증 페이로드, 로그인 페이로드, DelOnQuickConnect 콜백을 넘겨줍니다. 인증 페이로드와 로그인 페이로드는 생략할 수 있습니다.
 
-```csharp
+```c#
 /// <summary>
 /// GameAnvil 서버에 연결 시도, 연결 성공 시 인증 요청, 인증 성공 시 로그인 요청
 /// 연결/인증/로그인 모두 성공 시 QUICK_CONNECT_SUCCESS
@@ -52,7 +50,7 @@ public void QuickConnect(Payload authenticatePayload, Payload loginPayload, DelO
 
 DelOnQuickConnect 콜백을 통해서 QuickConnect 결과를 받을 수 있습니다.
 
-```csharp
+```c#
 /// <summary>
 /// QuickConnect 요청 결과를 전달 받을 대리자
 /// </summary>
@@ -68,7 +66,7 @@ GameAnvilConnector의 Disconnect(), QuickDisconnect() 함수를 이용해서 서
 
 QuickDisconnect() 호출 시 로그아웃, 서버 접속 종료, 연결 해제 후 처리할 콜백 호출의 과정을 한 번에 처리할 수 있습니다.
 
-```csharp
+```c#
 /// <summary>
 /// 로그아웃, GameAnvil 서버와의 연결 해제 요청, 콜백 호출
 /// </summary>
@@ -78,7 +76,7 @@ public void QuickDisconnect(DelOnQuickDisconnect onQuickDisconnect);
 
 Disconnect() 호출 시 서버 접속이 종료됩니다.
 
-```csharp
+```c#
 /// <summary>
 /// GameAnvil 서버와의 연결 해제 요청
 /// </summary>

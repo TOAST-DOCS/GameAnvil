@@ -40,31 +40,18 @@ GameHammer supports the following features.
 
 ## Adding GameHammer to Project
 
-Like GameAnvil, GameHammer is deployed through Maven. Add the following items to the dependencies element of the pom.xml file to use GameHammer. If GameHammer fails to be installed, check if the following URLs are correctly registered to the in-house nexus of the repository element.
+Like GameAnvil, GameHammer is deployed through Maven. Add the following items to the dependencies element of the pom.xml file to use GameHammer.
 
 ```
-...
-<repositories>
-    <repository>
-        <id>releases</id>
-        <name>Nhnent Maven Release Repository</name>
-        <url>http://nexus.nhnent.com/content/repositories/releases/</url>
-    </repository>
-    <repository>
-        <id>snapshots</id>
-        <name>Nhnent Maven Snapshot Repository</name>
-        <url>http://nexus.nhnent.com/content/repositories/snapshots/</url>
-    </repository>
-</repositories>
 ...    
 <dependencies>
         ...
-        <!-- test agent (java connector) -->
+        <!-- GameHammer -->
         <dependency>
-            <groupId>com.nhn.gameanvil</groupId>
-            <artifactId>gameahammer</artifactId>
-            <version>DEV-1.0.0</version>
-        </dependency>
+			<groupId>com.nhn.gameanvil</groupId>
+			<artifactId>gamehammer</artifactId>
+			<version>1.2.1-jdk11</version>
+		</dependency>
         ...
 <dependencies>
 ...        
