@@ -1,5 +1,20 @@
 ## Game > GameAnvil > 릴리스 노트 > GameAnvil
 
+### 1.3.1 (2023.04.20)
+
+#### New
+
+#### Fix
+
+* 새로기동된 노드의 채널정보가 갱신되지않는 이슈 수정
+
+#### Change
+
+- Console에서 확인 하는 Support 노드의 활성화 상태체크 API 변경
+- Location 노드가 설정된 서버에서만 Management 노드가 기동 하도록 변경
+
+------
+
 ### 1.3.0 (2022.12.27)
 
 #### New
@@ -88,7 +103,7 @@ GameAnvil 1.3은 완전히 새로워진 Console 1.3과 완벽하게 연동됩니
   - ghotsTimeout 값이 demandClientStateCheck 값 보다 적어도 3초 이상 크도록 제약 사항 추가
 
 #### Change
- 
+
 - Safe Pause 고도화
   - 출발지 노드와 도착지 노드를 모두 선택하도록 변경
   - Safe Pause 시작시에 출발지 노드와 도착지 노드를 선택하지 않도록 변경
@@ -157,7 +172,7 @@ public class GameNode extends BaseGameNode {
 public class GameUser extends BaseUser {
 }
 ```
-  
+
 
 * 비동기 MySQL 쿼리 지원
   * 비동기 sql 처리를 위해 Jasync-sql / X Dev API 클래스를 추가
