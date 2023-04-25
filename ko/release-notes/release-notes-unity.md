@@ -207,6 +207,17 @@
     * ResultCodeSessionClose 추가
 
 ------
+### 1.1.6 (2023.01.20)
+
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.6.unitypackage)
+
+#### GameAnvil 1.1.0 이상
+
+#### Fix
+* useIpv6 옵션 활성화상태에서 connect() 호출 시 블록 될 수 있는 이슈 수정 
+
+------
+
 ### 1.1.5 (2022.01.28)
 
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.5.unitypackage)
