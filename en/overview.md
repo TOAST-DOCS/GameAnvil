@@ -45,3 +45,11 @@ There are four key libraries used by GameAnvil: Because Quasar, ZeroMQ, and Nett
 | ZeroMQ           | Server's IPC                      |
 | Netty            | Communication between server and client            |
 | Protocol Buffers | Parallelization of messages between server and client   |
+
+## Information on Privacy Policy
+
+In the process of using GameAnvil service, the customer may collect/use personal information of users, and in this case, the customer is obliged to comply with relevant laws such as the Personal Information Protection Act.
+Also during this process, work consignment relation regarding the processing of personal information may arise between the customer and NHN Cloud. The customer who assumes the position of consignor may enter into a consignment contract with the consignee, NHN Cloud, separately in writing, and post a privacy policy notice by referencing the following.
+
+* Consignee: NHN Cloud Corp.
+* Consignment work: Provision of GameAnvil service
