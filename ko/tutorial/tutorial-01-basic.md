@@ -20,8 +20,6 @@
 
 [최종 서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvilServerTutorial.zip?disposition=attachment)
 
-[최종 클라이언트 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/BasicSyncTutorial.zip?disposition=attachment)
-
 ### 프로젝트 구성
 
 이번 챕터에서는 개발을 시작하기 위해서 초기 설정을 완료하는 것을 목표로 합니다. 실제 프로세스를 실행해서 서버를 구동하는 것은 다음 챕터에서 다룹니다.
