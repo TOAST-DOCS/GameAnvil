@@ -485,7 +485,7 @@ public class SyncGameUser extends BaseUser {
 
 룸 타입은 각 룸 구현을 구분하는 서버와 클라이언트 간 약속된 문자열이고, 이후 클라이언트 프로젝트 구현 시 룸 타입을 입력해야 하는 부분이 있으므로 기억해둡니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new-game-room-server.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new-game-room-server.png)
 
 자동으로 생성된 코드는 아래와 같습니다.
 
@@ -593,7 +593,7 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
 
 여기까지 기초 튜토리얼 샘플 실행을 위한 서버 구축이 완료되었습니다. 다시 서버를 실행해 보면, 로그 중에서 `{"message":"All nodes are ready!!"}`라는 문구를 확인할 수 있습니다. 이 로그가 떴다는 것은 GameAnvil 서버가 정상적으로 실행되었음을 의미합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/all_nodes_are_ready.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/all_nodes_are_ready.png)
 
 이제 클라이언트의 요청을 받을 서버가 준비되었습니다. 다음 단계에서는 게임엔빌 커넥터와 유니티 샘플 프로젝트를 활용하여 클라이언트를 구현해 보겠습니다.
 
