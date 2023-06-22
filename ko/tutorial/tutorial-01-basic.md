@@ -18,7 +18,7 @@
 
 아래 단계를 진행하며 수정을 완료하게 되는 최종 서버 샘플 프로젝트는 아래 링크를 통해 다운로드할 수 있습니다. 초기 템플릿에서 여러 단계를 거쳐 서버 기능을 구현하고 나면 결국 어떤 구조가 되는지 미리 확인하고 싶다면 해당 프로젝트를 다운로드해 참고하면 됩니다.
 
-[최종 서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvilServerTutorial.zip?disposition=attachment)
+[최종 서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilServerTutorial.zip?disposition=attachment)
 
 ### 프로젝트 구성
 
@@ -30,7 +30,7 @@
 
 게임엔빌에서는 이 일련의 과정을 대신해주는 인텔리제이 템플릿을 제공하고 있습니다. 이것을 사용해서 보다 간단하게 초기 작업을 완료할 수 있습니다. 다음 링크를 통해서 인텔리제이용 프로젝트 파일 템플릿을 다운로드할 수 있습니다. 다운로드한 템플릿은 압축을 풀지 않도록 합니다.
 
-[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvilTemplate.zip?disposition=attachment)
+[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilTemplate.zip?disposition=attachment)
 
 다운로드한 템플릿을 적용하기 위해서 우선 인텔리제이를 실행합니다. `Welcome to InteliJ IDEA` 창의 좌측 메뉴에서 Customize를 선택한 후 Import Settings...를 선택합니다. 또는 이미 프로젝트를 연 상태라면 전체 검색창(단축키 `Shift Shift`)에서 `Import Settings...` 를 검색합니다. 
 
