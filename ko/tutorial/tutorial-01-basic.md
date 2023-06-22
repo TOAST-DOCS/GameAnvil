@@ -34,21 +34,21 @@
 
 다운로드한 템플릿을 적용하기 위해서 우선 인텔리제이를 실행합니다. `Welcome to InteliJ IDEA` 창의 좌측 메뉴에서 Customize를 선택한 후 Import Settings...를 선택합니다. 또는 이미 프로젝트를 연 상태라면 전체 검색창(단축키 `Shift Shift`)에서 `Import Settings...` 를 검색합니다. 
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/import_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/import_gameanvil_template.png)
 
 <br>
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/search_import_settings.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/search_import_settings.png)
 
 <br>
 
 파인더 또는 파일 탐색기 창이 열리면, 템플릿을 다운로드한 경로로 이동해 압축 파일을 선택합니다. 확인을 클릭한 후 `Select Components to Import` 창이 열리면 `File templates` 항목과 `Project Templates` 항목을 모두 선택합니다. 확인을 클릭한 후 `Import and Restart`를 누르면 인텔리제이가 다시 시작되면서 템플릿 적용이 완료됩니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/select_import.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/select_import.png)
 
 인텔리제이 우상단의 버튼 그룹에서 `New Project` 버튼을 누르고 왼쪽 목록을 스크롤 하여 하단의 Templates에 있는 GameAnvil Template를 선택합니다. 프로젝트 이름을 SynchronizeTutorial로 설정합니다. 이름에 공백이 있어서는 안됩니다. 프로젝트 위치와 베이스 패키지 이름을 확인한 후 프로젝트를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/imported_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/imported_gameanvil_template.png)
 
 이제 IntelliJ에 서버 프로젝트 골격이 구성되었습니다. Project 패널을 보면 코드와 설정 파일들이 생성된 것을 확인할 수 있습니다.
 
@@ -59,7 +59,7 @@
 * GameAnvilConfig.json : 게임엔빌 구동에 필요한 서버 설정 정보를 기록한 파일입니다. 서버 구현에 맞게 수정할 수 있습니다.
 * logback.xml : Java 프로젝트에서 로깅을 구성하는 데 사용되는 파일입니다. Logback 프레임워크의 설정 파일로서, 로깅 시스템의 동작 방식과 로그의 형식, 저장 위치 등을 지정합니다. 이 파일을 사용하여 로깅 수준, 로그 형식, 로그 파일의 경로 및 이름, 로그 롤링 정책 등을 설정할 수 있습니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/gameanvil_project_view_init.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_project_view_init.png)
 
 ## GameAnvil 서버 설정 파일 수정
 
@@ -127,7 +127,7 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
   ]
 ```
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/gameanvil_config_json.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_config_json.png)
 
 참고로 gateway 설정을 보면 TCP_SOCKET 커넥션은 18200 포트를 사용하는 것으로 설정되어 있는 것을 확인할 수 있습니다. 이는 클라이언트와 연결되는 포트로, 이후 클라이언트 프로젝트에서 서버 접속 정보를 기입하는 부분에서 이 포트 번호를 사용하게 됩니다.
 
@@ -141,7 +141,7 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
 
 Project 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다면 `Add SDK > Download JDK`를 통해서 원하는 버전의 JDK를 다운로드해 설정합니다. Language level은 SDK default로 설정합니다. 다음으로 Modules 탭에서 Language level을 Project default로 설정합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/project_structure.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/project_structure.png)
 
 좌상단 메뉴에서 `Run > Edit Configurations`를 선택하여 `Run/Debug Configurations` 창을 열고, VM Option에 아래 내용이 있는 것을 확인합니다. 사용 중인 Java 버전에 따라 추가되는 내용이 조금 달라지므로 주의합니다. 
 
@@ -157,17 +157,17 @@ Java 11 버전을 사용하는 Run With JDK11의 경우에는 아래 내용이 �
 -javaagent:./src/main/resources/META-INF/quasar-core-0.8.0-jdk11.jar=bm
 ```
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/run_configurations.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/run_configurations.png)
 
 ### 서버 구동
 
 실행 설정이 완료되었으면, Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 `Run 'Run with JDK11'`을 선택합니다. Java 8 버전으로 실행하는 경우에는 `Run/Debug Configurations` 창의 왼쪽 Application 목록에서 `Run With JDK8`을 드래그하여 가장 첫 번째 순서에 위치하도록 이동시키면 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭했을 때 `Run 'Run with JDK8'`을 선택할 수 있게 변경될 것입니다. 이렇게 한 번 실행한 이후에는 인텔리제이 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/run_with_jdk11.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/run_with_jdk11.png)
 
 서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다. 
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/gameanvil_run_log.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run_log.png)
 
 게임엔빌 서버는 여러 개의 노드들로 구성되어 있습니다. 이 노드들은 서버가 수행할 기능을 여러 개의 역할로 분담합니다. 아직은 서버 초기 구동만 확인했을 뿐, 노드나 다른 서버 구동을 위한 코드 작성을 하지 않았기 때문에 완전히 준비된 상태는 아닙니다.
 
@@ -183,7 +183,7 @@ GameAnvil은 `Base-` 접두사를 붙인 여러 노드 클래스를 제공합니
 
 프로젝트 패널에서 Main 클래스가 위치한 경로를 찾고, 우클릭하여 컨텍스트 메뉴를 연 뒤 `New > Package`를 선택하여 `node`라는 이름의 새로운 패키지를 생성합니다. 그리고 node 패키지를 우클릭하여 컨텍스트 메뉴를 연 뒤 `New > BaseGameNode`를 선택합니다. 파일 생성 대화 상자가 열리면 File name 항목에 `SyncGameNode`, Service Name에 `Sync`를 입력하고 OK 버튼을 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/create_sync_game_node.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/create_sync_game_node.png)
 
 이 기능은 앞서 템플릿을 설치할 때 File templates(schemes)를 함께 적용해 주었기 때문에 사용 가능한 기능입니다. 혹시 `New > BaseGameNode` 항목이 보이지 않는 경우에는 `New > Java Class`를 선택해서 빈 클래스를 생성합니다. 그리고 `extends BaseGameNode` 코드를 추가하여 BaseGameNode 클래스를 상속받을 수 있도록 하고 implement methods를 한 후, 아래 코드와 같이 `@ServiceName("Sync")` 어노테이션을 붙여주면 동일한 과정을 수행하게 됩니다.
 
@@ -485,7 +485,7 @@ public class SyncGameUser extends BaseUser {
 
 룸 타입은 각 룸 구현을 구분하는 서버와 클라이언트 간 약속된 문자열이고, 이후 클라이언트 프로젝트 구현 시 룸 타입을 입력해야 하는 부분이 있으므로 기억해둡니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new-game-room-server.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new_game_room_server.png)
 
 자동으로 생성된 코드는 아래와 같습니다.
 
@@ -593,7 +593,7 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
 
 여기까지 기초 튜토리얼 샘플 실행을 위한 서버 구축이 완료되었습니다. 다시 서버를 실행해 보면, 로그 중에서 `{"message":"All nodes are ready!!"}`라는 문구를 확인할 수 있습니다. 이 로그가 떴다는 것은 GameAnvil 서버가 정상적으로 실행되었음을 의미합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/all_nodes_are_ready.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/all_nodes_are_ready.png)
 
 이제 클라이언트의 요청을 받을 서버가 준비되었습니다. 다음 단계에서는 게임엔빌 커넥터와 유니티 샘플 프로젝트를 활용하여 클라이언트를 구현해 보겠습니다.
 
