@@ -279,7 +279,7 @@ Connect() 함수에서는 connector를 통해 ConnectionAgent 객체를 참조�
 게임엔빌에서 제공하는 BaseUser 클래스를 상속하여 게임 유저를 구현하는 기본 코드가 작성된 파일이 생성됩니다. 게임엔빌에서 원하는 기능의 게임 유저를 구현하려면, BaseUser 클래스를 상속한 후 상황에 맞게 호출되는 여러 콜백 함수들을 오버라이딩하여 원하는 코드를 실행하도록 설정하면 됩니다. 다음은 지원하는 콜백 함수 목록의 일부입니다.
 
 - onLogin : 로그인 요청 시에 실행되는 콜백입니다. 반환값으로 로그인 요청 허용 여부를 전달해야합니다. false를 반환하면 클라이언트는 로그인에 실패할 것입니다. 파라미터를 통해 클라이언트로부터 받은 페이로드를 참조할 수 있으며, 클라이언트로 되돌려줄 페이로드에 대한 참조를 통해 로그인 허용 정보 외에 추가 정보를 클라이언트에 전달할 수 있습니다.
-- onPostLogin : 로그인 요청이 왔을 때, 로그인 이전에 실행 되는 콜백입니다.
+- onPostLogin : 로그인 이후에 실행 되는 콜백입니다.
 - onReLogin : 이미 로그인 된 바 있는 유저에 대해서 또 다시 로그인 요청이 오는 경우는 이 콜백에서 따로 처리할 수 있습니다.
 - onDisconnect : 클라이언트 요청에 따른 로그아웃 또는 서버에 의한 강제 로그아웃에 의해서 서버에 등록된 유저 정보와 연결이 끊어졌을 때 호출되는 콜백입니다.
 - onDispatch : 룸 또는 또다른 유저로부터 해당 유저에게 패킷이 전달 되었을 때 호출되는 콜백입니다.
@@ -522,7 +522,6 @@ public class BasicRoom extends BaseRoom<BasicUser> {
         return false;
     }
 }
-
 ```
 
 이제 게임 유저와 게임 방이 준비되었습니다. 하지만 아직 게임 유저/게임 룸의 생성과 삭제 요청을 처리하는 노드가 없습니다. 게임 유저와 게임 룸을 관리하는 역할을 하는 노드는 GameNode입니다. 이 노드는 일반적으로 게임 서버가 하기를 기대하는 대부분의 게임 로직 처리 역할을 수행하는 노드입니다. 게임엔빌에 노드를 추가하는 방법은 자연스럽고 간단합니다. 게임 유저와 게임 룸을 정의했던 것과 마찬가지로, 미리 정의된 클래스를 상속해서 클래스를 만든 뒤 원하는 기능을 추가 구현하면 됩니다. 게임엔빌에서 제공하는 어노테이션을 부착하면, 런타임에 알맞은 시점에서 노드 인스턴스가 생성되어 자동으로 실행될 것입니다.
@@ -532,6 +531,7 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 <img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/new_gamenode.png"/>
 
 노드가 역할을 수행하기 위해서는 우선 노드가 루프를 실행해야합니다. 노드가 실행될 때는 일련의 과정을 거치게되므로 약간의 시간이 필요합니다. 노드의 실행 여부나 실행 과정 중 어느 단계에 있느냐를 나타내는 지표를 노드의 상태라고 부릅니다. 노드의 상태는 보통 아래 순서에 따라서 순차적으로 변경되면서 READY 상태에 도달합니다.
+
 - INIT
 - PREPARE
 - READY
@@ -641,12 +641,13 @@ public class BasicGameNode extends BaseGameNode {
     }
 
 }
+```
 
 마지막으로 작성한 게임 유저와 게임 룸을 GameNode에 연동하기 위해서  설정파일에도 이를 등록해주겠습니다. GameAnvilConfig.json 파일에 아래의 내용을 추가해줍니다. 또는 아래 내용이 포함된 전체 설정 파일을 다운로드 받아서 교체합니다. 
 
 [GameAnvilConfig.json](https://static.toastoven.net/prod_gameanvil/files/GameAnvilConfig.json?disposition=attachment)
 
-```
+```json
 // 게임 로비 역할을 하는 노드. (게임 룸, 유저를 포함 하고있음)
   "game": [
     {
@@ -1763,7 +1764,7 @@ public class BasicUser extends BaseUser {
 
 ```
 
-유저 매치메이킹을 사용하기 위한 기본적인 준비가 되었으면, 이제 실제 매치메이킹을 수행하는 매치메이커를 작성합니다. 아래와 같이 BasicUserMatchmaker 클래스를 추가합니다.
+유저 매치메이킹을 사용하기 위한 기본적인 준비가 되었으면, 이제 실제 매치메이킹을 수행하는 매치메이커를 작성합니다. 아래와 같이 BasicUserMatchMaker 클래스를 추가합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_user_match_maker.png)
 
