@@ -215,13 +215,15 @@ try {
 - RedisCluster를 이용한 set/get 예제
 
 ```java
-String setResult = redisCluster.set(key, value);String getResult = redisCluster.get(key);
+String setResult = redisCluster.set(key, value);
+String getResult = redisCluster.get(key);
 ```
 
 - RedisSingle을 이용한 set/get 예제
 
 ```java
-String setResult = redisSingle.set(key, value);String getResult = redisSingle.get(key);
+String setResult = redisSingle.set(key, value);
+String getResult = redisSingle.get(key);
 ```
 
 - 직접 LETTUCE의 RedisAsyncCommands 객체를 사용한 예제
