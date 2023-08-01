@@ -84,7 +84,7 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
 ```json
   "game": [
     {
-      "nodeCnt": 0,
+      "nodeCnt": 1,
       "serviceId": 1,
       "serviceName": "Todo - Input My Service Name",
       "channelIDs": ["ToDo - Input My ChannelName","ToDo - Input My ChannelName"], // 노드마다 부여할 채널 ID. (유니크하지 않아도 됨. ""는 채널 사용하지 않음을 의미)
@@ -127,7 +127,7 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_config_json.png)
 
-참고로 gateway 설정을 보면 TCP_SOCKET 커넥션은 18200 포트를 사용하는 것으로 설정되어 있는 것을 확인할 수 있습니다. 이는 클라이언트와 연결되는 포트로, 이후 클라이언트 프로젝트에서 서버 접속 정보를 기입하는 부분에서 이 포트 번호를 사용하게 됩니다.
+참고로 gateway 설정을 보면 TCP_SOCKET 커넥션은 11200 포트를 사용하는 것으로 설정되어 있는 것을 확인할 수 있습니다. 이는 클라이언트와 연결되는 포트로, 이후 클라이언트 프로젝트에서 서버 접속 정보를 기입하는 부분에서 이 포트 번호를 사용하게 됩니다.
 
 ## GameAnvil 서버 구동
 
@@ -672,7 +672,7 @@ Hierarchy 뷰 상의 Canvas 게임오브젝트에 컴포넌트로 추가 되어 
 
 ### Connect 관련 필드 설정
 
-접속할 서버 정보를 기재합니다. 로컬에서 서버를 직접 띄우는 경우이므로 ip는 `127.0.0.1`을 사용하겠습니다. port는 게이트웨이 노드의 기본 포트인 `18200`을 사용하겠습니다. 따로 설정할 필요 없이 GameAnvilConnector의 기본값을 그대로 사용하면 됩니다. ip와 port 정보는 필요한 경우 플레이 모드에서 수정할 수 있도록 유니티의 InputField와 연결하는 코드가 작성되어 있는 것을 확인할 수 있습니다.
+접속할 서버 정보를 기재합니다. 로컬에서 서버를 직접 띄우는 경우이므로 ip는 `127.0.0.1`을 사용하겠습니다. port는 게이트웨이 노드의 기본 포트인 `11200`을 사용하겠습니다. 따로 설정할 필요 없이 GameAnvilConnector의 기본값을 그대로 사용하면 됩니다. ip와 port 정보는 필요한 경우 플레이 모드에서 수정할 수 있도록 유니티의 InputField와 연결하는 코드가 작성되어 있는 것을 확인할 수 있습니다.
 
 ```c#
 void Start()
@@ -695,7 +695,7 @@ void portChanged()
 {
     if (!int.TryParse(portInputField.text, out GameAnvilConnector.getInstance().port))
     {
-        GameAnvilConnector.getInstance().port = 18200;
+        GameAnvilConnector.getInstance().port = 11200;
     }
 }
 ```
