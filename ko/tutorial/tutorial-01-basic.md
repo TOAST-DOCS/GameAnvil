@@ -18,7 +18,7 @@
 
 아래 단계를 진행하며 수정을 완료하게 되는 최종 서버 샘플 프로젝트는 아래 링크를 통해 다운로드할 수 있습니다. 초기 템플릿에서 여러 단계를 거쳐 서버 기능을 구현하고 나면 결국 어떤 구조가 되는지 미리 확인하고 싶다면 해당 프로젝트를 다운로드해 참고하면 됩니다.
 
-[최종 서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilServerTutorial.zip?disposition=attachment)
+[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilServerTutorial_1213.zip?disposition=attachment)
 
 ### 프로젝트 구성
 
@@ -59,7 +59,7 @@
 * GameAnvilConfig.json : 게임엔빌 구동에 필요한 서버 설정 정보를 기록한 파일입니다. 서버 구현에 맞게 수정할 수 있습니다.
 * logback.xml : Java 프로젝트에서 로깅을 구성하는 데 사용되는 파일입니다. Logback 프레임워크의 설정 파일로서, 로깅 시스템의 동작 방식과 로그의 형식, 저장 위치 등을 지정합니다. 이 파일을 사용하여 로깅 수준, 로그 형식, 로그 파일의 경로 및 이름, 로그 롤링 정책 등을 설정할 수 있습니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_project_view_init.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_project_view_init_1213.png)
 
 ## GameAnvil 서버 설정 파일 수정
 
@@ -125,7 +125,7 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
   ]
 ```
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_config_json.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_config_json_1213.png)
 
 참고로 gateway 설정을 보면 TCP_SOCKET 커넥션은 18200 포트를 사용하는 것으로 설정되어 있는 것을 확인할 수 있습니다. 이는 클라이언트와 연결되는 포트로, 이후 클라이언트 프로젝트에서 서버 접속 정보를 기입하는 부분에서 이 포트 번호를 사용하게 됩니다.
 
@@ -141,27 +141,15 @@ Project 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다�
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/project_structure.png)
 
-좌상단 메뉴에서 `Run > Edit Configurations`를 선택하여 `Run/Debug Configurations` 창을 열고, VM Option에 아래 내용이 있는 것을 확인합니다. 사용 중인 Java 버전에 따라 추가되는 내용이 조금 달라지므로 주의합니다. 
-
-Java 8 버전을 사용하는 Run With JDK8의 경우 아래의 내용이 있을 것입니다.
-
-```
--javaagent:./src/main/resources/META-INF/quasar-core-0.7.10-jdk8.jar=bm
-```
-
-Java 11 버전을 사용하는 Run With JDK11의 경우에는 아래 내용이 있을 것입니다.
-
-```
--javaagent:./src/main/resources/META-INF/quasar-core-0.8.0-jdk11.jar=bm
-```
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/run_configurations.png)
-
 ### 서버 구동
 
-실행 설정이 완료되었으면, Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 `Run 'Run with JDK11'`을 선택합니다. Java 8 버전으로 실행하는 경우에는 `Run/Debug Configurations` 창의 왼쪽 Application 목록에서 `Run With JDK8`을 드래그하여 가장 첫 번째 순서에 위치하도록 이동시키면 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭했을 때 `Run 'Run with JDK8'`을 선택할 수 있게 변경될 것입니다. 이렇게 한 번 실행한 이후에는 인텔리제이 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
+실행 설정이 완료되었으면, Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 `Main.main() 실행`을 선택합니다. 이렇게 한 번 실행한 이후에는 인텔리제이 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/run_with_jdk11.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run1_1213.png)
+
+build.gradle 에는 편의를 위한 JVM 옵션이 미리 설정되어 있습니다 이러한 설정을 활용하여 서버를 실행시키리면 IntelliJ 의 Gradle 창에서 `Task > others > runMain` 을 우클릭 후 `GameAnvilTutorial 실행` 을 클릭합니다. 
+
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run2_1213.png)
 
 서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다. 
 

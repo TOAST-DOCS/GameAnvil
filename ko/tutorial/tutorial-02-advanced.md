@@ -18,7 +18,7 @@
 
 게임엔빌에서는 이 일련의 과정을 대신 해주는 인텔리제이 템플릿을 제공하고 있습니다. 이것을 사용해서 보다 간단하게 초기 작업을 완료할 수 있으므로, 프로젝트 생성에 템플릿을 사용하는 것을 강하게 권장 드립니다. 다음 링크를 통해서 인텔리제이용 프로젝트 파일 템플릿를 다운로드 받을 수 있습니다. 다운로드 받은 템플릿은 압축을 풀지 않도록 합니다.
 
-[프로젝트 템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Template.zip?disposition=attachment)
+[프로젝트 템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Template.zip?disposition=attachment)
 
 다운로드 받은 템플릿을 적용하기 위해서 우선 InteliJ를 실행합니다. `Welcome to InteliJ IDEA` 윈도우의 좌측 메뉴에서 Customize를 선책한 후 Import Settings...를 선택합니다. 또는 이미 프로젝트를 연 상태라면 전체 검색창(단축키 `Shift Shift`)에서 `Import Settings...` 를 검색합니다.
 
@@ -32,7 +32,7 @@
 
 프로젝트 템플릿을 사용해서 프로젝트를 구성할 수도 있지만, 이 문서에서는 이미 초기 설정이 완료되어있는 프로젝트를 다운로드 받아서 사용하겠습니다. 아래 링크를 통해서 튜토리얼용 프로젝트를 다운로드 한 후 압축을 해제하고 인텔리제이를 통해 실행합니다.
 
-[튜토리얼용 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Tutorial Project.zip?disposition=attachment)
+[튜토리얼용 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Tutorial%20Project_1213.zip?disposition=attachment)
 
 처음 프로젝트를 열면 아래와 같이 메이븐을 통해 스크립트를 실행할 수 있도록 허용할 것인지 물어보는 프롬프트가 나타날 수 있습니다. Trust Project를 선택해서 온전한 프로젝트를 열 수 있도록 하겠습니다.
 
@@ -87,23 +87,16 @@ Import Unity Package 대화 상자가 뜨면, 리스트 내의 모든 체크 박
 
 ### 2.1. GameAnvil 서버 구동
 
-게임엔빌은 Java 8과 11 두 가지 버전을 지원합니다. 어떤 버전을 사용하는지에 따라 설정 방법이 조금 다릅니다. 서버 프로젝트의 Run Configuration 윈도우를 열고, VM Option에 아래 내용이 있는 것을 확인합니다. 사용 중인 Java 버전에 따라 추가되는 내용이 조금 달라지므로 주의합니다. 
+실행 설정이 완료되었으면, Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 `Main.main() 실행`을 선택합니다. 이렇게 한 번 실행한 이후에는 인텔리제이 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
 
-Java 8 버전을 사용할 경우 아래의 내용이 있을 것입니다.
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run1_1213.png)
 
-```
--javaagent:./src/main/resources/META-INF/quasar-core-0.7.10-jdk8.jar=bm
-```
+build.gradle 에는 편의를 위한 JVM 옵션이 미리 설정되어 있습니다 이러한 설정을 활용하여 서버를 실행시키리면 IntelliJ 의 Gradle 창에서 `Task > others > runMain` 을 우클릭 후 `GameAnvilTutorial 실행` 을 클릭합니다. 
 
-Java 11 버전을 사용한다면, 대신 아래 내용이 있을 것입니다.
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run2_1213.png)
 
-```
--javaagent:./src/main/resources/META-INF/quasar-core-0.8.0-jdk11.jar=bm
-```
 
-실행 설정이 완료되었으면, GameAnvil 프로젝트가 구성된 IntelliJ 우측 상단의 Run 아이콘을 클릭해 서버를 실행합니다. 혹은 컨텍스트 메뉴의 Run 항목을 선택해서 실행할 수도 있습니다.
-
-서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다. GameAnvil 서버는 수행할 역할을 여러개로 분담하는 이벤트 루프인 노드들로 구성되어 있습니다. 각각의 노드는 코드를 실행하기 위해 준비하는데 시간이 필요합니다. 각 노드가 준비 완료되면 onReady 로그를 출력합니다. 노드 중에 클라이언트가 서버로 접속하는데 직접적인 역할을 수행하는 GatewayNode가 준비 되어 해당 노드에서 onReady로그게 출력 되었다면 GameAnvil 서버는 이제 언제든 접속이 가능한 상태입니다.
+서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다. GameAnvil 서버는 수행할 역할을 여러개로 분담하는 이벤트 루프인 노드들로 구성되어 있습니다. 각각의 노드는 코드를 실행하기 위해 준비하는데 시간이 필요합니다. 각 노드가 준비 완료되면 onReady 로그를 출력합니다. 노드 중에 클라이언트가 서버로 접속하는데 직접적인 역할을 수행하는 GatewayNode가 준비 되어 해당 노드에서 onReady 로그가 출력 되었다면 GameAnvil 서버는 이제 언제든 접속이 가능한 상태입니다.
 
 <br>
 
@@ -638,9 +631,8 @@ public class BasicGameNode extends BaseGameNode {
 }
 ```
 
-마지막으로 작성한 게임 유저와 게임 룸을 GameNode에 연동하기 위해서  설정파일에도 이를 등록해주겠습니다. GameAnvilConfig.json 파일에 아래의 내용을 추가해줍니다. 또는 아래 내용이 포함된 전체 설정 파일을 다운로드 받아서 교체합니다. 
+마지막으로 작성한 게임 유저와 게임 룸을 GameNode에 연동하기 위해서  설정파일에도 이를 등록해주겠습니다. GameAnvilConfig.json 파일의 "game" 항목에 아래의 내용을 추가해줍니다. 
 
-[GameAnvilConfig.json](https://static.toastoven.net/prod_gameanvil/files/GameAnvilConfig.json?disposition=attachment)
 
 ```json
 // 게임 로비 역할을 하는 노드. (게임 룸, 유저를 포함 하고있음)
