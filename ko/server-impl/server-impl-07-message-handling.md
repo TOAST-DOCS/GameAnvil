@@ -2,13 +2,10 @@
 
 ![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/three_steps_for_message_process.png)
 
-
-
 ## 1. 일반 메시지 처리
 
-GameAnvil의 메시지 처리는 위의 그림과 같이 크게 세 부분으로 나뉩니다. 이 세 부분이 서로 맞물려 메시지 처리 흐름을 만들게 됩니다.
-
-
+* GameAnvil의 메시지 처리는 위의 그림과 같이 크게 세 부분으로 나뉩니다. 이 세 부분이 서로 맞물려 메시지 처리 흐름을 만들게 됩니다.
+* 이 중 onDispatch 콜백 구현은 엔진에서 자체적으로 하고 있으며 엔진 사용자는 Dispatcher 의 선언과 메시지 핸들러를 구현하여 패킷을 처리합니다
 
 ### 1.1. 패킷 디스패처 생성 및 메시지와 핸들러 연결
 
@@ -16,7 +13,7 @@ GameAnvil의 메시지 처리는 위의 그림과 같이 크게 세 부분으로
 
 ```java
 // (패킷 디스패처 생성    
-private static PacketDispatcher packetDispatcher = new PacketDispatcher();   
+private static final MessageDispatcher<MY_USER_CLASS> messageDispatcher = new MessageDispatcher<>();
 ```
 
 이렇게 생성한 디스패처에 원하는 메시지와 핸들러를 연결합니다.
@@ -24,10 +21,9 @@ private static PacketDispatcher packetDispatcher = new PacketDispatcher();
 ```java
 // 처리하고 싶은 메시지와 핸들러를 매핑
 static {
-    packetDispatcher.registerMsg(MyProto.MyMsg.getDescriptor(), _MyMsgHandler.class);
+    packetDispatcher.registerMsg(MyProto.MyMsg.class, _MyMsgHandler.class);
 }
 ```
-
 
 
 ### 1.2. 메시지 핸들러 구현
@@ -35,48 +31,44 @@ static {
 이제 해당 메시지 핸들러를 직접 구현합니다. 이 때, GameAnvil은 엔진 내부는 물론이고 모든 샘플 코드에서 메시지 핸들러에 대해 _로 시작하는 네이밍을 사용합니다. 앞으로 등장하는 모든 예제 코드에서도 _로 시작하는 클래스는 모두 메시지 핸들러입니다.  가장 기본적인 형태의 메시지 핸들러는 아래와 같습니다. RECEIVER_CLASS는 해당 메시지를 받는 클래스를 의미합니다.
 
 ```java
-public class _MyMsgHandler implements GameAnvilPacketHandler<RECEIVER_CLASS> {
+public class _MyGameMsg implements MessageHandler<RECEIVER_CLASS, MyProto.MyMsg> {
+
     private static final Logger logger = getLogger(_MyMsgHandler.class);
 
     @Override
-    public final void execute(RECEIVER_CLASS receiver, GameAnvilPacket gameAnvilPacket) throws SuspendExecution {
-
-		...
+    public void execute(RECEIVER_CLASS receiver, MyProto.MyMsg myMsg) throws SuspendExecution {
     }
+
 }
 ```
 
 예를 들어, 패킷 수신자가 GameUser라면 그 메시지 핸들러는 아래와 같습니다.
 
 ```java
-public class _MyGameMsg implements GameAnvilPacketHandler<GameUser> {
-    private static final Logger logger = getLogger(_MyGameMsg.class);
+public class _MyGameMsg implements MessageHandler<GameUser, MyProto.MyMsg> {
 
-	@Override
-    public final void execute(final GameUser gameUser, final GameAnvilPacket gameAnvilPacket) throws SuspendExecution {
-        ...
+    private static final Logger logger = getLogger(_MyMsgHandler.class);
+
+    @Override
+    public void execute(GameUser receiver, MyProto.MyMsg myMsg) throws SuspendExecution {
     }
+
 }
 ```
 
 
+### 1.3. getMessageDispatcher 콜백 구현
 
-### 1.3. onDispatch 콜백 구현
-
-패킷 디스패처와 메시지 핸들러를 모두 구현하였습니다. 남은건 이제 엔진에서 처리할 패킷이 있을 때 해당 패킷 디스패처로 넘겨주기면 하면 됩니다. 사용자가 상속 구현하는 엔진의 객체 중 패킷을 처리할 수 있는 모든 것들은 onDispatch 콜백 메서드를 제공합니다. 이 콜백 메서드는 해당 객체에서 처리할 메시지가 있을 때 엔진에 의해 호출됩니다. 인자로 넘어온 처리할 패킷을 앞 서 생성한 패킷 디스패처로 넘기면 됩니다. 이 때, 해당 패킷에 대한 추가 처리를 하고 싶다면 그 역시 이 콜백에 구현하면 됩니다.
+패킷 디스패처와 메시지 핸들러를 모두 구현하였습니다. 남은건 이제 엔진에서 처리할 패킷이 있을 때 디스패처를 넘겨주기면 하면 됩니다. 간단하게 구현할 수 있습니다.
 
 ```java
-/**
-* 패킷이 전달될 때 호출
-*
-* @param packet 처리할 패킷
-* @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-*/
-@Override
-public void onDispatch(Packet packet) throws SuspendExecution {
-// 메시지 처리. 필요할 경우 패킷에 대한 추가 처리도 여기에서 할 수도 있습니다.
-    if (packetDispatcher.isRegisteredMessage(packet))
-	    packetDispatcher.dispatch(this, packet);
+public class GameUser {
+    // .. 생략
+    @Override
+    public final MessageDispatcher<GameUser> getMessageDispatcher() {
+        return packetDispatcher;
+    }
+    // .. 생략
 }
 ```
 
@@ -95,18 +87,18 @@ public void onDispatch(Packet packet) throws SuspendExecution {
 다음의 예제 코드는 RESTful 요청을 처리하기 위해 이전과 다른 RestPacketDispatcher를 생성하고 있습니다. 또한 메시지 클래스가 아닌 URL 형태의 API를 핸들러에 연결하고 있습니다.
 
 ```java
-private static RestPacketDispatcher restPacketDispatcher = new RestPacketDispatcher<>();
+private static final RestMessageDispatcher<RECEIVER_CLASS> restDispatcher = new RestMessageDispatcher<>();
 
 static {
     // path 와 method(GET, POST, ...) 조합으로 등록.
-    restPacketDispatcher.registerMsg("/auth", RestObject.GET, _RestAuthReq.class);
-    restPacketDispatcher.registerMsg("/echo", RestObject.GET, _RestEchoReq.class);
-    restPacketDispatcher.registerMsg("/testGET", RestObject.GET, _RestTestGET.class);
-    restPacketDispatcher.registerMsg("/testPOST", RestObject.POST, _RestTestPOST.class);
+    restDispatcher.registerMsg("/auth", RestObject.GET, _RestAuthReq.class);
+    restDispatcher.registerMsg("/echo", RestObject.GET, _RestEchoReq.class);
+    restDispatcher.registerMsg("/testGET", RestObject.GET, _RestTestGET.class);
+    restDispatcher.registerMsg("/testPOST", RestObject.POST, _RestTestPOST.class);
 }
 ```
 
-예제 코드와 같이 RestPacketDispatcher를 사용하여 사용자가 원하는 RESTful API와 메시지 핸들러를 연결하고 있습니다.
+예제 코드와 같이 RestMessageDispatcher 사용하여 사용자가 원하는 RESTful API와 메시지 핸들러를 연결하고 있습니다.
 
 
 
@@ -115,7 +107,7 @@ static {
 RESTful 메시지 핸들러는 Packet 대신 RestObject가 인자로 전달되는 차이점 외에는 동일한 모습입니다. 
 
 ```java
-public class _RestAuthReq implements RestPacketHandler<WebSupportNode> {
+public class _RestAuthReq implements RestMessageHandler<WebSupportNode> {
     private static final Logger logger = getLogger(_RestAuthReq.class);
 
     @Override
@@ -127,26 +119,12 @@ public class _RestAuthReq implements RestPacketHandler<WebSupportNode> {
 
 
 
-### 2.3. onDispatch 콜백 구현
+### 2.3. RestMessageDispatcher 구현
 
-RESTful 메시지 처리를 위한 onDispatch 콜백은 SupportNode만 지원합니다. 아래의 예제 코드와 같이 앞서 생성한 REST 패킷 디스패처리를 이용하여 전달된 RestObject를 처리할 수 있습니다. 해당 RestObject에 대한 추가 처리를 하고자 할 경우에도 이 콜백 메서드에 구현할 수 있습니다.
-
+RESTful 메시지 처리를 위한 getRestMessageDispatcher는 SupportNode만 지원합니다. restMessageDispatcher 를 넘기도록 간단하게 구현할 수 있습니다.
 ```java
-/**
-* 처리할 RESTful 요청이 있으면 호출
-*
-* @param restObject 전달된 RESTful 요청
-* @return 메시지를 직접 처리하였으면 true를 반환하고 그렇지 않으면 false를 반환
-* @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
-*/
 @Override
-public boolean onDispatch(RestObject restObject) throws SuspendExecution {
-	// REST 요청 처리        
-    if (!restMsgHandler.isRegisteredMessage(restObject))
-	    return false;
-
-    restPacketDispatcher.dispatch(this, restObject);
-    return true;
+public final RestMessageDispatcher<WebSupportNode> getRestMessageDispatcher() {
+    return restMessageDispatcher;
 }
 ```
-

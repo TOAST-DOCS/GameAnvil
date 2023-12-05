@@ -56,7 +56,8 @@ SomeObject ret = future.get(); // 스레드 블로킹을 유발
 GameAnvil은 이런 future에 대한 대기를 스레드 블로킹에서 파이버 블로킹으로 전환해주는 API를 제공합니다. 단, 이 API들은 Java의 CompletableFuture와 Guava의 ListenableFuture만 지원합니다. 다행히도 대부분의 라이브러리는 이 2가지의 future를 기반으로 비동기를 지원하기 때문에 큰 무리 없이 적용 가능할 것입니다. 아래의 코드는 이러한 Async API를 이용해서 future에 대한 대기를 파이버 블로킹으로 처리하는 예입니다.
 
 ```java
-Future<SomeObject> future = someAsyncJob();
+// lettuce future, jdk CompletableFuture 등 
+CompletionStage<SomeObject> future = someAsyncJob();
 
 SomeObject ret = Async.awaitFuture(future); // 해당 파이버만 블로킹
 ```
@@ -69,16 +70,7 @@ SomeObject ret = Async.awaitFuture(future); // 해당 파이버만 블로킹
 import com.nhn.gameanvil.async.Async;
 
 void runningBlockingMethod() { // NOT suspendable
-
     Async.exec(executor, runnable); // 외부 스레드로 블로킹 호출을 위임했으므로 이 파이버는 블로킹되지 않는다.
-
-}
-import com.nhn.gameanvil.async.Async;
-
-int callingBlockingMethod() {  // NOT suspendable
-
-    return Async.exec(executor, callable);  // 외부 스레드로 블로킹 호출을 위임했으므로 이 파이버는 블로킹되지 않는다.
-
 }
 ```
 
@@ -150,7 +142,11 @@ RedisCluster와 비교했을 때, 대상 Redis가 스탠드얼론이라는 차�
 주의 사항은 Lettuce의 경우와 완전히 동일합니다. 아래는 RedisSingle을 이용해서 Redis에 접속하는 코드입니다.
 
 ```java
-redisCluster = new RedisCluster<>(IP_ADDRESS, 7500);redisCluster.connect(RpsConfig.DB_THREAD_POOL, StringCodec.UTF8);if (redisCluster.isConnected()) {    logger.warn("============= Connected to Redis using Lettuce =============");}
+redisCluster = new RedisCluster<>(IP_ADDRESS, 7500);
+redisCluster.connect(RpsConfig.DB_THREAD_POOL, StringCodec.UTF8);
+if (redisCluster.isConnected()) {
+    logger.warn("============= Connected to Redis using Lettuce =============");
+}
 ```
 
 ### **2.4.RedisFuture를 파이버에서 사용하기**
@@ -302,6 +298,9 @@ Async.awaitFuture(future.get()); // 파이버 상에서 해당 future를 대기�
 
 GameAnvil에서 제공하는 Http API는 요청과 응답을 위한 HttpRequest, HttpResponse 클래스 그리고 결과에 대한 일반적인 처리를 위한 HttpResultTemplate 클래스로 이루어집니다. 이 클래스들을 이용하면 간단하고 직관적으로 Http 요청과 응답을 처리할 수 있으며 그 결과를 원하는 형태로 취할 수도 있습니다. 또한 모든 코드는 비동기이므로 특별한 처리가 필요없습니다. 다음은 이를 사용한 예제 코드들입니다.
 
+### **3.1 HttpReqeust & HttpResponse 사용**
+HttpRequest 라이브러리는 GameAnvil 에서 오랫 동안 사용되어 왔지만 관련 라이브러리가 업데이트되지 않아 사용 시 몇가지 문제점이 발생했습니다. 이러한 문제를 해결하기 위해 내부 Http 라이브러리를 변경한 HttpRequest2 클래스가 존재하고 있는데요 만약 HttpRequest 를 사용 중 문제가 발생한다면 HttpRequest2 구성으로 변경을 권장드립니다. 이후 릴리즈 시 HttpReuqest2 에 문제가 발생하지 않는다면 기존 HttpRequest 는 제거될 수 있습니다.
+
 - 예제1> 가장 기본적인 사용법 내부적으로 파이버 단위의 future 처리를 알아서 해주므로 가장 직관적인 방식입니다. 특별한 이유가 없다면 이러한 기본적인 사용법만으로도 충분합니다.
 
 ```java
@@ -401,6 +400,22 @@ try {
 }
 ```
 
+### **3.2 HttpReqeust2 사용**
+위 HttpRequest 라이브러리는 GameAnvil 에서 오랫 동안 사용되어 왔지만 관련 라이브러리가 업데이트되지 않아 사용 시 몇가지 문제점이 발생했습니다. 이러한 문제를 해결하기 위해 내부 Http 라이브러리를 변경한 HttpRequest2 클래스가 존재하고 있는데요 만약 HttpRequest 를 사용 중 문제가 발생한다면 HttpRequest2 구성으로 변경을 권장드립니다. 이후 릴리즈 시 HttpReuqest2 에 문제가 발생하지 않는다면 기존 HttpRequest 는 제거될 수 있습니다.
+
+- 예제1> 이후의 코드 흐름과 상관있는 경우에 해당 future를 대기한 후 처리
+```java
+HttpRequest2 request = new HttpRequest2(Method.GET, GET_LIST_URL);
+
+try {
+    HttpResponse2 httpResponse = request.execute();
+    String body = httpResponse.getContents(String.class);
+    System.out.println(body);
+} catch (Exception e) {
+      logger.error("Exception occurred: ", e);
+}
+```
+
 ## 4. RDBMS 비동기 처리
 
 RDBMS에 대한 쿼리는 일반적으로 블로킹입니다. 이런 블로킹 쿼리를 GameAnvil 상에서 처리하는 방법은 앞서 살펴보았던 다른 Async 사용법과 크게 다르지 않습니다. 어떤 종류의 RDBMS를 사용하던 SQL 쿼리에 대한 코드는 동일한 방법으로 구현할 수 있습니다. 또한 엔진 사용자는 DB 접근을 위해 자유롭게 SQL Mapper나 ORM 등을 선택할 수 있습니다.
@@ -435,13 +450,13 @@ logger.info("Query has finished.");
 이때, 비동기 처리를 위한 스레드풀은 Bootstrap 단계에서 미리 생성해둘 수 있습니다.
 
 ```
-bootstrap.createExecutorService("MyThreadPool", 250);
+gameAnvilServer.createExecutorService("MyThreadPool", 250);
 ```
 
 혹은 엔진 사용자가 필요에 따라 직접 생성한 외부 스레드풀을 사용할 수도 있습니다.
 
 ```
-bootstrap.createExecutorService(myExecutorService, 250);
+gameAnvilServer.createExecutorService(myExecutorService, 250);
 ```
 
 둘째, 쿼리의 결과가 필요 없는 경우에는 다음의 예제와 같이 Async 클래스의 runBlocking API를 사용합니다. runBlocking은 파이버 상에서 임의의 블로킹 호출을 수행합니다.

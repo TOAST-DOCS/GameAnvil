@@ -55,7 +55,7 @@
 * Main : 프로그램의 진입점 Main 함수를 포함하는 클래스입니다.
 * protocol 패키지 : java로 컴파일된 프로토콜 버퍼 파일을 포함하는 패키지입니다.
 * proto 패키지 : Google Protobuf 라이브러리를 이용해 작성된 프로토콜 파일입니다.
-* build.sh : 프로토콜 파일을 java로 컴파일하여 프로토콜 버퍼 파일을 생성하는 실행 파일입니다.
+* build.sh / build.bat : 프로토콜 파일을 java로 컴파일하여 프로토콜 버퍼 파일을 생성하는 실행 파일입니다.
 * GameAnvilConfig.json : 게임엔빌 구동에 필요한 서버 설정 정보를 기록한 파일입니다. 서버 구현에 맞게 수정할 수 있습니다.
 * logback.xml : Java 프로젝트에서 로깅을 구성하는 데 사용되는 파일입니다. Logback 프레임워크의 설정 파일로서, 로깅 시스템의 동작 방식과 로그의 형식, 저장 위치 등을 지정합니다. 이 파일을 사용하여 로깅 수준, 로그 형식, 로그 파일의 경로 및 이름, 로그 롤링 정책 등을 설정할 수 있습니다.
 
@@ -194,17 +194,21 @@ import com.nhn.gameanvil.node.game.BaseGameNode;
 import com.nhn.gameanvil.node.game.data.BaseChannelRoomInfo;
 import com.nhn.gameanvil.node.game.data.BaseChannelUserInfo;
 import com.nhn.gameanvil.node.game.data.ChannelUpdateType;
-import com.nhn.gameanvil.packet.Packet;
-import com.nhn.gameanvil.packet.PacketDispatcher;
 import com.nhn.gameanvil.packet.Payload;
+import com.nhn.gameanvil.packet.message.MessageDispatcher;
 
 @ServiceName("Sync")
-public class SyncGameNode extends BaseGameNode {
+public final class SyncGameNode extends BaseGameNode {
 
-    private static PacketDispatcher packetDispatcher = new PacketDispatcher();
+    private static final MessageDispatcher<SyncGameNode> messageDispatcher = new MessageDispatcher<>();
 
     static {
-        // packetDispatcher.registerMsg();
+        // messageDispatcher.registerMsg();
+    }
+
+    @Override
+    public MessageDispatcher<SyncGameNode> getMessageDispatcher() {
+        return messageDispatcher;
     }
 
     @Override
@@ -220,12 +224,6 @@ public class SyncGameNode extends BaseGameNode {
     @Override
     public void onReady() throws SuspendExecution {
 
-    }
-
-    @Override
-    public void onDispatch(Packet packet) throws SuspendExecution {
-        if (packetDispatcher.isRegisteredMessage(packet))
-            packetDispatcher.dispatch(this, packet);
     }
 
     @Override
@@ -274,12 +272,12 @@ public class SyncGameNode extends BaseGameNode {
     }
 
     @Override
-    public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelUserInfo baseChannelUserInfo, int i, String s) throws SuspendExecution {
+    public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelUserInfo baseChannelUserInfo, int userId, String accountId) throws SuspendExecution {
 
     }
 
     @Override
-    public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelRoomInfo baseChannelRoomInfo, int i) throws SuspendExecution {
+    public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelRoomInfo baseChannelRoomInfo, int userId) throws SuspendExecution {
 
     }
 
@@ -324,28 +322,33 @@ public class SyncGameNode extends BaseGameNode {
 자동으로 생성된 코드는 아래와 같습니다.
 
 ```java
+
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.annotation.UserType;
 import com.nhn.gameanvil.node.game.BaseUser;
 import com.nhn.gameanvil.node.game.data.RoomMatchResult;
-import com.nhn.gameanvil.packet.Packet;
-import com.nhn.gameanvil.packet.PacketDispatcher;
 import com.nhn.gameanvil.packet.Payload;
+import com.nhn.gameanvil.packet.message.MessageDispatcher;
 import com.nhn.gameanvil.serializer.TransferPack;
 
 @ServiceName("Sync")
 @UserType("USER_TYPE_SYNC")
-public class SyncGameUser extends BaseUser {
+public final class SyncGameUser extends BaseUser {
 
-    private static PacketDispatcher packetDispatcher = new PacketDispatcher();
+    private static final MessageDispatcher<SyncGameUser> messageDispatcher = new MessageDispatcher<>();
 
     static {
-        // packetDispatcher.registerMsg();
+        // messageDispatcher.registerMsg();
     }
 
     @Override
-    public boolean onLogin(final Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public MessageDispatcher<SyncGameUser> getMessageDispatcher() {
+        return messageDispatcher;
+    }
+
+    @Override
+    public boolean onLogin(Payload payload, Payload sessionPayload, Payload outPayload) throws SuspendExecution {
         boolean isSuccess = true;
         return isSuccess;
     }
@@ -356,12 +359,12 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public boolean onLoginByOtherDevice(final String newDeviceId, Payload outPayloadForKickUser) throws SuspendExecution {
+    public boolean onLoginByOtherDevice(String newDeviceId, Payload outPayloadForKickUser) throws SuspendExecution {
         return true;
     }
 
     @Override
-    public boolean onLoginByOtherUserType(final String userType, Payload outPayload) throws SuspendExecution {
+    public boolean onLoginByOtherUserType(String userType, Payload outPayload) throws SuspendExecution {
         return true;
     }
 
@@ -371,7 +374,7 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public boolean onReLogin(final Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onReLogin(Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
         boolean isSuccess = true;
         return isSuccess;
     }
@@ -380,10 +383,6 @@ public class SyncGameUser extends BaseUser {
     public void onDisconnect() throws SuspendExecution {
     }
 
-    @Override
-    public void onDispatch(final Packet packet) throws SuspendExecution {
-        packetDispatcher.dispatch(this, packet);
-    }
 
     @Override
     public void onPause() throws SuspendExecution {
@@ -396,7 +395,7 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public void onLogout(final Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onLogout(Payload payload, Payload outPayload) throws SuspendExecution {
 
     }
 
@@ -412,18 +411,13 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public RoomMatchResult onMatchRoom(final String roomType, final String matchingGroup, final String matchingUserCategory, final Payload payload) throws SuspendExecution {
+    public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, Payload payload) throws SuspendExecution {
         return null;
     }
 
     @Override
-    public boolean onMatchUser(final String roomType, final String matchingGroup, final Payload payload, Payload outPayload) throws SuspendExecution {
+    public boolean onMatchUser(String roomType, String matchingGroup, Payload payload, Payload outPayload) throws SuspendExecution {
         return false;
-    }
-
-    @Override
-    public void onRegisterTimerHandler() {
-
     }
 
     @Override
@@ -432,12 +426,12 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public void onTransferOut(final TransferPack transferPack) throws SuspendExecution {
+    public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
 
     }
 
     @Override
-    public void onTransferIn(final TransferPack transferPack) throws SuspendExecution {
+    public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
 
     }
 
@@ -447,13 +441,13 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public boolean onCheckMoveOutChannel(final String destinationChannelId, final Payload payload, Payload errorPayload) throws SuspendExecution {
+    public boolean onCheckMoveOutChannel(String destinationChannelId, Payload payload, Payload errorPayload) throws SuspendExecution {
         boolean canMoveOut = false;
         return canMoveOut;
     }
 
     @Override
-    public void onMoveOutChannel(final String destinationChannelId, Payload outPayload) throws SuspendExecution {
+    public void onMoveOutChannel(String destinationChannelId, Payload outPayload) throws SuspendExecution {
     }
 
     @Override
@@ -461,7 +455,7 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public void onMoveInChannel(final String sourceChannelId, final Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onMoveInChannel(String sourceChannelId, Payload payload, Payload outPayload) throws SuspendExecution {
     }
 
     @Override
@@ -469,6 +463,7 @@ public class SyncGameUser extends BaseUser {
 
     }
 }
+
 ```
 
 게임 유저는 클라이언트가 서버에 로그인 요청을 함으로써 생성됩니다. 서버에서는, 클라이언트에서 전송된 페이로드 등을 통해서 로그인 허용 여부를 결정해서 반환값으로 내보낼 수 있습니다. 주요 로직만 엔진 사용자가 작성하고, 로그인 성공이나 실패 처리는 엔진에서 담당합니다.
@@ -488,26 +483,30 @@ public class SyncGameUser extends BaseUser {
 자동으로 생성된 코드는 아래와 같습니다.
 
 ```java
+
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.annotation.RoomType;
 import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.node.game.BaseRoom;
-import com.nhn.gameanvil.node.game.RoomPacketDispatcher;
-import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.node.game.RoomMessageDispatcher;
 import com.nhn.gameanvil.packet.Payload;
 import com.nhn.gameanvil.serializer.TransferPack;
-import com.yourcompany.gameanvil.user.SyncGameUser;
 
 import java.util.List;
 
 @ServiceName("Sync")
 @RoomType("ROOM_TYPE_SYNC")
-public class SyncGameRoom extends BaseRoom<SyncGameUser> {
+public final class SyncGameRoom extends BaseRoom<SyncGameUser> {
 
-    private static RoomPacketDispatcher packetDispatcher = new RoomPacketDispatcher();
+    private static final RoomMessageDispatcher<SyncGameRoom, SyncGameUser> messageDispatcher = new RoomMessageDispatcher<>();
 
     static {
-        // packetDispatcher.registerMsg();
+        // messageDispatcher.registerMsg();
+    }
+
+    @Override
+    public RoomMessageDispatcher<SyncGameRoom, SyncGameUser> getMessageDispatcher() {
+        return messageDispatcher;
     }
 
     @Override
@@ -519,22 +518,17 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
     }
 
     @Override
-    public void onDispatch(SyncGameUser user, final Packet packet) throws SuspendExecution {
-        packetDispatcher.dispatch(this, user, packet);
-    }
-
-    @Override
-    public boolean onCreateRoom(SyncGameUser user, final Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onCreateRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
         return true;
     }
 
     @Override
-    public boolean onJoinRoom(SyncGameUser user, final Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onJoinRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
         return true;
     }
 
     @Override
-    public boolean onLeaveRoom(SyncGameUser user, final Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onLeaveRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
         return true;
     }
 
@@ -554,12 +548,6 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
     }
 
     @Override
-    public void onRegisterTimerHandler() {
-
-    }
-
-
-    @Override
     public boolean canTransfer() throws SuspendExecution {
         return true;
     }
@@ -570,7 +558,7 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
     }
 
     @Override
-    public void onTransferIn(List<SyncGameUser> userList, final TransferPack transferPack) throws SuspendExecution {
+    public void onTransferIn(List<SyncGameUser> userList, TransferPack transferPack) throws SuspendExecution {
     }
 
     @Override

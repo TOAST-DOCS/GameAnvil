@@ -64,3 +64,35 @@ protoc  ./MyGame.proto --java_out=../java
 protoc ./MyGame.proto --java_out=../java --csharp_out=./
 ```
 
+
+## GeneratedMessageV3 과 Packet
+GameAnvil 서버에서는 프로토 버퍼객체를 그대로 활용할 수 있도록 어떠한 전송이 가능한 메서드에서는 프로토 버퍼 객체를 그대로 사용할 수 있도록 대부분 `com.google.protobuf.GeneratedMessageV3` 클래스를 지원합니다. 일반적인 상황에서는 프로토 버퍼 객체를 그대로 사용하여도 문제가 없지만 여러명의 클라이언트에게 전송하는 등 특정 상황에서는 `com.nhn.gameanvil.packet.Packet` 클래스를 사용 하여 성능을 향상 시킬 수 있습니다
+
+전달된 GeneratedMessageV3 클래스는 내부적으로 Packet 으로 변환되어 직렬화 후 전송하기 떄문에 아래의 `broadcastMessage` 를 호출 하는 상황에서는 Packet 으로 변경하는 과정에서 같은 프로토 버퍼를 여러번 직렬화하는 문제가 발생 할 수 있습니다
+```java
+// 아래와 같은 상황에서는 여러번 직렬화 하여 성능 문제가 발생할 수 있습니다
+void broadcastMessage(List<GameUser> users, GeneratedMessageV3 message) {
+    for (GameUser user : users) {
+        user.send(message);
+    }
+}
+```
+
+이러한 상황을 방지하기 위해 아래와 같이 수정합니다. Packet 객체에서는 내부적으로 직렬화된 정보를 들고 있어 여러번 전송해도 정상적으로 동작합니다.
+```java
+// 성능 문제 수정
+void broadcastMessage(List<GameUser> users, GeneratedMessageV3 message) {
+    Packet p = Packet.makePacket(message); 
+    for (GameUser user : users) {
+        user.send(p);
+    }
+}
+```
+
+아래와 같은 상황에서는 Packet 을 사용하지 않아도 크게 문제가 없으며 코드 가독성이 떨어질 수 있기 떄문에 프로토 버퍼 객체를 그대로 넘기는 것이 좋습니다.
+```java
+// 아래와 같은 상황에서는 GeneratedMessageV3 사용이 편리합니다 
+void sendMessage(GameUser user, GeneratedMessageV3 message) {
+    user.send(message);
+}
+```

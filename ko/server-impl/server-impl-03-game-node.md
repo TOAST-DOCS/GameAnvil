@@ -22,7 +22,7 @@ GameNode는 실제 게임 객체가 생성되고 게임 컨텐츠를 구현하�
 
 GameNode는 BaseGameNode 클래스를 상속하여 구현합니다.  아래의 예제 코드는 GameNode에서 기본적으로 재정의할 수 있는 콜백 메서드를 보여줍니다. 노드 공통 콜백과 더불어 채널 관리를 위한 콜백이 존재합니다.
 
-모든 노드는 사용자 정의 메시지를 처리하기 위한 디스패처 생성과 메시지 핸들러 등록 과정이 필요합니다. 특히, GameNode는 게임 컨텐츠를 위해 이러한 과정이 필수입니다.  우선, (1) 정적 패킷 디스패처를 하나 생성합니다. 이 때, 반드시 메모리나 성능 측면에서 이점을 취할 수 있도록 정적(static)으로 생성합니다. (2) 그리고 처리하고 싶은 메시지를 구현해둔 [핸들러](server-07-message-handling#11)와 연결합니다. (3) 마지막으로 onDispatch 콜백에서 (1)에서 생성한 디스패처를 이용하여 패킷을 처리합니다. 이 때, 디스패칭 뿐만 아니라 패킷에 대한 추가적인 처리를 할 수도 있습니다.
+모든 노드는 사용자 정의 메시지를 처리하기 위한 디스패처 생성과 메시지 핸들러 등록 과정이 필요합니다. 특히, GameNode는 게임 컨텐츠를 위해 이러한 과정이 필수입니다.  우선, (1) 정적 패킷 디스패처를 하나 생성합니다. 이 때, 반드시 메모리나 성능 측면에서 이점을 취할 수 있도록 정적(static)으로 생성합니다. (2) 그리고 처리하고 싶은 메시지를 구현해둔 [핸들러](server-07-message-handling#11)와 연결합니다. (3) 마지막으로 MessageDispatcher 에서 (1)에서 생성한 디스패처를 이용하여 패킷을 처리합니다.
 
 이러한 일련의 과정을 아래의 예제 코드에서 (1)~(3)에 해당하는 주석 바로 아래의 코드를 통해 살펴볼 수 있습니다.
 
@@ -33,11 +33,16 @@ GameNode는 BaseGameNode 클래스를 상속하여 구현합니다.  아래의 �
 public class SampleGameNode extends BaseGameNode {
 
     // (1) 패킷 디스패처 생성  
-    private static PacketDispatcher packetDispatcher = new PacketDispatcher();
+    private static final MessageDispatcher<SampleGameNode> messageDispatcher = new MessageDispatcher<>();
 
     // (2) SampleGameNode에서 처리하고 싶은 프로토콜과 핸들러를 매핑
     static {
-        packetDispatcher.registerMsg(SampleGame.GameNodeTest.getDescriptor(), _GameNodeTest.class);
+        messageDispatcher.registerMsg(SampleGame.GameNodeTest.class, _GameNodeTest.class);
+    }
+
+    @Override
+    public MessageDispatcher<SampleGameNode> getMessageDispatcher() {
+        return messageDispatcher;
     }
 
     @Override
@@ -46,19 +51,6 @@ public class SampleGameNode extends BaseGameNode {
 
     @Override
     public void onPrepare() throws SuspendExecution {
-    }
-
-    /**
-     * 패킷이 전달될 때 호출
-     *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onDispatch(Packet packet) throws SuspendExecution {
-        // (3) SampleGameNode의 메시지 처리. 필요할 경우 패킷에 대한 추가 처리도 여기에서 할 수도 있습니다.
-        if (packetDispatcher.isRegisteredMessage(packet))
-            packetDispatcher.dispatch(this, packet);
     }
 
     /**
@@ -154,10 +146,15 @@ public class SampleGameNode extends BaseGameNode {
 @UseChannelInfo
 public class SampleGameUser extends BaseUser {
 
-    private static PacketDispatcher packetDispatcher = new PacketDispatcher();
+    private static final MessageDispatcher<SampleGameUser> messageDispatcher = new MessageDispatcher<>();
 
     static {
-        packetDispatcher.registerMsg(SampleGame.GameUserTest.getDescriptor(), _GameUserTest.class);
+        messageDispatcher.registerMsg(SampleGame.GameUserTest.class, _GameUserTest.class);
+    }
+
+    @Override
+    public MessageDispatcher<SampleGameUser> getMessageDispatcher() {
+        return messageDispatcher;
     }
 
     /**
@@ -246,17 +243,6 @@ public class SampleGameUser extends BaseUser {
      */
     @Override
     public void onDisconnect() throws SuspendExecution {    
-    }
-
-    /**
-     * GameUser에 처리할 패킷이 있을 때 호출
-     *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onDispatch(final Packet packet) throws SuspendExecution {
-        packetDispatcher.dispatch(this, packet);
     }
 
     /**
@@ -475,7 +461,6 @@ GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저
 | onLoginByOtherConnection | 다른 커넥션으로 로그인 시도              | 이미 로그인이 되어 있는 상태에서 (재접속으로 인해) 이전과 다른 커넥션으로 로그인 시도를 할 경우에 호출됩니다. 만일, 재접속에 대한 추가 작업이 필요하다면 이 콜백에서 할 수 있습니다.                                                                            |
 | onReLogin                | 재로그인                                 | 이미 로그인이 되어 있는 상태에서 다시 로그인을 할 경우에는 onLogin이 아닌 onReLogin이 호출됩니다. 즉, 재로그인에 대한 작업은 이 콜백에서 처리합니다.                                                                                                            |
 | onDisconnect             | 접속 종료                                | 클라이언트로부터 접속이 끊겼을 때 호출됩니다. 이 때, 추가로 처리할 코드를 이 곳에 구현합니다.                                                                                                                                                                   |
-| onDispatch               | 처리할 패킷이 있음                       | 유저에 처리할 패킷이 도달하면 호출됩니다. 사용자는 자신이 선언한 디스패처를 사용하거나 패킷에 대한 추가 작업을 진행할 수 있습니다. 자세한 내용은 [메시지 처리](server-07-message-handling#13-ondispatch)를 참고하세요.                                         |
 | onPause                  | 일시 정지                                | 콘솔을 통해 GameNode를 일시 정지하면 해당 GameNode의 모든 유저에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 유저에서 추가로 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                                               |
 | onResume                 | 재개                                     | 콘솔을 통해 GameNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GameNode의 모든 유저에 대해 호출됩니다. 사용자는 재개 상태에서 유저에 대해 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다                                                                 |
 | onLogout                 | 로그 아웃                                | 유저가 로그아웃할 때 호출됩니다. 이는 사용자가 명시적으로 요청한 로그아웃일 수도 있고, 접속 끊김 상태에서 설정된 시간을 초과할 경우에 엔진에 의해 자동으로 로그아웃될 수도 있습니다.                                                                            |
@@ -493,6 +478,7 @@ GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저
 | onPostMoveOutChannel     | 기존 채널에서 다른 채널로 이동 준비 완료 | onMoveOutChannel이 성공하면 후처리를 위해 호출됩니다.                                                                                                                                                                                                           |
 | onMoveInChannel          | 새로운 채널로 이동 처리                  | 유저가 다른 채널로 이동할 때, 대상 노드에서 호출됩니다. 사용자는 임의의 정보를 outPayload에 담아서 클라이언트로 전달할 수 있습니다.                                                                                                                             |
 | onPostMoveInChannel      | 새로운 채널로 이동 완료                  | onMoveInChannel이 성공하면 후처리를 위해 호출됩니다.                                                                                                                                                                                                            |
+| getMessageDispatcher | 처리할 패킷이 있음 | 처리할 메세지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메시지 처리](server-07-message-handling#13-ondispatch)를 참고하세요. |
 
 ### 3.1. 로그인이란?
 
@@ -516,10 +502,15 @@ GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저
 @UseChannelInfo
 public class SampleGameRoom extends BaseRoom<SampleGameUser> {
 
-    private static PacketDispatcher packetDispatcher = new PacketDispatcher();
+    private static final RoomMessageDispatcher<SampleGameRoom, SampleGameUser> messageDispatcher = new RoomMessageDispatcher<>();
 
     static {
-        packetDispatcher.registerMsg(SampleGame.GameRoomTest.getDescriptor(), _GameRoomTest.class);
+        messageDispatcher.registerMsg(SampleGame.GameRoomTest.class, _GameRoomTest.class);
+    }
+
+    @Override
+    public RoomMessageDispatcher<SampleGameRoom, SampleGameUser> getMessageDispatcher() {
+        return messageDispatcher;
     }
 
     /**
@@ -538,18 +529,6 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
      */
     @Override
     public void onDestroy() throws SuspendExecution {    
-    }
-
-    /**
-     * GameRoom에 처리할 패킷이 있을 때 호출
-     *
-     * @param user   해당 패킷을 처리할 유저 객체. 해당 패킷을 처리할 유저가 없을 경우 null.
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onDispatch(SampleGameUser user, final Packet packet) throws SuspendExecution {
-        packetDispatcher.dispatch(this, user, packet);
     }
 
     /**
@@ -713,7 +692,6 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
 | ------------------------ | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | onInit                 | 초기화                           | 방이 생성될 때 초기화를 위해 호출됩니다. 토픽 등록 등의 해당 방에 대한 초기화 코드를 작성할 수 있습니다.                                                                                                                                                                                                                                                     |
 | onDestroy              | 방 사라짐                        | 방에서 마지막 유저가 나가고 더 이상 처리할 메시지가 없으면 해당 방은 사라집니다. 이 때 호출되는 콜백입니다.                                                                                                                                                                                                                                                  |
-| onDispatch             | 처리할 패킷이 있음               | 유저에 처리할 패킷이 도달하면 호출됩니다. 사용자는 자신이 선언한 디스패처를 사용하거나 패킷에 대한 추가 작업을 진행할 수 있습니다. 자세한 내용은[메시지 처리](server-07-message-handling#13-ondispatch)를 참고하세요.                                                                                                                                      |
 | onCreateRoom           | 방 생성                          | 클라이언트가 방 생성을 요청하면 호출됩니다. 컨텐츠에서 사용할 유저 목록을 위한 자료 구조를 생성하거나 기타 방 생성과 함께 처리되어야할 코드를 작성합니다.                                                                                                                                                                                                    |
 | onJoinRoom             | 방 참여                          | 클라이언트가 서버 상에 존재하는 임의의 방으로 참여를 요청하면 호출됩니다. 컨텐츠에서 사용할 유저 목록을 갱신하거나 방 안의 유저들 사이에 동기화할 정보를 처리할 수 있습니다.                                                                                                                                                                                 |
 | onLeaveRoom            | 방 떠남                          | 클라이언트가 방 떠나기 요청을 하면 호출됩니다. 컨텐츠에서 사용할 유저 목록을 위한 자료 구조를 갱신하거나 기타 방에서 나오면서 함께 처리되어야할 코드를 작성합니다.                                                                                                                                                                                           |
@@ -726,6 +704,7 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
 | onPause                | 일시 정지                        | 콘솔을 통해 GameNode를 일시 정지하면 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 방에서 추가로 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                                                                                                                                                |
 | onResume               | 재개                             | 콘솔을 통해 GameNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 재개 상태에서 방에 대해 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                                                                                                                                 |
 | onMatchParty           | 파티 매치메이킹 요청             | 사용자가 파티 매치메이킹을 요청하면 호출됩니다. 파티 매치메이킹은 임의의 NamedRoom을 파티 용도로 생성한 후, 방 안의 모든 유저가 하나의 파티로 매칭을 요청하는 기능입니다. 사용자는 이 콜백에서 엔진이 제공하는 파티 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                                                                 |
+| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메시지 처리](server-07-message-handling#13-ondispatch)를 참고하세요. |
 
 ## 5. 방 종류
 

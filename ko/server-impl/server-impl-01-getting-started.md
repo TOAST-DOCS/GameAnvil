@@ -56,17 +56,6 @@ public class SampleGatewayNode extends BaseGatewayNode {
     }
 
     /**
-     * 처리할 패킷이 있을 경우 호출
-     * 사용자는 이 콜백에서 자신이 선언한 dispatcher를 이용하여 직접 dispatch할 수 있습니다.
-     *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onDispatch(Packet packet) throws SuspendExecution {  
-    }
-
-    /**
      * pause 될 때 호출
      *
      * @param payload contents 에서 전달하고자 하는 추가 정보
@@ -105,10 +94,10 @@ public class SampleGatewayNode extends BaseGatewayNode {
 | onInit     | 초기화             | 노드가 최초 초기화를 진행할 때 호출합니다. 노드 구동 전에 필요한 초기화 작업이 있다면 이 콜백이 적합합니다. 이 때, 노드는 아직 메시지를 처리하지 않습니다.                                              |
 | onPrepare  | 준비               | 노드 초기화가 완료된 후 호출됩니다. 사용자는 노드가 준비 완료되기 전에 임의의 작업을 이 곳에서 처리할 수 있습니다. 이 때, 노드는 메시지를 처리할 수 있습니다.                                           |
 | onReady    | 준비 완료          | 노드가 모든 준비를 마친 후, 구동 완료 단계입니다. 이 때, 노드는 Ready 상태이므로 사용자는 이 때부터 모든 기능을 사용할 수 있습니다.                                                                     |
-| onDispatch | 처리할 패킷이 있음 | 노드에 처리할 패킷이 도달하면 호출됩니다. 사용자는 자신이 선언한 디스패처를 사용하거나 패킷에 대한 추가 작업을 진행할 수 있습니다. 자세한 내용은[메시지 처리](server-07-message-handling)를 참고하세요. |
 | onPause    | 일시 정지          | 노드를 일시 정지하면 호출됩니다. 사용자는 노드가 일시 정지될 때 추가로 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                                                 |
 | onResume   | 재개               | 노드가 일시 정지 상태에서 다시 구동을 재개할 때 호출됩니다. 사용자는 재개 상태에서 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                                     |
 | onShutdown | 노드 정지          | 노드가 완전히 중지될 때 호출됩니다. 중지된 노드는 재개(Resume)할 수 없습니다.                                                                                                                           |
+| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메시지 처리](server-07-message-handling#13-ondispatch)를 참고하세요. |
 
 
 

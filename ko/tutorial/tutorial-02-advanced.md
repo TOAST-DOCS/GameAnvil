@@ -289,27 +289,33 @@ Connect() 함수에서는 connector를 통해 ConnectionAgent 객체를 참조�
 onLogin 콜백 메서드에서는 로그인 과정에 실행되어야 하는 동작을 구현합니다. 이 예제에서는 별다른 로그인 구현 없이, 무조건 로그인에 성공하도록 true를 반환하도록 합니다.
 
 ```java
+
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.annotation.UserType;
 import com.nhn.gameanvil.node.game.BaseUser;
-import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.node.game.data.RoomMatchResult;
 import com.nhn.gameanvil.packet.Payload;
-import match.BasicUserMatchInfo;
-import org.slf4j.Logger;
+import com.nhn.gameanvil.packet.message.MessageDispatcher;
+import com.nhn.gameanvil.serializer.TransferPack;
 
 @ServiceName("BASIC_SERVICE")
 @UserType("BASIC_USER")
 public class BasicUser extends BaseUser {
 
-    private static PacketDispatcher packetDispatcher = new PacketDispatcher();
+    private static final MessageDispatcher<BasicUser> messageDispatcher = new MessageDispatcher<>();
 
     static {
-        // packetDispatcher.registerMsg();
+        // messageDispatcher.registerMsg();
     }
 
     @Override
-    public boolean onLogin(final Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public MessageDispatcher<BasicUser> getMessageDispatcher() {
+        return messageDispatcher;
+    }
+
+    @Override
+    public boolean onLogin(Payload payload, Payload sessionPayload, Payload outPayload) throws SuspendExecution {
         boolean isSuccess = true;
         return isSuccess;
     }
@@ -320,12 +326,12 @@ public class BasicUser extends BaseUser {
     }
 
     @Override
-    public boolean onLoginByOtherDevice(final String newDeviceId, Payload outPayloadForKickUser) throws SuspendExecution {
+    public boolean onLoginByOtherDevice(String newDeviceId, Payload outPayloadForKickUser) throws SuspendExecution {
         return true;
     }
 
     @Override
-    public boolean onLoginByOtherUserType(final String userType, Payload outPayload) throws SuspendExecution {
+    public boolean onLoginByOtherUserType(String userType, Payload outPayload) throws SuspendExecution {
         return true;
     }
 
@@ -335,7 +341,7 @@ public class BasicUser extends BaseUser {
     }
 
     @Override
-    public boolean onReLogin(final Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onReLogin(Payload payload, Payload sessionPayload, Payload outPayload) throws SuspendExecution {
         boolean isSuccess = true;
         return isSuccess;
     }
@@ -344,10 +350,6 @@ public class BasicUser extends BaseUser {
     public void onDisconnect() throws SuspendExecution {
     }
 
-    @Override
-    public void onDispatch(final Packet packet) throws SuspendExecution {
-        packetDispatcher.dispatch(this, packet);
-    }
 
     @Override
     public void onPause() throws SuspendExecution {
@@ -360,7 +362,7 @@ public class BasicUser extends BaseUser {
     }
 
     @Override
-    public void onLogout(final Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onLogout(Payload payload, Payload outPayload) throws SuspendExecution {
 
     }
 
@@ -376,18 +378,13 @@ public class BasicUser extends BaseUser {
     }
 
     @Override
-    public RoomMatchResult onMatchRoom(final String roomType, final String matchingGroup, final String matchingUserCategory, final Payload payload) throws SuspendExecution {
+    public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, Payload payload) throws SuspendExecution {
         return null;
     }
 
     @Override
-    public boolean onMatchUser(final String roomType, final String matchingGroup, final Payload payload, Payload outPayload) throws SuspendExecution {
+    public boolean onMatchUser(String roomType, String matchingGroup, Payload payload, Payload outPayload) throws SuspendExecution {
         return false;
-    }
-
-    @Override
-    public void onRegisterTimerHandler() {
-
     }
 
     @Override
@@ -396,12 +393,12 @@ public class BasicUser extends BaseUser {
     }
 
     @Override
-    public void onTransferOut(final TransferPack transferPack) throws SuspendExecution {
+    public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
 
     }
 
     @Override
-    public void onTransferIn(final TransferPack transferPack) throws SuspendExecution {
+    public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
 
     }
 
@@ -411,13 +408,13 @@ public class BasicUser extends BaseUser {
     }
 
     @Override
-    public boolean onCheckMoveOutChannel(final String destinationChannelId, final Payload payload, Payload errorPayload) throws SuspendExecution {
+    public boolean onCheckMoveOutChannel(String destinationChannelId, Payload payload, Payload errorPayload) throws SuspendExecution {
         boolean canMoveOut = false;
         return canMoveOut;
     }
 
     @Override
-    public void onMoveOutChannel(final String destinationChannelId, Payload outPayload) throws SuspendExecution {
+    public void onMoveOutChannel(String destinationChannelId, Payload outPayload) throws SuspendExecution {
     }
 
     @Override
@@ -425,7 +422,7 @@ public class BasicUser extends BaseUser {
     }
 
     @Override
-    public void onMoveInChannel(final String sourceChannelId, final Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onMoveInChannel(String sourceChannelId, Payload payload, Payload outPayload) throws SuspendExecution {
     }
 
     @Override
@@ -451,33 +448,36 @@ public class BasicUser extends BaseUser {
 
 ```java
 import co.paralleluniverse.fibers.SuspendExecution;
+import com.nhn.gameanvil.annotation.RoomType;
+import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.node.game.BaseRoom;
 import com.nhn.gameanvil.node.game.BaseUser;
-import com.nhn.gameanvil.node.game.RoomPacketDispatcher;
-import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.node.game.RoomMessageDispatcher;
 import com.nhn.gameanvil.packet.Payload;
-import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 @ServiceName("BASIC_SERVICE")
 @RoomType("BASIC_ROOM")
 public class BasicRoom extends BaseRoom<BasicUser> {
-    private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
+    private static RoomMessageDispatcher<BasicRoom, BasicUser> dispatcher = new RoomMessageDispatcher<>();
     private Map<Integer, BaseUser> users = new HashMap<>();
 
     @Override
+    public final RoomMessageDispatcher<BasicRoom, BasicUser> getMessageDispatcher() {
+        return dispatcher;
+    }
+
+    @Override
     public boolean onCreateRoom(BasicUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
-        users.put(user.getUserId(), basicUser);
+        users.put(user.getUserId(), user);
         return true;
     }
 
     @Override
     public boolean onJoinRoom(BasicUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
-        users.put(basicUser.getUserId(), user);
+        users.put(user.getUserId(), user);
         return true;
     }
 
@@ -492,19 +492,14 @@ public class BasicRoom extends BaseRoom<BasicUser> {
     }
 
     @Override
-    public void onDispatch(BasicUser user, Packet packet) throws SuspendExecution {
-
-    }
-
-    @Override
     public boolean onLeaveRoom(BasicUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
-        users.remove(basicUser);
+        users.remove(user);
         return true;
     }
 
     @Override
-    public void onLeaveRoom(BasicUser basicUser) throws SuspendExecution {
-        
+    public void onLeaveRoom(BasicUser user) throws SuspendExecution {
+
     }
 
     @Override
@@ -975,26 +970,23 @@ public class GameManager : MonoBehaviour
 
 게임 유저가 전송한 메시지를 서버가 받아서 방 안의 유저들에게 전송해주는 기능을 작성해보겠습니다. 클라이언트가 전송한 메시지를 서버의 게임 룸에서 처리하기 위해서는 핸들러를 사용합니다. 핸들러란, 특정 프로토콜을 처리하기 위한 코드 묶음을 의미합니다. 핸들러는 프로토콜 종류에 따라서 여러개가 될 수 있고, 방에 핸들러를 여러개 등록할 수 있습니다. 따라서 방은 복수의 프로토콜을 처리 가능합니다.
 
-서버 프로젝트로 이동하여 BasicRoom 클래스를 다시 살펴봅시다. 우리는 앞서 BaseRoom 클래스를 상속받은 BasicRoom 클래스에서 RoomPacketDispatcher를 생성했습니다. 패킷 디스패처는 메시지를 수신하였을 때 메시지가 적절한(프로그래머가  의도한) 핸들러를 찾아 실행하도록 하는 역할을 합니다. 이번에 작성하는 수신 메시지에 대한 핸들러도 바로 이 패킷 디스패처에 등록됩니다.
+서버 프로젝트로 이동하여 BasicRoom 클래스를 다시 살펴봅시다. 우리는 앞서 BaseRoom 클래스를 상속받은 BasicRoom 클래스에서 RoomMessageDispatcher를 생성했습니다. 패킷 디스패처는 메시지를 수신하였을 때 메시지가 적절한(프로그래머가  의도한) 핸들러를 찾아 실행하도록 하는 역할을 합니다. 이번에 작성하는 수신 메시지에 대한 핸들러도 바로 이 패킷 디스패처에 등록됩니다.
 
 핸들러 생성도 클래스 생성을 통해 이루어집니다. 새로운 클래스 파일을 BasicHandler라는 이름으로 생성합니다. 그리고 RoomPacketHandler를 상속하도록 한 후, execute 메서드를 오버라아딩합니다. 이후 패킷 디스패처에 등록하면 MessageRequest가 수신 되었을 때 이 메서드 안의 내용이 실행될 것입니다.
 
 ```Java
 import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.node.game.RoomPacketHandler;
-import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.node.game.RoomMessageHandler;
 import org.slf4j.Logger;
 import protocol.BasicProtocol;
 
-import java.io.IOException;
-
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class BasicHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
+public class BasicHandler implements RoomMessageHandler<BasicRoom, BasicUser, BasicProtocol.MessageRequest> {
     private static final Logger logger = getLogger(BasicHandler.class);
-  
-  	@Override
-    public void execute(BasicRoom room, BasicUser requester, Packet packet) throws SuspendExecution {
+
+    @Override
+    public void execute(BasicRoom room, BasicUser requester, BasicProtocol.MessageRequest request) throws SuspendExecution {
 
     }
 }
@@ -1004,24 +996,24 @@ public class BasicHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
 
 ```Java
 public class BasicRoom extends BaseRoom<BasicUser> {
-    private static final Logger logger = getLogger(BasicRoom.class);
-    private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
+    private static RoomMessageDispatcher<BasicRoom, BasicUser> dispatcher = new RoomMessageDispatcher<>();
     private Map<Integer, BaseUser> users = new HashMap<>();
 
     static {
-        dispatcher.registerMsg(BasicProtocol.MessageRequest.getDescriptor(), BasicHandler.class); // 처리할 메시지에 대한 핸들러 등록
+        dispatcher.registerMsg(BasicProtocol.MessageRequest.class, BasicHandler.class); // 처리할 메시지에 대한 핸들러 등록
     }
 
-    public void broadcast(Packet packet) {
-        users.values().stream().forEach(user -> user.send(packet.duplicate()));
+    @Override
+    public final RoomMessageDispatcher<BasicRoom, BasicUser> getMessageDispatcher() {
+        return dispatcher;
     }
 
     ...생략...
-  
-    @Override
-    public void onDispatch(BasicUser user, Packet packet) throws SuspendExecution {
-        dispatcher.dispatch(this, user, packet);
+
+    public void broadcast(com.google.protobuf.GeneratedMessageV3 packet) {
+        users.values().stream().forEach(user -> user.send(packet));
     }
+
 }
 ```
 
@@ -1042,17 +1034,12 @@ public class BasicHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
     private static final Logger logger = getLogger(BasicHandler.class);
   
   	@Override
-    public void execute(BasicRoom room, BasicUser requester, Packet packet) throws SuspendExecution {
-        try {
-            BasicProtocol.MessageRequest request = BasicProtocol.MessageRequest.parseFrom(packet.getStream());
-            BasicProtocol.MessageResponse response = BasicProtocol.MessageResponse.newBuilder().setMessage(request.getMessage()).build();
-            BasicProtocol.MessageBroadcast broadcast = BasicProtocol.MessageBroadcast.newBuilder().setMessage(request.getMessage()).build();
+    public void execute(BasicRoom room, BasicUser requester, BasicProtocol.MessageRequest request) throws SuspendExecution {
+        BasicProtocol.MessageResponse response = BasicProtocol.MessageResponse.newBuilder().setMessage(request.getMessage()).build();
+        BasicProtocol.MessageBroadcast broadcast = BasicProtocol.MessageBroadcast.newBuilder().setMessage(request.getMessage()).build();
 
-            requester.reply(new Packet(response)); // 송신자에게 응답
-            room.broadcast(new Packet(broadcast)); // 방 전체 유저에게 메시지를 전송
-        } catch (IOException e) {
-            logger.error("BasicHandler::execute()", e);;
-        }
+        requester.reply(response); // 송신자에게 응답
+        room.broadcast(broadcast); // 방 전체 유저에게 메시지를 전송
     }
 }
 
@@ -1182,12 +1169,12 @@ C# 클래스 파일은 파인더와 파일 탐색기 등의 프로그램을 이�
 public class Main {
 
     public static void main(String[] args) {
-        GameAnvilBootstrap bootstrap = GameAnvilBootstrap.getInstance();
+        GameAnvilServer server = GameAnvilServer.getInstance();
 
-        bootstrap.addProtoBufClass(BasicProtocol.getDescriptor());
-        bootstrap.addProtoBufClass(Puzzle.getDescriptor());
+        server.addProtoBufClass(BasicProtocol.class);
+        server.addProtoBufClass(Puzzle.class);
 
-        bootstrap.run();
+        server.run();
     }
 
 }
@@ -1289,33 +1276,31 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
 서버 프로젝트로 돌아와서 PuzzlePositionHandler.java 클래스 파일을 생성합니다. 그리고 받은 패킷을 그대로 방 안의 모든 유저들에게 전달하도록 broadcast 메서드를 사용합니다.
 
-```c#
+```java
 import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.node.game.RoomPacketHandler;
-import com.nhn.gameanvil.packet.Packet;
-import game.BasicRoom;
-import game.BasicUser;
+import com.nhn.gameanvil.node.game.RoomMessageHandler;
+import protocol.Puzzle;
 
-public class PuzzlePositionHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
+public class PuzzlePositionHandler implements RoomMessageHandler<BasicRoom, BasicUser, Puzzle.PuzzlePosition> {
 
     @Override
-    public void execute(BasicRoom room, BasicUser user, Packet packet) throws SuspendExecution {
-        room.broadcast(packet);
+    public void execute(BasicRoom room, BasicUser user, Puzzle.PuzzlePosition position) throws SuspendExecution {
+        room.broadcast(position);
     }
 }
 ```
 
 앞서 구현한 핸들러를 BasicRoom의 RoomDispacher에 등록하도록 합니다. 핸들러 클래스 파일을 작성했더라도 RoomDispatcher에 등록하지 않으면 메시지가 도착했을 때 해당 핸들러가 실행될 수 없습니다. 이제 BasicRoom은 BasicProtocol 외에도 PuzzlePosition 프로토콜을 처리할 수 있게 되었습니다.
 
-```c#
+```java
 public class BasicRoom extends BaseRoom<BasicUser> {
     private static final Logger logger = getLogger(BasicRoom.class);
     private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
     private Map<Integer, BaseUser> users = new HashMap<>();
 
     static {
-        dispatcher.registerMsg(BasicProtocol.MessageRequest.getDescriptor(), BasicHandler.class);
-        dispatcher.registerMsg(Puzzle.PuzzlePosition.getDescriptor(), PuzzlePositionHandler.class);
+        dispatcher.registerMsg(BasicProtocol.MessageRequest.class, BasicHandler.class);
+        dispatcher.registerMsg(Puzzle.PuzzlePosition.class, PuzzlePositionHandler.class);
     }
   
     ...생략...
@@ -1375,10 +1360,10 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 빌드된 
 
 BasicRoom에 puzzlePositions 맵을 추가합니다. 이 맵은 각 퍼즐 조각별 위치 정보를 관리합니다.
 
-```c#
+```java
 public class BasicRoom extends BaseRoom<BasicUser> {
-    private static final Logger logger = getLogger(BasicRoom.class);
-    private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
+
+    private static final RoomMessageDispatcher<BasicRoom, BasicUser> dispatcher = new RoomMessageDispatcher<>();
   
     private Map<Integer, BaseUser> users = new HashMap<>();
     public Map<Integer, Puzzle.PuzzlePosition> puzzlePositions = new HashMap<>();
@@ -1392,30 +1377,15 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 ```Java
 import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.node.game.RoomPacketHandler;
-import com.nhn.gameanvil.packet.Packet;
-import game.BasicRoom;
-import game.BasicUser;
-import org.slf4j.Logger;
+import com.nhn.gameanvil.node.game.RoomMessageHandler;
 import protocol.Puzzle;
 
-import java.io.IOException;
-
-import static org.slf4j.LoggerFactory.getLogger;
-
 public class PuzzlePositionHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
-    private static final Logger logger = getLogger(PuzzlePositionHandler.class);
+
     @Override
-    public void execute(BasicRoom room, BasicUser user, Packet packet) throws SuspendExecution {
-        try {
-            Puzzle.PuzzlePosition position = Puzzle.PuzzlePosition.parseFrom(packet.getStream());
-
-            room.puzzlePositions.put(position.getIndex(), position); // 맵에 위치 정보를 저장
-
-            room.broadcast(packet);
-        } catch (IOException e) {
-            logger.error("PuzzlePositionHandler::execute()", e);
-        }
+    public void execute(BasicRoom room, BasicUser user, Puzzle.PuzzlePosition position) throws SuspendExecution {
+        room.puzzlePositions.put(position.getIndex(), position); // 맵에 위치 정보를 저장
+        room.broadcast(position);
     }
 }
 
@@ -1423,15 +1393,12 @@ public class PuzzlePositionHandler implements RoomPacketHandler<BasicRoom, Basic
 
 새로운 유저가 방에 들어올 때, 저장해둔 퍼즐 위치 정보를 받을 수 있도록 BasicRoom의 onJoinRoom을 수정해서  서버에 저장해둔 퍼즐의 위치 정보를 전송하도록 합니다.
 
-```c#
+```java
 public class BasicRoom extends BaseRoom {
     @Override
     public boolean onJoinRoom(BasicUser basicUser, Payload inPayload, Payload outPayload) throws SuspendExecution {
-        users.put(basicUser.getUserId(), basicUser);
-
-        puzzlePositions.values().stream().forEach( puzzlePosition -> broadcast(new Packet(puzzlePosition))); // 퍼즐 위치 동기화
-
-        logger.debug("onJoinRoom(userId:{})", basicUser);
+        users.put(user.getUserId(), user);
+        puzzlePositions.values().stream().forEach(this::broadcast); // 퍼즐 위치 동기화
         return true;
     }
 }
@@ -1484,8 +1451,8 @@ message ScatterPuzzle { } // 퍼즐 섞기 요청 프로토콜
 유니티 프로젝트로 이동하여 GameManager.cs에 아래와 같이 섞기 요청을 위한 코드를 작성합니다. Scatter 메서드가 호출되면 유저 에이전트를 통해 새로운 ScatterPuzzle 타입의 메시지가 게임 룸으로 전송됩니다.
 
 ```csharp
-public GameManager : Monobehaviour{
-		public void Scatter(){
+public class GameManager : Monobehaviour {
+	public void Scatter() {
         	ConnectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).Send(new ScatterPuzzle());
     }
 }
@@ -1504,10 +1471,7 @@ public GameManager : Monobehaviour{
 
 ```Java
 import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.node.game.RoomPacketHandler;
-import com.nhn.gameanvil.packet.Packet;
-import game.BasicRoom;
-import game.BasicUser;
+import com.nhn.gameanvil.node.game.RoomMessageHandler;
 import org.slf4j.Logger;
 import protocol.Puzzle;
 
@@ -1520,7 +1484,7 @@ import java.util.stream.Stream;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ScatterPuzzleHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
+public class ScatterPuzzleHandler implements RoomMessageHandler<BasicRoom, BasicUser, Puzzle.ScatterPuzzle> {
     private static final Logger logger = getLogger(ScatterPuzzleHandler.class);
     private static final int mapSize = 400;
 
@@ -1535,11 +1499,12 @@ public class ScatterPuzzleHandler implements RoomPacketHandler<BasicRoom, BasicU
     }
 
     @Override
-    public void execute(BasicRoom room, BasicUser user, Packet packet) throws SuspendExecution {
+    public void execute(BasicRoom room, BasicUser user, Puzzle.ScatterPuzzle scatterPuzzle) throws SuspendExecution {
         room.puzzlePositions = new HashMap<>();
+        
         List<Point> random = IntStream.rangeClosed(-4, 4).boxed()
-                .map(i -> new Point(i * mapSize / 4, i%2==0 ? mapSize : -mapSize))
-                .collect(Collectors.toList());
+            .map(i -> new Point(i * mapSize / 4, i%2==0 ? mapSize : -mapSize))
+            .collect(Collectors.toList());
         random = Stream.concat(random.stream(), random.stream().map(p -> new Point(p.y, p.x))).collect(Collectors.toList());
         Collections.shuffle(random);
 
@@ -1552,7 +1517,7 @@ public class ScatterPuzzleHandler implements RoomPacketHandler<BasicRoom, BasicU
 
             room.puzzlePositions.put(i, puzzlePosition);
 
-            room.broadcast(new Packet(puzzlePosition));
+            room.broadcast(puzzlePosition);
         }
     }
 }
@@ -1564,17 +1529,17 @@ public class ScatterPuzzleHandler implements RoomPacketHandler<BasicRoom, BasicU
 ```java
 public class BasicRoom extends BaseRoom<BasicUser> {
     private static final Logger logger = getLogger(BasicRoom.class);
-    private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
-
+    private static final RoomMessageDispatcher<BasicRoom, BasicUser> dispatcher = new RoomMessageDispatcher<>();
+    
     private Map<Integer, BaseUser> users = new HashMap<>();
     public Map<Integer, Puzzle.PuzzlePosition> puzzlePositions = new HashMap<>();
 
+
     static {
-        dispatcher.registerMsg(BasicProtocol.MessageRequest.getDescriptor(), BasicHandler.class);
-        dispatcher.registerMsg(Puzzle.PuzzlePosition.getDescriptor(), PuzzlePositionHandler.class);
-        dispatcher.registerMsg(Puzzle.ScatterPuzzle.getDescriptor(), ScatterPuzzleHandler.class);
+        dispatcher.registerMsg(BasicProtocol.MessageRequest.class, BasicHandler.class); // 처리할 메시지에 대한 핸들러 등록
+        dispatcher.registerMsg(Puzzle.PuzzlePosition.class, PuzzlePositionHandler.class);
+        dispatcher.registerMsg(Puzzle.ScatterPuzzle.class, ScatterPuzzleHandler.class);
     }
-  
     ...생략...  
 }
 ```
@@ -1647,20 +1612,13 @@ onJoinRoom에 잘못 구현했던 퍼즐 위치 송신 코드를, 제대로 된 
 
 ```java
 import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.node.game.RoomPacketHandler;
-import com.nhn.gameanvil.packet.Packet;
-import game.BasicRoom;
-import game.BasicUser;
+import com.nhn.gameanvil.node.game.RoomMessageHandler;
 import protocol.Puzzle;
 
-import java.io.IOException;
-
-import static org.slf4j.LoggerFactory.getLogger;
-
-public class PuzzlePositionReqHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
+public class PuzzlePositionReqHandler implements RoomMessageHandler<BasicRoom, BasicUser, Puzzle.PuzzlePositionReq> {
     @Override
-    public void execute(BasicRoom room, BasicUser user, Packet packet) throws SuspendExecution {
-        room.puzzlePositions.values().stream().forEach( puzzlePosition -> room.broadcast(new Packet(puzzlePosition)));
+    public void execute(BasicRoom room, BasicUser user, Puzzle.PuzzlePositionReq req) throws SuspendExecution {
+        room.puzzlePositions.values().stream().forEach(room::broadcast);
     }
 }
 ```
@@ -1671,10 +1629,10 @@ public class PuzzlePositionReqHandler implements RoomPacketHandler<BasicRoom, Ba
 public class BasicRoom extends BaseRoom<BasicUser> {
 
     static {
-        dispatcher.registerMsg(BasicProtocol.MessageRequest.getDescriptor(), BasicHandler.class);
-        dispatcher.registerMsg(Puzzle.PuzzlePosition.getDescriptor(), PuzzlePositionHandler.class);
-        dispatcher.registerMsg(Puzzle.ScatterPuzzle.getDescriptor(), ScatterPuzzleHandler.class);
-        dispatcher.registerMsg(Puzzle.PuzzlePositionReq.getDescriptor(), PuzzlePositionReqHandler.class);
+        dispatcher.registerMsg(BasicProtocol.MessageRequest.class, BasicHandler.class); // 처리할 메시지에 대한 핸들러 등록
+        dispatcher.registerMsg(Puzzle.PuzzlePosition.class, PuzzlePositionHandler.class);
+        dispatcher.registerMsg(Puzzle.ScatterPuzzle.class, ScatterPuzzleHandler.class);
+        dispatcher.registerMsg(Puzzle.PuzzlePositionReq.class, PuzzlePositionReqHandler.class);
     }
   
     ...생략...
@@ -1703,7 +1661,8 @@ UserMatchInfo 클래스를 생성합니다. 파일명은 BasicUserMatchInfo으�
 이 클래스에는 매칭에 사용될 유저의 정보를 담게 됩니다. 매치메이킹에 사용될 요소가 있다면 여기에 추가하면 됩니다. 이번 예제에서는 별다른 요소를 추가하지 않고, 필수적으로 구현해야하는 메서드만을 작성해서 사용하겠습니다. 한 가지 주의할 점은 getId() 메서드가 반드시 요청한 유저의 아이디를 반환하게 구현하도록 합니다. 그리고 파티 매치메이킹 기능은 사용하지 않으므로 0을 반환하도록 설정합니다.
 
 ```java
-
+import com.nhn.gameanvil.annotation.RoomType;
+import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.node.match.BaseUserMatchInfo;
 
 import java.io.Serializable;
@@ -1717,7 +1676,7 @@ public class BasicUserMatchInfo extends BaseUserMatchInfo implements Serializabl
     public BasicUserMatchInfo(int id) {
         this.id = id;
     }
-  
+
     @Override
     public int getId() {
         return id;
@@ -1750,10 +1709,10 @@ public class BasicUser extends BaseUser {
 
     @Override
     public boolean onMatchUser(String roomType, String matchingGroup, Payload payload, Payload outPayload) throws SuspendExecution {
-        try {
+   try {
             BasicUserMatchInfo term = new BasicUserMatchInfo(getUserId());
-            return matchUser(matchingGroup, roomType, term, payload); // 유저 매치 메이킹 요청          
-        } catch (NodeNotFoundException | TimeoutException e) {
+            return matchUser(matchingGroup, roomType, term); // 유저 매치 메이킹 요청
+        } catch (Exception e) {
             logger.error("BasicUser::onMatchUser()", e);
         }
         return false;
@@ -1773,6 +1732,8 @@ getMatchRequests는 인자로 매칭을 위한 최소 인원수를 받아서 현
 만일 매칭에 충분한 요청이 쌓이지 않았거나, 조건에 맞는 대상이 없을 경우에는 null을 반환합니다. 이 경우에는 다음 1초 후의 match 호출에서 다시 동일한 매칭 검색이 수행됩니다.
 
 ```Java
+import com.nhn.gameanvil.annotation.RoomType;
+import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.node.match.BaseUserMatchMaker;
 import org.slf4j.Logger;
 
@@ -1784,9 +1745,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 @RoomType("BASIC_ROOM")
 public class BasicUserMatchMaker extends BaseUserMatchMaker<BasicUserMatchInfo> {
     private static final Logger logger = getLogger(BasicUserMatchMaker.class);
-		private static final int NUM_USER = 2;
-  	private static final int TIMEOUT = 10000;
-  
+    private static final int NUM_USER = 2;
+    private static final int TIMEOUT = 10000;
+
     public BasicUserMatchMaker() {
         super(NUM_USER, TIMEOUT);
     }
@@ -1870,6 +1831,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태
 유저가 매치메이킹 요청을 할 때마다 BasicRoomMatchForm 객체가 생성되어 사용됩니다. 생성자에서 부모 생성자로 전달하는  "BASIC_MATCHING_USER_CATEGORY"는 이 문서에서는 신경쓰지 않아도 됩니다.
 
 ```java
+import com.nhn.gameanvil.node.match.BaseRoomMatchForm;
 import java.io.Serializable;
 
 public class BasicRoomMatchForm extends BaseRoomMatchForm implements Serializable {
@@ -1932,6 +1894,11 @@ public class BasicRoomMatchMaker extends BaseRoomMatchMaker<BasicRoomMatchForm, 
     }
 
     @Override
+    public void onPostMatch(BasicRoomMatchForm basicRoomMatchForm, BasicRoomMatchInfo basicRoomMatchInfo, Object... objects) {
+
+    }
+
+    @Override
     public int compare(BasicRoomMatchInfo o1, BasicRoomMatchInfo o2) {
         int o1UserCount = getUserCount(o1.getRoomId());
         int o2UserCount = getUserCount(o2.getRoomId());
@@ -1940,20 +1907,19 @@ public class BasicRoomMatchMaker extends BaseRoomMatchMaker<BasicRoomMatchForm, 
         } else if (o1UserCount < o2UserCount) {
             return 1;
         } else {
-          return 0;
+            return 0;
         }
     }
-    
+
     @Override
     public void onIncreaseUserCount(int roomId, String matchingUserCategory, int currentUserCount) {
-    
+
     }
 
     @Override
     public void onDecreaseUserCount(int roomId, String matchingUserCategory, int currentUserCount) {
 
     }
-    
 }
 ```
 
@@ -1996,17 +1962,17 @@ public class BasicRoom extends BaseRoom<BasicUser> {
     ...생략...
 
     @Override
-    public boolean onCreateRoom(BasicUser basicUser, Payload inPayload, Payload outPayload) throws SuspendExecution {
-        users.put(basicUser.getUserId(), basicUser);
+    public boolean onCreateRoom(BasicUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
+        users.put(user.getUserId(), user);
 
         BasicRoomMatchInfo gameRoomMatchInfo = new BasicRoomMatchInfo(getId());
         try {
-            registerRoomMatch(gameRoomMatchInfo, "BASIC_MATCHING_USER_CATEGORY", basicUser.getUserId(), users.size()); // 방을 룸 매치메이킹 대상으로 등록
+            registerRoomMatch(gameRoomMatchInfo, "BASIC_MATCHING_USER_CATEGORY", user.getUserId()); // 방을 룸 매치메이킹 대상으로 등록
         } catch (Exception e) {
             logger.error("BasicRoom::onCreateRoom():registerRoomMatch", e);
         }
 
-        logger.debug("onCreateRoom(userId:{})", basicUser);
+        logger.debug("onCreateRoom(userId:{})", user);
         return true;
     }
   
@@ -2022,17 +1988,17 @@ public class BasicRoom extends BaseRoom<BasicUser> {
     ...생략...
 
     @Override
-    public boolean onJoinRoom(BasicUser basicUser, Payload inPayload, Payload outPayload) throws SuspendExecution {
-        users.put(basicUser.getUserId(), basicUser);
+    public boolean onJoinRoom(BasicUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
+        users.put(user.getUserId(), user);
 
         BasicRoomMatchInfo gameRoomMatchInfo = new BasicRoomMatchInfo(getId());
         try {
-            updateRoomMatch(gameRoomMatchInfo); 
+            updateRoomMatch(gameRoomMatchInfo);
         } catch (Exception e) {
             logger.error("BasicRoom::onCreateRoom():registerRoomMatch", e);
         }
 
-        logger.debug("onJoinRoom(userId:{})", basicUser);
+        logger.debug("onJoinRoom(userId:{})", user);
         return true;
     }
 }
@@ -2093,7 +2059,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이 상태에서 방을 
 마지막으로 방을 떠나는 기능 구현을 위해 Unity 클라이언트의 GameManager에 아래 메서드를 추가합니다.
 
 ```c#
-public void LeaveRoom(){
+public void LeaveRoom() {
 		ConnectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).LeaveRoom((userAgent, resultCode, force, roomId, payload) =>{
       	if(resultCode == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS){
       		Destroy(connectHandler.gameObject);
