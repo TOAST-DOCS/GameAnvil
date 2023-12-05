@@ -30,6 +30,7 @@ throws SuspendExecution
 
 AOT(ahead-of-time) Instrumentation을 진행하고 싶다면 아래의 내용을 프로젝트 객체 관리 파일(pom.xml)에 추가한 후, Maven을 통해 서버 바이너리를 package나 install 혹은 deploy하면 컴파일 완료 후 Instrumentation을 진행합니다. 이 경우에는 당연히 첫째 경우처럼 VM 옵션에서 javaagent가 필요하지 않습니다.
 
+#### maven
 ```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
@@ -57,3 +58,31 @@ AOT(ahead-of-time) Instrumentation을 진행하고 싶다면 아래의 내용을
 </plugin>
 ```
 
+#### gradle
+```gradle
+// gradle 4.10.3 에서 테스트하였음
+// apply plugin: 'java-library'
+
+configurations {
+    quasar
+	api.setCanBeResolved(true)
+	all {
+		resolutionStrategy {
+			force 'com.esotericsoftware:kryo:4.0.2'
+		}
+	}
+}
+
+compileJava {
+    dependsOn.processResources
+
+    doLast {
+        ant.taskdef(name: 'instrumentation', classname: 'co.paralleluniverse.fibers.instrument.InstrumentationTask', classpath: configurations.api.asPath)
+        ant.instrumentation(verbose: 'true', check: 'true', debug: 'true') {
+            fileset(dir: 'build/classes/') {
+                include(name: '**/*.class')
+            }
+        }
+    }
+}
+```
