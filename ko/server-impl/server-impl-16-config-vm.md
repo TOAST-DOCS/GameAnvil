@@ -75,6 +75,10 @@ GameAnvilConfig은 서버를 유연하게 구성하기 위해 매우 많은 수�
 | replicaSize | 복제 그룹의 크기 master + slave의 개수                       | -      |
 | shardFactor | sharding을 위한 인수 <br />-전체 shard의 개수 = clusterSize x replicaSize x shardFactor <br />-하나의 머신(VM)에서 구동할 shard의 개수 = replicaSize x shardFactor <br />-고유한 shard의 총 개수 (master 샤드의 개수) = clusterSize x shardFactor | -      |
 
+### Location Cluster
+
+master 로케이션 노드로 요청하여 유저와 룸 등의 위치 정보를 조회할 수 있습니다. 단, 모든 로케이션 노드가 클러스터링이 완료된 이후에만 요청을 보낼 수 있습니다. 로케이션 노드를 사용하는 것으로 설정한 경우 엔진 내부에서는 로케이션 노드를 구동하고 모든 로케이션 노드가 클러스터링이 완료되었는지 체크합니다. 일정 시간 내에 전체 클러스터링이 완료되지 않으면 에러 로그를 남깁니다.
+
 ### Location Fail-over
 
 replicaSize를 2 이상으로 설정하는 경우, master 로케이션 노드와 slave 로케이션 노드가 존재하게 됩니다. 만약 master 로케이션 노드가 죽은 경우 slave 로케이션 노드가 master의 역할을 대체하도록 location fail-over 기능이 구현되어 있습니다. master 로케이션 노드가 있던 서버를 재구동하는 경우에는 VmOption에 `-Dresumed=true`를 추가하여 구분될 수 있도록 합니다. 이 때 재구동되는 로케이션 노드는 모두 slave로 구동됩니다.
