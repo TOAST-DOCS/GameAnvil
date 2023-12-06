@@ -81,7 +81,7 @@ master 로케이션 노드로 요청하여 유저와 룸 등의 위치 정보를
 
 ### Location Fail-over
 
-replicaSize를 2 이상으로 설정하는 경우, master 로케이션 노드와 slave 로케이션 노드가 존재하게 됩니다. 만약 master 로케이션 노드가 죽은 경우 slave 로케이션 노드가 master의 역할을 대체하도록 location fail-over 기능이 구현되어 있습니다. master 로케이션 노드가 있던 서버를 재구동하는 경우에는 VmOption에 `-Dresumed=true`를 추가하여 구분될 수 있도록 합니다. 이 때 재구동되는 로케이션 노드는 모두 slave로 구동됩니다.
+replicaSize를 2 이상으로 설정하는 경우, master 로케이션 노드와 slave 로케이션 노드가 존재하게 됩니다. 만약 master 로케이션 노드가 죽은 경우 slave 로케이션 노드가 master의 역할을 대체하도록 location fail-over 기능이 구현되어 있습니다. master 로케이션 노드가 있던 서버를 재구동하는 경우에는 VmOption에 `-DrestartedAfterDown=true`를 추가하여 구분될 수 있도록 합니다. 이 때 재구동되는 로케이션 노드는 모두 slave로 구동됩니다.
 
 ### 2.3. match
 
