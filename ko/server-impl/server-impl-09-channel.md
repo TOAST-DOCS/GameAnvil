@@ -321,7 +321,7 @@ public void onChannelInfo(Payload outPayload) throws SuspendExecution {
 	}
 
     // outPayload에 클라이언트에게 보낼 채널 정보를 추가합니다.
-	outPayload.add(new Packet(channelInfoBuilder));
+	outPayload.add(channelInfoBuilder);
 }
 ```
 

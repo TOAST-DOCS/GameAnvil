@@ -275,7 +275,6 @@ Connect() 함수에서는 connector를 통해 ConnectionAgent 객체를 참조�
 - onPostLogin : 로그인 이후에 실행 되는 콜백입니다.
 - onReLogin : 이미 로그인 된 바 있는 유저에 대해서 또 다시 로그인 요청이 오는 경우는 이 콜백에서 따로 처리할 수 있습니다.
 - onDisconnect : 클라이언트 요청에 따른 로그아웃 또는 서버에 의한 강제 로그아웃에 의해서 서버에 등록된 유저 정보와 연결이 끊어졌을 때 호출되는 콜백입니다.
-- onDispatch : 룸 또는 또다른 유저로부터 해당 유저에게 패킷이 전달 되었을 때 호출되는 콜백입니다.
 
 이외의 콜백 함수들은 로그인 과정에 관여하지 않으므로 당장 모든 콜백이 무슨 의미인지 완벽하게 알아야 할 필요는 없습니다. 
 
@@ -535,16 +534,16 @@ import com.nhn.gameanvil.node.game.data.BaseChannelRoomInfo;
 import com.nhn.gameanvil.node.game.data.BaseChannelUserInfo;
 import com.nhn.gameanvil.node.game.data.ChannelUpdateType;
 import com.nhn.gameanvil.packet.Packet;
-import com.nhn.gameanvil.packet.PacketDispatcher;
+import com.nhn.gameanvil.packet.message.MessageDispatcher;
 import com.nhn.gameanvil.packet.Payload;
 
 @ServiceName("BASIC_SERVICE")
 public class BasicGameNode extends BaseGameNode {
 
-    private static PacketDispatcher packetDispatcher = new PacketDispatcher();
+    private static final MessageDispatcher<BasicGameNode> messageDispatcher = new MessageDispatcher<>();
 
     static {
-        // packetDispatcher.registerMsg();
+        // messageDispatcher.registerMsg();
     }
 
     @Override
@@ -563,9 +562,8 @@ public class BasicGameNode extends BaseGameNode {
     }
 
     @Override
-    public void onDispatch(Packet packet) throws SuspendExecution {
-        if (packetDispatcher.isRegisteredMessage(packet))
-            packetDispatcher.dispatch(this, packet);
+    public MessageDispatcher<BasicGameNode> getMessageDispatcher() {
+        return messageDispatcher;
     }
 
     @Override
@@ -1002,8 +1000,8 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
     ...생략...
 
-    public void broadcast(com.google.protobuf.GeneratedMessageV3 packet) {
-        users.values().stream().forEach(user -> user.send(packet));
+    public void broadcast(com.google.protobuf.GeneratedMessageV3 message) {
+        users.values().stream().forEach(user -> user.send(message));
     }
 
 }
@@ -1011,18 +1009,15 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 실행될 내용, 즉, execute 메서드 내부 구현은 아래와 같이 작성합니다. 아래의 핸들러 예제 구현에서는 수신한 메시지에 대해 송신자에게 응답 메시지를 전송함과 더불어 방 전체 유저에게 방 단위 브로드캐스트용 메시지를 추가로 송신합니다. 이 때, 클라이언트는 방 단위 브로드캐스트 메시지를 기준으로 게임을 동기화 하도록 구현되어 있습니다.
 
-```Java
+```java
 import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.node.game.RoomPacketHandler;
-import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.node.game.RoomMessageHandler;
 import org.slf4j.Logger;
 import protocol.BasicProtocol;
 
-import java.io.IOException;
-
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class BasicHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
+public class BasicHandler implements RoomMessageHandler<BasicRoom, BasicUser, BasicProtocol.MessageRequest> {
     private static final Logger logger = getLogger(BasicHandler.class);
   
   	@Override
@@ -1189,6 +1184,7 @@ public class ConnectHandler : MonoBehaviour {
 ```
 
 <br>
+
 ### 8.3. 클라이언트 측 전송 구현
 
 이제 게임을 위한 프로토콜 정의 및 등록까지 모두 마쳤습니다. 지금부터는 이러한 프로토콜에 기반한 메시지를 실제 전송하는 기능을 구현 합니다. 우선 클라이언트 측에서 데이터를 전송하는 부분을 먼저 구현합니다. 퍼즐 조각을 드래그 하는 동안 그 위치를 서버로 전송해 보겠습니다.
@@ -1287,7 +1283,7 @@ public class PuzzlePositionHandler implements RoomMessageHandler<BasicRoom, Basi
 ```java
 public class BasicRoom extends BaseRoom<BasicUser> {
     private static final Logger logger = getLogger(BasicRoom.class);
-    private static RoomPacketDispatcher dispatcher = new RoomPacketDispatcher();
+    private static RoomMessageDispatcher<BasicRoom, BasicUser> dispatcher = new RoomMessageDispatcher<>();
     private Map<Integer, BaseUser> users = new HashMap<>();
 
     static {
@@ -1372,7 +1368,7 @@ import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.node.game.RoomMessageHandler;
 import protocol.Puzzle;
 
-public class PuzzlePositionHandler implements RoomPacketHandler<BasicRoom, BasicUser> {
+public class PuzzlePositionHandler implements RoomMessageHandler<BasicRoom, BasicUser, Puzzle.PuzzlePosition> {
 
     @Override
     public void execute(BasicRoom room, BasicUser user, Puzzle.PuzzlePosition position) throws SuspendExecution {

@@ -21,7 +21,7 @@ private static final MessageDispatcher<MY_USER_CLASS> messageDispatcher = new Me
 ```java
 // 처리하고 싶은 메시지와 핸들러를 매핑
 static {
-    packetDispatcher.registerMsg(MyProto.MyMsg.class, _MyMsgHandler.class);
+    messageDispatcher.registerMsg(MyProto.MyMsg.class, _MyMsgHandler.class);
 }
 ```
 
