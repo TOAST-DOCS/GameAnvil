@@ -244,12 +244,12 @@ public class GameRoom extends BaseRoom<GameUser> {
 
 ## 3. 채널 정보 동기화
 
-동일한 채널의 게임 노드는 서로 채널 관련 정보를 공유합니다. 예를 들면 같은 채널에 속한 하나의 게임 노드에서 앞서 살펴본 방식으로 유저나 방 정보가 변경되면 해당 채널의 나머지 게임 노드는 다음과 같은 콜백 메서드가 호출됩니다. 이러한 콜백을 이용하여 동일한 채널 내의 모든 게임 노드가 정보를 동기화활 수 있습니다. 다음은 게임 노드에서 이러한 채널 동기화를 위해 사용되는 콜백 메서드입니다.
+동일한 채널의 게임 노드는 서로 채널 관련 정보를 공유합니다. 예를 들면 같은 채널에 속한 하나의 게임 노드에서 앞서 살펴본 방식으로 유저나 방 정보가 변경되면 해당 채널의 나머지 게임 노드는 다음과 같은 콜백 메서드가 호출됩니다. 이러한 콜백을 이용하여 동일한 채널 내의 모든 게임 노드가 정보를 동기화할 수 있습니다. 다음은 게임 노드에서 이러한 채널 동기화를 위해 사용되는 콜백 메서드입니다.
 
 ```java
  	/**
      * 같은 채널의 다른 노드에서 유저 변화가 발생할 때 호출
-     * 즉, updateChannelUser() API 호출시 발생
+     * 즉, updateChannelUser() API 호출 시 발생
      *
      * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
      * @param channelUserInfo 변경될 User 정보 전달.
@@ -263,12 +263,12 @@ public class GameRoom extends BaseRoom<GameUser> {
 
     /**
      * 같은 채널의 다른 노드에서 방 상태 변화가 발생할 때 호출
-     * 즉, updateChannelRoomInfo() API 호출시 발생
+     * 즉, updateChannelRoomInfo() API 호출 시 발생
      *
      * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
      * @param channelRoomInfo 변경될 Room 정보 전달.
      * @param roomId          변경 대상의 Room Id 전달.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @throws SuspendExecution이 메서드는 파이버가 suspend 될 수 있다.
      */
     @Override
     public void onChannelRoomInfoUpdate(ChannelUpdateType type, ChannelRoomInfo channelRoomInfo, final int roomId) throws SuspendExecution {  
@@ -277,8 +277,8 @@ public class GameRoom extends BaseRoom<GameUser> {
     /**
      * 클라이언트에서 채널 정보 요청 시 호출
      *
-     * @param outPayload Client 로 전달될 Channel 정보 전달.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param outPayload Client로 전달될 Channel 정보 전달.
+     * @throws SuspendExecution이 메서드는 파이버가 suspend 될 수 있다.
      */
     @Override
     public void onChannelInfo(Payload outPayload) throws SuspendExecution {  
