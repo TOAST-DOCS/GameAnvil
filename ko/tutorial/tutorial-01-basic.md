@@ -139,7 +139,11 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
 
 Project 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다면 `Add SDK > Download JDK`를 통해서 원하는 버전의 JDK를 다운로드해 설정합니다. Language level은 SDK default로 설정합니다. 다음으로 Modules 탭에서 Language level을 Project default로 설정합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/project_structure.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/project_structure_1213.png)
+
+설정 메뉴에서 gradle 에서 사용하는 JVM 을 확인합니다. 프로젝트 SDK 와 동일한 gradle 버전으로 설정합니다.
+
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gradle_sdk_config_1213.png)
 
 ### 서버 구동
 

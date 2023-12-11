@@ -34,7 +34,7 @@
 
 [튜토리얼용 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Tutorial%20Project_1213.zip?disposition=attachment)
 
-처음 프로젝트를 열면 아래와 같이 메이븐을 통해 스크립트를 실행할 수 있도록 허용할 것인지 물어보는 프롬프트가 나타날 수 있습니다. Trust Project를 선택해서 온전한 프로젝트를 열 수 있도록 하겠습니다.
+처음 프로젝트를 열면 아래와 같이 Gradle 을 통해 스크립트를 실행할 수 있도록 허용할 것인지 물어보는 프롬프트가 나타날 수 있습니다. Trust Project를 선택해서 온전한 프로젝트를 열 수 있도록 하겠습니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/trust_project.png)
 
@@ -45,6 +45,17 @@
 - GameAnvilConfig.json : 게임엔빌 구동에 필요한 서버 설정 정보를 기록한 파일입니다. 서버 구현에 맞게 수정할 수 있습니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/gameanvil_projectview_init.png)
+
+먼저 jdk 설정을 확인하겠습니다. 좌상단 메뉴에서 `File > Project Structure`를 선택하여 `Project Structure` 창을 엽니다. 맥 사용자의 경우 `Command + ;` 단축키를 사용할 수 있습니다. 
+
+Project 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다면 `Add SDK > Download JDK`를 통해서 원하는 버전의 JDK를 다운로드해 설정합니다. Language level은 SDK default로 설정합니다. 다음으로 Modules 탭에서 Language level을 Project default로 설정합니다.
+
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/project_structure_1213.png)
+
+설정 메뉴에서 gradle 에서 사용하는 JVM 을 확인합니다. 프로젝트 SDK 와 동일한 gradle 버전으로 설정합니다.
+
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gradle_sdk_config_1213.png)
+
 
 프로젝트 준비가 거의 끝났지만, 아직 실행을 위해서 설정해주어야 하는 것들이 남았습니다. 우선은 클라이언트 프로젝트 생성을 먼저 한 후에 서버 설정을 마치고 실행하도록 하겠습니다.
 <br>
