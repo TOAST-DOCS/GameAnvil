@@ -29,7 +29,7 @@ MyChatNode extends gameanvil.GameNode {
 
 ## 2. 채널
 
-채널은 하나의 서비스를 논리적으로 나눌 수 있는 방법을 제공합니다. 단, GameNode에 한해서만 사용 가능하며 채널명은 어떤 문자열이든 사용 가능합니다. 더욱 상세한 설명은 [Game > GameAnvil > 서버 개발 가이드 > 채널](server-09-channel.md)의 내용을 참고 하십시오.
+채널은 하나의 서비스를 논리적으로 나눌 수 있는 방법을 제공합니다. 단, GameNode에 한해서만 사용 가능하며 채널명은 어떤 문자열이든 사용 가능합니다. 더욱 상세한 설명은 [Game > GameAnvil > 서버 개발 가이드 > 채널](../server-impl/server-impl-09-channel.md)의 내용을 참고 하십시오.
 
 
 ## 3. 서비스 관리
