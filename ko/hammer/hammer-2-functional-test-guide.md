@@ -6,7 +6,7 @@ GameHammer를 사용하기 위한 기본 모듈입니다. 기본 설정과 Conne
 
 ```
 Tester tester = Tester.newBuilder()
-                    .addProtoBufClass(0, RPSGame.getDescriptor())
+                    .addProtoBufClass(RPSGame.getDescriptor())
                     .build();
 ```
 
@@ -14,7 +14,7 @@ Tester tester = Tester.newBuilder()
 
 ```
 Tester tester = Tester.newBuilderWithConfig()
-                    .addProtoBufClass(0, RPSGame.getDescriptor())
+                    .addProtoBufClass(RPSGame.getDescriptor())
                     .build();
 ```
 
@@ -35,7 +35,7 @@ Connection은 다음과 같은 기능을 제공합니다.
 GameAnvil 서버에 연결합니다.
 
 ```
-Future<ResultConnect> future = connection.connect(new RemoteInfo("127.0.0.1", 11200));
+Future<ResultConnect> future = connection.connect(new RemoteInfo("127.0.0.1", 18200));
 ResultConnect resultConnect = futre.get(); // blocked
 if(resultConnect.isSuccess()){
     // connect success

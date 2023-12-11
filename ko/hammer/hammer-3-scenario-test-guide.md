@@ -207,9 +207,9 @@ ScenarioMachine으로 하나의 시나리오를 정의하며, 하나의 시나�
 
 ```java
 ScenarioMachine<STATE, EVENT> scenario = new ScenarioMachine("Sample A");
-scenario.setState(new StateA(scenario, STATE.A));
-scenario.setState(new StateB(scenario, STATE.B));
-scenario.setState(new StateC(scenario, STATE.C));
+scenario.addState(new StateA());
+scenario.addState(new StateB());
+scenario.addState(new StateC());
 ```
 
 ##### ScenarioTest
