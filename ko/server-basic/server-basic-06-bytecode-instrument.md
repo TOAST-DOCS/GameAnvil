@@ -20,9 +20,13 @@ throws SuspendExecution
 -javaagent:MY_PATH\quasar-core-0.7.10-jdk8.jar=bm
 ```
 
+```
+-javaagent:MY_PATH\quasar-core-0.8.0-jdk11.jar=bm
+```
+
 ### Note
 
-*이 항목은 반드시 VM 옵션의 가장 앞 부분에 추가해야 합니다. 이때, quasar-core의 경로는 본인의 quasar-core를 복사해둔 경로로 설정하세요.*
+*이 항목은 반드시 VM 옵션의 가장 앞 부분에 추가해야 합니다. 이 때, quasar-core의 경로는 본인의 quasar-core를 복사해둔 경로로 설정하세요.*
 
 
 
@@ -66,11 +70,6 @@ AOT(ahead-of-time) Instrumentation을 진행하고 싶다면 아래의 내용을
 configurations {
     quasar
 	api.setCanBeResolved(true)
-	all {
-		resolutionStrategy {
-			force 'com.esotericsoftware:kryo:4.0.2'
-		}
-	}
 }
 
 compileJava {
