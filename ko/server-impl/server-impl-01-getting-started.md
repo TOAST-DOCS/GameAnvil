@@ -97,7 +97,7 @@ public class SampleGatewayNode extends BaseGatewayNode {
 | onPause    | 일시 정지          | 노드를 일시 정지하면 호출됩니다. 사용자는 노드가 일시 정지될 때 추가로 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                                            |
 | onResume   | 재개               | 노드가 일시 정지 상태에서 다시 구동을 재개할 때 호출됩니다. 사용자는 재개 상태에서 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                                     |
 | onShutdown | 노드 정지          | 노드가 완전히 중지될 때 호출됩니다. 중지된 노드는 재개(Resume)할 수 없습니다.                                                                                                 |
-| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher-콜백-구현)를 참고하세요. |
+| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하세요. |
 
 
 

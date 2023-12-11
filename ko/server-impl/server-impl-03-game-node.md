@@ -476,7 +476,7 @@ GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저
 | onPostMoveOutChannel     | 기존 채널에서 다른 채널로 이동 준비 완료 | onMoveOutChannel이 성공하면 후처리를 위해 호출됩니다.                                                                                                                    |
 | onMoveInChannel          | 새로운 채널로 이동 처리                  | 유저가 다른 채널로 이동할 때, 대상 노드에서 호출됩니다. 사용자는 임의의 정보를 outPayload에 담아서 클라이언트로 전달할 수 있습니다.                                                                         |
 | onPostMoveInChannel      | 새로운 채널로 이동 완료                  | onMoveInChannel이 성공하면 후처리를 위해 호출됩니다.                                                                                                                     |
-| getMessageDispatcher | 처리할 패킷이 있음 | 처리할 메세지가 있을 때 반환시킵니다. 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher-콜백-구현)를 참고하세요.            |
+| getMessageDispatcher | 처리할 패킷이 있음 | 처리할 메세지가 있을 때 반환시킵니다. 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하세요.            |
 
 ### 3.1. 로그인이란?
 
@@ -701,7 +701,7 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
 | onPause                | 일시 정지                        | 콘솔을 통해 GameNode를 일시 정지하면 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 방에서 추가로 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                                                   |
 | onResume               | 재개                             | 콘솔을 통해 GameNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 재개 상태에서 방에 대해 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                                          |
 | onMatchParty           | 파티 매치메이킹 요청             | 사용자가 파티 매치메이킹을 요청하면 호출됩니다. 파티 매치메이킹은 임의의 NamedRoom을 파티 용도로 생성한 후, 방 안의 모든 유저가 하나의 파티로 매칭을 요청하는 기능입니다. 사용자는 이 콜백에서 엔진이 제공하는 파티 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                      |
-| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다. 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher-콜백-구현)를 참고하세요.                                                                                                                       |
+| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다. 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하세요.                                                                                                                       |
 
 ## 5. 방 종류
 

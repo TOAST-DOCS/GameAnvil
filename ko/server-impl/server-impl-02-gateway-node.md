@@ -134,7 +134,7 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
 | onPause        | 일시 정지           | 콘솔을 통해 GatewayNode를 일시 정지하면 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 커넥션에서 추가로 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                             |
 | onResume       | 재개                | 콘솔을 통해 GatewayNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 재개 상태에서 커넥션에 대해 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                              |
 | onDisconnect   | 접속 종료           | 클라이언트로부터 접속이 끊겼을 때 호출됩니다. 이 때, 추가로 처리할 코드를 이 곳에 구현합니다.                                                                                                                                                           |
-| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher-콜백-구현)를 참고하세요. |
+| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하세요. |
 
 
 
@@ -197,7 +197,7 @@ public class SampleSession extends BaseSession {
 | onPreLogin   | 로그인 전처리       | GameNode에 로그인을 요청하기 직전에 호출됩니다. 이 때, 사용자는 매개변수로 전달된 출력용 페이로드(outPayload)에 임의의 값을 넣어서 로그인 요청에 실어 보낼 수 있습니다. 이 페이로드는 게임 노드에서 로그인 콜백을 처리할 때 그대로 전달됩니다. |
 | onPostLogin  | 로그인 후처리       | GameNode에 로그인을 완료한 후 호출됩니다. 로그인 완료 후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                                                                    |
 | onPostLogout | 로그아웃 후처리     | 로그 아웃 처리가 완료된 후 호출됩니다. 로그 아웃 이후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                                                                       |
-| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher-콜백-구현)를 참고하세요. |
+| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메세지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메세지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하세요. |
 
 
 
