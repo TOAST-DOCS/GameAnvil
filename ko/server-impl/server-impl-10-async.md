@@ -16,7 +16,7 @@ import com.nhn.gameanvil.async.Async;
 
 ### Note
 
-*모든 비동기 지원 API에 대한 설명은 [GameAnvil API Reference](https://gameplatform.toast.com/docs/api/com/nhn/gameanvil/async/Async.html)에서 JavaDoc으로 작성된 문서를 확인할 수 있습니다.*
+*모든 비동기 지원 API에 대한 설명은 [GameAnvil API Reference](https://gameplatform.nhncloud.com/docs/api/gameanvil/1.4/com/nhn/gameanvil/async/Async.html)에서 JavaDoc으로 작성된 문서를 확인할 수 있습니다.*
 
 
 
@@ -78,7 +78,7 @@ void runningBlockingMethod() { // NOT suspendable
 
 그동안 어떤 종류의 Redis 클라이언트를 사용할지는 전적으로 GameAnvil 사용자의 선택이었습니다. 하지만 이로 인해 Redis 관련 이슈의 종류와 복잡도가 사용자가 선택한 Redis 클라이언트 종류와 사용 방식의 차이에 비례해서 증가한다는 사실을 알게 되었습니다. 우리는 이를 방지하고자 GameAnvil의 기본적인 가이드라인에 Redis 클라이언트에 관한 사용법을 포함하기로 결정했습니다. 이 가이드라인은 GameAnvil에서 지원하는 Redis 클라이언트의 종류와 그 기본적인 사용법을 API화하여 통일시키는 것을 목표로 합니다. 물론 제공되는 API가 아닌 다른 종류의 Redis 클라이언트를 선택해서 별도로 사용하는 것도 가능하지만 틀별한 이유가 없다면 지양하길 권합니다.
 
-### **[Note]**
+### **Note**
 
 *이후의 내용에서 GameAnvil에서 제공하는 Lettuce 클래스와 제품명인 "Lettuce"를 구분하기 위해 전자의 경우는 가능한 "Lettuce 클래스"라고 표기하고 일부 내용상 필요에 의해 그냥 "Lettuce"로 표기할 수도 있습니다. 이와 구분하기 위해 제품명은 전체 대문자 ***LETTUCE***로 표기합니다. 이 글에서 설명하는 LETTUCE는 GameAnvil에서의 사용 방법에 포커스를 두기 때문에 그 이상의 설명이 필요할 경우에는 [LETTUCE 공식 페이지](https://github.com/lettuce-io/lettuce-core)를 참고하세요.*
 
@@ -235,9 +235,9 @@ Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 �
 - RedisAdvancedClusterAsyncCommands
 - RedisAsyncCommands
 
-아래의 예제들은 이런 AsyncCommands 객체를 이용하여 mget을 수행하는 예제들입니다. LETTUCE의 비동기 처리는 기본적으로 RedisFuture를 사용하고 이 RedisFuture는 CompletableFuture입니다. CompletableFuture에 대한 자세한 내용은 [Java 공식 레퍼런스](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에서 확인 가능합니다. 참고로 아래의 예제들은 LETTUCE에 대한 비동기 처리의 극히 일부 방식만을 보여주고 있으므로 그대로 사용하기 보다는 개발중인 코드에 알맞게 작성하세요. 완벽한 비동기 코드의 제어를 위해서는 반드시 [LETTUCE](https://github.com/lettuce-io/lettuce-core)와 [CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에 대한 내용을 숙지해야 합니다.
+아래의 예제들은 이런 AsyncCommands 객체를 이용하여 mget을 수행하는 예제들입니다. LETTUCE의 비동기 처리는 기본적으로 RedisFuture를 사용하고 이 RedisFuture는 CompletableFuture입니다. CompletableFuture에 대한 자세한 내용은 [Java 공식 레퍼런스](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에서 확인 가능합니다. 참고로 아래의 예제들은 LETTUCE에 대한 비동기 처리의 극히 일부 방식만을 보여주고 있으므로 그대로 사용하기 보다는 개발 중인 코드에 알맞게 작성하세요. 완벽한 비동기 코드의 제어를 위해서는 반드시 [LETTUCE](https://github.com/lettuce-io/lettuce-core)와 [CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에 대한 내용을 숙지해야 합니다.
 
-### **[Note]**
+### **Note**
 
 thenApply()와 thenAccept() 등은 임의의 외부 스레드에서 호출되므로 Node에서 관리하는 내부 리소스에 대한 접근을 하거나 리소스에 대한 Lock을 사용하면 안됩니다.
 
@@ -247,7 +247,7 @@ thenApply()와 thenAccept() 등은 임의의 외부 스레드에서 호출되므
 Lettuce.awaitFuture(asyncCommands.mget("key1", "key2"));
 ```
 
-- 예제2> 이 후의 코드 흐름과 상관없는 경우 future chain으로 외부 스레드에 처리를 위임 (즉, mget으로 값 획득을 완료할 때까지 대기할 필요가 없을 경우)
+- 예제2> 이후의 코드 흐름과 상관 없는 경우 future chain으로 외부 스레드에 처리를 위임 (즉, mget으로 값 획득을 완료할 때까지 대기할 필요가 없을 경우)
 
 ```java
 RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
@@ -299,7 +299,7 @@ Async.awaitFuture(future.get()); // 파이버 상에서 해당 future를 대기�
 GameAnvil에서 제공하는 Http API는 요청과 응답을 위한 HttpRequest, HttpResponse 클래스 그리고 결과에 대한 일반적인 처리를 위한 HttpResultTemplate 클래스로 이루어집니다. 이 클래스들을 이용하면 간단하고 직관적으로 Http 요청과 응답을 처리할 수 있으며 그 결과를 원하는 형태로 취할 수도 있습니다. 또한 모든 코드는 비동기이므로 특별한 처리가 필요없습니다. 다음은 이를 사용한 예제 코드들입니다.
 
 ### **3.1 HttpReqeust & HttpResponse 사용**
-HttpRequest 라이브러리는 GameAnvil 에서 오랫 동안 사용되어 왔지만 관련 라이브러리가 업데이트되지 않아 사용 시 몇가지 문제점이 발생했습니다. 이러한 문제를 해결하기 위해 내부 Http 라이브러리를 변경한 HttpRequest2 클래스가 존재하고 있는데요 만약 HttpRequest 를 사용 중 문제가 발생한다면 HttpRequest2 구성으로 변경을 권장드립니다. 이후 릴리즈 시 HttpReuqest2 에 문제가 발생하지 않는다면 기존 HttpRequest 는 제거될 수 있습니다.
+HttpRequest 라이브러리는 GameAnvil 에서 오랫동안 사용되어 왔지만 관련 라이브러리가 업데이트되지 않아 사용 시 몇가지 문제점이 발생했습니다. 이러한 문제를 해결하기 위해 내부 Http 라이브러리를 변경한 HttpRequest2 클래스가 존재하고 있는데요, 만약 HttpRequest를 사용하는 도중 문제가 발생한다면 HttpRequest2 구성으로 변경을 권장드립니다. 이후 릴리즈 시 HttpReuqest2 에 문제가 발생하지 않는다면 기존 HttpRequest는 제거될 수 있습니다.
 
 - 예제1> 가장 기본적인 사용법 내부적으로 파이버 단위의 future 처리를 알아서 해주므로 가장 직관적인 방식입니다. 특별한 이유가 없다면 이러한 기본적인 사용법만으로도 충분합니다.
 
@@ -401,9 +401,11 @@ try {
 ```
 
 ### **3.2 HttpReqeust2 사용**
-위 HttpRequest 라이브러리는 GameAnvil 에서 오랫 동안 사용되어 왔지만 관련 라이브러리가 업데이트되지 않아 사용 시 몇가지 문제점이 발생했습니다. 이러한 문제를 해결하기 위해 내부 Http 라이브러리를 변경한 HttpRequest2 클래스가 존재하고 있는데요 만약 HttpRequest 를 사용 중 문제가 발생한다면 HttpRequest2 구성으로 변경을 권장드립니다. 이후 릴리즈 시 HttpReuqest2 에 문제가 발생하지 않는다면 기존 HttpRequest 는 제거될 수 있습니다.
+
+위 HttpRequest 라이브러리는 GameAnvil에서 오랫동안 사용되어 왔지만 관련 라이브러리가 업데이트되지 않아 사용 시 몇가지 문제점이 발생했습니다. 이러한 문제를 해결하기 위해 내부 Http 라이브러리를 변경한 HttpRequest2 클래스가 존재하고 있는데요, 만약 HttpRequest를 사용하는 도중 문제가 발생한다면 HttpRequest2 구성으로 변경을 권장드립니다. 이후 릴리즈 시 HttpReuqest2에 문제가 발생하지 않는다면 기존 HttpRequest는 제거될 수 있습니다.
 
 - 예제1> 이후의 코드 흐름과 상관있는 경우에 해당 future를 대기한 후 처리
+
 ```java
 HttpRequest2 request = new HttpRequest2(Method.GET, GET_LIST_URL);
 
