@@ -47,11 +47,10 @@ message SampleReceive
 
 ### 메시지 등록
 
-새로 생성한 메시지를 사용하려면 사용할 메시지를 ProtocolManager에 서버와 같은 값으로 미리 등록해야 합니다. 미리 등록하지 않거나 서버와 다르면, 동작하지 않거나 오동작 하거나 예외가 발생할 수 있습니다.
+새로 생성한 메시지를 사용하려면 사용할 메시지를 ProtocolManager에 미리 등록해야 합니다. 미리 등록하지 않으면, 동작하지 않거나 오동작 하거나 예외가 발생할 수 있습니다.
 
 ```c#
-// 서버와 같은 값으로 등록해야 한다.
-ProtocolManager.getInstance().RegisterProtocol(0, Messages.MessagesReflection.Descriptor);
+ProtocolManager.getInstance().RegisterProtocol(Messages.MessagesReflection.Descriptor);
 ```
 
 ### 메시지 전송
