@@ -14,18 +14,18 @@
 
 # 3. 구성 환경
 
-* Unity3d: 2018.4.1f1
+* Unity3d: 2030.3.37f1
 
   - Unity Standalone으로 제작되었습니다. 본 샘플은 개발 참고용으로서 에디터환경에서만 동작이 확인되었습니다.
 
-* GameAnvil 커넥터: 1.2.0.0
+* GameAnvil 커넥터: 1.4.0
 
 
 # 4. 클라이언트 구동하기
 
 ## Unity3d 사용
 
-git 저장소에서 클론한거나 다운받은 프로젝트를 Unity3d로 실행합니다.
+git 저장소에서 클론한거나 다운받은 프로젝트를 Unity로 실행합니다.
 
 ![reference-2-unity-01](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-01.png) 
 
@@ -40,8 +40,10 @@ GameAnvil 커넥터 C# 라이브러리를 확인 합니다.
 ![reference-2-unity-02](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-02.png) 
 
 	* GameAnvil
+    * GameAnvilConnector
 	* Google.ProtoBuf
 	* K4os.Compression.LZ4
+    * link
 	* log4net
 	* SuperSocket.ClientEngine
 	* System.Buffers
@@ -54,7 +56,7 @@ GameAnvil.dll 파일을 파일 오른쪽 버튼으로 속성에서 버전정보�
 
 ### 클라이언트 실행
 
-유니티 에디터의 Play버튼으로 실행을 합니다. GameBase 와 연동이 되어 있어서 클라이언트 시작하자마자 초기화와 게스트 로그인 처리 되어 화면 아래쪽에 정보가 표시가 됩니다. 오른쪽에 로그 콘솔에 오류가 없다면 정상 시작된 상태입니다.
+유니티 에디터의 Play버튼으로 실행을 합니다. 오른쪽에 로그 콘솔에 오류가 없다면 정상 시작된 상태입니다.
 
 ![reference-2-unity-03](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-03.png) 
 
@@ -126,10 +128,7 @@ GameAnvil.dll 파일을 파일 오른쪽 버튼으로 속성에서 버전정보�
         
         ![reference-2-unity-20](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-20.png) ![reference-2-unity-21](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-21.png) ![reference-2-unity-22](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-22.png)
 
-  * Gamebase: Gamebase용 폴더
   * Plugins: IOS / Android 용 폴더
-  * StreamingAssets: Gamebase 사용 폴더
-  * TOAST: Gamebase 사용 폴더
 
 
 
@@ -153,11 +152,11 @@ connector.LvNetLogger += (level, log) =>
 };
 
 // 서버와 같은 순서로 프로토콜 등록
-GameAnvil.ProtocolManager.getInstance().RegisterProtocol(0, Com.Nhn.Gameanvil.Sample.Protocol.AuthenticationReflection.Descriptor);
-GameAnvil.ProtocolManager.getInstance().RegisterProtocol(1, Com.Nhn.Gameanvil.Sample.Protocol.GameMultiReflection.Descriptor);
-GameAnvil.ProtocolManager.getInstance().RegisterProtocol(2, Com.Nhn.Gameanvil.Sample.Protocol.GameSingleReflection.Descriptor);
-GameAnvil.ProtocolManager.getInstance().RegisterProtocol(3, Com.Nhn.Gameanvil.Sample.Protocol.ResultReflection.Descriptor);
-GameAnvil.ProtocolManager.getInstance().RegisterProtocol(4, Com.Nhn.Gameanvil.Sample.Protocol.UserReflection.Descriptor);
+GameAnvil.ProtocolManager.getInstance().RegisterProtocol(Com.Nhn.Gameanvil.Sample.Protocol.AuthenticationReflection.Descriptor);
+GameAnvil.ProtocolManager.getInstance().RegisterProtocol(Com.Nhn.Gameanvil.Sample.Protocol.GameMultiReflection.Descriptor);
+GameAnvil.ProtocolManager.getInstance().RegisterProtocol(Com.Nhn.Gameanvil.Sample.Protocol.GameSingleReflection.Descriptor);
+GameAnvil.ProtocolManager.getInstance().RegisterProtocol(Com.Nhn.Gameanvil.Sample.Protocol.ResultReflection.Descriptor);
+GameAnvil.ProtocolManager.getInstance().RegisterProtocol(Com.Nhn.Gameanvil.Sample.Protocol.UserReflection.Descriptor);
 ```
 
 ### GameAnvil Connector 리스너 등록
@@ -389,7 +388,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
                 if (payload.contains<Com.Nhn.Gameanvil.Sample.Protocol.EndGameRes>())
                 {
                     Com.Nhn.Gameanvil.Sample.Protocol.EndGameRes endGameRes = Com.Nhn.Gameanvil.Sample.Protocol.EndGameRes.Parser.ParseFrom(payload.getPacket<Com.Nhn.Gameanvil.Sample.Protocol.EndGameRes>().GetBytes());
-C#                }
+                }
             }
             else
             {
