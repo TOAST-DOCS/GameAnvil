@@ -18,7 +18,7 @@
 
 * JDK: openjdk version "11.0.16.1" 2022-08-12 LTS
 
-* **GameAnvil 1.4.0**
+* **GameAnvil 1.4.1**
 
 * DB
   * Jasync-sql 1.2.3 : 기본 사용
@@ -38,7 +38,7 @@
 
 Git 저장소에서 clone한 프로젝트를 IntelliJ로 실행합니다.
 
-기본 설정은 Gradle 설정 Dependencies에 **com.nhn.gameanvil:gameanvil:1.4.0-jdk11** 로 JDK11 버전이 사용되고 있습니다.
+기본 설정은 Gradle 설정 Dependencies에 **com.nhn.gameanvil:gameanvil:1.4.1-jdk11** 로 JDK11 버전이 사용되고 있습니다.
 
 resources/GameAnvilConfig.json 파일에 IP가 127.0.0.1로 되어 있습니다.
 
@@ -348,7 +348,7 @@ DB나 Redis의 설정이없다면 샘플 서버가 정상적으로 동작 하지
 GameAnvil 버전 확인
 ```groovy
 dependencies {
-    api 'com.nhn.gameanvil:gameanvil:1.4.0-jdk11'
+    api 'com.nhn.gameanvil:gameanvil:1.4.1-jdk11'
 }
 ```
 
@@ -366,7 +366,7 @@ plugins {
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 group = 'com.nhn.gameanvil'
-version = '1.4.0'
+version = '1.4.1'
 java.sourceCompatibility = JavaVersion.VERSION_11
 java.targetCompatibility = JavaVersion.VERSION_11
 
@@ -427,7 +427,7 @@ dependencies {
     api files(Paths.get(project.projectDir.absolutePath, './src/main/resources/META-INF/quasar-core-0.8.0-jdk11.jar').toString())
     api 'org.mybatis:mybatis:3.5.3'
     api 'mysql:mysql-connector-java:8.0.23'
-    api 'com.nhn.gameanvil:gameanvil:1.4.0-jdk11'
+    api 'com.nhn.gameanvil:gameanvil:1.4.1-jdk11'
 }
 ```
 
@@ -442,13 +442,13 @@ Gradle 탭의 GameAnvilTutorial > Tasks > build > jar 동해서 프로젝트 빌
 
 ## Command 사용해서 서버 실행
 
-Command로 서버를 구동시키려면  Gradle로 빌드된 sample_game_server-1.4.0.jar 를 사용하면 됩니다.
+Command로 서버를 구동시키려면  Gradle로 빌드된 sample_game_server-1.4.1.jar 를 사용하면 됩니다.
 
 ![reference-1-server_09](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_09.png)
 
 
 ```
-java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar sample_game_server-1.4.0.jar
+java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar sample_game_server-1.4.1.jar
 ```
 
 - 기본으로 실행 시에 별도의 옵션이 지정되지 않으면 빌드할 때 지정되어 있는 환경 파일 적용됩니다.
