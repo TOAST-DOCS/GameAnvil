@@ -569,7 +569,7 @@ public final class SyncGameRoom extends BaseRoom<SyncGameUser> {
 
 ## 서버 구현을 마무리하며
 
-여기까지 기초 튜토리얼 샘플 실행을 위한 서버 구축이 완료되었습니다. 다시 서버를 실행해 보면, 로그 중에서 `{"message":"All nodes are ready!!"}`라는 문구를 확인할 수 있습니다. 이 로그가 떴다는 것은 GameAnvil 서버가 정상적으로 실행되었음을 의미합니다.
+여기까지 기초 튜토리얼 샘플 실행을 위한 서버 구축이 완료되었습니다. 다시 서버를 실행해 보면, 로그중에서 `{"message":"All nodes are ready!!"}`라는 문구를 확인할 수 있습니다. 이 로그가 떴다는 것은 GameAnvil 서버가 정상적으로 실행되었음을 의미합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/all_nodes_are_ready.png)
 
@@ -909,7 +909,7 @@ public void DelOnCreateRoom(UserAgent userAgent, ResultCodeCreateRoom result, in
 
 ### 게임 룸 입장 요청 API 사용
 
-서버에 게임 룸이 생성되었다고 가정해 봅시다. 해당 룸에 접속하기 위해서는 게임엔빌 커넥터에서 게임 룸 입장 요청 메서드를 호출하면 됩니다. 이 때, 룸 생성 당시 전달 받은 게임 룸 아이디를 전달합니다.
+서버에 게임 룸이 생성되었다고 가정해 봅시다. 해당 룸에 접속하기 위해서는 게임엔빌 커넥터에서 게임 룸 입장 요청 메서드를 호출하면 됩니다. 이때, 룸 생성 당시 전달 받은 게임 룸 아이디를 전달합니다.
 
 ```c#
 GameAnvilConnector.getInstance().getUserAgent().JoinRoom("ROOM_TYPE_SYNC", {룸 아이디 입력});

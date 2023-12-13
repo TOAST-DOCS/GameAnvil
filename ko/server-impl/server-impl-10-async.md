@@ -230,7 +230,7 @@ RedisFuture<String> setFuture = redisAsyncCommands.set(key, value);RedisFuture<S
 
 ### **2.6.본격적인 LETTUCE 비동기 처리**
 
-Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 통해 사용 가능합니다. 기본적으로 LETTUCE는 Sync방식의 Commands 객체과 Async방식의 Commands 객체를 제공하는데 GameAnvil은 그 중 Aync방식의 사용을 권장합니다. 기본적으로 AsyncCommands는 Redis Cluster인 경우와 StandAlone인 경우에 대해 각각 아래와 같습니다.
+Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 통해 사용 가능합니다. 기본적으로 LETTUCE는 Sync방식의 Commands 객체과 Async방식의 Commands 객체를 제공하는데 GameAnvil은 그중 Aync방식의 사용을 권장합니다. 기본적으로 AsyncCommands는 Redis Cluster인 경우와 StandAlone인 경우에 대해 각각 아래와 같습니다.
 
 - RedisAdvancedClusterAsyncCommands
 - RedisAsyncCommands

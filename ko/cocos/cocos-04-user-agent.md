@@ -824,19 +824,19 @@ class UserListener implements IUserListener {
      * 오류 발생
      * @param user 오류가 발생한 유저에이전트 
      * @param errorCode 오류 코드
-     * @param msgName 오류가 발생한 기능 또는 메세지
+     * @param msgName 오류가 발생한 기능 또는 메시지
      */
     OnErrorCommand?(user: UserAgent, errorCode: ErrorCode, msgName: string): void { }
     /**
      * 공지 알림
      * @param user 공지 를 받은 유저에이전트 
-     * @param message 공지 메세지
+     * @param message 공지 메시지
      */
     OnNotice?(user: UserAgent, message: string): void { }
     /**
      * 어드민에서 Kickout()한 경우 알림
      * @param user Kickout()된 유저에이전트 
-     * @param message 어드민에서 전달한 메세지
+     * @param message 어드민에서 전달한 메시지
      */
     OnAdminKickoutNoti?(user: UserAgent, message: string): void { }
     /**

@@ -34,11 +34,11 @@ GameAnvil을 사용하기 위해서는 NHN Cloud에서 GameAnvil 서비스를 �
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-2.png)
 
-이 때, 아래와 같은 활성화 팝업창이 나타나면 확인을 눌러서 완료할 수 있습니다.
+이때, 아래와 같은 활성화 팝업창이 나타나면 확인을 눌러서 완료할 수 있습니다.
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-3.png)
 
-이 때, 정상적으로 서비스가 활성화 되었다면 사용자는 자신만의 고유한 Console에 대한 접근 권한을 가지게 됩니다. 바로 이 Console이 운영 단계에서 필요한 모든 기능을 제공합니다. 이 문서의 나머지 부분은 이 Console의 기능과 사용법을 중심으로 내용을 풀어 나가도록 하겠습니다.
+이때, 정상적으로 서비스가 활성화 되었다면 사용자는 자신만의 고유한 Console에 대한 접근 권한을 가지게 됩니다. 바로 이 Console이 운영 단계에서 필요한 모든 기능을 제공합니다. 이 문서의 나머지 부분은 이 Console의 기능과 사용법을 중심으로 내용을 풀어 나가도록 하겠습니다.
 
 ## 4. 상품 선택과 설문
 

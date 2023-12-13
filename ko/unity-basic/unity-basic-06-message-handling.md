@@ -59,11 +59,11 @@ Request()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 
 
 ```c#
 /// <summary>
-/// 유저 에이전트를 사용 해서 프로토 버프 메세지 전송
+/// 유저 에이전트를 사용 해서 프로토 버프 메시지 전송
 /// </summary>
-/// <typeparam name="T">프로토 버프 타입 메세지</typeparam>
+/// <typeparam name="T">프로토 버프 타입 메시지</typeparam>
 /// <param name="agent">전송할 유저 에이전트</param>
-/// <param name="message">전송할 프로토 버프 메세지</param>
+/// <param name="message">전송할 프로토 버프 메시지</param>
 /// <param name="action">응답 처리 할 동작</param>
 static public void Request<T>(User.UserAgent agent, IMessage message, Action<User.UserAgent, T> action) where T : IMessage;
 
@@ -76,7 +76,7 @@ static public void Request<T>(User.UserAgent agent, IMessage message, Action<Use
 static public void Request(User.UserAgent agent, Packet packet, Action<User.UserAgent, Packet> action);
 ```
 
-Request 응답을 받기 위해 리스너를 등록하는 방법도 있는데, 이는 [Unity 심화 개발 가이드 > 메세지 핸들링](../unity-advanced/unity-advanced-04-message-handling.md)에서 확인하실 수 있습니다.
+Request 응답을 받기 위해 리스너를 등록하는 방법도 있는데, 이는 [Unity 심화 개발 가이드 > 메시지 핸들링](../unity-advanced/unity-advanced-04-message-handling.md)에서 확인하실 수 있습니다.
 
 지정된 시간 내에 응답이 오지 않으면 타임아웃을 발생시키고 다음 메시지를 처리합니다. 타임아웃은 UserAgent.OnErrorCommandListeners 리스너와 UserAgent.OnErrorCustomCommandListeners 리스너에 ErrorCode.TIMEOUT으로 전달됩니다.
 

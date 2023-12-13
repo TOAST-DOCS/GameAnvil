@@ -82,7 +82,7 @@ public class SampleGameUser extends BaseUser implements TimerHandler {
 }
 ```
 
-그리고 추가로 BaseChannelUserInfo를 구현합니다. 이 때, 사용자가 채널에서 관리하고 싶은 정보를 모두 포함하면 됩니다.
+그리고 추가로 BaseChannelUserInfo를 구현합니다. 이때, 사용자가 채널에서 관리하고 싶은 정보를 모두 포함하면 됩니다.
 
 ```java
 public class GameChannelUserInfo implements Serializable, BaseChannelUserInfo {
@@ -115,7 +115,7 @@ public class GameChannelUserInfo implements Serializable, BaseChannelUserInfo {
 }
 ```
 
-이렇게 작성한 채널 유저 정보는 다음과 같이 유저 객체에서 추가하거나 갱신할 수 있습니다. 이 때, updateChannelUserInfo API를 사용합니다. 만일 해당 유저 객체가 서버에서 로그아웃되면 해당 채널 유저 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
+이렇게 작성한 채널 유저 정보는 다음과 같이 유저 객체에서 추가하거나 갱신할 수 있습니다. 이때, updateChannelUserInfo API를 사용합니다. 만일 해당 유저 객체가 서버에서 로그아웃되면 해당 채널 유저 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
 
 ```java
 public class SampleGameUser extends BaseUser {
@@ -145,7 +145,7 @@ public class SampleGameUser extends BaseUser {
 		...
 	}
   
-	// 사용자 컨텐츠에서 변경된 유저 정보를 언제든 갱신할 수 있습니다.
+	// 사용자 콘텐츠에서 변경된 유저 정보를 언제든 갱신할 수 있습니다.
 	updateLevel(int level) {
 		channelUserInfo.setLevel(getLevel());
       
@@ -169,7 +169,7 @@ public class GameRoom extends BaseUser implements TimerHandler {
 }
 ```
 
-그리고 추가로 BaseChannelRoomInfo를 구현합니다. 이 때, 사용자가 채널에서 관리하고 싶은 방 관련 정보를 모두 포함하면 됩니다.
+그리고 추가로 BaseChannelRoomInfo를 구현합니다. 이때, 사용자가 채널에서 관리하고 싶은 방 관련 정보를 모두 포함하면 됩니다.
 
 ```java
 public class GameChannelRoomInfo implements Serializable, BaseChannelRoomInfo {
@@ -206,7 +206,7 @@ public class GameChannelRoomInfo implements Serializable, BaseChannelRoomInfo {
 }
 ```
 
-이렇게 작성한 채널 방 정보는 다음과 같이 방 객체에서 추가하거나 갱신할 수 있습니다. 이 때, updateChannelRoomInfo API를 사용합니다. 만일 해당 방 객체가 서버에서 사라지면 해당 채널 방 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
+이렇게 작성한 채널 방 정보는 다음과 같이 방 객체에서 추가하거나 갱신할 수 있습니다. 이때, updateChannelRoomInfo API를 사용합니다. 만일 해당 방 객체가 서버에서 사라지면 해당 채널 방 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
 
 ```java
 public class GameRoom extends BaseRoom<GameUser> {
@@ -287,7 +287,7 @@ public class GameRoom extends BaseRoom<GameUser> {
 
 ### 3.1. 클라이언트로 채널 정보 동기화
 
-클라이언트는 서버로 언제든 채널 정보를 요청할 수 있습니다. 이 때, 앞서 살펴본 게임 노드의 콜백 메서드 중 onChannelInfo가 호출됩니다. 단, 클라이언트의 잘못된 구현 혹은 악의적인 사용을 막고자 이 콜백 메서드 호출은 최소한의 재호출 주기(기본값 1초)를 가집니다.  예를 들어 클라이언트가 1초 동안 10번의 채널 정보 요청을 하더라도 서버는 단 1회의 onChannelInfo 콜백 메서드를 호출합니다. 나머지 9번의 요청은 이전에 캐싱해둔 정보를 전달합니다. 다음은 이러한 onChannelInfo를 구현한 pseudo 코드입니다.
+클라이언트는 서버로 언제든 채널 정보를 요청할 수 있습니다. 이때, 앞서 살펴본 게임 노드의 콜백 메서드 중 onChannelInfo가 호출됩니다. 단, 클라이언트의 잘못된 구현 혹은 악의적인 사용을 막고자 이 콜백 메서드 호출은 최소한의 재호출 주기(기본값 1초)를 가집니다.  예를 들어 클라이언트가 1초 동안 10번의 채널 정보 요청을 하더라도 서버는 단 1회의 onChannelInfo 콜백 메서드를 호출합니다. 나머지 9번의 요청은 이전에 캐싱해둔 정보를 전달합니다. 다음은 이러한 onChannelInfo를 구현한 pseudo 코드입니다.
 
 ```java
 public void onChannelInfo(Payload outPayload) throws SuspendExecution {

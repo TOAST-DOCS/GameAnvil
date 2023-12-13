@@ -38,7 +38,7 @@ MyChatNode extends gameanvil.GameNode {
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/service/detail.png)
 
-이 때, 서비스/채널 상세 정보 페이지가 제공하는 "수정"이나 "삭제" 버튼을 사용하여 해당 서비스와 채널 정보를 수정하거나 삭제할 수 있습니다.
+이때, 서비스/채널 상세 정보 페이지가 제공하는 "수정"이나 "삭제" 버튼을 사용하여 해당 서비스와 채널 정보를 수정하거나 삭제할 수 있습니다.
 
 
 또한 "등록" 버튼을 눌러 새로운 서비스와 채널 정보를 등록할 수도 있습니다.

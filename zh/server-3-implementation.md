@@ -940,7 +940,7 @@ addTimer(2, TimeUnit.SECONDS, 0, "transferRoomTimerHandler2", false);
 
 ## 5. 아이디 (ID)
 
-GameAnvil은 여러 종류의 아이디를 사용합니다. 그 중 일부는 서버가 자체 발급하고 다른 일부는 사용자가 GameAnvilConfig에 직접 설정합니다. 접속에 필요한 계정 정보 등은 클라이언트에서 입력받은 정보를 서버로 전달합니다. 다음은 GameAnvil에서 사용하는 대표적인 아이디에 대한 설명입니다.
+GameAnvil은 여러 종류의 아이디를 사용합니다. 그중 일부는 서버가 자체 발급하고 다른 일부는 사용자가 GameAnvilConfig에 직접 설정합니다. 접속에 필요한 계정 정보 등은 클라이언트에서 입력받은 정보를 서버로 전달합니다. 다음은 GameAnvil에서 사용하는 대표적인 아이디에 대한 설명입니다.
 
 | 이름      | 설명                                                         | 자료형 | 범위      |
 | --------- | ------------------------------------------------------------ | ------ | --------- |
@@ -2118,7 +2118,7 @@ bootstrap.setGame("SampleGameService")
 
 ### game
 
-- 설정값이 없거나 nodeCnt가 0이면 GameNode를 생성하지 않습니다. 앞서 설명했듯이 엔진의 Bootstrap 단계에서 사용한 ServiceName을 이 곳에 설정해야 합니다.
+- 설정값이 없거나 nodeCnt가 0이면 GameNode를 생성하지 않습니다. 앞서 설명했듯이 엔진의 Bootstrap 단계에서 사용한 ServiceName을 이곳에 설정해야 합니다.
 
 | 이름        | 설명                                                         | 기본값 |
 | ----------- | ------------------------------------------------------------ | ------ |
@@ -2484,7 +2484,7 @@ String getResult = Async.awaitFuture(getFuture);
 
 ### **13-6.본격적인 LETTUCE 비동기 처리**
 
-Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 통해 사용 가능합니다. 기본적으로 LETTUCE는 Sync방식의 Commands 객체과 Async방식의 Commands 객체를 제공하는데 GameAnvil은 그 중 Aync방식의 사용을 권장합니다. 기본적으로 AsyncCommands는 Redis Cluster인 경우와 StandAlone인 경우에 대해 각각 아래와 같습니다.
+Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 통해 사용 가능합니다. 기본적으로 LETTUCE는 Sync방식의 Commands 객체과 Async방식의 Commands 객체를 제공하는데 GameAnvil은 그중 Aync방식의 사용을 권장합니다. 기본적으로 AsyncCommands는 Redis Cluster인 경우와 StandAlone인 경우에 대해 각각 아래와 같습니다.
 
 - RedisAdvancedClusterAsyncCommands
 - RedisAsyncCommands

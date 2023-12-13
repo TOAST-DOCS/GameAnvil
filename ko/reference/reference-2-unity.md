@@ -384,7 +384,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
         {
             if (result == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS)
             {
-            	// 성공 처리, 응답 받은 메세지 처리
+            	// 성공 처리, 응답 받은 메시지 처리
                 if (payload.contains<Com.Nhn.Gameanvil.Sample.Protocol.EndGameRes>())
                 {
                     Com.Nhn.Gameanvil.Sample.Protocol.EndGameRes endGameRes = Com.Nhn.Gameanvil.Sample.Protocol.EndGameRes.Parser.ParseFrom(payload.getPacket<Com.Nhn.Gameanvil.Sample.Protocol.EndGameRes>().GetBytes());

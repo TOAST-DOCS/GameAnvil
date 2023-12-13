@@ -247,12 +247,12 @@ public class GameUser extends BaseUser {
 | GameAnvilTopic.ALL\_GAME\_USER | 게임 노드에 있는 모든 게임 유저 객체 | GameUser |
 
 
-* 예외 처리 및 메소드 시그니쳐 최적화
+* 예외 처리 및 메서드 시그니쳐 최적화
 
 
-  * 무분별하게 사용된 예외 처리와 메소드 시그니처를 정리하고 사용자에게 필요한 정보만 넘겨주도록 수정
+  * 무분별하게 사용된 예외 처리와 메서드 시그니처를 정리하고 사용자에게 필요한 정보만 넘겨주도록 수정
 
-* HttpRequest에 PATCH 메소드 추가
+* HttpRequest에 PATCH 메서드 추가
 * 인증서 없이 테스트용으로 SSL를 사용할 수 있는 기능 설정명이 useSelf에서 useSelfSignedCert으로 변경되었습니다.
 
 ---
@@ -289,7 +289,7 @@ public class GameUser extends BaseUser {
 
 #### Change
 
-* HttpReqest에 PATCH 메소드를 사용할 수 있는 API 추가
+* HttpReqest에 PATCH 메서드를 사용할 수 있는 API 추가
     * httpRequest.PATCH()
     * httpRequest.PATCH(AsyncHttpCompletionHandler asyncHttpCompletionHandler)
     * httpRequest.PATCHAsync()

@@ -29,7 +29,7 @@
 
 ## 4. 노드 구성
 
-오토스케일 그룹의 노드 구성은 일반 서버 구성과 일부 차이가 있습니다. 가장 큰 차이점은 오토스케일 그룹을 단일 노드로 구성된 서버로만 생성 가능하다는 것입니다. 이 때, GATEWAY, GAME, SUPPORT 3가지 노드만 선택 가능합니다. MATCH는 오토스케일 그룹을 생성할 수 없습니다.
+오토스케일 그룹의 노드 구성은 일반 서버 구성과 일부 차이가 있습니다. 가장 큰 차이점은 오토스케일 그룹을 단일 노드로 구성된 서버로만 생성 가능하다는 것입니다. 이때, GATEWAY, GAME, SUPPORT 3가지 노드만 선택 가능합니다. MATCH는 오토스케일 그룹을 생성할 수 없습니다.
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/config-nodes.png)
 

@@ -16,7 +16,7 @@ GameAnvil 서버 구성의 가장 기본이 되는 단위는 노드입니다. �
 | Management | 필수(자동)| 서버 정보 취합 및 Console/Agent와 통신      | 불가능      | private             |
 | Ipc        | 필수(자동)| GameAnvil 서버의 Inter-process 통신 처리    | 불가능      | private             |
 
-특히, 사용자는 이 중에서 컨텐츠 구현이 가능한 노드들(Gateway, Game, Support, Match)에만 집중하면 됩니다. 나머지는 엔진이 내부적으로 사용하며 사용자가 추가로 구현할 부분은 없습니다. 또한 필수 노드는 반드시 하나 이상 존재해야 전체 서버가 정상적으로 구동 가능합니다. 이 때 Location 노드는 명시적으로 GameAnvilConfig.json 에 명시적으로 선언이 필요합니다.
+특히, 사용자는 이 중에서 컨텐츠 구현이 가능한 노드들(Gateway, Game, Support, Match)에만 집중하면 됩니다. 나머지는 엔진이 내부적으로 사용하며 사용자가 추가로 구현할 부분은 없습니다. 또한 필수 노드는 반드시 하나 이상 존재해야 전체 서버가 정상적으로 구동 가능합니다. 이때 Location 노드는 명시적으로 GameAnvilConfig.json 에 명시적으로 선언이 필요합니다.
 
 이러한 노드의 계층 구조는 아래의 그림과 같은 모습입니다.
 

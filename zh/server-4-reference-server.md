@@ -552,7 +552,7 @@ public static void main(String[] args) {
 }
 ```
 
-### GameAnvil 내부에서 처리되는 메소드
+### GameAnvil 내부에서 처리되는 메서드
 
 - GameSession - 세션
   - com.nhn.gameanvil.sample.gateway.GameSession
