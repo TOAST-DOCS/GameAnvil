@@ -1082,7 +1082,7 @@ public class GameManager : MonoBehaviour
 
         roomIdText.text = "PuzzleRoom:" + connectHandler.roomId;
 
-        ProtocolManager.GetInstance().RegisterProtocol(0, BasicProtocolReflection.Descriptor);
+        ProtocolManager.GetInstance().RegisterProtocol(BasicProtocolReflection.Descriptor);
         connectHandler.GetInstance().GetConnector().GetUserAgent("BASIC_SERVICE", 1).AddListener<MessageBroadcast>((sendUserAgent, messageBroadcast) => {
             ChatLogText.text += messageBroadcast.Message;
         });
