@@ -150,23 +150,23 @@ try {
 
 IntelliJ를 실행한 후, 단축키 `Shift Shift` 로 전체 검색창을 띄운 다음 `Import Settings...` 을 검색합니다. 또는 File > Manage IDE Settings > Import Settings...를 선택합니다.
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/search_import_settings.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/search_import_settings.png" />
 
 파인더 창이 뜨면 다운로드 받은 템플릿 파일을 선택합니다. 아래의 그림과 같이 임포트할 요소들을 선택하는 창이 뜨면, 파일 템플릿과 프로젝트 템플릿을 모두 체크한 후 임포트를 진행합니다. 가져오기가 완료되면 IntelliJ를 다시 시작합니다.
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/select_import.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/select_import.png" />
 
 새로운 프로젝트 생성 창이 열리면, 좌측 메뉴의 User-defined탭에서 GameAnvil Template를 선택합니다.
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/new_project_project_template.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/new_project_project_template.png" />
 
 마치면 다음 그림과 같이 GameAnvil 서버 개발을 바로 시작할 수 있는 템플릿 프로젝트가 생성됩니다. 
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/project_template_view.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/project_template_view.png" />
 
 GameAnvil에서 제공하는 여러 가지 클래스를 바로 생성할 수 있는 파일 템플릿도 제공하고 있습니다. 프로젝트에서 원하는 패키지를 선택한 후 우클릭으로 컨텍스트 메뉴를 엽니다. 이 때, 다음 그림과 같이 각 클래스별 파일 템플릿을 이용할 수 있습니다.
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/file_template.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/file_template.png" />
 
 다음은 파일 템플릿으로 제공되는 파일 템플릿 목록입니다. 각각의 파일 템플릿은 하나의 클래스 템플릿을 구현합니다.
 
