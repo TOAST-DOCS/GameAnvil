@@ -116,7 +116,7 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
 ```json
 "game": [
     {
-      "nodeCnt": 0,
+      "nodeCnt": 1,
       "serviceId": 1,
       "serviceName": "Sync",
       "channelIDs": [""], // 노드마다 부여할 채널 ID. (유니크하지 않아도 됨. ""는 채널 사용하지 않음을 의미)
