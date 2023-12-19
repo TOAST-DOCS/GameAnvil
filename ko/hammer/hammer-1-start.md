@@ -11,7 +11,7 @@ GameHammer를 사용하려면 다음과 같은 사항이 필요합니다.
 - 지원하는 언어
     - Java
 - 타깃 개발 환경
-    - InteliJ
+    - IntelliJ
 - 지원하는 네트워크 프로토콜
     - TCP/IP
     - SSL over TCP/IP
@@ -29,7 +29,7 @@ GameHammer는 다음과 같은 기능을 지원합니다.
 - Sync/Async 방식 모두 지원
     - Async 방식의 API 제공
     - Sync 방식을 위한 future 제공
-- 수천 개 또는 그 이상의 커넥셕 동시에 사용 가능
+- 수천 개 또는 그 이상의 커넥션 동시에 사용 가능
 - 상태 기반의 시나리오 관리 기능 지원
 
 ### 레퍼런스 프로젝트
@@ -50,9 +50,33 @@ GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.
         <dependency>
 			<groupId>com.nhn.gameanvil</groupId>
 			<artifactId>gamehammer</artifactId>
-			<version>1.2.1-jdk11</version>
+			<version>1.4.1-jdk11</version>
 		</dependency>
         ...
 <dependencies>
 ...        
 ```
+
+## Maven으로 GameHammer jar 파일 생성하기
+
+GameHammer를 이용해 테스트 시나리오를 작성한 후에는 GameAnvil 콘솔을 통해 테스트할 목적 등으로 jar 파일을 생성할 수 있습니다. 메이븐을 통해서 업로드용 jar 파일을 생성해보겠습니다.
+
+GameHammer를 추가한 프로젝트의 pom.xml이 있는 디렉토리에서 아래 명령어를 실행합니다.
+
+```
+mvn package
+```
+
+명령어 실행 후, 빌드 과정이 출력 되고 마지막으로 빌드에 성공했다는 메시지를 확인합니다. 아래와 같이 나오면 성공입니다.
+
+```
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.880 s
+[INFO] Finished at: 2023-11-13T17:49:48+09:00
+[INFO] ------------------------------------------------------------------------
+Process finished with exit code 0
+```
+
+새롭게 생성된 target 디렉터리 안에서 빌드된 파일을 확인할 수 있습니다.

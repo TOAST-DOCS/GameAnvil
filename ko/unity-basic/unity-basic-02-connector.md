@@ -33,7 +33,7 @@ GameAnvilConnector 동작에 사용되는 설정값이 있습니다. GameAnvilCo
 
 ### 로그
 
-GameAnvilConnector는 직접 로그를 남기지 않고 콜백을 통해 로그를 전달합니다. 다음과 같이 OnLogMessage 콜백에 리스너를 등록해서 전달된 로그 메세지를 출력할 수 있습니다.
+GameAnvilConnector는 직접 로그를 남기지 않고 콜백을 통해 로그를 전달합니다. 다음과 같이 OnLogMessage 콜백에 리스너를 등록해서 전달된 로그 메시지를 출력할 수 있습니다.
 
 ```c#
 GameAnvilConnector.getInstance().OnLogMesseage.AddListener(log => Debug.Log("OnLogMesseage test : " + log));

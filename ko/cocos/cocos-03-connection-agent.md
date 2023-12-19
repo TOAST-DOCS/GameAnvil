@@ -50,7 +50,7 @@ connectionAgent.Authenticate(deviceId, accountId, password, payload
      * @param connection Authentication()을 요청한 커넥션에이전트
      * @param resultCode 인증의 결과 코드
      * @param loginedUserInfoList 서버에 남아있는 로그인 정보 목록
-     * @param message 서버로부터 받은 메세지, 인증 실패 이유 등
+     * @param message 서버로부터 받은 메시지, 인증 실패 이유 등
      * @param payload 서버로 부터 받은 추가 정보
      */
     if (result == ResultCodeAuth.AUTH_SUCCESS) {
@@ -232,7 +232,7 @@ class ConnectionListener implements IConnectionListener{
      * @param connection Authentication()을 요청한 커넥션에이전트
      * @param resultCode 인증의 결과 코드
      * @param loginedUserInfoList 서버에 남아있는 로그인 정보 목록
-     * @param message 서버로부터 받은 메세지, 인증 실패 이유 등
+     * @param message 서버로부터 받은 메시지, 인증 실패 이유 등
      * @param payload 서버로 부터 받은 추가 정보
      */
     OnAuthentication(connection: ConnectionAgent, resultCode: ResultCodeAuth, loginedUserInfoList: Array<LoginedUserInfo>, message: string, payload: Payload): void { }
@@ -284,7 +284,7 @@ class ConnectionListener implements IConnectionListener{
      * 오류 발생
      * @param connection 오류 발생 한 커넥션에이전트
      * @param errorCode 에러 코드
-     * @param msgName 에러가 발생한 메세지의 이름
+     * @param msgName 에러가 발생한 메시지의 이름
      */
     OnErrorCommand(connection: ConnectionAgent, errorCode: ErrorCode, msgName: string): void { }
 };

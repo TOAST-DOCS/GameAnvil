@@ -198,7 +198,7 @@ GameAnvil은 두 가지 매치 메이킹을 제공합니다. 각각 방 단위�
 
 #### 룸 매치 메이킹
 
-룸 매치 메이킹은 조건에 맞는 방으로 유저를 입장시켜주는 방식입니다. 룸 매치 메이킹 요청시 조건에 맞는 방이 있으면 해당방으로 바로 입장 시켜주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장 시켜주는 방식입니다. 
+룸 매치 메이킹은 조건에 맞는 방으로 유저를 입장시켜 주는 방식입니다. 룸 매치 메이킹 요청시 조건에 맞는 방이 있으면 해당방으로 바로 입장 시켜주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장 시켜주는 방식입니다. 
 
 MatchRoom()을 호출하여 룸 매치 메이킹을 요청할 수 있습니다. 조건에 맞는 방이 없을 경우 임의의 방을 생성하고 해당 방에 입장할 수도 있습니다. 
 
@@ -824,19 +824,19 @@ class UserListener implements IUserListener {
      * 오류 발생
      * @param user 오류가 발생한 유저에이전트 
      * @param errorCode 오류 코드
-     * @param msgName 오류가 발생한 기능 또는 메세지
+     * @param msgName 오류가 발생한 기능 또는 메시지
      */
     OnErrorCommand?(user: UserAgent, errorCode: ErrorCode, msgName: string): void { }
     /**
      * 공지 알림
      * @param user 공지 를 받은 유저에이전트 
-     * @param message 공지 메세지
+     * @param message 공지 메시지
      */
     OnNotice?(user: UserAgent, message: string): void { }
     /**
      * 어드민에서 Kickout()한 경우 알림
      * @param user Kickout()된 유저에이전트 
-     * @param message 어드민에서 전달한 메세지
+     * @param message 어드민에서 전달한 메시지
      */
     OnAdminKickoutNoti?(user: UserAgent, message: string): void { }
     /**

@@ -58,7 +58,7 @@ Connector는 직접 로그를 남기지 않고 콜백을 통해 로그를 전달
 
 | Connector 로그 관련 함수 | 설명 |
 | --------------------- | --- |
-| AddLogListener | 로깅 메세지를 처리할 콜백 등록 |
+| AddLogListener | 로깅 메시지를 처리할 콜백 등록 |
 | RemoveLogListener | 로깅 메시지를 처리할 콜백 목록에서 특정 콜백 제거 |
 | ContainsLogListener | 로깅 메시지를 처리할 콜백 목록이 특정 콜백을 포함하는지 검사 |
 | EnablePingPongLogs | PingPong에 의해 발생하는 로그 출력 여부 설정 |
@@ -68,7 +68,7 @@ Connector는 직접 로그를 남기지 않고 콜백을 통해 로그를 전달
 
 아래 코드를 통해서 더욱 자세하게 살펴보겠습니다.
 
-Connector.AddLogListener()로 로깅 메세지를 처리할 콜백을 등록할 수 있습니다.
+Connector.AddLogListener()로 로깅 메시지를 처리할 콜백을 등록할 수 있습니다.
 
 ```c#
 /// <summary>
@@ -78,7 +78,7 @@ Connector.AddLogListener()로 로깅 메세지를 처리할 콜백을 등록할 
 public void AddLogListener (Action<string> logListener);
 ```
 
-Connector.RemoveLogListener()로 등록했던 로깅 메세지 처리 콜백을 삭제할 수 있습니다.
+Connector.RemoveLogListener()로 등록했던 로깅 메시지 처리 콜백을 삭제할 수 있습니다.
 
 ```c#
 /// <summary>
@@ -88,7 +88,7 @@ Connector.RemoveLogListener()로 등록했던 로깅 메세지 처리 콜백을 
 public void RemoveLogListener (Action<string> logListener);
 ```
 
-Connector.ContainsLogListener()로 특정 콜백이 로깅 메세지를 처리할 콜백 목록에 포함되어 있는지 확인할 수 있습니다.
+Connector.ContainsLogListener()로 특정 콜백이 로깅 메시지를 처리할 콜백 목록에 포함되어 있는지 확인할 수 있습니다.
 
 ```c#
 /// <summary>

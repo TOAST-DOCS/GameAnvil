@@ -14,17 +14,17 @@
 
 # 3. 구성 환경
 
-* IDE : Intellij 2021.1
+* IDE : Intellij 2022.3.3
 
-* JDK: AdoptOpenJDK build 1.8.0_275-b01
+* JDK: openjdk version "11.0.16.1" 2022-08-12 LTS
 
-* **GameAnvil 1.2.0**
+* **GameAnvil 1.4.1**
 
 * DB
-  * Jasync-sql 1.1.6 : 기본 사용
+  * Jasync-sql 1.2.3 : 기본 사용
     * MyBatis 3.5.3
   * 각자의 환경에 맞게 IP 주소를 설정
-  * MySQL 5.7.29
+  * MySQL 8.0.23
 
 * Redis
   * GameAnvil에서 제공하는 Lettuce API를 사용
@@ -38,7 +38,7 @@
 
 Git 저장소에서 clone한 프로젝트를 IntelliJ로 실행합니다.
 
-기본 설정은 Maven 설정 Dependencies에 **com.nhn.gameanvil:gameanvil:1.2.0-jdk8** 로 JDK8 버전이 사용되고 있습니다.
+기본 설정은 Gradle 설정 Dependencies에 **com.nhn.gameanvil:gameanvil:1.4.1-jdk11** 로 JDK11 버전이 사용되고 있습니다.
 
 resources/GameAnvilConfig.json 파일에 IP가 127.0.0.1로 되어 있습니다.
 
@@ -46,7 +46,7 @@ resources/GameAnvilConfig.json 파일에 IP가 127.0.0.1로 되어 있습니다.
 
 ### 실행환경 설정
 
-샘플 서버는 기본 JDK8로 설정이 되어 있기 때문에 IntelliJ가 다른 버전으로 설정이 되어 있다면 설정을 JDK8로 맞추어야 빌드시에 에러가 발생 하지않습니다.
+샘플 서버는 기본 JDK11로 설정이 되어 있기 때문에 IntelliJ가 다른 버전으로 설정이 되어 있다면 설정을 JDK11로 맞추어야 빌드시에 에러가 발생 하지않습니다.
 
 만약 IntelliJ 에서 GameAnvil 라이브러리와 JDK의 버전이 맞지않고 실행을 하면 다음과같은 에러가 발생합니다.
 
@@ -60,40 +60,15 @@ File > Project Structure > Project Settings > Project 메뉴에서 JDK를 확인
 
 ![reference-1-server_01](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_01.png) 
 
-File > Settings > Build, Execution, Deployment > Buil Tools > Maven > Importing 메뉴에서 JDK 를 확인 합니다.
+IntelliJ IDEA > Settings > Build, Execution, Deployment > Buil Tools > Gradle > Gradle JVM 메뉴에서 JDK 를 확인 합니다.
 
 ![reference-1-server_02](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_02.png) 
 
-Maven JDK를 변경 했다면 Maven 탭의 Reload 를 실행해서 프로젝트에 반영을 합니다.
+Gradle JDK를 변경 했다면 Gradle 탭의 Reload 를 실행해서 프로젝트에 반영을 합니다.
 
 ![reference-1-server_03](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_03.png) 
 
-GameAnvil은 JDK11로 지원을 하고 있기 때문에 JDK11환경이라면 gameanvil:1.2.0-jdk11 버전을 사용 하면됩니다.
-
-
-
-빌드 환경 설정은 아래의 내용을 순서대로 설정합니다. IntelliJ 버전에 따라 화면은 조금 다를수 있습니다. (스크린샷은 2021.1 버전입니다.)
-
-![reference-1-server_04](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_04.png) 
-
-- 1: 클릭으로 새로운 빌드 환경 설정 추가
-- 2: +로 Application 추가 -> 3 생성
-- 4: 원하는 빌드 환경 이름 설정 
-- 5: JDK 버전 설정
-- 6: 프로젝트 Main 클래스 선택(com.nhn.gameanvil.sample.Main)
-- 7: resources/setting.txt의 # VM Options에 있는 내용 입력
-
-```
--Dco.paralleluniverse.fibers.detectRunawayFibers=false
--Dco.paralleluniverse.fibers.verifyInstrumentation=false
--Xms6g
--Xmx6g
--XX:+UseG1GC
--XX:MaxGCPauseMillis=100
--XX:+UseStringDeduplication
-```
-
-
+빌드 환경 설정은 아래의 내용을 순서대로 설정합니다. IntelliJ 버전에 따라 화면은 조금 다를수 있습니다. (스크린샷은 2023.12 버전입니다.)
 
 ### Redis 설정 확인
 
@@ -343,7 +318,11 @@ Mybatis 연결은 resources/mybatid-config.xml의 접속 설정을 수정해서 
 
 ### 서버 실행
 
+Gradle 탭의 runMain 실횅으로 IntelliJ에서 실행 "gameanvil.sample-game-server [runMain]"
+
 앞서 설정해 두었던 "SampleGameServer" 구성을 이용하여 서버를 실행합니다.
+
+![reference-1-server_04](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_04.png)
 
 ![reference-1-server_05](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_05.png) 
 
@@ -353,8 +332,7 @@ http://127.0.0.1:18400/management/nodeInfoPage 페이지를 통해서 로컬에�
 
 ![reference-1-server_06](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_06.png) 
 
-구성은 GameNode 4, GatewayNode 4, SupportNode2, IpcNode 1, ManagementNode 1, Locationnode 9, LocationNookupNode1,  MatchNode 1, GatewayNetworkNode 1, SupportNetwotNode1 총 25개 노드가 표시됩니다.
-
+구성은 GameNode 4, GatewayNode 4, SupportNode2, IpcNode 1, ManagementNode 1, Locationnode 2, LocationNookupNode1,  MatchNode 1, GatewayNetworkNode 1, SupportNetwotNode1 총 18개 노드가 표시됩니다.
 
 
 ### 오류 확인
@@ -366,213 +344,111 @@ DB나 Redis의 경우에는 샘플 서버에 적용된 부분은 팀내부에서
 DB나 Redis의 설정이없다면 샘플 서버가 정상적으로 동작 하지않습니다.
 
 
-
-### Maven 빌드
-
-#### pom.xml 설정확인
-
+### Gradle 빌드
 GameAnvil 버전 확인
-
-```xml
-    <!-- gameanvil -->
-    <dependency>
-      <groupId>com.nhn.gameanvil</groupId>
-      <artifactId>gameanvil</artifactId>
-      <version>1.2.0-jdk8</version>
-    </dependency>
-```
-
-Build 설정
-
-```xml
-<build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.2.0</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <!-- executable jar 에서 main 으로 실행 될 클래스 -->
-              <mainClass>com.nhn.gameanvil.sample.Main</mainClass>
-              <!-- jar 파일 안의 META-INF/MANIFEST.MF 에 classpath 정보가 추가됨 -->
-              <addClasspath>true</addClasspath>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.4</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>com.nhn.gameanvil.sample.Main</mainClass>
-                </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>META-INF/io.netty.versions.properties</resource>
-                </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>META-INF/services/java.sql.Driver</resource>
-                </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>META-INF/LICENSE</resource>
-                </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>META-INF/NOTICE</resource>
-                </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>META-INF/services/reactor.blockhound.integration.BlockHoundIntegration</resource>
-                </transformer>
-              </transformers>
-              <artifactSet>
-                <excludes>
-                  <exclude>javax.activation:javax.activation-*</exclude>
-                  <exclude>org.javassist:javassist*</exclude>
-                </excludes>
-              </artifactSet>
-              <filters>
-                <filter>
-                  <artifact>*:*</artifact>
-                  <excludes>
-                    <exclude>module-info.class</exclude>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.DSA</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
-                    <exclude>META-INF/*.MF</exclude>
-                    <exclude>META-INF/*.txt</exclude>
-                    <exclude>about.html</exclude>
-                  </excludes>
-                </filter>
-              </filters>
-              <createDependencyReducedPom>false</createDependencyReducedPom>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <executable>java</executable>
-          <arguments>
-            <argument>-classpath</argument>
-            <!-- automatically creates the classpath using all project dependencies, also adding the project build directory -->
-            <classpath/>
-            <!-- Main class -->
-            <argument>com.nhn.gameanvil.sample.Main</argument>
-
-          </arguments>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
-        <executions>
-          <!-- Ant task for Quasar AOT instrumentation -->
-          <execution>
-            <id>Running AOT instrumentation</id>
-            <phase>compile</phase>
-            <configuration>
-              <tasks>
-                <taskdef name="instrumentationTask" classname="co.paralleluniverse.fibers.instrument.InstrumentationTask" classpathref="maven.dependency.classpath"/>
-                <instrumentationTask>
-                  <fileset dir="${project.build.directory}/classes/" includes="**/*.class"/>
-                </instrumentationTask>
-              </tasks>
-            </configuration>
-
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-          <execution>
-            <phase>package</phase>
-            <configuration>
-              <tasks>
-                <copy todir="target/config/" overwrite="false">
-                  <fileset dir="target/classes/">
-                    <include name="logback.xml" />
-                    <include name="mybatis-config.xml" />
-                    <include name="GameAnvilConfig.json" />
-                  </fileset>
-                </copy>
-                <copy todir="target/query/" overwrite="false">
-                  <fileset dir="target/classes/query/">
-                    <include name="*.xml" />
-                  </fileset>
-                </copy>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-    </plugins>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-    </resources>
-  </build>
+```groovy
+dependencies {
+    api 'com.nhn.gameanvil:gameanvil:1.4.1-jdk11'
+}
 ```
 
 
+build.gradle 설정
 
-#### Maven package 빌드 실행
+```groovy
+import java.nio.file.Paths
 
-maven 탭의 Lifecycle > package 를 동해서 프로젝트 빌드를 합니다.
+plugins {
+    id 'java'
+    id 'java-library'
+}
 
-![reference-1-server_07](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_07.png) 
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-정상적으로 빌드가 완료 되면 프로젝트 폴더 ./target에 빌드된 jar 파일이 생성됩니다.
+group = 'com.nhn.gameanvil'
+version = '1.4.1'
+java.sourceCompatibility = JavaVersion.VERSION_11
+java.targetCompatibility = JavaVersion.VERSION_11
 
-![reference-1-server_08](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_08.png) 
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
 
+configurations {
+    quasar
+    api.setCanBeResolved(true)
+    all {
+        resolutionStrategy {
+            force 'com.esotericsoftware:kryo:4.0.2'
+        }
+    }
+}
 
+// standalone jar 을 생성합니다.
+jar {
+    baseName = "sample_game_server"
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    manifest {
+        attributes 'Main-Class': 'com.nhn.gameanvil.sample.Main'
+    }
+
+    from {
+        configurations.compileClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+// GameAnvil 서버를 실행합니다
+task runMain(dependsOn: build, type: JavaExec) {
+    jvmArgs = [
+            "-Xms6g",
+            "-Xmx6g",
+            "-XX:+UseG1GC"]
+    main = 'com.nhn.gameanvil.sample.Main'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+compileJava {
+    dependsOn.processResources
+
+    doLast {
+        ant.taskdef(name: 'instrumentation', classname: 'co.paralleluniverse.fibers.instrument.InstrumentationTask', classpath: configurations.api.asPath)
+        ant.instrumentation(verbose: 'true', check: 'true', debug: 'true') {
+            fileset(dir: 'build/classes/') {
+                include(name: '**/*.class')
+            }
+        }
+    }
+}
+
+dependencies {
+    api files(Paths.get(project.projectDir.absolutePath, './src/main/resources/META-INF/quasar-core-0.8.0-jdk11.jar').toString())
+    api 'org.mybatis:mybatis:3.5.3'
+    api 'mysql:mysql-connector-java:8.0.23'
+    api 'com.nhn.gameanvil:gameanvil:1.4.1-jdk11'
+}
+```
+
+#### Gradle jar 빌드
+Gradle 탭의 GameAnvilTutorial > Tasks > build > jar 동해서 프로젝트 빌드를 합니다.
+
+![reference-1-server_07](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_07.png)
+
+정상적으로 빌드가 완료 되면 프로젝트 폴더 build/libs 에 빌드된 jar 파일이 생성됩니다.
+
+![reference-1-server_08](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_08.png)
 
 ## Command 사용해서 서버 실행
 
-Command로 서버를 구동시키려면  Maven으로 빌드된 sample_game_server-1.2.0.jar 파일과 config, query 폴더의 파일을 복사해 사용하면 됩니다.
+Command로 서버를 구동시키려면  Gradle로 빌드된 sample_game_server-1.4.1.jar 를 사용하면 됩니다.
 
-![reference-1-server_09](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_09.png) 
+![reference-1-server_09](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_09.png)
+
 
 ```
-java -Dco.paralleluniverse.fibers.detectRunawayFibers=false -Dco.paralleluniverse.fibers.verifyInstrumentation=false -Dconfig.file=.\config\GameAnvilConfig.json -Dlogback.configurationFile=.\config\logback.xml -DmybatisConfig=.\config\mybatis-config.xml -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar .\sample_game_server-1.2.0.jar
+java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar sample_game_server-1.4.1.jar
 ```
 
 - 기본으로 실행 시에 별도의 옵션이 지정되지 않으면 빌드할 때 지정되어 있는 환경 파일 적용됩니다.
@@ -583,36 +459,6 @@ java -Dco.paralleluniverse.fibers.detectRunawayFibers=false -Dco.parallelunivers
   - com.nhn.gameanvil.sample.mybatis.GameSqlSessionFactory 참고
 
 실행을 하면 IntelliJ 에서 실행한거와 같이 onReady 로그가 나오고 http://127.0.0.1:18400/management/nodeInfoPage 페이지에 모든 노드가 READY 되면 정상 기동된것입니다.
-
-
-
-## JIT 설정 (Optional)
-
-GameAnvil는 AOT Instrumentation뿐만 아니라 JIT Instrumentation도 지원합니다. 기본적으로는 AOT가 적용이되어 있어서 기본적으로 코드를 수정하고 maven 빌드를 통해서 AOT 빌드가 만들어 진것을 사용 하게 됩니다. AOT 빌드는 maven 빌드만 지원되기때문에 수정하고 확인 할때 maven 빌드를 해야 합니다. 매번 maven 빌드로 테스트하기 번거로워 로컬에서 테스트할 때는 Vm Option에`-javaagent:.\src\main\resources\META-INF\quasar-core-0.7.10-jdk8.jar=bm` 옵션을 추가하고 pom.xml에서 AOT 빌드옵션을 제거해줍니다.
-
-```xml
-         <!-- Ant task for Quasar AOT instrumentation -->
-          <execution>
-            <id>Running AOT instrumentation</id>
-            <phase>compile</phase>
-            <configuration>
-              <tasks>
-                <taskdef name="instrumentationTask" classname="co.paralleluniverse.fibers.instrument.InstrumentationTask" classpathref="maven.dependency.classpath"/>
-                <instrumentationTask>
-                  <fileset dir="${project.build.directory}/classes/" includes="**/*.class"/>
-                </instrumentationTask>
-              </tasks>
-            </configuration>
-
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-```
-
- intelliJ에서 바로 로컬 서버를 실행할 수 있습니다. 이렇게 서버를 실행시키면 JIT 방식으로 빌드가 됩니다.  서버가 실행될때 Instrumentation이 처리되게 됩니다.
-
-
 
 # sample-game-server 서버 살펴보기
 
@@ -762,12 +608,6 @@ GameAnvil는 AOT Instrumentation뿐만 아니라 JIT Instrumentation도 지원�
   
     ![reference-1-server_11](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_11.png) 
 
-### Gamebase
-
-- NHN Cloud의 Gamebase 등록
-  - 서버에서 앱 ID, SecretKey 필요
-
-
 ## 서버 동작 내용
 
 ### 서버 동작 설정
@@ -778,11 +618,11 @@ Main 클래스의 GameAnvilServer 설정을 하고 실행을 한다. 설정을 �
         GameAnvilServer gameAnvilServer = GameAnvilServer.getInstance();
 
         // 클라이언트와 전송할 프로토콜 정의 - 순서는 클라이언트와 동일 해야 한다.
-        gameAnvilServer.addProtoBufClass(0, Authentication.getDescriptor());
-        gameAnvilServer.addProtoBufClass(1, GameMulti.getDescriptor());
-        gameAnvilServer.addProtoBufClass(2, GameSingle.getDescriptor());
-        gameAnvilServer.addProtoBufClass(3, Result.getDescriptor());
-        gameAnvilServer.addProtoBufClass(4, User.getDescriptor());
+        gameAnvilServer.addProtoBufClass(Authentication.getDescriptor());
+        gameAnvilServer.addProtoBufClass(GameMulti.getDescriptor());
+        gameAnvilServer.addProtoBufClass(GameSingle.getDescriptor());
+        gameAnvilServer.addProtoBufClass(Result.getDescriptor());
+        gameAnvilServer.addProtoBufClass(User.getDescriptor());
 
         // 게임에서 사용하는 DB 쓰레드풀 지정
         gameAnvilServer.createExecutorService(GameConstants.DB_THREAD_POOL, 100);
@@ -956,37 +796,6 @@ static {
 ```
 
 rest요청에 대해서는 전달받은 restObject.writeString()으로 응답 메시지를 전달합니다.
-
-
-
-### 외부 http 요청
-
-com.nhn.gameanvil.sample.gateway.GameConnection
-
-Gamebase token 검증처리 같이 인증 시점에 게임 서버 에서 외부 서버로 rest로 요청을 해서 받는 처리를 합니다.
-
-```java
-// Gamebse 인증
-//----------------------------------- 토큰 유효한지에 대한 검증 Gamebase
-String gamebaseUrl = String.format(GameConstants.GAMEBASE_DEFAULT_URL + "/tcgb-gateway/v1.2/apps/X2bqX5du/members/%s/tokens/%s", accountId, authenticationReq.getAccessToken());
-HttpRequest httpRequest = new HttpRequest(gamebaseUrl);
-httpRequest.getBuilder().addHeader("Content-Type", "application/json");
-httpRequest.getBuilder().addHeader("X-Secret-Key", GameConstants.GAMEBASE_SECRET_KEY);
-logger.info("httpRequest url [{}]", gamebaseUrl);
-HttpResponse response = httpRequest.GET();
-logger.info("httpRequest response:[{}]", response.toString());
-
-// Gamebase 응답 json 데이터 객체 파싱
-AuthenticationResponse gamebaseResponse = response.getContents(AuthenticationResponse.class);
-if (gamebaseResponse.getHeader().isSuccessful())
-{
-    resultCode = ErrorCode.NONE;
-} else {
-    resultCode = ErrorCode.TOKEN_NOT_VALIDATED;
-}
-//------------------------------------
-```
-
 
 
 ### Redis
@@ -1269,8 +1078,6 @@ public int insertUser(GameUserInfo gameUserInfo) throws TimeoutException, Suspen
   "common": {
     "ip": "127.0.0.1", // 노드마다 공통으로 사용하는 IP. (머신의 IP를 지정)
     "meetEndPoints": ["127.0.0.1:18000"], // 대상 노드의 common IP와 communicatePort 등록. (해당 서버 endpoint 포함가능 , 리스트로 여러개 가능)
-    "ipcPort": 18000, // 다른 ipc node 와 통신할때 사용되는 port
-    "publisherPort" : 18100, // publish socket 을 위한 port
     "debugMode": false //디버깅시 각종 timeout 이 발생안하도록 하는 옵션 , 리얼에서는 반드시 false 이어야 한다.
   },
 
@@ -1278,8 +1085,8 @@ public int insertUser(GameUserInfo gameUserInfo) throws TimeoutException, Suspen
   // LocationNode 설정
   "location": {
     "clusterSize": 1, // 총 몇개의 머신(VM)으로 구성되는가?
-    "replicaSize": 3, // 복제 그룹의 크기 (master + slave의 개수)
-    "shardFactor": 3  // sharding을 위한 인수 (아래의 주석 참고)
+    "replicaSize": 1, // 복제 그룹의 크기 (master + slave의 개수)
+    "shardFactor": 2  // sharding을 위한 인수 (아래의 주석 참고)
     // 전체 shard의 개수 = clusterSize x replicaSize x shardFactor
     // 하나의 머신(VM)에서 구동할 shard의 개수 = replicaSize x shardFactor
     // 고유한 shard의 총 개수 (master 샤드의 개수) = clusterSize x shardFactor
@@ -1287,8 +1094,7 @@ public int insertUser(GameUserInfo gameUserInfo) throws TimeoutException, Suspen
 
   // 매치 노드 설정
   "match": {
-    "nodeCnt": 1,
-    "useLocationDirect": true
+    "nodeCnt": 1
   },
 
   //-------------------------------------------------------------------------------------
@@ -1297,26 +1103,14 @@ public int insertUser(GameUserInfo gameUserInfo) throws TimeoutException, Suspen
     "nodeCnt": 4, // 노드 개수. (노드 번호는 0 부터 부여 됨)
     "ip": "127.0.0.1", // 클라이언트와 연결되는 IP.
     "dns": "", // 클라이언트와 연결되는 도메인 주소.
-    "maintenance": false,
-    "tcpNoDelay": false, // Netty Bootstrap 설정시 사용 됨. (디폴트로 필드 미사용 및 기본 값 false)
     "connectGroup": { // 커넥션 종류.
       "TCP_SOCKET": {
         "port": 18200, // 클라이언트와 연결되는 포트.
         "idleClientTimeout": 240000 // 데이터 송수신이 없는 상태 이후의 타임아웃. (0 이면 사용하지 않음)
-        //        ,"secure": { // 보안 설정.
-        //          "useSelfSignedCert": true
-        ////          ,"keyCertChainPath": "gameanvil.crt" // 인증서 경로.
-        ////          ,"privateKeyPath": "privatekey.pem" // 개인 키 경로.
-        //        }
       },
       "WEB_SOCKET": {
         "port": 18300,
         "idleClientTimeout": 0
-        //        ,"secure": {
-        //          "useSelfSignedCert": true
-        ////          ,"keyCertChainPath": "gameanvil.crt"
-        ////          ,"privateKeyPath": "privatekey.pem"
-        //        }
       }
     }
   },

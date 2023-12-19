@@ -63,7 +63,7 @@ export default class GameAnvilManager {
         // 커넥터 생성.
         this.connector = Connector.Create();
 
-        // 메세지 루프. 10ms 마다 호출.
+        // 메시지 루프. 10ms 마다 호출.
         let updater = setInterval(() => { this.connector.Update(); }, 10);
     }
 

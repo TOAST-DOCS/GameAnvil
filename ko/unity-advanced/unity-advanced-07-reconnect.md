@@ -91,7 +91,7 @@ userAgent.Login(loginedUserInfo.UserType, loginedUserInfo.ChannelId, null,
 });
 ```
 
-로그인 성공 시 UserAgent.LoginInfo의 IsRelogined가 true이면 재접속 로그인에 성공한 것입니다. UserAgent.LoginInfo에 포함된 정보들을 바탕으로 재접속 처리를 하시면 됩니다. 이 때 제일 중요한 것이 재접속 시간 동안 서버의 변경된 데이터를 클라이언트에 동기화하는 것입니다. 이 동기화에 필요한 데이터를 UserAgent.LoginInfo의 Payload에 담아 처리할 수있습니다.  
+로그인 성공 시 UserAgent.LoginInfo의 IsRelogined가 true이면 재접속 로그인에 성공한 것입니다. UserAgent.LoginInfo에 포함된 정보들을 바탕으로 재접속 처리를 하시면 됩니다. 이때 제일 중요한 것이 재접속 시간 동안 서버의 변경된 데이터를 클라이언트에 동기화하는 것입니다. 이 동기화에 필요한 데이터를 UserAgent.LoginInfo의 Payload에 담아 처리할 수있습니다.  
 
 재접속 로그인을 하게 되면 서버에서는 BaseUser.onRelogin() 콜백이 호출되게 됩니다. 이때 동기화에 필요한 메시지를 정의하여 outPayload 매개변수에 추가하면 UserAgent.LoginInfo의 Payload로 받아서 처리할 수 있습니다. 
 

@@ -29,7 +29,7 @@ MyChatNode extends gameanvil.GameNode {
 
 ## 2. 채널
 
-채널은 하나의 서비스를 논리적으로 나눌 수 있는 방법을 제공합니다. 단, GameNode에 한해서만 사용 가능하며 채널명은 어떤 문자열이든 사용 가능합니다. 더욱 상세한 설명은 [Game > GameAnvil > 서버 개발 가이드 > 채널](server-09-channel.md)의 내용을 참고 하십시오.
+채널은 하나의 서비스를 논리적으로 나눌 수 있는 방법을 제공합니다. 단, GameNode에 한해서만 사용 가능하며 채널명은 어떤 문자열이든 사용 가능합니다. 더욱 상세한 설명은 [Game > GameAnvil > 서버 개발 가이드 > 채널](../server-impl/server-impl-09-channel.md)의 내용을 참고 하십시오.
 
 
 ## 3. 서비스 관리
@@ -38,7 +38,7 @@ MyChatNode extends gameanvil.GameNode {
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/service/detail.png)
 
-이 때, 서비스/채널 상세 정보 페이지가 제공하는 "수정"이나 "삭제" 버튼을 사용하여 해당 서비스와 채널 정보를 수정하거나 삭제할 수 있습니다.
+이때, 서비스/채널 상세 정보 페이지가 제공하는 "수정"이나 "삭제" 버튼을 사용하여 해당 서비스와 채널 정보를 수정하거나 삭제할 수 있습니다.
 
 
 또한 "등록" 버튼을 눌러 새로운 서비스와 채널 정보를 등록할 수도 있습니다.

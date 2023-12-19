@@ -142,7 +142,7 @@ export default class GameAnvilManager {
         // 커넥터 생성.
         this.connector = Connector.Create();
 
-        // 메세지 루프. 10ms 마다 호출.
+        // 메시지 루프. 10ms 마다 호출.
         let updater = setInterval(() => { this.connector.Update(); }, 10);
     }
 
@@ -201,7 +201,7 @@ let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
 //   agent : Authenticate를 호출한 ConnectionAgent 객체.
 //   resultCode : Authenticate 결과
 //   loginedUserInfoList : 이 어카운트 Id를 이용중인 로그인된 유저 정보.
-//   message : 서버에서 보내주는 추가 메세지. 
+//   message : 서버에서 보내주는 추가 메시지. 
 //   payload: 서버 콘텐츠에서 보내주는 추가 데이터.
 connection.Authenticate(
     "deviceId",
