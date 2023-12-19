@@ -10,7 +10,7 @@
 
 ![image.png](https://static.toastoven.net/prod_gameanvil/images/FiberConcept.png)
 
-이와 같이 파이버를 사용할 때의 장점은 순차적인 코드 작성이 가능하다는 점입니다. 서버 코드는 일반적인 블로킹 코드를 작성하는 것과 매우 흡사해집니다. 별도의 콜백 처리나 완료 통보에 신경쓸 필요가 전혀 없습니다. 이런 파이버의 장점에 더해 GameAnvil 사용자는 이 파이버 단위에 대해 크게 신경 쓸 필요가 없습니다. GameAnvil 엔진단에서 모든 파이버를 관리하고 있으므로 사용자는 일반적인 싱글 스레딩 코드를 작성하듯이 개발하면 됩니다.
+이와 같이 파이버를 사용할 때의 장점은 순차적인 코드 작성이 가능하다는 점입니다. 서버 코드는 일반적인 블로킹 코드를 작성하는 것과 매우 흡사해집니다. 별도의 콜백 처리나 완료 통보에 신경 쓸 필요가 전혀 없습니다. 이런 파이버의 장점에 더해 GameAnvil 사용자는 이 파이버 단위에 대해 크게 신경 쓸 필요가 없습니다. GameAnvil 엔진단에서 모든 파이버를 관리하고 있으므로 사용자는 일반적인 싱글 스레딩 코드를 작성하듯이 개발하면 됩니다.
 
 ![fiber-context-switching.png](https://static.toastoven.net/prod_gameanvil/images/fiber-context-switching.png)
 

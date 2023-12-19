@@ -1113,7 +1113,7 @@ public class GameManager : MonoBehaviour
 
 같은 방 안의 유저들간에 주고 받는 메시지는 MessageRequest, MessageResponse, MessageBroadcast외에 그 어떤 타입의 값도 모두 표현할 수 있습니다. 이번 챕터에서는 직접 프로토콜을 정의하고 서버와 클라이언트에 등록하는 방법을 살펴보겠습니다.
 
-메시지는 미리 정의한 프로토콜에 기반하여 정의되기만 하면 서버와 클라이언트 간에 송수신이 가능합니다. XML, json 등 여러가지 표현 수단이 있겠지만 GameAnvil은 Google Protocol Buffers를 사용합니다. 이는 속도와 안정성 측면에서 가장 좋은 솔루션 중 하나입니다.
+메시지는 미리 정의한 프로토콜에 기반하여 정의되기만 하면 서버와 클라이언트 간에 송수신이 가능합니다. XML, json 등 여러 가지 표현 수단이 있겠지만 GameAnvil은 Google Protocol Buffers를 사용합니다. 이는 속도와 안정성 측면에서 가장 좋은 솔루션 중 하나입니다.
 
 <br>
 
