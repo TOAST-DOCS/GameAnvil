@@ -20,6 +20,10 @@ throws SuspendExecution
 -javaagent:MY_PATH\quasar-core-0.7.10-jdk8.jar=bm
 ```
 
+```
+-javaagent:MY_PATH\quasar-core-0.8.0-jdk11.jar=bm
+```
+
 ### Note
 
 *이 항목은 반드시 VM 옵션의 가장 앞 부분에 추가해야 합니다. 이때, quasar-core의 경로는 본인의 quasar-core를 복사해둔 경로로 설정하세요.*
@@ -28,8 +32,9 @@ throws SuspendExecution
 
 ### 1.2. AOT Instrumentation
 
-AOT(ahead-of-time) Instrumentation을 진행하고 싶다면 아래의 내용을 프로젝트 객체 관리 파일(pom.xml)에 추가한 후, Maven을 통해 서버 바이너리를 package나 install 혹은 deploy하면 컴파일 완료 후 Instrumentation을 진행합니다. 이 경우에는 당연히 첫째 경우처럼 VM 옵션에서 javaagent가 필요하지 않습니다.
+AOT(ahead-of-time) Instrumentation을 진행하고 싶다면 아래의 내용을 프로젝트 객체 관리 파일(pom.xml)에 추가한 후, Maven을 통해 서버 바이너리를 package나 install 혹은 deploy 하면 컴파일 완료 후 Instrumentation을 진행합니다. 이 경우에는 당연히 첫째 경우처럼 VM 옵션에서 javaagent가 필요하지 않습니다.
 
+#### maven
 ```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
@@ -57,3 +62,26 @@ AOT(ahead-of-time) Instrumentation을 진행하고 싶다면 아래의 내용을
 </plugin>
 ```
 
+#### gradle
+```gradle
+// gradle 4.10.3 에서 테스트하였음
+// apply plugin: 'java-library'
+
+configurations {
+    quasar
+	api.setCanBeResolved(true)
+}
+
+compileJava {
+    dependsOn.processResources
+
+    doLast {
+        ant.taskdef(name: 'instrumentation', classname: 'co.paralleluniverse.fibers.instrument.InstrumentationTask', classpath: configurations.api.asPath)
+        ant.instrumentation(verbose: 'true', check: 'true', debug: 'true') {
+            fileset(dir: 'build/classes/') {
+                include(name: '**/*.class')
+            }
+        }
+    }
+}
+```

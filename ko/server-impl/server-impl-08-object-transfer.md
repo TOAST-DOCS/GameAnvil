@@ -4,7 +4,7 @@
 
 ## 1. 객체 전송(Object Transfer)
 
-GameAnvil에서 객체 전송이란 하나의 노드에서 다른 노드로 객체가 이동하는 것을 의미합니다. 사용자가 관심을 가져야할 객체 전송은 모두 게임 노드 사이에서 발생합니다. 그 대표적인 두 가지인 유저 전송과 룸 전송에 대해 살펴봅니다.
+GameAnvil에서 객체 전송이란 하나의 노드에서 다른 노드로 객체가 이동하는 것을 의미합니다. 사용자가 관심을 가져야 할 객체 전송은 모두 게임 노드 사이에서 발생합니다. 그 대표적인 두 가지인 유저 전송과 룸 전송에 대해 살펴봅니다.
 
 
 
@@ -60,37 +60,25 @@ public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
 
 ### 2-2. 전송 가능한 유저 타이머
 
-유저가 전송될 때 유저에 등록해둔 타이머도 함께 전송할 수 있습니다. 전송 가능한 타이머를 사용하기 위해서는 별도로 아래의 콜백 메서드에서 원하는 key를 이용해서 미리 등록해두어야 합니다. Timer 핸들러를 다음과 같이 원하는 key로 매핑해둡니다.
+유저가 전송될 때 유저에 등록해 둔 타이머도 함께 전송할 수 있습니다. 이때, 전송 이후에도 사용할 타이머를 등록할 수 있도록 onTransferInTimerHandler 콜백을 호출합니다. 사용자는 문자열 키와 그에 대응하는 TimerHandler를 등록할 수 있습니다. 문자열 키가 전송된 타이머 핸들러 키 목록에 존재하는 경우, 재등록할 타이머 핸들러를 등록합니다. 이 콜백에서 재등록하지 않은 타이머는 유저 또는 방 전송 이후 더 이상 사용되지 않기 떄문에 주의해야 합니다.
 
 ```java
- @Override
- public void onRegisterTimerHandler() {
-     registerTimerHandler("transferUserTimerHandler1", transferUserTimerHandler1());
-     registerTimerHandler("transferUserTimerHandler2", (timerObject, object) -> {
-         GameUser user = (GameUser) object;
-         logger.warn("GameUser::transferUserTimerHandler2() : userId({})", user.getId());
-     });
- }
+@Override
+public void onTransferInTimerHandler(TimerHandlerTransferPack timerHandlerTransferPack) {
+    if (timerHandlerTransferPack.getTimerHandlerKeys().contains(StringValues.TEST_TIMER_HANDLER)){
+        timerHandlerTransferPack.reRegister(StringValues.TEST_TIMER_HANDLER, testTimerHandler());
+    }
+    ...
+}
 ```
-
-등록이 완료된 타이머 객체는 언제든 해당 key를 이용해서 아래와 같이 게임 유저 구현부에서 사용할 수 있습니다. 단순히 등록만 한 타이머는 효과가 없으므로 실제 사용을 위해서는 반드시 아래와 같이 유저 객체에 추가해야 타이머가 발동합니다.
-
-```java
-addTimer(1, TimeUnit.SECONDS, 20, "transferRoomTimerHandler1", false);
-addTimer(2, TimeUnit.SECONDS, 0, "transferRoomTimerHandler2", false);
-```
-
-이렇게 유저 객체에 추가해 둔 타이머는 별도로 전송에 대한 처리를 하지 않아도 모두 자동으로 전송됩니다. 즉, 대상 게임 노드에서 해당 유저 객체에 대해 동일한 타이머 추가 과정을 거칠 필요가 없습니다.
-
-
 
 ## 3. 방 전송 (RoomTranfer)
 
 ![gamenode-room-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-room-transfer2.png)
 
-방 전송은 중급 개념에서 설명한 유저 전송과 매우 비슷한 기능입니다. 유저 보다 큰 개념인 방이 전송되는 차이가 있을 뿐입니다. 게임 노드에는 한 명 이상의 게임 유저가 참여한 방 객체가 생성될 수 있습니다. 이 방 객체는 유저 객체와 마찬가지로 게임 노드 사이에서 전송될 수 있습니다. 예를 들면 1번 게임 노드의 방 객체가 2번 게임 노드로 전송이 되는 것이죠. 이렇게 방이 전송될 때 당연하게도 방 안에 존재하는 유저들도 함께 전송이 일어납니다. 그 덕분에 방이 전송되기 전/후의 게임 흐름은 연속되어 진행될 수 있습니다. 즉, 해당 방 객체가 전송되는 과정은 매우 빠르게 진행되므로 방 안의 유저들은 인지하지 못한 상태에서 게임을 지속할 수 있습니다.  이 기술은 GameAnvil 무점검 패치(NonStopPatch)의 핵심이자 근간이 되며 방 객체를 잘 직렬화/역직렬화해야 의도한대로 동작합니다. 이러한 직렬화/역직렬화 대상은 GameAnvil 사용자가 직접 구현할 수 있습니다. 즉, 해당 방 객체의 어떤 값을 전송할 것인지 결정하는 것이죠.
+방 전송은 중급 개념에서 설명한 유저 전송과 매우 비슷한 기능입니다. 유저보다 큰 개념인 방이 전송되는 차이가 있을 뿐입니다. 게임 노드에는 한 명 이상의 게임 유저가 참여한 방 객체가 생성될 수 있습니다. 이 방 객체는 유저 객체와 마찬가지로 게임 노드 사이에서 전송될 수 있습니다. 예를 들면 1번 게임 노드의 방 객체가 2번 게임 노드로 전송이 되는 것이죠. 이렇게 방이 전송될 때 당연하게도 방 안에 존재하는 유저들도 함께 전송이 일어납니다. 그 덕분에 방이 전송되기 전/후의 게임 흐름은 연속되어 진행될 수 있습니다. 즉, 해당 방 객체가 전송되는 과정은 매우 빠르게 진행되므로 방 안의 유저들은 인지하지 못한 상태에서 게임을 지속할 수 있습니다.  이 기술은 GameAnvil 무점검 패치(NonStopPatch)의 핵심이자 근간이 되며 방 객체를 잘 직렬화/역직렬화해야 의도한 대로 동작합니다. 이러한 직렬화/역직렬화 대상은 GameAnvil 사용자가 직접 구현할 수 있습니다. 즉, 해당 방 객체의 어떤 값을 전송할 것인지 결정하는 것이죠.
 
-이러한 방 전송을 발생시키는 것은 오직 무점검 패치(NonStopPatch) 명령 뿐입니다. 이 명령은 일반적으로 GameAnvil Console을 통해 게임 운영자가 명시적으로 전달합니다.
+이러한 방 전송을 발생시키는 것은 오직 무점검 패치(NonStopPatch) 명령뿐입니다. 이 명령은 일반적으로 GameAnvil Console을 통해 게임 운영자가 명시적으로 전달합니다.
 
 
 
@@ -128,29 +116,16 @@ public void onTransferIn(List<GameUser> userList, TransferPack transferPack) thr
 }
 ```
 
-
-
 ### 3-2. 전송 가능한 방 타이머
 
-방이 전송될 때 방에 등록해둔 타이머도 함께 전송할 수 있습니다. 전송 가능한 타이머를 사용하기 위해서는 별도로 아래의 콜백 메서드에서 원하는 key를 이용해서 미리 등록해두어야 합니다. Timer 핸들러를 다음과 같이 원하는 key로 매핑해둡니다. 이는 유저 전송과 완전히 동일합니다.
+방이 전송될 때 방에 등록해 둔 타이머도 함께 전송할 수 있습니다. 이때, 전송 이후에도 사용할 타이머를 등록할 수 있도록 onTransferInTimerHandler 콜백을 호출합니다. 사용자는 문자열 키와 그에 대응하는 TimerHandler를 등록할 수 있습니다. 문자열 키가 전송된 타이머 핸들러 키 목록에 존재하는 경우, 재등록할 타이머 핸들러를 등록합니다. 이 콜백에서 재등록하지 않은 타이머는 유저 또는 방 전송 이후 더 이상 사용되지 않기 떄문에 주의해야 합니다.
 
 ```java
- @Override
- public void onRegisterTimerHandler() {
-     registerTimerHandler("transferRoomTimerHandler1", transferRoomTimerHandler1());
-     registerTimerHandler("transferRoomTimerHandler2", (timerObject, object) -> {
-         GameRoom room = (GameRoom) object;
-         logger.warn("GameRoom::transferRoomTimerHandler2() : roomId({})", room.getId());
-     });
- }
+@Override
+public void onTransferInTimerHandler(TimerHandlerTransferPack timerHandlerTransferPack) {
+    if (timerHandlerTransferPack.getTimerHandlerKeys().contains(StringValues.TEST_TIMER_HANDLER)){
+        timerHandlerTransferPack.reRegister(StringValues.TEST_TIMER_HANDLER, testTimerHandler());
+    }
+    ...
+}
 ```
-
-등록이 완료된 타이머 객체는 언제든 해당 key를 이용해서 아래와 같이 게임 룸 구현부에서 사용할 수 있습니다. 단순히 등록만 한 타이머는 효과가 없으므로 실제 사용을 위해서는 반드시 아래와 같이 유저 객체에 추가해야 타이머가 발동합니다.
-
-```java
-addTimer(1, TimeUnit.SECONDS, 20, "transferRoomTimerHandler1", false);
-addTimer(2, TimeUnit.SECONDS, 0, "transferRoomTimerHandler2", false);
-```
-
-이렇게 방 객체에 추가해 둔 타이머는 별도로 전송에 대한 처리를 하지 않아도 모두 자동으로 전송됩니다. 즉, 대상 게임 노드에서 해당 방 객체에 대해 동일한 타이머 추가 과정을 거칠 필요가 없습니다.
-

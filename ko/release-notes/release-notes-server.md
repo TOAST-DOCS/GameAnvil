@@ -179,7 +179,7 @@ public class GameUser extends BaseUser {
   * 사용자가 쉽게 비동기 sql를 처리하도록 지원
   
 * 사용자 가이드 문서 보강
-  * 하나의 문서에 함축적으로 나열되어 있던 여러가지 중요한 주제들을 모두 별도의 메뉴로 구성하여 그 내용의 질과 양을 업그레이드 하였습니다
+  * 하나의 문서에 함축적으로 나열되어 있던 여러 가지 중요한 주제들을 모두 별도의 메뉴로 구성하여 그 내용의 질과 양을 업그레이드 하였습니다
   * 튜토리얼을 통해 쉽고 간단하지만 꽤 멋진 직소 퍼즐 게임(서버&클라이언트)을 직접 개발해 볼 수 있습니다. 
   * JavaDoc API 레퍼런스에서 내용이 부족하거나 누락된 부분을 모두 보충하였습니다. 또한 설명이 애매하거나 잘못 이해될 수 있는 문장들을 모두 다듬었습니다.
 
@@ -247,12 +247,12 @@ public class GameUser extends BaseUser {
 | GameAnvilTopic.ALL\_GAME\_USER | 게임 노드에 있는 모든 게임 유저 객체 | GameUser |
 
 
-* 예외 처리 및 메소드 시그니쳐 최적화
+* 예외 처리 및 메서드 시그니쳐 최적화
 
 
-  * 무분별하게 사용된 예외 처리와 메소드 시그니처를 정리하고 사용자에게 필요한 정보만 넘겨주도록 수정
+  * 무분별하게 사용된 예외 처리와 메서드 시그니처를 정리하고 사용자에게 필요한 정보만 넘겨주도록 수정
 
-* HttpRequest에 PATCH 메소드 추가
+* HttpRequest에 PATCH 메서드 추가
 * 인증서 없이 테스트용으로 SSL를 사용할 수 있는 기능 설정명이 useSelf에서 useSelfSignedCert으로 변경되었습니다.
 
 ---
@@ -289,7 +289,7 @@ public class GameUser extends BaseUser {
 
 #### Change
 
-* HttpReqest에 PATCH 메소드를 사용할 수 있는 API 추가
+* HttpReqest에 PATCH 메서드를 사용할 수 있는 API 추가
     * httpRequest.PATCH()
     * httpRequest.PATCH(AsyncHttpCompletionHandler asyncHttpCompletionHandler)
     * httpRequest.PATCHAsync()

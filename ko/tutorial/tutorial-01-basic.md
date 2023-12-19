@@ -18,7 +18,7 @@
 
 아래 단계를 진행하며 수정을 완료하게 되는 최종 서버 샘플 프로젝트는 아래 링크를 통해 다운로드할 수 있습니다. 초기 템플릿에서 여러 단계를 거쳐 서버 기능을 구현하고 나면 결국 어떤 구조가 되는지 미리 확인하고 싶다면 해당 프로젝트를 다운로드해 참고하면 됩니다.
 
-[최종 서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilServerTutorial.zip?disposition=attachment)
+[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilServerTutorial_1213.zip?disposition=attachment)
 
 ### 프로젝트 구성
 
@@ -55,11 +55,11 @@
 * Main : 프로그램의 진입점 Main 함수를 포함하는 클래스입니다.
 * protocol 패키지 : java로 컴파일된 프로토콜 버퍼 파일을 포함하는 패키지입니다.
 * proto 패키지 : Google Protobuf 라이브러리를 이용해 작성된 프로토콜 파일입니다.
-* build.sh : 프로토콜 파일을 java로 컴파일하여 프로토콜 버퍼 파일을 생성하는 실행 파일입니다.
+* build.sh / build.bat : 프로토콜 파일을 java로 컴파일하여 프로토콜 버퍼 파일을 생성하는 실행 파일입니다.
 * GameAnvilConfig.json : 게임엔빌 구동에 필요한 서버 설정 정보를 기록한 파일입니다. 서버 구현에 맞게 수정할 수 있습니다.
 * logback.xml : Java 프로젝트에서 로깅을 구성하는 데 사용되는 파일입니다. Logback 프레임워크의 설정 파일로서, 로깅 시스템의 동작 방식과 로그의 형식, 저장 위치 등을 지정합니다. 이 파일을 사용하여 로깅 수준, 로그 형식, 로그 파일의 경로 및 이름, 로그 롤링 정책 등을 설정할 수 있습니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_project_view_init.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_project_view_init_1213.png)
 
 ## GameAnvil 서버 설정 파일 수정
 
@@ -116,7 +116,7 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
 ```json
 "game": [
     {
-      "nodeCnt": 0,
+      "nodeCnt": 1,
       "serviceId": 1,
       "serviceName": "Sync",
       "channelIDs": [""], // 노드마다 부여할 채널 ID. (유니크하지 않아도 됨. ""는 채널 사용하지 않음을 의미)
@@ -125,9 +125,9 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
   ]
 ```
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_config_json.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_config_json_1213.png)
 
-참고로 gateway 설정을 보면 TCP_SOCKET 커넥션은 11200 포트를 사용하는 것으로 설정되어 있는 것을 확인할 수 있습니다. 이는 클라이언트와 연결되는 포트로, 이후 클라이언트 프로젝트에서 서버 접속 정보를 기입하는 부분에서 이 포트 번호를 사용하게 됩니다.
+참고로 gateway 설정을 보면 TCP_SOCKET 커넥션은 18200 포트를 사용하는 것으로 설정되어 있는 것을 확인할 수 있습니다. 이는 클라이언트와 연결되는 포트로, 이후 클라이언트 프로젝트에서 서버 접속 정보를 기입하는 부분에서 이 포트 번호를 사용하게 됩니다.
 
 ## GameAnvil 서버 구동
 
@@ -139,29 +139,21 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
 
 Project 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다면 `Add SDK > Download JDK`를 통해서 원하는 버전의 JDK를 다운로드해 설정합니다. Language level은 SDK default로 설정합니다. 다음으로 Modules 탭에서 Language level을 Project default로 설정합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/project_structure.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/project_structure_1213.png)
 
-좌상단 메뉴에서 `Run > Edit Configurations`를 선택하여 `Run/Debug Configurations` 창을 열고, VM Option에 아래 내용이 있는 것을 확인합니다. 사용 중인 Java 버전에 따라 추가되는 내용이 조금 달라지므로 주의합니다. 
+설정 메뉴에서 gradle 에서 사용하는 JVM 을 확인합니다. 프로젝트 SDK 와 동일한 gradle 버전으로 설정합니다.
 
-Java 8 버전을 사용하는 Run With JDK8의 경우 아래의 내용이 있을 것입니다.
-
-```
--javaagent:./src/main/resources/META-INF/quasar-core-0.7.10-jdk8.jar=bm
-```
-
-Java 11 버전을 사용하는 Run With JDK11의 경우에는 아래 내용이 있을 것입니다.
-
-```
--javaagent:./src/main/resources/META-INF/quasar-core-0.8.0-jdk11.jar=bm
-```
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/run_configurations.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gradle_sdk_config_1213.png)
 
 ### 서버 구동
 
-실행 설정이 완료되었으면, Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 `Run 'Run with JDK11'`을 선택합니다. Java 8 버전으로 실행하는 경우에는 `Run/Debug Configurations` 창의 왼쪽 Application 목록에서 `Run With JDK8`을 드래그하여 가장 첫 번째 순서에 위치하도록 이동시키면 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭했을 때 `Run 'Run with JDK8'`을 선택할 수 있게 변경될 것입니다. 이렇게 한 번 실행한 이후에는 인텔리제이 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
+실행 설정이 완료되었으면, Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 `Main.main() 실행`을 선택합니다. 이렇게 한 번 실행한 이후에는 인텔리제이 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/run_with_jdk11.png)
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run1_1213.png)
+
+build.gradle 에는 편의를 위한 JVM 옵션이 미리 설정되어 있습니다 이러한 설정을 활용하여 서버를 실행시키리면 IntelliJ 의 Gradle 창에서 `Task > others > runMain` 을 우클릭 후 `GameAnvilTutorial 실행` 을 클릭합니다. 
+
+![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run2_1213.png)
 
 서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다. 
 
@@ -194,17 +186,21 @@ import com.nhn.gameanvil.node.game.BaseGameNode;
 import com.nhn.gameanvil.node.game.data.BaseChannelRoomInfo;
 import com.nhn.gameanvil.node.game.data.BaseChannelUserInfo;
 import com.nhn.gameanvil.node.game.data.ChannelUpdateType;
-import com.nhn.gameanvil.packet.Packet;
-import com.nhn.gameanvil.packet.PacketDispatcher;
 import com.nhn.gameanvil.packet.Payload;
+import com.nhn.gameanvil.packet.message.MessageDispatcher;
 
 @ServiceName("Sync")
-public class SyncGameNode extends BaseGameNode {
+public final class SyncGameNode extends BaseGameNode {
 
-    private static PacketDispatcher packetDispatcher = new PacketDispatcher();
+    private static final MessageDispatcher<SyncGameNode> messageDispatcher = new MessageDispatcher<>();
 
     static {
-        // packetDispatcher.registerMsg();
+        // messageDispatcher.registerMsg();
+    }
+
+    @Override
+    public MessageDispatcher<SyncGameNode> getMessageDispatcher() {
+        return messageDispatcher;
     }
 
     @Override
@@ -220,12 +216,6 @@ public class SyncGameNode extends BaseGameNode {
     @Override
     public void onReady() throws SuspendExecution {
 
-    }
-
-    @Override
-    public void onDispatch(Packet packet) throws SuspendExecution {
-        if (packetDispatcher.isRegisteredMessage(packet))
-            packetDispatcher.dispatch(this, packet);
     }
 
     @Override
@@ -274,12 +264,12 @@ public class SyncGameNode extends BaseGameNode {
     }
 
     @Override
-    public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelUserInfo baseChannelUserInfo, int i, String s) throws SuspendExecution {
+    public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelUserInfo baseChannelUserInfo, int userId, String accountId) throws SuspendExecution {
 
     }
 
     @Override
-    public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelRoomInfo baseChannelRoomInfo, int i) throws SuspendExecution {
+    public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelRoomInfo baseChannelRoomInfo, int userId) throws SuspendExecution {
 
     }
 
@@ -324,28 +314,33 @@ public class SyncGameNode extends BaseGameNode {
 자동으로 생성된 코드는 아래와 같습니다.
 
 ```java
+
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.annotation.UserType;
 import com.nhn.gameanvil.node.game.BaseUser;
 import com.nhn.gameanvil.node.game.data.RoomMatchResult;
-import com.nhn.gameanvil.packet.Packet;
-import com.nhn.gameanvil.packet.PacketDispatcher;
 import com.nhn.gameanvil.packet.Payload;
+import com.nhn.gameanvil.packet.message.MessageDispatcher;
 import com.nhn.gameanvil.serializer.TransferPack;
 
 @ServiceName("Sync")
 @UserType("USER_TYPE_SYNC")
-public class SyncGameUser extends BaseUser {
+public final class SyncGameUser extends BaseUser {
 
-    private static PacketDispatcher packetDispatcher = new PacketDispatcher();
+    private static final MessageDispatcher<SyncGameUser> messageDispatcher = new MessageDispatcher<>();
 
     static {
-        // packetDispatcher.registerMsg();
+        // messageDispatcher.registerMsg();
     }
 
     @Override
-    public boolean onLogin(final Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public MessageDispatcher<SyncGameUser> getMessageDispatcher() {
+        return messageDispatcher;
+    }
+
+    @Override
+    public boolean onLogin(Payload payload, Payload sessionPayload, Payload outPayload) throws SuspendExecution {
         boolean isSuccess = true;
         return isSuccess;
     }
@@ -356,12 +351,12 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public boolean onLoginByOtherDevice(final String newDeviceId, Payload outPayloadForKickUser) throws SuspendExecution {
+    public boolean onLoginByOtherDevice(String newDeviceId, Payload outPayloadForKickUser) throws SuspendExecution {
         return true;
     }
 
     @Override
-    public boolean onLoginByOtherUserType(final String userType, Payload outPayload) throws SuspendExecution {
+    public boolean onLoginByOtherUserType(String userType, Payload outPayload) throws SuspendExecution {
         return true;
     }
 
@@ -371,7 +366,7 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public boolean onReLogin(final Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onReLogin(Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
         boolean isSuccess = true;
         return isSuccess;
     }
@@ -380,10 +375,6 @@ public class SyncGameUser extends BaseUser {
     public void onDisconnect() throws SuspendExecution {
     }
 
-    @Override
-    public void onDispatch(final Packet packet) throws SuspendExecution {
-        packetDispatcher.dispatch(this, packet);
-    }
 
     @Override
     public void onPause() throws SuspendExecution {
@@ -396,7 +387,7 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public void onLogout(final Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onLogout(Payload payload, Payload outPayload) throws SuspendExecution {
 
     }
 
@@ -412,18 +403,13 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public RoomMatchResult onMatchRoom(final String roomType, final String matchingGroup, final String matchingUserCategory, final Payload payload) throws SuspendExecution {
+    public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, Payload payload) throws SuspendExecution {
         return null;
     }
 
     @Override
-    public boolean onMatchUser(final String roomType, final String matchingGroup, final Payload payload, Payload outPayload) throws SuspendExecution {
+    public boolean onMatchUser(String roomType, String matchingGroup, Payload payload, Payload outPayload) throws SuspendExecution {
         return false;
-    }
-
-    @Override
-    public void onRegisterTimerHandler() {
-
     }
 
     @Override
@@ -432,12 +418,12 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public void onTransferOut(final TransferPack transferPack) throws SuspendExecution {
+    public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
 
     }
 
     @Override
-    public void onTransferIn(final TransferPack transferPack) throws SuspendExecution {
+    public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
 
     }
 
@@ -447,13 +433,13 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public boolean onCheckMoveOutChannel(final String destinationChannelId, final Payload payload, Payload errorPayload) throws SuspendExecution {
+    public boolean onCheckMoveOutChannel(String destinationChannelId, Payload payload, Payload errorPayload) throws SuspendExecution {
         boolean canMoveOut = false;
         return canMoveOut;
     }
 
     @Override
-    public void onMoveOutChannel(final String destinationChannelId, Payload outPayload) throws SuspendExecution {
+    public void onMoveOutChannel(String destinationChannelId, Payload outPayload) throws SuspendExecution {
     }
 
     @Override
@@ -461,7 +447,7 @@ public class SyncGameUser extends BaseUser {
     }
 
     @Override
-    public void onMoveInChannel(final String sourceChannelId, final Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onMoveInChannel(String sourceChannelId, Payload payload, Payload outPayload) throws SuspendExecution {
     }
 
     @Override
@@ -469,6 +455,7 @@ public class SyncGameUser extends BaseUser {
 
     }
 }
+
 ```
 
 게임 유저는 클라이언트가 서버에 로그인 요청을 함으로써 생성됩니다. 서버에서는, 클라이언트에서 전송된 페이로드 등을 통해서 로그인 허용 여부를 결정해서 반환값으로 내보낼 수 있습니다. 주요 로직만 엔진 사용자가 작성하고, 로그인 성공이나 실패 처리는 엔진에서 담당합니다.
@@ -488,26 +475,30 @@ public class SyncGameUser extends BaseUser {
 자동으로 생성된 코드는 아래와 같습니다.
 
 ```java
+
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.annotation.RoomType;
 import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.node.game.BaseRoom;
-import com.nhn.gameanvil.node.game.RoomPacketDispatcher;
-import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.node.game.RoomMessageDispatcher;
 import com.nhn.gameanvil.packet.Payload;
 import com.nhn.gameanvil.serializer.TransferPack;
-import com.yourcompany.gameanvil.user.SyncGameUser;
 
 import java.util.List;
 
 @ServiceName("Sync")
 @RoomType("ROOM_TYPE_SYNC")
-public class SyncGameRoom extends BaseRoom<SyncGameUser> {
+public final class SyncGameRoom extends BaseRoom<SyncGameUser> {
 
-    private static RoomPacketDispatcher packetDispatcher = new RoomPacketDispatcher();
+    private static final RoomMessageDispatcher<SyncGameRoom, SyncGameUser> messageDispatcher = new RoomMessageDispatcher<>();
 
     static {
-        // packetDispatcher.registerMsg();
+        // messageDispatcher.registerMsg();
+    }
+
+    @Override
+    public RoomMessageDispatcher<SyncGameRoom, SyncGameUser> getMessageDispatcher() {
+        return messageDispatcher;
     }
 
     @Override
@@ -519,22 +510,17 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
     }
 
     @Override
-    public void onDispatch(SyncGameUser user, final Packet packet) throws SuspendExecution {
-        packetDispatcher.dispatch(this, user, packet);
-    }
-
-    @Override
-    public boolean onCreateRoom(SyncGameUser user, final Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onCreateRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
         return true;
     }
 
     @Override
-    public boolean onJoinRoom(SyncGameUser user, final Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onJoinRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
         return true;
     }
 
     @Override
-    public boolean onLeaveRoom(SyncGameUser user, final Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onLeaveRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
         return true;
     }
 
@@ -554,12 +540,6 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
     }
 
     @Override
-    public void onRegisterTimerHandler() {
-
-    }
-
-
-    @Override
     public boolean canTransfer() throws SuspendExecution {
         return true;
     }
@@ -570,7 +550,7 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
     }
 
     @Override
-    public void onTransferIn(List<SyncGameUser> userList, final TransferPack transferPack) throws SuspendExecution {
+    public void onTransferIn(List<SyncGameUser> userList, TransferPack transferPack) throws SuspendExecution {
     }
 
     @Override
@@ -589,7 +569,7 @@ public class SyncGameRoom extends BaseRoom<SyncGameUser> {
 
 ## 서버 구현을 마무리하며
 
-여기까지 기초 튜토리얼 샘플 실행을 위한 서버 구축이 완료되었습니다. 다시 서버를 실행해 보면, 로그 중에서 `{"message":"All nodes are ready!!"}`라는 문구를 확인할 수 있습니다. 이 로그가 떴다는 것은 GameAnvil 서버가 정상적으로 실행되었음을 의미합니다.
+여기까지 기초 튜토리얼 샘플 실행을 위한 서버 구축이 완료되었습니다. 다시 서버를 실행해 보면, 로그중에서 `{"message":"All nodes are ready!!"}`라는 문구를 확인할 수 있습니다. 이 로그가 떴다는 것은 GameAnvil 서버가 정상적으로 실행되었음을 의미합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/all_nodes_are_ready.png)
 
@@ -672,7 +652,7 @@ Hierarchy 뷰 상의 Canvas 게임오브젝트에 컴포넌트로 추가 되어 
 
 ### Connect 관련 필드 설정
 
-접속할 서버 정보를 기재합니다. 로컬에서 서버를 직접 띄우는 경우이므로 ip는 `127.0.0.1`을 사용하겠습니다. port는 게이트웨이 노드의 기본 포트인 `11200`을 사용하겠습니다. 따로 설정할 필요 없이 GameAnvilConnector의 기본값을 그대로 사용하면 됩니다. ip와 port 정보는 필요한 경우 플레이 모드에서 수정할 수 있도록 유니티의 InputField와 연결하는 코드가 작성되어 있는 것을 확인할 수 있습니다.
+접속할 서버 정보를 기재합니다. 로컬에서 서버를 직접 띄우는 경우이므로 ip는 `127.0.0.1`을 사용하겠습니다. port는 게이트웨이 노드의 기본 포트인 `18200`을 사용하겠습니다. 따로 설정할 필요 없이 GameAnvilConnector의 기본값을 그대로 사용하면 됩니다. ip와 port 정보는 필요한 경우 플레이 모드에서 수정할 수 있도록 유니티의 InputField와 연결하는 코드가 작성되어 있는 것을 확인할 수 있습니다.
 
 ```c#
 void Start()
@@ -929,7 +909,7 @@ public void DelOnCreateRoom(UserAgent userAgent, ResultCodeCreateRoom result, in
 
 ### 게임 룸 입장 요청 API 사용
 
-서버에 게임 룸이 생성되었다고 가정해 봅시다. 해당 룸에 접속하기 위해서는 게임엔빌 커넥터에서 게임 룸 입장 요청 메서드를 호출하면 됩니다. 이 때, 룸 생성 당시 전달 받은 게임 룸 아이디를 전달합니다.
+서버에 게임 룸이 생성되었다고 가정해 봅시다. 해당 룸에 접속하기 위해서는 게임엔빌 커넥터에서 게임 룸 입장 요청 메서드를 호출하면 됩니다. 이때, 룸 생성 당시 전달 받은 게임 룸 아이디를 전달합니다.
 
 ```c#
 GameAnvilConnector.getInstance().getUserAgent().JoinRoom("ROOM_TYPE_SYNC", {룸 아이디 입력});

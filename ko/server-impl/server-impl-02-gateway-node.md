@@ -6,7 +6,7 @@
 
 ![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gatewaynode_on_network.png)
 
-GatewayNode는 클라이언트가 접속하는 관문(Gateway)입니다. 즉, 클라이언트의 커넥션과 게임 서비스에 대한 세션을 관리합니다. 이 때, 클라이언트는 게임을 진행하기 위해 반드시 GatewayNode에 접속한 후 인증을 완료해야 합니다. 이들의 관계는 다음 그림과 같습니다.
+GatewayNode는 클라이언트가 접속하는 관문(Gateway)입니다. 즉, 클라이언트의 커넥션과 게임 서비스에 대한 세션을 관리합니다. 이때, 클라이언트는 게임을 진행하기 위해 반드시 GatewayNode에 접속한 후 인증을 완료해야 합니다. 이들의 관계는 다음 그림과 같습니다.
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
@@ -50,16 +50,6 @@ public class SampleGatewayNode extends BaseGatewayNode {
     }
 
     /**
-     * 처리할 패킷이 있을 경우 호출
-     *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onDispatch(Packet packet) throws SuspendExecution {      
-    }
-
-    /**
      * pause 될 때 호출
      *
      * @param payload contents 에서 전달하고자 하는 추가 정보
@@ -96,7 +86,7 @@ public class SampleGatewayNode extends BaseGatewayNode {
 
 커넥션은 클라이언트의 물리적 접속 자체를 의미합니다. 클라이언트는 고유한 AccountId를 이용하여 커넥션 상에서 인증 절차를 진행할 수 있습니다. 인증이 성공할 경우 해당 AccountId는 생성된 커넥션에 매핑됩니다.
 
-이러한 커넥션은 다음과와 같이 BaseConnection을 상속한 후 콜백 메서드들을 재정의 합니다. 이때, 임의의 플랫폼에서 인증한 후 획득하는 유저의 키값 등을 AccountId로 사용할 수 있습니다. 예를 들어 Gamebase를 통해 인증한 후 UserId를 획득하면 이 값을 GameAnvil의 인증 과정에서 AccountId로 사용할 수 있습니다. 또한 GatewayNode 구현과 마찬가지로 구현한 클래스를 엔진에 등록하기 위해 @Connection 어노테이션을 사용하고 있습니다.
+이러한 커넥션은 다음과 같이 BaseConnection을 상속한 후 콜백 메서드들을 재정의 합니다. 이때, 임의의 플랫폼에서 인증한 후 획득하는 유저의 키 값 등을 AccountId로 사용할 수 있습니다. 예를 들어 Gamebase를 통해 인증한 후 UserId를 획득하면 이 값을 GameAnvil의 인증 과정에서 AccountId로 사용할 수 있습니다. 또한 GatewayNode 구현과 마찬가지로 구현한 클래스를 엔진에 등록하기 위해 @Connection 어노테이션을 사용하고 있습니다.
 
 ```java
 @Connection // 이 커넥션 클래스를 엔진에 등록
@@ -115,16 +105,6 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
      */
     @Override
     public boolean onAuthenticate(final String accountId, final String password, final String deviceId, final Payload payload, final Payload outPayload) throws SuspendExecution {      
-    }
-
-    /**
-     * 처리할 패킷이 있을 경우 호출
-     *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onDispatch(final Packet packet) throws SuspendExecution {      
     }
 
     @Override
@@ -148,13 +128,13 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
 이러한 콜백의 의미와 용도는 아래의 표를 참고하세요.
 
 
-| 콜백 이름      | 의미                | 설명                                                                                                                                                                                                                                                     |
-| ---------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| onAuthenticate | 인증                | 클라이언트가 Authentication() API를 사용하여 커넥션에 대한 인증을 요청 할 때 호출됩니다. 사용자는 여기에서 클라이언트가 보낸 인증 정보를 바탕으로 인증 처리를 진행할 수 있습니다. 만일 인증이 성공하면 true를 반환하고 실패하면 false를 반환해야 합니다. |
-| onDispatch     | 처리할  패킷이 있음 | 커넥션에 처리할 패킷이 도달하면 호출됩니다. 사용자는 자신이 선언한 디스패처를 사용하거나 패킷에 대한 추가 작업을 진행할 수 있습니다. 자세한 내용은[메시지 처리](server-07-message-handling#13-ondispatch)를 참고하세요.                                  |
-| onPause        | 일시 정지           | 콘솔을 통해 GatewayNode를 일시 정지하면 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 커넥션에서 추가로 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                                              |
-| onResume       | 재개                | 콘솔을 통해 GatewayNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 재개 상태에서 커넥션에 대해 처리하고 싶은 코드를 이 곳에 구현할 수 있습니다.                                               |
-| onDisconnect   | 접속 종료           | 클라이언트로부터 접속이 끊겼을 때 호출됩니다. 이 때, 추가로 처리할 코드를 이 곳에 구현합니다.                                                                                                                                                            |
+| 콜백 이름      | 의미                | 설명                                                                                                                                                                                                                                                    |
+| ---------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| onAuthenticate | 인증                | 클라이언트가 Authentication() API를 사용하여 커넥션에 대한 인증을 요청할 때 호출됩니다. 사용자는 여기에서 클라이언트가 보낸 인증 정보를 바탕으로 인증 처리를 진행할 수 있습니다. 만일 인증이 성공하면 true를 반환하고 실패하면 false를 반환해야 합니다. |
+| onPause        | 일시 정지           | 콘솔을 통해 GatewayNode를 일시 정지하면 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 커넥션에서 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                                             |
+| onResume       | 재개                | 콘솔을 통해 GatewayNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 재개 상태에서 커넥션에 대해 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                              |
+| onDisconnect   | 접속 종료           | 클라이언트로부터 접속이 끊겼을 때 호출됩니다. 이때, 추가로 처리할 코드를 이곳에 구현합니다.                                                                                                                                                           |
+| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메시지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메시지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하세요. |
 
 
 
@@ -168,24 +148,18 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
 @Session // 이 세션 클래스를 엔진에 등록
 public class SampleSession extends BaseSession {
 
-    private static PacketDispatcher dispatcher = new PacketDispatcher();
+    private static MessageDispatcher<SampleSession> dispatcher = new MessageDispatcher<>();
 
     static {
-        dispatcher.registerMsg(SampleGame.MsgToSessionReq.getDescriptor(), _MsgToSessionHandler.class);
+        dispatcher.registerMsg(SampleGame.MsgToSessionReq.class, _MsgToSessionHandler.class);
+    }
+
+    @Override
+    public MessageDispatcher<SampleSession> getMessageDispatcher() {
+        return dispatcher;
     }
 
     /**
-     * 세션으로 패킷이 전달될 때 호출
-     *
-     * @param packet 처리할 패킷
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onDispatch(final Packet packet) throws SuspendExecution {
-        dispatcher.dispatch(this, packet);
-    }
-  
-     /**
      * login 호출 이전에 호출
      *
      * @param outPayload 클라이언트로 전달할 페이로드
@@ -218,12 +192,12 @@ public class SampleSession extends BaseSession {
 이러한 콜백의 의미와 용도는 아래의 표를 참고하세요.
 
 
-| 콜백 이름    | 의미                | 설명                                                                                                                                                                                                                                           |
-| -------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| onDispatch   | 처리할  패킷이 있음 | 세션에 처리할 패킷이 도달하면 호출됩니다. 사용자는 자신이 선언한 디스패처를 사용하거나 패킷에 대한 추가 작업을 진행할 수 있습니다. 자세한 내용은[메시지 처리](server-07-message-handling#13-ondispatch)를 참고하세요.                          |
-| onPreLogin   | 로그인 전처리       | GameNode에 로그인을 요청하기 직전에 호출됩니다. 이 때, 사용자는 매개변수로 전달된 출력용 페이로드(outPayload)에 임의의 값을 넣어서 로그인 요청에 실어 보낼 수 있습니다. 이 페이로드는 게임 노드에서 로그인 콜백을 처리할 때 그대로 전달됩니다. |
-| onPostLogin  | 로그인 후처리       | GameNode에 로그인을 완료한 후 호출됩니다. 로그인 완료 후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                                                                    |
-| onPostLogout | 로그아웃 후처리     | 로그 아웃 처리가 완료된 후 호출됩니다. 로그 아웃 이후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                                                                       |
+| 콜백 이름    | 의미                | 설명                                                                                                                                                                                                                                          |
+| -------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| onPreLogin   | 로그인 전처리       | GameNode에 로그인을 요청하기 직전에 호출됩니다. 이때, 사용자는 매개변수로 전달된 출력용 페이로드(outPayload)에 임의의 값을 넣어서 로그인 요청에 실어 보낼 수 있습니다. 이 페이로드는 게임 노드에서 로그인 콜백을 처리할 때 그대로 전달됩니다. |
+| onPostLogin  | 로그인 후처리       | GameNode에 로그인을 완료한 후 호출됩니다. 로그인 완료 후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                                                                   |
+| onPostLogout | 로그아웃 후처리     | 로그아웃 처리가 완료된 후 호출됩니다. 로그아웃 이후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                                                                       |
+| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메시지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메시지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하세요. |
 
 
 

@@ -47,11 +47,10 @@ message SampleReceive
 
 ### 메시지 등록
 
-새로 생성한 메시지를 사용하려면 사용할 메시지를 ProtocolManager에 서버와 같은 값으로 미리 등록해야 합니다. 미리 등록하지 않거나 서버와 다르면, 동작하지 않거나 오동작 하거나 예외가 발생할 수 있습니다.
+새로 생성한 메시지를 사용하려면 사용할 메시지를 ProtocolManager에 미리 등록해야 합니다. 미리 등록하지 않으면, 동작하지 않거나 오동작 하거나 예외가 발생할 수 있습니다.
 
 ```c#
-// 서버와 같은 값으로 등록해야 한다.
-ProtocolManager.getInstance().RegisterProtocol(0, Messages.MessagesReflection.Descriptor);
+ProtocolManager.getInstance().RegisterProtocol(Messages.MessagesReflection.Descriptor);
 ```
 
 ### 메시지 전송
@@ -60,11 +59,11 @@ Request()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 
 
 ```c#
 /// <summary>
-/// 유저 에이전트를 사용 해서 프로토 버프 메세지 전송
+/// 유저 에이전트를 사용 해서 프로토 버프 메시지 전송
 /// </summary>
-/// <typeparam name="T">프로토 버프 타입 메세지</typeparam>
+/// <typeparam name="T">프로토 버프 타입 메시지</typeparam>
 /// <param name="agent">전송할 유저 에이전트</param>
-/// <param name="message">전송할 프로토 버프 메세지</param>
+/// <param name="message">전송할 프로토 버프 메시지</param>
 /// <param name="action">응답 처리 할 동작</param>
 static public void Request<T>(User.UserAgent agent, IMessage message, Action<User.UserAgent, T> action) where T : IMessage;
 
@@ -77,7 +76,7 @@ static public void Request<T>(User.UserAgent agent, IMessage message, Action<Use
 static public void Request(User.UserAgent agent, Packet packet, Action<User.UserAgent, Packet> action);
 ```
 
-Request 응답을 받기 위해 리스너를 등록하는 방법도 있는데, 이는 [Unity 심화 개발 가이드 > 메세지 핸들링](../unity-advanced/unity-advanced-04-message-handling.md)에서 확인하실 수 있습니다.
+Request 응답을 받기 위해 리스너를 등록하는 방법도 있는데, 이는 [Unity 심화 개발 가이드 > 메시지 핸들링](../unity-advanced/unity-advanced-04-message-handling.md)에서 확인하실 수 있습니다.
 
 지정된 시간 내에 응답이 오지 않으면 타임아웃을 발생시키고 다음 메시지를 처리합니다. 타임아웃은 UserAgent.OnErrorCommandListeners 리스너와 UserAgent.OnErrorCustomCommandListeners 리스너에 ErrorCode.TIMEOUT으로 전달됩니다.
 

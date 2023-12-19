@@ -46,7 +46,7 @@ SSL은 기본적으로 GameAnvilConfig을 통해 보안 설정을 합니다. 인
 
 | 이름              | 설명                                                         | 기본값 |
 | ----------------- | ------------------------------------------------------------ | ------ |
-| useSelfSignedCert | 테스트를 위한 자체 인증을 사용할지 여부를 설정합니다. true이면 테스트용으로 인증서 없이도 SSL을 사용할 수 있습니다. 이 때, 다음의 keyCertChainPath, privateKeyPath 설정은 무시됩니다. | false  |
+| useSelfSignedCert | 테스트를 위한 자체 인증을 사용할지 여부를 설정합니다. true이면 테스트용으로 인증서 없이도 SSL을 사용할 수 있습니다. 이때, 다음의 keyCertChainPath, privateKeyPath 설정은 무시됩니다. | false  |
 | keyCertChainPath  | 인증서 상대 경로 경로<br>-Dsecure 옵션을 사용하지 않을 경우, 루트 경로는 프로젝트 내의 resources/ 입니다. | -      |
 | privateKeyPath    | 개인키 상대 경로<br/>-Dsecure 옵션을 사용하지 않을 경우, 루트 경로는 프로젝트 내의 resources/ 입니다. | -      |
 
@@ -74,7 +74,7 @@ SSL은 기본적으로 GameAnvilConfig을 통해 보안 설정을 합니다. 인
 
 | 이름              | 설명                                                         | 기본값 |
 | ----------------- | ------------------------------------------------------------ | ------ |
-| useSelfSignedCert | 테스트를 위한 자체 인증을 사용할지 여부를 설정합니다. true이면 테스트용으로 인증서 없이도 SSL을 사용할 수 있습니다. 이 때, 다음의 keyCertChainPath, privateKeyPath 설정은 무시됩니다. | false  |
+| useSelfSignedCert | 테스트를 위한 자체 인증을 사용할지 여부를 설정합니다. true이면 테스트용으로 인증서 없이도 SSL을 사용할 수 있습니다. 이때, 다음의 keyCertChainPath, privateKeyPath 설정은 무시됩니다. | false  |
 | keyCertChainPath  | 인증서 상대 경로 경로<br>-Dsecure 옵션을 사용하지 않을 경우, 루트 경로는 프로젝트 내의 resources/ 입니다. | -      |
 | privateKeyPath    | 개인키 상대 경로<br/>-Dsecure 옵션을 사용하지 않을 경우, 루트 경로는 프로젝트 내의 resources/ 입니다. | -      |
 
