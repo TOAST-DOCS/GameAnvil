@@ -59,9 +59,9 @@ GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.
 
 ## Maven으로 GameHammer jar 파일 생성하기
 
-GameHammer를 이용해 테스트 시나리오를 작성한 뒤 GameAnvil 콘솔에서 테스트할 목적 등으로 jar 파일을 생성할 수 있습니다. 여기에서는 메이븐을 통해 업로드용 jar 파일을 생성합니다.
+GameHammer를 이용해 테스트 시나리오를 작성한 후에는 GameAnvil 콘솔을 통해 테스트할 목적 등으로 jar 파일을 생성할 수 있습니다. 메이븐을 통해서 업로드용 jar 파일을 생성해보겠습니다.
 
-GameHammer를 추가한 프로젝트의 pom.xml이 있는 디렉터리에서 아래 명령어를 실행합니다.
+GameHammer를 추가한 프로젝트의 pom.xml이 있는 디렉토리에서 아래 명령어를 실행합니다.
 
 ```
 mvn package
