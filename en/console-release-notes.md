@@ -1,5 +1,30 @@
 ## Game > GameAnvil > Release Note > Console
 
+
+## January 9, 2024
+### Fix
+* Improved stability
+
+### Change
+* Reorganized the server screen
+  * Separated the general server from the autoscale group menu
+  * Added the detailed search and control of created servers and autoscale groups
+  * Added the server and autoscale group details page
+  * Added the feature to copy servers and autoscale groups
+  * Added the feature to bulk modify general servers
+  * Added the feature to bulk modify autoscale group deployment files
+  * Added the feature to recover from failed autoscale group instances
+  * Added autoscale group scale event history view page
+  * Added the GameAnvil Config feature
+  * Modified the deployment files menu
+    * Deleted default deployment files
+    * Modified the search feature
+  * Modified the Safe Pause screen 
+  * Reorganized the node menu
+    * Added the feature to view and refine information
+  * Modified server, autoscale group creation screen
+    * GameAnvil Config can be created by writing it in JSON format in advance
+
 ## September 26, 2023
 ### New
 * Added a software license agreement screen
