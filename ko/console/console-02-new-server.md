@@ -22,19 +22,19 @@ GameAnvil 콘솔은 크게 상위 메뉴로 큰 기능이 나뉘며 각 메뉴�
 앞 서 "게임 서버" 혹은 "서버"의 용어에 대해 설명한바 있습니다. 그 의미대로 서버를 생성하기 위해서는 최소한 서버 바이너리와 관련 설정 및 데이터 등이 준비되어야 합니다. 콘솔은 이를 위해 "서버" 메뉴의 "배포 파일"과 "구성(Config)" 탭을 제공합니다. 
 
 사용자가 개발한 게임 서버 바이너리를 "배포" 탭의 기능을 이용하여 업로드할 수 있습니다. 업로드한 바이너리는 아래의 화면과 같이 그 내역이 관리됩니다. 서버를 생성할 때 이러한 배포 파일 중 하나를 선택하여 각 인스턴스로 배포할 수 있습니다.  
-![그림](./images/console/new-server/deploy.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/new-server/deploy.png)
 
 배포 파일과 마찬가지로 서버를 구동하기 위한 구성 정보(Config)를 등록해야 합니다. 이를 통해 서버 바이너리를 어떤 설정에 기반하여 구동할 것인지 결정할 수 있습니다. 이러한 구성 파일 또한 다음 화면과 같이 그 내역이 별도로 관리됩니다.
 
-![그림](./images/console/new-server/config.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/new-server/config.png)
 
 구성 정보(Config)를 등록하는 방식은 크게 두 가지를 제공합니다. 다음의 그림과 같이 미리 생성된 JSON 파일을 업로드 할 수 있습니다. 이 때, 최초로 구성 정보(Config) 파일을 작성하는 경우에는 "Config 템플릿 파일"을 다운로드 받아서 사용할 수 있습니다.
 
-![그림](./images/console/new-server/config-new.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/new-server/config-new.png)
 
 또한 아래의 화면과 같이 편집창을 이용하여 직접 구성 정보를 입력한 후 등록할 수도 있습니다. 등록 방식 외에는 어떠한 차이점도 없으므로 사용자가 원하는 방법을 선택하면 됩니다.
 
-![그림](./images/console/new-server/config-edit.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/new-server/config-edit.png)
 
 이렇게 등록한 배포 파일과 구성 파일은 그 목록 뿐만 아니라 "이력" 탭을 통해 그 동안의 모든 이력을 조회할 수도 있습니다.
 
@@ -50,7 +50,7 @@ GameAnvil 콘솔은 크게 상위 메뉴로 큰 기능이 나뉘며 각 메뉴�
 
 다음과 같이 서버 생성 페이지가 새롭게 열리는 것을 확인할 수 있습니다.
 
-![그림](./images/console/new-server/create-new.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/new-server/create-new.png)
 
 이 문서의 나머지 부분은 이 서버 생성 페이지의 기능들에 대해 설명합니다.
 
@@ -95,11 +95,11 @@ GameAnvil의 노드는 게임 서버의 기능 단위입니다. 개발이 완료
 
 서버가 정상적으로 구동되면 이미지와 같이 "RUNNING" 상태로 바뀝니다. 이렇게 생성된 서버를 클릭하면 다음과 같이 서버 정보가 보여집니다. 사용자는 서버 제어 명령을 통해 해당 서버를 종료시킨 후, 삭제하거나 재부팅 등을 할 수 있습니다. 혹은 다중 선택 버튼을 통해 한 번에 여러 개의 서버를 동시에 선택하여 명령을 수행할 수도 있습니다.
 
-![그림](./images/console/new-server/created.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/new-server/created.png)
 
 서버 목록에서 임의의 항목을 클릭하면 서버 상세 정보를 확인할 수 있습니다.
 
-![그림](./images/console/new-server/detail.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/new-server/detail.png)
 
 
 ## 6. 생성된 노드 정보 확인
@@ -107,13 +107,13 @@ GameAnvil의 노드는 게임 서버의 기능 단위입니다. 개발이 완료
 앞 서, 우리는 생성된 서버 정보를 확인하는 방법을 살펴 보았습니다. 이와 마찬가지로 생성된 서버를 구성하는 모든 노드 정보 또한 "노드" 탭을 통해 확인할 수 있습니다.
 
 "서버 타입"과 "노드 타입" 그리고 "상태" 등의 체크 박스 뿐만 아니라 "노드 ID" 등의 좀 더 명확한 정보를 통해 원하는 노드 정보만 필터링 가능합니다. 
-![그림](./images/console/new-server/node.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/new-server/node.png)
 
 ## 7. 로드 밸런서
 
 GameAnvil 서비스는 클라이언트의 접속을 효율적으로 처리하기 위해 로드 밸런서를 연동합니다. GameAnvil의 노드 중 클라이언트가 접속할 수 있는 포인트는 게이트웨이 노드와 서포트 노드입니다. 그리고 이들은 모두 여러 대의 인스턴스로 구성될 수 있습니다. 이때, 여러 대의 접속 포인트는 적절한 부하 분산을 위해 로드 밸런서와 연동되어야 합니다. 또한 해당 로드 밸런서는 외부에서 접속 가능한 플로팅IP에 연결되어야 합니다.
 
-![그림](./images/console/new-server/lb.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/new-server/lb.png)
 
 이러한 일련의 모든 과정은 GameAnvil 서비스가 알아서 처리합니다. 그리고 위의 이미지와 같이 "로드 밸런서 정보" 버튼을 통해 접속 정보를 제공합니다. 해당 정보는 클라이언트의 접속 주소/포트 쌍이므로 불필요하게 외부에 전달되지 않도록 주의할 필요가 있습니다.
 

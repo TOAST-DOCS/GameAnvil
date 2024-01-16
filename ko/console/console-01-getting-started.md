@@ -38,7 +38,7 @@ GameAnvil을 사용하기 위해서는 NHN Cloud에서 GameAnvil 서비스를 �
 
 팝업창의 내용을 따라 결제 수단 등록을 완료하면 다음과 같이 조직 생성 및 선택 화면을 통해 활성화가 계속 진행됩니다.
 
-![그림](./images/console/getting-started/org-and-project.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/org-and-project.png)
 
 원하는 이름으로 조직을 생성하고 나면 사용자는 자신만의 고유한 콘솔 접근 권한을 가지게 됩니다. 바로 이 콘솔이 운영 단계에서 필요한 모든 기능을 제공합니다. 이 문서의 나머지 부분은 이 콘솔의 기능과 사용법을 중심으로 내용을 풀어 나가도록 하겠습니다.
 

@@ -10,7 +10,7 @@
 
 서버 상태는 프로세스(S/W)와 인스턴스(H/W)의 상태를 복합적으로 표현합니다. 서버 관리 페이지에서 볼 수 있는 대시 보드는 이러한 서버 상태를 나열하고 각각의 상태에 속한 서버의 대수를 표시하고 있습니다. 또한 구분되는 색깔로 각각의 상태를 나타냅니다.
 
-![그림](./images/console/state/dashboard.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/state/dashboard.png)
 
 <br>
 다음은 각각의 서버 상태에 관한 설명입니다.
