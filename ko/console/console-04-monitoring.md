@@ -7,7 +7,7 @@
 대시보드에서 보여주는 서버 정보와 노드 정보는 상세 정보를 펼칠 수 있습니다. 다음은 상세 보기를 했을 때의 서버 정보입니다. 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/monitoring/dashboard-server-detail.png)
 
-마찬가지로 다음은 ㅅ항세 보기를 했을 때의 노드 정보입니다.
+마찬가지로 다음은 상세 보기를 했을 때의 노드 정보입니다.
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/monitoring/dashboard-node-detail.png)
 

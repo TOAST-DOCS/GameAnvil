@@ -5,7 +5,7 @@
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-group.png)
 
-"오토스케일 그룹 생성"을 눌러 새로운 오토 스케일 그룹을 생성할 수 있습니다. 이 때, 다음과 같이 여러 가지 설정 값들을 지정할 수 있습니다. 
+"오토스케일 그룹 생성"을 눌러 새로운 오토 스케일 그룹을 생성할 수 있습니다. 이 때, 오토스케일의 동작에 영향을 주는 여러 가지 설정이 제공됩니다. 
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param1.png)
 
@@ -13,7 +13,7 @@
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param2.png)
 
-이러한 증설과 감축 조건에 해당하는 값들은 각각 AND/OR 연산으로 조합할 수 있습니다. 이 때, CPU와 Memory 등의 하드웨어 리소스 뿐만 아니라 게임 유저수를 추가로 설정할 수 있습니다.
+이러한 증설과 감축 조건에 해당하는 값들은 각각 AND/OR 연산으로 조합할 수 있습니다. 여기에는 CPU와 Memory 등의 하드웨어 리소스 뿐만 아니라 게임 유저수와 같은 논리적인 리로스를 추가로 설정할 수 있습니다.
 
 오토스케일 그룹이 생성되면 다음과 같이 그 목록을 확인할 수 있습니다. 또한, 서버 생성과 마찬가지로 각 항목을 클릭하여 생성된 오토스케일 그룹의 상세 정보를 확인할 수 있습니다.
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-created.png)
@@ -41,7 +41,7 @@
 
 ## 4. 노드 구성
 
-오토스케일 그룹의 노드 구성은 일반 서버 구성과 일부 차이가 있습니다. 가장 큰 차이점은 오토스케일 그룹을 단일 노드로 구성된 서버로만 생성 가능하다는 것입니다. 이때, GATEWAY, GAME 2가지 노드만 선택 가능합니다. SUPPORT와 MATCH는 오토스케일 그룹을 생성할 수 없습니다.
+오토스케일 그룹의 노드 구성은 일반 서버 구성과 일부 차이가 있습니다. 가장 큰 차이점은 오토스케일 그룹을 단일 노드로 구성된 서버로만 생성이 가능하다는 것입니다. 이때, GATEWAY, GAME 2가지 노드만 선택 가능합니다. SUPPORT와 MATCH는 아직 오토스케일을 지원하지 않습니다.
 
 단일 노드로 구성한다는 것은 서로 다른 노드를 하나의 서버로 구성할 수 없음을 의미합니다. 이는 게임 노드나 서포트 노드처럼 서비스를 구성해야하는 경우에는, 단일 서비스만으로 구성해야 함을 의미하기도 합니다. 앞서 살펴본 예시 이미지는 "RPSGame" 서비스를 위한 게임 노드 3개가 하나의 서버로 구성됩니다. 하나의 노드를 선택하면 나머지는 더 이상 선택 할 수 없습니다.
 
