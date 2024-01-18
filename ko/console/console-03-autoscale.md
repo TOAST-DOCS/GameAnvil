@@ -13,7 +13,7 @@
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param2.png)
 
-이러한 증설과 감축 조건에 해당하는 값들은 각각 AND/OR 연산으로 조합할 수 있습니다. 여기에는 CPU와 Memory 등의 하드웨어 리소스 뿐만 아니라 게임 유저수와 같은 논리적인 리로스를 추가로 설정할 수 있습니다.
+이러한 증설과 감축 조건에 해당하는 값들은 각각 AND/OR 연산으로 조합할 수 있습니다. 여기에는 CPU와 Memory 등의 하드웨어 리소스 뿐만 아니라 게임 유저수와 같은 논리적인 리소스를 추가로 설정할 수 있습니다.
 
 오토스케일 그룹이 생성되면 다음과 같이 그 목록을 확인할 수 있습니다. 또한, 서버 생성과 마찬가지로 각 항목을 클릭하여 생성된 오토스케일 그룹의 상세 정보를 확인할 수 있습니다.
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-created.png)
