@@ -54,7 +54,7 @@
 
 #### Safe Pause를 진행하는 서버의 상태
 
-* 서버를 구성하는 여러 개의 노드 중 일부가 SAFE PAUSE 혹은 READY(LOCK) 상태일 수 있습니다. 이러한 서버의 상태는 함축적으로 "" 상태로 표현합니다.
+* 서버를 구성하는 여러 개의 노드 중 일부가 SAFE PAUSE 혹은 READY(LOCK) 상태일 수 있습니다. 이러한 서버의 상태는 함축적으로 SAFE PAUSE 상태로 표현합니다.
 
 
 Safe Pause에 대한 더 자세한 설명은 [Safe Pause](console-09-safe-pause.md)를 참고하세요.
