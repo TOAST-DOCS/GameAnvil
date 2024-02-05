@@ -829,7 +829,7 @@ class UserListener implements IUserListener {
     OnErrorCommand?(user: UserAgent, errorCode: ErrorCode, msgName: string): void { }
     /**
      * 공지 알림
-     * @param user 공지 를 받은 유저에이전트 
+     * @param user 공지를 받은 유저에이전트 
      * @param message 공지 메시지
      */
     OnNotice?(user: UserAgent, message: string): void { }
