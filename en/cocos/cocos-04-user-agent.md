@@ -64,7 +64,7 @@ userAgent.Logout((agent: UserAgent, resultCode: ResultCodeLogout, payload: Paylo
      * @param user Logout()을 요청한 유저에이전트
      * @param resultCode  Logout() 결과 코드
      * @param force 강제 로그아웃여부
-     * @param payload 서버로 부터 받은 추가정보
+     * @param payload 서버로부터 받은 추가정보
      */
     if (ResultCodeLogout.LOGOUT_SUCCESS == resultCode) {
         // 성공
@@ -95,7 +95,7 @@ userAgent.CreateRoom(roomType, roomName, payload, (agent: UserAgent, resultCode:
      * @param resultCode CreateRoom() 결과 코드
      * @param roomId 생성된 방의 룸아이디
      * @param roomName 생성된 방의 이름
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeCreateRoom.CREATE_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -124,7 +124,7 @@ userAgent.JoinRoom(roomId, roomType, payload, (agent: UserAgent, resultCode: Res
      * @param resultCode JoinRoom() 결과 코드
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeJoinRoom.JOIN_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -149,7 +149,7 @@ userAgent.LeaveRoom(payload, (agent: UserAgent, resultCode: ResultCodeLeaveRoom,
      * @param resultCode LeaveRoom() 결과 코드
      * @param force 강퇴 여부
      * @param roomId 퇴장한 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -180,7 +180,7 @@ userAgent.NamedRoom(roomName, roomType, isParty, payload, (agent: UserAgent, res
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
      * @param created 입장한 방을 생성했는지 여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeNamedRoom.NAMED_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -222,7 +222,7 @@ userAgent.MatchRoom(isCreateRoomIfNotJoinRoom, isMoveRoomIfJoinedRoom, roomType,
      * @param roomId 매치된 방의 룸아이디
      * @param roomName 매치된 방의 이름
      * @param created 매치된 방의 생성여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeMatchRoom.MATCH_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -254,7 +254,7 @@ userAgent.MatchUserStart(roomType, payload, (agent: UserAgent, resultCode: Resul
      * MatchUserStart()의 결과
      * @param user MatchUserStart()를 요청한 유저에이전트 
      * @param resultCode MatchUserStart() 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS == resultCode) {
         // 성공
@@ -274,7 +274,7 @@ class MatchUserListener implements IUserListener {
      * @param resultCode 매칭 결과 코드
      * @param created 방 생성 여부. true일 경우 매칭 요청한 UserAgent가  방을 생성한 것을 의미한다. 방장을 결정하는 용도 등으로 사용할 수 있음
      * @param roomId 매칭된 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchUserDone(user: UserAgent, resultCode: ResultCodeMatchUserDone, created: boolean, roomId: number, payload: Payload): void {
         if (ResultCodeMatchUserDone.MATCH_USER_DONE_SUCCESS == resultCode) {
@@ -345,7 +345,7 @@ userAgent.NamedRoom(roomName, roomType, isParty, payload, (agent: UserAgent, res
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
      * @param created 입장한 방을 생성했는지 여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeNamedRoom.NAMED_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -369,7 +369,7 @@ userAgent.MatchPartyStart(roomType, payload, (agent: UserAgent, resultCode: Resu
      * MatchPartyStart()의 결과
      * @param user MatchPartyStart()을 요청한 유저에이전트 
      * @param resultCode MatchPartyStart() 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음.
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음.
      */
     if (ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS == resultCode) {
         // 성공
@@ -389,7 +389,7 @@ class MatchPartyListener implements IUserListener {
      * @param resultCode 매칭 결과 코드
      * @param created 방 생성 여부. true일 경우 매칭 요청한 UserAgent가  방을 생성한 것을 의미한다. 방장을 결정하는 용도 등으로 사용할 수 있음
      * @param roomId 매칭된 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchUserDone(user: UserAgent, resultCode: ResultCodeMatchUserDone, created: boolean, roomId: number, payload: Payload): void {
         if (ResultCodeMatchUserDone.MATCH_USER_DONE_SUCCESS == resultCode) {
@@ -444,7 +444,7 @@ class MoveChannelListener implements IUserListener {
      * @param resultCode 체널이동 결과 코드
      * @param force 서버에서 강제로 체널을 이동했는지 여부
      * @param channelId 이동한 체널아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMoveChannel?(user: UserAgent, resultCode: ResultCodeMoveChannel, force: boolean, channelId: string, payload: Payload): void {
         // 채널 이동
@@ -656,7 +656,7 @@ userAgent.MoveChannel(channelId, payload, (agent: UserAgent, resultCode: ResultC
      * @param resultCode 체널이동 결과 코드
      * @param force 서버에서 강제로 체널을 이동했는지 여부
      * @param channelId 이동한 체널아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS == resultCode) {
         // 성공
@@ -686,7 +686,7 @@ class UserListener implements IUserListener {
      * @param user Logout()을 요청한 유저에이전트
      * @param resultCode  Logout() 결과 코드
      * @param force 강제 로그아웃여부
-     * @param payload 서버로 부터 받은 추가정보
+     * @param payload 서버로부터 받은 추가정보
      */
     OnLogout?(user: UserAgent, resultCode: ResultCodeLogout, force: boolean, payload: Payload): void { }
     /**
@@ -696,7 +696,7 @@ class UserListener implements IUserListener {
      * @param roomId 매치된 방의 룸아이디
      * @param roomName 매치된 방의 이름
      * @param created 매치된 방의 생성여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchRoom?(user: UserAgent, resultCode: ResultCodeMatchRoom, roomId: number, roomName: string, created: boolean, payload: Payload): void { }
     /**
@@ -705,7 +705,7 @@ class UserListener implements IUserListener {
      * @param resultCode CreateRoom() 결과 코드
      * @param roomId 생성된 방의 룸아이디
      * @param roomName 생성된 방의 이름
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnCreateRoom?(user: UserAgent, resultCode: ResultCodeCreateRoom, roomId: number, roomName: string, payload: Payload): void { }
     /**
@@ -714,7 +714,7 @@ class UserListener implements IUserListener {
      * @param resultCode JoinRoom() 결과 코드
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnJoinRoom?(user: UserAgent, resultCode: ResultCodeJoinRoom, roomId: number, roomName: string, payload: Payload): void { }
     /**
@@ -724,7 +724,7 @@ class UserListener implements IUserListener {
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
      * @param created 입장한 방을 생성했는지 여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnNamedRoom?(user: UserAgent, resultCode: ResultCodeNamedRoom, roomId: number, roomName: string, created: boolean, payload: Payload): void { }
     /**
@@ -733,14 +733,14 @@ class UserListener implements IUserListener {
      * @param resultCode LeaveRoom() 결과 코드
      * @param force 강퇴 여부
      * @param roomId 퇴장한 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnLeaveRoom?(user: UserAgent, resultCode: ResultCodeLeaveRoom, force: boolean, roomId: number, payload: Payload): void { }
     /**
      * MatchUserStart()의 결과
      * @param user MatchUserStart()를 요청한 유저에이전트 
      * @param resultCode MatchUserStart() 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchUserStart?(user: UserAgent, resultCode: ResultCodeMatchUserStart, payload: Payload): void { }
     /**
@@ -755,7 +755,7 @@ class UserListener implements IUserListener {
      * @param resultCode 매칭 결과 코드
      * @param created 방 생성 여부. true일 경우 매칭 요청한 UserAgent가  방을 생성한 것을 의미한다. 방장을 결정하는 용도 등으로 사용할 수 있음
      * @param roomId 매칭된 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchUserDone?(user: UserAgent, resultCode: ResultCodeMatchUserDone, created: boolean, roomId: number, payload: Payload): void { }
     /**
@@ -767,7 +767,7 @@ class UserListener implements IUserListener {
      * MatchPartyStart()의 결과
      * @param user MatchPartyStart()을 요청한 유저에이전트 
      * @param resultCode MatchPartyStart() 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음.
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음.
      */
     OnMatchPartyStart?(user: UserAgent, resultCode: ResultCodeMatchPartyStart, payload: Payload): void { }
     /**
@@ -782,14 +782,14 @@ class UserListener implements IUserListener {
      * @param resultCode 체널이동 결과 코드
      * @param force 서버에서 강제로 체널을 이동했는지 여부
      * @param channelId 이동한 체널아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMoveChannel?(user: UserAgent, resultCode: ResultCodeMoveChannel, force: boolean, channelId: string, payload: Payload): void { }
     /**
      * Snapshot()의 결과
      * @param user Snapshot()을 요청한 유저에이전트 
      * @param resultCode Snapshot()의 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
      OnSnapshot?(user: UserAgent, resultCode: ResultCodeSnapshot, payload: Payload): void { }
     /**

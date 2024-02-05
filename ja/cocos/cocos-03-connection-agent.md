@@ -51,7 +51,7 @@ connectionAgent.Authenticate(deviceId, accountId, password, payload
      * @param resultCode 인증의 결과 코드
      * @param loginedUserInfoList 서버에 남아있는 로그인 정보 목록
      * @param message 서버로부터 받은 메시지, 인증 실패 이유 등
-     * @param payload 서버로 부터 받은 추가 정보
+     * @param payload 서버로부터 받은 추가 정보
      */
     if (result == ResultCodeAuth.AUTH_SUCCESS) {
 		// 성공
@@ -233,7 +233,7 @@ class ConnectionListener implements IConnectionListener{
      * @param resultCode 인증의 결과 코드
      * @param loginedUserInfoList 서버에 남아있는 로그인 정보 목록
      * @param message 서버로부터 받은 메시지, 인증 실패 이유 등
-     * @param payload 서버로 부터 받은 추가 정보
+     * @param payload 서버로부터 받은 추가 정보
      */
     OnAuthentication(connection: ConnectionAgent, resultCode: ResultCodeAuth, loginedUserInfoList: Array<LoginedUserInfo>, message: string, payload: Payload): void { }
     /**
@@ -277,7 +277,7 @@ class ConnectionListener implements IConnectionListener{
      * @param resultCode Disconnect()의 결과 코드
      * @param reason 종료 이유. ConnectionAgent.Disconnect()에 인자로 넘긴 이유
      * @param force 강제 종료 여부
-     * @param payload 서버로 부터 받은 추가 정보
+     * @param payload 서버로부터 받은 추가 정보
      */
     OnDisconnect(connection: ConnectionAgent, resultCode: ResultCodeDisconnect, reason: string, force: boolean, payload: Payload): void { }
     /**

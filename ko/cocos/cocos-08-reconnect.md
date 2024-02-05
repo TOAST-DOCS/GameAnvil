@@ -47,7 +47,7 @@ connectionAgent.Authenticate(deviceId, accountId, password, payload
      * @param resultCode 인증의 결과 코드
      * @param loginedUserInfoList 서버에 남아있는 로그인 정보 목록
      * @param message 서버로부터 받은 메시지, 인증 실패 이유 등
-     * @param payload 서버로 부터 받은 추가 정보
+     * @param payload 서버로부터 받은 추가 정보
      */
     if (result == ResultCodeAuth.AUTH_SUCCESS) {
 		// 성공
