@@ -2,33 +2,33 @@
 
 ## UserAgent
 
-UserAgent는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고 받으며 여러 가지 콘텐츠를 구현할 수 있습니다. UserAgent를 사용하기 위해서는 Connector.CreateUserAgent() 함수를 이용해 새로운 UserAgent를 생성해야 합니다. ServiceName과 SubId로 구분되는 여러 개의 UserAgent를 생성할 수 있습니다. 생성된 UserAgent는 Connector 에서 내부적으로 관리되어 Connector.GetUserAgent()함수를 이용해 다시 사용할 수 있습니다. 
+UserAgent는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고받으며 여러 가지 콘텐츠를 구현할 수 있습니다. UserAgent를 사용하기 위해서는 Connector.CreateUserAgent() 함수를 이용해 새로운 UserAgent를 생성해야 합니다. ServiceName과 SubId로 구분되는 여러 개의 UserAgent를 생성할 수 있습니다. 생성된 UserAgent는 Connector에서내부적으로 관리되어 Connector.GetUserAgent() 함수를 이용해 다시 사용할 수 있습니다. 
 
 ```typescript
 /**
- * 서비스이름과 서브 아이디에 해당하는 유저 에이전트를 반환
- * @param serviceName 유저에이전트가 사용하는 서비스이름
- * @param subId 서비스별 유저에이전트를 식별 할 수 있는 고유 아아디. 서버 구현에 따라 사용하지 않을 수 있음
- * @returns 해당 유저 에이전트, 없으면 null
+ * 서비스 이름과 서브 아이디에 해당하는 유저에이전트를 반환
+ * @param serviceName 유저에이전트가 사용하는 서비스 이름
+ * @param subId 서비스별 유저에이전트를 식별할 수 있는 고유 아아디. 서버 구현에 따라 사용하지 않을 수 있음
+ * @returns 해당 유저에이전트, 없으면 null
  */
 let userAgent = connector.GetUserAgent(serviceName, subId);
 if(userAgent == null){
     /**
-     * 유저 에이전트 생성
-     * @param serviceName 유저에이전트가 사용 할 서비스 이름
-     * @param subId 서비스별 유저에이전트를 식별 할 수 있는 고유 아이디. 서버 구현에 따라 사용하지 않을 수 있음
-     * @returns 생성된 유저 에이전트
+     * 유저에이전트 생성
+     * @param serviceName 유저에이전트가 사용할 서비스 이름
+     * @param subId 서비스별 유저에이전트를 식별할 수 있는 고유 아이디. 서버 구현에 따라 사용하지 않을 수 있음
+     * @returns 생성된 유저에이전트
      */
     userAgent = connector.CreateUserAgent(serviceName, subId);
 }
 
 ```
 
-GameAnvil 서버는 여러 개의 서비스를 동시에 운영할 수 있으며, 하나의 UserAgent는 하나의 서비스에 로그인 하여 서로 독립적으로 동작하게 됩니다. 즉 여러 개의 UserAgent를 만들어 서로 다른 서비스에 로그인하여 동시에 사용이 가능합니다. SubId를 다르게 한다면 같은 서비스에 여러 개의 UserAgent를 동시에 로그인하여 사용하는 것도 가능합니다. 
+GameAnvil 서버는 여러 개의 서비스를 동시에 운영할 수 있으며, 하나의 UserAgent는 하나의 서비스에 로그인하여 서로 독립적으로 동작하게 됩니다. 즉 여러 개의 UserAgent를 만들어 서로 다른 서비스에 로그인하여 동시에 사용이 가능합니다. SubId를 다르게 한다면 같은 서비스에 여러 개의 UserAgent를 동시에 로그인하여 사용하는 것도 가능합니다. 
 
 ### 로그인/로그아웃
 
-로그인은 클라언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 로그아웃은 로그인의 반대 개념입니다. 즉, GameNode 상에서 자신의 유저 객체를 제거하는 과정입니다. 
+로그인은 클라언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 로그아웃은 로그인의 반대 개념입니다. 즉, GameNode상에서 자신의 유저 객체를 제거하는 과정입니다. 
 
 로그인 시 어떤 UserType으로 어떤 채널에 로그인할지 입력해줘야 합니다. 추가 정보가 필요하다면 Payload에 담아 보낼 수 있습니다. 
 
@@ -486,7 +486,7 @@ userAgent.GetChannelCountInfo((agent: UserAgent, resultCode: ResultCodeChannelCo
  * 특정 채널의 유저와 방 개수를 요청
  * 
  * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스이름
+ * @param serviceName 채널 정보를 요청할 서비스 이름
  * @param channelId 채널 정보를 요청할 채널아이디
  * @param callback 채널의 유저와 방 개수 요청 결과를 전달받아 처리 할 콜백
  */
@@ -531,7 +531,7 @@ userAgent.GetChannelInfo((agent: UserAgent, resultCode: ResultCodeChannelInfo, c
 /**
  * 특정 채널의 정보를 요청
  * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스이름
+ * @param serviceName 채널 정보를 요청할 서비스 이름
  * @param channelId 채널 정보를 요청할 채널아이디
  * @param callback 채널 정보 요청 결과를 전달받아 처리 할 콜백
  */
@@ -577,7 +577,7 @@ userAgent.GetAllChannelCountInfo((agent: UserAgent, resultCode: ResultCodeAllCha
  * 특정 서비스에 있는 모든 채널의 유저와 방의 개수를 요청
  * 
  * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스이름
+ * @param serviceName 채널 정보를 요청할 서비스 이름
  * @param callback 모든 채널의 유저와 방의 개수 요청 결과를 전달받아 처리 할 콜백
  */
 userAgent.GetAllChannelCountInfo(serviceName, (agent: UserAgent, resultCode: ResultCodeAllChannelCountInfo, allChannelCountInfo: AllChannelCountInfo) => {
