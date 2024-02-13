@@ -1,6 +1,6 @@
-## Game > GameAnvil > CocosCreator開発ガイド > GameAnvilコネクタインストール
+## Game > GameAnvil > CocosCreator開発ガイド > GameAnvilコネクタのインストール
 
-## GameAnvilコネクタインストール
+## GameAnvilコネクタのインストール
 
 まず、新しいCocosCreatorプロジェクトを作成します。**Cocos Creator Dashboard > New Project > Empty Project**を選択して新しいプロジェクトを作成します。
 
