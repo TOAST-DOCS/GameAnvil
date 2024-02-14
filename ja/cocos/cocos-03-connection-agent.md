@@ -19,7 +19,7 @@ ConnectionAgentのConnect関数を使ってサーバーに接続します。
 // callback : 結果を受け取って処理するコールバック。
 connectionAgent.Connect(ipAddress,(agent: ConnectionAgent, resultCode: ResultCodeConnect) => {
     //  agent : Connect()を呼び出したConnectionAgentオブジェクト。
-	//  resultCode : Connect結果。
+	  //  resultCode : Connect結果。
     if (ResultCodeConnect.CONNECT_SUCCESS == resultCode) {
         // 成功
     } else {

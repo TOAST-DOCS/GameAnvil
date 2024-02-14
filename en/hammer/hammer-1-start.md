@@ -2,7 +2,7 @@
 
 ## GameHammer
 
-GameHammer는 GameAvlil 엔진을 이용한 게임 서버 개발 도구로 강력하고 편리한 테스트 도구입니다. 실제 커넥터에서 제공하는 모든 기능을 사용할 수 있으며, 다양한 테스트 케이스를 만들 수 있는 API를 제공하고 있습니다. 또한, 스트레스 테스트를 위해 다수의 GameHammer를 동시에 실행하고, 그 결과를 취합해 바로 확인할 수 있습니다.
+GameHammer는 GameAnvil 엔진을 이용한 게임 서버 개발 도구로 강력하고 편리한 테스트 도구입니다. 실제 커넥터에서 제공하는 모든 기능을 사용할 수 있으며, 다양한 테스트 케이스를 만들 수 있는 API를 제공하고 있습니다. 또한, 스트레스 테스트를 위해 다수의 GameHammer를 동시에 실행하고, 그 결과를 취합해 바로 확인할 수 있습니다.
 
 ### 시스템 요구 사항
 
@@ -38,9 +38,9 @@ GameHammer는 다음과 같은 기능을 지원합니다.
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------ |
 | [sample-game-server](https://github.com/nhn/gameanvil.sample-game-server.git) | [sample-game-test](https://github.com/nhn/gameanvil.sample-game-test.git) | 실제 게임 서버와 GameHammer를 사용한 테스트 코드 |
 
-## 프로젝트에 GameHamer 추가하기
+## 프로젝트에 GameHammer 추가하기
 
-GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.xml 파일의 dependencies 요소에 다음과 같이 추가하시면 GameHammer를 사용할 수 있습니다.
+GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.xml 파일의 dependencies 요소에 다음과 같이 추가하면 GameHammer를 사용할 수 있습니다.
 
 ```
 ...
@@ -67,7 +67,7 @@ GameHammer를 추가한 프로젝트의 pom.xml이 있는 디렉터리에서 아
 mvn package
 ```
 
-명령어 실행 후, 빌드 과정이 출력 되고 마지막으로 빌드에 성공했다는 메시지를 확인합니다. 아래와 같이 나오면 성공입니다.
+명령어 실행 후, 빌드 과정이 출력되고 마지막으로 빌드에 성공했다는 메시지를 확인합니다. 아래와 같이 나오면 성공입니다.
 
 ```
 [INFO] ------------------------------------------------------------------------
@@ -79,4 +79,4 @@ mvn package
 Process finished with exit code 0
 ```
 
-새롭게 생성된 target 디렉터리 안에서 빌드된 파일을 확인할 수 있습니다.
+새롭게 생성된 타깃 디렉터리 안에서 빌드된 파일을 확인할 수 있습니다.

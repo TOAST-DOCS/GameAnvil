@@ -2,21 +2,21 @@
 
 ## UserAgent
 
-UserAgent는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고 받으며 여러 가지 컨텐츠를 구현할 수 있습니다. UserAgent를 사용하기 위해서는 Connector.CreateUserAgent() 함수를 이용해 새로운 UserAgent를 생성해야 합니다. ServiceName과 SubId로 구분되는 여러 개의 UserAgent를 생성할 수 있습니다. 생성된 UserAgent는 Connector 에서 내부적으로 관리되어 Connector.GetUserAgent()함수를 이용해 다시 사용할 수 있습니다. 
+UserAgent는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고받으며 여러 가지 콘텐츠를 구현할 수 있습니다. UserAgent를 사용하기 위해서는 Connector.CreateUserAgent() 함수를 이용해 새로운 UserAgent를 생성해야 합니다. ServiceName과 SubId로 구분되는 여러 개의 UserAgent를 생성할 수 있습니다. 생성된 UserAgent는 Connector에서내부적으로 관리되어 Connector.GetUserAgent() 함수를 이용해 다시 사용할 수 있습니다. 
 
 ```typescript
 /**
- * 서비스이름과 서브 아이디에 해당하는 유저 에이전트를 반환
- * @param serviceName 유저에이전트가 사용하는 서비스이름
- * @param subId 서비스별 유저에이전트를 식별 할 수 있는 고유 아아디. 서버 구현에 따라 사용하지 않을 수 있음
+ * 서비스 이름과 서브 아이디에 해당하는 유저 에이전트를 반환
+ * @param serviceName 유저에이전트가 사용하는 서비스 이름
+ * @param subId 서비스별 유저에이전트를 식별할 수 있는 고유 아아디. 서버 구현에 따라 사용하지 않을 수 있음
  * @returns 해당 유저 에이전트, 없으면 null
  */
 let userAgent = connector.GetUserAgent(serviceName, subId);
 if(userAgent == null){
     /**
      * 유저 에이전트 생성
-     * @param serviceName 유저에이전트가 사용 할 서비스 이름
-     * @param subId 서비스별 유저에이전트를 식별 할 수 있는 고유 아이디. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param serviceName 유저에이전트가 사용할 서비스 이름
+     * @param subId 서비스별 유저에이전트를 식별할 수 있는 고유 아이디. 서버 구현에 따라 사용하지 않을 수 있음
      * @returns 생성된 유저 에이전트
      */
     userAgent = connector.CreateUserAgent(serviceName, subId);
@@ -24,11 +24,11 @@ if(userAgent == null){
 
 ```
 
-GameAnvil 서버는 여러 개의 서비스를 동시에 운영할 수 있으며, 하나의 UserAgent는 하나의 서비스에 로그인 하여 서로 독립적으로 동작하게 됩니다. 즉 여러 개의 UserAgent를 만들어 서로 다른 서비스에 로그인하여 동시에 사용이 가능합니다. SubId를 다르게 한다면 같은 서비스에 여러 개의 UserAgent를 동시에 로그인하여 사용하는 것도 가능합니다. 
+GameAnvil 서버는 여러 개의 서비스를 동시에 운영할 수 있으며, 하나의 UserAgent는 하나의 서비스에 로그인하여 서로 독립적으로 동작하게 됩니다. 즉 여러 개의 UserAgent를 만들어 서로 다른 서비스에 로그인하여 동시에 사용이 가능합니다. SubId를 다르게 한다면 같은 서비스에 여러 개의 UserAgent를 동시에 로그인하여 사용하는 것도 가능합니다. 
 
 ### 로그인/로그아웃
 
-로그인은 클라언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 로그아웃은 로그인의 반대 개념입니다. 즉, GameNode 상에서 자신의 유저 객체를 제거하는 과정입니다. 
+로그인은 클라언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 로그아웃은 로그인의 반대 개념입니다. 즉, GameNode상에서 자신의 유저 객체를 제거하는 과정입니다. 
 
 로그인 시 어떤 UserType으로 어떤 채널에 로그인할지 입력해줘야 합니다. 추가 정보가 필요하다면 Payload에 담아 보낼 수 있습니다. 
 
@@ -64,7 +64,7 @@ userAgent.Logout((agent: UserAgent, resultCode: ResultCodeLogout, payload: Paylo
      * @param user Logout()을 요청한 유저에이전트
      * @param resultCode  Logout() 결과 코드
      * @param force 강제 로그아웃여부
-     * @param payload 서버로 부터 받은 추가정보
+     * @param payload 서버로부터 받은 추가정보
      */
     if (ResultCodeLogout.LOGOUT_SUCCESS == resultCode) {
         // 성공
@@ -76,7 +76,7 @@ userAgent.Logout((agent: UserAgent, resultCode: ResultCodeLogout, payload: Paylo
 
 ### 방생성, 입장, 퇴장
 
-2명 이상의 유저는 방을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 유저들의 요청은 방 안에서 모두 순서가 보장됩니다. 물론 1명의 유저를 위한 방 생성도 컨텐츠에 따라서 의미를 가질 수도 있습니다. 방을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다. 
+2명 이상의 유저는 방을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 유저들의 요청은 방 안에서 모두 순서가 보장됩니다. 물론 1명의 유저를 위한 방 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. 방을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다. 
 
 CreateRoom()을 호출하여 방을 생성하고 그 방으로 입장합니다.
 
@@ -95,7 +95,7 @@ userAgent.CreateRoom(roomType, roomName, payload, (agent: UserAgent, resultCode:
      * @param resultCode CreateRoom() 결과 코드
      * @param roomId 생성된 방의 룸아이디
      * @param roomName 생성된 방의 이름
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeCreateRoom.CREATE_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -124,7 +124,7 @@ userAgent.JoinRoom(roomId, roomType, payload, (agent: UserAgent, resultCode: Res
      * @param resultCode JoinRoom() 결과 코드
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeJoinRoom.JOIN_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -149,7 +149,7 @@ userAgent.LeaveRoom(payload, (agent: UserAgent, resultCode: ResultCodeLeaveRoom,
      * @param resultCode LeaveRoom() 결과 코드
      * @param force 강퇴 여부
      * @param roomId 퇴장한 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -180,7 +180,7 @@ userAgent.NamedRoom(roomName, roomType, isParty, payload, (agent: UserAgent, res
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
      * @param created 입장한 방을 생성했는지 여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeNamedRoom.NAMED_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -198,7 +198,7 @@ GameAnvil은 두 가지 매치 메이킹을 제공합니다. 각각 방 단위�
 
 #### 룸 매치 메이킹
 
-룸 매치 메이킹은 조건에 맞는 방으로 유저를 입장시켜 주는 방식입니다. 룸 매치 메이킹 요청시 조건에 맞는 방이 있으면 해당방으로 바로 입장 시켜주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장 시켜주는 방식입니다. 
+룸 매치 메이킹은 조건에 맞는 방으로 유저를 입장시켜 주는 방식입니다. 룸 매치 메이킹 요청 시 조건에 맞는 방이 있으면 해당 방으로 바로 입장시켜 주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장시켜 주는 방식입니다. 
 
 MatchRoom()을 호출하여 룸 매치 메이킹을 요청할 수 있습니다. 조건에 맞는 방이 없을 경우 임의의 방을 생성하고 해당 방에 입장할 수도 있습니다. 
 
@@ -222,7 +222,7 @@ userAgent.MatchRoom(isCreateRoomIfNotJoinRoom, isMoveRoomIfJoinedRoom, roomType,
      * @param roomId 매치된 방의 룸아이디
      * @param roomName 매치된 방의 이름
      * @param created 매치된 방의 생성여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeMatchRoom.MATCH_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -254,7 +254,7 @@ userAgent.MatchUserStart(roomType, payload, (agent: UserAgent, resultCode: Resul
      * MatchUserStart()의 결과
      * @param user MatchUserStart()를 요청한 유저에이전트 
      * @param resultCode MatchUserStart() 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS == resultCode) {
         // 성공
@@ -274,7 +274,7 @@ class MatchUserListener implements IUserListener {
      * @param resultCode 매칭 결과 코드
      * @param created 방 생성 여부. true일 경우 매칭 요청한 UserAgent가  방을 생성한 것을 의미한다. 방장을 결정하는 용도 등으로 사용할 수 있음
      * @param roomId 매칭된 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchUserDone(user: UserAgent, resultCode: ResultCodeMatchUserDone, created: boolean, roomId: number, payload: Payload): void {
         if (ResultCodeMatchUserDone.MATCH_USER_DONE_SUCCESS == resultCode) {
@@ -345,7 +345,7 @@ userAgent.NamedRoom(roomName, roomType, isParty, payload, (agent: UserAgent, res
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
      * @param created 입장한 방을 생성했는지 여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeNamedRoom.NAMED_ROOM_SUCCESS == resultCode) {
         // 성공
@@ -369,7 +369,7 @@ userAgent.MatchPartyStart(roomType, payload, (agent: UserAgent, resultCode: Resu
      * MatchPartyStart()의 결과
      * @param user MatchPartyStart()을 요청한 유저에이전트 
      * @param resultCode MatchPartyStart() 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음.
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음.
      */
     if (ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS == resultCode) {
         // 성공
@@ -389,7 +389,7 @@ class MatchPartyListener implements IUserListener {
      * @param resultCode 매칭 결과 코드
      * @param created 방 생성 여부. true일 경우 매칭 요청한 UserAgent가  방을 생성한 것을 의미한다. 방장을 결정하는 용도 등으로 사용할 수 있음
      * @param roomId 매칭된 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchUserDone(user: UserAgent, resultCode: ResultCodeMatchUserDone, created: boolean, roomId: number, payload: Payload): void {
         if (ResultCodeMatchUserDone.MATCH_USER_DONE_SUCCESS == resultCode) {
@@ -444,7 +444,7 @@ class MoveChannelListener implements IUserListener {
      * @param resultCode 체널이동 결과 코드
      * @param force 서버에서 강제로 체널을 이동했는지 여부
      * @param channelId 이동한 체널아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMoveChannel?(user: UserAgent, resultCode: ResultCodeMoveChannel, force: boolean, channelId: string, payload: Payload): void {
         // 채널 이동
@@ -486,7 +486,7 @@ userAgent.GetChannelCountInfo((agent: UserAgent, resultCode: ResultCodeChannelCo
  * 특정 채널의 유저와 방 개수를 요청
  * 
  * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스이름
+ * @param serviceName 채널 정보를 요청할 서비스 이름
  * @param channelId 채널 정보를 요청할 채널아이디
  * @param callback 채널의 유저와 방 개수 요청 결과를 전달받아 처리 할 콜백
  */
@@ -531,7 +531,7 @@ userAgent.GetChannelInfo((agent: UserAgent, resultCode: ResultCodeChannelInfo, c
 /**
  * 특정 채널의 정보를 요청
  * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스이름
+ * @param serviceName 채널 정보를 요청할 서비스 이름
  * @param channelId 채널 정보를 요청할 채널아이디
  * @param callback 채널 정보 요청 결과를 전달받아 처리 할 콜백
  */
@@ -577,7 +577,7 @@ userAgent.GetAllChannelCountInfo((agent: UserAgent, resultCode: ResultCodeAllCha
  * 특정 서비스에 있는 모든 채널의 유저와 방의 개수를 요청
  * 
  * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스이름
+ * @param serviceName 채널 정보를 요청할 서비스 이름
  * @param callback 모든 채널의 유저와 방의 개수 요청 결과를 전달받아 처리 할 콜백
  */
 userAgent.GetAllChannelCountInfo(serviceName, (agent: UserAgent, resultCode: ResultCodeAllChannelCountInfo, allChannelCountInfo: AllChannelCountInfo) => {
@@ -656,7 +656,7 @@ userAgent.MoveChannel(channelId, payload, (agent: UserAgent, resultCode: ResultC
      * @param resultCode 체널이동 결과 코드
      * @param force 서버에서 강제로 체널을 이동했는지 여부
      * @param channelId 이동한 체널아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     if (ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS == resultCode) {
         // 성공
@@ -686,7 +686,7 @@ class UserListener implements IUserListener {
      * @param user Logout()을 요청한 유저에이전트
      * @param resultCode  Logout() 결과 코드
      * @param force 강제 로그아웃여부
-     * @param payload 서버로 부터 받은 추가정보
+     * @param payload 서버로부터 받은 추가정보
      */
     OnLogout?(user: UserAgent, resultCode: ResultCodeLogout, force: boolean, payload: Payload): void { }
     /**
@@ -696,7 +696,7 @@ class UserListener implements IUserListener {
      * @param roomId 매치된 방의 룸아이디
      * @param roomName 매치된 방의 이름
      * @param created 매치된 방의 생성여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchRoom?(user: UserAgent, resultCode: ResultCodeMatchRoom, roomId: number, roomName: string, created: boolean, payload: Payload): void { }
     /**
@@ -705,7 +705,7 @@ class UserListener implements IUserListener {
      * @param resultCode CreateRoom() 결과 코드
      * @param roomId 생성된 방의 룸아이디
      * @param roomName 생성된 방의 이름
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnCreateRoom?(user: UserAgent, resultCode: ResultCodeCreateRoom, roomId: number, roomName: string, payload: Payload): void { }
     /**
@@ -714,7 +714,7 @@ class UserListener implements IUserListener {
      * @param resultCode JoinRoom() 결과 코드
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnJoinRoom?(user: UserAgent, resultCode: ResultCodeJoinRoom, roomId: number, roomName: string, payload: Payload): void { }
     /**
@@ -724,7 +724,7 @@ class UserListener implements IUserListener {
      * @param roomId 입장한 방의 룸아이디
      * @param roomName 입장한 방의 이름
      * @param created 입장한 방을 생성했는지 여부(방장 여부)
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnNamedRoom?(user: UserAgent, resultCode: ResultCodeNamedRoom, roomId: number, roomName: string, created: boolean, payload: Payload): void { }
     /**
@@ -733,14 +733,14 @@ class UserListener implements IUserListener {
      * @param resultCode LeaveRoom() 결과 코드
      * @param force 강퇴 여부
      * @param roomId 퇴장한 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnLeaveRoom?(user: UserAgent, resultCode: ResultCodeLeaveRoom, force: boolean, roomId: number, payload: Payload): void { }
     /**
      * MatchUserStart()의 결과
      * @param user MatchUserStart()를 요청한 유저에이전트 
      * @param resultCode MatchUserStart() 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchUserStart?(user: UserAgent, resultCode: ResultCodeMatchUserStart, payload: Payload): void { }
     /**
@@ -755,7 +755,7 @@ class UserListener implements IUserListener {
      * @param resultCode 매칭 결과 코드
      * @param created 방 생성 여부. true일 경우 매칭 요청한 UserAgent가  방을 생성한 것을 의미한다. 방장을 결정하는 용도 등으로 사용할 수 있음
      * @param roomId 매칭된 방의 룸아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMatchUserDone?(user: UserAgent, resultCode: ResultCodeMatchUserDone, created: boolean, roomId: number, payload: Payload): void { }
     /**
@@ -767,7 +767,7 @@ class UserListener implements IUserListener {
      * MatchPartyStart()의 결과
      * @param user MatchPartyStart()을 요청한 유저에이전트 
      * @param resultCode MatchPartyStart() 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음.
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음.
      */
     OnMatchPartyStart?(user: UserAgent, resultCode: ResultCodeMatchPartyStart, payload: Payload): void { }
     /**
@@ -782,14 +782,14 @@ class UserListener implements IUserListener {
      * @param resultCode 체널이동 결과 코드
      * @param force 서버에서 강제로 체널을 이동했는지 여부
      * @param channelId 이동한 체널아이디
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
     OnMoveChannel?(user: UserAgent, resultCode: ResultCodeMoveChannel, force: boolean, channelId: string, payload: Payload): void { }
     /**
      * Snapshot()의 결과
      * @param user Snapshot()을 요청한 유저에이전트 
      * @param resultCode Snapshot()의 결과 코드
-     * @param payload 서버로 부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
+     * @param payload 서버로부터 받은 추가 정보. 서버 구현에 따라 사용하지 않을 수 있음
      */
      OnSnapshot?(user: UserAgent, resultCode: ResultCodeSnapshot, payload: Payload): void { }
     /**
@@ -829,7 +829,7 @@ class UserListener implements IUserListener {
     OnErrorCommand?(user: UserAgent, errorCode: ErrorCode, msgName: string): void { }
     /**
      * 공지 알림
-     * @param user 공지 를 받은 유저에이전트 
+     * @param user 공지를 받은 유저에이전트 
      * @param message 공지 메시지
      */
     OnNotice?(user: UserAgent, message: string): void { }
