@@ -26,7 +26,7 @@ Tester tester = Tester.newBuilderWithConfig()
 Connection connection = tester.createConnection(uuid);
 ```
 
-생성된 Connection 객체는 Tester에서 관리되며 uuid로 구분됩니다. 이미 생성된 객체의 uuid가 입력되면 해당 객체를 반환합니다.
+생성된 Connection 객체는 Tester에서 관리되며 UUID로 구분됩니다. 이미 생성된 객체의 UUID가 입력되면 해당 객체를 반환합니다.
 
 Connection은 다음과 같은 기능을 제공합니다. 
 
@@ -42,7 +42,7 @@ if(resultConnect.isSuccess()){
 }
 ```
 
-`connect()` 에서 반환 받은 Future의 `get()`을 호출하면 연결이 성공하거나 실패 할 때까지 대기후 ResultConnect 객체를 반환합니다. 반환 받은 ResultConnect 객체를 통해 결과를 알 수 있습니다. `connect()`의 두 번째 인자로 콜백을 넘겨 결과를 받을 수도 있습니다. `connect()` 외 다른 API들도 Future를 리턴해 결과를 기다리거나 콜백을 넘겨 결과를 전달 받을 수 있습니다. 
+`connect()` 에서 반환된 Future의 `get()`을 호출하면 연결이 성공하거나 실패할 때까지 대기 후 ResultConnect 객체를 반환합니다. 반환된 ResultConnect 객체를 통해 결과를 알 수 있습니다. `connect()`의 두 번째 인자로 콜백을 넘겨 결과를 받을 수도 있습니다. `connect()` 외 다른 API들도 Future를 리턴해 결과를 기다리거나 콜백을 넘겨 결과를 전달 받을 수 있습니다. 
 
 ### Authentication
 
@@ -70,7 +70,7 @@ if(resultChannelList.isSuccess){
 
 ### GetChannelInfo
 
-지정한 체널의 정보를 요청합니다.
+지정한 채널의 정보를 요청합니다.
 
 ```
 Future<ResultChannelList> future = connection.getChannelList(serviceName, String channelId);
@@ -419,7 +419,7 @@ if(resultMoveChannel.isSuccess()){
 
 ### WaitForMoveChannelNoti
 
-체널 이동 알림을 받을 때까지 기다립니다. 방 입장, 매치매이킹 등의 이유로 체널을 이동하게 되면 전달됩니다.
+채널 이동 알림을 받을 때까지 기다립니다. 방 입장, 매치메이킹 등의 이유로 채널을 이동하게 되면 전달됩니다.
 
 ```
 Future<ResultMoveChannelNoti> future = connection.waitForMoveChannelNoti();
@@ -527,7 +527,7 @@ public void Connect() {
 }
 ```
 
-`connection.connect()`를 호출해 서버에 접속합니다. 이때 반환받은 `Future`의 `get()`을 호출하면 `connection.connect()`가 완료될 때까지 대기하고,  완료되면 그 결과인 `ResultConnect`를 리턴합니다.  여기서 리턴받은 `ResultConnect`이용해 성공 여부를 판단할 수 있습니다. 
+`connection.connect()`를 호출해 서버에 접속합니다. 이때 반환된 `Future`의 `get()`을 호출하면 `connection.connect()`가 완료될 때까지 대기하고,  완료되면 그 결과인 `ResultConnect`를 리턴합니다.  여기서 반환된 `ResultConnect`이용해 성공 여부를 판단할 수 있습니다. 
 
 또 다른 예로 게임에서 사용하는 메시지에 대한 Request/Response 방식 테스트 코드는 다음과 같이 작성할 수 있습니다. 
 
@@ -547,9 +547,9 @@ public void RequestTest() {
 }
 ```
 
-먼저 메시지를 만들고, 이것을 `connection.request()`의 인자로 넣어 서버로 전송합니다. 이때 리턴받은 `Future`의 `get()`를 호출하면 서버에서 응답을 하거나 타임아웃이 발생할 때까지 대기하고, 응답을 받거나 타임아웃이 발생하면 `PacketResult`를 리턴합니다. 여기서 리턴받은 `PacketResult`를 이용해 성공 여부를 판단할 수 있습니다. 성공하면 `PacketResult.getStream()`을 이용해 메시지를 파싱하여 내용을 확인할 수 있습니다. 
+먼저 메시지를 만들고, 이것을 `connection.request()`의 인자로 넣어 서버로 전송합니다. 이때 반환된 `Future`의 `get()`를 호출하면 서버에서 응답을 하거나 타임아웃이 발생할 때까지 대기하고, 응답을 받거나 타임아웃이 발생하면 `PacketResult`를 리턴합니다. 여기서 반환된 `PacketResult`를 이용해 성공 여부를 판단할 수 있습니다. 성공하면 `PacketResult.getStream()`을 이용해 메시지를 파싱하여 내용을 확인할 수 있습니다. 
 
-Connnection, User의 API 중 Future를 리턴하는 API들은 모두 이런 방식을 사용해 테스트할 수 있습니다.
+Connection, User의 API 중 Future를 리턴하는 API들은 모두 이런 방식을 사용해 테스트할 수 있습니다.
 
 ### Send/Receive
 

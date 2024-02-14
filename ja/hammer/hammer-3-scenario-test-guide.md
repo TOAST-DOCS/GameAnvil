@@ -2,11 +2,11 @@
 
 ## 대규모 부하 테스트와 이를 위한 시나리오 작성
 
-GameHammer는 대규모 부하테스트를 위해 대량의 커넥션을 동시에 처리할 수 있는 기능을 제공합니다. 그리고 복잡한 테스트를 좀 더 편하게 관리할 수 있도록 상태 기반의 시나리오 테스트를 지원합니다. 
+GameHammer는 대규모 부하 테스트를 위해 대량의 커넥션을 동시에 처리할 수 있는 기능을 제공합니다. 그리고 복잡한 테스트를 좀 더 편하게 관리할 수 있도록 상태 기반의 시나리오 테스트를 지원합니다. 
 
 ### 시나리오 테스트 작성 예제
 
-다음과 같은 간단한 시나리오 테스트를 작성해 봅시다.
+여기에서는 다음과 같은 간단한 시나리오 테스트 작성 예제를 다룹니다.
 
 ![img](http://static.toastoven.net/prod_gameanvil/images/scenario_1.png)
 
@@ -17,7 +17,7 @@ public static class TestActor extends ScenarioActor<TestActor> {
 }
 ```
 
-각 상태별로 State를 상속받은 클래스를 정의합니다.  
+각 상태별로 State를 상속 받은 클래스를 정의합니다.  
 
 ```java
 public class StateA extends State<TestActor> {
@@ -141,7 +141,7 @@ public static class TestActor extends ScenarioActor<TestActor> {
 
 #### ChangeState
 
-ScenarioActor를 현재 상태를 다른 상태로 변경합니다. 주의 할점은 `ChangeState()`가 호출된 시점에 바로후 상태가 변경되는것이 아니라는 점 입니다. 실제 상태가 변경되는 시점은 다음 메시지 루프의 시작시점이며, 이때 현재 상태를 구현한 State 객체의 `onExit()`와 다음 상태를 구현한 State 객체의 `onEnter()`가 순차적으로 호출됩니다.
+ScenarioActor를 현재 상태를 다른 상태로 변경합니다. 주의할 점은 `ChangeState()`가 호출된 시점에 바로 상태가 변경되는 것이 아니라는 점 입니다. 실제 상태가 변경되는 시점은 다음 메시지 루프의 시작 시점이며, 이때 현재 상태를 구현한 State 객체의 `onExit()`와 다음 상태를 구현한 State 객체의 `onEnter()`가 순차적으로 호출됩니다.
 
 ```java
 scenarioActor.changeState(NextState.class);
@@ -149,7 +149,7 @@ scenarioActor.changeState(NextState.class);
 
 #### Finish
 
-ScenarioActor가 수행 중인 시나리오를 종료합니다. `ChangeState()` 와 마찬가지로 `Finish()`가 호출된 후 다음 메시지 루프의 시작 시점에 실행되며, 이때 현제 상태를 구현한 State 객체의 `onExit()`가 호출됩니다. 그리고 ScenarioActor가 수행된 횟수가 ScenarioLoopCount보다 적은 경우 시나리오를 다시 수행하여 ScenarioLoopCount만큼 수행할 때 까지 반복합니다. ScenarioLoopCount <= 0일 경우 지정된 TestTime(기본값: 30초) 동안 계속 반복합니다. boolean값을 인자로 받아 시나리오가 성공으로 종료되었는지, 실패로 종료되었는지 구분하여 통계를 기록합니다.
+ScenarioActor가 수행 중인 시나리오를 종료합니다. `ChangeState()` 와 마찬가지로 `Finish()`가 호출된 후 다음 메시지 루프의 시작 시점에 실행되며, 이때 현재 상태를 구현한 State 객체의 `onExit()`가 호출됩니다. 그리고 ScenarioActor가 수행된 횟수가 ScenarioLoopCount보다 적은 경우 시나리오를 다시 수행하여 ScenarioLoopCount만큼 수행할 때 까지 반복합니다. ScenarioLoopCount <= 0일 경우 지정된 TestTime(기본값: 30초) 동안 계속 반복합니다. boolean 값을 인자로 받아 시나리오가 성공으로 종료되었는지, 실패로 종료되었는지 구분하여 통계를 기록합니다.
 
 ```java
 scenarioActor.finish(true);
@@ -163,7 +163,7 @@ ScenarioActor는 하나의 Connection를 가지고 있어 이를 이용해 GameA
 Connection connection = scenarioActor.getConnection();
 ```
 
-시나리오 테스트에서는 기능 테스트에서처럼 Future를 이용해 테스트 코드를 작성할 경우, `Future.get()`에서 블록이 되기 때문에 여러개의 테스트를 동시에 수행할 수 없습니다. 대신 콜백 방식의 API를 사용하여 동시에 수행하도록 할 수 있습니다. 기능 테스트에서 소개한 모든 API에는 대응하는 콜백 방식의 API가 제공되므로 시나리오 테스트에서는 이 콜백 방식 API를 사용하면 됩니다.
+시나리오 테스트에서는 기능 테스트에서처럼 Future를 이용해 테스트 코드를 작성할 경우, `Future.get()`에서 블록이 되기 때문에 여러 개의 테스트를 동시에 수행할 수 없습니다. 대신 콜백 방식의 API를 사용하여 동시에 수행하도록 할 수 있습니다. 기능 테스트에서 소개한 모든 API에는 대응하는 콜백 방식의 API가 제공되므로 시나리오 테스트에서는 이 콜백 방식 API를 사용하면 됩니다.
 
 ```java
 Connection connection = scenarioActor.getConnection();
@@ -199,7 +199,7 @@ public class StateA extends State<TestActor> {
 }
 ```
 
-ScenarioActor가 각 상태로 변경할 때 마다 각 상태를 나타내는 State의 `onEnert()`가 호출되며 그 상태로 변경된 ScenarioActor가 인자로 넘어옵니다. 각 상태에서 빠져나갈때는`onExit()`가 호출되며 그 상태에서 빠져나간 ScenarioActor가 인자로 넘어옵니다.  
+ScenarioActor가 각 상태로 변경할 때 마다 각 상태를 나타내는 State의 `onEnert()`가 호출되며 그 상태로 변경된 ScenarioActor가 인자로 넘어옵니다. 각 상태에서 빠져나갈 때는`onExit()`가 호출되며 그 상태에서 빠져나간 ScenarioActor가 인자로 넘어옵니다.  
 
 ##### ScenarioMachine
 
