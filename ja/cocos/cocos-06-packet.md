@@ -1,12 +1,12 @@
-## Game > GameAnvil > CocosCreator 개발 가이드 > 패킷
+## Game > GameAnvil > CocosCreator開発ガイド > パケット
 
-## 패킷
+## パケット
 
-서버와 주고받는 모든 메시지는 패킷 모듈에 실려서 처리되며 패킷 모듈이 제공하는 인터페이스를 이용하게 됩니다.
+サーバーと送受信する全てのメッセージはパケットモジュールに載せて処理され、パケットモジュールが提供するインターフェイスを利用します。
 
-### 생성
+### 作成
 
-GameAnvil 커넥터는 Google Protocol Buffers를 기본 프로토콜로 사용하고 있습니다 . Google Protocol Buffers를 이용하는 패킷생성은 다음과 같습니다.
+GameAnvilコネクタはGoogle Protocol Buffersを基本プロトコルとして使用しています。Google Protocol Buffersを利用するパケット作成は次のとおりです。
 
 ```typescript
 let sampleMessage = new Messages.SampleMessage();
@@ -15,7 +15,7 @@ let packet= Packet.CreateFromPbMsg(sampleMessage);
 let sampleMessage2 = packet.GetPbMessage<Messages.SampleMessage>();
 ```
 
-Google Protocol Buffers를 사용하지 않고도 패킷을 생성할 수 있습니다 .
+Google Protocol Buffersを使わずにパケットを生成できます。
 
 ```typescript
 let enc = new TextEncoder();
@@ -31,9 +31,9 @@ let bytes = packet.GetBytes();
 let obj = JsonUtil.Deserialize(bytes);
 ```
 
-### 압축
+### 圧縮
 
-패킷 크기가 클 경우 압축하여 데이터 사용량을 줄일 수 있습니다 .  
+パケットサイズが大きい場合、圧縮してデータ使用量を減らすことができます。 
 
 ```typescript
 let sampleMessage = new Messages.SampleMessage();
@@ -48,7 +48,7 @@ let responseMsg = packet.GetPbMessage<Messages.SampleMessage>();
 
 ### Payload
 
-GameAnvil에서 제공하는 기본 API를 이용할 때 추가적인 데이터가 필요할 수 있습니다. 이를 위해 기본 API들에는 추가 데이터를 넘겨줄 수 있는 payload라는 매개변수가 포함되어 있습니다. 이 payload에 필요한 데이터를 패킷에 담아 list 형식으로 저장할 수 있습니다. 여기에 추가 데이터를 넣어 서버로 보내거나, 서버에서 보낸 메시지를 꺼낼 수 있습니다.  
+GameAnvilが提供する基本APIを利用する時、追加的なデータが必要な場合があります。このため、基本APIには追加データを渡すことができるpayloadというパラメータが含まれています。このpayloadに必要なデータをパケットに入れてlist形式で保存できます。ここに追加データを入れてサーバーへ送ったり、サーバーから送ったメッセージを取り出すことができます。 
 
 ```typescript
 let userInfo = Packet.CreateFromPbMsg(new Messages.UserInfo());
@@ -68,4 +68,3 @@ payload.add(roomInfo);
 let userInfoPacket: Packet = payload.GetPacket(Messages.UserInfo);
 let roomInfo2: Messages.RoomInfo = payload.GetPBMessage(Messages.RoomInfo);
 ```
-

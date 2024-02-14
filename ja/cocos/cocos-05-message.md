@@ -1,24 +1,24 @@
-## Game > GameAnvil > CocosCreator 개발 가이드 > 메시지 핸들링
+## Game > GameAnvil > CocosCreator開発ガイド > メッセージハンドリング
 
-## 메시지
+## メッセージ
 
-ConnectionAgent, UserAgent의 기본 기능 외에 Request()와 Send()를 이용하여 메시지를 서버로 전송할 수 있습니다. 메시지를 전송하려면 메시지를 생성하고 등록하는 과정이 필요합니다.
+ConnectionAgent、UserAgentの基本機能以外にRequest()とSend()を使ってメッセージをサーバーに送信できます。メッセージを送信するためにはメッセージを作成して登録する過程が必要です。
 
-### 메시지 생성
+### メッセージの作成
 
-GameAnvil은 기본 메시지 프로토콜로 [Google Protocol Buffers](https://developers.google.com/protocol-buffers/docs/proto3)를 사용하고 있습니다. .proto파일에 메시지를 정의하고, pbjs 로 실제 클래스 소스 코드를 생성하게 됩니다. 그리고 GameAnvil에서 사용할 추가 코드를 생성된 코드에 삽입합니다. 이렇게 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. 
+GameAnvilは基本メッセージプロトコルとして[Google Protocol Buffers](https://developers.google.com/protocol-buffers/docs/proto3)を使っています。.protoファイルにメッセージを定義して、pbjsで実際のクラスのソースコードを作成します。 そして、GameAnvilで使う追加コードを作成されたコードに挿入します。このように作成されたソースコードをプロジェクトに追加して使うことができます。
 
-추가 코드를 삽입하려면 `CodeInserter` 를 설치해야합니다. `CodeInserter`는 [여기](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-CodeInserter.zip)에서 다운로드 받을 수 있습니다. 다운로드 받은 파일의 압축을 풀어 프로젝트 루트 아래(assets 폴더 밖에)에 폴더를 만들어 넣어줍니다.
+追加コードを挿入するには `CodeInserter` をインストールする必要があります。CodeInserter` は[ここ](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-CodeInserter.zip)からダウンロードできます。ダウンロードしたファイルを解凍してプロジェクトルートの下(assetsフォルダの外)にフォルダを作って格納します。
 
 ![codeInserter](https://static.toastoven.net/prod_gameanvil/images/client-2-codeInserter.png)
 
-`CodeInserter`는 acorn을 사용합니다. 터미널에서 다음 코드를 입력하여 acorn을 설치합니다. 
+`CodeInserter`はacornを使用します。ターミナルで次のコードを入力してacornをインストールします。
 
 ```
 npm i acorn@5.5.3 --save-dev
 ```
 
-package.json의 devDependencies에 acorn이 추가된 것을 확인할 수 있습니다.
+package.jsonのdevDependenciesにacornが追加されたことが確認できます。
 
 ```json
 {
@@ -40,7 +40,7 @@ package.json의 devDependencies에 acorn이 추가된 것을 확인할 수 있�
 }
 ```
 
-이제 메시지를 만들어 보도록 하겠습니다. 먼저 assets 폴더 아래에 protocols 폴더를 생성하고 다음과 같이 messages.proto 파일을 생성합니다.
+次はメッセージを作ってみます。 まず、assetsフォルダの下にprotocolsフォルダを作成して次のようにmessages.protoファイルを作成します。
 
 ```protobuf
 // messages.proto
@@ -69,7 +69,7 @@ message SampleReceive
 }
 ```
 
-다음으로 messages.proto 파일을 컴파일하기 위한 스크립트를 package.json에 추가합니다. 
+次に、messages.protoファイルをコンパイルするためのスクリプトをpackage.jsonに追加します。
 
 ```json
 {
@@ -95,30 +95,30 @@ message SampleReceive
 }
 ```
 
-그리고 터미널에서 다음 코드를 입력하여 메시지를 생성합니다.
+そしてターミナルで次のコードを入力してメッセージを作成します。
 
 ```
 npm run messages
 ```
 
-다음과 같이 `message.js`, `message.d.ts` 파일이 생성된 것을 확인할 수 있습니다.
+次のように`message.js`, `message.d.ts`ファイルが作成されたことを確認できます。
 
 ![messages](https://static.toastoven.net/prod_gameanvil/images/client-2-messages.png)
 
-### 메시지 등록
+### メッセージの登録
 
-새로 생성한 메시지를 사용하려면 사용하려는 메시지를 ProtocolManager에 서버와 같은 값으로 미리 등록해야 합니다. 등록하지 않거나 서버와 다를 경우 동작하지 않거나 오동작 하거나 예외가 발생 할 수 있습니다.
+新しく作成したメッセージを使うためには、使用するメッセージをProtocolManagerにサーバーと同じ値で事前に登録する必要があります。 登録をしなかったり、サーバーと違う場合、動作しないか、誤動作したり、例外が発生する可能性があります。
 
 ```typescript
-// 서버와 같은 값으로 등록해야한다.
+// サーバーと同じ値で登録する必要があります。
 ProtocolManager.RegisterProtocol(0, message);
 ```
 
-### 메시지 전송
+### メッセージの送信
 
-RequestPb()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 응답을 기다리는 동안 추가적인 RequestPb()는 큐에 저장되고 서버 응답을 처리한 후 순차적으로 처리하게 됩니다. 서버 응답을 받아 처리하려면 리스너를 등록해야 합니다. 리스너를 등록하지 않을 경우 서버 응답을 받아도 별도의 알림을 주지 않고 다음 메시지를 처리하게 됩니다. 지정된 시간 내에 응답이 오지 않으면 타임아웃을 발생시키고 다음 메시지를 처리합니다. 타임아웃은 OnError() 리스너에 ErrorCode.TIMEOUT으로 전달이 됩니다.
+RequestPb()でメッセージを送信すると、サーバーレスポンスを待ちます。サーバーレスポンスを待っている間、追加のRequestPb()はキューに保存され、サーバーレスポンスを処理した後、順次処理します。サーバーレスポンスを受信して処理するにはリスナーを登録する必要があります。リスナーを登録していない場合、サーバーレスポンスを受け取っても別途の通知をせずに次のメッセージを処理することになります。指定された時間内にレスポンスが来ない場合、タイムアウトを発生させて次のメッセージを処理します。タイムアウトはOnError()リスナーにErrorCode.TIMEOUTが伝達されます。
 
-SendPb()로 메시지를  전송하면 SendPb()의 호출 즉시 서버로 전송되며 별도의 응답을 기다리지 않습니다. RequestPb()에 대한 응답을 기다리는 중에도 SendPb()를 사용한 메시지는 바로 서버로 전송됩니다.
+SendPb()でメッセージを送信すると、SendPb()の呼び出しと同時にサーバーに送信され、別途のレスポンスを待たずに送信されます。RequestPb()のレスポンスを待っている間も、SendPb()を使ったメッセージはすぐにサーバーに送信されます。
 
 ```typescript
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
@@ -135,7 +135,7 @@ connection.AddCallback(Messages.SampleResponse, (connectionAgent, response)=>{
 });
 let sampleRequest = new Messages.SampleRequest();
 connection.RequestPb(sampleRequest);
-// 응답으로 Messages.SampleResponse.
+// レスポンス Messages.SampleResponse.
 
 connection.RequestPb<Messages.SampleResponse>(sampleRequest, (connectionAgent, response)=>{
     // Messages.SampleResponse
@@ -153,16 +153,16 @@ user.AddCallback(Messages.SampleResponse, (connectionAgent, response)=>{
 });
 let sampleRequest = new Messages.SampleRequest();
 user.RequestPb(sampleRequest);
-// 응답으로 Messages.SampleResponse.
+// レスポンス Messages.SampleResponse.
 
 user.RequestPb<Messages.SampleResponse>(sampleRequest, (connectionAgent, response)=>{
     // Messages.SampleResponse
 });
 ```
 
-### 커스텀 메시지
+### カスタムメッセージ
 
-패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [여기](cocos-06-packet.md)를 참고합니다.
+パケットクラスを利用してProtocolBuffer以外の任意のデータをバイトストリームでシリアル化して使うことができます。パケットについての詳細は[こちら](cocos-06-packet.md)を参照してください。
 
 ```typescript
 let connection = GameAnvilManager.GetInstance().GetConnectionAgent();
@@ -173,10 +173,10 @@ let enc = new TextEncoder();
 connection.AddUndefinedProtocolCallback(resMsgId, this.onUndefinedProtocolResponse);
 let packet = Packet.CreateFromBuffer(reqMsgId, enc.encode("Test Data"));
 connection.Request(packet);
-// onUndefinedProtocolResponse 응답
+// onUndefinedProtocolResponseレスポンス
 
 connection.Request(packet, (connectionAgent, packet) => {
-    // 여기로 응답
+    // ここにレスポンス
 });
 let user = GameAnvilManager.GetInstance().GetUserAgent(this.ServiceName);
 let reqMsgId = 1;
@@ -186,9 +186,9 @@ let enc = new TextEncoder();
 user.AddUndefinedProtocolCallback(resMsgId, this.onUndefinedProtocolResponse);
 let packet = Packet.CreateFromBuffer(reqMsgId, enc.encode("Test Data"));
 user.Request(packet);
-// onUndefinedProtocolResponse 응답
+// onUndefinedProtocolResponseレスポンス
 
 user.Request(packet, (connectionAgent, packet) => {
-    // 여기로 응답
+    // ここにレスポンス
 });
 ```
