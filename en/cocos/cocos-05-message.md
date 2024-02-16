@@ -6,9 +6,9 @@ ConnectionAgent, UserAgent의 기본 기능 외에 Request()와 Send()를 이용
 
 ### 메시지 생성
 
-GameAnvil은 기본 메시지 프로토콜로 [Google Protocol Buffers](https://developers.google.com/protocol-buffers/docs/proto3)를 사용하고 있습니다. .proto파일에 메시지를 정의하고, pbjs 로 실제 클래스 소스 코드를 생성하게 됩니다. 그리고 GameAnvil에서 사용할 추가 코드를 생성된 코드에 삽입합니다. 이렇게 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. 
+GameAnvil은 기본 메시지 프로토콜로 [Google Protocol Buffers](https://developers.google.com/protocol-buffers/docs/proto3)를 사용하고 있습니다. .proto파일에 메시지를 정의하고, pbjs로 실제 클래스 소스 코드를 생성하게 됩니다. 그리고 GameAnvil에서 사용할 추가 코드를 생성된 코드에 삽입합니다. 이렇게 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. 
 
-추가 코드를 삽입하려면 `CodeInserter` 를 설치해야합니다. `CodeInserter`는 [여기](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-CodeInserter.zip)에서 다운로드 받을 수 있습니다. 다운로드 받은 파일의 압축을 풀어 프로젝트 루트 아래(assets 폴더 밖에)에 폴더를 만들어 넣어줍니다.
+추가 코드를 삽입하려면 `CodeInserter` 를 설치해야 합니다. `CodeInserter`는 [여기](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-CodeInserter.zip)에서 다운로드할 수 있습니다. 다운로드한 파일의 압축을 풀어 프로젝트 루트 아래(assets 폴더 밖에)에 폴더를 만들어 넣습니다.
 
 ![codeInserter](https://static.toastoven.net/prod_gameanvil/images/client-2-codeInserter.png)
 
@@ -107,16 +107,16 @@ npm run messages
 
 ### 메시지 등록
 
-새로 생성한 메시지를 사용하려면 사용하려는 메시지를 ProtocolManager에 서버와 같은 값으로 미리 등록해야 합니다. 등록하지 않거나 서버와 다를 경우 동작하지 않거나 오동작 하거나 예외가 발생 할 수 있습니다.
+새로 생성한 메시지를 사용하려면 사용하려는 메시지를 ProtocolManager에 서버와 같은 값으로 미리 등록해야 합니다. 등록하지 않거나 서버와 다를 경우 동작하지 않거나 오동작하거나 예외가 발생할 수 있습니다.
 
 ```typescript
-// 서버와 같은 값으로 등록해야한다.
+// 서버와 같은 값으로 등록해야 한다.
 ProtocolManager.RegisterProtocol(0, message);
 ```
 
 ### 메시지 전송
 
-RequestPb()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 응답을 기다리는 동안 추가적인 RequestPb()는 큐에 저장되고 서버 응답을 처리한 후 순차적으로 처리하게 됩니다. 서버 응답을 받아 처리하려면 리스너를 등록해야 합니다. 리스너를 등록하지 않을 경우 서버 응답을 받아도 별도의 알림을 주지 않고 다음 메시지를 처리하게 됩니다. 지정된 시간 내에 응답이 오지 않으면 타임아웃을 발생시키고 다음 메시지를 처리합니다. 타임아웃은 OnError() 리스너에 ErrorCode.TIMEOUT으로 전달이 됩니다.
+RequestPb()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 응답을 기다리는 동안 추가적인 RequestPb()는 큐에 저장되고 서버 응답을 처리한 후 순차적으로 처리하게 됩니다. 서버 응답을 받아 처리하려면 리스너를 등록해야 합니다. 리스너를 등록하지 않을 경우 서버 응답을 받아도 별도의 알림을 주지 않고 다음 메시지를 처리하게 됩니다. 지정된 시간 내에 응답이 오지 않으면 타임아웃을 발생시키고 다음 메시지를 처리합니다. 타임아웃은 OnError() 리스너에 ErrorCode.TIMEOUT으로 전달됩니다.
 
 SendPb()로 메시지를  전송하면 SendPb()의 호출 즉시 서버로 전송되며 별도의 응답을 기다리지 않습니다. RequestPb()에 대한 응답을 기다리는 중에도 SendPb()를 사용한 메시지는 바로 서버로 전송됩니다.
 
