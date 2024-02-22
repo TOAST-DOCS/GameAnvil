@@ -1,31 +1,31 @@
 ## Game > GameAnvil > 레퍼런스 프로젝트 > Unity 샘플
 
-# 1. Connector API doc - C#
+# Connector API doc - C#
 
 [Connector API C#](https://gameplatform.toast.com/docs/api/)
 
 
 
-# 2. 클라이언트 다운로드
+# 클라이언트 다운로드
 
 [Sample Game Client](https://github.com/nhn/gameanvil.sample-game-client-unity.git)
 
 
 
-# 3. 구성 환경
+# 구성 환경
 
 * Unity3d: 2020.3.37f1
 
-  - Unity Standalone으로 제작되었습니다. 본 샘플은 개발 참고용으로서 에디터환경에서만 동작이 확인되었습니다.
+  - Unity Standalone으로 제작되었습니다. 본 샘플은 개발 참고용으로서 에디터 환경에서만 동작이 확인되었습니다.
 
 * GameAnvil 커넥터: 1.4.1
 
 
-# 4. 클라이언트 구동하기
+# 클라이언트 구동하기
 
 ## Unity3d 사용
 
-git 저장소에서 클론한거나 다운받은 프로젝트를 Unity로 실행합니다.
+git 저장소에서 복제(clone)하거나 다운로드한 프로젝트를 Unity로 실행합니다.
 
 ![reference-2-unity-01](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-01.png) 
 
@@ -33,7 +33,7 @@ git 저장소에서 클론한거나 다운받은 프로젝트를 Unity로 실행
 
 ### 실행 환경 확인
 
-GameAnvil 커넥터 C# 라이브러리를 확인 합니다.
+GameAnvil 커넥터 C# 라이브러리를 확인합니다.
 
 * Assets/GameAnvil
 
@@ -50,26 +50,26 @@ GameAnvil 커넥터 C# 라이브러리를 확인 합니다.
 	* System.Memory
 	* System.Runtime.CompilerServices.Unsafe
 
-GameAnvil.dll 파일을 파일 오른쪽 버튼으로 속성에서 버전정보가 원하는 버전인지 확인합니다.  
+GameAnvil.dll 파일을 마우스 오른쪽 버튼으로 클릭한 뒤 속성에서 버전 정보가 원하는 버전이 맞는지 확인합니다.
 
 
 
 ### 클라이언트 실행
 
-유니티 에디터의 Play버튼으로 실행을 합니다. 오른쪽에 로그 콘솔에 오류가 없다면 정상 시작된 상태입니다.
+유니티 에디터의 Play 버튼을 클릭해 실행합니다. 오른쪽 로그 콘솔에 오류가 없다면 정상 시작된 상태입니다.
 
 ![reference-2-unity-03](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-03.png) 
 
 
 
-# 5. 클라이언트 살펴 보기
+# 클라이언트 살펴 보기
 
 ## 클라이언트 프로젝트 구성
 
 게임 개발에 참고할 수 있게 만든 GameAnvil 샘플 서버와 연동하기 위한 클라이언트로 제작된 프로젝트입니다.
 
 - 기능 사용성에 목적을 두어서 게임 자체에 대한 에러나 버그가 많을 수 있습니다.
-- 궁금한 점이 있다면 [고객센터](https://www.nhncloud.com/kr/support/inquiry) 로 문의해 주시기 바랍니다.
+- 자세한 내용은 [고객센터](https://www.nhncloud.com/kr/support/inquiry)로 문의하십시오.
 
 
 
@@ -87,16 +87,16 @@ GameAnvil.dll 파일을 파일 오른쪽 버튼으로 속성에서 버전정보�
     * Data: 데이터성 객체 폴더
     * GameTest: 게임 테스트 폴더
       * Scenes: 게임 테스트 화면 폴더
-        * GameLoginScene : 아이디 입력 받아 전체적인 로그인 처리하는 화면
+        * GameLoginScene: 아이디 입력 받아 전체적인 로그인 처리하는 화면
 
           ![reference-2-unity-06](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-06.png) 
 
-        * GameLobbyScene : 유저가 로그인하고나서의 화면, TapBird(1인), 멀티TapBird(4인), Snake(2인) 게임과, 랭킹, 유저 정보, 닉네임 변경를 확인
+        * GameLobbyScene: 유저가 로그인하고나서의 화면, TapBird(1인), 멀티TapBird(4인), Snake(2인) 게임과, 랭킹, 유저 정보, 닉네임 변경를 확인
 
           ![reference-2-unity-07](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-07.png) 
 
-    * PlatformTest : GameAnvil API Test 폴더
-      * Scenes : GameAnvil API 화면 폴더
+    * PlatformTest: GameAnvil API Test 폴더
+      * Scenes: GameAnvil API 화면 폴더
         * AuthScene ; launching(rest), 커넥트, 인증, 로그인 처리하는 화면
 
           ![reference-2-unity-08](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-08.png)  ![reference-2-unity-09](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-09.png)  ![reference-2-unity-10](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-10.png)  ![reference-2-unity-11](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-11.png)
@@ -118,7 +118,7 @@ GameAnvil.dll 파일을 파일 오른쪽 버튼으로 속성에서 버전정보�
           ![reference-2-unity-16](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-16.png)  ![reference-2-unity-17](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-17.png) 
 
     * Protocols: 서버와 통신할 프로토콜 폴더
-    * Snake: Snake 게임 폴더, 유저 매치 게임, 2인 동시에 서버에서 보내준 food를 화면에보여주고, 유저의 이동값을 표시, food 먹었을 때의 처리, 게임 end 조건 판단
+    * Snake: Snake 게임 폴더, 유저 매치 게임, 2인 동시에 서버에서 보내준 food를 화면에 보여 주고, 유저의 이동값을 표시, food 먹었을 때의 처리, 게임 end 조건 판단
       * Scenes: Snake 게임 화면 폴더
         
         ![reference-2-unity-18](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-18.png) ![reference-2-unity-19](https://static.toastoven.net/prod_gameanvil/images/reference/reference-2-unity-19.png)
@@ -137,7 +137,7 @@ GameAnvil.dll 파일을 파일 오른쪽 버튼으로 속성에서 버전정보�
 ### ConnectHandler : Assets/GameAnvilSample/
 
 - Assets/GameAnvilSample/ConnectHandler.cs
-- GameAnvil 커넥터초기화 밎 프로토콜 등록 처리를 합니다.
+- GameAnvil 커넥터 초기화 밎 프로토콜 등록 처리를 합니다.
 
 ```c#
 connector = new GameAnvil.Connector(config);
@@ -168,7 +168,7 @@ GameAnvil.ProtocolManager.getInstance().RegisterProtocol(Com.Nhn.Gameanvil.Sampl
 ConnectHandler.Instance.GetConnectionAgent().onDisconnectListeners += (ConnectionAgent connectionAgent, ResultCodeDisconnect result, bool force, Payload payload) =>
 {
     Debug.LogFormat("onDisconnect - {0}", result);
-    // 연결이 끊어졌을때 필요한 처리
+    // 연결이 끊어졌을 때 필요한 처리
 };
 ```
 
@@ -185,7 +185,7 @@ ConnectHandler.Instance.GetConnectionAgent().onDisconnectListeners += (Connectio
 
                 if (result == ResultCodeConnect.CONNECT_SUCCESS)
                 {
-                    // 서버 접속 성공시 처리
+                    // 서버 접속 성공 시 처리
                 }
                 else
                 {
@@ -212,11 +212,11 @@ ConnectHandler.Instance.GetConnectionAgent().onDisconnectListeners += (Connectio
                 {
                     if (result == ResultCodeAuth.AUTH_SUCCESS)
                     {
-                        // 성공시 처리
+                        // 성공 시 처리
                     }
                     else
                     {
-                        // 실패시 처리
+                        // 실패 시 처리
                     }
                 }
             );
@@ -246,7 +246,7 @@ ConnectHandler.Instance.GetConnectionAgent().onDisconnectListeners += (Connectio
 
                         // 서버에서 받은 게임 데이터 설정
 
-                        // 룸에 들어있는 상태 처리
+                        // 룸에 들어 있는 상태 처리
                         if (loginInfo.isJoinedRoom)
                         {
                             if (loginInfo.RoomPayload.contains<Com.Nhn.Gameanvil.Sample.Protocol.RoomInfoMsg>())
@@ -259,7 +259,7 @@ ConnectHandler.Instance.GetConnectionAgent().onDisconnectListeners += (Connectio
                                 }
                                 else if (roomInfoMsg.RoomType == Com.Nhn.Gameanvil.Sample.Protocol.RoomType.RoomSnake)
                                 {
-                                    // 유저매치 
+                                    // 유저 매치 
                                 }
                                 else if (roomInfoMsg.RoomType == Com.Nhn.Gameanvil.Sample.Protocol.RoomType.RoomTap)
                                 {
@@ -286,17 +286,17 @@ ConnectHandler.Instance.GetConnectionAgent().onDisconnectListeners += (Connectio
 gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, string.Empty);
 ```
 
-### CreateRoom : 혼자 게임 하는 방 생성및 입장
+### CreateRoom: 혼자 게임하는 방 생성 및 입장
 
 - Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
 ```c#
-        // 혼자 게임 하는 방 생성
+        // 혼자 게임하는 방 생성
         gameUser.CreateRoom(Constants.SPACE_ROOM_TYPE_SINGLE, new Payload().add(new Packet(startGameReq)), (UserAgent userAgent, ResultCodeCreateRoom result, int roomId, string roomName, Payload payload) =>
         {
             if (result == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)
             {
-                // 성공처리
+                // 성공 처리
             }
             else
             {
@@ -305,7 +305,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
         });
 ```
 
-### MatchRoom : 멀티 룸 매치 메이킹
+### MatchRoom: 멀티 룸 매치 메이킹
 
 - Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
@@ -315,7 +315,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
         {
             if (result == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
             {
-                // 성공시 처리
+                // 성공 시 처리
             }
             else
             {
@@ -324,7 +324,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
         });
 ```
 
-### MatchUserStart : 멀티 유저 매치메이킹
+### MatchUserStart: 멀티 유저 매치 메이킹
 
 - Assets/GameAnvilSample/PlatformTest/Scripts/LobbyUi.cs
 
@@ -334,7 +334,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
         {
             if (result == ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS)
             {
-                // 성공시 처리
+                // 성공 시 처리
             }
             else
             {
@@ -351,7 +351,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
         {
             if (result == ResultCodeMatchUserDone.MATCH_USER_DONE_SUCCESS)
             {
-				// 성공시 처리
+				// 성공 시 처리
             }
         };
 ```
@@ -359,10 +359,10 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
 - 유저 매치 타임아웃 시 onMatchUserTimeout이 호출됩니다.  Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs
 
 ```c#
-        // 유저 매치 요청 타임 아웃 리스너
+        // 유저 매치 요청 타임아웃 리스너
         snakeGameUser.onMatchUserTimeoutListeners += (UserAgent userAgent) =>
         {
-        	// 유저매치 타임아웃 처리
+        	// 유저 매치 타임아웃 처리
         };
 ```
 
@@ -373,13 +373,13 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
 - Assets/GameAnvilSample/PlatformTest/Scripts/SingleGameUi.cs
 
 ```c#
-     // 게임종료 프로토콜 정의
+     // 게임 종료 프로토콜 정의
         var endGameReq = new Com.Nhn.Gameanvil.Sample.Protocol.EndGameReq
         {
             EndType = gameEndType
         };
 
-        // 게임룸 나가는 요청
+        // 게임 룸 나가는 요청
         tapBirdUser.LeaveRoom(new Payload().add(new Packet(endGameReq)), (UserAgent userAgent, ResultCodeLeaveRoom result, bool force, int roomId, Payload payload) =>
         {
             if (result == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS)
@@ -392,7 +392,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
             }
             else
             {
-                // 실패시 처리
+                // 실패 시 처리
             }
         });
 ```
@@ -424,7 +424,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
         {
             if (shuffleDeckRes.ResultCode == Com.Nhn.Gameanvil.Sample.Protocol.ErrorCode.None)
             {
-                // 성공시 처리
+                // 성공 시 처리
             }
             else
             {
@@ -433,7 +433,7 @@ gameUser = ConnectHandler.Instance.GetUserAgent(Constants.GAME_SPACE_NAME, strin
         });
 ```
 
-- 리스너 등록: Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs : 서버에서 클라이언트로 오는 푸쉬해주는 패킷 리스너 등록
+- 리스너 등록: Assets/GameAnvilSample/PlatformTest/Scripts/MultiSnakeGameUi.cs : 서버에서 클라이언트로 푸시해 주는 패킷 리스너 등록
 
 ```c#
         snakeGameUser.AddListener((UserAgent userAgent, Com.Nhn.Gameanvil.Sample.Protocol.SnakeFoodMsg msg) =>
