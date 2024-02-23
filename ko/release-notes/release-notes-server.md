@@ -1,4 +1,22 @@
 ## Game > GameAnvil > 릴리스 노트 > GameAnvil
+### 1.4.2 (2024.02.26)
+
+#### New
+* Safe-Pause 기능을 개선했습니다. 
+  * 이미 Safe-Pause가 진행중인 경우라도, 진행중이 아닌 노드를 출발지/도착지 노드로 지정하여 새로운 Safe-pause를 실행할 수 있도록 개선했습니다. 
+  * GameNode 와 더불어 MatchNode 도 Safe-Paue를 지원합니다. 
+
+#### Fix
+* 엔진의 로그 내용을 보강하고 가독성을 개선했습니다. 
+  * request 실패시 보내는 패킷의 자세한 정보 추가했습니다.
+  * 시스템 정보 로그에 대한 마커를 SYSTEM_INFO 하나에서 SYSTEM_INFO와 SYSTEM_WARN으로 분리하였습니다.
+  * MultiRequest에서 개별 요청이 실패할 경우 어떤 요청이 실패했는지 로그를 남기도록 했습니다.
+  * 머신간 연결 상태와 관련된 로그 내용을 보강했습니다. 
+
+#### Change
+* GameAnvilConfig.json 에서 managementIp와 더불어 managementPort도 설정할 수 있도록 변경되었습니다.
+
+------
 
 ### 1.4.1 (2023.12.13)
 
