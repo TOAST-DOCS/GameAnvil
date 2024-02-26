@@ -2,7 +2,7 @@
 
 
 
-## 1. Suspendable
+## Suspendable
 
 다음의 몇 가지 내용은 파이버 기반의 코드를 작성할 때 주의할 사항입니다. 사용자는 파이버 단위에 크게 신경 쓸 필요가 없지만 아래의 주의 사항만큼은 반드시 지켜야 합니다.
 
@@ -17,7 +17,7 @@ void someSuspendableMethod() throws SuspendExecution {
 }
 ```
 
-- 만일 특수한 이유로 throws SuspendExecution 예외 시그니처를 명시할 수 없다면 **@Suspendable** 애너테이션(annotation)을 사용할 수 있습니다. 그 외의 경우에는 반드시 throws SuspendExecution 예외 시그니처를 우선해서 사용하세요.
+- 만일 특수한 이유로 throws SuspendExecution 예외 시그니처를 명시할 수 없다면 **@Suspendable** 애너테이션(annotation)을 사용할 수 있습니다. 그 외의 경우에는 반드시 throws SuspendExecution 예외 시그니처를 우선하여 사용하십시오.
 
 ```
 @Suspendable
@@ -38,10 +38,10 @@ void someCaller() throws SuspendExecution {
 }
 ```
 
-- SuspendExecution은 엔진에서 사용하는 Quasar 라이브러리가 파이버를 처리하기 위해 사용하는 특수한 기법입니다. 이는 **실제 예외가 아니며** 파이버가 아직 Java의 표준이 아니기 때문에 Quasar 라이브러리가 쓰는 일종의 우회 기법 정도로 이해할 수 있습니다. **그러므로 절대 이 SuspendExecution 예외를 catch해서는 안됩니다!** 흔하게 발생할 수 있는 오류이자 매우 중요한 부분입니다.
+- SuspendExecution은 엔진에서 사용하는 Quasar 라이브러리가 파이버를 처리하기 위해 사용하는 특수한 기법입니다. 이는 파이버가 아직 Java의 표준이 아니기 때문에 Quasar 라이브러리가 사용하는 일종의 우회 기법으로, 실제 예외가 아닙니다. 따라서 절대 SuspendExecution 예외를 catch해서는 안 됩니다. 흔하게 발생할 수 있는 오류이므로 주의하십시오.
 
 ```
-// !! 잘못된 사용 법 !!
+// !! 잘못된 사용법 !!
 
 void someCaller() {
 
