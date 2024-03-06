@@ -1,23 +1,23 @@
-## Game > GameAnvil > 테스트 개발 가이드 > 시나리오 테스트 개발 가이드
+## Game > GameAnvil > テスト開発ガイド > シナリオテスト開発ガイド
 
-## 대규모 부하 테스트와 이를 위한 시나리오 작성
+## 大規模負荷テストとそのためのシナリオ作成
 
-GameHammer는 대규모 부하 테스트를 위해 대량의 커넥션을 동시에 처리할 수 있는 기능을 제공합니다. 그리고 복잡한 테스트를 좀 더 편하게 관리할 수 있도록 상태 기반의 시나리오 테스트를 지원합니다. 
+GameHammerは大規模負荷テストのために大量の接続を同時に処理できる機能を提供します。そして、複雑なテストをより楽に管理できるように、状態ベースのシナリオテストをサポートします。
 
-### 시나리오 테스트 작성 예제
+### シナリオテスト作成例
 
-여기에서는 다음과 같은 간단한 시나리오 테스트 작성 예제를 다룹니다.
+ここでは、次のような簡単なシナリオテストの作成例を説明します。
 
 ![img](http://static.toastoven.net/prod_gameanvil/images/scenario_1.png)
 
-우선 각 시나리오를 수행할 주체가 될 ScenarioActor를 정의합니다.
+まず、各シナリオを実行する主体となるScenarioActorを定義します。
 
 ```java
 public static class TestActor extends ScenarioActor<TestActor> {
 }
 ```
 
-각 상태별로 State를 상속 받은 클래스를 정의합니다.  
+状態ごとにStateを継承したクラスを定義します。 
 
 ```java
 public class StateA extends State<TestActor> {
@@ -63,7 +63,7 @@ public class StateC extends State<TestActor> {
 }
 ```
 
-상태를 관리할 ScenarioMachine을 생성합니다. 그리고 앞서 정의한 StateA, StateB, StateC 객체를 생성해 ScenarioMachine에 추가합니다. 
+状態を管理するScenarioMachineを作成します。 そして、先に定義したStateA、StateB、StateCオブジェクトを作成してScenarioMachineに追加します。
 
 ```java
 ScenarioMachine<TestActor> scenario = new ScenarioMachine<>("Sample A");
@@ -71,24 +71,24 @@ scenario.addState(new StateA());
 scenario.addState(new StateB());
 scenario.addState(new StateC());
 
-sceanrio.editState(StateA.class) // StateA에서는
-    .addActionOnEnter(changeState(StateB.class), (sceanrioActor) -> new Random().nextBoolean()) // 랜덤으로 StateB로 이동
-    .addActionOnEnter(changeState(StateC.class)) // 나머지 경우에는 StateC로 이동
+sceanrio.editState(StateA.class) // StateAでは
+    .addActionOnEnter(changeState(StateB.class), (sceanrioActor) -> new Random().nextBoolean()) // ランダムにStateBに移動
+    .addActionOnEnter(changeState(StateC.class)) // 残りの場合はStateCに移動
     .endEdit();
 
 scenario.
-    .editState(StateB.class) // StateB에서는
-    .addActionOnEnter(changeState(StateC.class)) // 항상 StateC로 이동
+    .editState(StateB.class) // StateBでは
+    .addActionOnEnter(changeState(StateC.class)) // 常にStateCに移動
     .endEdit();
 
 scenario
-    .editState(StateC.class) // StateC에서는
-    .addActionOnEnter(finishWithSuccess(), (scenarioActor) -> new Random().nextBoolean()) // 랜덤으로 성공 종료로 처리
-    .addActionOnEnter(finishWithFail()) // 나머지 경우는 실패 종료로 처리
+    .editState(StateC.class) // StateCでは
+    .addActionOnEnter(finishWithSuccess(), (scenarioActor) -> new Random().nextBoolean()) // ランダムに成功終了として処理
+    .addActionOnEnter(finishWithFail()) // 残りの場合は失敗終了として処理
     .endEdit();
 ```
 
-이제 시나리오 테스트를 실행합니다.
+シナリオテストを実行します。
 
 ```java
 Tester tester = Tester.newBuilder()
@@ -103,7 +103,7 @@ scenarioTest.start(tester,
                   );
 ```
 
-실행 결과는 Random을 사용하기 때문에 매번 다르겠지만 대략 아래와 비슷합니다.
+実行結果はRandomを使うので毎回違いますが、概ね下記のようになります。
 
 ```
 ScenarioActor 0 - onScenarioTestStart StateA
@@ -120,13 +120,13 @@ ScenarioActor 1 - onEnter StateC
 ScenarioActor 1 - onExit StateC
 ```
 
-## 시나리오 테스트 기본 개념
+## シナリオテスト基本概念
 
-시나리오 테스트는 대규모 부하 테스트를 지원하기 위한 개념으로, 시나리오 테스트를 실행할 때 동시에 실행할 ScenarioActor 수, 시작 상태, 최대 실행 시간을 지정해서 실행합니다. 
+シナリオテストは大規模な負荷テストをサポートするための概念で、シナリオテストを実行する時、同時に実行するScenarioActorの数、開始状態、最大実行時間を指定して実行します。
 
 ### ScenarioActor
 
-동시에 실행되는 각각의 주체가  ScenarioActor입니다. 동시에 실행할 개수를 100으로 지정할 경우 100개의 ScenarioActor 객체가 생성되어 각각 시나리오를 수행하게 됩니다. ScenarioActor는 하나의 Connection을 가지고 있어 이를 이용해 GameAnvil 서버의 기능을 실행할 수 있습니다. ScenarioActor를 상속 구현하면서 시나리오 수행에 필요한 기능이나 설정 등을 추가하여 이용할 수 있습니다. `changeState()`를 이용해 현재 상태를 다른 상태로 변경할 수 있고, `finish()`를 이용해 시나리오를 종료할 수 있습니다. 
+同時に実行される各主体がScenarioActorです。同時実行する数を100に指定した場合、100個のScenarioActorオブジェクトが作成され、それぞれシナリオを実行します。ScenarioActorは一つのConnectionを持ち、これを利用してGameAnvilサーバーの機能を実行できます。ScenarioActorを継承して実装し、シナリオの実行に必要な機能や設定などを追加して利用できます。`changeState()` を使って現在の状態を別の状態に変更することができ、 `finish()` を使ってシナリオを終了できます。
 
 ```java
 public static class TestActor extends ScenarioActor<TestActor> {
@@ -141,7 +141,7 @@ public static class TestActor extends ScenarioActor<TestActor> {
 
 #### ChangeState
 
-ScenarioActor를 현재 상태를 다른 상태로 변경합니다. 주의할 점은 `ChangeState()`가 호출된 시점에 바로 상태가 변경되는 것이 아니라는 점 입니다. 실제 상태가 변경되는 시점은 다음 메시지 루프의 시작 시점이며, 이때 현재 상태를 구현한 State 객체의 `onExit()`와 다음 상태를 구현한 State 객체의 `onEnter()`가 순차적으로 호출됩니다.
+ScenarioActorの現在の状態を別の状態に変更します。注意すべき点は、`ChangeState()`が呼び出された時点ですぐに状態が変更されるわけではないということです。実際に状態が変更されるのは次のメッセージループの開始時であり、この時、現在の状態を実装したStateオブジェクトの`onExit()`と次の状態を実装したStateオブジェクトの`onEnter()`が順番に呼び出されます。
 
 ```java
 scenarioActor.changeState(NextState.class);
@@ -149,7 +149,7 @@ scenarioActor.changeState(NextState.class);
 
 #### Finish
 
-ScenarioActor가 수행 중인 시나리오를 종료합니다. `ChangeState()` 와 마찬가지로 `Finish()`가 호출된 후 다음 메시지 루프의 시작 시점에 실행되며, 이때 현재 상태를 구현한 State 객체의 `onExit()`가 호출됩니다. 그리고 ScenarioActor가 수행된 횟수가 ScenarioLoopCount보다 적은 경우 시나리오를 다시 수행하여 ScenarioLoopCount만큼 수행할 때 까지 반복합니다. ScenarioLoopCount <= 0일 경우 지정된 TestTime(기본값: 30초) 동안 계속 반복합니다. boolean 값을 인자로 받아 시나리오가 성공으로 종료되었는지, 실패로 종료되었는지 구분하여 통계를 기록합니다.
+ScenarioActorが実行中のシナリオを終了します。`ChangeState()`と同様に`Finish()`が呼び出された後、次のメッセージループの開始時に実行され、現在の状態を実装したStateオブジェクトの`onExit()`が呼び出されます。 そして、ScenarioActorが実行された回数がScenarioLoopCountより少ない場合、シナリオを再実行し、ScenarioLoopCountだけ実行されるまで繰り返します。ScenarioLoopCount <= 0の場合、指定されたTestTime(デフォルト:30秒)の間、継続的に繰り返します。 boolean値を引数として受け取り、シナリオが成功で終了したか、失敗で終了したかを区別して統計を記録します。
 
 ```java
 scenarioActor.finish(true);
@@ -157,13 +157,13 @@ scenarioActor.finish(true);
 
 #### Connection
 
-ScenarioActor는 하나의 Connection를 가지고 있어 이를 이용해 GameAnvil 서버의 기능을 실행할 수 있습니다. 
+ScenarioActorは一つのConnectionを持っていて、これを利用してGameAnvilサーバーの機能を実行できます。
 
 ```java
 Connection connection = scenarioActor.getConnection();
 ```
 
-시나리오 테스트에서는 기능 테스트에서처럼 Future를 이용해 테스트 코드를 작성할 경우, `Future.get()`에서 블록이 되기 때문에 여러 개의 테스트를 동시에 수행할 수 없습니다. 대신 콜백 방식의 API를 사용하여 동시에 수행하도록 할 수 있습니다. 기능 테스트에서 소개한 모든 API에는 대응하는 콜백 방식의 API가 제공되므로 시나리오 테스트에서는 이 콜백 방식 API를 사용하면 됩니다.
+シナリオテストでは、機能テストのようにFutureを使ってテストコードを作成する場合、`Future.get()`でブロックになるため、複数のテストを同時に実行できません。 代わりに、コールバック方式のAPIを使って同時に実行できます。機能テストで紹介した全てのAPIには対応するコールバック方式のAPIが提供されるので、シナリオテストではこのコールバック方式のAPIを使うことができます。
 
 ```java
 Connection connection = scenarioActor.getConnection();
@@ -180,7 +180,7 @@ connection.connect(new RemoteInfo("127.0.0.1", 11200), resultConnect -> {
 
 ### State
 
-State를 상속 구현하여 각 상태를 나타내는 State를 정의합니다. 
+Stateを継承実装して各状態を表すStateを定義します。
 
 ```java
 public class StateA extends State<TestActor> {
@@ -199,11 +199,11 @@ public class StateA extends State<TestActor> {
 }
 ```
 
-ScenarioActor가 각 상태로 변경할 때 마다 각 상태를 나타내는 State의 `onEnert()`가 호출되며 그 상태로 변경된 ScenarioActor가 인자로 넘어옵니다. 각 상태에서 빠져나갈 때는`onExit()`가 호출되며 그 상태에서 빠져나간 ScenarioActor가 인자로 넘어옵니다.  
+ScenarioActorが各状態に変更する度に、各状態を表すStateの`onEnert()`が呼び出され、その状態に変更されたScenarioActorが引数として渡されます。 各状態から抜け出す時は`onExit()`が呼び出され、その状態から抜け出したScenarioActorが引数として渡されます。 
 
 ##### ScenarioMachine
 
-ScenarioMachine으로 하나의 시나리오를 정의하며, 하나의 시나리오는 여러 개의 상태와 상태 간의 전이로 정의됩니다. 
+ScenarioMachineで一つのシナリオを定義し、一つのシナリオは複数の状態と状態間の遷移で定義されます。
 
 ```java
 ScenarioMachine<STATE, EVENT> scenario = new ScenarioMachine("Sample A");
@@ -214,7 +214,7 @@ scenario.addState(new StateC());
 
 ##### ScenarioTest
 
-먼저 Tester를 생성합니다. 이때 동시에 실행할 ScenarioActor의 수, 반복할 횟수, 테스트 시간 등을 옵션으로 지정할 수 있습니다.  그리고 ScenarioMachine을 인자로 받아 ScenarioTest를 생성합니다. 이제 앞서 생성한 Tester, ScenarioActo의 Class, 시작 상태를 나타내는 State의 Class를 넘겨 실행합니다. 테스트는 모든 ScenarioActor가 지정된 횟수만큼 반복하거나 지정한 테스트 시간이 될 때까지 수행됩니다. 
+まず、Testerを生成します。この時、同時に実行するScenarioActorの数、繰り返す回数、テスト時間などをオプションで指定できます。 そしてScenarioMachineを引数で受けてScenarioTestを作成します。先ほど作成したTester、ScenarioActoのClass、開始状態を表すStateのClassを渡して実行します。テストは全てのScenarioActorが指定された回数だけ繰り返したり、指定したテスト時間になるまで実行されます。
 
 ```
 Tester tester = Tester.newBuilder()
@@ -229,7 +229,7 @@ scenarioTest.start(tester,
                   );
 ```
 
-테스트를 완료한 후 `printStatistics()`를 이용해 테스트 결과를 얻을 수 있습니다.
+テストが完了した後、 `printStatistics()` を使ってテスト結果を取得できます。
 
 ```
 logger.info(scenarioTest.printStatistics("Finished"));
@@ -264,11 +264,11 @@ Heap Memory Avg : NaN MBytes
 ## SocketException : 0
 ```
 
-### 향상된 콜백 등록 기능
+### 改善されたコールバック登録機能
 
-이 방식으로 등록한 리스너는 User 에이전트를 통해 등록한 리스너와 다르게 State의 종료 시점에 자동으로 정리되므로 onExit에서 리스너를 제거해 주는 동작을 할 필요가 없어집니다.
+この方法で登録したリスナーはUserエージェントで登録したリスナーとは違ってStateの終了時に自動で整理されるので、onExitでリスナーを削除する動作をする必要がなくなります。
 
-예제 코드에서는 request에 대해 콜백을 등록하고, 콜백에서 response를 처리하여 문자열을 리턴하도록 설정하였습니다. 리턴된 값은 ScanarioMachine에서 다음으로 이동할 State를 결정하는 데 쓰일 것입니다. 
+サンプルコードではrequestに対してコールバックを登録して、コールバックでresponseを処理して文字列を返すように設定しました。返された値はScanarioMachineで次に移動するStateを決定するために使われます。
 
 ```java
 public class EchoState extends State<TestActor> {
@@ -298,8 +298,8 @@ public class EchoState extends State<TestActor> {
 }
 ```
 
-또는 서버로부터 일방적으로 메시지를 받는 경우에는 어노테이션 방식으로 콜백을 등록하면 편리합니다. 아래와 같이 `@Listener`어노테이션을 사용하여 특정 패킷에 대해 어떻게 처리할지 정의할 수 있습니다.
-어노테이션의 인자로 수신이 예상되는 메시지의 class를 설정하고, 해당 핸들러에 부착합니다.
+または、サーバーから一方的にメッセージを受け取る場合は、アノテーション方式でコールバックを登録すると便利です。下記のように `@Listener` アノテーションを使って特定のパケットに対してどう処理するかを定義できます。
+アノテーションの引数に受信が予想されるメッセージのclassを設定し、そのハンドラにアタッチします。
 
 ```java
 @Listener(SendFromServer.class)
@@ -313,8 +313,8 @@ public void sendFromServerListener(PacketResult packetResult, TestActor scenario
 }
 ```
 
-리퀘스트에 대한 응답 핸들러를 등록할 때에도 어노테이션을 사용할 수 있습니다. 이 경우에는 콜백으로 서버에서 전송된 패킷이 전달되지만, 어노테이션의 request 인자로 리퀘스트 타입을 대신 명시해야 합니다.
-서버에서 받는 타입에 대해서는 어노테이션에 명시하지 않습니다.
+リクエストに対するレスポンスハンドラを登録する時にもアノテーションを使うことができます。この場合、コールバックでサーバーから送信されたパケットが渡されますが、アノテーションのrequest引数にリクエストのタイプを指定する必要があります。
+サーバーから受け取るタイプについては、アノテーションに指定しません。
 
 ```java
 @Listener(request = RequestToServer.class)
@@ -326,7 +326,7 @@ public void requestToServerListener(PacketResult res, TestActor scenarioActor) {
 }
 ```
 
-기타 User 에이전트에서 지원하는 기능들은 대부분 ScenarioActor에서 아래와 같이 어노테이션 부착 또는 메서드 레퍼런스를 이용한 콜백 등록 방식을 사용할 수 있습니다.
+他のUserエージェントでサポートする機能はほとんどのScenarioActorで下記のようにアノテーションを付けたり、メソッド参照を利用したコールバック登録方式を使うことができます。
 
 ```java
 @Listener
@@ -342,7 +342,7 @@ public String connectListener(ResultConnect resultConnect, TestActor scenarioAct
 }
 ```
 
-아래는 지원하는 리스너 목록입니다. 아래 시그니처를 가진 메서드를 State에 선언한 후 `@Listener` 어노테이션을 부착하십시오.
+以下はサポートするリスナーのリストです。下記のシグネチャを持つメソッドをStateに宣言した後、`@Listener` アノテーションを付けてください。
 
 * connect 
 
@@ -475,4 +475,3 @@ public void listener(ResultSnapshot result, ScenarioActor actor);
 ```java
 public void listener(PacketResult result, ScenarioActor actor);
 ```
-
