@@ -2,13 +2,13 @@
 
 
 
-## 1. 객체 전송(Object Transfer)
+## 객체 전송(Object Transfer)
 
 GameAnvil에서 객체 전송이란 하나의 노드에서 다른 노드로 객체가 이동하는 것을 의미합니다. 사용자가 관심을 가져야 할 객체 전송은 모두 게임 노드 사이에서 발생합니다. 그 대표적인 두 가지인 유저 전송과 룸 전송에 대해 살펴봅니다.
 
 
 
-## 2. 유저 전송 (UserTransfer)
+## 유저 전송(UserTransfer)
 
 ![gamenode-user-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-user-transfer2.png)
 
@@ -24,7 +24,7 @@ GameAnvil에서 객체 전송이란 하나의 노드에서 다른 노드로 객�
 
 
 
-### 2-1. 유저 전송 구현
+### 유저 전송 구현
 
 실제 유저 전송은 GameAnvil이 내부적으로 조용하게 처리합니다. 이때, 클라이언트는 자신의 게임 유저 객체가 서버 사이에서 전송되는지 인지하지 못합니다. 즉, 다른 게임 노드의 방으로 들어가더라도 클라이언트는 단지 하나의 GameAnvil 서버군에서 임의의 방으로 들어간 것뿐이죠.
 
@@ -58,9 +58,9 @@ public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
 
 
 
-### 2-2. 전송 가능한 유저 타이머
+### 전송 가능한 유저 타이머
 
-유저가 전송될 때 유저에 등록해 둔 타이머도 함께 전송할 수 있습니다. 이때, 전송 이후에도 사용할 타이머를 등록할 수 있도록 onTransferInTimerHandler 콜백을 호출합니다. 사용자는 문자열 키와 그에 대응하는 TimerHandler를 등록할 수 있습니다. 문자열 키가 전송된 타이머 핸들러 키 목록에 존재하는 경우, 재등록할 타이머 핸들러를 등록합니다. 이 콜백에서 재등록하지 않은 타이머는 유저 또는 방 전송 이후 더 이상 사용되지 않기 떄문에 주의해야 합니다.
+유저가 전송될 때 유저에 등록해 둔 타이머도 함께 전송할 수 있습니다. 이때, 전송 이후에도 사용할 타이머를 등록할 수 있도록 onTransferInTimerHandler 콜백을 호출합니다. 사용자는 문자열 키와 그에 대응하는 TimerHandler를 등록할 수 있습니다. 문자열 키가 전송된 타이머 핸들러 키 목록에 존재하는 경우, 재등록할 타이머 핸들러를 등록합니다. 이 콜백에서 재등록하지 않은 타이머는 유저 또는 방 전송 이후 더 이상 사용되지 않기 때문에 주의해야 합니다.
 
 ```java
 @Override
@@ -72,7 +72,7 @@ public void onTransferInTimerHandler(TimerHandlerTransferPack timerHandlerTransf
 }
 ```
 
-## 3. 방 전송 (RoomTranfer)
+## 방 전송 (RoomTranfer)
 
 ![gamenode-room-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-room-transfer2.png)
 
@@ -82,7 +82,7 @@ public void onTransferInTimerHandler(TimerHandlerTransferPack timerHandlerTransf
 
 
 
-### 3-1. 방 전송 구현
+### 방 전송 구현
 
 실제 방 전송은 GameAnvil이 내부적으로 조용하게 처리합니다. 이때, 클라이언트는 자신의 게임 유저와 더불어 자신이 속한 방 객체가 서버 사이에서 전송되는지 인지하지 못할 가능성이 높습니다. 특별한 문제가 발생하지 않는 한 전체 흐름이 매우 빠르게 진행되기 때문에 전송 전의 게임 흐름을 전송 후에 계속 이어감에 있어 무리가 없습니다.
 
@@ -92,7 +92,9 @@ public void onTransferInTimerHandler(TimerHandlerTransferPack timerHandlerTransf
 
 만일 여기에서 전송할 데이터를 지정하지 않으면 대상 게임 노드로 전송된 방 객체의 해당 데이터는 모두 기본값으로 초기화되므로 주의가 필요합니다.
 
-**참고**> *앞서 설명하였듯이 방이 전송될 때는 당연하게도 방 안의 유저들이 함께 전송됩니다. 유저 전송에 관해서는 중급 개념에서 설명했으므로 여기에서는 따로 설명하지 않습니다.*
+> [참고]
+> 
+> 방이 전송될 때는 방 안의 유저들이 함께 전송됩니다. 유저 전송에 관해서는 중급 개념에서 설명했으므로 여기에서는 다루지 않습니다.
 
 ```java
 @Override
@@ -102,7 +104,7 @@ public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
 }
 ```
 
-이제 방 전송이 완료된 후 대상 게임 노드에서 처리할 콜백 메서드를 살펴보겠습니다. 아래와 같이 전송 전에 지정한 key를 이용해서 원하는 객체에 접근할 수 있습니다. 이와 같은 방법으로 전송 완료된 방 객체의 해당 데이터를 원래 상태로 만들어 줍니다. 특히, 전송된 방 안의 유저 객체 리스트를 매개 변수로 전달받고 있음을 확인할 수 있습니다. 이 부분만 제외하면 전체적인 흐름은 유저 전송과 매우 흡사합니다.
+이제 방 전송이 완료된 후 대상 게임 노드에서 처리할 콜백 메서드를 살펴보겠습니다. 아래와 같이 전송 전에 지정한 key를 이용해서 원하는 객체에 접근할 수 있습니다. 이와 같은 방법으로 전송 완료된 방 객체의 해당 데이터를 원래 상태로 만들어 줍니다. 특히, 전송된 방 안의 유저 객체 리스트를 매개 변수로 전달 받고 있음을 확인할 수 있습니다. 이 부분만 제외하면 전체적인 흐름은 유저 전송과 매우 흡사합니다.
 
 ```java
 @Override
@@ -116,9 +118,9 @@ public void onTransferIn(List<GameUser> userList, TransferPack transferPack) thr
 }
 ```
 
-### 3-2. 전송 가능한 방 타이머
+### 전송 가능한 방 타이머
 
-방이 전송될 때 방에 등록해 둔 타이머도 함께 전송할 수 있습니다. 이때, 전송 이후에도 사용할 타이머를 등록할 수 있도록 onTransferInTimerHandler 콜백을 호출합니다. 사용자는 문자열 키와 그에 대응하는 TimerHandler를 등록할 수 있습니다. 문자열 키가 전송된 타이머 핸들러 키 목록에 존재하는 경우, 재등록할 타이머 핸들러를 등록합니다. 이 콜백에서 재등록하지 않은 타이머는 유저 또는 방 전송 이후 더 이상 사용되지 않기 떄문에 주의해야 합니다.
+방이 전송될 때 방에 등록해 둔 타이머도 함께 전송할 수 있습니다. 이때, 전송 이후에도 사용할 타이머를 등록할 수 있도록 onTransferInTimerHandler 콜백을 호출합니다. 사용자는 문자열 키와 그에 대응하는 TimerHandler를 등록할 수 있습니다. 문자열 키가 전송된 타이머 핸들러 키 목록에 존재하는 경우, 재등록할 타이머 핸들러를 등록합니다. 이 콜백에서 재등록하지 않은 타이머는 유저 또는 방 전송 이후 더 이상 사용되지 않기 때문에 주의해야 합니다.
 
 ```java
 @Override
