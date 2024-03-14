@@ -1,62 +1,60 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 상태
+## Game > GameAnvil > Console User Guide > State
 
 
-## 상태
-하나의 게임 서비스를 위해 여러 대의 게임 서버를 구성할 수 있습니다. 그리고 각 게임 서버는 여러 개의 노드로 구성할 수 있습니다. 이러한 서버와 노드는 서로 다른 상태값을 가집니다. 이 문서의 나머지 부분에서 서버와 노드의 상태에 관해 설명합니다.
+## State
+Multiple game servers can be configured for a single game service. And each game server can be configured with multiple nodes. These servers and nodes have different state values. The rest of this document describes the state of the server and nodes.
 
 
 
-## 서버 상태
+## Server State
 
-서버 상태는 프로세스(S/W)와 인스턴스(H/W)의 상태를 복합적으로 표현합니다. 서버 관리 페이지에서 볼 수 있는 대시보드는 이러한 서버 상태를 나열하고 각각의 상태에 속한 서버의 대수를 표시하고 있습니다. 또한 구분되는 색깔로 각각의 상태를 나타냅니다.
+Server states are a combination of the state of processes (S/W) and instances (H/W). The dashboard, which you can see on the Server Management page, lists these server’s state and displays the number of servers in each state. It also displays each state in a distinct color.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/state/dashboard.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/state/dashboard.png)
 
 <br>
-다음은 각각의 서버 상태에 관한 설명입니다.
+The following describes each server state.
 
-| 서버 상태      | 의미                                                                                        |
+| Server State      | Description                                                                                        |
 |------------|-------------------------------------------------------------------------------------------|
-| ERROR      | 서버가 정상적이지 못한 모든 상태를 표현합니다. 이 경우 해당 서버는 재부팅 명령만 가능합니다. 재부팅하여 STANDBY 상태가 되면 다른 명령이 활성화됩니다. |
-| RUNNING    | 서버가 정상적으로 구동된 상태입니다. 즉, 게임 서버 프로세스가 문제없이 잘 시작되었습니다.                                       |
-| STANDBY    | 서버 인스턴스가 정상적으로 부팅되었으며 GameAnvil 서비스와 통신이 가능합니다. 이 경우 시작 명령을 통해 게임 서버 프로세스를 구동할 수 있습니다.    |
-| SAFE PAUSE | 서버에 속한 일부 노드가 Safe Pause를 진행 중입니다.                                |
-| TRANSIT    | 두 가지 상태 사이를 전환 중입니다. 목표 상태로 전환이 완료될 때까지 해당 서버로 명령할 수 없습니다.                                |
+| ERROR      | The server represents all anomaly conditions. In this case, only reboot command is available in the server. another command is enabled when rebooted and entered into the STANDBY state. |
+| RUNNING    | The server is normally running. In other words, the game server process has started well without any issues.                                       |
+| STANDBY    | The server instance has been booted successfully and can communicate with the GameAnvil service. In this case, you can run the game server process using the start command.    |
+| SAFE PAUSE | Some nodes on the server are performing SafePause.                                |
+| TRANSIT    | Switching between two states. You cannot command that server until the transition to the target state is completed.                                |
 
 
-## 노드 상태
+## Node State
 
-노드 상태는 하나의 게임 서버를 구성하는 여러 노드들의 상태를 보여줍니다. 또한 동일한 서버상의 노드일지라도 서로 다른 상태일 수 있습니다. 
+Node state shows the state of multiple nodes that make up a game server. Also, nodes on the same server can be in different state. 
 
-| 노드 상태 | 의미 |
+| Node State | Description |
 | ----------- | --------------------------- |
-| INIT | 노드 초기화 중 |
-| PREPARE | 노드 초기화 이후 준비 작업 진행 중 |
-| READY | 노드 구동 완료 및 서비스 가능 상태 |
-| READY(LOCK) | SAFE PAUSE 중인 노드로부터 유저/방을 전송 받는 중(베타적 서비스 가능 상태) |
-| PAUSE | 일시 정지 상태 |
-| RESUME | PAUSE로부터 재개 |
-| SAFE PAUSE | SAFE PAUSE 진행 중입니다. SAFE PAUSE가 완료되면 PAUSE 상태가 됩니다. |
-| INVALID | 노드 부하가 높을 경우 일시적으로 노드 정보를 확인하지 못하는 상태(자동으로 복구됨) |
-| DISABLE | INVALID 상태가 오래 지속되거나 장애 등으로 인해 서비스 불가능 상태(자동으로 복구되지 않음) |
+| INIT | Initializing a node |
+| PREPARE | Preparation work is in progress after node initialization |
+| READY | Node up and ready for service |
+| READY(LOCK) | Receiving user/room from a node that is in SAFE PAUSE (beta availability) |
+| PAUSE | Paused state |
+| RESUME | Resume from PAUSE |
+| SAFE PAUSE | SAFE PAUSE is in progress. When SAFE PAUSE is completed, it will be in PAUSE state. |
+| INVALID | Temporary failure to check node information when node load is high (automatically restored) |
+| DISABLE | Service is not available due to long-lasting INVALID state or failure (not automatically restored) |
 
 
 
-## Safe Pause 관련 상태
+## States related to Safe Pause
 
-서버 상태와 노드 상태 중에는 Safe Pause와 관련된 것들이 있습니다. 임의의 노드에 대해 Safe Pause를 진행할 경우 서버와 노드는 해당 상태로 전이(Transit)됩니다. 다음은 이에 대한 추가 설명입니다.
-
-
-#### Safe Pause를 진행하는 노드의 상태
-
-* SAFE PAUSE: 임의의 노드를 안전하게 중지(Safe Pause)시킬 경우 해당 노드가 처리 중이던 정보는 안전하게 다른 노드들로 이관됩니다. 이러한 일련의 과정은 SAFE PAUSE 상태로 나타냅니다. 이 상태의 노드는 모든 정보를 이관한 후 PAUSE 상태로 들어갑니다.
-* READY(LOCK): Safe Pause시킬 노드에서 처리 중이던 유저/방 등의 정보를 이관 받을 노드의 상태입니다. 이 상태의 노드는 이관이 완료될 때까지 외부 명령을 수행할 수 없습니다. 즉, Safe Pause 완료까지 베타적인 READY 상태가 됩니다.
-
-#### Safe Pause를 진행하는 서버의 상태
-
-* 서버를 구성하는 여러 개의 노드 중 일부가 SAFE PAUSE 혹은 READY(LOCK) 상태일 수 있습니다. 이러한 서버의 상태는 함축적으로 SAFE PAUSE 상태로 표현합니다.
+Some of the server state and node states are related to Safe Pause. If you proceed with Safe Pause for any node, the server and node will be transited to that state. A further explanation is as follows.
 
 
-Safe Pause에 대한 더 자세한 설명은 [Safe Pause](console-09-safe-pause.md)를 참고하십시오.
+#### State of nodes undergoing Safe Pause
 
+* SAFE PAUSE: If you safely pause (Safe Pause) on any node, it will securely transfer the processing information to other nodes. This series of processes is represented in the SAFE PAUSE state. Nodes in this state enter the PAUSE state after transferring all information.
+* READY (LOCK): It is the state of the node to be transferred information such as user/room that was being processed by the node to be Safe Pause. 
+A node in this state cannot perform an external command until the transfer is complete. In other words, it will be in a beta READY state until SafePause is complete.
 
+#### State of the server running SafePause
+
+* Some of the multiple nodes that make up the server may be in the SAFE PAUSE or READY (LOCK) state. This is implicitly expressed as SAFE PAUSE state.
+
+For more information on Safe Pause, see [Safe Pause](console-09-safe-pause.md).
