@@ -1,49 +1,49 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 오토스케일
+## Game > GameAnvil > Console User guide > Autoscale
 
-## 오토스케일
+## Auto scale
 
-**오토스케일 그룹** 탭에서 오토스케일을 생성하고 관리할 수 있습니다. 오토스케일 그룹은 지정한 조건에 따라 그룹 내의 서버가 자동으로 증설되거나 감축됩니다.
+You can create and manage autoscales from the **Autoscale Group** tab. Autoscale groups automatically scale-out/-in servers within the group based on the conditions you specify.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-group.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-group.png)
 
-**+ 오토스케일 그룹 생성**을 눌러 새로운 오토스케일 그룹을 생성할 수 있습니다. 이때 오토스케일의 동작에 영향을 주는 여러 가지 설정이 제공됩니다.
+You can create a new autoscale group by clicking **+ Create Autoscale Group **. At this time, it provides a number of settings that affect the behavior of autoscales.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param1.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param1.png)
 
-서버 생성과 마찬가지로 오토스케일 그룹 내에서 어떤 구성 정보(Config)를 이용하여 서버를 생성할지 미리 정의합니다. 또한 인스턴스 타입과 증설 및 감축의 기준이 되는 여러 요소들을 직접 정의할 수 있습니다.
+As with server creation, you predefine what configuration information (Config) is used to create servers within an autoscale group. You can also define the instance type and many of the factors on which scaling up and down is based.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param2.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param2.png)
 
-이러한 증설과 감축 조건에 해당하는 값들은 각각 AND/OR 연산으로 조합할 수 있습니다. 여기에는 CPU와 메모리 등 하드웨어 리소스뿐만 아니라 게임 유저 수와 같은 논리적인 리소스를 추가로 설정할 수 있습니다.
+Values for these scale-out/-in conditions can be combined as AND/OR operations. At this time, you can set up hardware resources such as CPU and memory, as well as logical resources such as the number of game users.
 
-오토스케일 그룹이 생성되면 다음과 같이 그 목록을 확인할 수 있습니다. 또한, 서버 생성과 마찬가지로 각 항목을 클릭하여 생성된 오토스케일 그룹의 상세 정보를 확인할 수 있습니다.
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-created.png)
+Once the autoscale group is created, you can check the list as follows. Also, just like creating a server, you can click each item to see the details of the autoscale group created. 
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-created.png)
 
-이 문서의 나머지 내용은 오토스케일 그룹의 생성에서 사용하는 설정 항목에 대해 살펴봅니다.
+The remainder of this article explores the configuration items used in the creation of an autoscale group.
 
-## 오토스케일 그룹 생성
+## Create Auto scale group
 
-오토스케일 그룹을 생성할 때 다음과 같은 정보를 입력해야 합니다.
+When creating an autoscale group, you must enter the following information.
 
-* 그룹 이름: 해당 오토스케일 그룹의 고유한 이름을 입력합니다.
-* Memo: 오토스케일 그룹에 대한 메모를 입력할 수 있습니다.
-* 최소 서버: 오토스케일 그룹이 최대한 감축할 수 있는 최소 인스턴스 개수입니다.
-* 최대 서버: 오토스케일 그룹이 최대한 증설할 수 있는 최대 인스턴스 개수입니다.
-* 시작 서버: 오토스케일 그룹이 최초로 시작할 인스턴스 개수입니다.의
+* Group Name: Enter a unique name for the autoscale group.
+* Memo: Enter a note about the autoscale group.
+* Minimum servers: The minimum number of instances that the autoscale group can reduce to the maximum.
+* Maximum servers: The maximum number of instances that an autoscale group can grow to.
+* Start server: The number of instances that the autoscale group will initially start.
 
-## 증설/감축 정책
+## Scale Out/In Policy
 
-오토스케일 그룹의 증설/감축 정책을 설정합니다.
+It sets the scale-out/-in policy for autoscale group.
 
-* 스케일 단위: 증설/감축이 필요할 때 한 번에 몇 대의 인스턴스를 증설할지 결정합니다.
-* 재사용 대기시간 (초): 증설/감축이 실행된 후 해당 재사용 대기시간 내에는 (조건이 충족되더라도) 다음 증설/감축이 발생하지 않음을 보장합니다.
-* 조건 연산자: 여러 개의의 조건을 AND/OR 연산으로 조합할 수 있습니다.
-* 오토스케일 조건: 오토스케일 증설/감축 조건을 설정할 수 있습니다. **+** 를 클릭해 여러 개의 조건을 조합할 수 있습니다.
+* Scale Unit: Determines how many instances you want to add at a time when you need to scale-out/-in.
+* Reuse wait time (in seconds): Guarantees that after a scale-up/down is executed, the next scale-up/down will not occur within the corresponding reuse wait (even if the condition is met).
+* Condition operator: Multiple conditions can be combined as AND/OR operations.
+* Autoscale condition: Autoscale scale-out/-in conditions can be set. You can combine multiple conditions by clicking **+**.
 
-## 노드 구성
+## Node configuration
 
-오토스케일 그룹의 노드 구성은 일반 서버 구성과 일부 차이가 있습니다. 가장 큰 차이점은 오토스케일 그룹을 단일 노드로 구성된 서버로만 생성이 가능하다는 것입니다. 이때, GATEWAY, GAME 2가지 노드만 선택 가능합니다. SUPPORT와 MATCH는 아직 오토스케일을 지원하지 않습니다.
+The node configuration of an autoscale group is partially different from that of the normal server configuration. The biggest difference is that autoscale groups can only be created with a server composed of a single node. At this time, only two nodes can be selected, GATEWAY and GAME. SUPPORT and MATCH do not yet support autoscale.
 
-단일 노드로 구성하면 서로 다른 노드를 하나의 서버로 구성할 수 없습니다. 이는 게임 노드나 서포트 노드처럼 서비스를 구성해야 하는 경우 단일 서비스만으로 구성해야 함을 의미합니다. 앞서 살펴본 예시 이미지는 'RPSGame' 서비스를 위한 게임 노드 3개가 하나의 서버로 구성됩니다. 하나의 노드를 선택하면 나머지는 더 이상 선택할 수 없습니다.
+When configured as a single node, different nodes cannot be configured as a single server. This means that if a service needs to be configured like a game node or a support node, it needs to be configured as a single service. In the example image described above, three game nodes for the 'RPSGame' service consist of one server. If you select one node, you can no longer select the rest.
 
-오토스케일 그룹으로 노드 구성이 완료되면 앞 서 설정한 정책에 기반하여 증설/감축이 자동으로 실행됩니다.
+When node configuration is completed with an autoscale group, scale-out/-in is automatically run based on the policy set earlier.
