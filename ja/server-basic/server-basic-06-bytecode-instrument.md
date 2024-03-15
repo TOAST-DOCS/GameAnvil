@@ -1,4 +1,4 @@
-## Game > GameAnvil > サーバーの概念説明 > ByteCode Instrumentation
+## Game > GameAnvil > サーバー概念の説明 > ByteCode Instrumentation
 
 
 
