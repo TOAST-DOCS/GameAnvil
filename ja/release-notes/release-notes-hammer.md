@@ -1,114 +1,114 @@
-## Game > GameAnvil > 릴리스 노트 > GameHammer
+## Game > GameAnvil > リリースノート > GameHammer
 
 ### 1.4.0 (2023.12.13)
 
 #### New
 
-* 시나리오 테스트 사용성 개선
-  - 시나리오 엑터를 통해 메서드를 직접 넘기는 방식 추가
-  - 어노테이션을 부착해 메서드를 핸들러로 등록하는 방식 추가
-  - 시나리오 테스트에서 서버로 요청하고 응답을 받기까지 걸리는 시간을 측정하여 결과 로그에 출력하는 기능 추가
-  - 상태 변화를 스테이트 내부에서 설정하지 않고, 시나리오를 한번에 작성하도록 하여 상태 이동을 한 곳에서 관리하는 기능 추가
-  - 시나리오 테스트 시 서버가 실행 중이 아닐 때에는 로그를 통해 알 수 있도록 수정
-  - 시나리오 테스트 로그 전송 및 조회 기능 개선
-* Payload에서 압축 패킷 지원하는 기능 추가
-* protobuf 3 최신 버전으로 업데이트
-* Protocol 등록 시 index를 지정하지 않아도 되도록 개선
+* シナリオテストのユーザビリティを改善
+  - シナリオアクターを介してメソッドを直接渡す方式を追加
+  - アノテーション付きでメソッドをハンドラとして登録する方式を追加
+  - シナリオテストでサーバーにリクエストして、レスポンスを受け取るまでにどのくらいの時間がかかるかを測定して、結果ログに出力する機能を追加
+  - 状態変化をステート内部で設定せず、シナリオを作成する際にまとめて作成するようにして、状態移動がどのように行われるかを1カ所で管理する機能を追加
+  - シナリオテスト時にサーバーが実行中でない場合は、ログを通じて分かるように修正
+  - シナリオテストログを転送および照会する機能を改善
+* Payloadで圧縮パケットをサポートする機能を追加
+* protobuf 3最新バージョンにアップデート
+* Protocolを登録する際にindexを指定しなくてもいいように改善
 
 #### Change
 
-* 로그인 시 잘못된 ChannelId를 입력할 경우 SystemError 응답 대신 Login 실패 응답을 주도록 수정
-* ConfigLoader에 파라미터로 받은 스트링에서 CustomConfig를 로딩할 수 있도록 오버로딩 추가
-* ScenarioActor.connect()의 파라미터 순서 변경.
-    * 다른 API들과 통일되도록 callback을 앞에 받도록 수정
-* 패킷 encode / decode 성능 개선
+* ログイン時に誤ったChannelIdを入力した場合、SystemErrorレスポンスの代わりにLogin失敗レスポンスされるように修正
+* ConfigLoaderにパラメータとして受け取ったストリングからCustomConfigをローディングできるように、オーバーローディングを追加
+* ScenarioActor.connect()のパラメータ順序を変更。
+    * 他のapiと統一されるようにcallbackを前に受け取るように修正
+* パケットencode/decode性能を改善
 
 #### Fix
 
-* State의 onEnter, onExit에서 exception이 발생할 경우 로그가 남지 않는 이슈 수정
-* 테스트 종료 시점에 request를 보내고 응답을 기다리지 않는 경우 warn 로그가 남는 이슈 수정
-* Connect되지 않은 Connector에서는 Timer가 동작하지 않는 이슈 수정
-* testTimeout 시간이 지났으나 start 해야 하는 scenarioActor가 남아 있을 경우 테스트가 종료되지 않는 버그 수정
+* StateのonEnter、onExitでexceptionが発生した場合、ログが残らない問題を修正
+* テストが終了した時点でrequestを送信し、レスポンスを待たない場合、warnログが残る問題を修正
+* ConnectされていないConnectorでTimerが動作しない問題を修正。
+* testTimeout時間が過ぎたが、startしなければならないscenarioActorが残っている場合、テストが終了しないバグを修正。
 
 ---
 
 ### 1.3.0 (2022.12.27)
 #### New
-* vmOption을 통해 설정을 로드할 수 있는 기능 추가
+* vmOptionで設定をロードできる機能を追加
 
 ---
 ### 1.2.1 (2021.11.30)
 
 #### New 
 
-* SecureSocket지원 기능 추가.
-	* RemoteInfo class에  useSecureSocket 옵션 추가. (default : false)
-    * GameHammerConfig의 targetServerList의 항목에 useSecureSocket 필드 추가.(default : false)
-	* Tester.Bulder.addRemoteInfo()에 useSecureSocket을 입력 받는 오버로딩 추가.
+* SecureSocketサポート機能を追加。
+	* RemoteInfo classにuseSecureSocketオプションを追加。(default : false)
+    * GameHammerConfigのtargetServerListの項目にuseSecureSocketフィールド追加。(default : false)
+	* Tester.Bulder.addRemoteInfo()にuseSecureSocketを入力されるオーバーローディングを追加。
 
 ---
 
 ### 1.2.0(2021.07.13)
 #### Change
-* 패키지 구조 정리
-	* 내부용 패키지는 gameanvilcore로 묶음.
+* パッケージ構造を整理
+	* 内部用のパッケージはgameanvilcoreでまとめる。
 * ResultCode
   * ResultCodeAuth
-    * AUTH_FAIL_MAINTENANCE 제거 
+    * AUTH_FAIL_MAINTENANCEを削除 
   * ResultCodeCreateRoom
-    * CREATE_ROOM_FAIL_CREATE_ROOM_ID 추가
-    * CREATE_ROOM_FAIL_CREATE_ROOM 추가
+    * CREATE_ROOM_FAIL_CREATE_ROOM_IDを追加
+    * CREATE_ROOM_FAIL_CREATE_ROOMを追加
   * ResultCodeChannelInfo
-    * CHANNEL_INFO_FAIL_NO_CHANNEL_INFO 추가
-    * CHANNEL_INFO_FAIL_INVALID_SERVICE_ID 추가
-    * CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND 추가
-  * ResultCodeAllChannelInfo 추가
-  * ResultCodeChannelCountInfo 추가
-  * ResultCodeAllChannelCountInfo 추가
+    * CHANNEL_INFO_FAIL_NO_CHANNEL_INFOを追加
+    * CHANNEL_INFO_FAIL_INVALID_SERVICE_IDを追加
+    * CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUNDを追加
+  * ResultCodeAllChannelInfoを追加
+  * ResultCodeChannelCountInfoを追加
+  * ResultCodeAllChannelCountInfoを追加
   * ResultCodeChannelList
-    * CHANNEL_LIST_FAIL_INVALID_SERVICEID 제거
-    * CHANNEL_LIST_FAIL_NO_CHANNEL_LIST 추가
+    * CHANNEL_LIST_FAIL_INVALID_SERVICEIDを削除
+    * CHANNEL_LIST_FAIL_NO_CHANNEL_LISTを追加
   * ResultCodeJoinRoom
-    * JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM 추가
-    * JOIN_ROOM_FAIL_ALREADY_FULL 추가
-    * JOIN_ROOM_FAIL_ROOM_MATCH 추가
+    * JOIN_ROOM_FAIL_ALREADY_JOINED_ROOMを追加
+    * JOIN_ROOM_FAIL_ALREADY_FULLを追加
+    * JOIN_ROOM_FAIL_ROOM_MATCHを追加
   * ResultCodeLogin
-    * LOGIN_FAIL_MAINTENANCE 제거
+    * LOGIN_FAIL_MAINTENANCEを削除
   * ResultCodeMatchUserCancel
-    * MATCH_USER_CANCEL_FAIL_CONTENT -> MATCH_USER_CANCEL_FAIL 이름 변경
-    * MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS 추가
+    * MATCH_USER_CANCEL_FAIL_CONTENT → MATCH_USER_CANCEL_FAILに名前を変更
+    * MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESSを追加
   * ResultCodeMatchRoom
-    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_ID 추가
-    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM  추가
-    * MATCH_ROOM_FAIL_INVALID_ROOM_ID  추가
-    * MATCH_ROOM_FAIL_INVALID_NODE_ID  추가
-    * MATCH_ROOM_FAIL_INVALID_USER_ID  추가
-    * MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND  추가
-    * MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY 추가
-    * MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY 추가
-    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL  추가
-    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL 추가
+    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_IDを追加
+    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOMを追加
+    * MATCH_ROOM_FAIL_INVALID_ROOM_IDを追加
+    * MATCH_ROOM_FAIL_INVALID_NODE_IDを追加
+    * MATCH_ROOM_FAIL_INVALID_USER_IDを追加
+    * MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUNDを追加
+    * MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORYを追加
+    * MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTYを追加
+    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULLを追加
+    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULLを追加
   * ResultCodeMatchUserDone
-    * MATCH_USER_DONE_FAIL_TRANSFER 추가
-    * MATCH_USER_DONE_FAIL_CREATE_ROOM 추가
+    * MATCH_USER_DONE_FAIL_TRANSFERを追加
+    * MATCH_USER_DONE_FAIL_CREATE_ROOMを追加
   * ResultCodeNamedRoom
-    * NAMED_ROOM_FAIL_CREATE_ROOM 추가
+    * NAMED_ROOM_FAIL_CREATE_ROOMを追加
   * ResultCodeDisconnect
-    * FORCE_CLOSE_MAINTENANCE 제거
-    * FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_ID 추가.
-    * FORCE_CLOSE_DISCONNECT_ALARM 제거
-    * FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT 추가
-    * FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION 추가
-  * ResultCodeSessionClose 추가
+    * FORCE_CLOSE_MAINTENANCEを削除
+    * FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_IDを追加
+    * FORCE_CLOSE_DISCONNECT_ALARMを削除
+    * FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENTを追加
+    * FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSIONを追加
+  * ResultCodeSessionCloseを追加
 
 ### 1.1.2 (2021.11.30)
 
 #### New 
 
-* SecureSocket지원 기능 추가.
-	* RemoteInfo class에  useSecureSocket 옵션 추가. (default : false)
-    * GameHammerConfig의 targetServerList의 항목에 useSecureSocket 필드 추가.(default : false)
-	* Tester.Bulder.addRemoteInfo()에 useSecureSocket을 입력 받는 오버로딩 추가.
+* SecureSocketサポート機能を追加。
+	* RemoteInfo classにuseSecureSocketオプションを追加。(default : false)
+    * GameHammerConfigのtargetServerListの項目にuseSecureSocketフィールド追加。(default : false)
+	* Tester.Bulder.addRemoteInfo()にuseSecureSocketを入力されるオーバーローディングを追加。
 
 ---
 
@@ -116,12 +116,12 @@
 
 #### New 
 
-* ping 기능 온오프 가능하도록 `Connection.setSendPingPaused()`추가.
+* ping機能をオンオフできるように`Connection.setSendPingPaused()`を追加。
 
 #### Fix
 
-* config의 pingIngerval이 적용되지 않는 버그 수정
-* config의 pingIngerval이 0 이면 ping을 안 보내도록 수정
+* configのpingIngervalが適用されないバグを修正
+* configのpingIngervalが0の場合、pingを送信しないように修正
 
 ---
 
@@ -129,53 +129,53 @@
 
 #### Change
 
-* 서버의 버전과 맞추기위해 1.1.0으로 올림.
+* サーバーのバージョンと合わせるために1.1.0にアップデート
 
 #### New
 
-* sendPauseClientStateCheck() 추가.
-* sendResumeClientStateCheck() 추가.
-* 서버에서 오는 상태체크 응답을 켜고 끌 수 있도록 기능 추가
+* sendPauseClientStateCheck()を追加。
+* sendResumeClientStateCheck()を追加。
+* サーバーから送信される状態チェックのレスポンスをオンオフできる機能を追加
 
 ---
 
 ### 1.0.2 (2020.02.10)
 
 #### Fix
-* 클라이언트에서 게임 노드로 지정된 시간(default 10초)동안 아무런 패킷을 보내지 않을 경우 서버에서 클라이언트로 상태 확인 요청을 보내게 되는데, GameHammer에서 이 상태 확인 요청에 잘못된 응답을 하여 접속이 끊어지는 문제 수정
-* 시나리오 테스트를 장시간 유지하여 요청한 패킷의 수가 아주 많아질 경우 packetSeq 가 overflow되어 서버에서 응답을 주지 않는 문제 수정  
-* send시에도 packetSeq를 증가시키는 문제 수정
+* クライアントからゲームノードに指定された時間(default10秒)中に何のパケットも送信しなかった場合、サーバーからクライアントにヘルスチェックリクエストが送信されるが、GameHammerでこのヘルスチェックリクエストに誤ったレスポンスをして、接続が切断される問題を修正
+* シナリオテストを長時間継続して、リクエストしたパケット数が大幅に増加した場合、packetSeqがoverflowされてサーバーからレスポンスを受け取れない問題を修正 
+* send時にもpacketSeqを増加させる問題を修正
 
 #### Change
-* 로그 내용 강화.
-    * accountId, userId 추가.
-    * 마지막으로 받은 패킷 추가.
-    * Ping/Pong 마지막 패킷에서 제외
-* 패킷의 크기를 줄이기 위해 
-    * packetSeq 최대값 16383으로 제한
-    * subId 최대값 127, 최소값 1로 제한
+* ログ内容を強化。
+    * accountId、userIdを追加。
+    * 最後に受け取ったパケットを追加。
+    * Ping/Pongの最後のパケットから除外
+* パケットのサイズを減らすために
+    * packetSeqの最大値を16383に制限
+    * subIdの最大値を127、最小値を1に制限
 
 ---
 
 ### 1.0.1 (2020.12.28)
 
 #### Fix
-* 같은 Message에 대해 waitFor를 중첩하여 사용할 경우 첫번째 응답시에 모든 중첩된 대기가 풀리는 버그 수정
-* ResultAuthentication의 getPayloads()가 null을 리턴하는 버그 수정
-* 테스트 종료시 간헐적으로 HandlerPing.onPingTime()에서 NullPointerException발생하는 이슈 수정
-* 테스트중 간헐적으로 Statistics.record()에서 ConcurrentModificationException발생하는 이슈 수정
+* 同じMessageに対してwaitForを連続して使用した場合、最初のレスポンス時にすべての重畳待機が解除されるバグを修正
+* ResultAuthenticationのgetPayloads()がnullをリターンするバグを修正
+* テストが終了した際に、断続的にHandlerPing.onPingTime()でNullPointerExceptionが発生する問題を修正
+* テスト中に断続的にStatistics.record()でConcurrentModificationExceptionが発生する問題を修正
 
 #### Change
-* GameHammerConfig.json파일이 없을 경우 출력되는 로그를 error에서 warn으로 변경.
+* GameHammerConfig.jsonファイルがない場合に出力されたログをerrorからwarnに変更。
 
 ---
 
 ### 1.0.0 (2020.12.18)
 
 #### Fix
-* EA버전에서 장시간 테스트 실패하는 이슈 수정.
-* EA버전 대비 TPS 성능 대폭 개선(약 2배)
-* 누락된 기능 추가.
+* EAバージョンで長時間テストに失敗する問題を修正。
+* EAバージョンに比べTPS性能を大幅に改善(約2倍)
+* 不足していた機能を追加。
     * Connector
         * getChannelInfo
         * addListenerAdminKickoutNoti
@@ -193,30 +193,30 @@
 
 #### Change
 * Tester
-    * 모든 요청 방식 기능에 Sync/Async 방식을 지원
-        * Sync : 요청시 Future를 리턴값으로 받아 Fureture.get()으로 완료될때까지 대기하고 결과를 받아 처리하는 방식.
-        * Async : 요청시 callback을 인자로 넘겨주고, callback에서 완료 결과를 받아 처리하는 방식.
+    * すべてのリクエスト方式機能にSync/Async方式をサポート
+        * Sync :リクエスト時にFutureを戻り値として受け取り、Fureture.get()で完了するまで待機して結果を受け取り、処理する方式。
+        * Async :リクエスト時にcallbackを引数として渡し、callbackから完了結果を受け取って処理する方式。
 * Scenario
-    * TRANSACTION과 EVENT 개념 제거
-        * 대신 각 State에서 changeState()를 사용해 원하는 State로 직접 이동
+    * TRANSACTIONとEVENTの概念を削除
+        * 代わりに各StateからchangeState()を使用して、希望するStateに直接移動
 
 #### New
-* 서버에서 보내는 noti를 기다려 처리할 수 있도록 waitForXXX 기능 추가.
+* サーバーから送信されるnotiを待って処理できるようにwaitForXXX機能を追加。
 
 ---
 
 ### 1.0.0-EA (2020.08.03)
 
 #### New
-* Tester - GameAnvil Connector를 대신하여 서버와의 연동 기능 테스트를 지원
-    * Connection - GameAnvil Connector의 ConnectionAgent가 담당하는 기능 지원
+* Tester - GameAnvil Connectorに代わってサーバーとの連動機能テストをサポート
+    * Connection - GameAnvil ConnectorのConnectionAgentが担当する機能をサポート
         * connect
         * authenticate
         * getChannelList
         * send
         * request
         * createUser
-    * User - GameAnvil Connector의 UserAgent가 담당하는 기능 지원
+    * User - GameAnvil ConnectorのUserAgentが担当する機能をサポート
         * login
         * logout
         * createRoom
@@ -231,7 +231,7 @@
         * request
         * addListenerMatchUserTimeout
         * addListenerMatchUserDone
-* ScenarioTest - Tester를 사용한 시나리오 테스트를 지원. 
-    * ScenarioMachine - 시나리오를 구성하는 여러 상태의 모음
-    * State - 사용자가 정의하는 전체 시나리오 중 특정 상태를 표현
-    * ScenarioActor - 시나리오를 수행하는 하나의 가상 유저
+* ScenarioTest - Testerを使用したシナリオテストをサポート。 
+    * ScenarioMachine - シナリオを構成する複数の状態の集合
+    * State - ユーザーが定義する全シナリオの中から特定の状態を表現
+    * ScenarioActor - シナリオを実行する1つの仮想ユーザー
