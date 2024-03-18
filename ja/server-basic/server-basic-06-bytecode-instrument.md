@@ -1,8 +1,8 @@
-## Game > GameAnvil > サーバー概念の説明 > ByteCode Instrumentation
+## Game > GameAnvil > サーバーの概念説明 > ByteCode Instrumentation
 
 
 
-## 1. ByteCode Instrumentation
+## ByteCode Instrumentation
 
 GameAnvilは、ファイバーベースのサーバーエンジンです。 そのためQuasarライブラリを使用します。ファイバーベースの非同期処理を実行するために、事前に約束された特殊な例外を使用します。もしくは、@Suspendableアノテーション(annotation)を使用することもあります。
 
@@ -12,7 +12,7 @@ throws SuspendExecution
 
 あらかじめ約束されたこのようなコードを解析するために、GameAnvilサーバーコードは必ずQuasarライブラリを利用して、ByteCode Instrumentationを進行する必要があります。ByteCode Instrumentationは2つの方法のうちいずれかを利用して進行できます。
 
-### 1.1. Runtime Instrumentation
+### Runtime Instrumentation
 
 サーバー実行VMオプションの最前面に次のようにQuasarバイナリをjavaagentとして追加します。そうすると、ランタイムでByteCode Instrumentaionを進行します。
 
@@ -24,13 +24,13 @@ throws SuspendExecution
 -javaagent:MY_PATH\quasar-core-0.8.0-jdk11.jar=bm
 ```
 
-### Note
+> [参考]
+>
+> この項目は、必ずVMオプションの最前面に追加する必要があります。この時、quasar-coreのパスは本人のquasar-coreをコピーしておいたパスに設定してください。*
 
-*この項目は、必ずVMオプションの最前面に追加する必要があります。この時、quasar-coreのパスは本人のquasar-coreをコピーしておいたパスに設定してください。*
 
 
-
-### 1.2. AOT Instrumentation
+### AOT Instrumentation
 
 AOT(ahead-of-time)Instrumentationを進行したい場合は、次の内容をプロジェクトオブジェクト管理ファイル(pom.xml)に追加し、Mavenを通じてサーバーバイナリをpackageやinstall、またはdeployすると、コンパイル完了後にInstrumentationを進行します。この場合、最初の場合と同様にVMオプションでjavaagentは必要ありません。
 
