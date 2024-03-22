@@ -2,7 +2,7 @@
 
 ## QuickConnect
 
-GameAnvilConnector에서는 QuickConnect 기능을 제공하여 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > ConnectionAgent](../unity-advanced/unity-advanced-02-connection-agent.md) 또는 서버 개발 가이드를 참고해주세요.
+GameAnvilConnector에서는 QuickConnect 기능을 제공하여 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > ConnectionAgent](../unity-advanced/unity-advanced-02-connection-agent.md) 또는 서버 개발 가이드를 참고하십시오.
 
 ### QuickConnect 설정
 
@@ -16,7 +16,7 @@ QuickConnect에 사용되는 설정값이 있습니다. GameAnvilConnector 생�
 | --- | --- |
 | ip | 대상 아이피 주소 |
 | port | 대상 포트 번호 |
-| accountId | 사용자 계정을 식별 할 수 있는 고유 아이디 |
+| accountId | 사용자 계정을 식별할 수 있는 고유 아이디 |
 | deviceId | 사용자 기기 식별용 고유 아이디. 서버 구현에 따라 사용하지 않는 경우 빈 문자열 전달 |
 | password | 사용자 계정의 비밀번호. 서버 구현에 따라 사용하지 않는 경우 빈 문자열 전달 |
 | userType | 유저의 타입 |
