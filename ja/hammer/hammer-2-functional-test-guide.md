@@ -1,8 +1,8 @@
-## Game > GameAnvil > 테스트 개발 가이드 > 기능 테스트 개발 가이드
+## Game > GameAnvil > テスト開発ガイド > 機能テスト開発ガイド
 
 ## Tester
 
-GameHammer를 사용하기 위한 기본 모듈입니다. 기본 설정과 Connection 객체의 관리를 담당합니다. Tester 객체를 생성하려면 먼저 Builder를 만들고 테스트에 필요한 옵션을 설정한 후, `build()`를 호출하면 됩니다.
+GameHammerを使うための基本モジュールです。基本設定とConnectionオブジェクトの管理を担当します。Testerオブジェクトを生成するには、まず、Builderを作成し、テストに必要なオプションを設定した後、`build()`を呼び出します。
 
 ```
 Tester tester = Tester.newBuilder()
@@ -10,7 +10,7 @@ Tester tester = Tester.newBuilder()
                     .build();
 ```
 
-옵션 설정을 외부로부터 불러올 수도 있습니다. vmoption `config.file=PATH`로 경로를 지정하거나, resource 폴더 아래에 GameHammerConfg.json 파일을 만들어 놓으면 TesterConfigLoader에서 자동으로 읽어오게 됩니다. 아래와 같은 방법으로 읽어온 옵션 설정이 적용된 Tester를 생성할 수 있습니다.
+オプション設定を外部から読み込むこともできます。 vmoption `config.file=PATH` でパスを指定するか、resourceフォルダの下にGameHammerConfg.jsonファイルを作成しておくと、TesterConfigLoaderで自動的に読み込みます。下記のような方法で、読み込んだオプション設定が適用されたTesterを作成できます。
 
 ```
 Tester tester = Tester.newBuilderWithConfig()
@@ -20,19 +20,19 @@ Tester tester = Tester.newBuilderWithConfig()
 
 ## Connection
 
-게임 서버와의 연결, 인증 등의 기능을 처리하고, 유저의 관리를 담당합니다. 아래와 같이 Tester를 통해 생성합니다.
+ゲームサーバーとの接続、認証などの機能を処理して、ユーザーの管理を担当します。下記のようにTesterを使って作成します。
 
 ```
 Connection connection = tester.createConnection(uuid);
 ```
 
-생성된 Connection 객체는 Tester에서 관리되며 uuid로 구분됩니다. 이미 생성된 객체의 uuid가 입력되면 해당 객체를 반환합니다.
+作成されたConnectionオブジェクトはTesterで管理され、UUIDで区分されます。すでに作成されているオブジェクトのUUIDが入力された場合は、そのオブジェクトを返します。
 
-Connection은 다음과 같은 기능을 제공합니다. 
+Connectionは次のような機能を提供します。
 
 ### Connect
 
-GameAnvil 서버에 연결합니다.
+GameAnvilサーバーに接続します。
 
 ```
 Future<ResultConnect> future = connection.connect(new RemoteInfo("127.0.0.1", 18200));
@@ -42,11 +42,11 @@ if(resultConnect.isSuccess()){
 }
 ```
 
-`connect()` 에서 반환 받은 Future의 `get()`을 호출하면 연결이 성공하거나 실패 할 때까지 대기후 ResultConnect 객체를 반환합니다. 반환 받은 ResultConnect 객체를 통해 결과를 알 수 있습니다. `connect()`의 두 번째 인자로 콜백을 넘겨 결과를 받을 수도 있습니다. `connect()` 외 다른 API들도 Future를 리턴해 결과를 기다리거나 콜백을 넘겨 결과를 전달 받을 수 있습니다. 
+`connect()`から返されたFutureの`get()`を呼び出すと、接続が成功するか失敗するまで待ってからResultConnectオブジェクトを返します。返されたResultConnectオブジェクトで結果を知ることができます。`connect()`の第二引数としてコールバックを渡して結果を受け取ることもできます。`connect()`以外の他のAPIもFutureを返して結果を待ったり、コールバックを渡して結果を受け取ることができます。
 
 ### Authentication
 
-GameAnvil 서버에 인증을 요청합니다. 인증에 성공해야 GameAnvil 커넥터의 다른 기능을 사용할 수 있습니다.
+GameAnvilサーバーに認証をリクエストします。認証に成功すると、GameAnvilコネクタの他の機能を使用できます。
 
 ```
 Future<ResultAuthentication> future = connection.authentication(accountId, password, deviceId, payload);
@@ -58,7 +58,7 @@ if(resultAuthentication.isSuccess){
 
 ### GetChannelList
 
-지정한 서비스에서 사용 가능한 채널 목록을 요청합니다.
+指定したサービスで使用可能なチャンネルリストをリクエストします。
 
 ```
 Future<ResultChannelList> future = connection.getChannelList(serviceName);
@@ -70,7 +70,7 @@ if(resultChannelList.isSuccess){
 
 ### GetChannelInfo
 
-지정한 체널의 정보를 요청합니다.
+指定したチャンネルの情報をリクエストします。
 
 ```
 Future<ResultChannelList> future = connection.getChannelList(serviceName, String channelId);
@@ -82,7 +82,7 @@ if(resultChannelList.isSuccess){
 
 ### Request
 
-서버로 메시지를 보내고, 응답을 기다립니다.
+サーバーにメッセージを送って、レスポンスを待ちます。
 
 ```
 Future<PacketResult> future = connection.request(message);
@@ -94,7 +94,7 @@ if(packetResult.isSuccess()){
 
 ### Send
 
-서버로 메시지를 보냅니다.
+サーバーにメッセージを送ります。
 
 ```
 connection.send(message);
@@ -102,7 +102,7 @@ connection.send(message);
 
 ### Close
 
-접속을 끊습니다. 접속 종료 시 생성했던 유저들을 모두 로그아웃하려면 인자로 true를 입력합니다.
+接続を切ります。 接続終了時に作成したユーザーを全てログアウトするには、引数にtrueを入力します。
 
 ```
 connection.close(true);
@@ -110,7 +110,7 @@ connection.close(true);
 
 ### WaitForAdminKickoutNoti
 
-어드민 강제 종료 알림을 받을 때까지 기다립니다. 어드민에서 강제 종료할 경우 전달됩니다.
+管理者の強制終了通知が来るまで待ちます。管理者が強制終了する場合、通知されます。
 
 ```
 Future<ResultAdminKickoutNoti> future = connection.waitForAdminKickoutNoti()
@@ -120,7 +120,7 @@ ResultAdminKickoutNoti resultAdminKickoutNoti = future.get(WAIT_TIME_OUT, TimeUn
 
 ### WaitForForceCloseNoti
 
-강제 종료 알림을 받을 때까지 기다립니다. 서버에서 `BaseUser.closeConnection()`을 호출하거나, Authentication이 실패하거나, 같은 계정으로 중복 로그인을 하거나, UserTrasnfer 도중 예외가 발생하는 등의 경우 전달됩니다.
+強制終了通知が来るまで待ちます。サーバーから`BaseUser.closeConnection()`を呼び出したり、Authenticationが失敗したり、同じアカウントで重複ログインをしたり、UserTrasnferの途中で例外が発生した場合などに渡されます。
 
 ```
 Future<ResultForceCloseNoti> future = connection.waitForForceCloseNoti();
@@ -130,7 +130,7 @@ ResultForceCloseNoti resultForceCloseNoti = future.get(WAIT_TIME_OUT, TimeUnit.M
 
 ### WaitForDisconnect
 
-네트워크 연결 끊김 알림을 받을 때까지 기다립니다. 서버에서 `BaseConnection.close()`를 호출하거나, 소켓 오류가 발생하거나 `Connection.close()`, `Tester.Close()`를 호출할 경우 전달됩니다.
+ネットワーク切断通知を受け取るまで待ちます。サーバーから`BaseConnection.close()`を呼び出したり、ソケットエラーが発生したり、`Connection.close()`, `Tester.Close()` を呼び出した場合に渡されます。
 
 ```
 Future<ResultDisconnect> future = connection.waitForDisconnect();
@@ -140,7 +140,7 @@ ResultDisconnect resultDisconnect = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECO
 
 ## User
 
-로그인을 비롯하여 방 생성, 입장, 매칭 등 게임에 필요한 주요 기능을 담당합니다. 다음과 같이 User를 생성할 수 있습니다.
+ログインをはじめルームの作成、入場、マッチングなどゲームに必要な主要機能を担当します。次のようにUserを作成できます。
 
 ```
 User user = connection.getUserAgent(serviceName, subId);
@@ -149,13 +149,13 @@ if(user == null){
 }
 ```
 
-`Connection.getUserAgent()`로 ServiceName과 SubId로 매칭되는 User가 있는지 확인하고, 없을 경우 `Connection.createUser()`로 새로운 User를 생성합니다. 
+`Connection.getUserAgent()`でServiceNameとSubIdでマッチングするUserがいるか確認し、いない場合は`Connection.createUser()`で新しいUserを作成します。 
 
-User는 다음과 같은 기능을 제공합니다. 
+Userは次のような機能を提供します。
 
 ### Login
 
-지정한 유저 타입으로 지정한 채널에 로그인합니다. 유저 타입과 채널은 서버에서 설정한 문자열을 사용합니다.
+指定したユーザータイプで指定したチャンネルにログインします。ユーザータイプとチャンネルはサーバーで設定した文字列を使います。
 
 ```
 Future<ResultLogin> future = user.login(resultLogin -> {
@@ -172,7 +172,7 @@ if(resultLogin.isSuccess()){
 
 ### Logout
 
-로그인된 채널에서 로그아웃합니다.
+ログインしたチャンネルからログアウトします。
 
 ```
 Future<ResultLogout> future = user.logout(resultLogout -> {
@@ -189,7 +189,7 @@ if(resultLogout.isSuccess()){
 
 ### WaitForForceLogoutNoti
 
-강제 로그아웃 알림을 받을 때까지 기다립니다. 서버에서 `BaseUser.kickout()`을 호출할 경우 전달됩니다.
+強制ログアウト通知を受け取るまで待ちます。サーバーで`BaseUser.kickout()` を呼び出す場合に渡されます。
 
 ```
 Future<ResultForceLogoutNoti> future = connection.waitForForceLogoutNoti();
@@ -199,7 +199,7 @@ ResultForceLogoutNoti resultForceLogoutNoti = future.get(WAIT_TIME_OUT, TimeUnit
 
 ### CreateRoom
 
-지정한 룸 타입으로 지정한 이름의 방을 생성하고 해당 방에 입장합니다. 룸 타입은 서버에서 설정한 문자열을 사용합니다.
+指定したルームタイプで指定した名前のルームを作成し、そのルームに入場します。ルームタイプはサーバーで設定した文字列を使います。
 
 ```
 Future<ResultCreateRoom> future = user.createRoom(resultCreateRoom -> {
@@ -216,7 +216,7 @@ if(resultCreateRoom.isSuccess()){
 
 ### JoinRoom
 
-지정한 ID의 방에 입장합니다. 지정한 ID의 방이 없을 경우 실패합니다.
+指定したIDのルームに入室します。指定したIDのルームがない場合は失敗します。
 
 ```
 Future<ResultJoinRoom> future = user.joinRoom(resultJoinRoom -> {
@@ -233,7 +233,7 @@ if(resultJoinRoom.isSuccess()){
 
 ### NamedRoom
 
-지정한 이름의 방에 입장합니다. 지정한 이름의 방이 없을 경우 방을 생성하고 해당 방에 입장합니다. 파티 매칭을 위한 방인 경우에는 useParty를 true로 입력합니다.
+指定した名前のルームに入場します。指定した名前のルームがない場合、ルームを作成してそのルームに入場します。パーティーマッチングのためのルームの場合はusePartyをtrueにします。
 
 ```
 Future<ResultNamedRoom> future = user.namedRoom(resultNamedRoom -> {
@@ -250,7 +250,7 @@ if(resultNamedRoom.isSuccess()){
 
 ### LeaveRoom
 
-현재 방에서 퇴장합니다.
+現在のルームから退室します。
 
 ```
 Future<ResultLeaveRoom> future = user.leaveRoom(resultLeaveRoom -> {
@@ -267,7 +267,7 @@ if(resultLeaveRoom.isSuccess()){
 
 ### WaitForForceLeaveRoomNoti
 
-방 강제 퇴장 알림을 받을 때까지 기다립니다. 서버에서 BaseUser.kickoutRoom()을 호출할 경우 전달됩니다.
+強制退室通知が来るまで待ちます。サーバーでBaseUser.kickoutRoom()を呼び出す場合に渡されます。
 
 ```
 Future<ResultForceLeaveRoomNoti> future = connection.waitForForceLeaveRoomNoti();
@@ -277,7 +277,7 @@ ResultForceLeaveRoomNoti resultForceLeaveRoomNoti = future.get(WAIT_TIME_OUT, Ti
 
 ### MatchUserStart
 
-유저 매치메이킹을 요청합니다. 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패할 수 있습니다.  WaitForMatchUserDoneNoti를 통해 매치 성공 알림, WaitForMatchUserTimeoutNoti를 통해 매치 타임아웃 알림을 받을 수 있습니다.
+ユーザーのマッチメイキングをリクエストします。すでにルームに入場している場合など、サーバーの条件によってリクエストが失敗する場合があります。 WaitForMatchUserDoneNotiでマッチ成功通知、WaitForMatchUserTimeoutNotiでマッチタイムアウト通知を受け取ることができます。
 
 ```
 Future<ResultMatchUserStart> future = user.matchUserStart(resultMatchUserStart -> {
@@ -294,7 +294,7 @@ if(resultMatchUserStart.isSuccess()){
 
 ### MatchUserCancel
 
-유저 매치메이킹 요청을 취소합니다. 매치 요청 중이 아닌 경우, 이미 매칭이 성공했거나 타임아웃이 발생했을 경우 실패할 수 있습니다.
+ユーザーのマッチメイキングリクエストをキャンセルします。マッチリクエスト中でない場合や、すでにマッチングが成功した場合、タイムアウトが発生した場合は、失敗することがあります。
 
 ```
 Future<ResultMatchUserCancel> future = user.matchUserCancel(resultMatchUserCancel -> {
@@ -311,7 +311,7 @@ if(resultMatchUserCancel.isSuccess()){
 
 ### WaitForMatchUserDoneNoti
 
-유저 매치메이킹 또는 파티 매치메이킹 완료 알림을 받을 때까지 기다립니다.  
+ユーザーマッチメイキングまたはパーティーマッチメイキング完了通知を受け取るまで待ちます。 
 
 ```
 Future<ResultMatchUserDone> future = connection.waitForMatchUserDoneNoti();
@@ -321,7 +321,7 @@ ResultMatchUserDone resultMatchUserDone = future.get(WAIT_TIME_OUT, TimeUnit.MIL
 
 ### WaitForMatchUserTimeoutNoti
 
-유저 매치메이킹 또는 파티 매치메이킹에 대한 타임아웃 알림을 받을 때까지 기다립니다.  
+ユーザーマッチメイキングまたはパーティーマッチメイキングのタイムアウト通知を受け取るまで待ちます。 
 
 ```
 Future<ResultMatchUserTimeout> future = connection.waitForMatchUserTimeoutNoti();
@@ -331,7 +331,7 @@ ResultMatchUserTimeout resultMatchUserTimeout = future.get(WAIT_TIME_OUT, TimeUn
 
 ### MatchPartyStart
 
-파티 매치메이킹을 요청합니다. 파티 매치메이킹을 위한 방에 입장한 상태에서 요청할 수 있습니다. WaitForMatchUserDoneNoti를 통해 매치 성공 알림, WaitForMatchUserTimeoutNoti를 통해 매치 타임아웃 알림을 받을 수 있습니다.
+パーティーマッチメイキングをリクエストします。パーティーマッチメイキングのためのルームに入場した状態でリクエストできます。WaitForMatchUserDoneNotiでマッチ成功通知、WaitForMatchUserTimeoutNotiでマッチタイムアウト通知を受け取ることができます。
 
 ```
 Future<ResultMatchPartyStart> future = user.matchPartyStart(resultMatchPartyStart -> {
@@ -348,7 +348,7 @@ if(resultMatchPartyStart.isSuccess()){
 
 ### WaitForMatchPartyStartNoti
 
-파티 매치메이킹 시작 알림을 받을 때까지 기다립니다. 파티 매치메이킹을 위한 방에서 다른 사람이 파티 매치메이킹을 시작했을 경우 전달됩니다.
+パーティーマッチメイキング開始通知を受け取るまで待ちます。パーティーマッチメイキングのためのルームで他の人がパーティーマッチメイキングを開始した場合、通知されます。
 
 ```
 Future<ResultMatchPartyStart> future = connection.waitForMatchPartyStartNoti();
@@ -358,7 +358,7 @@ ResultMatchPartyStart resultMatchPartyStart = future.get(WAIT_TIME_OUT, TimeUnit
 
 ### MatchPartyCancel
 
-파티 매치메이킹 요청을 취소합니다. 파티 매치메이킹 중이 아닌 경우, 이미 파티 매치메이킹에 성공했거나 타임아웃이 발생하면 실패할 수 있습니다.
+パーティーマッチメイキングのリクエストをキャンセルします。パーティーマッチメイキング中でない場合や、すでにパーティーマッチメイキングに成功した場合、またはタイムアウトが発生した場合は失敗することがあります。
 
 ```
 Future<ResultMatchPartyCancel> future = user.matchPartyCancel(resultMatchPartyCancel -> {
@@ -375,7 +375,7 @@ if(resultMatchPartyCancel.isSuccess()){
 
 ### WaitForMatchPartyCancelNoti
 
-파티 매치메이킹 취소 알림을 받을 때까지 기다립니다. 파티 매치메이킹 중 다른 사람이 파티 매치메이킹을 취소한 경우 전달됩니다.
+パーティーマッチメイキングのキャンセル通知を受け取るまで待ちます。パーティーマッチメイキング中に他の人がパーティーマッチメイキングをキャンセルした場合、通知されます。
 
 ```
 Future<ResultMatchPartyCancel> future = connection.waitForMatchPartyCancelNoti();
@@ -385,7 +385,7 @@ ResultMatchPartyCancel resultMatchPartyCancel = future.get(WAIT_TIME_OUT, TimeUn
 
 ### MatchRoom
 
-방 매치메이킹을 요청합니다. 방이 없을 경우 임의의 방을 생성하고 해당 방에 입장할 수도 있습니다.
+ルームのマッチメイキングをリクエストします。ルームがない場合、任意のルームを作成してそのルームに入場することもできます。
 
 ```
 Future<ResultMatchRoom> future = user.matchRoom(resultMatchRoom -> {
@@ -402,7 +402,7 @@ if(resultMatchRoom.isSuccess()){
 
 ### MoveChannel
 
-지정한 채널로 이동합니다.
+指定したチャンネルに移動します。
 
 ```
 Future<ResultMoveChannel> future = user.moveChannel(resultMoveChannel -> {
@@ -419,7 +419,7 @@ if(resultMoveChannel.isSuccess()){
 
 ### WaitForMoveChannelNoti
 
-체널 이동 알림을 받을 때까지 기다립니다. 방 입장, 매치매이킹 등의 이유로 체널을 이동하게 되면 전달됩니다.
+チャンネル移動通知を受け取るまで待ちます。ルーム入場、マッチメイキングなどの理由でチャンネルを移動すると通知されます。
 
 ```
 Future<ResultMoveChannelNoti> future = connection.waitForMoveChannelNoti();
@@ -429,7 +429,7 @@ ResultMoveChannelNoti resultMoveChannelNoti = future.get(WAIT_TIME_OUT, TimeUnit
 
 ### Request
 
-서버로 메시지를 보내고, 응답을 기다립니다.
+サーバーにメッセージを送って、レスポンスを待ちます。
 
 ```
 Future<PacketResult> future = user.request(packetResult -> {
@@ -446,7 +446,7 @@ if(packetResult.isSuccess()){
 
 ### Send
 
-서버로 메시지를 보냅니다.
+サーバーにメッセージを送ります。
 
 ```
 user.send(message);
@@ -454,7 +454,7 @@ user.send(message);
 
 ### WaitForNotice
 
-공지 알림을 받을 때까지 기다립니다. 어드민에서 공지를 보내거나, REST API를 이용해 공지를 보낼 경우 전달됩니다.
+告知の通知を受け取るまで待ちます。管理者から告知を送ったり、REST APIを使って告知を送った場合に伝達されます。
 
 ```
 Future<ResultNotice> future = connection.waitForMoveChannelNoti();
@@ -462,11 +462,11 @@ ResultNotice resultNotice = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // 
 // resultNotice 
 ```
 
-## 테스트 코드 작성
+## テストコードの作成
 
-### 기본 설정
+### 基本設定
 
-JUnit을 이용해 테스트 코드를 작성할 때 다음과 같이 BeforeClass, AfterClass, After 코드를 작성합니다.
+JUnitを使ってテストコードを作成する時、次のようにBeforeClass、AfterClass、Afterコードを作成します。
 
 ```
 public class TestWithGameHammer {
@@ -506,13 +506,13 @@ public class TestWithGameHammer {
     }
 ```
 
-이렇게 작성하면 선행 테스트에서 사용한 유저가 남아 다음 테스트에 영향을 주는 것을 막을 수 있습니다. 
+このように書くと、先行テストで使ったユーザーが残って次のテストに影響を与えるのを防ぐことができます。
 
-### Request/Response 테스트
+### Request/Responseテスト
 
-GameHammer를 이용한 테스트 코드는 크게 2가지 유형으로 나눌 수 있습니다. 첫 번째는 Request/Response 형태의 테스트 코드입니다. 클라이언트에서 Request를 보낼 경우 서버에서는 반드시 Response를 보내야 합니다. 응답을 보내지 않으면 timeout이 발생합니다. GameAnvil 커넥터가 제공하는 API 대부분이 이런 Request/Response 방식이며 GameHammer에서도 이런 Request/Response 방식의 테스트를 지원합니다.
+GameHammerを使ったテストコードは大きく2つのタイプに分けられます。一つ目はRequest/Response形式のテストコードです。クライアントでRequestを送る場合、サーバーは必ずResponseを送る必要があります。レスポンスを送らない場合、timeoutが発生します。GameAnvilコネクタが提供するAPIのほとんどがこのようなRequest/Response方式であり、GameHammerでもこのようなRequest/Response方式のテストをサポートします。
 
-예를 들면 Connection의 connect에 대한 테스트 코드는 다음과 같이 작성할 수 있습니다.
+例えば、Connectionのconnectに対するテストコードは次のように書くことができます。
 
 ```
 @Test
@@ -527,9 +527,9 @@ public void Connect() {
 }
 ```
 
-`connection.connect()`를 호출해 서버에 접속합니다. 이때 반환받은 `Future`의 `get()`을 호출하면 `connection.connect()`가 완료될 때까지 대기하고,  완료되면 그 결과인 `ResultConnect`를 리턴합니다.  여기서 리턴받은 `ResultConnect`이용해 성공 여부를 판단할 수 있습니다. 
+`connection.connect()` を呼び出してサーバーに接続します。この時、返された `Future` の `get()` を呼び出すと `connection.connect()` が完了するまで待って、完了したらその結果である `ResultConnect` を返します。 ここで返された `ResultConnect` を利用して成功したかどうかを判断できます。
 
-또 다른 예로 게임에서 사용하는 메시지에 대한 Request/Response 방식 테스트 코드는 다음과 같이 작성할 수 있습니다. 
+もう一つの例としてゲームで使うメッセージに対するRequest/Response方式のテストコードは次のように書くことができます。
 
 ```
 @Test
@@ -547,13 +547,13 @@ public void RequestTest() {
 }
 ```
 
-먼저 메시지를 만들고, 이것을 `connection.request()`의 인자로 넣어 서버로 전송합니다. 이때 리턴받은 `Future`의 `get()`를 호출하면 서버에서 응답을 하거나 타임아웃이 발생할 때까지 대기하고, 응답을 받거나 타임아웃이 발생하면 `PacketResult`를 리턴합니다. 여기서 리턴받은 `PacketResult`를 이용해 성공 여부를 판단할 수 있습니다. 성공하면 `PacketResult.getStream()`을 이용해 메시지를 파싱하여 내용을 확인할 수 있습니다. 
+まずメッセージを作成し、これを `connection.request()` の引数としてサーバーに送信します。この時、返された `Future` の `get()` を呼び出すと、サーバーからレスポンスが来るかタイムアウトが発生するまで待ち、レスポンスが来るかタイムアウトが発生したら `PacketResult` を返します。ここで返された `PacketResult` を使って成功したかどうかを判断できます。成功したら `PacketResult.getStream()` を使ってメッセージを解析して内容を確認できます。
 
-Connnection, User의 API 중 Future를 리턴하는 API들은 모두 이런 방식을 사용해 테스트할 수 있습니다.
+Connection、UserのAPIのうち、Futureを返すAPIは全てこの方法でテストできます。
 
 ### Send/Receive
 
-클라이언트는 Send를 보내고 응답을 기다리지 않습니다. 그리고 서버에서도 클라이언트의 동작과 상관없이 Send를 보낼 수 있습니다. 테스트는 다음과 같이 작성할 수 있습니다.
+クライアントはSendを送ってレスポンスを待たないです。 そして、サーバーでもクライアントの動作と関係なくSendを送ることができます。テストは次のように書くことができます。
 
 ```
 @Test

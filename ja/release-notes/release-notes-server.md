@@ -1,43 +1,61 @@
-## Game > GameAnvil > 릴리스 노트 > GameAnvil
+## Game > GameAnvil > リリースノート > GameAnvil
+### 1.4.2 (2024.02.26)
+
+#### New
+* Safe-Pause機能を改善しました。 
+  * 既にSafe-Pauseが進行中であっても、進行中でないノードを出発/到着ノードとして指定することで、新しいSafe-pauseを実行できるように改善しました。
+  * GameNode に加え、MatchNode もSafe-Paueをサポートします。 
+
+#### Fix
+* エンジンのログの内容を補強し、読みやすさを改善しました。
+  * request失敗時に送信するパケットの詳細情報を追加しました。
+  * システム情報ログのマーカーをSYSTEM_INFOからSYSTEM_INFOとSYSTEM_WARNに分離しました。
+  * MultiRequestで個々のリクエストが失敗した場合、どのリクエストが失敗したかログを残すようにしました。
+  * マシン間の接続状態に関連するログ内容を補強しました。
+
+#### Change
+* GameAnvilConfig.jsonでmanagementIpに加えてmanagementPortも設定できるように変更しました。
+
+------
 
 ### 1.4.1 (2023.12.13)
 
 #### New
-###### 엔진 ProtoBuffer 버전 3.24.1 로 업데이트
-###### 프로토버퍼 관련 편의기능 추가
-  * send, reply 에서 프로토버퍼를 직접 사용할 수 있습니다.
-  * Packet 을 직접 프로토 버퍼로 변경할 수 있습니다. (`MyProto.MyMessage resMsg = resPacket.toProtoBufferMessage();`)
-  * 대부분의 상황에서 retain release 를 호출하지 않아도 정상적으로 동작합니다.
-###### Protocol 등록시 index를 지정하지 않아도 되도록 개선 
-  * 기존 number 는 엔진에서 자동으로 할당합니다.
+###### エンジンのProtobufバージョンを3.24.1にアップデート。
+###### Protobuf関連の便利機能を追加
+  * send, replyでProtobufを直接使用できます。
+  * パケットを直接Protobufに変更できます。 (`MyProto.MyMessage resMsg = resPacket.toProtoBufferMessage();`)
+  * ほとんどの状況でretain releaseを呼び出さなくても正常に動作します。
+###### Protocol登録時にindexを指定しなくてもよくなりました。
+  * 既存のnumberはエンジンが自動的に割り当てます。
 
 #### Fix
-* 서버에서 Request 호출 시 대상이 없으면 즉각 실패 응답을 하도록 개선했습니다.
-    * 엔진의 requestToGameUser와 같은 요청(request) API 를 호출 했을 때, 대상을 찾지 못하면 Timeout까지 기다리는 대신 즉시 실패를 반환하도록 개선했습니다.
-* 엔진의 로그 내용을 보강하고 가독성 개선
-    * 엔진 로그 중 DEBUG와 TRACE 레벨을 모두 체계적으로 분리하고 내용을 이해하기 쉽게 정리했습니다.
-    * 유저와 관련된 엔진의 로그 내용을 보강했습니다.
-    * 일부 엔진 에러 메시지는 이해하기 힘들다고 판단하여 그 내용을 개선했습니다.
-* 매니지먼트 노드는 로케이션 노드가 구성될 때만 함께 구동되도록 개선했습니다.
-    * 이제 사용자는 더 이상 매니지먼트 노드를 직접 설정하고 관리할 필요가 없습니다. 로케이션 노드가 구성되는 곳에서 알아서 자동으로 구동됩니다. 당연히 구동 순서도 더 이상 신경쓸 필요가 없습니다.
-* 로그인 과정에서 잘못된 채널ID를 입력할 경우에 대한 응답을 개선했습니다.
-    * 이제 막연한 SystemError 응답 대신 로그인 실패 응답을 주도록 수정하여 더욱 명확해졌습니다.
-* 등록되지 않은 프로토콜이 페이로드에 담겨서 게임 서버로 전달될 경우 좀 더 친절해지기
-    * 기존에는 서버에 WARN 로그만 남기고 끝이었습니다. 이는 디버깅 과정에서 자칫 로그를 놓칠 수도 있으므로 서버에서 에러 처리함과 동시에 클라이언트로 응답을 전달하도록 개선했습니다.
-* Apache HttpComponent 기반의 새로운 HttpClient2를 제공합니다.
-    * 기존에 사용하던 AsyncHttpClient 오픈소스가 더 이상 업데이트 되지 않으므로 선택적 사용이 가능하도록 새로운 라이브러리 기반의 HttpClient2를 제공합니다.
-* 페이로드에서 압축 패킷을 지원합니다.
-    * 이제 Payload에도 압축 패킷을 사용할 수 있도록 개선했습니다.
-* 매치메이킹 실패 시에 클라이언트로 알림을 전달합니다.
-    * 매치메이킹이 실패했을 때에도 클라이언트로 적절한 결과를 전달하도록 개선했습니다.
+* サーバーからRequestを呼び出す際に対象がなければ、直ちに失敗レスポンスを送信するように改善しました。
+    * エンジンのrequestToGameUserのようなリクエスト(request)APIを呼び出した時、ターゲットが見つからない場合、Timeoutまで待つのではなく、すぐに失敗を返すように改善しました。
+* エンジンのログ内容を補強し、可読性を改善
+    * エンジンログのうち、DEBUGとTRACEレベルをすべて体系的に分離し、内容を理解しやすく整理しました。
+    * ユーザーに関連するエンジンのログ内容を補強しました。
+    * 一部のエンジンのエラーメッセージを分かりやすく改善しました。
+* マネジメントノードは、ロケーションノードが構成されている場合にのみ、一緒に駆動するように改善しました。
+    * 管理ノードがロケーションノード構成位置で自動的に駆動されるため、ユーザーが直接設定し、管理する必要がなくなりました。 また、駆動順序も気にする必要がなくなりました。
+* ログインプロセスで誤ったチャンネルIDを入力した場合のレスポンスを改善しました。
+    * 漠然としたSystemErrorレスポンスの代わりにログイン失敗レスポンスを送信するように修正し、より明確性が増しました。
+* 登録されていないプロトコルがペイロードに含まれてゲームサーバーに転送される場合、サーバーでエラーを処理し、クライアントにレスポンスを転送するように改善しました。
+    * 既存のサーバーにWARNログだけを残す方式の場合、デバッグの過程でログを見逃す問題があり、クライアントにレスポンスを転送するように改善しました。
+* Apache HttpComponentベースの新しいHttpClient2を提供します。
+    * 既存のAsyncHttpClientオープンソースが更新されなくなったため、選択的に使用できるように新しいライブラリベースのHttpClient2を提供します。
+* ペイロードで圧縮パケットをサポートします。
+    * ペイロードにも圧縮パケットを使用できるように改善しました。
+* マッチメイキング失敗時にクライアントに通知します。
+    * マッチメイキングが失敗したときにも、クライアントに適切な結果を伝えるように改善しました。
 
 #### Change
-* 설정
-    * GameAnvilConfig.json 에서 ip 항목 대신 ipcIp 와, managementIp 를 사용합니다
-    * BaseChannelInfo 에서 정상적으로 직렬화하지 않는 문제를 수정했습니다 BaseChannelInfo 대신 GameAnvilServer 에서 setObjectSerializer 호출로 직렬화 변경 가능합니다
-* matchUser, matchParty 호출 시 Payload 를 넣지 않습니다. 자체적으로 보관합니다.
- * 모든 로케이션 노드가 클러스터링이 완료된 이후에만 로케이션 노드(마스터 노드)로 요청을 보낼 수 있도록 수정. 확인을 위해 모든 로케이션 노드가 클러스터링이 완료되었는지 체크하고 일정 시간 내에 전체 클러스터링이 완료되지 않으면 에러 로그를 남기는 기능을 추가했습니다.
- * 유저 매칭 시 기존에는 랜덤한 채널에서 매칭된 룸이 생성되는 방식이었지만, 이제는 매칭을 요청한 채널 중에서 매칭된 룸이 생성되도록 변경했습니다.
+* 設定
+    * GameAnvilConfig.jsonでip項目の代わりにipcIpとmanagementIpを使用します。
+    * BaseChannelInfoで正常にシリアル化しない問題を修正しました。 BaseChannelInfoの代わりにGameAnvilServerでsetObjectSerializerを呼び出してシリアル化できます。
+* matchUser、matchParty呼び出し時にPayloadを入れないようにしました。 独自に保管します。
+ * すべてのロケーションノード(マスターノード)がクラスタリングが完了した後にのみロケーションノードにリクエストを送信できるように修正しました。 すべてのロケーションノードがクラスタリングが完了したことを確認し、一定時間内に全体クラスタリングが完了しない場合、エラーログを残す機能を追加しました。
+ * ユーザーマッチングの際、ランダムチャンネルからマッチングされたルームが作成される従来の方式から、マッチングを要求したチャンネルの中からマッチングされた部屋が作成される方式に変更しました。
   
 ------
 
@@ -47,12 +65,12 @@
 
 #### Fix
 
-* 새로기동된 노드의 채널정보가 갱신되지않는 이슈 수정
+* 新しく起動したノードのチャンネル情報が更新されない問題を修正
 
 #### Change
 
-- Console에서 확인 하는 Support 노드의 활성화 상태체크 API 변경
-- Location 노드가 설정된 서버에서만 Management 노드가 기동 하도록 변경
+- Consoleで確認するSupportノードの有効化状態チェックAPIを変更
+- Locationノードが設定されたサーバーでのみManagementノードが起動するように変更
 
 ------
 
@@ -60,153 +78,153 @@
 
 #### New
 
-###### Console 1.3과의 연동 
-GameAnvil 1.3은 완전히 새로워진 Console 1.3과 완벽하게 연동됩니다. 콘솔을 통해 각 노드의 상태를 직관적으로 관리하고, 명령을 내릴 수 있습니다. Safe Pause를 진행하거나 특정 노드를 생성하고 제거하는 등의 기능을 콘솔을 통해 편리하게 시도할 수 있습니다.
-</br> ※ 이전 버전의 GameAnvil은 Console 1.3에서 사용할 수 없습니다.
+###### Console 1.3との連動 
+GameAnvil 1.3は完全に生まれ変わったConsole 1.3と完璧に連動します。コンソールを通じて各ノードの状態を直感的に管理し、コマンドを発行できます。Safe Pauseの進行や、特定のノードを作成して削除するなどの機能をコンソールを通じてより快適に試すことができます。
+</br> ※以前のバージョンのGameAnvilはConsole 1.3で使用できません。
 
-###### 사용하기 편리한 동기화 기능
-동기화 컴포넌트 제공으로 Unity 엔진과 연동 편의성이 대폭 강화되었습니다. 서버의 복잡한 로직 구현 없이도 원격의 클라이언트 간에 게임오브젝트의 여러 요소들이 자동으로 동기화 됩니다.
+###### 便利な同期機能
+同期コンポーネントの提供により、Unityエンジンとの連動利便性が大幅に強化されました。サーバーの複雑なロジックを実装しなくても、遠隔のクライアント間でゲームオブジェクトのさまざまな要素が自動的に同期されます。
 
-* GameObject 생성, 파괴 자동 동기화
-* Animation 동기화
-* Transform 동기화
-* RigidBody 및 RigidBody2D 동기화
-* 커스텀 값 동기화 기능
+* GameObject作成、破壊の自動同期
+* Animation同期
+* Transform同期
+* RigidBodyおよびRigidBody2D同期
+* カスタム値同期機能
 
-###### 성능 최적화
-게임엔빌 1.3은 이전 버전에 비해 패킷 처리 성능이 5% 이상 향상되었습니다. 내부 동작 코드를 최적화하여 더 빠른 속도로 동작합니다.
+###### 性能の最適化
+GameAnvil 1.3は、以前のバージョンに比べてパケット処理性能が5%以上向上しました。内部動作コードを最適化して、より高速で動作します。
 
 #### Fix
 
-- Safe Pause 관련 버그 수정
-  - Safe Pause 진행 중 출발지 노드에 있는 방으로 매치메이킹이 되는 문제를 수정하였습니다.
-  - 스트레스 테스트와 Safe Pause를 동시에 수행할 경우 MatchRoomException이 발생하는 문제 수정
-  - Safe Pause 과정에서 방 전송을 할 때 TimerObject로 인해 NPE가 발생하는 문제 해결
-  - Safe Pause 진행 시 룸매치메이킹이 실패하는 이슈 해결
-  - Safe Pause를 통해 전송이 된 방의 도착지 노드에서 해당 방과 동일한 아이디의 방이 생성되는 이슈 수정
-    - 룸 아이디 생성은 로케이션 노드에서 담당하도록 수정
-  - 그 외, 유저 전송 및 방 전송과 관련된 버그 수정
-    - 방 전송 실패 시 롤백이 되지 않는 문제 수정 
-    - 방 전송 실패시 결과 패킷에 실패 에러코드를 적용해서 전달하도록 수정
-    - 방 전송 실패시 생성한 룸과 유저를 노드에서 조회해서 정리하지 않고 직접 정리하도록 수정
-  	- 방 전송 과정에서 클라이언트가 보낸 일부 메시지가 유실될 가능성 수정
-    - 방이 다른 노드로 전송이 완료되었을 때, 타이밍 이슈로 기존 노드에 방이 남아 유저가 입장할 수 있는 상황을 수정
-      - 이제 트랜스퍼 중인 방은 매치메이커의 방 목록에서 제외됨
-      - 트랜스퍼가 완료되어서 제거되어야 하는 기존 방이나, 트랜스퍼가 실패한 방으로 입장하지 않도록 수정
-    - 유저 트랜스퍼가 완료 되기 전에 재접속시 목적지 노드에서 유저 객체를 찾을 수 없는 문제 수정
-    - 유저 트랜스퍼시 대상 노드에 대해 상태값을 확인하지 않도록 수정
-    - 룸 트랜스퍼시에, 유저의 트랜스퍼 인 관련 콜백 함수가 호출되도록 변경
+- Safe Pause関連のバグを修正
+  - Safe Pauseの進行中に出発地ノードにあるルームにマッチメイキングされる問題を修正しました。
+  - ストレステストとSafe Pauseを同時に実行した場合にMatchRoomExceptionが発生する問題を修正
+  - Safe Pauseプロセスでルームの転送をする際に、TimerObjectによりNPEが発生する問題を解決
+  - Safe Pauseの進行時にルームマッチメイキングが失敗する問題を解決
+  - Safe Pauseを通じて転送されたルームの到着地ノードで該当のルームと同じIDのルームが作成される問題を修正
+    - ルームIDの作成はロケーションノードで担当するように修正
+  - その他、ユーザー転送およびルームの転送関連のバグを修正
+    - ルームの転送に失敗した際にロールバックされない問題を修正 
+    - ルームの転送に失敗した場合、結果パケットに失敗エラーコードを適用して送信するように修正
+    - ルームの転送に失敗した際に作成したルームとユーザーをノードで照会して整理せず、直接整理するように修正
+  	- ルーム転送プロセスでクライアントが送信したメッセージの一部が失われる可能性を修正
+    - 他のノードへのルーム転送が完了した時に、タイミングイシューにより既存のノードにルームが残り、ユーザーが入場できる問題を修正
+      - 現在、トランスファー中のルームはマッチメイカーのルームリストから除外されています。
+      - トランスファーが完了し、削除されるはずの既存のルームや、トランスファーに失敗したルームに入場しないように修正
+    - ユーザートランスファーが完了する前に再接続した場合、目的地ノードでユーザーオブジェクトが見つからない問題を修正
+    - ユーザートランスファー時に対象ノードの状態値を確認しないように修正
+    - ルームトランスファー時に、ユーザーのトランスファー関連コールバック関数が呼び出されるように変更
 
-- Safe Pause 진행시 룸 매치메이킹에 실패하는 현상 수정
-  - 트랜스퍼 중인 방 상태 종류에 TRANSFER_IN_PROGRESS 추가
-  - 트랜스퍼 완료된 방이 PAUSE 상태로 바뀌지 않도록 수정
-  - 방 입장이 룸 파이버에서 처리되려고 할 때 방이 트랜스퍼 중인 경우 방 입장 처리를 중지하고 트랜스퍼를 진행하도록 수정
+- Safe Pauseの進行時にルームマッチメイキングに失敗する現象を修正
+  - トランスファー中であるルームの状態の種類にTRANSFER_IN_PROGRESSを追加
+  - トランスファーが完了したルームがPAUSE状態に変わらないように修正
+  - ルームへの入場がルームファイバーで処理されようとした時に、ルームがトランスファー中の場合は、ルームの入場処理を中止し、トランスファーを進行するように修正
 	
-* Room과 매치메이킹 관련 버그 수정
-  - CreateRoom 메서드로 만든 방을 룸 매치메이킹에 등록한 후에 해당 방이 종료하면 예외가 발생하는 이슈 수정
-    - 룸 매치시에 매치 룸을 찾지 못하였을 경우, 게임 유저에 매치 유저 카테고리를 설정하지 않도록 수정
+* Roomとマッチメイキング関連バグの修正
+  - CreateRoomメソッドで作成したルームをルームマッチメイキングに登録した後に該当のルームが終了すると、例外が発生する問題を修正
+    - ルームマッチングの際にマッチルームが見つからなかった場合、ゲームユーザーにマッチユーザーカテゴリーを設定しないように修正
 
-  - 모든 유저가 나간 방에 타이밍 이슈로 새로운 유저가 입장할 수 있는 문제 수정
-    - 유저 입장시에 빈 방인지 여부를 확인하도록 함
-    - 마지막 유저가 방에서 나간 직후에 채널 정보 정리 및 MatchRefill 취소
+  - すべてのユーザーが退場したルームにタイミングイシューにより、新しくユーザーが入場できる問題を修正
+    - ユーザーが入場する際に空室かどうかを確認するように修正
+    - 最後のユーザーがルームから退場した直後にチャンネル情報の整理およびMatchRefillキャンセルを実行
 
-  - 클라이언트에서 LeaveRoom 호출 시에 서버 에러가 발생하는 문제 수정
-    - UserPostLeaveRoom 패킷 전송 주체를 게임 유저 파이버로 변경
+  - クライアントからLeaveRoomを呼び出した際にサーバーエラーが発生する問題を修正
+    - UserPostLeaveRoomのパケット転送の主体をゲームユーザーファイバーに変更
   
-  - 방이 종료된 상태에서 방을 사용하는 API 호출시의 예외인 ClosedRoomException 추가
+  - ルームが終了した状態でルームを使用するAPIを呼び出した際に例外であるClosedRoomExceptionを追加
 
-* 게이트웨이 및 세션 관련 버그 수정
-  * 게이트웨이 노드의 세션 객체가 전송(Transfer) 상태로 leak되는 이슈 수정
+* ゲートウェイおよびセッション関連のバグを修正
+  * ゲートウェイノードのセッションオブジェクトが転送(Transfer)状態でleakされる問題を修正
 
-  - 세션 삭제 과정에서 예외가 발생할 경우 커넥션 객체가 제거되지 않고 남아 있을 수 있는 문제 수정
+  - セッションが削除される過程で例外が発生した場合、コネクションオブジェクトが削除されず残ることがある問題を修正
 
-* 노드 관련 버그 수정
-  - 임의의 노드를 종료할 경우 나머지 서버에서 에러 또는 경고 로그가 남는 문제 수정
-    - 종료된 노드 정보를 서버간 공유하도록 수정
-    - 종료된 노드 정보를 지울 수 있는 API 추가
+* ノードの関連バグを修正
+  - 任意のノードを終了した場合、残りのサーバーでエラーまたは警告ログが残る問題を修正
+    - 終了したノード情報をサーバー間で共有するように修正
+    - 終了したノード情報を削除できるAPIを追加
 
-  - Shutdown 상태인 노드에 다른 노드에서 패킷을 보내는 경우가 발생할 수 있는 문제 수정
-    - 이제 종료 고지 후 실제 종료 까지 1초간 딜레이가 있게 됨
+  - Shutdown状態のノードに他のノードからパケットを送信することがある問題を修正
+    - 終了告知後に実際の終了まで1秒間のディレイを設定
 
-* 그 외
-   * 클라이언트에서 요청에 대한 응답을 받지 못하는 이슈 수정
+* その他
+   * クライアントからリクエストに対するレスポンスを得られない問題を修正
 
-  - 잘못된 서비스명으로 서버를 구동할 경우에도 모든 노드가 Ready로 처리되는 문제 수정
-    - 노드 갯수를 증가시키는 로직을 올바른 시점으로 변경
-    - 잘못된 서비스명을 사용하여 노드를 실행 시키려고 하는 경우 노드매니저에서 바로 종료하도록 수정
+  - 誤ったサービス名でサーバーを駆動した場合も、すべてのノードがReadyとして処理される問題を修正
+    - ノード数を増加させるロジックを正しい時点に変更
+    - 誤ったサービス名を使用してノードを実行しようとした場合、ノードマネージャですぐに終了するように修正
 
 
-  - 중복 로그인 중 강제 접속 종료 처리될 수 있는 버그 수정
-    - DeviceId가 다르면서 커넥션 아이디, 게이트웨이 노드 아이디가 같을 때 기존 유저를 로그아웃 시키는 경우에 대해, 중복해서 세션을 닫지 않도록 수정
+  - 重複ログイン中に強制接続終了処理されるバグを修正
+    - DeviceIdが異なり、コネクションID、ゲートウェイノードIDが同じ場合、既存ユーザーをログアウトさせる際に、重複してセッションを閉じないように修正
 
-  - ghostTimeout 값이 제대로 적용되도록 수정
+  - ghostTimeout値が正しく適用されるように修正
 
-  - ghotsTimeout 값이 demandClientStateCheck 값 보다 적어도 3초 이상 크도록 제약 사항 추가
+  - ghotsTimeout値がdemandClientStateCheck値より少なくとも3秒以上大きくなるように制約事項を追加
 
 #### Change
 
-- Safe Pause 고도화
-  - 출발지 노드와 도착지 노드를 모두 선택하도록 변경
-  - Safe Pause 시작시에 출발지 노드와 도착지 노드를 선택하지 않도록 변경
-  - 리포트 기능 강화 : HTML 형식 외 json 형식으로 리포트를 생성하는 기능 추가
+- Safe Pauseの高度化
+  - 出発地ノードと到着地ノードの両方を選択するように変更
+  - Safe Pause開始時に出発地ノードと到着地ノードを選択しないように変更
+  - レポート機能強化: HTML形式の他、json形式でレポートを作成する機能を追加
 
-- Safe Pause 관련 프로토콜 명 변경 및 ReportSender의 동작을 리퀘스트 방식으로 수정
-  - 변경 전 : PubNonStopPatchReportStartCommand / PubNonStopPatchReportStartNode
-  - 변경 후 : NonStopPatchReportStartCommandReq / NonStopPatchReportStartCommandRes / PubNonStopPatchReportStartNode		
+- Safe Pause関連のプロトコル名の変更およびReportSenderの動作をリクエストする方式に修正
+  - 変更前: PubNonStopPatchReportStartCommand / PubNonStopPatchReportStartNode
+  - 変更後: NonStopPatchReportStartCommandReq / NonStopPatchReportStartCommandRes / PubNonStopPatchReportStartNode		
 
-- 동일한 파이버로 리퀘스트를 보내면 예외 처리 되도록 변경
+- 同じファイバーでリクエストを送信すると例外処理されるように変更
 
-- BaseRoom 사용법 변경
-  - BaseRoom에 onLeaveRoom 메서드의 오버로딩 추가
-  - BaseRoom의 onPostLeaveRoom의 파라미터 제거로 사용성 변경
+- BaseRoomの使用方法を変更
+  - BaseRoomにonLeaveRoomメソッドのオーバーローディングを追加
+  - BaseRoomのonPostLeaveRoomのパラメータを削除してユーザビリティを変更
 
-- BaseUser 사용법 변경
-  - 유저가 룸에서 완전히 나간 후 호출되는 onPostLeaveRoom 메서드 추가
+- BaseUser使用方法変更
+  - ユーザーがルームから完全に退場した後に呼び出されるonPostLeaveRoomメソッドを追加
 
-- Disconnected 상태값을 isDetectedDisconnected, isCompleteDisconnected로 세분화
-  - isDetectedDisconnected는 서버에서 클라이언트의 연결이 끊겼다고 판단 하였을 때의 상태값
-  - isCompleteDisconnected는 서버에서 연결을 끊는 처리가 완료되었을 경우의 상태값
+- Disconnectedの状態値をisDetectedDisconnected、isCompleteDisconnectedに細分化
+  - isDetectedDisconnectedは、サーバーからクライアントの接続が切断されたと判断した時の状態値
+  - isCompleteDisconnectedは、サーバーから接続を切断する処理が完了した場合の状態値
 
-- 고유한 HostId 생성 로직 보강
-  - 사용자가 입력한 서브넷 마스크에 따라 HostId를 생성하도록 수정
+- 固有のHostId作成ロジックを補強
+  - ユーザーが入力したサブネットマスクに従ってHostIdを作成するように修正
 
-- 엔진에서 사용하는 라이브러리 최신화
+- エンジンで使用するライブラリを最新化
 
-- UserTimer, RoomTimer에 대한 참조를 반환하는 API getUserTimer, getRoomTimer 추가
+- UserTimer、RoomTimerへの参照を返すAPI getUserTimer、getRoomTimerを追加
 
-- DNS 관련 설정 삭제
+- DNS関連の設定を削除
 
 ---
 
 ### 1.2.0 (2021.07.13)
 
-더 자세한 정보는 [배포 노트](https://nhnent.dooray.com/share/posts/sGAj_STlTEWDr5LPgKgIhg)를 참고
+詳細については、[配布ノート](https://nhnent.dooray.com/share/posts/sGAj_STlTEWDr5LPgKgIhg)を参照
 
 #### New
 
-* 사용자 라이센스 적용
+* ユーザーライセンスを適用
   
-* [GameAnvil 사용자 라이센스](https://gameplatform.toast.com/kr/services/gameanvil/license)
+* [GameAnvilユーザーライセンス](https://gameplatform.toast.com/kr/services/gameanvil/license)
   
-* 노드 단위 구동 및 스케일링 지원
+* ノード単位の駆動およびスケーリングをサポート
 
-  * 런타임에서도 새로운 노드를 올릴 수 있는 기능 추가
-  * 기존에 비해 좀더 안정적으로 클러스터링을 맺도록 개선
-  * 노드 상태에 따른 노드 동작 개선
-  * 런타임에 노드 단위로 구동하거나 종료할 수 있음
+  * ランタイムでも新しいノードをアップロードできる機能を追加
+  * 従来に比べてより安定的にクラスタリングできるように改善
+  * ノード状態に応じたノード動作を改善
+  * ランタイムにノード単位で駆動または終了できるように改善
 
-* 간소화된 부트스트래핑
-  * GameAnvilBootstrap Deprecate 로 설정. 차후 버전에서 삭제될 예정.
-  * GameAnvilBootstrap 대신 GameAnvilServer 인스턴스를 사용하여 GameAnvil 서버 실행.
-  * 제공되는 어노테이션을 사용하여 BaseClass를 GameAnvil에서 읽어오도록 사용성이 개선됨.
+* 簡素化されたブートストラップ
+  * GameAnvilBootstrap Deprecateに設定。今後のバージョンで削除される予定。
+  * GameAnvilBootstrapの代わりにGameAnvilServerインスタンスを使用してGameAnvilサーバーを実行。
+  * 提供されるアノテーションを使用して、BaseClassをGameAnvilから読み込むようにユーザビリティを改善
 
 ```java
-// GameNode 등록
+// GameNode登録
 @ServiceName("GameNode")
 public class GameNode extends BaseGameNode {
 }
 
-// GameUser 등록
+// GameUser登録
 @ServiceName("GameNode")
 @UserType("GameUserType1")
 @UseChannelInfo
@@ -215,97 +233,97 @@ public class GameUser extends BaseUser {
 ```
 
 
-* 비동기 MySQL 쿼리 지원
-  * 비동기 sql 처리를 위해 Jasync-sql / X Dev API 클래스를 추가
-  * 사용자가 쉽게 비동기 sql를 처리하도록 지원
+* 非同期MySQLクエリをサポート
+  * 非同期sql処理用のJasync-sql / X Dev APIクラスを追加
+  * ユーザーが簡単に非同期sqlを処理できるようにサポート
   
-* 사용자 가이드 문서 보강
-  * 하나의 문서에 함축적으로 나열되어 있던 여러 가지 중요한 주제들을 모두 별도의 메뉴로 구성하여 그 내용의 질과 양을 업그레이드 하였습니다
-  * 튜토리얼을 통해 쉽고 간단하지만 꽤 멋진 직소 퍼즐 게임(서버&클라이언트)을 직접 개발해 볼 수 있습니다. 
-  * JavaDoc API 레퍼런스에서 내용이 부족하거나 누락된 부분을 모두 보충하였습니다. 또한 설명이 애매하거나 잘못 이해될 수 있는 문장들을 모두 다듬었습니다.
+* ユーザーガイド文書の補強
+  * 1つの文書に含意的に記載されていたいくつかの重要なトピックをモジュール化し、文書の質と量をアップグレードしました。
+  * チュートリアルを通じて、簡単かつ素晴らしいジグソーパズルゲーム(サーバー&クライアント)を直接開発できます。
+  * JavaDoc APIリファレンスで内容が不足していた部分をすべて補充しました。また、説明が曖昧で誤解を招く可能性のある文章をすべて修正しました。
 
 
 
 #### Fix
 
-* 채널 정보 관리 및 동기화 기능 리팩토링
-  * 채널 정보를 효율적으로 관리하도로 개선
-  * 채널 정보를 클라이언트에 보내주는 기능 개선
-  * 채널의 방과 유저의 개수를 얻어오는 기능 추가
-  * 채널 ID를 설정하지 않으면(즉 ""를 사용하면), 더이상 채널 기능을 사용하지 않는 것으로 개선. 채널을 사용하고자 할 경우에는 최소 1이상의 유효한 문자열을 채널 아이디로 사용해야 함.
+* チャンネル情報の管理および同期機能のリファクタリング
+  * チャンネル情報を効率的に管理できるように改善
+  * チャンネル情報をクライアントに送信する機能を改善
+  * チャンネルのルームとユーザー数を取得する機能を追加
+  * チャンネルIDを設定しなければ(すなわち""を使用すると)、それ以降チャンネル機能を使用しないように改善。チャンネルを使用したい場合は、少なくとも1つ以上の有効な文字列をチャンネルIDとして使用しなければならない。
 
-* 방생성시 outPayload가 릴리즈되지 않는 버그 수정
-* 같은 계정의 클라이언트에서 재접속 하기 전까지 룸 매치메이킹이 계속하여 실패하는 버그 수정
-* 유저 매치메이킹 시에 에러가 발생할 경우 클라이언트로 응답을 보내지 않던 버그 수정
-* 발행(publish) API 수정
-  * 사용성 개선
-  * 사용자가 의도하지 않은 노드로 publish 메시지가 전달되는 버그를 수정하였습니다. 그와 더불어 publish API의 사용성을 개선하였습니다.
-  * 채널 아이디로 한글을 사용할 때 pushlish 메시지가 대상 노드를 찾지 못하는 버그를 수정하였습니다.
+* ルームの作成時にoutPayloadがリリースされないバグを修正
+* 同じアカウントのクライアントから再接続するまで、ルームマッチメイキングが失敗し続けるバグを修正
+* ユーザーマッチメイキング時にエラーが発生した場合、クライアントにレスポンスを送信しなかったバグを修正
+* 発行(publish)APIを修正
+  * ユーザビリティを改善
+  * ユーザーが意図しないノードにpublishメッセージが送信されるバグを修正しました。また、publish APIのユーザビリティを改善しました。
+  * チャンネルIDでハングルを使用した場合、pushlishメッセージが対象ノードを見つけられないバグを修正しました。
 
 
 
 #### Change
 
-* 클라우드 ACL 환경에 맞춰 기본 포트가 변경되었습니다.
+* クラウドACL環境に合わせて基本ポートが変更されました。
 
-| 이름 | 포트 | 이전포트 |
+| 名前 | ポート | 以前のポート |
 | --- | --- | --- |
 | ipcPort | 18000 | 16000 |
 | publisherPort | 18100 | 13300 |
 | gateway tcp | 18200 | 11200 |
 | gateway web | 18300 | 11400 |
 | management | 18400 | 25150 |
-| support | 18600\~18999 | 사용자 정의 |
+| support | 18600\～18999 | ユーザー定義 |
 | GameAnvil Agent | 19080 |  |
 | GameAnvil Admin | 19090 |  |
 
-* 더 이상 Admin을 지원하지 않습니다. 그로인해 GameAnvil 내부에서는 더 이상 자체 DB를 사용하지 않습니다.
+* Adminのサポートを終了します。これにより、GameAnvil内部では独自DBを使用しません。
 
-* 더 이상 Dynamic Module을 지원하지 않습니다.
+* Dynamic Moduleのサポートを終了します。
 
-* ZMQ 라이브러리 교체
+* ZMQライブラリに変更
 	
-	* libzmq 와 jzmq 조합에서 Jeromq로 교체
+	* libzmqとjzmqの組み合わせからJeromqに変更
 	
-* 룸 매치메이킹 리팩토링 및 사용성 개선
-  * 룸매치 메이킹 흐름 개선
-  * 스트레스 테스트 진행 시 방을 찾지 못하는 문제 해결하여 스트레스 테스트 진행이 가능
-  * 방 인원수 정보 관리 기능 추가하여 사용자가 방 인원수 관리 기능을 구현하지 않아도 됨
+* ルームマッチメイキングのリファクタリングおよびユーザビリティを改善
+  * ルームマッチメイキングのフローを改善
+  * ストレステストを実行する際に、ルームが見つからない問題を修正
+  * ユーザーがルームの人数管理機能を実装しなくてもいいように、ルームの人数情報管理機能を追加
   
-* 인증과 로그인 그리고 접속종료 코드 최적화
+* 認証とログイン、接続終了コードの最適化
 
-    * Connection 에서 호출하던 콜백을 Session으로 이동
-    * DisconnectAlarm 원인 파악을 쉽게 하도록 개선
+    * Connectionから呼び出していたコールバックをSessionに移動
+    * DisconnectAlarmの原因把握を簡単にできるように改善
 
-* 사용자 제공 토픽 정리
+* ユーザー提供トピックを整理
 
-| 이름 | 설명 | 기본 등록 위치 |
+| 名前 | 説明 | 基本登録位置 |
 | --- | --- | --- |
-| GameAnvilTopic.GAME\_NODE | 모든 게임 노드 | GameNode |
-| GameAnvilTopic.GATEWAY\_NODE | 모든 게이트웨이 노드 | GatewayNode |
-| GameAnvilTopic.SUPPORT\_NODE | 모든 서포트 노드 | SupportNode |
-| GameAnvilTopic.ALL\_CLIENT | 접속중인 모든 클라이언트 | Session |
-| GameAnvilTopic.ALL\_GAME\_USER | 게임 노드에 있는 모든 게임 유저 객체 | GameUser |
+| GameAnvilTopic.GAME\_NODE | すべてのゲームノード | GameNode |
+| GameAnvilTopic.GATEWAY\_NODE | すべてのゲートウェイノード | GatewayNode |
+| GameAnvilTopic.SUPPORT\_NODE | すべてのサポートノード | SupportNode |
+| GameAnvilTopic.ALL\_CLIENT | 接続中のすべてのクライアント | Session |
+| GameAnvilTopic.ALL\_GAME\_USER | ゲームノードにあるすべてのゲームユーザーオブジェクト | GameUser |
 
 
-* 예외 처리 및 메서드 시그니쳐 최적화
+* 例外処理およびメソッドシグネチャの最適化
 
 
-  * 무분별하게 사용된 예외 처리와 메서드 시그니처를 정리하고 사용자에게 필요한 정보만 넘겨주도록 수정
+  * 無分別に使用された例外処理とメソッドシグネチャを整理して、ユーザーに必要な情報だけを渡すように修正
 
-* HttpRequest에 PATCH 메서드 추가
-* 인증서 없이 테스트용으로 SSL를 사용할 수 있는 기능 설정명이 useSelf에서 useSelfSignedCert으로 변경되었습니다.
+* HttpRequestにPATCHメソッドを追加
+* 証明書がなくてもテスト用でSSLを使用できる機能の設定名がuseSelfからuseSelfSignedCertに変更されました。
 
 ---
 
 ### 1.1.12 (2021.06.07)
 #### Change
 
-* SupportNode에 Gateway 접속정보를 받을 수 있는 API 추가
-    * BaseSupportNode.getGatewayConnectionInfoList 함수를 사용하여, Gateway 접속정보 목록을 제공
+* SupportNodeにGatewayの接続情報を取得できるAPIを追加
+    * BaseSupportNode.getGatewayConnectionInfoList関数を使用して、Gatewayの接続情報リストを提供
 
 ```json
-// Json으로 변환한 정보 목록
+// Jsonに変換した情報リスト
 {
   "header": {
     "isSuccessful": true,
@@ -317,7 +335,7 @@ public class GameUser extends BaseUser {
       "ip": "127.0.0.1",
       "dns": "",
       "connectionInfo": {
-        "TCP_SOCKET": 11200,    // 해당 ConnectionType에 따른 포트 정보 제공
+        "TCP_SOCKET": 11200,    // 該当ConnectionTypeに応じたポート情報を提供
         "WEB_SOCKET": 11400
       }
     }
@@ -330,7 +348,7 @@ public class GameUser extends BaseUser {
 
 #### Change
 
-* HttpReqest에 PATCH 메서드를 사용할 수 있는 API 추가
+* HttpReqestにPATCHメソッドを使用できるAPIを追加
     * httpRequest.PATCH()
     * httpRequest.PATCH(AsyncHttpCompletionHandler asyncHttpCompletionHandler)
     * httpRequest.PATCHAsync()
@@ -341,7 +359,7 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-* RedisSingle에 누락된 password 지원 API 추가
+* RedisSingleに不足していたpasswordサポートAPIを追加
 
 ---
 
@@ -349,8 +367,8 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-* 클라이언트의 PauseClientStateCheck를 받았을 때 idleClientTimeout 체크도 같이 멈추도록 수정.
-* 클라이언트의 PauseClientStateCheck에서 받은 pauseTime의 단위를 초로 계산하도록 수정.
+* クライアントのPauseClientStateCheckを受け取った時にidleClientTimeoutチェックも一緒に停止しないように修正。
+* クライアントのPauseClientStateCheckで受け取ったpauseTimeの単位を秒数で計算するように修正。
 
 ---
 
@@ -358,11 +376,11 @@ public class GameUser extends BaseUser {
 
 #### New
 
-* 클라이언트의 PauseClientStateCheck를 받아 입력받은 시간만큼 해당 클라이언트의 상태체크를 하지 않도록 기능추가.
-* 클라이언트의 ResumeClientStateCheck를 받아 상태 체크를 재개하는 기능 추가.
-* GameAnvilConfig.json 의 Gateway 에 PauseClientStateCheck 관련 허용 범위 제한하는 설정값 추가
-    * pauseClientStateCheckMaxDuration = 클라이언트가 보낸 시간값이 해당 수치보다 클경우 해당 수치로 제한
-    * pauseClientStateCheckMinDuration = 클라이언트가 보낸 시간값이 해당 수치보다 작을경우 해당 수치로 제한
+* クライアントのPauseClientStateCheckを受け取り、入力された時間だけ該当のクライアントの状態をチェックしないようにする機能を追加。
+* クライアントのResumeClientStateCheckを受け取り、状態チェックを再開する機能を追加。
+* GameAnvilConfig.jsonのGatewayにPauseClientStateCheck関連の許容範囲を制限する設定値を追加
+    * pauseClientStateCheckMaxDuration =クライアントが送信した時間値が該当の数値より大きい場合、該当の数値に制限
+    * pauseClientStateCheckMinDuration =クライアントが送信した時間値が該当の数値より小さい場合、該当の数値に制限
 
 ---
 
@@ -370,7 +388,7 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-* /game-data/get 사용시 GameData 값이 JsonObject 가 아니라 String으로 전달되는 문제 수정
+* /game-data/get使用時にGameData値がJsonObjectではなく、Stringで送信される問題を修正
 
 ---
 
@@ -378,9 +396,9 @@ public class GameUser extends BaseUser {
 
 #### Change
 
-* Dynamic Module 기능이 GameAnvil에서 스펙아웃되어 삭제 되었습니다.
-  * 기존에 사용하시는 분들을 위해 Dynamic Module 소스 공개와 사용 가이드를 작성하여 공유 드립니다. 해당 가이드를 참고하셔서 GameAnvil이 아닌 사용자 프로젝트에 Dynamic Module 소스을 추가하여 사용할 수 있습니다.
-  * [GameAnvil-Guide/81 Dynamic Module 스펙아웃으로 인한 소스 제공 및 사용법](https://nhnent.dooray.com/share/posts/xtwdO6FJTXmr7l28cZSM-w)
+* Dynamic Module機能がGameAnvilからスペックアウトされ、削除されました。
+  * 既存の使用者のために、Dynamic Moduleソースの公開と使用ガイドを作成して共有します。ガイドを参照して、GameAnvilではなくユーザープロジェクトにDynamic Moduleソースを追加して使用できます。
+  * [GameAnvil-Guide/81 Dynamic Moduleスペックアウトによるソース提供および使用方法](https://nhnent.dooray.com/share/posts/xtwdO6FJTXmr7l28cZSM-w)
 
 ---
 
@@ -388,11 +406,11 @@ public class GameUser extends BaseUser {
 
 #### Change
 
-* GameAnvil DB & Admin 기능(GameData, Dynamic Module 제외) 삭제
+* GameAnvil DB & Admin機能(GameData、Dynamic Moduleを除く)を削除
 
-    * GameAnvil 엔진단에서 더이상 DB를 사용하지 않습니다.
-    * 참고: [GameAnvil-Guide/76 Admin 1.1.0 -&gt; 1.1.1 마이그레이션 문서](https://nhnent.dooray.com/share/posts/GIHoRQ8kTjSi7D4wQjUcWw)
-    * 기존에 DB를 사용하던 Admin 기능들은 모두 GameAnvil Admin으로 이동되었습니다.
+    * GameAnvilエンジンでは、これ以上DBを使用しません。
+    * 参考: [GameAnvil-Guide/76 Admin 1.1.0 -&gt; 1.1.1マイグレーション文書](https://nhnent.dooray.com/share/posts/GIHoRQ8kTjSi7D4wQjUcWw)
+    * 従来のDBを使用していたAdmin機能はすべてGameAnvil Adminに移動しました。
 
 ```json
 "management": {
@@ -400,7 +418,7 @@ public class GameUser extends BaseUser {
   "restIp": "127.0.0.1",
   "restPort": 25150,
 
-  // 삭제
+  // 削除
   //"db": {
   //  "user": "root",
   //  "password": "1234",
@@ -415,7 +433,7 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-* 룸매칭에 MatchingGroup 적용시 간헐적으로 생성된 방에 Join이 안되는 문제 수정
+* ルームマッチングにMatchingGroupを適用すると、断続的に作成されたルームにJoinできない問題を修正
 
 ---
 
@@ -423,10 +441,10 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-* 인스턴스 재시작시 Disable상태에서 복구되지 않는 이슈 수정
-    * 낮은 확율로 재현될 수 있으나 다시 재시작 할 경우 복구 됨
+* インスタンスの再起動時にDisable状態で復旧されない問題を修正
+    * 低確率で再発する可能性があるが、再起動すると復旧する
 
-* ManagementNode에서 nodeInfoByHostId 사용 시 Double.infinity 에러가 뜨는 문제 수정
+* ManagementNodeでnodeInfoByHostId使用時にDouble.infinityエラーが表示される問題を修正
 
 ---
 
@@ -434,7 +452,7 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-* DynamicModule에서 SuspendExcution 예외 발생할수 있는 코드 호출시의 예외처리가 누락되어 DynamicModuledml method가 제대로 호출이 안되는 이슈 수정
+* DynamicModuleでSuspendExcution例外発生する可能性のあるコードを呼び出した際の例外処理が抜けていて、DynamicModuledml methodが正しく呼び出されない問題を修正
 
 ---
 
@@ -442,22 +460,22 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-* GatewayNode 에서 getNodeId()를 호출하면 NPE 발생하는 이슈 수정
+* GatewayNodeでgetNodeId()を呼び出すと、NPEが発生する問題を修正
 
-* 같은 계정의 클라이언트에서 재접속 하기 전까지 해당 GameUser로 룸 매칭이 계속하여 실패하는 이슈 수정
+* 同じアカウントのクライアントで再接続するまで、該当のGameUserでルームマッチングに失敗し続ける問題を修正
 
 ---
 
 ### 1.1.0 (2020-12-17)
 
-더 자세한 정보는 [배포 노트](https://nhnent.dooray.com/share/posts/bWby9jGjQri2cFNR_KYbnw)를 참고
+詳細については、[配布ノート](https://nhnent.dooray.com/share/posts/bWby9jGjQri2cFNR_KYbnw)を参照
 
 #### New
 
-* Jdk11 지원
+* Jdk11サポート
 
-  * Jdk8 지원 버전과 더불어 Jdk11 지원 버전을 배포하였습니다.
-  * GameAnvil version 명이 변경되었습니다.
+  * Jdk8サポートバージョンとともにJdk11サポートバージョンを配布しました。
+  * GameAnvil version名が変更されました。
 
 ```xml
 // jdk8
@@ -479,15 +497,15 @@ public class GameUser extends BaseUser {
 
 * Alarm
 
-    * 서버 내에서 발생한 상황을 지정한 URL로 받을 수 있는 기능 추가했습니다.
-    * "-Dalarm.url" VM 옵션을 사용하여, Alarm을 받을 URL을 지정할 수 있습니다.
-    * [GameAnvil-Guide/69 Alarm 사용법](https://nhnent.dooray.com/share/posts/Ap6DJT9KSaGv916_tj-xAA)
+    * サーバー内で発生した状況を指定したURLで取得できる機能を追加しました。
+    * "-Dalarm.url" VMオプションを使用して、Alarmを受け取るURLを指定できます。
+    * [GameAnvil-Guide/69 Alarmの使用方法](https://nhnent.dooray.com/share/posts/Ap6DJT9KSaGv916_tj-xAA)
 
 #### Change
 
-* BaseObject의 findAllUserLocsOfAccount 리턴값 UserLoc 로 변경
+* BaseObjectのfindAllUserLocsOfAccountの戻り値をUserLocに変更
 
-* Node정보를 Rest API로 얻어올 수 있는 기능을 추가하였습니다.
+* Node情報をRest APIで取得できる機能を追加しました。
     * /management/ipcNetworkNodeInfo
     * /management/managementNetworkNodeInfo
     * /management/locationLookupNodeInfo
@@ -495,23 +513,23 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-* 동일한 AccountId로 다른 SubId를 사용할 경우 로그인은 성공하지만, 그 이후 응답패킷을 받을 수 없는 문제를 수정하였습니다.
-* GatewayNode, MatchNode, SupportNode, ManagementNode의 NodeNum가 1부터 시작하는 문제를 수정하였습니다.
-* Netty의 send,recv buffer 사이즈 최적화와 그에 알맞은 watermark가 적절하게 적용 되도록 수정
+* 同じAccountIdで他のSubIdを使用した場合、ログインには成功するが、その後、レスポンスパケットを受信できない問題を修正しました。
+* GatewayNode、MatchNode、SupportNode、ManagementNodeのNodeNumが1からスタートする問題を修正しました。
+* Nettyのsend,recv bufferサイズの最適化とそれに適したwatermarkが適切に適用されるように修正
 
 ---
 
 ### 1.0.7 (2021.01.05)
 
 #### Fix
-- GatewayNode 에서 getNodeId()를 호출하면 NPE 발생하는 이슈 수정
+- GatewayNodeでgetNodeId()を呼び出すとNPEが発生する問題を修正
 
 ---
 
 ### 1.0.6 (2020.12.28)
 
 #### Fix
-- `RoomMatchMaking failure. The matched-room({}) does not exist in the game node.` 로그가 남으면서 룸매칭이 실패할 경우 해당 유저는 재접속 학시 전까지 계속하여 룸매칭이 실패하는 이슈 수정
+- `RoomMatchMaking failure. The matched-room({}) does not exist in the game node.` というログが残り、ルームマッチングが失敗した場合、そのユーザーは再接続するまで継続してルームマッチングが失敗する問題を修正しました。
 
 ---
 
@@ -519,7 +537,7 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-- RoomMatchReq에서 에러 응답 시 패킷 헤더 복원(restore)이 안 되는 문제 수정
+- RoomMatchReqでエラーレスポンス時に、パケットヘッダの復元(restore)ができない問題を修正
 
 ---
 
@@ -527,11 +545,11 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-- 임의의 Session에 아직 아무런 패킷이 전달된 적이 없을 경우에 이 Session으로 send 호출 시 NPE(Null Pointer Exception) 발생하는 문제 수정
-- publishToClient 사용 시 문제 발생(Notice 포함)
-- Room에서 사용하는 반복 Timer로 인해 방 파괴가 지연되는 문제 수정
-- protobuf 구조체를 변수로 가지고 있는 Class를 deserialize할 때 예외 발생하는 이슈 수정
-- java.lang.UnsupportedOperationException이 발생
+- 任意のSessionにまだ何のパケットも送信していない場合、このSessionでsendを呼び出すと、NPE(Null Pointer Exception)が発生する問題を修正
+- publishToClient使用時に問題が発生(Noticeを含む)
+- Roomで使用する繰り返しTimerによって、ルームの破壊が遅れる問題を修正
+- protobuf構造体を変数として持っているClassをdeserializeする際に例外発生する問題を修正
+- java.lang.UnsupportedOperationExceptionが発生
 
 ---
 
@@ -539,7 +557,7 @@ public class GameUser extends BaseUser {
 
 #### Change
 
-- 이전에 스펙에서 제외되었던 공지 기능 API를 다시 활성화
+- スペックから除外されていた告知機能APIを再び有効化
 
 ---
 
@@ -547,21 +565,21 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- Log에 표시되는 Node 정보를 사용자가 원하는 대로 설정할 수 있는 기능 추가
-- HostId를 직접 입력할 수 있는 기능 추가
-- nodeInfoByHostId에서 HostId별로 정보를 보내주는 기능 추가
+- Logに表示されるNode情報をユーザーの希望通りに設定できる機能を追加
+- HostIdを直接入力できる機能を追加
+- nodeInfoByHostIdでHostIdごとに情報を送信する機能を追加
 
 #### Fix
 
-- IP 0.0.0.0을 바인딩할 때 에러가 발생하는 이슈 수정
-- ConfigModule의 /config/get 사용 시 성공 여부 값이 실패로 응답하는 문제 수정
-- GameNode가 구동된 상태에서 다른 GameNode가 구동될 경우, Publish Packet 처리로 인해 에러가 발생할 수 있는 문제 예외 처리 추가
+- IP 0.0.0.0をバインディングした際にエラーが発生する問題を修正
+- ConfigModuleの/config/getを使用した際に、成否値が失敗としてレスポンスする問題を修正
+- GameNodeが駆動された状態で他のGameNodeが駆動された場合、Publish Packet処理によって、エラーが発生することのある問題に例外処理を追加
 
 #### Change
 
-- UserId, RoomId 생성 시 마지막 자리에 사용하는 ShardIndex값 범위를 지정할 수 있도록 수정
-- RestObject의 getRemoteAddress 값 추가
-- NodeKey 요청 개수를 지정할 수 있도록 수정
+- UserId、RoomIdを作成する際に、最後に使用するShardIndex値の範囲を指定できるように修正
+- RestObjectのgetRemoteAddress値を追加
+- NodeKeyのリクエスト数を指定できるように修正
 
 ---
 
@@ -569,62 +587,62 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-- onLogin()에서 false를 리턴할 경우 Payload가 클라이언트로 전달되지 안는 이슈 수정
-- Debug와 Trace 로그문 앞의 로그 레벨 확인 조건문 누락된 부분 추가
+- onLogin()でfalseを返す場合、Payloadがクライアントに送信されない問題を修正
+- DebugとTraceログ文の前のログレベル確認条件文が抜けている部分を追加
 
 ---
 
 ### 1.0.0 (2020.08.31)
 
-더 자세한 정보는 [배포 노트](https://nhnent.dooray.com/share/posts/5Fvh0aszQ5u6d_ZZxRWPvA)를 참고
+詳細については、[配布ノート](https://nhnent.dooray.com/share/posts/5Fvh0aszQ5u6d_ZZxRWPvA)を参照
 
 #### New
 
-- 성능과 안정성 대폭 향상 (0.9버전 대비 약 7배)
-- 성능에 직접적인 영향을 주는 다수의 로직을 최적화하고 문제점 수정
-- 완전히 새로워진 GameNode 로드밸런싱
-- 클라우드 VM의 상태를 반영하여 빠르고 정확하게 최적의 GameNode로 부하를 분산
-- Integer형 ID 도입
-- 기존에 String으로 되어 있던 핵심 ID들을 모두 Integer로 교체하여 최적화 진행
-- 서버 Log 레벨을 런타임에 변경할 수 있는 API 추가
-- Node 단위로 서비스 중에 Log 레벨을 변경 가능
+- 性能と安定性の大幅向上(0.9バージョンに比べ約7倍)
+- 性能に直接的な影響を与える多数のロジックを最適化し、問題点を修正
+- 完全に生まれ変わったGameNodeロードバランシング
+- クラウドVMの状態を反映し、迅速かつ正確に最適なGameNodeで負荷を分散
+- Integer型IDを導入
+- Stringになっていた主要IDをすべてIntegerに変更し、最適化を進行
+- サーバーLogレベルをランタイムに変更できるAPIを追加
+- Node単位でサービス中にLogレベルを変更可能
 
 #### Fix
 
-- 유저 전송 문제 수정, 사용법 개선 그리고 최적화
-- GameAnvil 사용자는 더욱 쉽게 유저 전송을 사용 가능
-- 무점검 패치 완벽 수정
-- 그동안 방 전송과 무점검 패치가 제대로 동작하지 않던 문제 모두 수정
-- 서버 구동 시에 알 수 없는 타이밍 이슈로 일부 Node가 제대로 뜨지 않던 문제 수정
-- Node의 일부 Timer 객체가 해제되지 않고 지속적으로 누적되던 Memory Leak 수정
-- 클라이언트 접속 체크 과정에서 새롭게 접속하는 유저가 의도하지 않게 끊기던 문제 수정
+- ユーザー転送問題を修正、使用方法の改善と最適化
+- GameAnvilユーザーはより簡単にユーザー転送を使用可能
+- 無点検パッチを完璧に修正
+- これまでルームの転送と無点検パッチが正しく動作しなかった問題をすべて修正
+- サーバー駆動時に不明なタイミングイシューにより、一部のNodeが正しく表示されなかった問題を修正
+- Nodeの一部のTimerオブジェクトが解除されず、継続的に累積されていたMemory Leakを修正
+- クライアントの接続チェックプロセスで、新しく接続するユーザーが意図せず切断されていた問題を修正
 
 #### Change
 
-- Node 이름을 아래의 표와 같이 더욱 직관적으로 변경
+- Node名を次の表のようにより直感的なものに変更
 
-| v1.0       | ~ v0.10       | 필수 | 기능                                        | 콘텐츠 구현 | 네트워크 접근     |
+| v1.0       | ～v0.10       | 必須 | 機能                                       | コンテンツ実装 | ネットワークアクセス    |
 | ---------- | ------------- | ---- | ------------------------------------------- | ----------- | ----------------- |
-| Gateway    | Session       | 필수 | 클라이언트 접속과 인증을 처리               | 가능        | public            |
-| Game       | Space         | 필수 | 실제 게임 서버로서 콘텐츠를 처리            | 가능        | private           |
-| Support    | Service       | 선택 | 필요에 따라 독립된 서비스로 구현하도록 지원 | 가능        | private or public |
-| Match      | Match         | 선택 | 매치메이킹을 수행                           | 가능        | private           |
-| Location   | Location      | 필수 | 유저와 방 등의 위치 정보를 저장 및 관리     | 불가능      | private           |
-| Management | Management    | 필수 | 서버 정보 취합 및 Admin/Agent와 통신        | 불가능      | private           |
-| Ipc        | Communication | 필수 | Gameflex 서버의 Inter-process 통신 처리     | 불가능      | private           |
+| Gateway    | Session       | 必須 | クライアント接続と認証を処理              | 可能       | public            |
+| Game       | Space         | 必須 | 実際のゲームサーバーとしてコンテンツを処理           | 可能       | private           |
+| Support    | Service       | 任意 | 必要に応じて独立したサービスとして実装できるようにサポート | 可能       | private or public |
+| Match      | Match         | 任意 | マッチメイキングを実行                          | 可能       | private           |
+| Location   | Location      | 必須 | ユーザーとルームなどの位置情報を保存および管理    | 不可     | private           |
+| Management | Management    | 必須 | サーバー情報の取得およびAdmin/Agentと通信       | 不可     | private           |
+| Ipc        | Communication | 必須 | GameflexサーバーのInter-process通信処理    | 不可     | private           |
 
-- GameAnvil 코드 가독성과 사용성 향상
-- 패키지 구조를 효율적으로 개선
-- 클래스 상속/포함 구조 개선
-- 네이밍을 직관적이고 일관성 있게 수정
-- Node의 비활성화 상태는 Invalid와 Disable로 세분화
-- Invalid는 일시적으로 반응을 하지 않는 상태
-- Disable은 영구적으로 비활성화된 상태
-- 이제 Loopback 주소는 자동으로 바인딩
-- GameAnvil에서 사용하는 모든 라이브러리를 최신 버전으로 업데이트
-- 전체 ErrorCode를 하나로 통합
-- 불필요한 ReConnect와 MoveService 기능 제거
-- 등록 시점이 아닌 구동 시점부터 다음 시간을 측정하는 새로운 Timer 추가
+- GameAnvilコードの可読性とユーザビリティを向上
+- パッケージ構造を効率的に改善
+- クラス継承/包含構造を改善
+- ネーミングを直感的で一貫性のあるものに修正
+- Nodeの無効化状態はInvalidとDisableに細分化
+- Invalidは一時的に反応しない状態
+- Disableは永久的に無効化された状態
+- Loopbackアドレスは自動的にバインディング
+- GameAnvilで使用するすべてのライブラリを最新バージョンにアップデート
+- ErrorCode全体を1つに統合
+- 不要なReConnectとMoveService機能を削除
+- 登録時点ではなく、駆動時点から次の時間を測定する新しいTimerを追加
 
 ---
 
@@ -632,23 +650,23 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- GameAnvil API 레퍼런스 (JavaDoc) 사이트 오픈
+- GameAnvil APIリファレンス(JavaDoc)サイトをオープン
 
-- AOT Instrumentation 지원
+- AOT Instrumentationをサポート
 
-- 엔진을 런타임에 매번 JIT Instrumentation할 필요 없이 컴파일 타임에 AOT로 진행
+- エンジンをランタイムに毎回JIT Instrumentationする必要なくコンパイルタイムにAOTで進行
 
-- 공식 GC로 G1GC를 사용하도록 가이드 시작
+- 公式GCとしてG1GCを使用するようガイドを開始
 
-- 가장 기본적인 VM 옵션
+- 最も基本的なVMオプション
 
   `java -javaagent:QUASAR_PATH\quasar-core-0.7.10-jdk8.jar=bm -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication`
 
 #### Fix
 
-- Quasar 스택 버그를 수정
-- 룸 매칭 유저들이 서로 다른 방으로 매칭되는 버그 수정
-- 압축된 패킷이 전송 안 되는 문제 수정
+- Quasarスタックバグを修正
+- ルームマッチングユーザーが異なるルームにマッチングされるバグを修正
+- 圧縮されたパケットが送信されない問題を修正
 
 ---
 
@@ -656,12 +674,12 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 사용자에게 제공하는 도구를 모아둔 Util 클래스를 제공
-- 기존에는 엔진 여러 곳에 흩어져있던 도구들을 해당 클래스 한 군데로 정리
+- ユーザーに提供するツールをすべてまとめたUtilクラスを提供
+- エンジン内の様々な場所に散らばっていたツールを、該当クラスに一箇所に整理
 
 #### Change
 
-- Topic 처리 코드 성능 개선
+- Topic処理コードの性能を改善
 
 
 ---
@@ -670,22 +688,22 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 기존에 문제가 많던 비동기 지원 API를 새롭게 리팩토링
-- Redis Cluster 지원 및 Lettuce 공식 지원에 따른 새로운 비동기 API 추가
-- 비동기 HttpRequest와 HttpResponse API 추가
-- ByteString 기반의 커스텀 프로토콜 기능 지원
-- Google protobuf 외의 사용자가 원하는 방식으로 메시지를 직렬화 가능
+- 問題が多かった非同期サポートAPIを新しくリファクタリング
+- Redis ClusterサポートおよびLettuce公式サポートによる新たな非同期APIを追加
+- 非同期HttpRequestとHttpResponse APIを追加
+- ByteStringベースのカスタムプロトコル機能をサポート
+- Google protobuf以外のユーザーが希望する方法でメッセージをシリアライズ可能
 
 #### Fix
 
-- 이전 버전에서 가장 심각한 문제였던 파이버의 상태가 망가지는 문제 모두 수정
+- 以前のバージョンで最も深刻な問題だったファイバーの状態が破損する問題をすべて修正
 
 #### Change
 
-- 엔진에서 사용하는 패킷과 헤더 크기 최적화
-- 0.9버전 대비 성능이 약 2.5배 향상
+- エンジンで使用するパケットとヘッダサイズを最適化
+- 0.9バージョンに比べて性能が約2.5倍向上
 - Embedded Redis Spec-out
-- 인프라에서 제공하는 서비스를 사용하도록 가이드
+- インフラが提供するサービスを使用するようにガイド
 
 ---
 
@@ -693,20 +711,20 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 프로세스 단위로 WatchDog을 연동할 수 있도록 포트를 추가로 개방
+- プロセス単位でWatchDogを連動できるようにポートを追加で開放
 
 #### Fix
 
-- 고스트 유저 버그 수정
-- SpaceNode에서 발생하는 Concurrent Modification 에러 수정
-- NodeInfoManager의 Comparator 오류 수정
-- 로그아웃한 유저의 세션 객체가 정리되지 않는 문제 수정
-- 매칭 그룹이 서로 다른 채널의 유저들에게 제대로 적용되지 않던 문제 수정
-- 파티 매치 메이킹 시에 Timeout에 대한 콜백을 제대로 받지 못하던 문제 수정
+- ゴーストユーザーバグを修正
+- SpaceNodeで発生するConcurrent Modificationエラーを修正
+- NodeInfoManagerのComparatorエラーを修正
+- ログアウトしたユーザーのセッションオブジェクトが整理されない問題を修正
+- マッチンググループが異なるチャンネルのユーザーに正しく適用されなかった問題を修正
+- パーティーマッチメイキング時にTimeoutに対するコールバックを正しく得られなかった問題を修正
 
 #### Change
 
-- 룸 매치 메이킹을 이미 진행 중인 상태에서 중복 요청이 왔을 경우에 대한 에러 코드 추가
+- ルームマッチメイキングがすでに進行中の状態で重複リクエストを受信した場合のエラーコードを追加
 - MATCH_ROOM_FAIL_IN_PROGRESS
 
 ---
@@ -715,18 +733,18 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- Session에 ClientTopic을 추가하고 삭제할 수 있는 addTopic(), removeTopic() API 추가
-- Packet TTL 기능 추가
-- Dangling Location을 주기적으로 체크해서 정리하는 로직 추가
+- SessionにClientTopicを追加して削除できるaddTopic()、removeTopic()APIを追加
+- Packet TTL機能を追加
+- Dangling Locationを定期的にチェックして整理するロジックを追加
 
 #### Fix
 
-- Admin에서 유저를 Kick할 경우 클라이언트로 ForceLogoutNoti를 전송하지 않도록 수정
-- LocationNode의 Spot 오동작 수정
+- AdminでユーザーをKickした場合、クライアントにForceLogoutNotiを送信しないように修正
+- LocationNodeのSpot誤作動を修正
 
 #### Change
 
-- onAuthenticate() 콜백 실패 시에 해당 소켓을 닫기 전에 ForceCloseNoti를 클라이언트로 전송하도록 변경
+- onAuthenticate()コールバック失敗時に該当ソケットを閉じる前にForceCloseNotiをクライアントに転送するように変更
 
 
 ---
@@ -735,25 +753,25 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 비정상적으로 남아있는 Room을 주기적으로 체크하고 정리하는 로직 추가
-- 유저 매치 메이킹은 요청을 한 후에 재로그인을 하더라도 이전의 매치 요청이 취소되지 않고 진행 중일 수 있는데, 이러한 이전의 유저 매치 메이킹 처리 상태를 알려주기 위해 재로그인 응답에 새로운 플래그를 추가
-- Packet Expire 가능 추가(기본값 30초)
+- 意図せず残っているRoomを定期的にチェックして整理するロジックを追加
+- ユーザーマッチメイキングは、リクエストした後に再ログインしても以前のマッチリクエストがキャンセルされず、進行中である場合があります。このような以前のユーザーマッチメイキングの処理状態を知らせるために、再ログインレスポンスに新しいフラグを追加
+- Packet Expire可能を追加(デフォルト値は30秒)
 
 #### Fix
 
-- Connection ID(CID)가 중복되는 문제 수정
-- Disconnection된 유저의 의해 방 파이버가 close되는 버그 수정
-- 로그인이 실패인 경우 응답 메시지에 serviceId 필드가 제대로 세팅되지 않는 문제 수정
-- 콘텐츠 콜백 처리부 중 try-catch가 누락된 부분 수정
-- 클라이언트 Reconnect가 약 3초 이상 걸리던 문제를 바로 처리되도록 수정
-- 고스트 유저 체크 시 발생하는 스레드 동시성 문제 수정
-- 룸 매치 메이킹 중복 처리 버그 수정
-- 룸에 연결이 끊긴 유저가 남는 문제 수정
+- Connection ID(CID)が重複する問題を修正
+- Disconnectionされたユーザーによってルームのファイバーがcloseされるバグを修正
+- ログインに失敗した場合、レスポンスメッセージにserviceIdフィールドが正しくセッティングされない問題を修正
+- コンテンツコールバック処理部分のうち、try-catchが抜けていた部分を修正
+- クライアントReconnectが約3秒以上かかっていた問題をすぐに処理できるように修正
+- ゴーストユーザーをチェックすると発生するスレッド同時性問題を修正
+- ルームマッチメイキングの重複処理バグを修正
+- ルームへの接続が切断されたユーザーが残る問題を修正
 
 #### Change
 
-- Session Disconnect의 모든 경우에 대해 로그 추가
-- CreateRoom은 현재의 노드에 바로 방을 생성하도록 변경
+- Session Disconnectのすべてのケースにログを追加
+- CreateRoomは現在のノードにすぐにルームを作成するように変更
 
 
 ---
@@ -762,24 +780,24 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 전송 가능한 시점을 콘텐츠에서 조율할 수 있도록 User와 Room에 canTransfer() 인터페이스를 추가
+- 転送可能な時点をコンテンツで調整できるようにUserとRoomにcanTransfer()インターフェイスを追加
 
 #### Fix
 
-- 엔진 내부 코드에 존재하던 메모리 릭 수정
-- ZMQ Router, Publiser 소켓의 연결 버그 수정
-- Login이 무한 반복되는 문제 수정
-- isLogined() API가 제대로 동작하지 않는 문제 수정
-- NodeInfoManager 동기화 문제 수정
-- 유저 객체가 제대로 정리되지 않는 문제 수정
+- エンジン内部のコードに存在していたメモリリークを修正
+- ZMQ Router、Publiserソケットの接続バグを修正
+- Loginが無限に繰り返される問題を修正
+- isLogined() APIが正しく動作しない問題を修正
+- NodeInfoManagerの同期問題を修正
+- ユーザーオブジェクトが正しく整理されない問題を修正
 
 #### Change
 
-- 기존의 AsyncAwaitHttpRequest를 FiberHttpRequest로 이름 변경
-- FiberHttpRequest와 HttpRequest에 비동기 함수 추가
-- Location Index 관련 로그 추가
-- SpaceNode 분배 방식을 idle에서 roundRobin으로 변경
-- NodeStarter에서 LocationNode가 있을 경우에만 sleep하도록 변경
+- 既存のAsyncAwaitHttpRequestをFiberHttpRequestに名前を変更
+- FiberHttpRequestとHttpRequestに非同期関数を追加
+- Location Index関連のログを追加
+- SpaceNode分配方式をidleからroundRobinに変更
+- NodeStarterでLocationNodeが存在する場合のみsleepするように変更
 
 
 ---
@@ -788,13 +806,13 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-- 무점검 패치 시에 새로운 유저가 로그인하거나 유저 전송 중일 경우 Pause된 노드에서 해당 유저가 정리되지 않는 오류 수정
+- 無点検パッチ時に新しいユーザーがログインした場合やユーザー転送中の場合、Pauseされたノードで該当ユーザーが整理されないエラーを修正
 
 #### Change
 
-- 문자열 형식의 serviceId를 정수형으로 변경
-- 프로토콜의 service_code를 service_id로 변경하고 관련 코드 수정
-- RESTful 지원 API의 내부 구현과 사용법 변경
+- 文字列形式のserviceIdを整数型に変更
+- プロトコルのservice_codeをservice_idに変更して関連コードを修正
+- RESTfulサポートAPIの内部実装と使用方法を変更
 
 
 ---
@@ -803,19 +821,19 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 콘텐츠에서 사용하는 프로토콜을 파일 단위로 등록할 수 있는 기능 추가
-- 내부 패킷 처리를 효율적으로 하기 위함
-- MoveService 기능 추가
+- コンテンツで使用するプロトコルをプロトコル単位で登録できる機能を追加
+- 内部パケット処理を効率的にするため
+- MoveService機能を追加
 
 #### Fix
 
-- 룸 매치 메이킹에서 사용하는 비교 연산자(Comparator)의 오류 수정
+- ルームマッチメイキングで使用する比較演算子(Comparator)のエラーを修正
 
 #### Change
 
-- Authentication 응답에 최근 로그인 정보를 추가하여 다음 로그인 시에 활용 가능
-- setReady()를 명시적으로 호출해서 onReady 상태로 넘어가도록 변경
-- LocationNode가 CommunicationNode의 onPrepare 시점에 초기화 되도록 변경
+- Authenticationレスポンスに直近のログイン情報を追加して、次のログイン時に活用可能
+- setReady()を明示的に呼び出してonReady状態に移行するように変更
+- LocationNodeがCommunicationNodeのonPrepare時点で初期化されるように変更
 
 
 ---
@@ -824,15 +842,15 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-- AsyncAwait.call() API에서 timeout이 발생하면 NPE(Null Pointer Exception)도 발생하는 문제 수정
-- Epoll이 활성화되면서 멈추는 문제 수정
-- 로그인 시 발생하는 Invalid System Target Location 오류 수정
+- AsyncAwait.call() APIでtimeoutが発生すると、NPE(Null Pointer Exception)も発生する問題を修正
+- Epollが有効になると停止する問題を修正
+- ログイン時に発生するInvalid System Target Locationエラーを修正
 
 #### Change
 
-- ManagementNode는 이제 더 이상 엔진 사용자가 확장해서 사용할 수 없음
-- 대신 ServiceNode를 사용
-- Admin에서 Machine 정보의 등록, 수정, 삭제가 요청하는 순간 바로 적용되도록 변경
+- ManagementNodeをエンジンユーザーが拡張して使用できないように変更
+- 代わりにServiceNodeを使用
+- AdminでMachine情報の登録、修正、削除がリクエストされた瞬間、すぐに適用されるように変更
 
 
 ---
@@ -841,23 +859,23 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- Admin을 이용한 예약 공지, 예약 점검 기능 추가
-- Admin을 이용한 White IP, White User, White Device 기능 추가
+- Adminを利用した予約告知、予約点検機能を追加
+- Adminを利用したWhite IP、White User、White Device機能を追加
 
 #### Fix
 
-- AsyncAwait.run() API에서 잘못된 방식으로 예외가 처리되던 코드 수정
-- ManagementNode가 다른 Node들보다 먼저 초기화가 되도록 수정
-- 채널 ID를 사용하지 않는 경우, 일부 채널 관련 publish가 누락되는 문제 수정
-- CreateRoom, JoinRoom에 대해 콘텐츠가 실패를 반환할 경우에 잘못된 에러코드가 헤더에 실려가던 문제 수정
-- 패킷 헤더 생성 시에 발생하던 메모리 릭 수정
-- 룸 매치 메이킹에서 발생하던 메모리 릭 수정
+- AsyncAwait.run() APIで誤った方式で例外が処理されていたコードを修正
+- ManagementNodeが他のNodeより先に初期化されるように修正
+- チャンネルIDを使用しない場合、一部のチャンネル関連publishが抜け落ちる問題を修正
+- CreateRoom、JoinRoomにコンテンツが失敗を返した場合、誤ったエラーコードがヘッダに載る問題を修正
+- パケットヘッダを作成すると発生していたメモリリークを修正
+- ルームマッチメイキングで発生していたメモリリークを修正
 
 #### Change
 
-- onLogout() 콜백에 payload 추가
-- ResultCode를 수정함에 따라 몇몇 프로토콜에서 중복 필드를 제거
-- Dynamic Module 사용성 개선
+- onLogout()コールバックにpayloadを追加
+- ResultCodeを修正するに伴い、いくつかのプロトコルで重複フィールドを削除
+- Dynamic Moduleユーザビリティを改善
 
 
 ---
@@ -866,27 +884,27 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 매치 메이킹을 전담하는 MatchNode 추가
-- 유저 매치 메이킹에 refill 기능 추가
-- 유저 매치 메이킹의 새로운 타입인 파티 매치 메이킹을 추가
-- Admin의 Machine 정보에서 노드 종류별로 부가정보를 추가
-- 유저가 동일한 DeviceId와 UserId로 재로그인 할 때 호출되는 onLoginByOtherConnection() 콜백 추가
+- マッチメイキングを専任するMatchNodeを追加
+- ユーザーマッチメイキングにrefill機能を追加
+- ユーザーマッチメイキングの新しいタイプであるパーティーマッチメイキングを追加
+- AdminのMachine情報でノードの種類ごとに付加情報を追加
+- ユーザーが同じDeviceIdとUserIdで再ログインする際に呼び出されるonLoginByOtherConnection()コールバックを追加
 
 #### Fix
 
-- Dynamic Module 버그 수정
-- Admin 접속이 안되는 문제 수정
-- User의 reply 버그 수정
-- Timer 추가/삭제 오류 수정
-- AsyncAwait.run()에 누락된 timeout 적용
-- 노드 Shutdown 시에 발생하던 오류 수정
-- 룸 매치 메이킹을 사용하지 않음에도 불구하고 매칭 정보를 삭제하면서 NPE(Null Pointer Exception)가 발생하는 문제 수정
+- Dynamic Moduleバグを修正
+- Admin接続ができない問題を修正
+- Userのreplyバグを修正
+- Timer追加/削除エラーを修正
+- AsyncAwait.run()に抜けているtimeoutを適用
+- ノードShutdown時に発生していたエラーを修正
+- ルームマッチメイキングを使用していないにもかかわらず、マッチング情報を削除してNPE(Null Pointer Exception)が発生する問題を修正
 
 #### Change
 
-- 일부 인터페이스의 위치 변경
-- 서로 다른 DeviceId로 로그인 시에 중복 로그인 처리 대신 재로그인 처리가 되도록 변경
-- 룸 매치 메이킹의 onMatchRoom() 콜백에서 추가한 payload가 이후의 흐름에 포함되도록 수정
+- 一部のインターフェイスの位置を変更
+- 異なるDeviceIdでログインすると、重複ログイン処理の代わりに再ログイン処理が行われるように変更
+- ルームマッチメイキングのonMatchRoom()コールバックで追加したpayloadがそれ以降のフローに含まれるように修正
 
 
 ---
@@ -895,20 +913,20 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 유저 매치 메이킹 기능 추가
-- 채널별 유저와 방 목록 기능 추가
-- Embedded Redis 추가
-- Reconnect 기능 추가
-- (구) Test Agent 추가
+- ユーザーマッチメイキング機能を追加
+- チャンネル別のユーザーとルームリスト機能を追加
+- Embedded Redisを追加
+- Reconnect機能を追加
+- (旧)Test Agentを追加
 
 #### Fix
 
-- Account 단위의 중복 로그인 처리 이슈 수정
+- Account単位の重複ログイン処理問題を修正
 
 #### Change
 
-- OracleJDK에서 AdpotOpenJDK로 변경
-- Node(스레드) 단위로 ZMQ 통신하던 것을 프로세스 단위로 변경
+- OracleJDKからAdpotOpenJDKに変更
+- Node(スレッド)単位でZMQ通信していたものをプロセス単位に変更
 
 ---
 
@@ -916,46 +934,46 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- Send from Session to Management 기능 추가
-- Request from Session to Management 기능 추가
-- User MatchMaker 추가
-- Channel User List 기능 추가
-- Custom Serializer 기능 추가
-- RoomFinder에 Custom Serializer를 plug-in 가능
+- Send from Session to Management機能を追加
+- Request from Session to Management機能を追加
+- User MatchMakerを追加
+- Channel User List機能を追加
+- Custom Serializer機能を追加
+- RoomFinderにCustom Serializerをplug-in可能
 
 #### Fix
 
-- 채널 유저 매니저에서 채널이 topic으로 사용되는 publish에 대한 빈 문자열 예외 처리 추가
-- 채널이 topic으로 사용되는 publish에 대한 빈 문자열 예외 처리 추가
-- AutoJoinRoom을 사용하지 않는 환경에서 delNamedRoomInfo() 와 delRoomInfo() 호출 시에 DefaultRoomFinder로 인해 발생하는 문제 수정
-- RoomFinder에서 null 체크 누락으로 발생하는 NullPointerException 수정
-- 유저 매치메이킹에서 timeout된 요청이 제거되지 않는 문제 수정
-- redis에 password가 설정되어 있는 경우에 대한 처리 추가
-- cfgManagement의 setRestIp() 오류 수정
-- Service 노드에서 Http 핸들링이 안되는 이슈 수정.
-- 브랜치: 0.8.6.2_fix_service_node_rest_handling
-- 태그: tardis-0.8.6.2.1
-- AutoJoinRoom 처리 시에 gameId가 설정된 경우의 오류 수정
-- MatchMaker 수정 및 예제 보강
-- ISession::onDisconnect() 누락 수정
-- Communication Node 간 Node 정보 교환 오류 수정
-- FindRoomList 성능 이슈 해결
-- Shutdown 버그 수정
-- BaseNode가 publishToNode 메시지를 못 받는 문제 수정
-- FindRoomList 성능 이슈 해결
-- Shutdown 버그 수정
-- BaseNode가 publishToNode 메시지를 못 받는 문제 수정
-- NamedAutoJoinRoom 버그 수정
-- UpdateRoomInfo/DelRoomInfo가 해당 Node에서 즉시 반영되도록 수정
-- 파이버 내에서 blocking call을 호출하는 부분에 의해 출력되던 Error 수정
+- チャンネルユーザーマネージャーでチャンネルがtopicとして使用されるpublishに対する空文字列例外処理を追加
+- チャンネルがtopicで使用されるpublishに空文字列の例外処理を追加
+- AutoJoinRoomを使用しない環境でdelNamedRoomInfo()とdelRoomInfo()を呼び出すと、DefaultRoomFinderによって発生する問題を修正
+- RoomFinderでnullチェックの欠落により発生するNullPointerExceptionを修正
+- ユーザーマッチメイキングでtimeoutされたリクエストが削除されない問題を修正
+- redisにpasswordが設定されている場合の処理を追加
+- cfgManagementのsetRestIp()エラーを修正
+- ServiceノードでHttpハンドリングができない問題を修正。
+- ブランチ: 0.8.6.2_fix_service_node_rest_handling
+- タグ: tardis-0.8.6.2.1
+- AutoJoinRoom処理時にgameIdが設定された場合のエラーを修正
+- MatchMaker修正および例題を補強
+- ISession::onDisconnect()の抜けを修正
+- Communication Node間のNode情報交換エラーを修正
+- FindRoomListの性能問題を解決
+- Shutdownバグを修正
+- BaseNodeがpublishToNodeメッセージを受け取れない問題を修正
+- FindRoomListの性能問題を解決
+- Shutdownバグを修正
+- BaseNodeがpublishToNodeメッセージを受け取れない問題を修正
+- NamedAutoJoinRoomバグを修正
+- UpdateRoomInfo/DelRoomInfoが該当Nodeで即時反映されるように修正
+- ファイバー内でblocking callを呼び出す部分によって出力されていたErrorを修正
 
 #### Change
 
-- FindRoomList는 전체 방 목록 container를 한번에 serialize/deserialize하도록 수정
-- 기존의 LocationException, TardisException 등을 RuntimeException으로 변경, Exception 정리
-- forceLeaveRoom은 kickOutRoom으로 rename
-- forceLogout은 kickOut으로 rename
-- tardisConfig 구성 변경
+- FindRoomListはルーム全体のリストcontainerを一度にserialize/deserializeするように修正
+- 既存のLocationException、TardisExceptionなどをRuntimeExceptionに変更して、Exceptionを整理
+- forceLeaveRoomはkickOutRoomにrename
+- forceLogoutはkickOutにrename
+- tardisConfig構成を変更
 
 ---
 
@@ -963,23 +981,23 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- JWT 인증토큰을 사용한 HTTP 세션 인증 및 관리 기능 추가
-- 동일 ID 사용하여, 여러 Service 중복 로그인할 수 있는 기능 추가
-- 하나의 GameNode에 여러 개의 RoomType을 사용할 수 있느 기능 추가
-- Server의 모든 정보를 웹으로 볼 수 있는 기능 추가 (NodeInfoPage)
+- JWT認証トークンを使用したHTTPセッション認証および管理機能を追加
+- 同じIDを使用して、複数のServiceに重複ログインできる機能を追加
+- 1つのGameNodeに複数のRoomTypeを使用できる機能を追加
+- Serverのすべての情報をWebで閲覧できる機能を追加(NodeInfoPage)
 
 #### Fix
 
-- 타이머 제거가 안되는 버그 수정
-- onPostLeaveRoom 이 2번 호출되는 버그 수정
+- タイマーが削除されないバグを修正
+- onPostLeaveRoomが2回呼び出されるバグを修正
 
 #### Change
 
-- 고스트 유저 처리 개선
-- 고스트 유저 로깅 추가
-- Packet compress 로직 개선
-- RestObject 개선, 사용 함수 추가
-- 패킷의 에러 처리 변경, 프로토콜 헤더에 에러코드를 담아서 처리
+- ゴーストユーザーの処理を改善
+- ゴーストユーザーロギングを追加
+- Packet compressロジックを改善
+- RestObjectを改善、使用関数を追加
+- パケットのエラー処理を変更、プロトコルヘッダにエラーコードを入れて処理
 
 ---
 
@@ -987,30 +1005,30 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- Bootstrap 적용
-- NGB Bootstrap 과 같은 형태로 구현
-- 구현부 각각의 클래스의 class 인스턴스만 명시하여 코드를 단순화
-- 여러 개의 메시지를 주고받을 수 있는 Multi Dispatch 기능 추가
-- ServiceNodeSender(이전 CustomServiceSender) publishToLobby 메서드 추가
+- Bootstrapを適用
+- NGB Bootstrapと同じ形態で実装
+- 実装部分の各クラスのclassインスタンスのみ明示してコードを単純化
+- 複数のメッセージをやり取りできるMulti Dispatch機能を追加
+- ServiceNodeSender(以前のCustomServiceSender) publishToLobbyメソッドを追加
 
 #### Change
 
-- AsyncAwait, RAsyncAwait 이름 변경
-- Bootstrap RoomFinder 설정을 space로 옮김
-- Cache, Custom Exception 이름 변경 (Location, Service)
-- Payload 클래스에서 getFirst 메서드를 통해 첫 번째 Packet 을 가져올 수 있도록 수정
-- ServiceNodeSender 의 requestToLobby 메서드 제거(동일 기능의 requestToNode 메서드와 중복 되는 이슈)
-- Packet 클래스의 makeDecompress 메서드 호출 시 async 사용하지 않도록 수정
-- UserSender의 reply 메서드 오버로딩(Packet 리스트 처리)
-- 일부 클래스 이름 변경
-- AsyncCall -> AsyncWaitingCall
-- AsyncRun -> AsyncWaitingRun
-- ReverseAsyncCall -> RAsyncWaitingCall
-- ReverseAsyncRun -> RAsyncWaitingRun
+- AsyncAwait、RAsyncAwaitの名前を変更
+- Bootstrap RoomFinder設定をspaceに移行
+- Cache、Custom Exceptionの名前を変更(Location、Service)
+- PayloadクラスのgetFirstメソッドで最初のPacketを所得できるように修正
+- ServiceNodeSenderのrequestToLobbyメソッドを削除(同じ機能のrequestToNodeメソッドと重複する問題)
+- PacketクラスのmakeDecompressメソッドを呼び出した際にasyncを使用しないように修正
+- UserSenderのreplyメソッドオーバーローディング(Packetリストを処理)
+- 一部のクラス名を変更
+- AsyncCall → AsyncWaitingCall
+- AsyncRun → AsyncWaitingRun
+- ReverseAsyncCall → RAsyncWaitingCall
+- ReverseAsyncRun → RAsyncWaitingRun
 
 #### Fix
 
-- Session IP 오류 수정
+- Session IPエラーを修正
 
 ---
 
@@ -1018,41 +1036,41 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- REST 핸들링 기능 추가
-- TardisConfig.json 에 permissionGroups 으로 REST 핸들링에 대해, Path & IP 기반의 ACL 기능 구현
-- Channel List (채널 이름 목록), Channel Information (특정 채널의 상세 정보)
-- Space LobbySender 에 requestToCustom, sendToCustom 메서드 추가
-- Space 노드 Management 정보에 "State" 항목 추가
-- Ilobby , ISessionLobby, IService 인터페이스에 아래 void onShutdown() throws SuspendExecution 추가
-- Node 가 shutdown될 때 contents에서 resource를 해지할 수 있도록 onShutdown() 인터페이스가 추가
-- ServiceNodeSender에 publishToNode 함수 추가
+- RESTハンドリング機能を追加
+- TardisConfig.jsonにpermissionGroupsでRESTハンドリングに対して、Path & IPベースのACL機能を実装
+- Channel List(チャンネル名リスト)、Channel Information(特定チャンネルの詳細情報)
+- Space LobbySenderにrequestToCustom、sendToCustomメソッドを追加
+- SpaceノードManagement情報に"State"項目を追加
+- Ilobby、ISessionLobby、IServiceインターフェイスに以下のvoid onShutdown() throws SuspendExecutionを追加
+- Nodeがshutdownする際にcontentsでresourceを解除できるようにonShutdown()インターフェイスが追加
+- ServiceNodeSenderにpublishToNode関数を追加
 
 #### Fix
 
-- Management의 JMX Management API 수정 및 추가(SessionGateway, CustomGateway)
-- Channel List(채널 이름 목록), Channel Information(특정 채널의 상세 정보) 기능 추가
-- Session, Custom 노드의 REST 핸들링 로직 수정
-- Gateway 노드(Session, Custom) isConnectableType 메서드의 리턴값 수정
-- SessionGateway 및 CustomGateway 라운드 로빈 이슈 및 JMX 리턴 정보 수정
-- 캐시 노드 targetMap 키값 사용하는 코드 수정
-- SessionGateway 노드 REST RoundRobin 코드 수정
-- 로그인 프로세스 개선 (Invalid Target Location 에러 로그 관련 수정)
-- 룸을 삭제하는 delRoomInfo 호출 시, 해당 노드 상태가 READY 가 아니라면 리턴 처리
+- ManagementのJMX Management APIを修正および追加(SessionGateway、CustomGateway)
+- Channel List(チャンネル名のリスト)、Channel Information(特定チャンネルの詳細情報)機能を追加
+- Session、CustomノードのRESTハンドリングロジックを修正
+- Gatewayノード(Session、Custom)isConnectableTypeメソッドの戻り値を修正
+- SessionGatewayおよびCustomGatewayのラウンドロビン問題およびJMXリターン情報を修正
+- キャッシュノードtargetMapキー値を使用するコードを修正
+- SessionGatewayノードのREST RoundRobinコードを修正
+- ログインプロセスを改善(Invalid Target Locationエラーログ関連を修正)
+- ルームを削除するdelRoomInfoを呼び出した時、該当ノードの状態がREADYでない場合はリターン処理
 
 #### Change
 
-- Session 노드와 클라이언트의 End-Point를 하나로 통합 (Session Gateway)
-- Custom 노드의 REST End-Point를 하나로 통합 (Custom Gateway)
-- 파이버 직접 사용 코드를 ReverseAsyncCall로 변경
-- SpaceSingular Dispatch 타임스탬프 추가
-- onTimer 등록하고, 주기적으로 체크 (10분)
-- 타임스탬프가 초과된 유저는 internalLogout 처리
-- Async 타임아웃 적용
-- 고스트 유저 처리 로직 추가 및 개선, TardisConfig.json에 필요한 값들 추가
-- 각 Response 프로토콜의 result_code 형식을 기존 integer 값에서 enum으로 변경하고, 종류를 간소화. is_payload 필드를 제거
-- 클래스, 패키지, 함수들과 cfg 내용이 rename
-- Request, Response 프로토콜에서 복수의 payload를 처리할 수 있도록 class Payload 데이터 타입이 Packet 으로 변경, class OutPayload 제거
-- 유저 Transfer-In 인터페이스의 파라미터 타입을 byte 배열로 변경
+- SessionノードとクライアントのEnd-Pointを1つに統合(Session Gateway)
+- CustomノードのREST End-Pointを1つに統合(Custom Gateway)
+- ファイバーの直接使用コードをReverseAsyncCallに変更
+- SpaceSingular Dispatchタイムスタンプを追加
+- onTimer登録して、定期的にチェック(10分)
+- タイムスタンプが超過したユーザーはinternalLogout処理
+- Asyncタイムアウトを適用
+- ゴーストユーザーの処理ロジックを追加および改善、TardisConfig.jsonに必要な値を追加
+- 各Responseプロトコルのresult_code形式を従来のinteger値からenumに変更し、種類を簡素化。is_payloadフィールドを削除
+- クラス、パッケージ、関数とcfg内容がrename
+- Request、Responseプロトコルで複数のpayloadを処理できるようにclass Payloadデータ型がPacketに変更、class OutPayloadを削除
+- ユーザーTransfer-Inインターフェイスのパラメータタイプをbyte配列に変更
 
 ---
 
@@ -1060,18 +1078,18 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- CustomService에 RestObject 기능 추가
-- CustomService에 RestHandler 추가
+- CustomServiceにRestObject機能を追加
+- CustomServiceにRestHandlerを追加
 
 #### Fix
 
-- Cache에서 유저 정보가 지워지지 않는 버그 수정
-- 엔진 내부에서 발생하던 NPE(Null Pointer Exception)에 대한 예외 처리 추가
-- 패킷 전송에 CID(Connection ID)를 제대로 적용하지 못하던 문제 수정
+- Cacheでユーザー情報が消えないバグを修正
+- エンジン内部で発生していたNPE(Null Pointer Exception)に例外処理を追加
+- パケット転送にCID(Connection ID)を正しく適用できていなかった問題を修正
 
 #### Change
 
-- Custom 모듈 네이밍을 모두 새롭게 변경
-- 예) CustomLobby -> CustomService
-- Custom 모듈 인터페이스 일부 변경
-- CustomServiceSender의 sendToUser()와 requestToUser() API에 serviceId 매개변수 추가
+- Customモジュールのネーミングをすべて新しく変更
+- 例) CustomLobby → CustomService
+- Customモジュールインターフェイスの一部を変更
+- CustomServiceSenderのsendToUser()とrequestToUser() APIにserviceId引数を追加

@@ -1,100 +1,100 @@
-## Game > GameAnvil > 테스트 개발 가이드 > 기능 테스트 개발 가이드
+## Game > GameAnvil > Test Development Guide > Functional Test Development Guide
 
 ## Tester
 
-GameHammer를 사용하기 위한 기본 모듈입니다. 기본 설정과 Connection 객체의 관리를 담당합니다. Tester 객체를 생성하려면 먼저 Builder를 만들고 테스트에 필요한 옵션을 설정한 후, `build()`를 호출하면 됩니다.
+It is the default module for using GameHammer. It is responsible for the default settings and the Connection object. To create a Tester object, create a Builder first, configure the necessary options for a test and call `build()`.
 
 ```
-Tester tester = Tester.newBuilder()
-                    .addProtoBufClass(RPSGame.getDescriptor())
+Tester tester = Tester.newBuilder() 
+                    .addProtoBufClass(RPSGame.getDescriptor()) 
                     .build();
 ```
 
-옵션 설정을 외부로부터 불러올 수도 있습니다. vmoption `config.file=PATH`로 경로를 지정하거나, resource 폴더 아래에 GameHammerConfg.json 파일을 만들어 놓으면 TesterConfigLoader에서 자동으로 읽어오게 됩니다. 아래와 같은 방법으로 읽어온 옵션 설정이 적용된 Tester를 생성할 수 있습니다.
+Option settings can be imported from outside. Specify a path using vmoption `config.file=PATH` or create the GameHammerConfg.json file under the resource folder so that the settings can be automatically read from TesterConfigLoader. The Tester to which the option settings read using the aforementioned method can be created.
 
 ```
-Tester tester = Tester.newBuilderWithConfig()
-                    .addProtoBufClass(RPSGame.getDescriptor())
+Tester tester = Tester.newBuilderWithConfig() 
+                    .addProtoBufClass(RPSGame.getDescriptor()) 
                     .build();
 ```
 
 ## Connection
 
-게임 서버와의 연결, 인증 등의 기능을 처리하고, 유저의 관리를 담당합니다. 아래와 같이 Tester를 통해 생성합니다.
+It handles the connection to the game server and authentication and takes care of users. Create Tester using as below:
 
 ```
 Connection connection = tester.createConnection(uuid);
 ```
 
-생성된 Connection 객체는 Tester에서 관리되며 uuid로 구분됩니다. 이미 생성된 객체의 uuid가 입력되면 해당 객체를 반환합니다.
+The created Connection object is managed by Tester and it is separated by UUID. If the UUID of an existing object is entered, it returns the corresponding object.
 
-Connection은 다음과 같은 기능을 제공합니다. 
+Connection provides the following features: 
 
 ### Connect
 
-GameAnvil 서버에 연결합니다.
+Connects to the GameAnvil server.
 
 ```
-Future<ResultConnect> future = connection.connect(new RemoteInfo("127.0.0.1", 18200));
-ResultConnect resultConnect = futre.get(); // blocked
-if(resultConnect.isSuccess()){
-    // connect success
+Future<ResultConnect> future = connection.connect(new RemoteInfo("127.0.0.1", 18200)); 
+ResultConnect resultConnect = futre.get(); // blocked 
+if(resultConnect.isSuccess()){ 
+    // connect success 
 }
 ```
 
-`connect()` 에서 반환 받은 Future의 `get()`을 호출하면 연결이 성공하거나 실패 할 때까지 대기후 ResultConnect 객체를 반환합니다. 반환 받은 ResultConnect 객체를 통해 결과를 알 수 있습니다. `connect()`의 두 번째 인자로 콜백을 넘겨 결과를 받을 수도 있습니다. `connect()` 외 다른 API들도 Future를 리턴해 결과를 기다리거나 콜백을 넘겨 결과를 전달 받을 수 있습니다. 
+When you call `get()`on the Future returned by `connect()`, it waits for the connection to succeed or fail and returns a ResultConnect object. You can get the result from the returned ResultConnect object. You can also pass a callback as the second argument to `connect()`to get the result. Other APIs besides `connect()` can also return a Future and wait for the result, or pass a callback to get the result. 
 
 ### Authentication
 
-GameAnvil 서버에 인증을 요청합니다. 인증에 성공해야 GameAnvil 커넥터의 다른 기능을 사용할 수 있습니다.
+Request authentication to the GameAnvil server. The other features of the GameAnvil connector can be used only when the authentication is successful.
 
 ```
-Future<ResultAuthentication> future = connection.authentication(accountId, password, deviceId, payload);
-ResultAuthentication resultAuthentication = future.get(); // blocked
-if(resultAuthentication.isSuccess){
-    // authentication success
+Future<ResultAuthentication> future = connection.authentication(accountId, password, deviceId, payload); 
+ResultAuthentication resultAuthentication = future.get(); // blocked 
+if(resultAuthentication.isSuccess){ 
+    // authentication success 
 }
 ```
 
 ### GetChannelList
 
-지정한 서비스에서 사용 가능한 채널 목록을 요청합니다.
+Request the list of channels available to the specified service.
 
 ```
-Future<ResultChannelList> future = connection.getChannelList(serviceName);
-ResultChannelList resultChannelList = future.get(); // blocked
-if(resultChannelList.isSuccess){
-    // authentication success
+Future<ResultChannelList> future = connection.getChannelList(serviceName); 
+ResultChannelList resultChannelList = future.get(); // blocked 
+if(resultChannelList.isSuccess){ 
+    // authentication success 
 }
 ```
 
 ### GetChannelInfo
 
-지정한 체널의 정보를 요청합니다.
+Request the information of the specified channel.
 
 ```
-Future<ResultChannelList> future = connection.getChannelList(serviceName, String channelId);
-ResultChannelList resultChannelList = future.get(); // blocked
-if(resultChannelList.isSuccess){
-    // authentication success
+Future<ResultChannelList> future = connection.getChannelList(serviceName, String channelId); 
+ResultChannelList resultChannelList = future.get(); // blocked 
+if(resultChannelList.isSuccess){ 
+    // authentication success 
 }
 ```
 
 ### Request
 
-서버로 메시지를 보내고, 응답을 기다립니다.
+Send message to server and wait for response.
 
 ```
-Future<PacketResult> future = connection.request(message);
-PacketResult packetResult = future.get(); // blocked
-if(packetResult.isSuccess()){
-    // request success
+Future<PacketResult> future = connection.request(message); 
+PacketResult packetResult = future.get(); // blocked 
+if(packetResult.isSuccess()){ 
+    // request success 
 }
 ```
 
 ### Send
 
-서버로 메시지를 보냅니다.
+Send message to server.
 
 ```
 connection.send(message);
@@ -102,7 +102,7 @@ connection.send(message);
 
 ### Close
 
-접속을 끊습니다. 접속 종료 시 생성했던 유저들을 모두 로그아웃하려면 인자로 true를 입력합니다.
+Severs the connection. To have the users created when disconnected log out, enter true as a factor.
 
 ```
 connection.close(true);
@@ -110,343 +110,343 @@ connection.close(true);
 
 ### WaitForAdminKickoutNoti
 
-어드민 강제 종료 알림을 받을 때까지 기다립니다. 어드민에서 강제 종료할 경우 전달됩니다.
+Wait until the forcibly closed by admin notification is received. It is passed when the admin forcibly disconnects.
 
 ```
-Future<ResultAdminKickoutNoti> future = connection.waitForAdminKickoutNoti()
-ResultAdminKickoutNoti resultAdminKickoutNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultAdminKickoutNoti> future = connection.waitForAdminKickoutNoti() 
+ResultAdminKickoutNoti resultAdminKickoutNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultAdminKickoutNoti 
 ```
 
 ### WaitForForceCloseNoti
 
-강제 종료 알림을 받을 때까지 기다립니다. 서버에서 `BaseUser.closeConnection()`을 호출하거나, Authentication이 실패하거나, 같은 계정으로 중복 로그인을 하거나, UserTrasnfer 도중 예외가 발생하는 등의 경우 전달됩니다.
+Wait until the forcible close notification. It is passed when the server calls `BaseUser.closeConnection()`, fails to authenticate, or is logged into a duplicate account or an exception occurs while UserTransfer is running.
 
 ```
-Future<ResultForceCloseNoti> future = connection.waitForForceCloseNoti();
-ResultForceCloseNoti resultForceCloseNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultForceCloseNoti> future = connection.waitForForceCloseNoti(); 
+ResultForceCloseNoti resultForceCloseNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultForceCloseNoti 
 ```
 
 ### WaitForDisconnect
 
-네트워크 연결 끊김 알림을 받을 때까지 기다립니다. 서버에서 `BaseConnection.close()`를 호출하거나, 소켓 오류가 발생하거나 `Connection.close()`, `Tester.Close()`를 호출할 경우 전달됩니다.
+Wait until a network disconnected notification is received. It is passed when the server calls `BaseConnection.close()`, a socket error occurs or calls either `Connection.close()` or `Tester.Close()`.
 
 ```
-Future<ResultDisconnect> future = connection.waitForDisconnect();
-ResultDisconnect resultDisconnect = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultDisconnect> future = connection.waitForDisconnect(); 
+ResultDisconnect resultDisconnect = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultDisconnect 
 ```
 
 ## User
 
-로그인을 비롯하여 방 생성, 입장, 매칭 등 게임에 필요한 주요 기능을 담당합니다. 다음과 같이 User를 생성할 수 있습니다.
+It is responsible for the major features required for the game such as login, room creation, join, and matching. User can be created as below:
 
 ```
-User user = connection.getUserAgent(serviceName, subId);
-if(user == null){
-    user = connection.createUser(serviceName, subId);
+User user = connection.getUserAgent(serviceName, subId); 
+if(user == null){ 
+    user = connection.createUser(serviceName, subId); 
 }
 ```
 
-`Connection.getUserAgent()`로 ServiceName과 SubId로 매칭되는 User가 있는지 확인하고, 없을 경우 `Connection.createUser()`로 새로운 User를 생성합니다. 
+Check if User that is matched with ServiceName and SubId using `Connection.getUserAgent()`. If there is none, create a new User with `Connection.createUser()`. 
 
-User는 다음과 같은 기능을 제공합니다. 
+User provides the following features: 
 
 ### Login
 
-지정한 유저 타입으로 지정한 채널에 로그인합니다. 유저 타입과 채널은 서버에서 설정한 문자열을 사용합니다.
+Log into the specified channel using the specified user type. User type and channel use the character strings specified by server.
 
 ```
-Future<ResultLogin> future = user.login(resultLogin -> {
-    if(resultLogin.isSuccess()){
-        // login success
-    }
-}, userType, channelId, payload);
-
-ResultLogin resultLogin = future.get(); // blocked
-if(resultLogin.isSuccess()){
-    // login success
+Future<ResultLogin> future = user.login(resultLogin -> { 
+    if(resultLogin.isSuccess()){ 
+        // login success 
+    } 
+}, userType, channelId, payload); 
+ 
+ResultLogin resultLogin = future.get(); // blocked 
+if(resultLogin.isSuccess()){ 
+    // login success 
 }
 ```
 
 ### Logout
 
-로그인된 채널에서 로그아웃합니다.
+Log out from the logged in channel.
 
 ```
-Future<ResultLogout> future = user.logout(resultLogout -> {
-    if(resultLogout.isSuccess()){
-        // logout success
-    }
-}, userType, channelId, payload);
-
-ResultLogout resultLogout = future.get(); // blocked
-if(resultLogout.isSuccess()){
-    // logout success
+Future<ResultLogout> future = user.logout(resultLogout -> { 
+    if(resultLogout.isSuccess()){ 
+        // logout success 
+    } 
+}, userType, channelId, payload); 
+ 
+ResultLogout resultLogout = future.get(); // blocked 
+if(resultLogout.isSuccess()){ 
+    // logout success 
 }
 ```
 
 ### WaitForForceLogoutNoti
 
-강제 로그아웃 알림을 받을 때까지 기다립니다. 서버에서 `BaseUser.kickout()`을 호출할 경우 전달됩니다.
+Wait until a forcible logout notification is sent. It is passed when the server calls `BaseUser.kickout()`.
 
 ```
-Future<ResultForceLogoutNoti> future = connection.waitForForceLogoutNoti();
-ResultForceLogoutNoti resultForceLogoutNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultForceLogoutNoti> future = connection.waitForForceLogoutNoti(); 
+ResultForceLogoutNoti resultForceLogoutNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultForceLogoutNoti 
 ```
 
 ### CreateRoom
 
-지정한 룸 타입으로 지정한 이름의 방을 생성하고 해당 방에 입장합니다. 룸 타입은 서버에서 설정한 문자열을 사용합니다.
+Create a room, name it with the specified room type and join the room. Room type uses the character strings configured from server.
 
 ```
-Future<ResultCreateRoom> future = user.createRoom(resultCreateRoom -> {
-    if(resultCreateRoom.isSuccess()){
-        // createRoom success
-    }
-}, roomType, roomName, payload);
-
-ResultCreateRoom resultCreateRoom = future.get(); // blocked
-if(resultCreateRoom.isSuccess()){
-    // createRoom success
+Future<ResultCreateRoom> future = user.createRoom(resultCreateRoom -> { 
+    if(resultCreateRoom.isSuccess()){ 
+        // createRoom success 
+    } 
+}, roomType, roomName, payload); 
+ 
+ResultCreateRoom resultCreateRoom = future.get(); // blocked 
+if(resultCreateRoom.isSuccess()){ 
+    // createRoom success 
 }
 ```
 
 ### JoinRoom
 
-지정한 ID의 방에 입장합니다. 지정한 ID의 방이 없을 경우 실패합니다.
+Join the room that has the specified ID. It fails when there is no room with the specified ID.
 
 ```
-Future<ResultJoinRoom> future = user.joinRoom(resultJoinRoom -> {
-    if(resultJoinRoom.isSuccess()){
-        // joinRoom success
-    }
-}, roomType, roomId, payload);
-
-ResultJoinRoom resultJoinRoom = future.get(); // blocked
-if(resultJoinRoom.isSuccess()){
-    // joinRoom success
+Future<ResultJoinRoom> future = user.joinRoom(resultJoinRoom -> { 
+    if(resultJoinRoom.isSuccess()){ 
+        // joinRoom success 
+    } 
+}, roomType, roomId, payload); 
+ 
+ResultJoinRoom resultJoinRoom = future.get(); // blocked 
+if(resultJoinRoom.isSuccess()){ 
+    // joinRoom success 
 }
 ```
 
 ### NamedRoom
 
-지정한 이름의 방에 입장합니다. 지정한 이름의 방이 없을 경우 방을 생성하고 해당 방에 입장합니다. 파티 매칭을 위한 방인 경우에는 useParty를 true로 입력합니다.
+Join the room with the specified name. If there is no room with the specified name, create such a room and join it. If the room is for party matching, enter true as useParty.
 
 ```
-Future<ResultNamedRoom> future = user.namedRoom(resultNamedRoom -> {
-    if(resultNamedRoom.isSuccess()){
-        // namedRoom success
-    }
-}, roomType, roomName, useParty, payload);
-
-ResultNamedRoom resultNamedRoom = future.get(); // blocked
-if(resultNamedRoom.isSuccess()){
-    // namedRoom success
+Future<ResultNamedRoom> future = user.namedRoom(resultNamedRoom -> { 
+    if(resultNamedRoom.isSuccess()){ 
+        // namedRoom success 
+    } 
+}, roomType, roomName, useParty, payload); 
+ 
+ResultNamedRoom resultNamedRoom = future.get(); // blocked 
+if(resultNamedRoom.isSuccess()){ 
+    // namedRoom success 
 }
 ```
 
 ### LeaveRoom
 
-현재 방에서 퇴장합니다.
+Leave the current room.
 
 ```
-Future<ResultLeaveRoom> future = user.leaveRoom(resultLeaveRoom -> {
-    if(resultLeaveRoom.isSuccess()){
-        // leaveRoom success
-    }
-}, payload);
-
-ResultLeaveRoom resultLeaveRoom = future.get(); // blocked
-if(resultLeaveRoom.isSuccess()){
-    // leaveRoom success
+Future<ResultLeaveRoom> future = user.leaveRoom(resultLeaveRoom -> { 
+    if(resultLeaveRoom.isSuccess()){ 
+        // leaveRoom success 
+    } 
+}, payload); 
+ 
+ResultLeaveRoom resultLeaveRoom = future.get(); // blocked 
+if(resultLeaveRoom.isSuccess()){ 
+    // leaveRoom success 
 }
 ```
 
 ### WaitForForceLeaveRoomNoti
 
-방 강제 퇴장 알림을 받을 때까지 기다립니다. 서버에서 BaseUser.kickoutRoom()을 호출할 경우 전달됩니다.
+Wait until a forcible kickout notification is sent. It is passed when the server calls BaseUser.kickoutRoom.
 
 ```
-Future<ResultForceLeaveRoomNoti> future = connection.waitForForceLeaveRoomNoti();
-ResultForceLeaveRoomNoti resultForceLeaveRoomNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultForceLeaveRoomNoti> future = connection.waitForForceLeaveRoomNoti(); 
+ResultForceLeaveRoomNoti resultForceLeaveRoomNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultForceLeaveRoomNoti 
 ```
 
 ### MatchUserStart
 
-유저 매치메이킹을 요청합니다. 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패할 수 있습니다.  WaitForMatchUserDoneNoti를 통해 매치 성공 알림, WaitForMatchUserTimeoutNoti를 통해 매치 타임아웃 알림을 받을 수 있습니다.
+Request user matchmaking. If the user already joined a room, the request may fail depending on server requirements. Matching success notification can be received by WaitForMatchUserDoneNoti and the match timeout notification can be received by WaitForMatchUserTimeoutNoti.
 
 ```
-Future<ResultMatchUserStart> future = user.matchUserStart(resultMatchUserStart -> {
-    if(resultMatchUserStart.isSuccess()){
-        // matchUserStart success
-    }
-}, roomType, payload);
-
-ResultMatchUserStart resultMatchUserStart = future.get(); // blocked
-if(resultMatchUserStart.isSuccess()){
-    // matchUserStart success
+Future<ResultMatchUserStart> future = user.matchUserStart(resultMatchUserStart -> { 
+    if(resultMatchUserStart.isSuccess()){ 
+        // matchUserStart success 
+    } 
+}, roomType, payload); 
+ 
+ResultMatchUserStart resultMatchUserStart = future.get(); // blocked 
+if(resultMatchUserStart.isSuccess()){ 
+    // matchUserStart success 
 }
 ```
 
 ### MatchUserCancel
 
-유저 매치메이킹 요청을 취소합니다. 매치 요청 중이 아닌 경우, 이미 매칭이 성공했거나 타임아웃이 발생했을 경우 실패할 수 있습니다.
+Cancel the user matchmaking request. If match is not requested, matching was successful, or a timeout occurred, it may fail.
 
 ```
-Future<ResultMatchUserCancel> future = user.matchUserCancel(resultMatchUserCancel -> {
-    if(resultMatchUserCancel.isSuccess()){
-        // matchUserCancel success
-    }
-}, roomType);
-
-ResultMatchUserCancel resultMatchUserCancel = future.get(); // blocked
-if(resultMatchUserCancel.isSuccess()){
-    // matchUserCancel success
+Future<ResultMatchUserCancel> future = user.matchUserCancel(resultMatchUserCancel -> { 
+    if(resultMatchUserCancel.isSuccess()){ 
+        // matchUserCancel success 
+    } 
+}, roomType); 
+ 
+ResultMatchUserCancel resultMatchUserCancel = future.get(); // blocked 
+if(resultMatchUserCancel.isSuccess()){ 
+    // matchUserCancel success 
 }
 ```
 
 ### WaitForMatchUserDoneNoti
 
-유저 매치메이킹 또는 파티 매치메이킹 완료 알림을 받을 때까지 기다립니다.  
+Wait until the user matchmaking or party matchmaking request complete notification is sent.  
 
 ```
-Future<ResultMatchUserDone> future = connection.waitForMatchUserDoneNoti();
-ResultMatchUserDone resultMatchUserDone = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultMatchUserDone> future = connection.waitForMatchUserDoneNoti(); 
+ResultMatchUserDone resultMatchUserDone = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultMatchUserDone 
 ```
 
 ### WaitForMatchUserTimeoutNoti
 
-유저 매치메이킹 또는 파티 매치메이킹에 대한 타임아웃 알림을 받을 때까지 기다립니다.  
+Wait until the user matchmaking or party matchmaking request timed out notification is sent.  
 
 ```
-Future<ResultMatchUserTimeout> future = connection.waitForMatchUserTimeoutNoti();
-ResultMatchUserTimeout resultMatchUserTimeout = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultMatchUserTimeout> future = connection.waitForMatchUserTimeoutNoti(); 
+ResultMatchUserTimeout resultMatchUserTimeout = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultMatchUserTimeout 
 ```
 
 ### MatchPartyStart
 
-파티 매치메이킹을 요청합니다. 파티 매치메이킹을 위한 방에 입장한 상태에서 요청할 수 있습니다. WaitForMatchUserDoneNoti를 통해 매치 성공 알림, WaitForMatchUserTimeoutNoti를 통해 매치 타임아웃 알림을 받을 수 있습니다.
+Request party matchmaking. It can be requested when the user joined a room for party matchmaking. Matching success notification can be received by WaitForMatchUserDoneNoti and the match timeout notification can be received by WaitForMatchUserTimeoutNoti.
 
 ```
-Future<ResultMatchPartyStart> future = user.matchPartyStart(resultMatchPartyStart -> {
-    if(resultMatchPartyStart.isSuccess()){
-        // matchPartyStart success
-    }
-}, roomType, payload);
-
-ResultMatchPartyStart resultMatchPartyStart = future.get(); // blocked
-if(resultMatchPartyStart.isSuccess()){
-    // matchPartyStart success
+Future<ResultMatchPartyStart> future = user.matchPartyStart(resultMatchPartyStart -> { 
+    if(resultMatchPartyStart.isSuccess()){ 
+        // matchPartyStart success 
+    } 
+}, roomType, payload); 
+ 
+ResultMatchPartyStart resultMatchPartyStart = future.get(); // blocked 
+if(resultMatchPartyStart.isSuccess()){ 
+    // matchPartyStart success 
 }
 ```
 
 ### WaitForMatchPartyStartNoti
 
-파티 매치메이킹 시작 알림을 받을 때까지 기다립니다. 파티 매치메이킹을 위한 방에서 다른 사람이 파티 매치메이킹을 시작했을 경우 전달됩니다.
+Wait until the user receives a party matchmaking start notification. It is passed when someone else started party matchmaking in a room for party matchmaking.
 
 ```
-Future<ResultMatchPartyStart> future = connection.waitForMatchPartyStartNoti();
-ResultMatchPartyStart resultMatchPartyStart = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultMatchPartyStart> future = connection.waitForMatchPartyStartNoti(); 
+ResultMatchPartyStart resultMatchPartyStart = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultMatchPartyStart 
 ```
 
 ### MatchPartyCancel
 
-파티 매치메이킹 요청을 취소합니다. 파티 매치메이킹 중이 아닌 경우, 이미 파티 매치메이킹에 성공했거나 타임아웃이 발생하면 실패할 수 있습니다.
+Cancel the party matchmaking request. If party matchmaking is not in progress, party matchmaking was successful, or a timeout occurred, it may fail.
 
 ```
-Future<ResultMatchPartyCancel> future = user.matchPartyCancel(resultMatchPartyCancel -> {
-    if(resultMatchPartyCancel.isSuccess()){
-        // matchPartyCancel success
-    }
-}, roomType);
-
-ResultMatchPartyCancel resultMatchPartyCancel = future.get(); // blocked
-if(resultMatchPartyCancel.isSuccess()){
-    // matchPartyCancel success
+Future<ResultMatchPartyCancel> future = user.matchPartyCancel(resultMatchPartyCancel -> { 
+    if(resultMatchPartyCancel.isSuccess()){ 
+        // matchPartyCancel success 
+    } 
+}, roomType); 
+ 
+ResultMatchPartyCancel resultMatchPartyCancel = future.get(); // blocked 
+if(resultMatchPartyCancel.isSuccess()){ 
+    // matchPartyCancel success 
 }
 ```
 
 ### WaitForMatchPartyCancelNoti
 
-파티 매치메이킹 취소 알림을 받을 때까지 기다립니다. 파티 매치메이킹 중 다른 사람이 파티 매치메이킹을 취소한 경우 전달됩니다.
+Wait until the party matchmaking cancel notification is sent. It is passed when someone else cancels party matchmaking while party matchmaking is in progress.
 
 ```
-Future<ResultMatchPartyCancel> future = connection.waitForMatchPartyCancelNoti();
-ResultMatchPartyCancel resultMatchPartyCancel = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultMatchPartyCancel> future = connection.waitForMatchPartyCancelNoti(); 
+ResultMatchPartyCancel resultMatchPartyCancel = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultMatchPartyCancel 
 ```
 
 ### MatchRoom
 
-방 매치메이킹을 요청합니다. 방이 없을 경우 임의의 방을 생성하고 해당 방에 입장할 수도 있습니다.
+Request the room matchmaking. If there is no room, the user may create an arbitrary room and join that room.
 
 ```
-Future<ResultMatchRoom> future = user.matchRoom(resultMatchRoom -> {
-    if(resultMatchRoom.isSuccess()){
-        // matchRoom success
-    }
-}, roomType);
-
-ResultMatchRoom resultMatchRoom = future.get(); // blocked
-if(resultMatchRoom.isSuccess()){
-    // matchRoom success
+Future<ResultMatchRoom> future = user.matchRoom(resultMatchRoom -> { 
+    if(resultMatchRoom.isSuccess()){ 
+        // matchRoom success 
+    } 
+}, roomType); 
+ 
+ResultMatchRoom resultMatchRoom = future.get(); // blocked 
+if(resultMatchRoom.isSuccess()){ 
+    // matchRoom success 
 }
 ```
 
 ### MoveChannel
 
-지정한 채널로 이동합니다.
+Move to the specified channel.
 
 ```
-Future<ResultMoveChannel> future = user.moveChannel(resultMoveChannel -> {
-    if(resultMoveChannel.isSuccess()){
-        // moveChannel success
-    }
-}, roomType);
-
-ResultMoveChannel resultMoveChannel = future.get(); // blocked
-if(resultMoveChannel.isSuccess()){
-    // moveChannel success
+Future<ResultMoveChannel> future = user.moveChannel(resultMoveChannel -> { 
+    if(resultMoveChannel.isSuccess()){ 
+        // moveChannel success 
+    } 
+}, roomType); 
+ 
+ResultMoveChannel resultMoveChannel = future.get(); // blocked 
+if(resultMoveChannel.isSuccess()){ 
+    // moveChannel success 
 }
 ```
 
 ### WaitForMoveChannelNoti
 
-체널 이동 알림을 받을 때까지 기다립니다. 방 입장, 매치매이킹 등의 이유로 체널을 이동하게 되면 전달됩니다.
+Wait until you receive a channel move notification. If you move the channel for reasons such as room entry, matchmaking, etc., it will be delivered.
 
 ```
-Future<ResultMoveChannelNoti> future = connection.waitForMoveChannelNoti();
-ResultMoveChannelNoti resultMoveChannelNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultMoveChannelNoti> future = connection.waitForMoveChannelNoti(); 
+ResultMoveChannelNoti resultMoveChannelNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultMoveChannelNoti 
 ```
 
 ### Request
 
-서버로 메시지를 보내고, 응답을 기다립니다.
+Send message to server and wait for response.
 
 ```
-Future<PacketResult> future = user.request(packetResult -> {
-    if(packetResult.isSuccess()){
-        // request success
-    }
-}, message);
-
-PacketResult packetResult = future.get(); // blocked
-if(packetResult.isSuccess()){
-    // request success
+Future<PacketResult> future = user.request(packetResult -> { 
+    if(packetResult.isSuccess()){ 
+        // request success 
+    } 
+}, message); 
+ 
+PacketResult packetResult = future.get(); // blocked 
+if(packetResult.isSuccess()){ 
+    // request success 
 }
 ```
 
 ### Send
 
-서버로 메시지를 보냅니다.
+Send message to server.
 
 ```
 user.send(message);
@@ -454,121 +454,121 @@ user.send(message);
 
 ### WaitForNotice
 
-공지 알림을 받을 때까지 기다립니다. 어드민에서 공지를 보내거나, REST API를 이용해 공지를 보낼 경우 전달됩니다.
+Wait until a notification is sent. It is passed when an admin sent a notification or a notification is sent by REST API.
 
 ```
-Future<ResultNotice> future = connection.waitForMoveChannelNoti();
-ResultNotice resultNotice = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
+Future<ResultNotice> future = connection.waitForMoveChannelNoti(); 
+ResultNotice resultNotice = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
 // resultNotice 
 ```
 
-## 테스트 코드 작성
+## Write test code
 
-### 기본 설정
+### Basic Settings
 
-JUnit을 이용해 테스트 코드를 작성할 때 다음과 같이 BeforeClass, AfterClass, After 코드를 작성합니다.
-
-```
-public class TestWithGameHammer {
-    static Tester tester;
-
-    @BeforeClass
-    public static void beforeClass() {
-        tester = Tester.newBuilder()
-                    .addProtoBufClass(0, RPSGame.getDescriptor())
-                    .build();
-    }
-
-    @Before
-    public void before() {
-    }
-
-    @After
-    public void after() {
-        tester.closeAllConnections();
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        tester.close();
-        tester = null;
-    }
-
-    @Test
-    public void connectTest() {
-        ResultConnect resultConnect = connect(connection);
-        assertEquals(ResultCodeConnect.CONNECT_SUCCESS, resultConnect.getResultCode());
-    }
-
-    @Test
-    public void someTest() {
-        // some test code
-    }
-```
-
-이렇게 작성하면 선행 테스트에서 사용한 유저가 남아 다음 테스트에 영향을 주는 것을 막을 수 있습니다. 
-
-### Request/Response 테스트
-
-GameHammer를 이용한 테스트 코드는 크게 2가지 유형으로 나눌 수 있습니다. 첫 번째는 Request/Response 형태의 테스트 코드입니다. 클라이언트에서 Request를 보낼 경우 서버에서는 반드시 Response를 보내야 합니다. 응답을 보내지 않으면 timeout이 발생합니다. GameAnvil 커넥터가 제공하는 API 대부분이 이런 Request/Response 방식이며 GameHammer에서도 이런 Request/Response 방식의 테스트를 지원합니다.
-
-예를 들면 Connection의 connect에 대한 테스트 코드는 다음과 같이 작성할 수 있습니다.
+Write the BeforeClass, AfterClass, and After codes as follows when writing test code using JUnit.
 
 ```
-@Test
-public void Connect() {
-    Connection connection = tester.createConnection(uuid);
+public class TestWithGameHammer { 
+    static Tester tester; 
+ 
+    @BeforeClass 
+    public static void beforeClass() { 
+        tester = Tester.newBuilder() 
+                    .addProtoBufClass(0, RPSGame.getDescriptor()) 
+                    .build(); 
+    } 
+ 
+    @Before 
+    public void before() { 
+    } 
+ 
+    @After 
+    public void after() { 
+        tester.closeAllConnections(); 
+    } 
+ 
+    @AfterClass 
+    public static void afterClass() { 
+        tester.close(); 
+        tester = null; 
+    } 
+ 
+    @Test 
+    public void connectTest() { 
+        ResultConnect resultConnect = connect(connection); 
+        assertEquals(ResultCodeConnect.CONNECT_SUCCESS, resultConnect.getResultCode()); 
+    } 
+ 
+    @Test 
+    public void someTest() { 
+        // some test code 
+    }
+```
 
-    Future<ResultConnect> future = connection.connect(new RemoteInfo("127.0.0.1", 11200));
-    ResultConnect resultConnect = futre.get(); // blocked
-    Assert.assertTrue("Connection fail", resultConnect.isSuccess());
+If it is written in this way, you can stop the users participated in a preceding test remain from affecting the following test. 
 
-    // more test code
+### Request/Response test
+
+Test codes using GameHammer can be categorized by 2 types. The former is a group of test codes in Request/Response type. If Request is sent by the client, Response must be sent. If response is not sent, a timeout occurs. Most of the APIs provided by the GameAnvil connector use the Request/Response method and GameHammer supports tests in this Request/Response type.
+
+For example, the test code for the connect of Connection can be written as below:
+
+```
+@Test 
+public void Connect() { 
+    Connection connection = tester.createConnection(uuid); 
+ 
+    Future<ResultConnect> future = connection.connect(new RemoteInfo("127.0.0.1", 11200)); 
+    ResultConnect resultConnect = futre.get(); // blocked 
+    Assert.assertTrue("Connection fail", resultConnect.isSuccess()); 
+ 
+    // more test code 
 }
 ```
 
-`connection.connect()`를 호출해 서버에 접속합니다. 이때 반환받은 `Future`의 `get()`을 호출하면 `connection.connect()`가 완료될 때까지 대기하고,  완료되면 그 결과인 `ResultConnect`를 리턴합니다.  여기서 리턴받은 `ResultConnect`이용해 성공 여부를 판단할 수 있습니다. 
+Call `connection.connect()` to connect to the server. If you call `get()` of `Future` returned at this time, wait until `connection.connect()` is complete, and return the resulting `ResultConnect`. You can use the returned `ResultConnect` to determine whether or not it is a success or failure. 
 
-또 다른 예로 게임에서 사용하는 메시지에 대한 Request/Response 방식 테스트 코드는 다음과 같이 작성할 수 있습니다. 
+For another example, the test code for messages using the Request/Response method can be written as below: 
 
 ```
-@Test
-public void RequestTest() {
-    Connection connection = tester.createConnection(uuid);
-    // assume aleady connected.
-
-    Messages.Request request = Messages.Request.newBuilder().build();
-    Future<PacketResult> future = connection.request(request);
-    PacketResult packetResult = future.get(); // blocked
-    Assert.assertTrue("Response fail", packetResult.isSuccess());
-    Messages.Response response = Messages.Response.parseFrom(packetResult.getStream());
-
-    // more test code
+@Test 
+public void RequestTest() { 
+    Connection connection = tester.createConnection(uuid); 
+    // assume aleady connected. 
+ 
+    Messages.Request request = Messages.Request.newBuilder().build(); 
+    Future<PacketResult> future = connection.request(request); 
+    PacketResult packetResult = future.get(); // blocked 
+    Assert.assertTrue("Response fail", packetResult.isSuccess()); 
+    Messages.Response response = Messages.Response.parseFrom(packetResult.getStream()); 
+ 
+    // more test code 
 }
 ```
 
-먼저 메시지를 만들고, 이것을 `connection.request()`의 인자로 넣어 서버로 전송합니다. 이때 리턴받은 `Future`의 `get()`를 호출하면 서버에서 응답을 하거나 타임아웃이 발생할 때까지 대기하고, 응답을 받거나 타임아웃이 발생하면 `PacketResult`를 리턴합니다. 여기서 리턴받은 `PacketResult`를 이용해 성공 여부를 판단할 수 있습니다. 성공하면 `PacketResult.getStream()`을 이용해 메시지를 파싱하여 내용을 확인할 수 있습니다. 
+First, create a message and send it to the server as a factor in `connection.request()`. When `get()` of `Future` is called, the server responds or waits for a timeout to occur and returns `PacketResult` when a timeout occurs. The `PacketResult` returned here can be used to determine success or failure. If successful, you can parse the message using `PacketResult.getStream()`. 
 
-Connnection, User의 API 중 Future를 리턴하는 API들은 모두 이런 방식을 사용해 테스트할 수 있습니다.
+The APIs of Connection and User that return Future can be tested by using this method.
 
 ### Send/Receive
 
-클라이언트는 Send를 보내고 응답을 기다리지 않습니다. 그리고 서버에서도 클라이언트의 동작과 상관없이 Send를 보낼 수 있습니다. 테스트는 다음과 같이 작성할 수 있습니다.
+The client sends Send, but it does not wait for response. The server may send Send regardless of the client's actions as well. The test can be written as below:
 
 ```
-@Test
-public void RequestTest() {
-    Connection connection = tester.createConnection(uuid);
-    // assume aleady connected.
-
-    Messages.SendToServer sendToServer = Messages.SendToServer.newBuilder().build();
-    connection.send(sendToServer);
-
-    Future<PacketResult> future = connection.waitFor(Messages.SendToClient.getDescription());
-    PacketResult packetResult = future.get(3000, TimeUnit.MILLISECONDS); // blocked
-    Assert.assertTrue("receive fail", packetResult.isSuccess());
-    Messages.SendToClient sendToClient = Messages.SendToClient.parseFrom(packetResult.getStream());
-
-    // more test code
+@Test 
+public void RequestTest() { 
+    Connection connection = tester.createConnection(uuid); 
+    // assume aleady connected. 
+ 
+    Messages.SendToServer sendToServer = Messages.SendToServer.newBuilder().build(); 
+    connection.send(sendToServer); 
+ 
+    Future<PacketResult> future = connection.waitFor(Messages.SendToClient.getDescription()); 
+    PacketResult packetResult = future.get(3000, TimeUnit.MILLISECONDS); // blocked 
+    Assert.assertTrue("receive fail", packetResult.isSuccess()); 
+    Messages.SendToClient sendToClient = Messages.SendToClient.parseFrom(packetResult.getStream()); 
+ 
+    // more test code 
 }
 ```

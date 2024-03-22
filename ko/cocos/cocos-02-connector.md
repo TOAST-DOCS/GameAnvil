@@ -6,7 +6,7 @@ GameAnvil 커넥터를 사용하려면 먼저 Connector를 생성해야 합니�
 
 ### 생성
 
-다음과 같이 Connecor를 생성할 수 있습니다.
+다음과 같이 Connector를 생성할 수 있습니다.
 
 ``` typescript
 import { Connector } from 'GameAnvil/gameanvil';
@@ -15,7 +15,7 @@ let connector = Connector.Create();
 
 ### 설정
 
-Connector가 동작에 사용되는 설정이 있습니다. 이 설정들은 Connector 생성시 기본값으로 설정되지만 필요하다면 다음과 같이 직접 값을 바꿀 수 있습니다. 
+Connector가 동작에 사용되는 설정이 있습니다. 이 설정들은 Connector 생성 시 기본값으로 설정되지만 필요하다면 다음과 같이 직접 값을 바꿀 수 있습니다. 
 
 ``` typescript
 import { Connector } from 'GameAnvil/gameanvil';
@@ -27,9 +27,9 @@ connector.config.PacketTimeout = 10;
 
 | 이름                 | 설명                                                         | 기본값 |
 | -------------------- | ------------------------------------------------------------ | ------ |
-| defaultReqestTimeout | TimeOut 기본 대기시간 설정                                   | 3(sec) |
-| packetTimeout        | 패킷이 지정된 시간안에 업데이트 되지 않으면, disconnect 되었다고 판단된다. pingInterval 보다 높게 설정되야 한다. | 5(sec) |
-| pingInterval         | 서버와의 연결을 확인하기 위한 ping 주기 설정. 0일경우 사용안함 | 3(sec) |
+| defaultReqestTimeout | TimeOut 기본 대기 시간 설정                                   | 3(sec) |
+| packetTimeout        | 패킷이 지정된 시간 안에 업데이트되지 않으면 연결이 해제되었다고 판단된다. pingInterval보다 높게 설정되어야 한다. | 5(sec) |
+| pingInterval         | 서버와의 연결을 확인하기 위한 ping 주기 설정. 0일 경우 사용 안 함 | 3(sec) |
 
 ### Update
 

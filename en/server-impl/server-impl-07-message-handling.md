@@ -2,12 +2,12 @@
 
 ![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/three_steps_for_message_process_1213.png)
 
-## 1. 일반 메시지 처리
+## 일반 메시지 처리
 
 * GameAnvil의 메시지 처리는 위의 그림과 같이 크게 세 부분으로 나뉩니다. 이 세 부분이 서로 맞물려 메시지 처리 흐름을 만들게 됩니다.
 * 이 중 onDispatch 콜백 구현은 엔진에서 자체적으로 하고 있으며 엔진 사용자는 Dispatcher의 선언과 메시지 핸들러를 구현하여 패킷을 처리합니다.
 
-### 1.1. 패킷 디스패처 생성 및 메시지와 핸들러 연결
+### 패킷 디스패처 생성 및 메시지와 핸들러 연결
 
 우선 메시지 처리를 하기 위한 패킷 디스패처를 생성합니다. 이 디스패처는 해당 클래스에 대해 사용되므로 불필요한 리소스 낭비를 막기 위해 반드시 static으로 생성합니다.
 
@@ -26,7 +26,7 @@ static {
 ```
 
 
-### 1.2. 메시지 핸들러 구현
+### 메시지 핸들러 구현
 
 이제 해당 메시지 핸들러를 직접 구현합니다. 이때, GameAnvil은 엔진 내부는 물론이고 모든 샘플 코드에서 메시지 핸들러에 대해 _로 시작하는 네이밍을 사용합니다. 앞으로 등장하는 모든 예제 코드에서도 _로 시작하는 클래스는 모두 메시지 핸들러입니다.  가장 기본적인 형태의 메시지 핸들러는 아래와 같습니다. RECEIVER_CLASS는 해당 메시지를 받는 클래스를 의미합니다.
 
@@ -57,9 +57,9 @@ public class _MyGameMsg implements MessageHandler<GameUser, MyProto.MyMsg> {
 ```
 
 
-### 1.3. getMessageDispatcher 콜백 구현
+### getMessageDispatcher 콜백 구현
 
-패킷 디스패처와 메시지 핸들러를 모두 구현하였습니다. 남은건 이제 엔진에서 처리할 패킷이 있을 때 디스패처를 넘겨주기면 하면 됩니다. 간단하게 구현할 수 있습니다.
+패킷 디스패처와 메시지 핸들러를 모두 구현하였습니다. 이제 엔진에서 처리할 패킷이 있을 때 디스패처를 넘겨 주기만 하면 됩니다.
 
 ```java
 public class GameUser {
@@ -76,13 +76,13 @@ public class GameUser {
 
 
 
-## 2. RESTful 요청 처리
+## RESTful 요청 처리
 
 패킷 디스패처는 두 가지가 존재합니다. 하나는 앞서 살펴본 일반적인 패킷 디스패처이고 다른 하나는 RESTful 요청을 처리하기 위한 디스패처입니다. 전체적인 사용법은 두 가지가 거의 동일합니다.  단, 이러한 RESTful 메시지 처리는 오직 SupportNode만 지원합니다. 
 
 
 
-### 2.1. REST 패킷 디스패처 생성 및 메시지와 핸들러 연결
+### REST 패킷 디스패처 생성 및 메시지와 핸들러 연결
 
 다음의 예제 코드는 RESTful 요청을 처리하기 위해 이전과 다른 RestPacketDispatcher를 생성하고 있습니다. 또한 메시지 클래스가 아닌 URL 형태의 API를 핸들러에 연결하고 있습니다.
 
@@ -102,7 +102,7 @@ static {
 
 
 
-### 2.2 핸들러 구현
+### 핸들러 구현
 
 RESTful 메시지 핸들러는 Packet 대신 RestObject가 인자로 전달되는 차이점 외에는 동일한 모습입니다. 
 
@@ -119,9 +119,9 @@ public class _RestAuthReq implements RestMessageHandler<WebSupportNode> {
 
 
 
-### 2.3. RestMessageDispatcher 구현
+### RestMessageDispatcher 구현
 
-RESTful 메시지 처리를 위한 getRestMessageDispatcher는 SupportNode만 지원합니다. restMessageDispatcher 를 넘기도록 간단하게 구현할 수 있습니다.
+RESTful 메시지 처리를 위한 getRestMessageDispatcher는 SupportNode만 지원합니다. restMessageDispatcher를 넘기도록 간단하게 구현할 수 있습니다.
 ```java
 @Override
 public final RestMessageDispatcher<WebSupportNode> getRestMessageDispatcher() {

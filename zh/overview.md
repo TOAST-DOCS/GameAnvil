@@ -1,98 +1,98 @@
-## Game > GameAnvil > 개요
+## Game > GameAnvil > Overview
 
-GameAvnil은 Java 기반의 고성능 실시간 게임 서버 엔진입니다. 게임 서버의 개발 시간을 단축하고 성능과 안정성을 높이는 것을 지향합니다. GameAnvil을 이용하여 풍부한 Java 생태계의 혜택을 누리면서 쉽고 빠르게 실시간 게임 서버를 개발해 보세요. 초보 개발자도 쉽게 익혀서 바로 실시간 게임 서버를 개발하면서 Unity 혹은 CocosCreator 등으로 개발 중인 클라이언트를 바로 연동할 수 있습니다.  또한 GameAnvil 시스템은 게임 서버의 개발뿐만 아니라 기능/성능 테스트는 물론이고 클라우드 상에서의 운영과 모니터링까지 책임질 수 있는 전반적인 도구를 함께 제공합니다.
+GameAnvil is a high-performing, real-time game server engine based on Java. It aims to shorten the development time of game servers and increase their performance and reliability. With GameAnvil, you can quickly and easily develop real-time game servers while benefiting from the rich Java ecosystem. Even novice developers can easily pick up and start developing real-time game servers and link them with clients developed in Unity or CocosCreator. The GameAnvil system also comes with a full suite of tools to help you not only develop game servers, but also to test their functionality and performance, as well as operate and monitor them in the cloud.
 
-## 공식 레퍼런스 게임
+## Major References
 
-GameAnvil을 이용하여 개발하고 서비스 중인 대표적인 게임들은 아래와 같습니다.
+Major games developed and serviced using GameAnvil are as follows.
 
 ![gameanvil-references.png](https://static.toastoven.net/prod_gameanvil/images/gameanvil-references.png)
-## 특징
-GameAnvil의 궁극적인 목표는 경험이 많지 않는 개발자도 쉽게 실시간 컨텐츠를 개발하여 서비스할 수 있도록 지원하는 것입니다. 이런 측면에서 코드 생산성과 사용 편의성을 높이고, 가능한 사용자로 하여금 기술적 진입 장벽을 낮추고자 합니다. 또한 클라우드 상품의 장점을 극대화하여 더욱 쉽게 서비스를 운영할 수 있도록 지원하고자 합니다.
+## Characteristics
+GameAnvil's ultimate goal is to help even less experienced developers easily develop and service real-time content. In this respect, we want to improve code productivity and ease of use, and ease technical entry barriers for possible users. We also aim to maximize the advantages of cloud products for easy service operation.
 
 ![gameanvil-references.png](https://static.toastoven.net/prod_gameanvil/images/overview-features.png)
 
-## 추천 사용 대상 게임
+## Recommended Games for Use
 
-현재 GameAnvil은 아래와 같은 종류의 게임들에 거의 완벽하게 대응합니다.
+Currently GameAnvil is pretty much perfect for the following kinds of games.
 
-* 캐주얼 게임
-* 턴제 게임
-* 보드 게임
-* 실시간 컨텐츠 혹은 DB 저장소 등이 필요한 인디 게임
-* 그 외, 실시간 컨텐츠를 쉽게 작성하여 서비스하고 싶은 여러 가지 게임
+* Casual game
+* Turn-based strategy game
+* Board game
+* Indie games that require real-time content or DB storage
+* Other games that you want to easily create and service real-time content
 
 
-## 손쉬운 유니티 개발 환경의 통합
+## Integration of Easy Unity Development Environments
 
-GameAnvil 서버와 쉽게 연동 가능한  **게임엔빌 커넥터** 유니티 패키지를 제공합니다. 해당 패키지를 통해 기존 유니티 개발 환경을 바로 GameAnvil 서버와 연동할 수 있습니다.
+Provides a **GameAnvil Connector** Unity package that can easily link with GameAnvil servers. This package allows you to link directly with GameAnvil servers in your existing Unity development environment.
 
-#### 빠른 연결 및 인증
-* 서버에 대한 연결 및 인증을 전용 API를 통해 쉽고 빠르게 처리할 수 있습니다.
+#### Fast connectivity and authentication
+* Connecting and authenticating to servers can be handled quickly and easily through a dedicated API.
 
-#### 풍부한 멀티 플레이 API
-* 방 생성, 방 입장, 매치메이킹 등 멀티 플레이 게임을 구현함에 있어 필요한 모든 기능이 API로 제공됩니다.
+#### Rich multiplayer API
+* All the features necessary to implement multi-play games such as room creation, room entry, and matchmaking are available as an API.
 
-#### 동기화 컴포넌트 지원
-* 컴포넌트를 등록하는 것 만으로도 별도의 서버 구현 없이 유저 간 동기화가 가능합니다.
-* 좌표 동기화, 강체 동기화, 에니메이터 동기화 외에 사용자가 정의한 값 동기화를 지원합니다.
+#### Synchronization component support
+* Just by registering components, synchronization between users is possible without a separate server implementation.
+* Supports user-defined value synchronization in addition to coordinate synchronization, forced synchronization, and enumerator synchronization.
 
-## 추천 사용 대상 개발자
+## Recommended Target Developers
 
 ![overview-target-developer.png](https://static.toastoven.net/prod_gameanvil/images/overview-target-developer.png)
 
 
-#### 1. **Java**를 다룰 줄 아는 개발자
+#### 1. developers who know **Java**
 
-* Java를 다룰 줄 아는 개발자에게는 최상의 선택입니다. 엔진이 제공하는 처리 흐름 위에서 컨텐츠에만 집중할 수 있습니다.
-* DB나 Redis 그리고 HTTP 등 게임 서버 개발에 필요한 모든 API를 GameAnvil이 제공합니다.
+* It's the best choice for developers who can handle Java. You can focus solely on your content on the processing flow that the engine provides.
+* GameAnvil provides all APIs necessary for game server development, such as DB, Redis, and HTTP.
 
-#### 2. **C++, C#** 등 다른 언어로 게임 서버를 개발해본 개발자
+#### 2. Developers who have developed game servers in other languages, such as **C++, C#**
 
-* 다른 언어로 게임 서버를 개발해본 개발자는 Java의 기본적인 문법만 익히면 바로 컨텐츠 개발을 시작할 수 있습니다.
-* Java와 다른 언어 사이에서 오는 차이점 외에는 문제될 것이 없습니다. Java를 익히면서 컨텐츠 개발을 진행해보세요. GameAnvil 개발진도 C++에서 Java로 큰 어려움 없이 전환하였습니다.
+* Developers who have developed game servers in other languages can start developing content as soon as they learn the basic grammar of Java.
+* There are no problems other than the differences between Java and other languages. Try to develop content while learning Java. GameAnvil developers also switched from C++ to Java without much difficulty.
 
-#### 3. **게임 서버를 개발해본 적 없는 주니어 혹은 신입 개발자**
+#### 3. **Junior or new developer who has never developed a game server**
 
-* 게임 서버를 개발해본 적이 없어도 괜찮습니다. 저희가 제공하는 가이드 문서와 레퍼런스를 바탕으로 충분히 쉽고 편하게 실시간 컨텐츠를 개발할 수 있습니다.
-* 실제 게임 서버에서 처리해야할 대부분의 기능은 엔진에서 알아서 처리해주고 있습니다. 그저 컨텐츠와 재미에만 집중하세요.
+* Even if you've never developed a game server, you can easily and comfortably develop real-time content based on the guide documents and references provided.
+* The engine takes care of most of the features that the real game server needs to handle, so you can only focus on the content.
 
 
-## 라이센스
+## - License:
 
-GameAnvil은 고유한 [소프트웨어 라이센스](https://gameplatform.toast.com/kr/services/gameanvil/license)에 의해 보호되고 있습니다. 해당 소프트웨어 라이센스에 동의할 경우에만 GameAnvil의 사용이 허가됩니다.
+GameAnvil is protected by a unique [Software License](https://gameplatform.toast.com/kr/services/gameanvil/license). GameAnvil is only available if you agree to the corresponding software license.
 
-## 아직 지원하지 않는 게임
+## Games Not Yet Supported
 
-GameAnvil은 아직 진화 단계에 있습니다. 그렇다보니 아직 다음과 같은 스타일의 게임은 지원하지 않습니다. 하지만 빠른 시일 내에 지원할 수 있도록 모든 개발진이 지금도 최선을 다하고 있습니다.
+GameAnvil is still in the evolving phase, so we don't support the following styles of games yet, but all our developers are doing our best to support them as soon as possible.
 
-* MMO(RPG) 게임
-* FPS 혹은 AOS 등의 P2P 기반 게임
+* MMO(RPG) game
+* P2P-based games such as FPS or AOS
 
-## 참고 서버 구성
+## Server Configuration
 
-| 게임 스타일 | 최대 동시 접속자 수 | 실시간 컨텐츠 유무 | 매치메이킹 사용 | ** 최소 VM 대수 | 대략적인 구성                               |
+| Game style | Maximum number of concurrent users | Whether Real-time Content Present or not | Use Matchmaking | \** Minimum VM Count | Rough configuration                                |
 | ----------- | ------------------- | ------------------ | --------------- | --------------- | ------------------------------------------- |
-| 캐주얼      | 10000               | O                  | O               | 5               | Gateway x 2, Game x 2, 그 외 x 1            |
-| 캐주얼      | 10000               | X                  | X               | 3               | Gateway x 1, Game x 1, 그 외 x 1            |
-| 인디        | 3000                | O                  | X               | 1               | All in One x 1                              |
-| 턴제 게임   | 200000              | O                  | O               | 49              | Gateway x 20, Game x 25, Loc x 3, 그 외 x 1 |
+| Casual      | 10000               | O                  | O               | 5               | Gateway x 2, Game x 2, and other x 1            |
+| Casual      | 10000               | X                  | X               | 3               | Gateway x 1, Game x 1, and other x 1            |
+| Indi        | 3000                | O                  | X               | 1               | All in One x 1                              |
+| Turn-based strategy game   | 200000              | O                  | O               | 49              | Gateway x 20, Game x 25, Loc x 3, and other x 1 |
 
-** 어디까지나 대략적인 수치입니다. 실제 컨텐츠의 볼륨이나 게임 스타일에 따라 달라질 수 있습니다.
+** At any case, it's a rough estimate, depending on the volume of the actual content or the style of the game.
 
-** VM의 스펙에 따라서도 대수가 달라질 수 있습니다. 
+** Depending on the specifications of the VM, the number may also vary. 
 
-** DB나 Redis 등의 저장소는 대수에서 제외됩니다.
+** Storage such as DB or Redis is excluded from the count.
 
-## 참고 영상
+## Reference videos
 
-* NDC 2021 [Java로 실시간 겜서버 엔진 개발 가능? ㅇㅇ 가능](https://youtu.be/kQyu5pAChcA)
-* NHN Cloud On 2022 웨비나 [On.5 온라인 게임 개발도 쉽고 빠르게](https://cloudon.nhn.com/webinar_past?idx=6)
+* Can NDC 2021 [ Java develop real-time game server engine? Yes, it is possible ](https://youtu.be/kQyu5pAChcA)
+* NHN Cloud On 2022 Webinar [On.5 Online game development is easy and fast ](https://cloudon.nhn.com/webinar_past?idx=6)
 
-## 개인정보 처리에 대한 안내
+## Information on Processing of Personal Information
 
-GameAnvil 서비스를 이용하는 과정에서 고객은 이용자의 개인정보를 수집/이용할 수 있으며, 이 경우 고객은 개인정보보호법 등 관련 법령을 준수할 의무가 있습니다.
-또한, 이 과정에서 고객과 NHN Cloud 간 개인정보 처리에 관한 업무 위수탁 관계가 발생할 수 있습니다. 위탁자의 지위에 있는 고객은 수탁사인 NHN Cloud와 별도 서면에 의한 위탁 계약을 체결할 수 있으며 고객이 운영하는 개인정보처리방침에 아래 내용을 참고하여 고지할 수 있습니다.
+In the process of using GameAnvil service, customer can collect/use the user's personal information, and in this case, the customer is obligated to comply with relevant laws and regulations such as the Personal Information Protection Act.
+In addition, in this process, there may be a consignment relationship between the customer and NHN Cloud regarding the processing of personal information. Customers in the position of a consignor may enter into a separate contract in writing with NHN Cloud, the consignee company, and may be notified by referring to the following information in the personal information processing policy operated by the customer.
 
-* 수탁업체: 엔에이치엔클라우드(주)
-* 위탁 업무의 내용: GameAnvil 서비스 제공
+* Consignee: NHN Cloud Corp.
+* Consignment work: Provision of GameAnvil service

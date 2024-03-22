@@ -1,60 +1,59 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 시작하기
+## Game > GameAnvil > Console User guide > Getting Started
 
-## 1. 시작하기에 앞서
+## Before Starting
 
-게임 서버 운영의 시작은 개발이 완료된 서버 바이너리를 원하는 규모의 물리 장비로 배포하고 원하는 논리 구성으로 구동하는 것입니다. 그와 더불어 모니터링과 바이너리 관리 그리고 패치 지원 등이 필요합니다. GameAnvil 콘솔은 이러한 요구 사항을 모두 충족합니다. 이 문서는 여러분이 GameAnvil을 이용하여 구현한 게임 서버를 콘솔 상에서 배포하고 운영하는 방법을 설명합니다.
+Game server operations begin by deploying developed server binary to physical devices of the desired size and running them to the desired logical configuration. They also require monitoring, binary management, patch support and etc. GameAnvil console meets all of these requirements. This document describes how to deploy and operate game servers implemented using GameAnvil on the console.
 
 
-## 2. 용어 정리
+## Glossary
 
-이 문서에서는 다음의 용어들을 자주 사용합니다. 대부분의 용어는 그 의미가 일반적인 뜻과 크게 차이가 없으나 "게임 서버"와 같은 일부 용어는 GameAnvil에서 특수하게 의미를 정의해 두었으므로 가능하면 이런 용어들을 모두 숙지한 후에 나머지 문서를 읽으시길 추천 드립니다.
+The following terms are frequently used in this document. Although most terms do not differ from the general meaning, some terms, such as "game server" are used in GameAnvil's special definition, so it is recommended that you familiarize yourself with the terms before using the document.
 
-| 용어      | 의미                                                                                                                                                                                      |
+| Term      | Description                                                                                                                                                                                      |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 서버 바이너리 | 서버 인스턴스 상에서 서버 프로세스로 실행 가능한 jar 파일. 해당 바이너리는 사용자가 구현한 모든 노드의 코드를 포함하고 있습니다.                                                                                                             |
-| 서버 프로세스 | 게임 서버를 구동 중인 프로세스. 즉, 서버 바이너리를 실행한 상태.                                                                                                                                                  |
-| 서버 인스턴스 | 게임 서버를 구동 하기 위한 NHN Cloud 인스턴스(VM)                                                                                                                                                      |
-| 게임 서버   | 서버 바이너리가 배포된 서버 인스턴스 혹은 이미 프로세스로 구동된 상태의 서버 인스턴스 전반을 아우르는 추상적인 용어. 즉, 게임 서비스가 가능한 물리 장비 + 바이너리 조합. GameAnvil은 서버 인스턴스와 서버 프로세스를 하나의 개념으로 관리합니다. 문서나 콘솔의 메뉴 등에서는 이를 줄여서 그냥 서버라고 하기도 합니다. |
-| 서버      | 게임 서버와 동일한 의미                                                                                                                                                                           |
-| 노드      | 하나의 서버 프로세스를 구성하는 기능 단위. 하나의 서버 프로세스는 1개 이상의 노드로 구성 가능 (자세한 사항은 서버 개발 가이드 참고)                                                                                                           |
-| 콘솔      | NHN Cloud에서 GameAnvil 서비스를 활성화하면 접근 가능한 GameAnvil Console을 줄여서 콘솔이라고 칭합니다.                                                                                                              |
-| 배포      | 서버 바이너리를 서버 인스턴스로 업로드하는 과정                                                                                                                                                              |
-| 배포 파일   | 서버 인스턴스로 업로드된/업로드할 서버 바이너리                                                                                                                                                              |
-| 구성      | 서버를 원하는 형태로 구성(Config)하는 것을 의미. 서버 설정도 동일한 의미를 가집니다.                                                                                                                                    |
+| Server binary | A .jar file that can be run as a server process on a server instance. The corresponding binary contains the code for all nodes that you implement.                                                                                                             |
+| Server process | The process of running the game server, i.e. running the server binary.                                                                                                                                                  |
+| Server instance | NHN Cloud Instance (VM) for running game servers                                                                                                                                                      |
+| Game server   | It is an abstract term that encompasses the server instance on which the server binary is deployed or the entire server instance that is already process-run. In other words, a combination of physical equipment + binary for game services. GameAnvil manages server instances and server processes as a single concept. It is abbreviated to be called as "server" in documents and console menus. |
+| Server      | It has the same meaning as game server                                                                                                                                                                           |
+| Node      | Functional units that make up a single server process. One server process can consist of one or more nodes (see Server Development Guide for details)                                                                                                           |
+| Console      | When you enable the GameAnvil service on NHN Cloud, the accessible GameAnvil Console is abbreviated to be called as console.                                                                                                              |
+| Deployment      | The process of uploading a server binary to a server instance                                                                                                                                                              |
+| Deployment file   | Server binary uploaded/to-upload to the server instance                                                                                                                                                              |
+| Configuration      | It means configuring the server in the desired form. Server settings have the same meaning.                                                                                                                                    |
 
 
-## 3. GameAnvil 서비스 활성화
+## Enable GameAnvil
 
-GameAnvil을 사용하기 위해서는 NHN Cloud에서 GameAnvil 서비스를 활성화해야 합니다. 아래의 이미지에서 빨간색 박스로 표시한 "서비스 추가"를 통해 진행할 수 있습니다.
+GameAnvil requires GameAnvil service to be enabled on NHN Cloud Console. Click **Select Service** or **Add Service**.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-1.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-1.png)
 
-해당 버튼을 클릭하면 아래와 같은 서비스 선택 화면이 나타납니다. 이 중에서 빨간색 박스로 표시된 GameAnvil을 선택합니다.
+Select **GameAnvil** from **Game** category.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-2.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-2.png)
 
-최초로 상품 활성화를 진행 중이라면 아래와 같은 결제 수단 등록 팝업창이 나타납니다.
+If you proceed with the service activation for the first time, the following payment method registration pop-up screen will appear.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-3-1.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-3-1.png)
 
-팝업창의 내용을 따라 결제 수단 등록을 완료하면 다음과 같이 조직 생성 및 선택 화면을 통해 활성화가 계속 진행됩니다.
+When you register your payment method by following the instructions on the screen, you will see the Create or Select Organization screen as follows. After setting up the organization, click confirmation to complete the service activation.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/org-and-project.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/org-and-project.png)
 
-원하는 이름으로 조직을 생성하고 나면 사용자는 자신만의 고유한 콘솔 접근 권한을 가지게 됩니다. 바로 이 콘솔이 운영 단계에서 필요한 모든 기능을 제공합니다. 이 문서의 나머지 부분은 이 콘솔의 기능과 사용법을 중심으로 내용을 풀어 나가도록 하겠습니다.
+Once the service is activated and the organization is created, users have unique console access rights. Users can access the console and set up and manage all the features you need during operational phase.
 
-## 4. GameAnvil 상품 선택
+## Select GameAnvil product 
 
-자, 이제 GameAnvil의 콘솔 사용에 앞서 상품 선택을 진행해야 합니다. 서비스를 활성화하면 아래와 같이 상품 선택 페이지가 시작됩니다.
+When the service is activated, GameAnvil product selection screen will be displayed. You have to select the product before using GameAnvil console.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activated-1-1.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activated-1-1.png)
 
-GameAnvil은 현재 두 가지의 상품을 제공합니다. 각 상품은 게임 서버의 시스템 노드 규모와 기술 지원 범위가 다릅니다. Standard 상품은 중소규모 게임에 있어서 가장 적당한 상품으로 이중화된 시스템 노드와 풍부한 기술 지원이 제공됩니다. Premium 상품은 대규모 게임을 위해 최적화된 시스템 노드와 좀 더 넓은 범위의 기술 지원을 제공하는 상품입니다. 서비스할 게임의 특성과 규모에 맞춰 상품을 선택하세요.
+GameAnvil offers two kinds of products that differ in the size of the game server's system nodes and the range of technical support. System nodes are resources used to manage instances, nodes, and user information internally in GameAnvil and are not exposed to users.
+Standard products are suitable for small · medium-sized games, offering dual system nodes and a wealth of technical support. Premium product offers system nodes optimized for large-scale gaming and a wider range of technical support. Choose a product that fits the characteristics and scale of the game you want to service.
 
-자, 여기까지 진행했다면 콘솔을 사용할 모든 준비가 완료되었습니다. 참고로 시스템 노드는 사용자에게 노출되지 않으며 GameAnvil 내부적으로 인스턴스와 노드 그리고 유저 정보 등을 관리하는데 사용되는 자원입니다.
+## Check GameAnvil service dashboard
 
-## 5. Welcome to GameAnvil Console
+Once you have completed the above process, you are ready to use GameAnvil service. You can view GameAnvil dashboard on the console.
 
-여기까지 모든 과정을 완료하면 콘솔 대시보드를 볼 수 있습니다. 축하합니다. 이제 GameAnvil 서비스를 사용할 모든 준비가 완료되었습니다.
-
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/console-dashboard.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/console-dashboard.png)

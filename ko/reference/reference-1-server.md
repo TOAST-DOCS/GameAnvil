@@ -1,27 +1,27 @@
 ## Game > GameAnvil > 레퍼런스 프로젝트 > 서버 샘플
 
-# 1. GameAnvil API JavaDoc
+# GameAnvil API JavaDoc
 
 [GameAnvil Server API - Java doc](https://gameplatform.toast.com/docs/api/)
 
 
 
-# 2. 서버 다운로드
+# 서버 다운로드
 
 [Sample Game Server](https://github.com/nhn/gameanvil.sample-game-server.git)
 
 
 
-# 3. 구성 환경
+# 구성 환경
 
-* IDE : Intellij 2022.3.3
+* IDE: Intellij 2022.3.3
 
 * JDK: openjdk version "11.0.16.1" 2022-08-12 LTS
 
 * **GameAnvil 1.4.1**
 
 * DB
-  * Jasync-sql 1.2.3 : 기본 사용
+  * Jasync-sql 1.2.3: 기본 사용
     * MyBatis 3.5.3
   * 각자의 환경에 맞게 IP 주소를 설정
   * MySQL 8.0.23
@@ -32,71 +32,71 @@
   
   
 
-# 4. 서버 구동하기
+# 서버 구동
 
 ## IntelliJ 사용 환경
 
 Git 저장소에서 clone한 프로젝트를 IntelliJ로 실행합니다.
 
-기본 설정은 Gradle 설정 Dependencies에 **com.nhn.gameanvil:gameanvil:1.4.1-jdk11** 로 JDK11 버전이 사용되고 있습니다.
+기본 설정은 Gradle 설정 Dependencies에 **com.nhn.gameanvil:gameanvil:1.4.1-jdk11**로 JDK11 버전이 사용되고 있습니다.
 
 resources/GameAnvilConfig.json 파일에 IP가 127.0.0.1로 되어 있습니다.
 
 
 
-### 실행환경 설정
+### 실행 환경 설정
 
-샘플 서버는 기본 JDK11로 설정이 되어 있기 때문에 IntelliJ가 다른 버전으로 설정이 되어 있다면 설정을 JDK11로 맞추어야 빌드시에 에러가 발생 하지않습니다.
+샘플 서버는 기본 JDK11로 설정되어 있기 때문에 IntelliJ가 다른 버전으로 설정되어 있는 경우 설정을 JDK11로 맞추어야 빌드 시 오류가 발생하지 않습니다.
 
-만약 IntelliJ 에서 GameAnvil 라이브러리와 JDK의 버전이 맞지않고 실행을 하면 다음과같은 에러가 발생합니다.
+만약 IntelliJ에서 GameAnvil 라이브러리와 JDK의 버전을 맞추지 않고 실행하면 다음과 같은 오류가 발생합니다.
 
 ```java
 Exception in thread "main" java.lang.UnsupportedClassVersionError: co/paralleluniverse/fibers/SuspendExecution has been compiled by a more recent version of the Java Runtime (class file version 54.0), this version of the Java Runtime only recognizes class file versions up to 52.0
 ```
 
-IntelliJ JDK 설정은 다음을 확인해 주세요
+IntelliJ JDK 설정은 다음을 확인하십시오.
 
-File > Project Structure > Project Settings > Project 메뉴에서 JDK를 확인 합니다.
+File > Project Structure > Project Settings > Project 메뉴에서 JDK를 확인합니다.
 
 ![reference-1-server_01](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_01.png) 
 
-IntelliJ IDEA > Settings > Build, Execution, Deployment > Buil Tools > Gradle > Gradle JVM 메뉴에서 JDK 를 확인 합니다.
+IntelliJ IDEA > Settings > Build, Execution, Deployment > Buil Tools > Gradle > Gradle JVM 메뉴에서 JDK를 확인 합니다.
 
 ![reference-1-server_02](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_02.png) 
 
-Gradle JDK를 변경 했다면 Gradle 탭의 Reload 를 실행해서 프로젝트에 반영을 합니다.
+Gradle JDK를 변경했다면 Gradle 탭의 Reload를 실행해 프로젝트에 반영합니다.
 
 ![reference-1-server_03](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_03.png) 
 
-빌드 환경 설정은 아래의 내용을 순서대로 설정합니다. IntelliJ 버전에 따라 화면은 조금 다를수 있습니다. (스크린샷은 2023.12 버전입니다.)
+빌드 환경 설정은 아래의 내용을 순서대로 설정합니다. IntelliJ 버전에 따라 화면은 조금 다를 수 있습니다. (스크린샷은 2023.12 버전입니다.)
 
 ### Redis 설정 확인
 
-패스워드가 없는 redis 연결을 한다면 `com.nhn.gameanvil.sample.common.GameConstants` 클래스의 redis 접속 정보 수정해서 연결합니다.
+패스워드 없이 Redis에 연결한다면 `com.nhn.gameanvil.sample.common.GameConstants` 클래스의 Redis 접속 정보를 수정해 연결합니다.
 
 ```java
-    // 레디스 접속 정보
+    // Redis 접속 정보
     public static final String REDIS_URL = "연결 주소";
     public static final int REDIS_PORT = 7500;
 ```
 
 
 
-패스워드 정보가 설정된 것이라면 redis 연결할때 `com.nhn.gameanvil.sample.redis.RedisHelper` 클래스의 주석된 부분의 패스워드 설정부분을 사용해서 접속 합니다.
+패스워드 정보가 설정된 것이라면 Redis에 연결할 때 `com.nhn.gameanvil.sample.redis.RedisHelper` 클래스의 주석된 부분의 패스워드 설정을 사용해 접속합니다.
 
 ```java
     /**
-     * 레디스 연결 처리, 사용하기 전에 최초에 한번 호출해서 연결 필요
+     * Redis 연결 처리. 사용 전 최초 1회 호출해 연결 필요
      *
      * @param url  접속 url
-     * @param port 점속 port
+     * @param port 접속 port
      * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
      */
     public void connect(String url, int port) throws SuspendExecution {
-        // 레디스 연결 처리
+        // Redis 연결 처리
         RedisURI clusterURI = RedisURI.Builder.redis(url, port).build();
 
-        // 패스워드가 필요한 경우 에는 패스워드 설청을 추가해서 RedisURI를 생성한다. 
+        // 패스워드가 필요한 경우에는 패스워드 설정을 추가해서 RedisURI를 생성 
 //        RedisURI clusterURI = RedisURI.Builder.redis(url, port).withPassword("password").build();
         this.clusterClient = RedisClusterClient.create(Collections.singletonList(clusterURI));
         this.clusterConnection = Lettuce.connect(GameConstants.REDIS_THREAD_POOL, clusterClient);
@@ -109,15 +109,15 @@ Gradle JDK를 변경 했다면 Gradle 탭의 Reload 를 실행해서 프로젝�
     }
 ```
 
-### DB 설정확인
+### DB 설정 확인
 
-샘플서버에서는 기본적으로 Jasync-sql 을 기본으로 사용하고 있고 StoredProcedure로 쿼리가 사용 되고있습니다.
+샘플 서버에서는 기본적으로 Jasync-sql을 기본으로 사용하며, StoredProcedure로 쿼리를 사용합니다.
 
-Mybatis 연결해서 사용하고 싶다면 `com.nhn.gameanvil.sample.common.GameConstants.USE_DB_JASYNC_SQL` 이값을 false로 바꾸면 mybatis로 db가 동작 하게됩니다.
+Mybatis 연결 시 `com.nhn.gameanvil.sample.common.GameConstants.USE_DB_JASYNC_SQL` 값을 false로 바꾸면 DB가 mybatis로 동작합니다.
 
 #### 샘플 사용 DB 스키마
 
-샘플에서 사용 하고있는 테이블 정보 입니다. 
+샘플에서 사용하고 있는 테이블 정보입니다.
 
 ```sql
 CREATE TABLE `users` (
@@ -144,7 +144,7 @@ CREATE TABLE `users` (
 
 
 
-사용 하고 있는 StoredProcedure 정보입니다.
+사용하고 있는 StoredProcedure 정보입니다.
 
 ```sql
 DELIMITER $$
@@ -318,7 +318,7 @@ Mybatis 연결은 resources/mybatid-config.xml의 접속 설정을 수정해서 
 
 ### 서버 실행
 
-Gradle 탭의 runMain 실횅으로 IntelliJ에서 실행 "gameanvil.sample-game-server [runMain]"
+Gradle 탭의 runMain 실행으로 IntelliJ에서 실행 "gameanvil.sample-game-server [runMain]"
 
 앞서 설정해 두었던 "SampleGameServer" 구성을 이용하여 서버를 실행합니다.
 
@@ -328,7 +328,7 @@ Gradle 탭의 runMain 실횅으로 IntelliJ에서 실행 "gameanvil.sample-game-
 
 서버가 정상적으로 구동되면 아래와 같이 모든 노드에 대해 onReady 로그가 출력됩니다.
 
-http://127.0.0.1:18400/management/nodeInfoPage 페이지를 통해서 로컬에서 실행된 노드의 상태를 확인 할수 있습니다. 모든 노드가 READY가 되면 정상 실행 된것입니다.
+http://127.0.0.1:18400/management/nodeInfoPage 페이지를 통해서 로컬에서 실행된 노드의 상태를 확인할 수 있습니다. 모든 노드가 READY가 되면 정상 실행된 것입니다.
 
 ![reference-1-server_06](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_06.png) 
 
@@ -337,11 +337,11 @@ http://127.0.0.1:18400/management/nodeInfoPage 페이지를 통해서 로컬에�
 
 ### 오류 확인
 
-정상적으로 서버가 실행되지 않았다면 설정을 다시 한번 확인해 보거나 log의 에러 부분을 확인해서 문의 부탁드립니다.
+정상적으로 서버가 실행되지 않을 경우 설정을 다시 확인하거나 log의 오류 부분을 확인하여 문의하십시오.
 
-DB나 Redis의 경우에는 샘플 서버에 적용된 부분은 팀내부에서 사용하는 부분이라 직접 구축을 해서 지정을 해야 합니다.
+DB나 Redis의 경우 샘플 서버에 적용된 부분은 팀 내부에서 사용하는 부분이므로 직접 구축해 지정해야 합니다.
 
-DB나 Redis의 설정이없다면 샘플 서버가 정상적으로 동작 하지않습니다.
+DB나 Redis의 설정이 없다면 샘플 서버가 정상적으로 동작하지 않습니다.
 
 
 ### Gradle 빌드
@@ -385,7 +385,7 @@ configurations {
     }
 }
 
-// standalone jar 을 생성합니다.
+// standalone jar을 생성합니다.
 jar {
     baseName = "sample_game_server"
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
@@ -400,7 +400,7 @@ jar {
     }
 }
 
-// GameAnvil 서버를 실행합니다
+// GameAnvil 서버를 실행합니다.
 task runMain(dependsOn: build, type: JavaExec) {
     jvmArgs = [
             "-Xms6g",
@@ -432,17 +432,17 @@ dependencies {
 ```
 
 #### Gradle jar 빌드
-Gradle 탭의 GameAnvilTutorial > Tasks > build > jar 동해서 프로젝트 빌드를 합니다.
+Gradle 탭의 GameAnvilTutorial > Tasks > build > jar 통해 프로젝트를 빌드합니다.
 
 ![reference-1-server_07](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_07.png)
 
-정상적으로 빌드가 완료 되면 프로젝트 폴더 build/libs 에 빌드된 jar 파일이 생성됩니다.
+정상적으로 빌드가 완료되면 프로젝트 폴더 build/libs에 빌드된 jar 파일이 생성됩니다.
 
 ![reference-1-server_08](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_08.png)
 
-## Command 사용해서 서버 실행
+## Command로 서버 실행
 
-Command로 서버를 구동시키려면  Gradle로 빌드된 sample_game_server-1.4.1.jar 를 사용하면 됩니다.
+Command로 서버를 구동하려면 Gradle로 빌드된 sample_game_server-1.4.1.jar를 사용합니다.
 
 ![reference-1-server_09](https://static.toastoven.net/prod_gameanvil/images/reference/reference-1-server_09.png)
 
@@ -451,21 +451,21 @@ Command로 서버를 구동시키려면  Gradle로 빌드된 sample_game_server-
 java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication -jar sample_game_server-1.4.1.jar
 ```
 
-- 기본으로 실행 시에 별도의 옵션이 지정되지 않으면 빌드할 때 지정되어 있는 환경 파일 적용됩니다.
+- 기본으로 실행 시에 별도의 옵션이 지정되지 않으면 빌드할 때 지정되어 있는 환경 파일이 적용됩니다.
 - GameAnvilConfig.json은 -Dconfig.file 옵션으로 경로와 파일 이름을 지정합니다.
-- logback.xml은 -Dlogback.configurationFile 옵션으로 경로와 파일이름을 지정합니다.
-- mybatis용 config 설정은 -DmybatisConfig 옵션 지정합니다.
-  - mybatis는 GameAnvil이 지원하는 기능의 일부가 아닙니다. 이 부분은 샘플용입니다.
+- logback.xml은 -Dlogback.configurationFile 옵션으로 경로와 파일 이름을 지정합니다.
+- mybatis용 config 설정은 -DmybatisConfig 옵션을 지정합니다.
+  - mybatis는 GameAnvil이 지원하는 기능의 일부가 아니며, 여기에서는 예시로 제시하였습니다.
   - com.nhn.gameanvil.sample.mybatis.GameSqlSessionFactory 참고
 
-실행을 하면 IntelliJ 에서 실행한거와 같이 onReady 로그가 나오고 http://127.0.0.1:18400/management/nodeInfoPage 페이지에 모든 노드가 READY 되면 정상 기동된것입니다.
+실행하면 IntelliJ에서 실행한 것과 같이 onReady 로그가 표시되고, http://127.0.0.1:18400/management/nodeInfoPage 페이지에 모든 노드가 READY 되면 정상 기동된 것입니다.
 
 # sample-game-server 서버 살펴보기
 
-게임 개발에 참고할 수 있게 만든 GameAnvil 샘플 클라이언와 연동하기 위해  제작된 프로젝트입니다.
+게임 개발에 참고할 수 있게 만든 GameAnvil 샘플 클라이언트와 연동하기 위해  제작된 프로젝트입니다.
 
-- 기능 사용성에 목적을 두어서 게임 자체에 대한 에러나 버그가 많을 수 있습니다.
-- 궁금한 점이 있다면 [고객센터](https://www.toast.com/kr/support/inquiry) 로 문의해 주시기 바랍니다.
+- 기능 사용성에 목적을 두어서 게임 자체에 대한 오류나 버그가 많을 수 있습니다.
+- 더 자세한 내용은 [고객센터](https://www.toast.com/kr/support/inquiry) 로 문의하십시오.
 
 
 
@@ -474,7 +474,7 @@ java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplica
 ### gateway
 
 - 인증
-  - Gamebase의 userId, token을 전달받아 token 검증 합니다.
+  - Gamebase의 userId, token을 전달 받아 token을 검증합니다.
 
 ### game
 
@@ -487,20 +487,20 @@ java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplica
   - 룸이 있다면 기존에 있는 룸에 입장
     - 룸에 유저와 점수 정보를 등록
     - 룸 정보에 현재 유저 수를 갱신합니다.
-  - 룸에서 나갈때
+  - 룸에서 나갈 때
     - 룸에 유저와 점수 정보를 삭제합니다.
     - 룸 정보의 유저 수를 갱신합니다.
   - 유저 점수 증가 패킷 처리
-    - 응답이 필요 없는 형태로 전달받은 점수를 룸의 유저 정보를 갱신
+    - 응답이 필요 없는 형태로 전달 받은 점수를 룸의 유저 정보를 갱신
     - 유저 점수 리스트를 만들어서 현재 룸 안에 있는 모든 유저에게 점수를 전달합니다.
 - Snake
-  - 유저 매치로 2명이 동시에 룸에 입장해서게임 플레이
+  - 유저 매치로 2명이 동시에 룸에 입장해서 게임 플레이
   - 둘이 매치되었을 때 한 명은 룸을 만들어 들어가고 한 명은 생성된 룸에 들어갑니다.
     - 첫 번째 유저 위치 지정 후 룸에 유저 정보와 점수 정보를 등록합니다.
     - 두 번째 입장할 때 위치 지정과 룸에 유저 정보와 점수 정보를 등록합니다.
     - 유저가 2명이 되면 유저에게 게임 정보를 전송합니다.
     - 룸에서 food 생성 타이머를 시작합니다.
-  - 룸에서 food 개수가 max가 될 때까지 1초에 한번씩 food를 생성해서 유저들에게 응답이 필요 없는 데이터로 전송
+  - 룸에서 food 개수가 max가 될 때까지 1초에 한 번씩 food를 생성해서 유저들에게 응답이 필요 없는 데이터로 전송
   - 룸에서 나갈 때
     - 룸에 유저 정보와 점수 정보를 삭제합니다.
     - 타이머를 정지합니다.
@@ -509,14 +509,14 @@ java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplica
     - 삭제할 food 정보를 받아서 룸에 있는 food 정보를 삭제합니다.
     - 상대에게 삭제된 food를 전달합니다.
   - user 이동 패킷 처리
-    - 유저가 이동할 때의 정보를 전달받아 룸에 유저 정보를 저장하고 상대방에게 이동된 유저 정보를 전달합니다.
+    - 유저가 이동할 때의 정보를 전달 받아 룸에 유저 정보를 저장하고 상대방에게 이동된 유저 정보를 전달합니다.
 
 #### single
 
 - 혼자 방을 만들어 게임
-  - 게임 시작할 때 전달받은 패킷에 싱글 룸에서 필요한 데이터 룸에 설정
+  - 게임 시작할 때 전달 받은 패킷에 싱글 룸에서 필요한 데이터 룸에 설정
 - 탭 메시지 패킷 처리
-  - 응답이 필요 없는 메시지로 전달받으면 현재 룸에 스코어 점수 기록
+  - 응답이 필요 없는 메시지로 전달 받으면 현재 룸에 스코어 점수 기록
 - 방에서 나올 때
   - 로그인된 유저 객체의 최고 점수보다 방 안에 저장된 점수가 크면
     - DB에 유저 최고 기록 업데이트
@@ -528,7 +528,7 @@ java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplica
   - 로그인
     - DB에서 유저 식별자를 가지고 유저 조회
       - 유저가 있는 경우 DB에서 가져온 정보 사용
-      - 유저가 없는경우 DB에 신규 정보 기록
+      - 유저가 없는 경우 DB에 신규 정보 기록
     - 로그인된 유저 정보 Redis에 기록
     - 유저 정보 응답
   - 닉네임 변경 요청
@@ -544,25 +544,25 @@ java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplica
       - 성공하면 현재 로그인된 유저 객체의 덱 변경
       - 바뀐 덱, 재화 잔액 응답
   - 싱글 게임 랭킹 정보 요청
-    - 전달받은 범위로 Redis에서 싱글 게임 랭킹 리스트 검색
-    - 로그인할 때마다 저장해둔 Redis의 유저 정보에서 랭킹 리스트의 닉네임 설정해서 랭킹 목록 생성
+    - 전달 받은 범위로 Redis에서 싱글 게임 랭킹 리스트 검색
+    - 로그인할 때마다 저장해 둔 Redis의 유저 정보에서 랭킹 리스트의 닉네임 설정해서 랭킹 목록 생성
     - 생성된 랭킹 리스트 응답
 
 ### support 
 
-- 게임 서버 접속 전 게임 세션 정보를 얻어오기 위한 서비스 입니다.
+- 게임 서버 접속 전 게임 세션 정보를 불러오기 위한 서비스입니다.
 
 - 런칭 정보 요청 패킷 처리
 
   - http://127.0.0.1:18600/launching?platform=Editor&appStore=GOOGLE&appVersion=1.2.0&deviceId=4D34C127-9C56-5BAB-A3C2-D8F18C0B7B6E 형식으로 요청을 합니다.
 
-  - 전달받은 데이터를 파싱하고 확인하고 GatewayNode 서버의 IP, PORT를 반환해 줍니다.
+  - 전달 받은 데이터를 파싱하고 확인하고 GatewayNode 서버의 IP, PORT를 반환해 줍니다.
 
 ### redis
 
 - GameAnvil에서 제공하는 lettuce 연동
 - GameNode의 onInit()에서 Redis 연결 설정 Node마다 만들어서 연결
-  - 싱글톤 인스턴스로 만들어서 모든 노드에서 하나의 Redis 연결을 사용하면 안 됩니다.
+  - 싱글톤 인스턴스로 생성하였으므로 모든 노드에서 하나의 Redis 연결을 사용하면 안 됩니다.
 - GameNode의 onShutdown()에서 Redis의 연결 shutdown 처리를 해야 합니다.
 - 예제 기능
   - hmget으로 유저 데이터 리스트 검색
@@ -573,9 +573,9 @@ java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplica
 
 #### jasync-sql
 
-* 비동기 SQL을 처리 할수 있는 클래스 입니다.
-* 싱글톤 인스턴스로 만들지 말고 노드당 하나씩 인스턴스를 만들어서 사용하고 서버가 종료될때 닫아 주어야 합니다.
-* 샘플에서는 StoredProcedure 로 쿼리가 작성되어 있습니다.
+* 비동기 SQL을 처리할 수 있는 클래스입니다.
+* 인스턴스는 노드당 하나씩 생성하여 사용하고, 서버가 종료될 때 닫아 주어야 합니다.
+* 샘플에서는 StoredProcedure로 쿼리가 작성되어 있습니다.
 
 #### mybatis
 
@@ -588,7 +588,7 @@ java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplica
 
 ### protocol 
 
-- google protobuf 3.0 을 사용 합니다.
+- google protobuf 3.0을 사용합니다.
 - 클라이언트와 사용하는 모든 패킷은 google protobuf로 작성합니다.
 - .proto 파일은 클라이언트와 공용으로 제작하며 build.bat에 있는 것처럼 서버에서 사용하기 위한 .java 파일로 변환을 해서 사용합니다.
 - 예제 사용 프로토콜
@@ -612,21 +612,21 @@ java -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplica
 
 ### 서버 동작 설정
 
-Main 클래스의 GameAnvilServer 설정을 하고 실행을 한다. 설정을 할때 클라이언트와의 프로토콜을 같은 순서로 등록이되고 서버에서 사용 하는 쓰레드 풀을 생성 한다.
+메인 클래스의 GameAnvilServer를 설정하고 실행합니다. 설정할 때 클라이언트와의 프로토콜을 같은 순서로 등록하고 서버에서 사용하는 스레드 풀을 생성합니다.
 
 ```java
         GameAnvilServer gameAnvilServer = GameAnvilServer.getInstance();
 
-        // 클라이언트와 전송할 프로토콜 정의 - 순서는 클라이언트와 동일 해야 한다.
+        // 클라이언트와 전송할 프로토콜 정의 - 순서는 클라이언트와 동일해야 한다.
         gameAnvilServer.addProtoBufClass(Authentication.getDescriptor());
         gameAnvilServer.addProtoBufClass(GameMulti.getDescriptor());
         gameAnvilServer.addProtoBufClass(GameSingle.getDescriptor());
         gameAnvilServer.addProtoBufClass(Result.getDescriptor());
         gameAnvilServer.addProtoBufClass(User.getDescriptor());
 
-        // 게임에서 사용하는 DB 쓰레드풀 지정
+        // 게임에서 사용하는 DB 스레드 풀 지정
         gameAnvilServer.createExecutorService(GameConstants.DB_THREAD_POOL, 100);
-        // 게임에서 사용하는 레디스 쓰레드풀 지정
+        // 게임에서 사용하는 Redis 스레드 풀 지정
         gameAnvilServer.createExecutorService(GameConstants.REDIS_THREAD_POOL, 100);
 
         // annotation 클래스 등록 처리를 위해 scan package 지정
@@ -638,58 +638,58 @@ Main 클래스의 GameAnvilServer 설정을 하고 실행을 한다. 설정을 �
 
 
 
-GameAnvil 에서 사용할수 있도록 GatewayNode, GameNode, SupportNode, MatchMaker, Room 들은 @annotaion 으로 클래스와 이름을 지정해줘야합니다. 서버가 실행 될때 선언된 클래스들은 엔진에서 자동으로 클래스 등록 처리가 이루어집니다.
+GameAnvil에서 사용할 수 있도록 GatewayNode, GameNode, SupportNode, MatchMaker, Room은 @annotaion으로 클래스와 이름을 지정해야 합니다. 서버가 실행될 때 선언된 클래스들은 엔진에서 자동으로 클래스 등록 처리가 이루어집니다.
 
-BaseConnection 를 상속받아 구현한 커넥션 클래스에 선언해줍니다.
+BaseConnection을 상속 받아 구현한 커넥션 클래스에 선언해 줍니다.
 
 ```java
 @Connection()
 ```
 
-BaseGatewayNode 를 상속받아 구현한 게이트웨이 노드에 선언해줍니다.
+BaseGatewayNode를 상속 받아 구현한 게이트웨이 노드에 선언해 줍니다.
 
 ```
 @GatewayNode()
 ```
 
-BaseSession 을 상속받아 구현한 세션에 선언해 줍니다.
+BaseSession을 상속 받아 구현한 세션에 선언해 줍니다.
 
 ```
 @Session()
 ```
 
-BaseGameNode 를 상속받아 구현한 게임노드에 GameAnvilConfig.json 에 설정한 게임노드의 서비스 이름을 지정합니다.
+BaseGameNode를 상속 받아 구현한 게임 노드에 GameAnvilConfig.json에 설정한 게임 노드의 서비스 이름을 지정합니다.
 
 ```
 @ServiceName(GameConstants.GAME_NAME)
 ```
 
-BaseUser 를 상속받아 구현한 게임유저에 게임의 서비스 이름과 유저 타입을 지정합니다. 유저타입은 클라이언트에서 접속해서 생성되는 타입니다.
+BaseUser를 상속 받아 구현한 게임 유저에 게임의 서비스 이름과 유저 타입을 지정합니다. 유저 타입은 클라이언트에 접속해 생성되는 타입입니다.
 
 ```
 @ServiceName(GameConstants.GAME_NAME)
 @UserType(GameConstants.GAME_USER_TYPE)
 ```
 
-BaseRoom 을 상속 받아 구현한 룸에 게임서비스 이름과 룸타입을 지정합니다. 룸타입은 클라이언트에서 접속할 룸타입을 지정합니다.
+BaseRoom을 상속 받아 구현한 룸에 게임 서비스 이름과 룸 타입을 지정합니다. 룸 타입은 클라이언트에서 접속할 룸 타입을 지정합니다.
 
 ```java
 // 싱글 게임
 @ServiceName(GameConstants.GAME_NAME)
 @RoomType(GameConstants.GAME_ROOM_TYPE_SINGLE)
 
-// 룸매치 게임
+// 룸 매치 게임
 @ServiceName(GameConstants.GAME_NAME)
 @RoomType(GameConstants.GAME_ROOM_TYPE_MULTI_ROOM_MATCH)
 
-// 유저매치 게임
+// 유저 매치 게임
 @ServiceName(GameConstants.GAME_NAME)
 @RoomType(GameConstants.GAME_ROOM_TYPE_MULTI_USER_MATCH)
 ```
 
-BaseUserMatchMaker, BaseRoomMatchMaker 를 상속받아 구현한 메치메이커에는 해당 룸과 같은 서비스이름과 룸타입을 지정 합니다.
+BaseUserMatchMaker, BaseRoomMatchMaker를 상속 받아 구현한 매치 메이커에는 해당 룸과 같은 서비스 이름과 룸 타입을 지정합니다.
 
-BaseSupportNode 를 상속 받아 구현한 서포트 노드에 GameAnvilConfig.json 에 설정한 서포트노드의 서비스 이름을 지정합니다.
+BaseSupportNode를 상속 받아 구현한 서포트 노드에 GameAnvilConfig.json에 설정한 서포트 노드의 서비스 이름을 지정합니다.
 
 ```
 @ServiceName(GameConstants.SUPPORT_NAME_LAUNCHING)
@@ -697,12 +697,12 @@ BaseSupportNode 를 상속 받아 구현한 서포트 노드에 GameAnvilConfig.
 
 
 
-### GameAnvil 에서 처리되는 API
+### GameAnvil에서 처리되는 API
 
 #### GameSession - 세션
 
 - com.nhn.gameanvil.sample.gateway.GameSession
-  - onAutenticate() : 클라이언트 인증 요청에 대한 검증 내용 구현
+  - onAuthenticate() : 클라이언트 인증 요청에 대한 검증 내용 구현
 
 #### GameUser - 유저
 
@@ -721,7 +721,7 @@ BaseSupportNode 를 상속 받아 구현한 서포트 노드에 GameAnvilConfig.
 #### UnlimitedTapRoom - 멀티 룸 매치, 최대 4인
 
 - com.nhn.gameanvil.sample.game.multi.roommatch.UnlimitedTapRoom
-  - onInit() : 룸생성시 처리, 룸에서 사용 하는 데이터 초기화 처리
+  - onInit() : 룸 생성 시 처리, 룸에서 사용하는 데이터 초기화 처리
   - onCreateRoom() : 최초 룸 매치용 룸을 생성하고 입장하는 부분 처리
   - onJoinRoom(): 두 번째 이후 입장하는 유저에 대한 처리
   - onLeaveRoom(): 룸 나갈 때에 대한 처리
@@ -734,7 +734,7 @@ BaseSupportNode 를 상속 받아 구현한 서포트 노드에 GameAnvilConfig.
 #### SnakeRoom - 유저 매치, 2인
 
 - com.nhn.gameanvil.sample.game.multi.usermatch.SnakeRoom
-  - onInit() : 룸생성시 처리, 룸에서 사용 하는 데이터 초기화 처리
+  - onInit() : 룸 생성 시 처리, 룸에서 사용하는 데이터 초기화 처리
   - onCreateRoom() : 최초 룸 매치용 룸을 생성하고 입장하는 부분 처리
   - onJoinRoom() : 두 번째 이후 입장하는 유저에 대한 처리
   - onPostLeaveRoom(): 룸 나간 후에 대한 처리, 둘이서 게임하는 룸이므로 한 명이 나가면 타이머 제거하고, 상대편도 내보냅니다.
@@ -748,7 +748,7 @@ BaseSupportNode 를 상속 받아 구현한 서포트 노드에 GameAnvilConfig.
 
 ### 패킷 등록
 
-게임 콘텐츠에서 정의해서 처리하는 패킷으로 클라이언트와 주고 맏는 패킷을 등록 합니다. 처리하는 클래스는 등록된 종류에 맞는 패킷 핸들러 인터페이스를 구현해야 합니다.
+게임 콘텐츠에서 정의해 처리하는 패킷으로 클라이언트와 주고받는 패킷을 등록합니다. 처리하는 클래스는 등록된 종류에 맞는 패킷 핸들러 인터페이스를 구현해야 합니다.
 
 유저가 로그인 상태에서 처리하는 패킷 : com.nhn.gameanvil.sample.game.user.GameUser
 
@@ -763,7 +763,7 @@ static {
 // 처리하는 클래스는 implements IPacketHandler<GameUser> 를 구현해서 만들어야 한다.
 ```
 
-클라이언트에서 request로 요청온 패킷에 대해서는 클라이언트에서 응답을 대기하고 있기 때문에 서버에서 처리하고 전달받은 유저 객체를 통해서 gameUser.reply()로 응답 처리를 해야 합니다.
+클라이언트에서 request로 요청 온 패킷에 대해서는 클라이언트에서 응답을 대기하고 있기 때문에 서버에서 처리하고 전달 받은 유저 객체를 통해서 gameUser.reply()로 응답 처리를 해야 합니다.
 
 
 
@@ -776,7 +776,7 @@ static {
     dispatcher.registerMsg(GameMulti.SnakeUserMsg.getDescriptor(), CmdSnakeUserMsg.class);  // 유저 위치 정보
     dispatcher.registerMsg(GameMulti.SnakeFoodMsg.getDescriptor(), CmdSnakeRemoveFoodMsg.class);  // food 삭제 정보처리
 }
-// 처리하는 클래스는 implements IRoomPacketHandler<SnakeRoom, GameUser> 를 구현해서 만들어야 한다.
+// 처리할 클래스는 implements IRoomPacketHandler<SnakeRoom, GameUser>를 구현해 만들어야 한다.
 ```
 
 서버에서 클라이언트로 전달하는 패킷은 gameUser.send()로 응답 대기 없이 전송합니다.
@@ -792,10 +792,10 @@ static {
     // launching
     restMsgHandler.registerMsg("/launching", RestObject.GET, CmdLaunching.class);
 }
-// 처리하는 클래스는 implements IRestPacketHandler 를 구현해서 만들어야 한다.
+// 처리할 클래스는 implements IRestPacketHandler를 구현해 만들어야 한다.
 ```
 
-rest요청에 대해서는 전달받은 restObject.writeString()으로 응답 메시지를 전달합니다.
+rest 요청에 대해서는 전달 받은 restObject.writeString()으로 응답 메시지를 전달합니다.
 
 
 ### Redis
@@ -809,16 +809,16 @@ private RedisClusterClient clusterClient;
 private StatefulRedisClusterConnection<String, String> clusterConnection;
 private RedisAdvancedClusterAsyncCommands<String, String> clusterAsyncCommands;
 /**
- * 레디스 연결, 사용하기전에 최초에 한번 호출해서 연결 해야 한다.
+ * Redis 연결, 사용 전 최초 1회 호출하여 연결해야 한다.
  *
  * @param url  접속 url
- * @param port 점속 port
+ * @param port 접속 port
  * @throws SuspendExecution
  */
-public void connect(String url, int port) throws SuspendExecution {    // 레디스 연결 처리
+public void connect(String url, int port) throws SuspendExecution {    // Redis 연결 처리
     RedisURI clusterURI = RedisURI.Builder.redis(url, port).build();
 
-    // 패스워드가 필요한 경우 에는 패스워드 설청을 추가해서 RedisURI를 생성한다. 
+    // 패스워드가 필요할 경우 패스워드 설정을 추가해 RedisURI를 생성한다.
 //  RedisURI clusterURI = RedisURI.Builder.redis(url, port).withPassword("password").build();
     this.clusterClient = RedisClusterClient.create(Collections.singletonList(clusterURI));
     this.clusterConnection = Lettuce.connect(GameConstants.REDIS_THREAD_POOL, clusterClient);
@@ -830,7 +830,7 @@ public void connect(String url, int port) throws SuspendExecution {    // 레디
 
 ```java
 /**
- * 접속 종료 서버가 내려가기전에 호출되어야 한다,
+ * 접속 종료 서버가 내려가기 전에 호출되어야 한다.
  */
 public void shutdown() {
     clusterConnection.close();
@@ -842,10 +842,10 @@ public void shutdown() {
 
 ```java
 /**
- * 유저 데이터 레디스에 저장
+ * 유저 데이터 Redis에 저장
  *
  * @param gameUserInfo 유저 정보
- * @return 저장 성고 여부
+ * @return 저장 성공 여부
  * @throws SuspendExecution
  */
 public boolean setUserData(GameUserInfo gameUserInfo) throws SuspendExecution {
@@ -853,7 +853,7 @@ public boolean setUserData(GameUserInfo gameUserInfo) throws SuspendExecution {
 
     boolean isSuccess = false;
     try {
-        Lettuce.awaitFuture(clusterAsyncCommands.hset(REDIS_USER_DATA_KEY, gameUserInfo.getUuid(), value)); // 해당 리턴값은 최초에 set 할때만 true 이고 있는값갱신시에는 false 응답
+        Lettuce.awaitFuture(clusterAsyncCommands.hset(REDIS_USER_DATA_KEY, gameUserInfo.getUuid(), value)); // 해당 리턴값은 최초에 set 할 때만 true이고 있는 값 갱신 시에는 false 응답
         isSuccess = true;
     } catch (TimeoutException e) {
         logger.error("setUserData - timeout", e);
@@ -902,7 +902,7 @@ com.nhn.gameanvil.sample.db.jasyncsql.JAsyncSqlManager
      * @param uuid      유저 유니크 식별자
      * @param highScore 수정할 최고 점수
      * @return 수정된 레코드 수 반환
-     * @throws TimeoutException 해당 호출에 대해 timeout 이 발생 할 수 있음을 의미
+     * @throws TimeoutException 해당 호출에 대해 timeout이 발생할 수 있음을 의미
      * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
      */
     public int updateUserHigScore(String uuid, int highScore) throws TimeoutException, SuspendExecution {
@@ -936,13 +936,13 @@ DB 연결 정보 설정 : resources/maybatis-config.xml
 </properties>
 ```
 
-사용할 쿼리 등록 - 외부 xml을 사용하려면 아래 주석 부분을 참고해서 사용 하면 됩니다.
+사용할 쿼리 등록 - 외부 xml을 사용하려면 아래 주석 부분을 참고하여 사용합니다.
 
 ```xml
   <mappers>
-    <!-- 정의된 SQL구문을 맵핑해준다. 기본적으로 리소스 안에 있는 mapper.xml을 사용 할때-->
+    <!-- 정의된 SQL 구문을 매핑해 준다. 기본적으로 리소스 안에 있는 mapper.xml을 사용할 때 -->
     <mapper resource="query/UserDataMapper.xml"/>
-    <!-- 외부 지정된 mapper.xml 파일을 지정할때는 전체 경로 지정을 사용한다. -->
+    <!-- 외부 지정된 mapper.xml 파일을 지정할 때는 전체 경로 지정을 사용한다. -->
     <!--<mapper url="file:///C:/_KevinProjects/GameServerEngine/sample-game-server/target/query/UserDataMapper.xml"/>-->
   </mappers>
 ```
@@ -991,7 +991,7 @@ public class GameSqlSessionFactory {
         // 접속 정보를 명시하고 있는 XML의 경로 읽기
         try {
             // mybatis_config.xml 파일의 경로 지정
-            String mybatisConfigPath = System.getProperty("mybatisConfig"); // 파라미터 전달 된경우 서버 (실행시 -DmybatisConfig= 옵선으로지정)
+            String mybatisConfigPath = System.getProperty("mybatisConfig"); // 파라미터 전달된 경우 서버(실행 시 -DmybatisConfig= 옵션으로 지정)
             logger.info("mybatisConfigPath : {}", mybatisConfigPath);
             if (mybatisConfigPath != null) {
                 logger.info("load to mybatisConfigPath : {}", mybatisConfigPath);
@@ -999,7 +999,7 @@ public class GameSqlSessionFactory {
                 if (sqlSessionFactory == null) {
                     sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
                 }
-            } else {    // 파라미터 전달이없는 경우 내부 파일에서 설정 얻는다
+            } else {    // 파라미터 전달이 없는 경우 내부 파일에서 설정을 얻는다.
                 Reader reader = Resources.getResourceAsReader("mybatis/mybatis-config.xml");
                 logger.info("load to resource : mybatis/mybatis-config.xml");
                 // sqlSessionFactory가 존재하지 않는다면 생성한다.
@@ -1028,7 +1028,7 @@ public class GameSqlSessionFactory {
 [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:39] load to resource : mybatis-config.xml
 ```
 
-실행시 -DmybatisConfig=를 사용한 경우, session을 만들 때 다음과 같이 지정된 위치 정보로 설정되는 로그가 기록됩니다.
+실행 시 -DmybatisConfig=를 사용한 경우, session을 만들 때 다음과 같이 지정된 위치 정보로 설정되는 로그가 기록됩니다.
 
 ```java
 [INFO ] [GameAnvil-DB_THREAD_POOL-0] [GameSqlSessionFactory.java:30] mybatisConfigPath : .\src\main\resources\mybatis-config.xml
@@ -1077,19 +1077,19 @@ public int insertUser(GameUserInfo gameUserInfo) throws TimeoutException, Suspen
 
   "common": {
     "ip": "127.0.0.1", // 노드마다 공통으로 사용하는 IP. (머신의 IP를 지정)
-    "meetEndPoints": ["127.0.0.1:18000"], // 대상 노드의 common IP와 communicatePort 등록. (해당 서버 endpoint 포함가능 , 리스트로 여러개 가능)
-    "debugMode": false //디버깅시 각종 timeout 이 발생안하도록 하는 옵션 , 리얼에서는 반드시 false 이어야 한다.
+    "meetEndPoints": ["127.0.0.1:18000"], // 대상 노드의 common IP와 communicatePort 등록. (해당 서버 endpoint 포함 가능 , 리스트로 여러 개 가능)
+    "debugMode": false // 디버깅 시 각종 timeout이 발생 안 하도록 하는 옵션, 리얼에서는 반드시 false이어야 한다.
   },
 
   //-------------------------------------------------------------------------------------
   // LocationNode 설정
   "location": {
-    "clusterSize": 1, // 총 몇개의 머신(VM)으로 구성되는가?
-    "replicaSize": 1, // 복제 그룹의 크기 (master + slave의 개수)
-    "shardFactor": 2  // sharding을 위한 인수 (아래의 주석 참고)
+    "clusterSize": 1, // 총 몇 개의 머신(VM)으로 구성되는가?
+    "replicaSize": 1, // 복제 그룹의 크기(master + slave의 개수)
+    "shardFactor": 2  // sharding을 위한 인수(아래의 주석 참고)
     // 전체 shard의 개수 = clusterSize x replicaSize x shardFactor
     // 하나의 머신(VM)에서 구동할 shard의 개수 = replicaSize x shardFactor
-    // 고유한 shard의 총 개수 (master 샤드의 개수) = clusterSize x shardFactor
+    // 고유한 shard의 총 개수(master shard의 개수) = clusterSize x shardFactor
   },
 
   // 매치 노드 설정
@@ -1100,13 +1100,13 @@ public int insertUser(GameUserInfo gameUserInfo) throws TimeoutException, Suspen
   //-------------------------------------------------------------------------------------
   // 클라이언트와의 커넥션을 관리하는 노드.
   "gateway": {
-    "nodeCnt": 4, // 노드 개수. (노드 번호는 0 부터 부여 됨)
+    "nodeCnt": 4, // 노드 개수(노드 번호는 0부터 부여됨).
     "ip": "127.0.0.1", // 클라이언트와 연결되는 IP.
     "dns": "", // 클라이언트와 연결되는 도메인 주소.
     "connectGroup": { // 커넥션 종류.
       "TCP_SOCKET": {
         "port": 18200, // 클라이언트와 연결되는 포트.
-        "idleClientTimeout": 240000 // 데이터 송수신이 없는 상태 이후의 타임아웃. (0 이면 사용하지 않음)
+        "idleClientTimeout": 240000 // 데이터 송수신이 없는 상태 이후의 타임아웃(0이면 사용하지 않음).
       },
       "WEB_SOCKET": {
         "port": 18300,
@@ -1116,14 +1116,14 @@ public int insertUser(GameUserInfo gameUserInfo) throws TimeoutException, Suspen
   },
 
   //-------------------------------------------------------------------------------------
-  // 게임 로비 역할을 하는 노드. (게임 룸, 유저를 포함 하고있음)
+  // 게임 로비 역할을 하는 노드(게임 룸, 유저를 포함하고 있음).
   "game": [
     {
       "nodeCnt": 4,
       "serviceId": 1,
       "serviceName": "TapTap",
-      "channelIDs": ["","","","",""], // 노드마다 부여할 채널 ID. (유니크하지 않아도 됨. "" 문자열로 채널 구분없이 중복사용도 가능)
-      "userTimeout": 5000 // disconnect 이후의 유저객체 제거 타임아웃.
+      "channelIDs": ["","","","",""], // 노드마다 부여할 채널 ID(유니크하지 않아도 됨. " " 문자열로 채널 구분 없이 중복 사용도 가능).
+      "userTimeout": 5000 // disconnect 이후의 유저 객체 제거 타임아웃.
     }
   ],
 

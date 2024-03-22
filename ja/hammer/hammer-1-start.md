@@ -1,46 +1,46 @@
-## Game > GameAnvil > 테스트 개발 가이드 > 시작하기
+## Game > GameAnvil > テスト開発ガイド > 始める
 
 ## GameHammer
 
-GameHammer는 GameAvlil 엔진을 이용한 게임 서버 개발 도구로 강력하고 편리한 테스트 도구입니다. 실제 커넥터에서 제공하는 모든 기능을 사용할 수 있으며, 다양한 테스트 케이스를 만들 수 있는 API를 제공하고 있습니다. 또한, 스트레스 테스트를 위해 다수의 GameHammer를 동시에 실행하고, 그 결과를 취합해 바로 확인할 수 있습니다.
+GameHammerはGameAnvilエンジンを利用したゲームサーバー開発ツールで、強力で便利なテストツールです。 実際のコネクタで提供するすべての機能を使用することができ、様々なテストケースを作成できるAPIを提供しています。 また、ストレステストのために複数のGameHammerを同時に実行し、その結果を集計してすぐに確認できます。
 
-### 시스템 요구 사항
+### システム要件
 
-GameHammer를 사용하려면 다음과 같은 사항이 필요합니다. 
+GameHammerを使用するには、以下の事項が必要です。
 
-- 지원하는 언어
+- サポートする言語
     - Java
-- 타깃 개발 환경
+- ターゲット開発環境
     - IntelliJ
-- 지원하는 네트워크 프로토콜
+- サポートするネットワークプロトコル
     - TCP/IP
     - SSL over TCP/IP
-- 사용 가능한 응용 프로토콜 형식
+- 使用可能な応用プロトコル形式
     - Google Protocol Buffers
-    - Google FlatBuffers(예정)
-    - 커스텀 바이트 스트림
-    - HTTP/HTTPS(특정한 용도로 한정)
+    - Google FlatBuffers(予定)
+    - カスタムバイトストリーム
+    - HTTP/HTTPS(特定の用途に限る)
 
-### 특장점
+### 特長
 
-GameHammer는 다음과 같은 기능을 지원합니다.
+GameHammerは以下の機能をサポートします。
 
-- 커넥터와 대응하는 모든 기능 지원
-- Sync/Async 방식 모두 지원
-    - Async 방식의 API 제공
-    - Sync 방식을 위한 future 제공
-- 수천 개 또는 그 이상의 커넥션 동시에 사용 가능
-- 상태 기반의 시나리오 관리 기능 지원
+- コネクタと対応するすべての機能をサポート
+- Sync/Async方式をサポート
+    - Async方式のAPIを提供
+    - Sync方式のためのfuture提供
+- 数千個またはそれ以上のコネクションを同時に使用可能
+- 状態ベースのシナリオ管理機能をサポート
 
-### 레퍼런스 프로젝트
+### リファレンスプロジェクト
 
-| 서버                                                         | 테스트 코드                                                  | 설명                                             |
+| サーバー                                                        | テストコード                                                 | 説明                                            |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------ |
-| [sample-game-server](https://github.com/nhn/gameanvil.sample-game-server.git) | [sample-game-test](https://github.com/nhn/gameanvil.sample-game-test.git) | 실제 게임 서버와 GameHammer를 사용한 테스트 코드 |
+| [sample-game-server](https://github.com/nhn/gameanvil.sample-game-server.git) | [sample-game-test](https://github.com/nhn/gameanvil.sample-game-test.git) | 実際のゲームサーバーとGameHammerを使用したテストコード |
 
-## 프로젝트에 GameHamer 추가하기
+## プロジェクトにGameHammerを追加する
 
-GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.xml 파일의 dependencies 요소에 다음과 같이 추가하시면 GameHammer를 사용할 수 있습니다.
+GameHammerはGameAnvilと同じようにMavenを通じて配布されます。 pom.xmlファイルのdependencies要素に次のように追加するとGameHammerを使用できます。
 
 ```
 ...
@@ -57,17 +57,17 @@ GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.
 ...        
 ```
 
-## Maven으로 GameHammer jar 파일 생성하기
+## MavenでGameHammer jarファイルを作成する
 
-GameHammer를 이용해 테스트 시나리오를 작성한 뒤 GameAnvil 콘솔에서 테스트할 목적 등으로 jar 파일을 생성할 수 있습니다. 여기에서는 메이븐을 통해 업로드용 jar 파일을 생성합니다.
+GameHammerを使ってテストシナリオを作成した後、GameAnvilコンソールでテストする目的などでjarファイルを作成できます。ここではMavenを使ってアップロード用jarファイルを作成します。
 
-GameHammer를 추가한 프로젝트의 pom.xml이 있는 디렉터리에서 아래 명령어를 실행합니다.
+GameHammerを追加したプロジェクトのpom.xmlがあるディレクトリで下記のコマンドを実行します。
 
 ```
 mvn package
 ```
 
-명령어 실행 후, 빌드 과정이 출력 되고 마지막으로 빌드에 성공했다는 메시지를 확인합니다. 아래와 같이 나오면 성공입니다.
+コマンド実行後、ビルド過程が出力され、最後にビルドが成功したというメッセージを確認します。下記のように表示されたら成功です。
 
 ```
 [INFO] ------------------------------------------------------------------------
@@ -79,4 +79,4 @@ mvn package
 Process finished with exit code 0
 ```
 
-새롭게 생성된 target 디렉터리 안에서 빌드된 파일을 확인할 수 있습니다.
+新しく作成されたターゲットディレクトリ内でビルドされたファイルを確認できます。

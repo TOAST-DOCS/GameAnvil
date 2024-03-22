@@ -1,33 +1,33 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 서비스와 채널
+## Game > GameAnvil > Console User Guide > Services and Channels
 
-## 1. 서비스
+## Service
 
-문서의 이전 부분에서 구성 정보(Config) 등록을 설명하면서 서비스라는 용어를 접했습니다. 예제에서는 "RPSGame"이라는 서비스 이름을 사용했는데요. 이러한 서비스가 무엇인지 살펴 보겠습니다.
+This document describes the 'service' mentioned earlier when dealing with configuration information (Config) registration.
 
-하나의 서비스는 고유한 서비스ID와 서비스명을 가집니다. 그리고 GameNode와 SupportNode는 구현하기에 따라 여러 종류의 서비스로 등록이 가능합니다. 즉, 서비스는 GameNode 혹은 SupportNode의 역할을 정의한다고 볼 수 있습니다.
+A service has a unique service ID and service name, and GameNodes and SupportNodes can register as different kinds of services depending on their implementation. In other words, a service can be said to define the role of a GameNode or SupportNode.
 
-예를 들어, "RpsGame" 서비스는 해당 서버에 구현된 Rps라는 게임 컨텐츠에 대한 서비스 용도입니다. 즉, 게임 컨텐츠를 제공하는 역할을 의미한다고 볼 수 있습니다. 마찬가지로 "RpsChat" 서비스를 추가하여 해당 서버에 구현된 채팅 컨텐츠에 대한 서비스를 정의할 수도 있습니다. 
+For example, the 'RPSGame' service is for the game content called 'RPS' implemented on that server, which means it is responsible for serving game content. Similarly, you can define a service for the chat content implemented on that server by adding the 'RPSChat' service. 
 
-다시 말하면, 여러분의 게임 서버에는 두 가지의 GameNode가 다음의 의사 코드처럼 그 역할에 맞게 따로 구현되어 있다는 것을 의미합니다. 이 코드에서 임의의 서비스명을 해당 GameNode 구현에 연결하기 위해 사용한 어노테이션을 주의 깊게 살펴 보십시오.
+This means that the game server has two GameNodes, each implemented separately for its role, as shown in the following pseudocode. Take a close look at the annotations we've used in this code to associate arbitrary service names with their corresponding GameNode implementations.
 
 ```java
-// 게임 컨텐츠를 구현한 GameNode
-@ServiceName("RpsGame")
-MyGameNode extends gameanvil.GameNode {
-    ...
-}
-
-// 채팅 컨텐츠를 구현한 GameNode
-@ServiceName("RpsChat")
-MyChatNode extends gameanvil.GameNode {
-    ...
+// GameNode implemented game contents
+@ServiceName("RpsGame") 
+MyGameNode extends gameanvil.GameNode { 
+    ... 
+} 
+ 
+// GameNode Implemented chatting contents
+@ServiceName("RpsChat") 
+MyChatNode extends gameanvil.GameNode { 
+    ... 
 }
 ```
 
-눈치 채셨겠지만, @ServiceName 어노테이션에 등록한 서비스명이 바로 서버를 구성할 때 사용한 서비스명과 일치해야 합니다. 그렇지 않으면 서버 구성에 실패할 것입니다. 이러한 서비스명은 사람이 읽기에는 편하지만 서버 프로그램에 있어서는 불필요하게 길고 큰 값입니다. 그래서 우리는 구성 정보(Config)에서 각 서비스명에 고유한 정수인 서비스ID를 매핑해 주었습니다. 서비스ID는 반드시 0보다 큰 정수값이어야 합니다. 좀 더 자세한 정보는 서버 구현 문서에서 확인할 수 있습니다.
+The service name registered with the @ServiceName annotation must match the service name used when configuring the server. Because these service names are easy for human to read but unnecessarily long and large for server programs to read, the Configuration Information (Config) mapped a unique integer for each service name, a service ID. The service ID must be an integer value greater than 0. More information is available in the Server Implementation document.
 
 
-## 2. 채널
+## Channel
 
-채널은 하나의 서비스를 논리적으로 나눌 수 있는 방법을 제공합니다. 예를 들어, RpsGame 서비스를 "초보", "중수", "고수" 채널 등으로 나눌 수 있습니다. 단, GameNode에 한해서만 사용 가능하며 채널명은 어떤 문자열이든 사용 가능합니다. 더욱 상세한 설명은 [Game > GameAnvil > 서버 개발 가이드 > 채널](../server-impl/server-impl-09-channel.md)의 내용을 참고 하십시오.
+Channels provide a logical way to divide a service. For example, RPSGame services can be divided into 'beginner', 'intermediate', and 'advanced' channels. However, they are only available for GameNodes and can be any string of channel names. For more information, see [Game>GameAnvil>Server Development Guide>Channel](../server-impl/server-impl-09-channel.md).
 

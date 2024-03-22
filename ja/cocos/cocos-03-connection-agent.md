@@ -1,294 +1,293 @@
-## Game > GameAnvil > CocosCreator 개발 가이드 > ConnectionAgent
+## Game > GameAnvil > CocosCreator開発ガイド > ConnectionAgent
 
 ## ConnectionAgent
 
-ConnectionAgent는 GameAnvil 서버의 커넥션 노드와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 직접 정의한 프로토콜을 기반으로 여러 가지 컨텐츠를 구현할 수 있습니다. ConnectionAgent는 커넥터가 초기화될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다.
+ConnectionAgentはGameAnvilサーバーのコネクションノードに関する作業を担当します。接続(Connect())、認証(Authentication())などの基本的なセッション管理機能やチャンネルリストなどを提供し、直接定義したプロトコルに基づいて様々なコンテンツを実装することができます。ConnectionAgentはコネクタが初期化される時に自動的に作成され、Connector.GetConnectionAgent() 関数を利用して取得できます。
 
 ```typescript
 let connectionAgent = connector.GetConnectionAgent();
 ```
 
-### 서버 접속
+### サーバー接続
 
-ConnectionAgent의 Connect 함수를 이용해 서버에 접속합니다. 
+ConnectionAgentのConnect関数を使ってサーバーに接続します。 
 
 ```typescript
-// GameAnvil 서버에 연결
+// GameAnvilサーバーに接続
 // Connect(ipAdress: string, callback?: (agent: ConnectionAgent, resultCode: ResultCodeConnect) => void): void;
-//  ipAddress : 접속할 서버 주소. 
-//  callback : 결과를 전달받아 처리할 콜백
+//  ipAddress :接続するサーバーアドレス。 
+// callback : 結果を受け取って処理するコールバック。
 connectionAgent.Connect(ipAddress,(agent: ConnectionAgent, resultCode: ResultCodeConnect) => {
-    //  agent : Connect()를 호출한 ConnectionAgent 객체.
-	//  resultCode : Connect 결과.
+    //  agent : Connect()を呼び出したConnectionAgentオブジェクト。
+	  //  resultCode : Connect結果。
     if (ResultCodeConnect.CONNECT_SUCCESS == resultCode) {
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
-### 인증
+### 認証
 
-ConnectionAgent의 Authenticate 함수를 이용해 인증절차를 진행합니다. 인자로 deviceId, accountId, password, payload, 응답을 처리할 콜백을 넘겨줍니다. deviceId는 중복 접속에 대한 처리에 활용되며, accountId와 password를 활용하여 서버에서 인증 처리를 할 수 있습니다. 인증을 위해 deviceId, accountId, password 외의 추가 정보가 필요할 경우 payload에 담아 보낼수 있습니다. Authenticate 함수를 호출하면 서버에서는 BaseConnection의 onAuthentication() 콜백이 호출되며 이 콜백의 처리 결과로 인증의 성공, 실패가 결정됩니다.
+ConnectionAgentのAuthenticate関数を使って認証手続きを行います。引数でdeviceId、accountId、password、payload、レスポンスを処理するコールバックを渡します。 deviceIdは重複接続に対する処理に活用され、accountIdとpasswordを活用してサーバーで認証を処理できます。認証のためにdeviceId、accountId、password以外の追加情報が必要な場合、payloadに入れて送ることができます。Authenticate関数を呼び出すと、サーバーではBaseConnectionのonAuthentication()コールバックが呼び出され、このコールバックの処理結果で認証の成功、失敗が決定されます。
 
 ```typescript
 /**
- * GameAnvil 서버에 인증을 요청
+ * GameAnvilサーバーに認証をリクエスト
  * 
- * 인증에 성공해야 GameAnvil 커넥터의 다른 기능을 사용 가능
- * @param deviceId 사용자 기기를 식별 할 수 있는 고유 아이디. 같은 사용자의 중복 접속을 체크하는데 사용
- * @param accountId 사용자 계정을 식별 할 수 있는 고유 아이디
- * @param password 사용자 계정의 패스워드
- * @param payload 서버로 전달 할 추가 정보
- * @param callback 결과를 전달 받아 처리 할 콜백
+ * 認証に成功すると、GameAnvilコネクタの他の機能を使用可能
+ * @param deviceId ユーザーのデバイスを識別できる固有のID。同じユーザーの重複接続をチェックするために使用
+ * @param accountId ユーザーアカウントを識別できる固有のID
+ * @param passwordユーザーアカウントのパスワード
+ * @param payload サーバーに渡す追加情報
+ * @param callback 結果を受け取って処理するコールバック
  */
 connectionAgent.Authenticate(deviceId, accountId, password, payload
          (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
     /**
-     * Authentication()의 결과
-     * @param connection Authentication()을 요청한 커넥션에이전트
-     * @param resultCode 인증의 결과 코드
-     * @param loginedUserInfoList 서버에 남아있는 로그인 정보 목록
-     * @param message 서버로부터 받은 메시지, 인증 실패 이유 등
-     * @param payload 서버로 부터 받은 추가 정보
+     * Authentication()の結果
+     * @param connection Authentication()をリクエストしたコネクションエージェント
+     * @param resultCode認証の結果コード
+     * @param loginedUserInfoListサーバーに残っているログイン情報リスト
+     * @param message サーバーから受け取ったメッセージ、認証失敗理由など
+     * @param payload サーバーから受け取った追加情報
      */
     if (result == ResultCodeAuth.AUTH_SUCCESS) {
-		// 성공
+		// 成功
     } else {
-		// 실패
+		// 失敗
     }
 });
 ```
 
-### 채널 정보
+### チャンネル情報
 
-GameAnvil은 설정으로 자유롭게 채널을 구성할 수 있습니다. 이런 채널구성은 서버와 클라이언트간에 미리 약속하여 고정된 형태로 사용할 수도 있지만, 상황에 따라 다양하게 변경하여 사용할 수도 있습니다. ConnectionAgent에서는 이렇게 변경된 채널 정보를 얻어올 수 있도록 몇가지 함수를 제공합니다. 
+GameAnvilは設定で自由にチャンネルを構成することができます。このようなチャンネル構成はサーバーとクライアントの間であらかじめ約束して固定された形で使うこともできますが、状況によって自由に変更して使うこともできます。ConnectionAgentではこのように変更されたチャンネル情報を取得できるようにいくつかの関数を提供します。
 
-GetChannelList()는 특정 서비스의 채널 아이디 목록을 요청하여 받아올 수 있습니다. 
+GetChannelList()は特定のサービスのチャンネルIDリストをリクエストして受け取ることができます。
 
 ```typescript
 /**
- * 특정 서비스에서 사용 가능한 채널 목록을 요청
- * @param serviceName 채널 정보를 요청할 서비스의 이름
- * @param callback 결과를 전달 받아 처리 할 콜백
+ * 特定のサービスで使用可能なチャンネルリストをリクエスト
+ * @param serviceName チャネル情報を要求するサービスの名前
+ * @param callback 結果を渡して処理するコールバック
  */
 connectionAgent.GetChannelList(serviceName, (agent: ConnectionAgent, resultCode: ResultCodeChannelList, channelIdList: Array<string>)=>{
     /**
-     * GetChannelList()의 결과
-     * @param connection GetChannelList()를 요청한 커넥션에이전트
-     * @param resultCode GetChannelList()의 결과 코드
-     * @param channelIdList 체널 목록
+     * GetChannelList()の結果
+     * @param connection GetChannelList()をリクエストした コネクションエージェント
+     * @param resultCode GetChannelList()の結果コード
+     * @param channelIdListチャンネルリスト
      */
     if (ResultCodeChannelList.CHANNEL_LIST_SUCCESS == resultCode) {
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
-GetChannelCountInfo()는 특정 채널의 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 
+GetChannelCountInfo()は特定のチャンネルのカウント情報(ユーザーとルーム数)をリクエストして取得できます。
 
 ```typescript
 /**
- * 특정 채널의 유저와 방 개수를 요청
+ * 特定チャンネルのユーザーとルーム数をリクエスト
  * 
- * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스의 이름
- * @param channelId 채널 정보를 요청할 체널의 아이디
- * @param callback 결과를 전달받아 처리 할 콜백
+ * サーバーでサポートしている場合、使用可能
+ * @param serviceName チャネル情報を要求するサービスの名前
+ * @param channelId チャンネル情報をリクエストするチャンネルのID
+ * @param callback 結果を受け取って処理するコールバック
  */
 connectionAgent.GetChannelCountInfo(serviceName, channelId, (agent: ConnectionAgent, resultCode: ResultCodeChannelCountInfo, channelCountInfo: ChannelCountInfo)=>{
     /**
-     * GetChannelCountInfo()의 결과
-     * @param connection GetChannelCountInfo()를 요청한 커넥션에이전트
-     * @param resultCode GetChannelCountInfo()의 결과 코드
-     * @param channelCountInfo 체널의 유저와 방 개수
+     * GetChannelCountInfo()の結果
+     * @param connection GetChannelCountInfo()をリクエストしたコネクションエージェント
+     * @param resultCode GetChannelCountInfo()の結果コード
+     * @param channelCountInfoチャンネルのユーザーとルーム数
      */
     if (ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS == resultCode) {
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
-GetChannelInfo()는 특정 채널의 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 
+GetChannelInfo()は特定チャンネルの情報(ユーザー定義)をリクエストして取得できます。
 
 ```typescript
 /**
- * 특정 채널의 정보를 요청
+ * 特定チャンネルの情報をリクエスト
  * 
- * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스의 이름
- * @param channelId 채널 정보를 요청할 체널의 아이디
- * @param callback 결과를 전달받아 처리 할 콜백
+ * サーバーでサポートしている場合、使用可能
+ * @param serviceName チャネル情報を要求するサービスの名前
+ * @param channelId チャンネル情報をリクエストするチャンネルのID
+ * @param callback 結果を受け取って処理するコールバック
  */
 connectionAgent.GetChannelInfo(serviceName, channelId, (agent: ConnectionAgent, resultCode: ResultCodeChannelInfo, channelInfo: Payload)=>{
     /**
-     * GetChannelInfo()의 결과
-     * @param connection GetChannelInfo()를 요청한 커넥션에이전트
-     * @param resultCode GetChannelInfo()의 결과 코드
-     * @param channelInfo 체널 정보
+     * GetChannelInfo()の結果
+     * @param connection GetChannelInfo()をリクエストした コネクションエージェント
+     * @param resultCode GetChannelInfo()の結果コード
+     * @param channelInfoチャンネル情報
      */
     if (ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS == resultCode) {
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
-GetAllChannelCountInfo()는 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 
+GetAllChannelCountInfo()は特定のサービスの全てのチャンネルに対するカウント情報(ユーザーとルーム数)をリクエストして取得できます。
 
 ```typescript
 /**
- * 특정 서비스에 있는 모든 채널의 유저와 방의 개수를 요청
+ * 特定のサービスにある全てのチャンネルのユーザーとルームの数をリクエスト
  * 
- * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스의 이름
- * @param callback 결과를 전달받아 처리 할 콜백
+ * サーバーでサポートしている場合、使用可能
+ * @param serviceName チャネル情報を要求するサービスの名前
+ * @param callback 結果を受け取って処理するコールバック
  */
 connectionAgent.GetAllChannelCountInfo(serviceName, (agent: ConnectionAgent, resultCode: ResultCodeAllChannelCountInfo, allChannelCountInfo: AllChannelCountInfo)=>{
     /**
-     * GetAllChannelCountInfo()의 결과
-     * @param connection GetAllChannelCountInfo()를 요청한 커넥션에이전트
-     * @param resultCode GetAllChannelCountInfo()의 결과 코드
-     * @param channelInfoList 체널의 유저와 방 개수
+     * GetAllChannelCountInfo()の結果
+     * @param connection GetAllChannelCountInfo()をリクエストしたコネクションエージェント
+     * @param resultCode GetAllChannelCountInfo()の結果コード
+     * @param channelInfoListチャンネルのユーザーとルーム数
      */
     if (ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS == resultCode) {
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
-GetAllChannelInfo()는 특정 서비스의 모든 채널에 대한 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 
+GetAllChannelInfo()は特定サービスのすべてのチャンネルの情報(ユーザー定義)をリクエストして取得できます。
 
 ```typescript
 /**
- * 특정 서비스에 있는 모든 채널의 유저와 방의 개수를 요청
+ * 特定のサービスにある全てのチャンネルのユーザーとルームの数をリクエスト
  * 
- * 서버에서 지원할 경우 사용할 수 있음
- * @param serviceName 채널 정보를 요청할 서비스의 이름
- * @param callback 결과를 전달받아 처리 할 콜백
+ * サーバーでサポートしている場合、使用可能
+ * @param serviceName チャネル情報を要求するサービスの名前
+ * @param callback 結果を受け取って処理するコールバック
  */
 connectionAgent.GetAllChannelInfo(serviceName, (agent: ConnectionAgent, resultCode: ResultCodeAllChannelInfo, allChannelInfo: AllChannelInfo)=>{
     /**
-     * GetAllChannelInfo()의 결과
-     * @param connection GetAllChannelInfo()를 요청한 커넥션에이전트
-     * @param resultCode GetAllChannelInfo의 결과 코드
-     * @param allChannelInfo 체널 정보
+     * GetAllChannelInfo()の結果
+     * @param connection GetAllChannelInfo()をリクエストしたコネクションエージェント
+     * @param resultCode GetAllChannelInfoの結果コード
+     * @param allChannelInfoチャンネル情報
      */
     if (ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS == resultCode) {
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
-### 접속 종료
+### 接続終了
 
-ConnectionAgent의 Disconnect 함수를 이용해 서버와의 접속을 종료합니다. 
+ConnectionAgentのDisconnect関数を使ってサーバーとの接続を終了します。
 
 ```typescript
 /**
- * GameAnvil 서버와의 연결을 해제
- * @param reason 콜백에 전달할 연결 해제 이유
- * @param callback 접속 종료시 호출될 콜백
+ * GameAnvilサーバーとの接続を解除
+ * @param reason コールバックに渡す接続解除の理由。
+ * @param callback 接続終了時に呼び出されるコールバック
  */
 connectionAgent.Disconnect(reason, (agent: ConnectionAgent, resultCode: ResultCodeDisconnect, reason: string) =>{
     /**
-     * Disconnect()의 결과 또는 또는 강제 접속종료 알림
-     * @param connection Disconnect()를 요청한 커넥션에이전트
-     * @param resultCode Disconnect()의 결과 코드
-     * @param reason 종료 이유. ConnectionAgent.Disconnect()에 인자로 넘긴 이유
+     * Disconnect()の結果またはまたは強制接続終了通知
+     * @param connection Disconnect()をリクエストしたコネクションエージェント
+     * @param resultCode Disconnect()の結果コード
+     * @param reason終了理由。 ConnectionAgent.Disconnect()に引数で渡した理由。
      */
     if (ResultCodeDisconnect.SOCKET_DISCONNECT == resultCode) {
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
 ### Listener
 
-IConnectionListener는 ConnectionAgent의 모든 동작의 결과 또는 알림을 정의한 인터페이스입니다. 이 인터페이스를 구현한 리스너를 ConnectionAgent.AddConnectionListener()로 등록하면 등록한 리스너로 응답을 받을 수 있습니다. 
+IConnectionListenerはConnectionAgentの全ての動作の結果や通知を定義したインターフェイスです。 このインターフェイスを実装したリスナーをConnectionAgent.AddConnectionListener()で登録すると、登録したリスナーでレスポンスを受けることができます。
 
 ```typescript
 class ConnectionListener implements IConnectionListener{
     /**
-     * Connect()의 결과
-     * @param connection Connect()을 요청한 커넥션에이전트
-     * @param resultCode 연결의 결과 코드
+     * Connect()の結果
+     * @param connection Connect()をリクエストしたコネクションエージェント
+     * @param resultCode接続の結果コード
      */
     OnConnect(connection: ConnectionAgent, resultCode: ResultCodeConnect): void { }
     /**
-     * Authentication()의 결과
-     * @param connection Authentication()을 요청한 커넥션에이전트
-     * @param resultCode 인증의 결과 코드
-     * @param loginedUserInfoList 서버에 남아있는 로그인 정보 목록
-     * @param message 서버로부터 받은 메시지, 인증 실패 이유 등
-     * @param payload 서버로 부터 받은 추가 정보
+     * Authentication()の結果
+     * @param connection Authentication()をリクエストしたコネクションエージェント
+     * @param resultCode認証の結果コード
+     * @param loginedUserInfoListサーバーに残っているログイン情報リスト
+     * @param message サーバーから受け取ったメッセージ、認証失敗理由など
+     * @param payload サーバーから受け取った追加情報
      */
     OnAuthentication(connection: ConnectionAgent, resultCode: ResultCodeAuth, loginedUserInfoList: Array<LoginedUserInfo>, message: string, payload: Payload): void { }
     /**
-     * GetChannelList()의 결과
-     * @param connection GetChannelList()를 요청한 커넥션에이전트
-     * @param resultCode GetChannelList()의 결과 코드
-     * @param channelIdList 체널 목록
+     * GetChannelList()の結果
+     * @param connection GetChannelList()をリクエストした コネクションエージェント
+     * @param resultCode GetChannelList()の結果コード
+     * @param channelIdListチャンネルリスト
      */
     OnChannelList(connection: ConnectionAgent, resultCode: ResultCodeChannelList, channelIdList: Array<string>): void { }
     /**
-     * GetChannelInfo()의 결과
-     * @param connection GetChannelInfo()를 요청한 커넥션에이전트
-     * @param resultCode GetChannelInfo()의 결과 코드
-     * @param channelInfo 체널 정보
+     * GetChannelInfo()の結果
+     * @param connection GetChannelInfo()をリクエストした コネクションエージェント
+     * @param resultCode GetChannelInfo()の結果コード
+     * @param channelInfoチャンネル情報
      */
     OnChannelInfo(connection: ConnectionAgent, resultCode: ResultCodeChannelInfo, channelInfo: Payload): void { }
     /**
-     * GetChannelCountInfo()의 결과
-     * @param connection GetChannelCountInfo()를 요청한 커넥션에이전트
-     * @param resultCode GetChannelCountInfo()의 결과 코드
-     * @param channelCountInfo 체널의 유저와 방 개수
+     * GetChannelCountInfo()の結果
+     * @param connection GetChannelCountInfo()をリクエストしたコネクションエージェント
+     * @param resultCode GetChannelCountInfo()の結果コード
+     * @param channelCountInfoチャンネルのユーザーとルーム数
      */
     OnChannelCountInfo(connection: ConnectionAgent, resultCode: ResultCodeChannelCountInfo, channelCountInfo: ChannelCountInfo): void { }
     /**
-     * GetAllChannelInfo()의 결과
-     * @param connection GetAllChannelInfo()를 요청한 커넥션에이전트
-     * @param resultCode GetAllChannelInfo의 결과 코드
-     * @param allChannelInfo 체널 정보
+     * GetAllChannelInfo()の結果
+     * @param connection GetAllChannelInfo()をリクエストしたコネクションエージェント
+     * @param resultCode GetAllChannelInfoの結果コード
+     * @param allChannelInfoチャンネル情報
      */
     OnAllChannelInfo(connection: ConnectionAgent, resultCode: ResultCodeAllChannelInfo, allChannelInfo: AllChannelInfo): void { }
     /**
-     * GetAllChannelCountInfo()의 결과
-     * @param connection GetAllChannelCountInfo()를 요청한 커넥션에이전트
-     * @param resultCode GetAllChannelCountInfo()의 결과 코드
-     * @param channelInfoList 체널의 유저와 방 개수
+     * GetAllChannelCountInfo()の結果
+     * @param connection GetAllChannelCountInfo()をリクエストしたコネクションエージェント
+     * @param resultCode GetAllChannelCountInfo()の結果コード
+     * @param channelInfoListチャンネルのユーザーとルーム数
      */
     OnAllChannelCountInfo(connection: ConnectionAgent, resultCode: ResultCodeAllChannelCountInfo, allChannelCountInfo: AllChannelCountInfo): void { }
     /**
-     * Disconnect()의 결과 또는 또는 강제 접속종료 알림
-     * @param connection Disconnect()를 요청한 커넥션에이전트
-     * @param resultCode Disconnect()의 결과 코드
-     * @param reason 종료 이유. ConnectionAgent.Disconnect()에 인자로 넘긴 이유
-     * @param force 강제 종료 여부
-     * @param payload 서버로 부터 받은 추가 정보
+     * Disconnect()の結果またはまたは強制接続終了通知
+     * @param connection Disconnect()をリクエストしたコネクションエージェント
+     * @param resultCode Disconnect()の結果コード
+     * @param reason終了理由。 ConnectionAgent.Disconnect()に引数で渡した理由。
+     * @param force 強制終了するかどうか
+     * @param payload サーバーから受け取った追加情報
      */
     OnDisconnect(connection: ConnectionAgent, resultCode: ResultCodeDisconnect, reason: string, force: boolean, payload: Payload): void { }
     /**
-     * 오류 발생
-     * @param connection 오류 발생 한 커넥션에이전트
-     * @param errorCode 에러 코드
-     * @param msgName 에러가 발생한 메시지의 이름
+     * エラー発生
+     * @param connection エラーが発生したコネクションエージェント
+     * @param errorCode エラーコード
+     * @param msgName エラーが発生したメッセージの名前
      */
     OnErrorCommand(connection: ConnectionAgent, errorCode: ErrorCode, msgName: string): void { }
 };
 
 connectionAgent.AddListener(new ConnectionListener());
 ```
-

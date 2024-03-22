@@ -1,31 +1,31 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > Safe Pause
+## Game > GameAnvil > Console User Guide > Safe Pause
 
-## 1. Safe Pause란?
+## What is Safe Pause?
 
-Safe Pause는 서비스 중지 없이 임의의 게임 노드를 일시 중단(Pause) 할 수 있는 기능입니다. Safe Pause의 출발지 노드는 처리 중이던 모든 유저와 방 정보를 동일한 서비스를 수행 중인 도착지 노드로 실시간 전송(Transfer)합니다. 그러므로 동일한 서비스의 게임 노드가 2개 이상 존재하지 않는다면 Safe Pause를 사용할 수 없습니다.
+Safe Pause is a feature that allows you to pause any game node without stopping the service. SafePause's departure node transfers all users and room information in real time to the destination node that is performing the same service. Therefore, SafePause is not available unless more than two game node exist in the same service.
 
-Safe Pause 과정에서 전송을 보내는 쪽과 받는 쪽은 아래의 그림처럼 각각 "SAFE PAUSE" 상태와 "READY(LOCK)" 상태로 바뀝니다. "READY(LOCK)" 상태의 노드는 해당 Safe Pause 트랜잭션이 완료될 때까지 임의로 상태를 변경할 수 없습니다. 즉, 콘솔 상에서 그 어떤 조작도 할 수 없습니다.
+In the SafePause process, the sender and receiver change to **SAFE PAUSE** and **READY(LOCK)** states, respectively, as shown in the figure below. A node in the **READY(LOCK)** state cannot change its state arbitrarily until the corresponding SafePause transaction is completed. In other words, it means that no operation can be performed on the console.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/state.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/state.png)
 
-Safe Pause가 완료되면 "Safe Pause" 상태는 "Pause" 상태로 바뀝니다. 당연히 해당 노드에는 그 어떤 유저나 방도 존재하지 않으므로 안전하게 셧다운할 수 있습니다. 패치나 점검이 필요하다면 이때 진행하면 됩니다. "Ready(Lock)" 상태 또한 Safe Pause가 완료됨과 동시에 "Ready" 상태로 전환되며 콘솔 상에서 조작이 가능해집니다.
+When SafePause completes, the **SafePause**state changes to **Pause** state. Naturally, there are no users or rooms on that node, so you can shut it down safely. If you need a patch or check, you can proceed at this time. **Ready(Lock)** state also turn to **Ready** state upon completion of SafePause and can be operated on the console.
 
-## 2. Safe Pause 사용하기
+## How to use Safe Pause
 
-운영 메뉴를 선택하면 Safe Pause 기본 화면을 볼 수 있습니다. 이 화면은 현재 진행 중인 Safe Pause와 관련된 노드 목록을 보여줍니다. "노드 선택" 버튼을 클릭하면 아래와 같이 Safe Pause를 수행할 노드를 선택하는 팝업이 열립니다.
+Select the Operations menu to view the Safe Pause main screen. It shows a list of nodes associated with Safe Pause currently in progress. Click on **Select Node** to open a pop-up to select the node to perform SafePause as shown below.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/node-selection.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/node-selection.png)
 
-Safe Pause의 "출발지 노드"와 "도착지 노드"를 각각 하나 이상 체크 박스로 선택할 수 있습니다. 이때, 처리 중인 유저와 방의 개수가 적은 노드를 "도착지 노드"로 선택하는 것이 유리합니다. 선택이 완료되었다면 "확인" 버튼을 눌러 Safe Pause를 "등록"하도록 합니다. 아직 수행 단계가 아닌 등록 단계임에 유의하세요.
+You can select one or more **departure nodes** and **destination nodes** in SafePause by clicking on more than one check boxes, respectively. At this time, it is advantageous to select a node with a small count of users and rooms being processed as **Destination Node**. When selection is done, press **Confirm** to **register** SafePause. Please take note that you are still in the registration stage, not in the performance stage yet.
 
-앞 서, 등록한 Safe Pause 관련 노드들은 이제 다음과 같이 Safe Pause 기본 화면에 노출됩니다. 만일, 잘못 등록한 노드가 있다면 가장 우측의 "-" 버튼을 눌러 해당 목록에서 삭제하도록 합니다.
+The nodes associated with Safe Pause that were previously registered are exposed to the Safe Pause main screen as follows. If there are any nodes that are incorrectly registered, you can delete them by clicking **-** on the right side of the list.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/start.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/start.png)
 
-모든 준비가 완료되었다면 "점검 실행" 버튼을 눌러 Safe Pause를 시작할 수 있습니다. Safe Puase가 시작되면 다음과 같이 "서버" 메뉴에서 진행 중인 상태를 실시간으로 확인할 수 있습니다.
+When you are all ready, you can start SafePause by clicking **Run Check**. Once SafePause starts, you can check the state of progress in real time from the **Server** menu as follows.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/safe-pausing.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/safe-pausing.png)
 
-Safe Pause 과정을 통해 "출발지 노드"들의 유저와 방은 "도착지 노드"로 전송되며, 모든 과정이 완료된 후에는 "출발지 노드"들은 모두 자동으로 PAUSE 상태가 됩니다. 이제 PAUSE된 노드들은 안전하게 종료할 수 있습니다.   
+Through SafePause process, the user and room of the **departure node** are sent to the **destination node** and all the **departure nodes** automatically enter the PAUSE state after all processes are completed. The PAUSE nodes can now be safely shut down.   
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/safe-pause-done.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/safe-pause/safe-pause-done.png)
