@@ -1,55 +1,98 @@
-## Game > GameAnvil > 개요
+## Game > GameAnvil > Overview
 
-GameAvnil은 Java 기반의 실시간 게임 서버 엔진으로, 다수의 게임 프로젝트에서 사용 중입니다.
+GameAnvil is a high-performing, real-time game server engine based on Java. It aims to shorten the development time of game servers and increase their performance and reliability. With GameAnvil, you can quickly and easily develop real-time game servers while benefiting from the rich Java ecosystem. Even novice developers can easily pick up and start developing real-time game servers and link them with clients developed in Unity or CocosCreator. The GameAnvil system also comes with a full suite of tools to help you not only develop game servers, but also to test their functionality and performance, as well as operate and monitor them in the cloud.
 
-GameAnvil을 이용하여 풍부한 Java 생태계의 혜택을 누리며 쉽고 빠르게 게임 서버를 개발해 보세요. 함께 제공되는 클라이언트 커넥터와 테스트 도구, 웹 콘솔을 사용해 쉽게 게임 서비스를 개발하고 준비할 수 있습니다.
+## Major References
+
+Major games developed and serviced using GameAnvil are as follows.
+
+![gameanvil-references.png](https://static.toastoven.net/prod_gameanvil/images/gameanvil-references.png)
+## Characteristics
+GameAnvil's ultimate goal is to help even less experienced developers easily develop and service real-time content. In this respect, we want to improve code productivity and ease of use, and ease technical entry barriers for possible users. We also aim to maximize the advantages of cloud products for easy service operation.
+
+![gameanvil-references.png](https://static.toastoven.net/prod_gameanvil/images/overview-features.png)
+
+## Recommended Games for Use
+
+Currently GameAnvil is pretty much perfect for the following kinds of games.
+
+* Casual game
+* Turn-based strategy game
+* Board game
+* Indie games that require real-time content or DB storage
+* Other games that you want to easily create and service real-time content
 
 
+## Integration of Easy Unity Development Environments
 
-## Key Features
+Provides a **GameAnvil Connector** Unity package that can easily link with GameAnvil servers. This package allows you to link directly with GameAnvil servers in your existing Unity development environment.
 
-- 파이버 기반의 Continuation 지원과 순차적인 코드 흐름
-- 싱글 스레딩과 Lock Free
-- 재접속 시에 이전 세션 자동 복구
-- 유저 매치 메이킹 지원
-- 룸 매치 메이킹 지원
-- No SPOF(Single Point Of Failure)
-- 런타임 서버 스케일링 지원
-- 서버 간 유저 및 방 전송
-- 전용 테스트 시스템 지원
-- 전용 웹 콘솔 지원
-- 클라이언트 커넥터 지원(Unity, CocosCreator)
-- 무정지 점검과 패치 지원
+#### Fast connectivity and authentication
+* Connecting and authenticating to servers can be handled quickly and easily through a dedicated API.
 
-## 용어
+#### Rich multiplayer API
+* All the features necessary to implement multi-play games such as room creation, room entry, and matchmaking are available as an API.
 
-GameAnvil에서 사용하는 용어와 설명입니다.
+#### Synchronization component support
+* Just by registering components, synchronization between users is possible without a separate server implementation.
+* Supports user-defined value synchronization in addition to coordinate synchronization, forced synchronization, and enumerator synchronization.
 
-| 용어               | 설명                                                         |
-| ------------------ | ------------------------------------------------------------ |
-| 머신               | GameAnvil 인스턴스(프로세스)가 실행되는 장비                 |
-| 인스턴스           | GameAnvil 프로세스(JVM) 실행 단위                            |
-| 노드               | GameAnvil 서버 구성의 가장 기본이 되는 단위 [세부 설명](https://alpha-docs.toast.com/ko/Game/GameAnvil/ko/server-2-basic) |
-| 마스터 머신        | Management Node가 실행되는 장비                              |
-| 로케이션 관리 머신 | Location Node가 실행되는 장비                                |
-| 머신 설정          | 마스터 머신과 로케이션 관리 머신을 지정하는 작업             |
-| 설정 템플릿        | 노드별 설정값을 저장해 다수의 인스턴스에서 사용할 수 있도록 제공 |
+## Recommended Target Developers
 
-## GameAnvil 사용 라이브러리
+![overview-target-developer.png](https://static.toastoven.net/prod_gameanvil/images/overview-target-developer.png)
 
-다음은 GameAnvil에서 사용하는 4가지 핵심 라이브러리입니다. Quasar, ZeroMQ, Netty는 엔진 내부에서 사용하므로 GameAnvil 사용자가 직접 사용할 일은 없습니다. Protocol Buffers는 메시지를 직렬화/역직렬화할 때 사용합니다. 직접 사용 여부와 관계없이 아래 4가지 라이브러리를 이해하면 엔진을 사용할 때 많은 도움이 됩니다.
 
-| 라이브러리       | 용도                            |
-| ---------------- | ------------------------------- |
-| Quasar           | 파이버 기반의 Continuation 지원 |
-| ZeroMQ           | 서버의 IPC                      |
-| Netty            | 서버-클라이언트 통신            |
-| Protocol Buffers | 서버-클라이언트 메시지 직렬화   |
+#### 1. developers who know **Java**
 
-## 개인정보 처리에 대한 안내
+* It's the best choice for developers who can handle Java. You can focus solely on your content on the processing flow that the engine provides.
+* GameAnvil provides all APIs necessary for game server development, such as DB, Redis, and HTTP.
 
-GameAnvil 서비스를 이용하는 과정에서 고객은 이용자의 개인정보를 수집/이용할 수 있으며, 이 경우 고객은 개인정보보호법 등 관련 법령을 준수할 의무가 있습니다.
-또한, 이 과정에서 고객과 NHN Cloud 간 개인정보 처리에 관한 업무 위수탁 관계가 발생할 수 있습니다. 위탁자의 지위에 있는 고객은 수탁사인 NHN Cloud와 별도 서면에 의한 위탁 계약을 체결할 수 있으며 고객이 운영하는 개인정보처리방침에 아래 내용을 참고하여 고지할 수 있습니다.
+#### 2. Developers who have developed game servers in other languages, such as **C++, C#**
 
-* 수탁업체: 엔에이치엔클라우드(주)
-* 위탁 업무의 내용: GameAnvil 서비스 제공
+* Developers who have developed game servers in other languages can start developing content as soon as they learn the basic grammar of Java.
+* There are no problems other than the differences between Java and other languages. Try to develop content while learning Java. GameAnvil developers also switched from C++ to Java without much difficulty.
+
+#### 3. **Junior or new developer who has never developed a game server**
+
+* Even if you've never developed a game server, you can easily and comfortably develop real-time content based on the guide documents and references provided.
+* The engine takes care of most of the features that the real game server needs to handle, so you can only focus on the content.
+
+
+## - License:
+
+GameAnvil is protected by a unique [Software License](https://gameplatform.toast.com/kr/services/gameanvil/license). GameAnvil is only available if you agree to the corresponding software license.
+
+## Games Not Yet Supported
+
+GameAnvil is still in the evolving phase, so we don't support the following styles of games yet, but all our developers are doing our best to support them as soon as possible.
+
+* MMO(RPG) game
+* P2P-based games such as FPS or AOS
+
+## Server Configuration
+
+| Game style | Maximum number of concurrent users | Whether Real-time Content Present or not | Use Matchmaking | \** Minimum VM Count | Rough configuration                                |
+| ----------- | ------------------- | ------------------ | --------------- | --------------- | ------------------------------------------- |
+| Casual      | 10000               | O                  | O               | 5               | Gateway x 2, Game x 2, and other x 1            |
+| Casual      | 10000               | X                  | X               | 3               | Gateway x 1, Game x 1, and other x 1            |
+| Indi        | 3000                | O                  | X               | 1               | All in One x 1                              |
+| Turn-based strategy game   | 200000              | O                  | O               | 49              | Gateway x 20, Game x 25, Loc x 3, and other x 1 |
+
+** At any case, it's a rough estimate, depending on the volume of the actual content or the style of the game.
+
+** Depending on the specifications of the VM, the number may also vary. 
+
+** Storage such as DB or Redis is excluded from the count.
+
+## Reference videos
+
+* Can NDC 2021 [ Java develop real-time game server engine? Yes, it is possible ](https://youtu.be/kQyu5pAChcA)
+* NHN Cloud On 2022 Webinar [On.5 Online game development is easy and fast ](https://cloudon.nhn.com/webinar_past?idx=6)
+
+## Information on Processing of Personal Information
+
+In the process of using GameAnvil service, customer can collect/use the user's personal information, and in this case, the customer is obligated to comply with relevant laws and regulations such as the Personal Information Protection Act.
+In addition, in this process, there may be a consignment relationship between the customer and NHN Cloud regarding the processing of personal information. Customers in the position of a consignor may enter into a separate contract in writing with NHN Cloud, the consignee company, and may be notified by referring to the following information in the personal information processing policy operated by the customer.
+
+* Consignee: NHN Cloud Corp.
+* Consignment work: Provision of GameAnvil service
