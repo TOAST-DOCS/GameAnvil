@@ -2,7 +2,7 @@
 
 ## ConnectionAgent
 
-ConnectionAgent는 GameAnvil 서버의 커넥션 노드와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 직접 정의한 프로토콜을 기반으로 여러 가지 컨텐츠를 구현할 수 있습니다. ConnectionAgent는 커넥터가 초기화될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다.
+ConnectionAgent는 GameAnvil 서버의 커넥션 노드와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 직접 정의한 프로토콜을 기반으로 여러 가지 콘텐츠를 구현할 수 있습니다. ConnectionAgent는 커넥터가 초기화될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다.
 
 ```typescript
 let connectionAgent = connector.GetConnectionAgent();
@@ -16,7 +16,7 @@ ConnectionAgent의 Connect 함수를 이용해 서버에 접속합니다.
 // GameAnvil 서버에 연결
 // Connect(ipAdress: string, callback?: (agent: ConnectionAgent, resultCode: ResultCodeConnect) => void): void;
 //  ipAddress : 접속할 서버 주소. 
-//  callback : 결과를 전달받아 처리할 콜백
+//  callback : 결과를 전달 받아 처리할 콜백
 connectionAgent.Connect(ipAddress,(agent: ConnectionAgent, resultCode: ResultCodeConnect) => {
     //  agent : Connect()를 호출한 ConnectionAgent 객체.
 	//  resultCode : Connect 결과.
@@ -30,18 +30,18 @@ connectionAgent.Connect(ipAddress,(agent: ConnectionAgent, resultCode: ResultCod
 
 ### 인증
 
-ConnectionAgent의 Authenticate 함수를 이용해 인증절차를 진행합니다. 인자로 deviceId, accountId, password, payload, 응답을 처리할 콜백을 넘겨줍니다. deviceId는 중복 접속에 대한 처리에 활용되며, accountId와 password를 활용하여 서버에서 인증 처리를 할 수 있습니다. 인증을 위해 deviceId, accountId, password 외의 추가 정보가 필요할 경우 payload에 담아 보낼수 있습니다. Authenticate 함수를 호출하면 서버에서는 BaseConnection의 onAuthentication() 콜백이 호출되며 이 콜백의 처리 결과로 인증의 성공, 실패가 결정됩니다.
+ConnectionAgent의 Authenticate 함수를 이용해 인증절차를 진행합니다. 인자로 deviceId, accountId, password, payload, 응답을 처리할 콜백을 넘겨줍니다. deviceId는 중복 접속에 대한 처리에 활용되며, accountId와 password를 활용하여 서버에서 인증을 처리할 수 있습니다. 인증을 위해 deviceId, accountId, password 외의 추가 정보가 필요할 경우 payload에 담아 보낼 수 있습니다. Authenticate 함수를 호출하면 서버에서는 BaseConnection의 onAuthentication() 콜백이 호출되며 이 콜백의 처리 결과로 인증의 성공, 실패가 결정됩니다.
 
 ```typescript
 /**
  * GameAnvil 서버에 인증을 요청
  * 
  * 인증에 성공해야 GameAnvil 커넥터의 다른 기능을 사용 가능
- * @param deviceId 사용자 기기를 식별 할 수 있는 고유 아이디. 같은 사용자의 중복 접속을 체크하는데 사용
- * @param accountId 사용자 계정을 식별 할 수 있는 고유 아이디
+ * @param deviceId 사용자 기기를 식별할 수 있는 고유 아이디. 같은 사용자의 중복 접속을 체크하는 데 사용
+ * @param accountId 사용자 계정을 식별할 수 있는 고유 아이디
  * @param password 사용자 계정의 패스워드
- * @param payload 서버로 전달 할 추가 정보
- * @param callback 결과를 전달 받아 처리 할 콜백
+ * @param payload 서버로 전달할 추가 정보
+ * @param callback 결과를 전달 받아 처리할 콜백
  */
 connectionAgent.Authenticate(deviceId, accountId, password, payload
          (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
@@ -51,7 +51,7 @@ connectionAgent.Authenticate(deviceId, accountId, password, payload
      * @param resultCode 인증의 결과 코드
      * @param loginedUserInfoList 서버에 남아있는 로그인 정보 목록
      * @param message 서버로부터 받은 메시지, 인증 실패 이유 등
-     * @param payload 서버로 부터 받은 추가 정보
+     * @param payload 서버로부터 받은 추가 정보
      */
     if (result == ResultCodeAuth.AUTH_SUCCESS) {
 		// 성공
@@ -63,7 +63,7 @@ connectionAgent.Authenticate(deviceId, accountId, password, payload
 
 ### 채널 정보
 
-GameAnvil은 설정으로 자유롭게 채널을 구성할 수 있습니다. 이런 채널구성은 서버와 클라이언트간에 미리 약속하여 고정된 형태로 사용할 수도 있지만, 상황에 따라 다양하게 변경하여 사용할 수도 있습니다. ConnectionAgent에서는 이렇게 변경된 채널 정보를 얻어올 수 있도록 몇가지 함수를 제공합니다. 
+GameAnvil은 설정으로 자유롭게 채널을 구성할 수 있습니다. 이런 채널 구성은 서버와 클라이언트 간에 미리 약속하여 고정된 형태로 사용할 수도 있지만, 상황에 따라 다양하게 변경하여 사용할 수도 있습니다. ConnectionAgent에서는 이렇게 변경된 채널 정보를 얻어올 수 있도록 몇 가지 함수를 제공합니다. 
 
 GetChannelList()는 특정 서비스의 채널 아이디 목록을 요청하여 받아올 수 있습니다. 
 
@@ -71,7 +71,7 @@ GetChannelList()는 특정 서비스의 채널 아이디 목록을 요청하여 
 /**
  * 특정 서비스에서 사용 가능한 채널 목록을 요청
  * @param serviceName 채널 정보를 요청할 서비스의 이름
- * @param callback 결과를 전달 받아 처리 할 콜백
+ * @param callback 결과를 전달 받아 처리할 콜백
  */
 connectionAgent.GetChannelList(serviceName, (agent: ConnectionAgent, resultCode: ResultCodeChannelList, channelIdList: Array<string>)=>{
     /**
@@ -97,7 +97,7 @@ GetChannelCountInfo()는 특정 채널의 카운트 정보(유저와 방 개수)
  * 서버에서 지원할 경우 사용할 수 있음
  * @param serviceName 채널 정보를 요청할 서비스의 이름
  * @param channelId 채널 정보를 요청할 체널의 아이디
- * @param callback 결과를 전달받아 처리 할 콜백
+ * @param callback 결과를 전달 받아 처리할 콜백
  */
 connectionAgent.GetChannelCountInfo(serviceName, channelId, (agent: ConnectionAgent, resultCode: ResultCodeChannelCountInfo, channelCountInfo: ChannelCountInfo)=>{
     /**
@@ -123,7 +123,7 @@ GetChannelInfo()는 특정 채널의 정보(사용자 정의)를 요청하여 �
  * 서버에서 지원할 경우 사용할 수 있음
  * @param serviceName 채널 정보를 요청할 서비스의 이름
  * @param channelId 채널 정보를 요청할 체널의 아이디
- * @param callback 결과를 전달받아 처리 할 콜백
+ * @param callback 결과를 전달 받아 처리할 콜백
  */
 connectionAgent.GetChannelInfo(serviceName, channelId, (agent: ConnectionAgent, resultCode: ResultCodeChannelInfo, channelInfo: Payload)=>{
     /**
@@ -148,7 +148,7 @@ GetAllChannelCountInfo()는 특정 서비스의 모든 채널에 대한 카운�
  * 
  * 서버에서 지원할 경우 사용할 수 있음
  * @param serviceName 채널 정보를 요청할 서비스의 이름
- * @param callback 결과를 전달받아 처리 할 콜백
+ * @param callback 결과를 전달 받아 처리할 콜백
  */
 connectionAgent.GetAllChannelCountInfo(serviceName, (agent: ConnectionAgent, resultCode: ResultCodeAllChannelCountInfo, allChannelCountInfo: AllChannelCountInfo)=>{
     /**
@@ -173,7 +173,7 @@ GetAllChannelInfo()는 특정 서비스의 모든 채널에 대한 정보(사용
  * 
  * 서버에서 지원할 경우 사용할 수 있음
  * @param serviceName 채널 정보를 요청할 서비스의 이름
- * @param callback 결과를 전달받아 처리 할 콜백
+ * @param callback 결과를 전달 받아 처리할 콜백
  */
 connectionAgent.GetAllChannelInfo(serviceName, (agent: ConnectionAgent, resultCode: ResultCodeAllChannelInfo, allChannelInfo: AllChannelInfo)=>{
     /**
@@ -233,7 +233,7 @@ class ConnectionListener implements IConnectionListener{
      * @param resultCode 인증의 결과 코드
      * @param loginedUserInfoList 서버에 남아있는 로그인 정보 목록
      * @param message 서버로부터 받은 메시지, 인증 실패 이유 등
-     * @param payload 서버로 부터 받은 추가 정보
+     * @param payload 서버로부터 받은 추가 정보
      */
     OnAuthentication(connection: ConnectionAgent, resultCode: ResultCodeAuth, loginedUserInfoList: Array<LoginedUserInfo>, message: string, payload: Payload): void { }
     /**
@@ -277,7 +277,7 @@ class ConnectionListener implements IConnectionListener{
      * @param resultCode Disconnect()의 결과 코드
      * @param reason 종료 이유. ConnectionAgent.Disconnect()에 인자로 넘긴 이유
      * @param force 강제 종료 여부
-     * @param payload 서버로 부터 받은 추가 정보
+     * @param payload 서버로부터 받은 추가 정보
      */
     OnDisconnect(connection: ConnectionAgent, resultCode: ResultCodeDisconnect, reason: string, force: boolean, payload: Payload): void { }
     /**
