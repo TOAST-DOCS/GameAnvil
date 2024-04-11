@@ -1,202 +1,205 @@
-## Game > GameAnvil > 릴리스 노트 > Console
+## Game > GameAnvil > Release Notes > Console
 
+## April 9, 2024
+### Change
+* Improved SafePause
 
-## 2024. 01. 09.
+## January 9, 2024
 ### Fix
-* 기타 안정성 개선
+* Improved stability
 
 ### Change
-* 서버 화면 개편
-  * 일반 서버, 오토스케일 그룹 메뉴 분리
-  * 생성된 서버, 오토스케일 그룹 상세 검색 및 제어 기능 추가
-  * 서버 및 오토스케일 그룹 상세 확인 페이지 추가
-  * 서버 및 오토스케일 그룹 복사 기능 추가
-  * 일반 서버 일괄 수정 기능 추가
-  * 오토스케일 그룹 배포 파일 일괄 수정 기능 추가
-  * 오토스케일 그룹 오류난 인스턴스 복구 기능 추가
-  * 오토스케일 그룹 스케일 이벤트 이력 확인 페이지 추가
-  * GameAnvil Config 기능 추가
-  * 배포 파일 메뉴 수정
-    * 기본 배포 파일 삭제
-    * 검색 기능 수정
-  * Safe Pause 화면 수정 
-  * 노드 메뉴 개편
-    * 정보 확인 및 상세 검색 기능 추가
-  * 서버, 오토스케일 그룹 생성 화면 수정
-    * GameAnvil Config를 미리 JSON 형식으로 작성하여 생성 가능
+* Server screen reorganized
+  * Separated general server from autoscale group menu
+  * Added detailed search and control of created servers and autoscale groups
+  * Added server and autoscale group details page
+  * Added the feature to copy servers and autoscale groups
+  * Added the feature to bulk modify general servers
+  * Added the feature to bulk modify autoscale group deployment files
+  * Added the feature to recover from failed autoscale group instances
+  * Added autoscale group scale event history view page
+  * Added the GameAnvil Config feature
+  * Modified the deployment files menu
+    * Deleted default deployment files
+    * Modified the search feature
+  * Modified the Safe Pause screen 
+  * Reorganized the node menu
+    * Added the feature to view and refine information
+  * Modified server, autoscale group creation screen
+    * GameAnvil Config can be created by writing it in JSON format in advance
 
 
-## 2023. 09. 26.
+## September 26, 2023
 ### New
-* 소프트웨어 라이선스 동의 화면 추가
+* Added a software license agreement screen
 
 ### Change
-* GameAnvil 프로젝트 활성화 시 진행 상황 표시 기능 추가
+* Added a progress display when activating a GameAnvil project
 
 
-## 2023. 08. 29.
+## August 29, 2023
 ### Change
-* 서버 생성 및 제어 중에 다른 서버를 추가로 생성 및 제어가 가능하도록 사용성 개선
+* Improved usability to allow additional servers to be created and controlled during server creation and control
 
 ### Fix
-* 기타 안정성 개선
+* Improved stability
 
 
-## 2023. 07. 25.
+## July 25, 2023
 ### Fix
-* Auto-Scale 그룹의 배포 파일이 수정되지 않는 문제 수정
-* 로그인이 만료된 경우 NHN Cloud 로그인 페이지로 이동되도록 수정
-* 기타 안정성 개선
+* Fixed an issue where deployment files in Auto-Scale groups are not modified
+* Modified to go to the NHN Cloud login page when login expires
+* Improved stability
 
 
-## 2023. 07. 11.
+## July 11, 2023
 ### Fix
-* 여러 서버에 배포되어 있는 파일을 일괄 변경할 수 있도록 수정
-* 기타 안정성 개선
+* Modified to allow bulk changes to files deployed on multiple servers
+* Improved stability
 
 
-## 2023. 06. 27.
-### Change일
-* 모니터링 대시보드 화면 개선
-    * 현재 사용 중인 CPU Core 잔여량 그래프 추가
-    * 서버별, 노드별 상태 모니터링 추가
-    * 서버의 CPU, Memory, Disk, Network 사용량 그래프 추가
-    * 오토스케일 그룹 상태 모니터링 추가
-    * 유저 분포 이력 및 그래프 추가
+## June 27, 2023
+### Changes
+* Improved the monitoring dashboard screen
+    * Added a graph of how many CPU cores are currently in use
+    * Added per-server, per-node health monitoring
+    * Added CPU, Memory, Disk, and Network usage graphs for a server
+    * Added the auto scale group health monitoring
+    * Added user distribution history and graphs
 
 ### Fix
-* 기타 안정성 개선
+* Improved stability
 
 
-## 2023. 05. 30.
+## May 30, 2023
 ### New
-* CloudTrail과 연동되어 사용자 액션 추적 가능
+* Integration with CloudTrail to track user actions
 
 ### Change
-* Auto-Scale 그룹의 노드가 노드 모니터링 페이지에 노출되도록 수정
-* 배포 파일의 Major 버전을 확인하여 이미 실행되어 있는 서버와 호환되지 않은 서버가 추가적으로 시작되지 않도록 변경
+* Modified to expose nodes in the Auto-Scale group to the node monitoring page
+* Modified to ensure additional servers that incompatible with those already running do not start by checking the major version of the deployment file
 
 ### Fix
-* Auto-Scale 그룹의 Gateway에 접속이 안 되는 문제 수정
-* 기타 안정성 개선
+* Fixed an issue where the gateway in an Auto-Scale group is not connected
+* Improved stability
 
 
-### 2022. 12. 27.
+### December 27, 2022
 
-GameAnvil 1.3.0부터 완전히 새로워진 Console과 연동합니다. 새로운 Console은 이전 버전에 대한 단순한 업데이트가 아닙니다. GameAnvil 서버를 NHN Cloud 인프라와 통합하여 더욱 쉽고 편하게 게임 서비스를 운영할 수 있는 새로운 UX를 제공하기 위해 거의 모든 부분이 새롭게 구현되었습니다. 이러한 이유로 Console은 GameAnvil과 버전을 맞추기 위해 1.1과 1.2를 건너뛰고 바로 1.3으로 버전업합니다.
+Starting with GameAnvil 1.3.0, it is integrated with the all-new console. The new console is not just a simple update to the previous version. Almost everything has been reimplemented to integrate GameAnvil servers with NHN Cloud infrastructure and provide a new UX that makes running your game service easier and more comfortable. For this reason, the console is skipping 1.1 and 1.2 and going straight to 1.3 to keep up with GameAnvil.
 
 #### New
 
-* ````인프라````를 직접 생성하고 관리할 수 있습니다.
-    * 컴퓨트 인스턴스(VM)는 물론이고 로드 밸런서(L4)까지 관련 인프라를 콘솔로 관리
-* 더욱 안정화, 고도화된 ````Safe Pause````를 지원합니다.
-    * 라이브 서비스 기술 지원으로 축적한 많은 핫픽스를 포함
-* 서비스 중 서버 부하에 유연하게 대응할 수 있도록 ````Auto-Scale````을 지원합니다.
-    * 인프라의 리소스 사용량뿐만 아니라 액티브 유저와 방의 수치까지 스케일링 조건으로 설정 가능
-* 다양한 ````모니터링```` 기능을 제공합니다.
-    * 서버와 노드 상태는 물론이고 유저, 방, 세션 등의 실시간 집계 수치를 제공
-* 서버 바이너리를 쉽고 빠르게 바로 ````배포```` 가능합니다.
-    * 배포 히스토리까지 완벽 지원
-* ````Gateway, Game, Match, Support```` 노드만 구성하고 관리하면 됩니다.
-    * 플랫폼에서 로케이션 노드 및 매니지먼트 노드를 관리
-* ```GUI 기반의 간편한 서버와 노드 구성```이 가능합니다.
-* 전반적인 ```화면 디자인과 UX가 고도화```되었습니다.
-  * 서버 상태를 한눈에 볼 수 있는 UI 제공
-  * Drag & Drop 형태의 UI로 쉽고 편하게 노드 구성 가능
+* You can create and manage your own ````infrastructure````.
+    * Console management of compute instances (VMs) and related infrastructure, including load balancers (L4s)
+* Support for more stable, advanced ````Safe Pause````.
+    * Included many hotfixes performed from live service technical support
+* Support for ````Auto-Scale```` to flexibly respond to server load during service.
+    * Set the number of active users and rooms, as well as the resource usage of the infrastructure as scaling conditions
+* Provides a variety of ````monitoring```` capabilities.
+    * Provides real-time aggregate metrics for server and node status, as well as users, rooms, sessions, etc.
+* Quickly and easily ````deploy```` server binaries.
+    * Full support for deployment history
+* You only need to configure and manage the ````Gateway, Game, Match, and Support```` nodes.
+    * Manage location nodes and management nodes on the platform
+* ```Easy, GUI-based server and node configuration```.
+* The overall ```screen design and UX has been advanced```.
+  * Provides an at-a-glance UI for server health
+  * Drag & Drop UI for easy and comfortable node configuration
 
 
 #### Fix
 
-* 없음
+* None
 
 #### Change
 
-* 없음
+* None
 
 ---
 
-### 2021. 07. 13.
+### July 13, 2021
 
 #### Change
 
-* 인스턴스 설정의 각 입력 값에 대한 가이드 문서를 최신화
-* 인스턴스 중지 시 Kill로 강제종료 하지 않고 매니지먼트 노드를 통해 정상적으로 종료되도록 변경
-* 인스턴스 설정 시 기본포트가 변경(신규 생성하는 인스턴스에 한함)
+* Updated the guide documentation for each input value in the instance settings
+* Modified to terminate instances normally via the management node instead of forcing a kill when stopped
+* Changed default port when setting up an instance (new instances only)
 
 #### Fix
 
-* 인증 필터의 순서가 명시적이지 않아 간헐적으로 오류 발생하는 현상 수정
+* Fixed an intermittent error when the order of authentication filters was not explicit.
 
 ---
 
-### 2021. 06. 15.
+### June 15, 2021
 
 #### New
 
-* 일문 번역 적용
+* Applied Japanese translation
 
 #### Change
 
-* 모니터링 시 오탐지를 줄이기 위해 모니터링 실행 주기와 에러 허용 횟수 변경
+* Modified how often monitoring runs and how many errors are tolerated to reduce false positives in monitoring
 
 ---
 
-### 2021. 05. 25.
+### May 25, 2021
 
 #### New
 
-* 서비스 생성만 가능하고 수정 및 삭제가 되지 않아 별도 관리 페이지 생성
+* Created a separate page for management as services could only be created but not edited or deleted
 
 #### Change
 
-* 기존 인스턴스 설정을 노드 단위로 저장 및 관리하던 방식에서 인스턴스 단위로 저장 및 관리하도록 변경
-* VM Option 입력 메시지를 10,240바이트까지 입력할 수 있도록 변경
+* Changed the instance settings so that they are now stored and managed as an instance rather than as a node
+* Changed VM Option input message to allow up to 10,240 bytes
 
 #### Fix
 
-* 인스턴스 설정 생성 시 각 노드의 사용자 가이드가 정상적인 가이드 페이지로 이동하도록 수정
+* Fixed an issue in which the user guide of each node would not move to the proper guide page when creating instance settings
 
 ---
 
-### 2021. 04. 27.
+### April 27, 2021
 
 #### New
 
-* 영문 번역 적용
+* Applied English translation
 
 #### Change
 
-* VM Option 입력 메시지를 512바이트까지 입력할 수 있도록 변경
-* Toast UI Chart Vue 버전 4.2.1로 적용
+* Changed VM Option input message to allow up to 512 bytes
+* Applied Toast UI Chart Vue version 4.2.1
 
 #### Fix
 
-* 머신 설정 오류 발생 시 재시도 버튼을 누르면 무조건 Java 11로 셋팅되는 문제 수정
-* 인스턴스 등록에서 머신 선택 시 필터링 된 상태의 전체선택 문제 수정
+* Fixed an issue where the machine would be forcibly set to Java 11 if Retry button was clicked after the occurrence of a machine setting error
+* Fixed an issue where all filtered machines would be selected when a machine was selected from Register Instance
 
 ---
 
-### 2021. 03. 23.
+### March 23, 2021
 
 #### Change
 
-* 등록된 머신이 없을 때 인스턴스 등록화면 접근 시 머신등록 페이지를 안내하도록 변경
-* 머신 파일 업로드 후 머신 목록 리스트로 이동하도록 변경
-* 모니터링 대시보드 동시접속자 변화 그래프 데이터가 몇시 몇분 데이터인지 표시하도록 변경
-* 인스턴스 등록 / 수정 화면에서 Port 입력란 아래 중복 체크 버튼을 Port 중복 체크로 문구 변경
+* Changed the system so that it shows the machine registration page if the instance registration screen is accessed while there is no registered machine.
+* Changed the system so that the user would be redirected to the machine list after a machine file is uploaded.
+* Changed the system so that the monitoring dashboard concurrent user influx graph data would display the hour and minute of the data
+* Changed the text of the Check for Duplicates button to Check for Port Duplicates in the instance registration/edit screen
 
 #### Fix
 
-* 노드 모니터링에서 선택 안하고 Resume / Pause 눌렀을 때 안내 팝업 나오도록 수정
+* Changed the system so that a popup window would appear if Resume/Pause is clicked without selecting node monitoring
 
 ---
 
-### 2021. 02. 23.
+### February 23, 2021
 
 #### New
 
-##### GameAnvil Console 출시
+##### Released GameAnvil Console
 
-* 동시 접속자 변화를 확인하고 유저 분포를 모니터링할 수 있습니다.
-* GameAnvil 엔진 서버를 관리할 수 있습니다.
-* 인스턴스, 노드에 발생한 이벤트를 조회할 수 있습니다.
+* Check the changes in concurrent users and monitor user distribution
+* Manage the GameAnvil engine server.
+* Check the events occurred from instances and nodes.
