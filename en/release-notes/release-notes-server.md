@@ -1,4 +1,4 @@
-## Game > GameAnvil > Release Note > GameAnvil
+## Game > GameAnvil > Release Notes > GameAnvil
 ### 1.4.2 (2024.02.26)
 
 #### New

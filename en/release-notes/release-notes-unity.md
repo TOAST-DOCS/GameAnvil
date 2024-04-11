@@ -1,4 +1,4 @@
-## Game > GameAnvil > Release Note > Connector-CSharp 
+## Game > GameAnvil > Release Notes > Connector-CSharp 
 
 ### 1.4.0 (2023.12.13)
 

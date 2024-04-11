@@ -1,4 +1,4 @@
-## Game > GameAnvil > Release Note > GameHammer
+## Game > GameAnvil > Release Notes > GameHammer
 
 ### 1.4.0 (2023.12.13)
 
