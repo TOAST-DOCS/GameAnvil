@@ -1,40 +1,40 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > ConnectionAgent
+## Game > GameAnvil > Unity基礎開発ガイド > ConnectionAgent
 
 ## QuickConnect
 
-GameAnvilConnector에서는 QuickConnect 기능을 제공하여 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > ConnectionAgent](../unity-advanced/unity-advanced-02-connection-agent.md) 또는 서버 개발 가이드를 참고하십시오.
+GameAnvilConnectorではQuickConnect機能を提供し、サーバーに接続、認証、ログインする手順を一度に処理できるようにします。接続、認証、ログインする手順の詳細については、[Unity深層開発ガイド > ConnectionAgent](../unity-advanced/unity-advanced-02-connection-agent.md)またはサーバー開発ガイドを参照してください。
 
-### QuickConnect 설정
+### QuickConnect設定
 
-QuickConnect에 사용되는 설정값이 있습니다. GameAnvilConnector 생성 시 기본값으로 설정되지만 필요하다면 인스펙터 창에서 직접 값을 변경할 수 있습니다.
+QuickConnectに使用される設定値があります。GameAnvilConnector作成時にデフォルトで設定されますが、必要に応じてインスペクタウィンドウで直接値を変更できます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/03-connection-agent/01-config.png)
 
-설정의 종류는 다음과 같습니다.
+設定の種類は次のとおりです。
 
-| 이름 | 설명 |
+| 名前 | 説明 |
 | --- | --- |
-| ip | 대상 아이피 주소 |
-| port | 대상 포트 번호 |
-| accountId | 사용자 계정을 식별할 수 있는 고유 아이디 |
-| deviceId | 사용자 기기 식별용 고유 아이디. 서버 구현에 따라 사용하지 않는 경우 빈 문자열 전달 |
-| password | 사용자 계정의 비밀번호. 서버 구현에 따라 사용하지 않는 경우 빈 문자열 전달 |
-| userType | 유저의 타입 |
-| channelId | 대상 채널의 아이디 |
-| serviceName | 대상 서비스의 이름 |
+| ip | 対象IPアドレス |
+| port | 対象ポート番号 |
+| accountId | ユーザーアカウントを識別できる固有のID |
+| deviceId | ユーザーデバイスを識別するための固有のID。サーバーの実装により、使用しない場合は空の文字列を伝達 |
+| password | ユーザーアカウントのパスワード。サーバーの実装により、使用しない場合は空の文字列を伝達 |
+| userType | ユーザーのタイプ |
+| channelId | 対象チャンネルのID |
+| serviceName | 対象サービスの名前 |
 
-### QuickConnect 사용
+### QuickConnectの使用
 
-QuickConnect()를 통해 서버에 접속, 인증, 로그인합니다. 매개변수로 인증 페이로드, 로그인 페이로드, DelOnQuickConnect 콜백을 넘겨줍니다. 인증 페이로드와 로그인 페이로드는 생략할 수 있습니다.
+QuickConnect()を使ってサーバーに接続、認証、ログインします。引数で認証ペイロード、ログインペイロード、DelOnQuickConnectコールバックを渡します。認証ペイロードとログインペイロードは省略できます。
 
 ```c#
 /// <summary>
-/// GameAnvil 서버에 연결 시도, 연결 성공 시 인증 요청, 인증 성공 시 로그인 요청
-/// 연결/인증/로그인 모두 성공 시 QUICK_CONNECT_SUCCESS
+/// GameAnvilサーバーに接続試行、接続成功時、認証リクエスト、認証成功時、ログインリクエスト
+/// 接続/認証/ログインが全て成功した場QUICK_CONNECT_SUCCESS
 /// </summary>
-/// <param name="authenticatePayload">인증을 위해 추가로 전달하는 정보</param>
-/// <param name="loginPayload">로그인을 위해 추가로 전달하는 정보</param>
-/// <param name="onQuickConnect">QuickConnect 요청 결과를 전달 받을 대리자</param>
+/// <param name="authenticatePayload">認証のために追加で渡す情報</param>
+/// <param name="loginPayload">ログインのために追加で渡す情報</param>
+/// <param name="onQuickConnect">QuickConnectリクエスト結果を受け取るデリゲート</param>
 public void QuickConnect(Payload authenticatePayload, Payload loginPayload, DelOnQuickConnect onQuickConnect){
     if (quickConnect != null)
     {
@@ -48,38 +48,37 @@ public void QuickConnect(Payload authenticatePayload, Payload loginPayload, DelO
 
 <br>
 
-DelOnQuickConnect 콜백을 통해서 QuickConnect 결과를 받을 수 있습니다.
+DelOnQuickConnectコールバックを使ってQuickConnectの結果を受け取ることができます。
 
 ```c#
 /// <summary>
-/// QuickConnect 요청 결과를 전달 받을 대리자
+/// QuickConnectリクエスト結果を受け取るデリゲート
 /// </summary>
-/// <param name="resultCode">QuickConnect 요청 결과</param>
-/// <param name="userAgent">방 생성, 입장 등 유저와 관련된 기능을 사용할 수 있도록 해주는 에이전트</param>
-/// <param name="quickConnectResult">서버로부터 받은 인증 관련 추가 정보, 서버로부터 받은 로그인 관련 추가 정보, 연결 요청 결과, 인증 요청 결과, 로그인 요청 결과 묶음</param>
+/// <param name="resultCode">QuickConnectリクエスト結果</param>
+/// <param name="userAgent">ルームの作成、入室などユーザーに関する機能を使用できるようにするエージェント</param>
+/// <param name="quickConnectResult">サーバーから受け取った認証、ログインに関する追加情報。接続リクエスト結果、認証リクエスト結果、ログインリクエスト結果の集合</param>
 public delegate void DelOnQuickConnect(ResultCodeQuickConnect resultCode, UserAgent userAgent, QuickConnectResult quickConnectResult);
 ```
 
 ## Disconnect
 
-GameAnvilConnector의 Disconnect(), QuickDisconnect() 함수를 이용해서 서버와의 연결을 해제할 수 있습니다. 
+GameAnvilConnectorのDisconnect(), QuickDisconnect()関数を利用してサーバーとの接続を解除できます。
 
-QuickDisconnect() 호출 시 로그아웃, 서버 접속 종료, 연결 해제 후 처리할 콜백 호출의 과정을 한 번에 처리할 수 있습니다.
+QuickDisconnect()呼び出し時、ログアウト、サーバー接続終了、接続解除後処理するコールバック呼び出しの過程を一度に処理できます。
 
 ```c#
 /// <summary>
-/// 로그아웃, GameAnvil 서버와의 연결 해제 요청, 콜백 호출
+/// ログアウト、 GameAnvilサーバーとの接続解除リクエスト、コールバックの呼び出し
 /// </summary>
-/// <param name="onQuickDisconnect">요청 결과를 전달 받을 대리자</param>
+/// <param name="onQuickDisconnect">リクエスト結果を受け取るデリゲート</param>
 public void QuickDisconnect(DelOnQuickDisconnect onQuickDisconnect);
 ```
 
-Disconnect() 호출 시 서버 접속이 종료됩니다.
+Disconnect()呼び出し時、サーバー接続が終了します。
 
 ```c#
 /// <summary>
-/// GameAnvil 서버와의 연결 해제 요청
+/// GameAnvilサーバーとの接続解除リクエスト
 /// </summary>
 public void Disconnect();
 ```
-

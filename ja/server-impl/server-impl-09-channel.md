@@ -1,12 +1,12 @@
-## Game > GameAnvil > 서버 개발 가이드 > 채널
+## Game > GameAnvil > サーバー開発ガイド > チャンネル
 
 
 
-## 채널(Channel)
+## チャンネル(Channel)
 
 ![channel-sync2.png](https://static.toastoven.net/prod_gameanvil/images/channel-sync2.png)
 
-채널은 단일 서버군을 논리적으로 나눌 수 있는 방법 중 하나입니다. GameAnvil은 한 개 이상의 게임 노드를 포함할 경우에 채널을 설정할 수 있습니다. 기본적으로 GameAnvilConfig을 통해 게임 노드에 아래의 예제처럼 채널을 설정할 수 있습니다. 이 예제에서 4개의 게임 노드에 대해 각각 ch1, ch1, ch2, ch2를 설정합니다.
+チャンネルは、単一サーバー群を論理的に分けることができる方法の1つです。GameAnvilは1つ以上のゲームノードを含む場合、チャンネルを設定できます。基本的にGameAnvilConfigによってゲームノードに次の例のようなチャンネルを設定できます。この例では4個のゲームノードに対して、それぞれch1、ch1、ch2、ch2を設定します。
 
 ```json
 "game": [
@@ -23,7 +23,7 @@
     }
 ```
 
-채널을 사용하고 싶지 않을 경우에는 채널 ID를 모두 다음과 같이 ""로 설정하면 됩니다. 이 경우 모든 채널 기능도 사용할 수 없습니다. 즉, 아래의 게임 노드 4개는 모두 채널과 관계없이 독립적으로 동작합니다.
+チャンネルを使用したくない場合は、チャンネルIDをすべて次のように""で設定してください。この場合、すべてのチャンネル機能は使用できません。つまり、次のゲームノード4個はすべて、チャンネルに関係なく独立して動作します。
 
 ```json
 "game": [
@@ -40,7 +40,7 @@
     }
 ```
 
-만일 전체 게임 노드를 하나의 채널로 관리하고 싶다면 다음과 같이 유효한 문자열로 채널 아이디를 입력합니다.
+もしゲームノード全体を1つのチャンネルで管理したい場合は、次のように有効な文字列でチャンネルIDを入力します。
 
 ```json
 "game": [
@@ -57,36 +57,36 @@
     }
 ```
 
-이러한 채널을 통해 다음과 같은 기능을 사용할 수 있습니다.
+このようなチャンネルによって次の機能を使用できます。
 
-* 채널 정보를 관리할 수 있습니다. 해당 채널에 속한 유저와 방 정보를 사용할 수 있게 됩니다.
-* 채널별 유저와 방의 개수를 조회할 수 있습니다.
-* 채널 단위로 메시지를 전송할 수 있습니다. publishToChannel API를 사용하면 대상 채널에 속한 모든 게임 노드로 메시지를 전달합니다.
+* チャンネル情報を管理できます。該当チャンネルに属しているユーザーとルーム情報を使用できるようになります。
+* チャンネル別のユーザーとルームの数を照会できます。
+* チャンネル単位でメッセージを送信できます。publishToChannel APIを使用すると、対象チャンネルに属しているすべてのゲームノードにメッセージを送信します。
 
 
 
-## 채널 정보 관리
+## チャンネル情報管理
 
-사용자는 채널에서 관리할 정보를 직접 구현할 수 있습니다. 이러한 정보는 같은 채널 안에서 자동으로 동기화가 됩니다.
+ユーザーはチャンネルで管理する情報を直接実装できます。これらの情報は、同じチャンネル内で自動的に同期されます。
 
-### 채널 유저 정보
+### チャンネルユーザー情報
 
-우선 채널에서 유저 정보를 관리하기 위해서는 다음과 같이 유저 클래스를 구현할 때 애너테이션을 통해 채널 유저 정보를 활성화시켜야 합니다.
+まず、チャンネルでユーザー情報を管理するためには、次のようにユーザークラスを実装する時にアノテーションによってチャンネルユーザー情報を有効にします。
 
 ```java
 @ServiceName("MyGame")
 @UserType("BasicUser")
-@UseChannelInfo // 채널 유저 정보 활성화
+@UseChannelInfo // チャンネルユーザー情報を有効化
 public class SampleGameUser extends BaseUser implements TimerHandler {
 	...
 }
 ```
 
-그리고 추가로 BaseChannelUserInfo를 구현합니다. 이때, 사용자가 채널에서 관리하고 싶은 정보를 모두 포함하면 됩니다.
+そして、追加でBaseChannelUserInfoを実装します。この時、ユーザーがチャンネルで管理したい情報をすべて加えてください。
 
 ```java
 public class GameChannelUserInfo implements Serializable, BaseChannelUserInfo {
-	// 채널에서 보여줄 유저 정보
+	// チャンネルで表示するユーザー情報
 	private int userId = 0;
 	private String accountId = "";
 	private int level = 0;
@@ -94,9 +94,9 @@ public class GameChannelUserInfo implements Serializable, BaseChannelUserInfo {
     ...
   
     /**
-     * 변경될 Channel User 정보의 User Id.
+     * 変更されるChannel User情報のUser Id。
      *
-     * @return int type 으로 UserId 반환.
+     * @return int typeでUserIdを返す。
      */
     @Override
     int getUserId() {
@@ -104,9 +104,9 @@ public class GameChannelUserInfo implements Serializable, BaseChannelUserInfo {
     }
 
     /**
-     * 변경될 Channel User 정보의 Account Id.
+     * 変更されるChannel User情報のAccount Id。
      *
-     * @return String type 으로 AccountId 반환.
+     * @return String typeでAccountIdを返す。
      */
     @Override
     String getAccountId() {
@@ -115,7 +115,7 @@ public class GameChannelUserInfo implements Serializable, BaseChannelUserInfo {
 }
 ```
 
-이렇게 작성한 채널 유저 정보는 다음과 같이 유저 객체에서 추가하거나 갱신할 수 있습니다. 이때, updateChannelUserInfo API를 사용합니다. 만일 해당 유저 객체가 서버에서 로그아웃되면 해당 채널 유저 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
+こうして作成したチャンネルユーザー情報は、次のようにユーザーオブジェクトで追加や更新できます。この時、updateChannelUserInfo APIを使用します。もし該当ユーザーオブジェクトがサーバーからログアウトすると、該当チャンネルユーザー情報も一緒に自動的に削除されます。以下はこれに対するpseudoコードです。
 
 ```java
 public class SampleGameUser extends BaseUser {
@@ -123,7 +123,7 @@ public class SampleGameUser extends BaseUser {
   
 	...
 
-	// 유저가 로그인 시 채널 유저 정보를 추가합니다.
+	// ユーザーがログイン時にチャンネルユーザー情報を追加します。
 	onLogin(...) throws SuspendExecution {
 		...
 		channelUserInfo.setUserId(getId())
@@ -134,7 +134,7 @@ public class SampleGameUser extends BaseUser {
 		...
 	}
   
-	// 채널 이동 시 대상 채널에 새로운 채널 유저 정보를 추가합니다.
+	// チャンネル移動時に対象チャンネルに新しいチャンネルユーザー情報を追加します。
 	onMoveInChannel(...) throws SuspendExecution {
 		...
 		channelUserInfo.setUserId(getId());
@@ -145,7 +145,7 @@ public class SampleGameUser extends BaseUser {
 		...
 	}
   
-	// 사용자 콘텐츠에서 변경된 유저 정보를 언제든 갱신할 수 있습니다.
+	// ユーザーコンテンツで変更されたユーザー情報をいつでも更新できます。
 	updateLevel(int level) {
 		channelUserInfo.setLevel(getLevel());
       
@@ -154,22 +154,22 @@ public class SampleGameUser extends BaseUser {
 }
 ```
 
-참고로 채널 이동 시에 이전 채널에서는 자동으로 해당 채널 유저 정보를 삭제하므로 사용자는 대상 채널에서 새롭게 추가할 정보만 신경 쓰면 됩니다.
+また、チャンネル移動時に以前のチャンネルでは自動的に該当チャンネルユーザー情報を削除するため、ユーザーは対象チャンネルで新たに追加する情報にのみ集中できます。
 
-### 채널 방 정보
+### チャンネルのルーム情報
 
-채널에서 방 정보를 관리하기 위해서는 앞서 살펴본 게임 유저와 마찬가지로 방 클래스를 구현할 때 애너테이션을 통해 채널 방 정보를 활성화시켜야 합니다.
+チャンネルでルーム情報を管理するためには、前述したゲームユーザーと同様に、ルームクラスを実装する時にアノテーションによってチャンネルのルーム情報を有効にする必要があります。
 
 ```java
 @ServiceName("MyGame")
 @RoomType("BasicRoom")
-@UseChannelInfo // 채널 정보 활성화
+@UseChannelInfo // チャンネル情報の有効化
 public class GameRoom extends BaseUser implements TimerHandler {
     ...
 }
 ```
 
-그리고 추가로 BaseChannelRoomInfo를 구현합니다. 이때, 사용자가 채널에서 관리하고 싶은 방 관련 정보를 모두 포함하면 됩니다.
+そして、追加でBaseChannelRoomInfoを実装します。この時、ユーザーがチャンネルで管理したいルームの関連情報をすべて加えてください。
 
 ```java
 public class GameChannelRoomInfo implements Serializable, BaseChannelRoomInfo {
@@ -180,9 +180,9 @@ public class GameChannelRoomInfo implements Serializable, BaseChannelRoomInfo {
     ...
       
     /**
-     * Room 정보의 Room Id.
+     * Room情報のRoom Id。
      *
-     * @return int type 으로 RoomId 반환.
+     * @return int typeでRoomIdを返す。
      */
     @Override
     public int getRoomId() {
@@ -190,23 +190,23 @@ public class GameChannelRoomInfo implements Serializable, BaseChannelRoomInfo {
     }
 
     /**
-     * Room 정보를 복사한다.
+     * Room情報をコピーする。
      *
-     * @return RoomInfo로 복사된 Room 정보를 반환.
-     * @throws CloneNotSupportedException 복사가 안 되는 경우.
+     * @return RoomInfoでコピーされたRoom情報を返す。
+     * @throws CloneNotSupportedExceptionコピーできない場合。
      */
     @Override
     public BaseChannelRoomInfo copy() throws CloneNotSupportedException {
         GameChannelRoomInfo channelRoomInfo = (GameChannelRoomInfo)super.clone();
       
-        // 데이터 복사가 필요할 경우 여기에서 진행합니다.
+        // データコピーが必要な場合はここで実行します。
       
         return channelRoomInfo;
     }   
 }
 ```
 
-이렇게 작성한 채널 방 정보는 다음과 같이 방 객체에서 추가하거나 갱신할 수 있습니다. 이때, updateChannelRoomInfo API를 사용합니다. 만일 해당 방 객체가 서버에서 사라지면 해당 채널 방 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
+こうして作成したチャンネルのルーム情報は、次のようにルームオブジェクトで追加や更新できます。この時、updateChannelRoomInfo APIを使用します。もし該当ルームオブジェクトがサーバーから削除された場合は、該当チャンネルのルーム情報も一緒に自動的に削除されます。以下はこれに対するpseudoコードです。
 
 ```java
 public class GameRoom extends BaseRoom<GameUser> {
@@ -214,7 +214,7 @@ public class GameRoom extends BaseRoom<GameUser> {
   
 	...
       
-	// 방 생성 시 updateChannelRoomInfo 함수를 통해서 채널 방 정보를 추가합니다.
+	// ルーム作成時にupdateChannelRoomInfo関数でチャンネルのルーム情報を追加します。
 	onCreateRoom(...) throws SuspendExecution {
 		...
 		channelRoomInfo.setRoomId(getId());
@@ -224,7 +224,7 @@ public class GameRoom extends BaseRoom<GameUser> {
 		updateChannelRoomInfo(channelUserInfo);
 	}
   
-	// 방에 새로운 유저가 들어오면 updateChannelRoomInfo 함수를 통해서 변경된 방 정보를 적용합니다.
+	// ルームに新しいユーザーが入場した場合、updateChannelRoomInfo関数で変更されたルーム情報を適用します。
 	onJoinRoom(...) throws SuspendExecution {
 		...
 		channelRoomInfo.setUserCount(++userCount);
@@ -232,7 +232,7 @@ public class GameRoom extends BaseRoom<GameUser> {
 		updateChannelRoomInfo(channelUserInfo);
 	}
   
-    // 방에 유저가 나가면 updateChannelRoomInfo 함수를 통해서 변경된 방 정보를 적용합니다.
+    // ルームからユーザーが退出した場合、updateChannelRoomInfo関数で変更されたルーム情報を適用します。
 	onPostLeaveRoom(...) throws SuspendExecution {
 		...
 		channelRoomInfo.setUserCount(--userCount);
@@ -242,62 +242,62 @@ public class GameRoom extends BaseRoom<GameUser> {
 }
 ```
 
-## 채널 정보 동기화
+## チャンネル情報の同期
 
-동일한 채널의 게임 노드는 서로 채널 관련 정보를 공유합니다. 예를 들면 같은 채널에 속한 하나의 게임 노드에서 앞서 살펴본 방식으로 유저나 방 정보가 변경되면 해당 채널의 나머지 게임 노드는 다음과 같은 콜백 메서드가 호출됩니다. 이러한 콜백을 이용하여 동일한 채널 내의 모든 게임 노드가 정보를 동기화할 수 있습니다. 다음은 게임 노드에서 이러한 채널 동기화를 위해 사용되는 콜백 메서드입니다.
+同じチャンネルのゲームノードは、互いにチャンネル関連情報を共有します。例えば、同じチャンネルに属している1つのゲームノードにおいて、前述した方式でユーザーやルームの情報が変更されると、該当チャンネルの残りのゲームノードは、次のようなコールバックメソッドが呼び出されます。これらのコールバックを利用して、同じチャンネル内のすべてのゲームノードが情報を同期できます。以下は、ゲームノードでこれらのチャンネル同期用に使用されるコールバックメソッドです。
 
 ```java
  	/**
-     * 같은 채널의 다른 노드에서 유저 변화가 발생할 때 호출
-     * 즉, updateChannelUser() API 호출 시 발생
+     * 同じチャンネルの別のノードでユーザー変化が発生した時に呼び出し
+     * すなわち、updateChannelUser() APIを呼び出した時に発生
      *
-     * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
-     * @param channelUserInfo 변경될 User 정보 전달.
-     * @param userId          변경 대상의 User Id 전달.
-     * @param accountId       변경 대상의 Account Id 전달.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param type            Channel情報の変更タイプ(更新/削除)を送信。
+     * @param channelUserInfo変更されるUser情報を送信。
+     * @param userId        変更対象のUser Idを送信。
+     * @param accountId     変更対象のAccount Idを送信。
+     * @throws SuspendExecution このメソッドはファイバーがsuspendになることがある。
      */
     @Override
     public void onChannelUserInfoUpdate(ChannelUpdateType type, ChannelUserInfo channelUserInfo, final int userId, final String accountId) throws SuspendExecution {  
     }
 
     /**
-     * 같은 채널의 다른 노드에서 방 상태 변화가 발생할 때 호출
-     * 즉, updateChannelRoomInfo() API 호출 시 발생
+     * 同じチャンネルの別のノードでルームの状態変化が発生した時に呼び出し
+     * すなわち、updateChannelRoomInfo() APIを呼び出した時に発生
      *
-     * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
-     * @param channelRoomInfo 변경될 Room 정보 전달.
-     * @param roomId          변경 대상의 Room Id 전달.
-     * @throws SuspendExecution이 메서드는 파이버가 suspend 될 수 있다.
+     * @param type            Channel情報の変更タイプ(更新/削除)を送信。
+     * @param channelRoomInfo変更されるRoom情報を送信。
+     * @param roomId        変更対象のRoom Idを送信。
+     * @throws SuspendExecution このメソッドはファイバーがsuspendになることがある。
      */
     @Override
     public void onChannelRoomInfoUpdate(ChannelUpdateType type, ChannelRoomInfo channelRoomInfo, final int roomId) throws SuspendExecution {  
     }
 
     /**
-     * 클라이언트에서 채널 정보 요청 시 호출
+     * クライアントがチャンネル情報をリクエストした時に呼び出し
      *
-     * @param outPayload Client로 전달될 Channel 정보 전달.
-     * @throws SuspendExecution이 메서드는 파이버가 suspend 될 수 있다.
+     * @param outPayload Clientに送信されるChannel情報を送信。
+     * @throws SuspendExecution このメソッドはファイバーがsuspendになることがある。
      */
     @Override
     public void onChannelInfo(Payload outPayload) throws SuspendExecution {  
     }
 ```
 
-### 클라이언트로 채널 정보 동기화
+### クライアントにチャンネル情報を同期
 
-클라이언트는 서버로 언제든 채널 정보를 요청할 수 있습니다. 이때, 앞서 살펴본 게임 노드의 콜백 메서드 중 onChannelInfo가 호출됩니다. 단, 클라이언트의 잘못된 구현 혹은 악의적인 사용을 막고자 이 콜백 메서드 호출은 최소한의 재호출 주기(기본값 1초)를 가집니다.  예를 들어 클라이언트가 1초 동안 10번의 채널 정보 요청을 하더라도 서버는 단 1회의 onChannelInfo 콜백 메서드를 호출합니다. 나머지 9번의 요청은 이전에 캐싱해 둔 정보를 전달합니다. 다음은 이러한 onChannelInfo를 구현한 pseudo 코드입니다.
+クライアントはサーバーにいつでもチャンネル情報をリクエストできます。この時、前述したゲームノードのコールバックメソッドのうち、onChannelInfoが呼び出されます。ただし、クライアントの誤った実装または、悪意のある使用を防ぐために、このコールバックメソッドの呼び出しは最小限の再呼び出しサイクル(デフォルト値1秒)を備えています。例えば、クライアントが1秒間に10回、チャンネル情報をリクエストしても、サーバーは1回のみonChannelInfoコールバックメソッドを呼び出します。残りの9回のリクエストは、キャッシュしておいた情報を送信します。以下は、これらのonChannelInfoを実装したpseudoコードです。
 
 ```java
 public void onChannelInfo(Payload outPayload) throws SuspendExecution {
 
-    // 클라이언트에 보낼 사용자 정의 채널 정보 생성
+    // クライアントに送信するユーザー定義のチャンネル情報を作成
 	Game.GameChannelInfo.Builder channelInfoBuilder = Game.GameChannelInfo.newBuilder();
 
 	channelInfoBuilder.setChannelId(this.getChannelId());
 
-	// getChannelUserInfo API를 통해서 채널 유저 정보를 가져옵니다.
+	// getChannelUserInfo APIでチャンネルのユーザー情報を取得します。
 	for (BaseChannelUserInfo channelUserInfo : getChannelUserInfo(UserType_1)) {
 		GameChannelUserInfo gameChannelUserInfo = (GameChannelUserInfo) channelUserInfo;
 
@@ -308,7 +308,7 @@ public void onChannelInfo(Payload outPayload) throws SuspendExecution {
     	channelInfoBuilder.addChannelUserInfos(channelUserInfoBuilder.build());
     }
   
-	// getChannelRoomInfo API를 통해서 채널 방 정보를 가져옵니다.
+	// getChannelRoomInfo APIでチャンネルのルーム情報を取得します。
     for (BaseChannelRoomInfo channelRoomInfo : getChannelRoomInfo(RoomType_2)) {  
 	   	GameChannelRoomInfo gameChannelRoomInfo = (GameChannelRoomInfo) channelRoomInfo;
   
@@ -320,11 +320,11 @@ public void onChannelInfo(Payload outPayload) throws SuspendExecution {
         channelInfoBuilder.addChannelRoomInfos(channelRoomInfoBuilder.build());
 	}
 
-    // outPayload에 클라이언트에게 보낼 채널 정보를 추가합니다.
+    // outPayloadにクライアントに送信するチャンネル情報を追加します。
 	outPayload.add(channelInfoBuilder);
 }
 ```
 
-### 클라이언트로 채널에 속한 유저와 방의 개수 전달하기
+### クライアントにチャンネルに属しているユーザーとルームの数を送信する
 
-GameAnvil 커넥터는 이러한 정보를 요청하기 위해 GetChannelCountInfo API를 제공합니다. 엔진에서 항상 채널 단위의 유저/방 개수를 관리하고 있으므로 사용자는 별도의 구현을 할 필요가 없습니다.
+GameAnvilコネクタは、これらの情報をリクエストするために、GetChannelCountInfo APIを提供しています。エンジンが常にチャンネル単位のユーザー/ルームの数を管理しているため、ユーザーは別途の実装をする必要がありません。
