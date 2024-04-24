@@ -1,4 +1,4 @@
-## Game > GameAnvil > 서버 개발 가이드 > 게이트웨이 노드 구현
+## Game > GameAnvil > サーバー開発ガイド > ゲートウェイノードの実装
 
 
 
@@ -6,73 +6,73 @@
 
 ![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gatewaynode_on_network.png)
 
-GatewayNode는 클라이언트가 접속하는 관문(Gateway)입니다. 즉, 클라이언트의 커넥션과 게임 서비스에 대한 세션을 관리합니다. 이때, 클라이언트는 게임을 진행하기 위해 반드시 GatewayNode에 접속한 후 인증을 완료해야 합니다. 이들의 관계는 다음 그림과 같습니다.
+GatewayNodeはクライアントが接続する入り口(Gateway)です。すなわち、クライアントのコネクションとゲームサービスのセッションを管理します。この時、クライアントはゲームを進行するために必ずGatewayNodeに接続して、認証を完了する必要があります。これらの関係については、次の図を参照してください。
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
-일반적으로 클라이언트는 GatewayNode로 하나의 커넥션을 맺습니다. 이때, 해당 커넥션에 대해 인증 절차를 진행하고, 성공한 경우에 한해 하나 이상의 세션을 생성할 수 있습니다. 각각의 세션은 클라이언트와 유저 사이의 논리적 연결 단위입니다. 위의 그림은 클라이언트가 하나의 커넥션을 통해 Game 서비스와 Chat 서비스로 세션을 생성한 모습입니다. 이러한 구조는 의도치 않게 클라이언트의 접속이 끊기더라도, 간단하게 [세션 복구 (Session Recovery)](#21-session-recovery)를 가능하게 합니다.
+通常、クライアントはGatewayNodeで1つのコネクションを結びます。この時、該当コネクションに対して認証手続きを行い、成功した場合に限って、1つ以上のセッションを作成できます。それぞれのセッションは、クライアントとユーザー間の論理的接続単位です。上図はクライアントが1つのコネクションを通じて、GameサービスとChatサービスでセッションを作成したものです。このような仕組みは、意図せずクライアントの接続が切れても、簡単に[セッションの復元(Session Recovery)](#21-session-recovery)を可能にします。
 
 
 
-### GatewayNode 구현
+### GatewayNodeの実装
 
-이러한 GatewayNode는 BaseGatewayNode 클래스를 상속하여 공통 콜백 메서드만 재정의하면 됩니다. 이러한 공통 콜백 메서드는 그 이름이 용도를 명확하게 설명하고 있습니다. 또한 이렇게 구현한 클래스를 엔진에 등록하기 위해 @GatewayNode 애너테이션을 사용합니다.
+このようなGatewayNodeは、BaseGatewayNodeクラスを継承して共通コールバックメソッドを再定義するだけで構いません。このような共通コールバックメソッドは、その名前が用途を明確に説明しています。また、こうして実装したクラスをエンジンに登録するために@GatewayNodeアノテーションを使用します。
 
 ```java
-@GatewayNode // 이 GatewayNode 클래스를 엔진에 등록
+@GatewayNode // このGatewayNodeクラスをエンジンに登録
 public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
-     * 초기화할 때 호출
+     * 初期化する際に呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onInit() throws SuspendExecution {      
     }
 
     /**
-     * Ready 되기 전에 처리할 부분을 위해 호출
+     * Ready前に処理する部分用に呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPrepare() throws SuspendExecution {
     }
 
     /**
-     * Ready 될 때 호출
+     * Ready呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onReady() throws SuspendExecution {      
     }
 
     /**
-     * pause 될 때 호출
+     * pause呼び出し
      *
-     * @param payload contents 에서 전달하고자 하는 추가 정보
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param payload contentsから送信したい追加情報
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPause(Payload payload) throws SuspendExecution {      
     }
 
     /**
-     * resume 될 때 호출
+     * resume呼び出し
      *
-     * @param payload contents에서 전달하고자 하는 추가 정보
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param payload contentsから送信したい追加情報
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onResume(Payload payload) throws SuspendExecution {      
     }
 
     /**
-     * shutdown 명령을 받으면 호출
+     * shutdownコマンドを受け取ると呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onShutdown() throws SuspendExecution {      
@@ -82,26 +82,26 @@ public class SampleGatewayNode extends BaseGatewayNode {
 
 
 
-### Connection 구현
+### Connectionの実装
 
-커넥션은 클라이언트의 물리적 접속 자체를 의미합니다. 클라이언트는 고유한 AccountId를 이용하여 커넥션 상에서 인증 절차를 진행할 수 있습니다. 인증이 성공할 경우 해당 AccountId는 생성된 커넥션에 매핑됩니다.
+コネクションは、クライアントの物理的な接続自体を意味します。クライアントは固有のAccountIdを利用して、コネクション上で認証手続きを進行できます。認証が成功した場合、該当AccountIdは作成されたコネクションにマッピングされます。
 
-이러한 커넥션은 다음과 같이 BaseConnection을 상속한 후 콜백 메서드들을 재정의합니다. 이때, 임의의 플랫폼에서 인증한 후 획득하는 유저의 키 값 등을 AccountId로 사용할 수 있습니다. 예를 들어 Gamebase를 통해 인증한 후 UserId를 획득하면 이 값을 GameAnvil의 인증 과정에서 AccountId로 사용할 수 있습니다. 또한 GatewayNode 구현과 마찬가지로 구현한 클래스를 엔진에 등록하기 위해 @Connection 애너테이션을 사용하고 있습니다.
+このようなコネクションは、次のようにBaseConnectionを継承した後、コールバックメソッドを再定義します。この時、任意のプラットフォームで認証した後、取得するユーザーのキー値などをAccountIdとして使用できます。例えば、Gamebaseを通じて認証した後、UserIdを取得すると、この値をGameAnvilの認証プロセスでAccountIdとして使用できます。また、GatewayNodeの実装と同様に、実装したクラスをエンジンに登録するために@Connectionアノテーションを使用しています。
 
 ```java
-@Connection // 이 커넥션 클래스를 엔진에 등록
+@Connection // このコネクションクラスをエンジンに登録
 public class SampleConnection extends BaseConnection<SampleGameSession> {
 
     /**
-     * authenticate 시에 호출
+     * authenticate時に呼び出し
      *
-     * @param accountId  계정 아이디
-     * @param password   계정 패스워드
-     * @param deviceId   클라이언트의 기기 아이디
-     * @param payload    클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 인증 성공 여부: false이면 클라이언트와의 접속이 종료
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param accountId アカウントID
+     * @param password アカウントパスワード
+     * @param deviceId クライアントのデバイスID
+     * @param payload  クライアントから送信されるペイロード
+     * @param outPayload クライアントで送信するペイロード
+     * @return認証成否: falseの場合は、クライアントとの接続が終了
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onAuthenticate(final String accountId, final String password, final String deviceId, final Payload payload, final Payload outPayload) throws SuspendExecution {      
@@ -116,36 +116,36 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
     }
 
     /**
-     * 클라이언트와 연결이 끊어졌을 때 호출
+     * クライアントとの接続が切断された場合に呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     public void onDisconnect() throws SuspendExecution {      
     }
 }
 ```
 
-이러한 콜백의 의미와 용도는 아래의 표를 참고하십시오.
+これらのコールバックの意味と用途については次の表を参照してください。
 
 
-| 콜백 이름      | 의미                | 설명                                                                                                                                                                                                                                                    |
+| コールバック名    | 意味               | 説明                                                                                                                                                                                                                                                  |
 | ---------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| onAuthenticate | 인증                | 클라이언트가 Authentication() API를 사용하여 커넥션에 대한 인증을 요청할 때 호출됩니다. 사용자는 여기에서 클라이언트가 보낸 인증 정보를 바탕으로 인증 처리를 진행할 수 있습니다. 만일 인증이 성공하면 true를 반환하고 실패하면 false를 반환해야 합니다. |
-| onPause        | 일시 정지           | 콘솔을 통해 GatewayNode를 일시 정지하면 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 커넥션에서 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                                             |
-| onResume       | 재개                | 콘솔을 통해 GatewayNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 재개 상태에서 커넥션에 대해 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                              |
-| onDisconnect   | 접속 종료           | 클라이언트로부터 접속이 끊겼을 때 호출됩니다. 이때, 추가로 처리할 코드를 이곳에 구현합니다.                                                                                                                                                           |
-| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메시지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메시지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하세요. |
+| onAuthenticate | 認証              | クライアントがAuthentication()APIを使用して、コネクションに認証をリクエストした際に呼び出されます。ユーザーは、ここでクライアントが送信した認証情報に基づいて認証処理を実行できます。認証が成功した場合はtrueを返し、失敗した場合はfalseを返す必要があります。 |
+| onPause        | 一時停止         | コンソールを介してGatewayNodeを一時停止すると、該当GatewayNodeのすべてのコネクションに対して呼び出されます。ユーザーは、ノードが一時停止された時、コネクションにおいて追加で処理したいコードをここに実装できます。                                                             |
+| onResume       | 再開              | コンソールを介してGatewayNodeが一時停止状態から動作を再開すると、該当GatewayNodeのすべてのコネクションに対して呼び出されます。ユーザーは再開状態でコネクションに対して処理したいコードをここに実装できます。                                              |
+| onDisconnect   | 接続終了         | クライアントからの接続が切断された時に呼び出されます。この時、追加で処理するコードをここに実装します。                                                                                                                                                           |
+| getMessageDispatcher | 処理するパケット有り | ノードに処理するメッセージがある場合に返します。ユーザーは、自分が宣言したディスパッチャーを使用できます。詳細については[メッセージ処理](./server-impl-07-message-handling#13-getMessageDispatcher)を参照してください。 |
 
 
 
-### Session 구현
+### Session実装
 
-커넥션을 성공적으로 맺은 클라이언트는 해당 커넥션상에서 서비스마다 하나씩 GameNode에 대한 논리적인 세션을 맺을 수 있습니다. GameAnvil은 내부적으로 커넥션의 AccountId와 세션의 SubId를 조합하여 전체 서버에서 고유한 세션을 구분할 수 있습니다.
+コネクションの接続に成功したクライアントは、該当コネクション上でサービスごとに1つずつGameNodeに対する論理的なセッションを結べます。GameAnvilは内部的にコネクションのAccountIdとセッションのSubIdを組み合わせて、サーバー全体で固有のセッションを区別できます。
 
-이때, SubId는 사용자가 임의로 정한 규칙에 맞춰서 해당 커넥션 내의 아무 고유한 값으로 할당하면 됩니다. 즉, 서로 다른 커넥션은 동일한 SubId를 가질 수도 있습니다. 하지만 서로 다른 AccountId를 가지므로 구분이 가능합니다. 또한 구현한 세션 클래스를 엔진에 등록하기 위해 @Session 애너테이션을 사용하고 있습니다.
+この時、SubIdはユーザーが任意で決めたルールに合わせて、該当コネクション内のどの固有値を割り当てても構いません。すなわち、互いに異なるコネクションは、同一のSubIdを持つこともできます。しかし、異なるAccountIdを持つため、区別可能です。また、実装したセッションクラスをエンジンに登録するために@Sessionアノテーションを使用しています。
 
 ```java
-@Session // 이 세션 클래스를 엔진에 등록
+@Session // このセッションクラスをエンジンに登録
 public class SampleSession extends BaseSession {
 
     private static MessageDispatcher<SampleSession> dispatcher = new MessageDispatcher<>();
@@ -160,28 +160,28 @@ public class SampleSession extends BaseSession {
     }
 
     /**
-     * login 호출 이전에 호출
+     * loginを呼び出す前に呼び出し
      *
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param outPayloadクライアントで送信するペイロード
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPreLogin(Payload outPayload) throws SuspendExecution {      
     }
 
     /**
-     * 로그인 성공 이후에 호출
+     * ログイン成功後に呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPostLogin() throws SuspendExecution {      
     }
 
     /**
-     * 로그아웃 이후에 호출
+     * ログアウト後に呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPostLogout() throws SuspendExecution {
@@ -189,30 +189,30 @@ public class SampleSession extends BaseSession {
 }
 ```
 
-이러한 콜백의 의미와 용도는 아래의 표를 참고하십시오.
+これらのコールバックの意味と用途については次の表を参照してください。
 
 
-| 콜백 이름    | 의미                | 설명                                                                                                                                                                                                                                          |
+| コールバック名  | 意味               | 説明                                                                                                                                                                                                                                        |
 | -------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| onPreLogin   | 로그인 전처리       | GameNode에 로그인을 요청하기 직전에 호출됩니다. 이때, 사용자는 매개변수로 전달된 출력용 페이로드(outPayload)에 임의의 값을 넣어서 로그인 요청에 실어 보낼 수 있습니다. 이 페이로드는 게임 노드에서 로그인 콜백을 처리할 때 그대로 전달됩니다. |
-| onPostLogin  | 로그인 후처리       | GameNode에 로그인을 완료한 후 호출됩니다. 로그인 완료 후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                                                                   |
-| onPostLogout | 로그아웃 후처리     | 로그아웃 처리가 완료된 후 호출됩니다. 로그아웃 이후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                                                                       |
-| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메시지가 있을 때 반환시킵니다 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메시지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하십시오. |
+| onPreLogin   | ログイン前の処理     | GameNodeにログインをリクエストする前に呼び出されます。この時、ユーザーは引数で送信された出力用のペイロード(outPayload)に任意の値を入れて、ログインリクエストに載せて送信できます。このペイロードは、ゲームノードでログインコールバックを処理する時にそのまま送信されます。 |
+| onPostLogin  | ログイン後の処理     | GameNodeにログイン完了した後、呼び出されます。ログイン完了後にセッションで処理するコードがある場合は、ここに実装します。                                                                                                                                   |
+| onPostLogout | ログアウト後の処理   | ログアウト処理が完了した後、呼び出されます。ログアウト後にセッションで処理するコードがある場合は、ここに実装します。                                                                                                                                       |
+| getMessageDispatcher | 処理するパケット有り | ノードに処理するメッセージがある場合に返します。ユーザーは自分が宣言したディスパッチャーを使用できます。詳細については[メッセージ処理](./server-impl-07-message-handling#13-getMessageDispatcher)を参照してください。 |
 
 
 
-## Connection과 Session
+## ConnectionとSession
 
-클라이언트는 게이트웨이 노드로 접속합니다. 즉, 커넥션을 생성합니다. 이 커넥션을 통해 계정과 유저 정보를 바탕으로 인증과 로그인을 진행할 수 있습니다. 로그인까지 완료되면 임의의 게임 노드에 유저 객체가 생성됩니다. 이는 게이트웨이 노드와 해당 게임 노드 사이에 논리적인 세션이 생성되었음을 의미합니다. 이렇게 커넥션과 세션 생성이 완료되면 해당 유저는 게임 진행이 가능해집니다. 여기에 대해서는 바로 뒤에서 게임 노드를 설명할 때 다시 살펴보도록 하겠습니다.
+クライアントはゲートウェイノードに接続します。すなわち、コネクションを作成します。このコネクションを通じて、アカウントとユーザー情報に基づいて認証とログインを行うことができます。ログインまで完了すると、任意のゲームノードにユーザーオブジェクトが作成されます。これは、ゲートウェイノードと該当ゲームノード間に論理的なセッションが作成されたことを意味します。こうしてコネクションとセッションの作成が完了すると、該当ユーザーはゲームの進行が可能になります。これについては、ゲームノードを説明する際にもう一度見てみましょう。
 
 ### Session Recovery
 
-만일, 클라이언트와 게이트웨이 노드 사이에 재접속이 발생하면 아래의 그림과 같이 세션 복구(Session Recovery)가 진행됩니다. 재접속을 하는 과정에서 클라이언트는 여러 대의 게이트웨이 노드 중 이전과 다른 곳에 커넥션을 시도할 수도 있습니다. 이 경우 유저 객체가 존재하는 게임 노드에 대한 위치 정보를 바탕으로 새롭게 세션을 복구합니다. 그러므로 유저는 게임 진행 중에 재접속을 하더라도 이전의 게임 상태를 이어갈 수 있습니다.
+万が一、クライアントとゲートウェイノード間で再接続が発生した場合、次の図のようにセッションの復元(Session Recovery)が行われます。再接続プロセスでクライアントは、複数のゲートウェイノードのうち、以前とは異なる場所にコネクションを試みることもできます。この場合、ユーザーオブジェクトが存在するゲームノードの位置情報に基づいて、新たにセッションを復元します。そのため、ユーザーはゲーム進行中に再接続しても、それまでのゲーム状態を維持できます。
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionRecovery.png)
 
 ### Location Node
 
-앞서 살펴본 커넥션 복구 그림에서 로케이션 노드가 보입니다. 로케이션 노드는 GameAnvil이 내부적으로 유저와 방 등의 위치 정보를 관리하는 시스템 노드입니다. 사용자는 로케이션 노드에 대해 직접 구현하거나 사용할 수 없습니다. 하지만 위치 정보를 관리하는 로케이션 노드의 역할을 이해하는 것은 전체적인 GameAnvil 시스템의 흐름을 이해하는 데 도움이 되기 때문에 여기에서 간단하게 언급하고자 합니다.
+前述したコネクション復元図でロケーションノードが表示されています。ロケーションノードは、GameAnvilが内部的にユーザーやルームなどの位置情報を管理するシステムノードです。ユーザーはロケーションノードに直接実装または、使用することはできません。しかし、位置情報を管理するロケーションノードの役割を理解することは、GameAnvilシステムの全体的なフローを理解するのに役立つため、ここで簡単に説明します。
 
-위의 커넥션 복구를 예로 들어 보겠습니다. 클라이언트가 최초 접속을 하여 게임 노드로 로그인을 시도하는 과정에서 이와 관련된 세션과 유저에 대한 위치 정보는 모두 로케이션 노드에 저장됩니다. 그러므로 재접속을 진행할 경우에는 이전 접속 과정에서 저장해 두었던 이 위치 정보를 조회할 수 있습니다. 이러한 위치 정보는 GameAnvil 내부적으로 유저나 방의 위치 정보를 조회하고 이를 바탕으로 메시지를 전달하는 용도 등으로 매우 중요하게 사용됩니다.
+上記のコネクション復元を例に挙げてみます。クライアントが初回接続して、ゲームノードにログインを試みる過程で、これに関連するセッションとユーザーの位置情報はすべてのロケーションノードに保存されます。そのため、再接続した場合は、以前の接続過程で保存していたこの位置情報を照会できます。このような位置情報は、GameAnvil内部的にユーザーやルームの位置情報を照会し、これをもとにメッセージを送信する用途などに使用されます。

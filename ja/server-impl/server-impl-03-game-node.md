@@ -1,4 +1,4 @@
-## Game > GameAnvil > 서버 개발 가이드 > 게임 노드 구현
+## Game > GameAnvil > サーバー開発ガイド > ゲームノードの実装
 
 
 
@@ -6,37 +6,37 @@
 
 ![GameNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gamenode_on_network.png)
 
-GameNode는 실제 게임 객체가 생성되고 게임 콘텐츠를 구현하는 노드입니다. 클라이언트는 GatewayNode에서 인증을 완료한 후, GameNode에 로그인을 완료해야 비로소 이러한 게임 콘텐츠를 시작할 수 있습니다.
+GameNodeは、実際のゲームオブジェクトが作成され、ゲームコンテンツを実装するノードです。クライアントはGatewayNodeで認証を完了した後、GameNodeにログインして初めてこのようなゲームコンテンツを開始できます。
 
-아래의 이미지에서 보듯이, 클라이언트는 고유한 AccountId로 인증을 완료한 커넥션을 기반으로 여러 개의 논리 세션을 생성할 수 있습니다. 이때, 세션은 클라이언트와 유저 객체 사이에 만들어집니다. 아래의 그림에서 빨간색 점선 화살표가 이러한 세션을 나타냅니다.
+以下の画像を見て分かるように、クライアントは固有のAccountIdで認証を完了したコネクションをベースに複数の論理セッションを作成できます。この時、セッションはクライアントとユーザーオブジェクト間に作成されます。以下の図では、赤い点線の矢印がこのようなセッションを示しています。
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
-각각의 세션은 해당 커넥션 내에서 고유한 값으로 구분할 수 있으며 우리는 이 값을 SubId라고 부릅니다. 즉, AccountId와 SubId의 조합으로 사용자는 원하는 만큼 세션을 생성할 수 있습니다. 이때, 동일한 서비스에 대한 세션도 마찬가지로 원하는 만큼 생성할 수 있습니다. 즉, 이미지에서 AccountId가 1인 커넥션은  "Game" 서비스 혹은 "Chat" 서비스에 대한 세션을 얼마든지 추가로 생성할 수 있는 것입니다.
+それぞれのセッションは、該当コネクション内で固有値で区別でき、この値をSubIdと呼んでいます。すなわち、AccountIdとSubIdの組み合わせにより、ユーザーは好きなだけセッションを作成できます。この時、同じサービスに対するセッションも同様に好きなだけ作成できます。つまり、画像でAccountIdが1であるコネクションは、"Game"サービスまたは、"Chat"サービスのセッションをいくらでも追加で作成できるということです。
 
-이러한 세션이 향하는 곳은 바로 유저 객체입니다. GameNode는 이러한 유저 객체와 그들의 그룹인 방 객체를 관리합니다. 이번 챕터는 이러한 GameNode와 GameUser 그리고 GameRoom에 대해 설명합니다.
+これらのセッションが向かうのはユーザーオブジェクトです。GameNodeは、これらのユーザーオブジェクトとそれらのグループであるルームオブジェクトを管理します。このチャプターでは、このようなGameNodeとGameUser、そしてGameRoomについて説明します。
 
 
 ## GameNode
 
-GameNode는 BaseGameNode 클래스를 상속하여 구현합니다. 아래의 예제 코드는 GameNode에서 기본적으로 재정의할 수 있는 콜백 메서드를 보여줍니다. 노드 공통 콜백과 더불어 채널 관리를 위한 콜백이 존재합니다.
+GameNodeは、BaseGameNodeクラスを継承して実装します。以下のサンプルコードはGameNodeで基本的に再定義できるコールバックメソッドを示しています。ノード共通のコールバックに加えて、チャンネル管理用のコールバックが存在します。
 
-모든 노드는 사용자 정의 메시지를 처리하기 위한 디스패처 생성과 메시지 핸들러 등록 과정이 필요합니다. 특히, GameNode는 게임 콘텐츠를 위해 이러한 과정이 필수입니다.  우선, (1) 정적 패킷 디스패처를 하나 생성합니다. 이때, 반드시 메모리나 성능 측면에서 이점을 취할 수 있도록 정적(static)으로 생성합니다. (2) 그리고 처리하고 싶은 메시지를 구현해 둔 [핸들러](server-impl-07-message-handling.md#11)와 연결합니다. (3) 마지막으로 MessageDispatcher에서 (1)에서 생성한 디스패처를 이용하여 패킷을 처리합니다.
+すべてのノードは、ユーザー定義のメッセージを処理するためのディスパッチャーの作成とメッセージハンドラ登録プロセスが必要です。特にGameNodeはゲームコンテンツのために、このようなプロセスが必須です。まず、(1)静的パケットディスパッチャーを1つ作成します。この時、必ずメモリや性能面で利点を得られるように静的(static)で作成します。(2)処理したいメッセージを実装しておいた[ハンドラ](server-impl-07-message-handling.md#11)と接続します。(3)最後に、MessageDispatcherで(1)で作成したディスパッチャーを利用してパケットを処理します。
 
-이러한 일련의 과정을 아래의 예제 코드에서 (1)~(3)에 해당하는 주석 바로 아래의 코드를 통해 살펴볼 수 있습니다.
+これらの一連のプロセスは、以下のサンプルコードで(1)～(3)に該当する注釈のすぐ下にあるコードで調べることができます。
 
-또한 이렇게 구현한 클래스를 @ServiceName 애너테이션을 사용하여 특정 서비스에 대한 용도로 엔진에 등록합니다. 하나의 GameNode 클래스는 오직 하나의 서비스에 대해서만 등록할 수 있습니다.
+また、こうして実装したクラスを@ServiceNameアノテーションを使用して、特定のサービスに対する用途でエンジンに登録します。1つのGameNodeクラスは、1つのサービスにのみ登録できます。
 
 ```java
-@ServiceName("MyGame") // "MyGame"이라는 서비스를 위한 GameNode로 엔진에 등록
+@ServiceName("MyGame") // "MyGame"というサービス用にGameNodeでエンジンに登録
 public class SampleGameNode extends BaseGameNode {
 
-    // (1) 패킷 디스패처 생성  
+    // (1)パケットディスパッチャーを作成 
     private static final MessageDispatcher<SampleGameNode> messageDispatcher = new MessageDispatcher<>();
 
-    // (2) SampleGameNode에서 처리하고 싶은 프로토콜과 핸들러를 매핑
+    // (2) SampleGameNodeで処理したいプロトコルとハンドラをマッピング
     static {
-        messageDispatcher.registerMsg(SampleGame.GameNodeTest.class, _GameNodeTest.class);
+        messageDispatcher.registerMsg(SampleGame.GameNodeTest.class、_GameNodeTest.class);
     }
 
     @Override
@@ -53,66 +53,66 @@ public class SampleGameNode extends BaseGameNode {
     }
 
     /**
-     * pause 될 때 호출
+     * pause呼び出し
      *
-     * @param payload contents 에서 전달하고자 하는 추가 정보
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param payload contentsから送信したい追加情報
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
-    public void onPause(PauseType type, Payload payload) throws SuspendExecution {
+    public void onPause(PauseType type,Payload payload) throws SuspendExecution {
     }
 
     /**
-     * resume 될 때 호출
+     * resume呼び出し
      *
-     * @param payload contents에서 전달하고자 하는 추가 정보
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param payload contentsから送信したい追加情報
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onResume(Payload payload) throws SuspendExecution {
     }
   
     /**
-     * shutdown 명령을 받으면 호출
+     * shutdownコマンドを受け取ると呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onShutdown() throws SuspendExecution {
     }
 
     /**
-     * 같은 채널의 다른 노드에서 유저 변화가 발생할 때 호출
-     * 즉, updateChannelUser() API 호출 시 발생
+     * 同じチャンネルの他のノードでユーザーが変化した時に呼び出し
+     * すなわち、updateChannelUser() APIを呼び出した時に発生
      *
-     * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
-     * @param channelUserInfo 변경될 User 정보 전달.
-     * @param userId          변경 대상의 User Id 전달.
-     * @param accountId       변경 대상의 Account Id 전달.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param type            Channel情報変更タイプ(更新/削除)を送信。
+     * @param channelUserInfo変更されるUser情報を送信。
+     * @param userId        変更対象のUser Idを送信。
+     * @param accountId     変更対象のAccount Idを送信。
+     * @throws SuspendExecution、このメソッドはファイバーがsuspendされることがある。
      */
     @Override
     public void onChannelUserInfoUpdate(ChannelUpdateType type, ChannelUserInfo channelUserInfo, final int userId, final String accountId) throws SuspendExecution {  
     }
 
     /**
-     * 같은 채널의 다른 노드에서 방 상태 변화가 발생할 때 호출
-     * 즉, updateChannelRoomInfo() API 호출 시 발생
+     * 同じチャンネルの他のノードでルームの状態が変化した時に呼び出し
+     * すなわち、updateChannelRoomInfo() APIを呼び出した時に発生
      *
-     * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
-     * @param channelRoomInfo 변경될 Room 정보 전달.
-     * @param roomId          변경 대상의 Room Id 전달.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param type            Channel情報変更タイプ(更新/削除)を送信。
+     * @param channelRoomInfo変更されるRoom情報を送信。
+     * @param roomId        変更対象のRoom Idを送信。
+     * @throws SuspendExecution、このメソッドはファイバーがsuspendされることがある。
      */
     @Override
     public void onChannelRoomInfoUpdate(ChannelUpdateType type, ChannelRoomInfo channelRoomInfo, final int roomId) throws SuspendExecution {  
     }
 
     /**
-     * 클라이언트에서 채널 정보 요청 시 호출
+     * クライアントからチャンネル情報をリクエストした時に呼び出し
      *
-     * @param outPayload Client 로 전달될 Channel 정보 전달.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param outPayload Clientに送信されるChannel情報を送信。
+     * @throws SuspendExecution、このメソッドはファイバーがsuspendされることがある。
      */
     @Override
     public void onChannelInfo(Payload outPayload) throws SuspendExecution {  
@@ -120,24 +120,24 @@ public class SampleGameNode extends BaseGameNode {
 }
 ```
 
-이러한 GameNode의 주 목적은 노드에 접속된 모든 GameUser와 GameRoom 객체들에 대한 처리를 수행하는 것입니다. 이에 대해서는 바로 달아서 설명하도록 하겠습니다.
+これらのGameNodeの主な目的は、ノードに接続されたすべてのGameUserとGameRoomオブジェクトに対する処理を実行することです。これについては、次で説明します。
 
-공통 콜백을 제외한 콜백의 의미와 용도는 아래의 표를 참고하십시오.
+共通コールバックを除外したコールバックの意味と用途については、次の表を参照してください。
 
 
-| 콜백 이름               | 의미                  | 설명                                                                                                                                                               |
+| コールバック名             | 意味                 | 説明                                                                                                                                                             |
 | ------------------------- | ----------------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onChannelUserInfoUpdate | 채널의 유저 정보 갱신 | 같은 채널로 묶인 여러 개의 GameNode 중, 하나의 GameNode에서 채널의 유저 정보가 변경되었을 때 같은 채널 내의 나머지 모든 GameNode에서 동기화를 위하여 호출됩니다. 이때, 사용자는 전달 받은 정보를 바탕으로 현재 GameNode의 채널 정보를 갱신할 수 있습니다. |
-| onChannelRoomInfoUpdate | 채널의 방 정보 갱신   | 같은 채널로 묶인 여러 개의 GameNode 중, 하나의 GameNode에서 채널의 방 정보가 변경되었을 때 같은 채널 내의 나머지 모든 GameNode에서 동기화를 위하여 호출됩니다. 이때, 사용자는 전달 받은 정보를 바탕으로 현재 GameNode의 채널 정보를 갱신할 수 있습니다.  |
-| onChannelInfo           | 채널 정보 요청        | 클라이언트가 채널 정보를 요청할 때 호출됩니다. 사용자는 이 콜백에서 원하는 대로 채널 정보를 구성하여 클라이언트로 전달할 수 있습니다.                                                                                     |
+| onChannelUserInfoUpdate | チャンネルのユーザー情報更新 | 同じチャンネルに結ばれた複数のGameNodeのうち、1つのGameNodeでチャンネルのユーザー情報が変更された場合、同じチャンネル内の残りの全GameNodeで同期するために呼び出されます。この時、ユーザーは受信した情報に基づいて現在のGameNodeチャンネル情報を更新できます。 |
+| onChannelRoomInfoUpdate | チャンネルのルーム情報更新 | 同じチャンネルに結ばれた複数のGameNodeのうち、1つのGameNodeでチャンネルのルーム情報が変更された場合、同じチャンネル内の残りの全GameNodeで同期するために呼び出されます。この時、ユーザーは受信した情報に基づいて現在のGameNodeチャンネル情報を更新できます。  |
+| onChannelInfo           | チャンネル情報リクエスト      | クライアントがチャンネル情報をリクエストした場合に呼び出されます。ユーザーは、このコールバックで好きなようにチャンネル情報を構成して、クライアントに送信できます。                                                                                     |
 
 
 
-## 유저 구현
+## ユーザー実装
 
-유저 객체는 로그인 과정을 거쳐 GameNode에 생성됩니다. 유저 기반의 콘텐츠는 이 클래스를 중심으로 구현하는 것이 바람직합니다. 앞서 살펴본 모든 예제와 마찬가지로 유저 또한 처리할 고유의 메시지와 핸들러를 연결할 수 있습니다. 아래의 예제 코드를 보면 유저는 꽤 많은 콜백 메서드를 제공하는 것을 볼 수 있습니다. 이 중 일부는 기본 구현이 제공되므로 특별히 필요한 상황이 아니라면 재정의하지 않아도 됩니다. 이는 유저뿐만 아니라 엔진에서 제공하는 대부분의 클래스에 해당합니다.
+ユーザーオブジェクトはログインプロセスを経て、GameNodeに作成されます。ユーザーベースのコンテンツは、このクラスを中心に実装することが望ましいです。前述したすべての例と同様に、ユーザーも処理する固有のメッセージとハンドラを接続できます。次のサンプルコードを見ると、ユーザーはかなり多くのコールバックメソッドを提供していることが分かります。これらの一部は、基本実装が提供されるため、特に必要な場合でない限り、再定義する必要はありません。これはユーザーだけでなく、エンジンが提供するほとんどのクラスに該当します。
 
-특히, 유저는 엔진에 등록하기 위한 애너테이션도 다른 클래스에 비해 많이 요구합니다. 우선, 어떤 게임 서비스를 위한 유저인지 등록 후, 유저 타입을 등록합니다. 이 유저 타입은 이름 그대로 유저의 종류를 구별하기 위한 용도로서, 클라이언트에서도 마찬가지로 API를 호출할 때 사용됩니다. 즉, 해당 API가 서버의 어떤 유저 타입에 대한 호출인지 명시하는 것입니다. 그러므로 반드시 서버와 클라이언트 사이에 이러한 유저 타입을 임의의 문자열로 사전 정의해두어야 합니다. 이 예제 코드에서는 "BasicUser"라는 유저 타입을 사용합니다. 이에 대한 더 자세한 설명은 별도의 챕터에서 다시 다루도록 합니다. 마지막으로 이 유저 정보가 [채널 간 유저 정보 동기화](server-impl-09-channel#3-채널-정보-동기화)에 사용될지 여부를 결정할 수 있습니다. 만일 채널 간 정보 동기화가 필요 없다면 @UseChannelInfo 애너테이션은 생략할 수 있습니다.
+特に、ユーザーはエンジンに登録するためのアノテーションも他のクラスに比べて多く要求します。まず、どのようなゲームサービスのユーザーなのか登録した後、ユーザータイプを登録します。このユーザータイプは、その名のとおりユーザーの種類を区別するためのもので、クライアントでも同様にAPIを呼び出す時に使用されます。すなわち、該当APIがサーバーのどのユーザータイプに対する呼び出しなのかを明示することです。そのため、必ずサーバーとクライアント間にこれらのユーザータイプを任意の文字列で事前に定義しておく必要があります。このサンプルコードでは、"BasicUser"というユーザータイプを使用します。これに関する詳細は別のチャプターで取り扱います。最後に、このユーザー情報が[チャンネル間のユーザー情報同期](server-impl-09-channel#3-チャンネル-情報-同期)に使用するかどうかを決定できます。チャンネル間の情報同期が必要でない場合は、@UseChannelInfoアノテーションを省略できます。
 
 ```java
 @ServiceName("MyGame")
@@ -157,13 +157,13 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 로그인할 때 호출
+     * ログインする時に呼び出し
      *
-     * @param payload        클라이언트에서 전달 받은 정보
-     * @param sessionPayload onPreLogin에서 전달된 페이로드
-     * @param outPayload     클라이언트로 전달할 정보
-     * @return 로그인이 성공이면 true를 반환 그렇지 않으면 false를 반환
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param payload      クライアントから送信された情報
+     * @param sessionPayload onPreLoginから送信されたペイロード
+     * @param outPayload   クライアントに送信する情報
+     * @returnログインが成功した場合はtrueを返し、それ以外の場合はfalseを返す 
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onLogin(final Payload payload,
@@ -172,9 +172,9 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 로그인 성공 이후에 필요한 후처리를 위해 호출 (즉, onLogin 혹은 onReLoin이 성공한 후 호출)
+     * ログイン成功後に必要な後処理用の呼び出し(すなわち、onLoginもしくはonReLoinが成功後に呼び出し)
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPostLogin() throws SuspendExecution {
@@ -182,12 +182,12 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 이미 로그인된 상황에서 다른 디바이스로 같은 유저가 로그인할 때 호출
+     * すでにログインした状況で異なるデバイスで同じユーザーがログインした場合に呼び出し
      *
-     * @param newDeviceId           새로 접속한 유저의 deviceId 값
-     * @param outPayloadForKickUser 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 새로 접속한 유저가 로그인 된 후 기존 유저는 강제 로그아웃 처리. false면 새로 접속한 유저가 로그인 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param newDeviceId          新たに接続したユーザーのdeviceId値
+     * @param outPayloadForKickUserクライアントに送信するペイロード
+     * @return戻り値がtrueの場合は、新たに接続したユーザーがログインした後、既存ユーザーは強制ログアウト処理。Falseの場合は、新たに接続したユーザーがログイン失敗
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onLoginByOtherDevice(final String newDeviceId,
@@ -196,12 +196,12 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 임의의 유저 타입으로 이미 로그인 한 상태에서 다른 유저 타입으로 로그인을 시도할 때 호출
+     * 任意のユーザータイプでログインした状態で、異なるユーザータイプでログインを試みた時に呼び出し
      *
-     * @param userType   새로 로그인을 시도하는 유저의 타입
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 새로운 로그인이 성공하고 false이면 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param userType  新たにログインを試みるユーザーのタイプ
+     * @param outPayloadクライアントに送信するペイロード
+     * @return戻り値がtrueの場合は、新しいログインが成功し、falseの場合は失敗
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onLoginByOtherUserType(final String userType,
@@ -210,24 +210,24 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 이미 로그인 된 상태에서 (재접속 등의 이유로) 다른 커넥션을 통해 로그인을 시도할 경우 호출
+     * すでにログインした状態で(再接続などの理由により)異なるコネクションを通じて、ログインを試みた場合に呼び出し
      *
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param outPayloadクライアントに送信するペイロード
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onLoginByOtherConnection(Payload outPayload) throws SuspendExecution {    
     }
 
     /**
-     * 이미 로그인 된 상태에서, 다시 로그인을 시도할 때 호출
-     * (로그인 된 상태에서는 사용자의 GameUser 객체가 GameNode에 여전히 유효한 상태로 남아 있음)
+     * すでにログインした状態で、再ログインを試みた時に呼び出し
+     * (ログインした状態では、ユーザーのGameUserオブジェクトがGameNodeに変わらず有効な状態である)
      *
-     * @param payload        클라이언트에서 전달한 임의의 페이로드
-     * @param sessionPayload onPreLogin에서 전달된 페이로드
-     * @param outPayload     클라이언트로 전달할 임의의 페이로드
-     * @return 반환값이 true이면 ReLogin 성공, false이면 ReLogin 실패
-     * @throws SuspendExecution: 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param payload      クライアントから送信した任意のペイロード
+     * @param sessionPayload onPreLoginから送信されたペイロード
+     * @param outPayload   クライアントに送信する任意のペイロード
+     * @return戻り値がtrueの場合はReLogin成功、falseの場合はReLogin失敗
+     * @throws SuspendExecution:このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onReLogin(final Payload payload,
@@ -236,61 +236,61 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트와의 연결이 끊어졌을 때 호출되는 콜백
+     * クライアントとの接続が切断された時に呼び出されるコールバック
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onDisconnect() throws SuspendExecution {    
     }
 
     /**
-     * 유저가 속한 노드가 pause될 때, 해당 유저도 pause 되면서 호출
+     * ユーザーが属するノードがpauseされた時、該当ユーザーもpauseされて呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPause() throws SuspendExecution {    
     }
 
     /**
-     * 유저가 속한 노드가 resume될 때, 해당 유저도 resume 되면서 호출
+     * ユーザーが属するノードがresumeされた時、該当ユーザーもresumeされて呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onResume() throws SuspendExecution {    
     }
 
     /**
-     * 유저가 logout할 때 호출
+     * ユーザーがlogoutした時に呼び出し
      *
-     * @param payload    클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param payload  クライアントから送信されたペイロード
+     * @param outPayloadクライアントに送信するペイロード
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onLogout(final Payload payload, Payload outPayload) throws SuspendExecution {
     }
 
     /**
-     * 해당 유저가 로그아웃 가능한지 확인하기 위해 호출
-     * 엔진 사용자는 이 콜백에서 현재 GameUser가 로그아웃을 해도 문제가 없을지 결정할 수 있음
+     * 該当ユーザーがログアウト可能かどうかを確認するための呼び出し
+     * エンジンユーザーは、このコールバックで現在のGameUserがログアウトしても問題がないか決定できる
      *
-     * @return 반환값이 false이면 로그아웃 진행이 멈추고, 이 후에 주기적으로 다시 콜백을 호출. 반환값이 true이면 로그아웃을 진행
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @return戻り値がfalseの場合は、ログアウトの進行が止まり、その後定期的に再度コールバックを呼び出す。戻り値がtrueの場合は、ログアウトを進行
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean canLogout() throws SuspendExecution {
     }
 
     /**
-     * 룸 매치 메이킹 요청을 받으면 호출
+     * ルームマッチメイキングリクエストを受け取ると呼び出し
      *
-     * @param roomType 클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
-     * @param payload  클라이언트로부터 전달 받은 페이로드
-     * @return 매칭된 룸의 정보 반환를 반환. 만일 null이면 클라이언트의 요청 옵션에 따라 새로운 방이 생성될 수도 있고, 실패 처리될 수도 있음
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param roomTypeクライアントとサーバー間にあらかじめ定義したルームの種類を区別する任意の値
+     * @param payloadクライアントから送信されたペイロード
+     * @returnマッチングされたルームの情報返還を返す。Nullの場合は、クライアントのリクエストオプションによって新たにルームが作成されることや、失敗処理されることもある
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public MatchRoomResult onMatchRoom(final String roomType,
@@ -299,13 +299,13 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 클라이언트에서 유저 매치 메이킹을 요청했을 경우 호출되는 콜백
+     * クライアントでユーザーマッチメイキングリクエストした場合に呼び出されるコールバック
      *
-     * @param roomType   클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
-     * @param payload    클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 유저 매치 메이킹 요청 성공이고 false 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param roomType クライアントとサーバー間にあらかじめ定義したルームの種類を区別する任意の値
+     * @param payload  クライアントから送信されたペイロード
+     * @param outPayloadクライアントに送信するペイロード
+     * @return戻り値がtrueの場合は、ユーザーマッチメイキングリクエストに成功し、falseの場合は失敗
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onMatchUser(final String roomType,
@@ -315,11 +315,11 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 유저 매칭이 취소될 때 호출
+     * ユーザーマッチングがキャンセルされた時に呼び出し
      *
-     * @param reason 취소된 이유. 일반적으로 타임아웃(TIMEOUT) 이거나 사용자의 요청에 의한 취소(CANCEL) 중 한 가지이다.
-     * @return 반환값이 true이면 매칭 취소 처리가 성공이고 false이면 취소가 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param reasonキャンセルされた理由。通常、タイムアウト(TIMEOUT)やユーザーのリクエストによるキャンセル(CANCEL)のうちどちらか1つ。
+     * @return戻り値がtrueの場合は、マッチングキャンセル処理に成功し、falseの場合はキャンセルが失敗
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onMatchUserCancel(final MatchCancelReason reason) throws SuspendExecution {
@@ -327,67 +327,67 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 처리할 타이머 핸들러를 등록하기 위한 콜백
-     * 이 콜백이 호출되었을 때, 사용자는 처리하고 싶은 타이머 핸들러들을 원하는 만큼 등록
-     * (자세한 내용은 "타이머" 챕터를 참고하십시오.)
+     * 処理するタイマーハンドラを登録するためのコールバック
+     * このコールバックが呼び出された場合、ユーザーは処理したいタイマーハンドラを好きなだけ登録
+     * (詳細については"タイマー"チャプターを参照してください。)
      */
     @Override
     public void onRegisterTimerHandler() {    
     }
 
     /**
-     * 유저가 다른 노드로 이동(전송) 가능한 상태인지 확인하기 위해 호출
+     * ユーザーが他のノードに移動(転送)可能な状態なのか確認するために呼び出し
      *
-     * @return 반환값이 true이면 전송 가능한 상태이고 false이면 불가능한 상태이다. 불가능한 상태의 경우, 만일 NonStopPatch가 진행 중이라면 패치가 종료되기 전까진 해당 유저를 전송하기 위해 지속적으로 호출
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @returnの戻り値がtrueの場合は、転送可能な状態であり、falseの場合は不可能な状態である。不可能な場合、もしNonStopPatchが進行中であれば、パッチが終了するまでは該当ユーザーを転送するために、継続的に呼び出す
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean canTransfer() throws SuspendExecution {
     }
     
     /**
-	 * 유저가 다른 노드로 이동(전송)할 때, 소스 노드에서 전달할 데이터를 꾸리기 위해서 호출
-	 * (자세한 내용은 "전송 가능 객체" 챕터를 참고하십시오.)
+	 * ユーザーが他のノードに移動(転送)する時に、ソースノードから送信するデータを構築するために呼び出す
+	 * (詳細については"転送可能なオブジェクト"チャプターを参照してください。)
      *
-     * @param transferPack 다른 노드로 가지고 갈 데이터를 저장하기 위한 꾸러미
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param transferPack他のノードに移動させるデータを保存するためのパッケージ
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onTransferOut(final TransferPack transferPack) throws SuspendExecution {    
     }
 
     /**
-     * 유저가 다른 노드로 이동(전송)할 때, 대상 노드에서 새롭게 생성된 유저 객체를 원래의 상태로 복원하기 위해 호출
-     * (자세한 내용은 "전송 가능 객체" 챕터를 참고하십시오.)
+     * ユーザーが他のノードに移動(転送)する時に、対象ノードで新たに作成されたユーザーオブジェクトを本来の状態に復元するために呼び出す
+     * (詳細については"転送可能なオブジェクト"チャプターを参照してください。)
      * 
-     * 이 시점에는 유저가 완전히 복구되지 않았으므로, 다른 곳(노드, 유저 등)으로의 메시지 요청이 제한된다.
+     * この時点ではユーザーが完全に復元していないため、他の場所(ノード、ユーザーなど)へのメッセージリクエストが制限される。
      *
-     * @param transferPack 다른 노드에서 가지고 온 데이터 꾸러미
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param transferPack他のノードから持ってきたデータパッケージ
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onTransferIn(final TransferPack transferPack) throws SuspendExecution {    
     }
 
     /**
-     * 노드 간 유저 이동(전송)이 완료된 후 호출
+     * ノード間のユーザー移動(転送)が完了した後、呼び出す
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPostTransferIn() throws SuspendExecution {    
     }
 
     /**
-     * 클라이언트에서 다른 채널로 이동 요청을 할 때, 현재 유저가 채널 이동이 가능한 상태인지 확인하기 위해 호출
+     * クライアントから他のチャンネルに移動リクエストをした時、現在のユーザーがチャンネル移動が可能な状態かどうかを確認するために呼び出す
 	 *
-	 * 주의> 만일, 사용자가 명시적으로 moveChannel() API를 호출하여 채널을 이동할 경우에는 onCheckMoveOutChannel()가 호출되지 않습니다. 오직 엔진에 의해 암묵적인 채널 이동이 발생할 때 호출됩니다.
+	 * 注意>万が一、ユーザーが明示的にmoveChannel()APIを呼び出してチャンネルを移動する場合、onCheckMoveOutChannel()は呼び出されません。エンジンによって暗黙のチャンネル移動が発生した場合にのみ呼び出されます。
      *
-     * @param destinationChannelId 이동 대상 채널의 ID
-     * @param payload              클라이언트로부터 전달 받은 페이로드
-     * @param errorPayload         채널 이동을 실패할 경우 서버에서 클라이언트로 전달하는 페이로드(성공일 경우에는 전달 안 됨)
-     * @return 반환값이 false이면 채널 이동이 불가능하므로 요청은 실패이고 true면 성공
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param destinationChannelId 移動対象チャンネルのID
+     * @param payload            クライアントから送信されたペイロード
+     * @param errorPayload       チャンネル移動に失敗した場合、サーバーからクライアントに送信するペイロード(成功した場合は送信されない)
+     * @returnの戻り値がfalseの場合、チャンネル移動は不可能であるため、リクエストは失敗し、trueの場合は成功
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onCheckMoveOutChannel(final String destinationChannelId,
@@ -397,11 +397,11 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 다른 노드로 채널 이동을 할 때, 소스 노드에서 호출
+     * 他のノードにチャンネル移動する時、ソースノードから呼び出す
      *
-     * @param destinationChannelId 이동할 channel ID
-     * @param outPayload           이동할 channel에 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param destinationChannelId移動するchannel ID
+     * @param outPayload         移動するchannelに送信するペイロード
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onMoveOutChannel(final String destinationChannelId,
@@ -409,21 +409,21 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 다른 노드로 채널 이동이 완료된 후 소스 노드에서 호출
+     * 他のノードにチャンネル移動が完了した後、ソースノードから呼び出す
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPostMoveOutChannel() throws SuspendExecution {
     }
 
     /**
-     * 다른 노드로 채널 이동을 할 때, 대상 노드로 진입하면서 호출
+     * 他のノードにチャンネル移動する時、対象ノードに進入して呼び出す
      *
-     * @param sourceChannelId 이동하기 전의 채널 ID
-     * @param payload         클라이언트로부터 전달 받은 페이로드
-     * @param outPayload      클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param sourceChannelId移動する前のチャンネルID
+     * @param payload       クライアントから送信されたペイロード
+     * @param outPayload    クライアントに送信するペイロード
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onMoveInChannel(final String sourceChannelId,
@@ -432,9 +432,9 @@ public class SampleGameUser extends BaseUser {
     }
 
     /**
-     * 다른 노드로 채널 이동이 완료된 후 대상 노드에서 호출
+     * 他のノードにチャンネル移動が完了した後、対象ノードから呼び出す
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPostMoveInChannel() throws SuspendExecution {
@@ -442,56 +442,56 @@ public class SampleGameUser extends BaseUser {
 }
 ```
 
-위의 예제 코드에서 onLogin으로 시작하는 콜백은 모두 로그인과 관련되어 호출됩니다. 예를 들어 최초의 로그인 요청에 대해서는 onLogin 콜백이 호출되며, 이미 로그인이 되어 있는 상태에서 재로그인을 처리하는 경우는 onReLogin 콜백이 호출됩니다. 마찬가지로 로그아웃을 처리할 때에는 onLogout 콜백이 호출됩니다. 이처럼 GameAnvil의 콜백은 그 이름과 JavaDoc 주석을 통해 그 용도가 대부분 명확하게 설명이 됩니다.
+上記のサンプルコードでonLoginから始まるコールバックは、すべてログインに関連して呼び出されます。例えば、初回のログインリクエストに対しては、onLoginコールバックが呼び出され、すでにログインしている状態で再ログイン処理する場合は、onReLoginコールバックが呼び出されます。同様にログアウト処理する場合は、onLogoutコールバックが呼び出されます。このように、GameAnvilのコールバックは、その名前とJavaDoc注釈により、その用途が明確になっています。
 
-유저는 언제든 채널 사이에서 이동이 가능합니다. 이러한 채널에 관련된 내용은 뒤에서 [별도의 챕터](server-impl-09-channel)로 따로 설명할 것이므로 여기에서는 우선 넘어가도록 하겠습니다. 뿐만 아니라 유저는 여러 개의 GameNode 사이에서 전송 가능한 객체입니다. 이와 관련한 기능 또한 [별도의 챕터](server-impl-08-object-transfer)에서 더 자세하게 설명하도록 합니다.
+ユーザーは、いつでもチャンネル間での移動が可能です。このようなチャンネルに関する内容は、後で[別途のチャプター](server-impl-09-channel)で説明しますので、ここでは先に進みます。それだけでなく、ユーザーは複数のGameNode間で転送可能なオブジェクトです。これに関連する機能についても[別途のチャプター](server-impl-08-object-transfer)で詳しく説明します。
 
-GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저 매치메이킹을 제공합니다. 이러한 매치메이킹 요청이 유저로 도달하면 onMatchRoom 혹은 onMatchUser 콜백이 호출됩니다. 사용자는 이 콜백에서 GameAnvil이 제공하는 매치메이커를 사용할 수도 있고 직접 구현하거나 3rd 파티로 제공받은 다른 매치메이커를 사용할 수도 있습니다. 이에 대한 더 자세한 설명은 바로 [다음 챕터](server-impl-04-match-node)에서 MatchNode를 다루면서 다시 하도록 하겠습니다.
+GameAnvilは、2種類のマッチメイキング機能、ルームマッチメイキングとユーザーマッチメイキングを提供します。これらのマッチメイキングリクエストがユーザーに到達すると、onMatchRoomまたは、onMatchUserコールバックが呼び出されます。ユーザーは、このコールバックでGameAnvilが提供するマッチメイカーを使用したり、直接実装したり、3rdパーティとして提供された他のマッチメイカーを使用したりすることもできます。これに関する詳細は、[次のチャプター](server-impl-04-match-node)でMatchNodeについて取り扱いながら、もう一度説明します。
 
-이러한 유저의 콜백을 정리하면 아래의 표와 같습니다.
+これらのユーザーのコールバックを整理すると、次の図のようになります。
 
 
-| 콜백 이름                | 의미                                    | 설명                                                                                                                                                      |
+| コールバック名              | 意味                                   | 説明                                                                                                                                                    |
 | -------------------------- | ----------------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onLogin                  | 로그인                                  | 처음 로그인을 할 때 호출됩니다. 일반적으로 사용자는 이 콜백에서 DB 등의 저장소로부터 유저 정보를 가지고 와서 게임 유저 객체를 초기화하는 작업을 수행합니다.                                                              |
-| onPostLogin              | 로그인 성공 후처리                      | onLogin이 성공한 후에 호출됩니다. 로그인에 대한 후처리 작업을 이 콜백에서 할 수 있습니다.                                                                                                 |
-| onLoginByOtherDevice     | 채널 정보 요청                          | 이미 로그인이 되어 있는 상태에서 다른 기기로 추가 로그인 요청이 왔을 때 호출됩니다. 사용자는 기존의 유저와 새로운 유저 중 어느 쪽을 로그인시킬지 반환값으로 결정할 수 있습니다.                                                   |
-| onLoginByOtherUserType   | 다른 유저 타입으로 로그인 시도           | 이미 로그인이 되어 있는 상태에서 다른 유저 타입으로 로그인 요청이 왔을 때 호출됩니다. 새로운 유저 타입에 대해 로그인을 진행할지 여부를 반환값으로 결정할 수 있습니다.                                                         |
-| onLoginByOtherConnection | 다른 커넥션으로 로그인 시도              | 이미 로그인이 되어 있는 상태에서 (재접속으로 인해) 이전과 다른 커넥션으로 로그인 시도를 할 경우에 호출됩니다. 만일, 재접속에 대한 추가 작업이 필요하다면 이 콜백에서 할 수 있습니다.                                               |
-| onReLogin                | 재로그인                                | 이미 로그인이 되어 있는 상태에서 다시 로그인을 할 경우에는 onLogin이 아닌 onReLogin이 호출됩니다. 즉, 재로그인에 대한 작업은 이 콜백에서 처리합니다.                                                           |
-| onDisconnect             | 접속 종료                               | 클라이언트로부터 접속이 끊겼을 때 호출됩니다. 이때, 추가로 처리할 코드를 이곳에 구현합니다.                                                                                                   |
-| onPause                  | 일시 정지                               | 콘솔을 통해 GameNode를 일시 정지하면 해당 GameNode의 모든 유저에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 유저에서 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                           |
-| onResume                 | 재개                                    | 콘솔을 통해 GameNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GameNode의 모든 유저에 대해 호출됩니다. 사용자는 재개 상태에서 유저에 대해 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                  |
-| onLogout                 | 로그아웃                               | 유저가 로그아웃할 때 호출됩니다. 이는 사용자가 명시적으로 요청한 로그아웃일 수도 있고, 접속 끊김 상태에서 설정된 시간을 초과할 경우에 엔진에 의해 자동으로 로그아웃될 수도 있습니다.                                                 |
-| canLogout                | 로그아웃 가능성 확인                    | 해당 유저가 현재 로그아웃이 가능한 상태인지 체크하기 위해 호출됩니다. 만일 게임 플레이 중이거나 정보를 잃어서는 안 되는 상황에는 false를 반환하여 로그아웃을 미룰 수 있습니다. 만일 false를 반환하면 엔진은 임의의 시간 이후에 지속적으로 이 콜백을 호출합니다. |
-| onMatchRoom              | 룸 매치메이킹 요청                      | 사용자가 룸 매치메이킹을 요청하면 호출됩니다. 이때, 사용자는 이 콜백에서 엔진이 제공하는 룸 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                                                        |
-| onMatchUser              | 유저 매치메이킹 요청                    | 사용자가 유저 매치메이킹을 요청하면 호출됩니다. 사용자는 이 콜백에서 엔진이 제공하는 유저 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                                                          |
-| onMatchUserCancel        | 유저 매치메이킹 취소                    | 사용자가 이전에 신청한 유저 매치메이킹을 취소하면 호출됩니다. 이미 매칭이 완료된 상황처럼 취소를 할 수 없는 경우에는 실패할 수도 있습니다.                                                                         |
-| canTransfer              | 유저 전송이 가능한 상태인지 확인         | 해당 유저가 다른 노드로 전송될 수 있는 상태인지 체크하기 위해 호출됩니다.  만일 게임 플레이 중이거나 아직 준비가 안 된 경우에는 false를 반환하여 전송을 미룰 수 있습니다. false를 반환한 경우에는 엔진이 임의의 시간 이후에 지속적으로 이 콜백을 호출합니다. |
-| onTransferOut            | 기존 노드에서 전송되어 나갈 준비         | 유저가 다른 GameNode로 전송될 때, 소스 노드에서 전송을 시작할 때 호출됩니다. 사용자는 이 콜백에서 유저 객체와 함께 전송할 데이터 꾸러미를 꾸릴 수 있습니다.                                                          |
-| onTransferIn             | 새로운 노드로 전송 완료 처리             | 유저가 다른 GameNode로 전송될 때, 대상 노드에서 전송 완료하면서 호출됩니다. 사용자는 함께 가지고 온 데이터 꾸러미를 풀어서 원래의 유저 상태로 복구할 수 있습니다.                                                       |
-| onPostTransferIn         | 전송 완료 후처리                        | 유저 전송이 성공한 경우, 대상 노드에서 후처리를 위해 호출됩니다.                                                                                                                   |
-| onCheckMoveOutChannel    | 채널 이동이 가능한 상태인지 확인         | 유저가 다른 채널로 이동할 수 있는 상태인지 체크하기 위해 호출됩니다. 만일, 사용자가 명시적으로 moveChannel() API를 호출하여 채널을 이동하는 경우에는 호출되지 않습니다. 오직 엔진에 의해 암묵적인 채널 이동이 발생할 때만 호출됩니다.             |
-| onMoveOutChannel         | 기존 채널에서 다른 채널로 이동 준비      | 유저가 다른 채널로 이동할 때, 소스 노드에서 호출됩니다. 사용자는 원하는 정보를 outPayload에 담아서 대상 채널로 가지고 갈 수 있습니다.                                                                      |
-| onPostMoveOutChannel     | 기존 채널에서 다른 채널로 이동 준비 완료 | onMoveOutChannel이 성공하면 후처리를 위해 호출됩니다.                                                                                                                   |
-| onMoveInChannel          | 새로운 채널로 이동 처리                  | 유저가 다른 채널로 이동할 때, 대상 노드에서 호출됩니다. 사용자는 임의의 정보를 outPayload에 담아서 클라이언트로 전달할 수 있습니다.                                                                        |
-| onPostMoveInChannel      | 새로운 채널로 이동 완료                  | onMoveInChannel이 성공하면 후처리를 위해 호출됩니다.                                                                                                                    |
-| getMessageDispatcher | 처리할 패킷이 있음 | 처리할 메시지가 있을 때 반환시킵니다. 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다 자세한 내용은 [메시지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하십시오.            |
+| onLogin                  | ログイン                                | 初めてログインする時に呼び出されます。通常、ユーザーはこのコールバックでDBなどのストレージからユーザー情報を取得して、ゲームユーザーオブジェクトを初期化する作業を実行します。                                                              |
+| onPostLogin              | ログイン成功後処理                    | onLoginが成功した後に呼び出されます。ログインの後処理作業をこのコールバックで実行できます。                                                                                                 |
+| onLoginByOtherDevice     | チャンネル情報リクエスト                        | すでにログインしている状態で、他のデバイスに追加ログインリクエストが来た時に呼び出されます。ユーザーは、既存のユーザーと新たなユーザーのどちらをログインさせるかを戻り値で決定できます。                                                   |
+| onLoginByOtherUserType   | 他のユーザータイプでログイン試行         | すでにログインしている状態で、他のユーザータイプにログインリクエストが来た時に呼び出されます。新たなユーザータイプに対してログインを進めるかどうかを戻り値で決定できます。                                                         |
+| onLoginByOtherConnection | 他のコネクションでログイン試行            | すでにログインしている状態で、(再接続によって)以前とは異なるコネクションでログインを試みた場合に呼び出されます。もし、再接続に対する追加作業が必要な場合は、このコールバックで行うことができます。                                               |
+| onReLogin                | 再ログイン                              | すでにログインしている状態で再ログインした場合は、onLoginではなくonReLoginが呼び出されます。すなわち、再ログインに対する作業は、このコールバックで処理します。                                                           |
+| onDisconnect             | 接続終了                             | クライアントから接続が切断された時に呼び出されます。この時、追加で処理するコードをここに実装します。                                                                                                   |
+| onPause                  | 一時停止                             | コンソールを介してGameNodeを一時停止すると、該当GameNodeのすべてのユーザーに呼び出されます。ユーザーは、ノードが一時停止した時にユーザーが追加で処理したいコードをここに実装できます。                                           |
+| onResume                 | 再開                                  | コンソールを介してGameNodeが一時停止状態から動作を再開すると、該当GameNodeのすべてのユーザーに呼び出されます。ユーザーは再開状態でユーザーに対して処理したいコードをここに実装できます。                                  |
+| onLogout                 | ログアウト                             | ユーザーがログアウトした時に呼び出されます。これは、ユーザーが明示的にリクエストしたログアウトである可能性もあり、接続が切断された状態で設定された時間を超過した場合、エンジンによって自動的にログアウトすることもあります。                                                 |
+| canLogout                | ログアウト可能性確認                  | 該当ユーザーが現在ログアウトが可能な状態であるかをチェックするために呼び出されます。もしゲームプレイ中や情報を失ってはならない状況である場合は、falseを返してログアウトを延期できます。falseを返した場合、エンジンは任意の時間が経過した後、継続的にコールバックを呼び出します。 |
+| onMatchRoom              | ルームマッチメイキングリクエスト                    | ユーザーがルームマッチメイキングをリクエストすると、呼び出されます。この時、ユーザーはこのコールバックでエンジンが提供するルームマッチメイキングAPIもしくは、第3のマッチメイキングソリューションを任意で使用できます。                                                        |
+| onMatchUser              | ユーザーマッチメイキングリクエスト                  | ユーザーがユーザーマッチメイキングをリクエストすると、呼び出されます。ユーザーは、このコールバックでエンジンが提供するユーザーマッチメイキングAPIもしくは、第3のマッチメイキングソリューションを任意で使用できます。                                                          |
+| onMatchUserCancel        | ユーザーマッチメイキングキャンセル                  | ユーザーが申請したユーザーマッチメイキングをキャンセルすると、呼び出されます。すでにマッチングが完了した場合など、キャンセルできない場合は失敗することもあります。                                                                         |
+| canTransfer              | ユーザー転送が可能な状態であるかを確認       | 該当ユーザーが他のノードに転送可能な状態であるかをチェックするために呼び出されます。もしゲームプレイ中やまだ準備が完了していない場合は、falseを返して転送を延期できます。 falseを返した場合、エンジンが任意の時間が経過した後、継続的にこのコールバックを呼び出します。 |
+| onTransferOut            | 既存ノードから転送される準備       | ユーザーが他のGameNodeに転送される時、ソースノードで転送を開始する時に呼び出されます。ユーザーは、このコールバックでユーザーオブジェクトと共に転送するデータパッケージを構築できます。                                                         |
+| onTransferIn             | 新たなノードに転送完了処理           | ユーザーが他のGameNodeに転送される時に対象ノードからの転送が完了すると、呼び出されます。ユーザーは共にインポートされたデータパッケージを展開して、元のユーザー状態に復元できます。                                                       |
+| onPostTransferIn         | 転送完了の後処理                      | ユーザーの転送に成功した場合、対象ノードで後処理のために呼び出されます。                                                                                                                   |
+| onCheckMoveOutChannel    | チャンネル移動が可能な状態であるかを確認       | ユーザーが他のチャンネルに移動できる状態かどうかをチェックするために呼び出されます。ユーザーが明示的にmoveChannel()APIを呼び出して、チャンネルを移動する場合は呼び出されません。エンジンによって、暗黙のチャンネル移動が発生した場合にのみ呼び出されます。             |
+| onMoveOutChannel         | 既存チャンネルから他のチャンネルへの移動準備    | ユーザーが他のチャンネルに移動する時にソースノードから呼び出されます。ユーザーは希望する情報をoutPayloadに入れて、対象チャンネルに移動させることができます。                                                                 |
+| onPostMoveOutChannel     | 既存チャンネルから他のチャンネルへの移動準備完了 | onMoveOutChannelが成功すると、後処理のために呼び出されます。                                                                                                                   |
+| onMoveInChannel          | 新しいチャンネルへの移動処理                | ユーザーが他のチャンネルに移動する時に対象ノードから呼び出されます。ユーザーは任意の情報をoutPayloadに入れて、クライアントに送信できます。                                                                        |
+| onPostMoveInChannel      | 新しいチャンネルへの移動完了                | onMoveInChannelが成功すると、後処理のために呼び出されます。                                                                                                                    |
+| getMessageDispatcher | 処理するパケット有り | 処理するメッセージがある場合に返します。ユーザーは、自分が宣言したディスパッチャーを使用できます。詳細については、[メッセージ処理](./server-impl-07-message-handling#13-getMessageDispatcher)を参照してください。            |
 
-### 로그인이란?
+### ログインとは？
 
-앞서 설명한 내용과 예제 코드에서 로그인에 관한 내용이 자주 등장합니다. 또한 이러한 로그인은 클라이언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 콜백 메서드 중 onLogin()은 최초에 유저를 생성하기 위해 로그인을 시도하는 과정에서 호출됩니다. 이때, 사용자는 유저 객체를 구성하기 위한 정보를 DB 등으로부터 획득할 수 있습니다. 이러한 onLogin() 콜백이 성공하면 GameNode 상에 해당 유저 객체가 생성됩니다. 이렇게 로그인이 완료되면, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고받으며 여러 가지 콘텐츠를 구현할 수 있습니다.
+前述した内容とサンプルコードでログインに関する内容が頻繁に登場します。また、このようなログインは、クライアントがサーバーに接続した後、GameNodeに自分のユーザーオブジェクトを作る過程だと定義できます。コールバックメソッドの中でonLogin()は、最初にユーザーを作成するためにログインを試みる過程で呼び出されます。この時、ユーザーはユーザーオブジェクトを構成するための情報をDBなどから取得できます。このようなonLogin()コールバックが成功すると、GameNode上に該当ユーザーオブジェクトが作成されます。このようにログインが完了すると、直接定義したプロトコルに基づいてクライアントは自分のユーザーオブジェクトを通じて、他のオブジェクトとメッセージをやり取りすることでさまざまなコンテンツを実装できます。
 
-### 로그아웃
-로그아웃은 로그인의 반대 개념입니다. 즉, GameNode상에서 자신의 유저 객체를 제거하는 과정입니다. 로그아웃을 시작하면 해당 유저 객체는 onLogout() 콜백을 호출하여 메모리상에서 삭제되기 전에 DB 등으로 자신의 최종 상태를 보관할 수 있습니다. 이러한 로그아웃은 클라이언트가 명시적으로 요청할 수도 있고, 클라이언트의 접속이 끊긴 상태에서 임의의 시간이 경과한 후 엔진에 의해 자동으로 처리되기도 합니다. 그러므로 만일 모바일 게임과 같이 잦은 접속 끊김이 예상될 경우에는 바로 로그아웃이 진행되지 않도록 적절한 [설정](server-impl-16-config-vm#25-game)을 해둘 수 있습니다.
+### ログアウト
+ログアウトはログインの反対概念です。すなわち、GameNode上で自分のユーザーオブジェクトを削除するプロセスです。ログアウトを開始すると、該当ユーザーオブジェクトは、onLogout()コールバックを呼び出して、メモリ上で削除される前にDBなどに自分の最終状態を保管できます。このようなログアウトは、クライアントが明示的にリクエストすることも可能で、クライアントの接続が切断された状態で任意の時間が経過した後、エンジンによって自動的に処理されることもあります。したがって、モバイルゲームのように頻繁な接続の切断が予想される場合は、すぐにログアウトが行われないように適切な[設定](server-impl-16-config-vm#25-game)をしておくことができます。
 
 
 
-## 방 구현
+## ルーム実装
 
-2명 이상의 유저는 방을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 유저들의 요청은 방 안에서 모두 순서가 보장됩니다. 물론 1명의 유저를 위한 방 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. 방을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다. 이러한 방은 유저와 마찬가지로 기본 클래스인 BaseRoom을 상속하여 여러 가지 콜백 메서드를 재정의할 수 있으며 자체적으로 메시지를 처리할 수도 있습니다. 아래의 예제 코드는 SampleGameUser를 위한 SampleGameRoom 클래스입니다.
+2人以上のユーザーは、ルームを通じて同期されたメッセージの流れを作成できます。すなわち、ユーザーのリクエストはルーム内ですべて順番が保証されます。もちろん、1人のユーザーのためのルーム作成もコンテンツによって、意味を持つことができます。ルームをどのように使用するかは、あくまでエンジンユーザー次第です。このようなルームは、ユーザーと同様に基本クラスであるBaseRoomを継承して、さまざまなコールバックメソッドを再定義でき、自らメッセージを処理することもできます。次のサンプルコードは、SampleGameUserのためのSampleGameRoomクラスです。
 
-방 역시 엔진에 등록하기 위해 여러 가지의 애너테이션이 필요합니다. 우선, 어떤 게임 서비스를 위한 방인지 등록 후, 방 타입을 등록합니다. 이 방 타입은 이름 그대로 방의 종류를 구별하기 위한 용도로서, 클라이언트에서도 마찬가지로 API를 호출할 때 사용됩니다. 즉, 해당 API가 서버의 어떤 방 타입에 대한 호출인지 명시하는 것입니다. 그러므로 반드시 서버와 클라이언트 사이에 이러한 방 타입을 임의의 문자열로 사전 정의해두어야 합니다. 이 예제 코드에서는 "BasicRoom"이라는 방 타입을 사용합니다. 이에 대한 더 자세한 설명은 별도의 챕터에서 다시 다루도록 합니다. 마지막으로 이 방 정보가 [채널 간 방 정보 동기화](server-impl-09-channel#3-채널-정보-동기화)에 사용될지 여부를 결정할 수 있습니다. 만일 채널 간 정보 동기화가 필요 없다면 @UseChannelInfo 애너테이션은 생략할 수 있습니다.
+ルームもエンジンに登録するためには、さまざまなアノテーションが必要です。まず、どのようなゲームサービス用のルームなのかを登録した後、ルームタイプを登録します。このルームタイプは、その名のとおり部屋の種類を区別するためのものであり、クライアントでも同様にAPIを呼び出す時に使用されます。すなわち、該当APIがサーバーのどのルームタイプへの呼び出しであるのかを明示することです。したがって、必ずサーバーとクライアント間にこれらのルームタイプを任意の文字列であらかじめ定義しておく必要があります。このサンプルコードでは、"BasicRoom"というルームタイプを使用します。これについての詳細は、別のチャプターで再度扱います。最後に、このルーム情報が[チャンネル間のルーム情報同期](server-impl-09-channel#3-チャンネル-情報-同期)に使用するかどうかを決定できます。チャンネル間の情報同期が不要な場合、@UseChannelInfoアノテーションは省略できます。
 
 ```java
 @ServiceName("MyGame")
@@ -511,31 +511,31 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * 방이 초기화될 때 호출
+     * ルームが初期化される時に呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onInit() throws SuspendExecution {    
     }
 
     /**
-     * 방이 서버에서 사라질 때 호출
+     * ルームがサーバーから消えた時に呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onDestroy() throws SuspendExecution {    
     }
 
     /**
-     * 새로운 방을 생성할 때 호출
+     * 新しいルームを作成する時に呼び出し
      *
-     * @param user       요청한 유저 객체
-     * @param inPayload  클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 방 생성이 성공이고 false이면 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param user     リクエストしたユーザーオブジェクト
+     * @param inPayloadクライアントから送信されたペイロード
+     * @param outPayloadクライアントに送信するペイロード
+     * @returnの戻り値がtrueの場合は、ルームの作成に成功し、falseの場合は失敗
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onCreateRoom(SampleGameUser user,
@@ -544,13 +544,13 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * 임의의 방에 참여할 때 호출
+     * 任意のルームに参加する時に呼び出し
      *
-     * @param user       요청한 유저 객체
-     * @param inPayload  클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 입장 성공이고 false이면 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param user     リクエストしたユーザーオブジェクト
+     * @param inPayloadクライアントから送信されたペイロード
+     * @param outPayloadクライアントに送信するペイロード
+     * @return戻り値がtrueの場合は、入場に成功し、falseの場合は失敗
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onJoinRoom(SampleGameUser user,
@@ -559,13 +559,13 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * 방에서 나갈 때 호출
+     * ルームから退出する時に呼び出し
      *
-     * @param user       요청을 한 유저 객체
-     * @param inPayload  클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 나가기 성공이고 false이면 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param user     リクエストしたユーザーオブジェクト
+     * @param inPayloadクライアントから送信されたペイロード
+     * @param outPayloadクライアントに送信するペイロード
+     * @return戻り値がtrueの場合は、退出に成功し、falseの場合は失敗
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean onLeaveRoom(SampleGameUser user,
@@ -574,30 +574,30 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * onLeaveRoom 콜백이 성공한 경우, 나가기가 완료된 다음에 후처리를 위해 호출
+     * onLeaveRoomコールバックが成功した場合、退出完了後、後処理のために呼び出し
      *
-     * @param user 방에서 나간 유저 객체
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param userルームから退出したユーザーオブジェクト
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPostLeaveRoom(SampleGameUser user) throws SuspendExecution {
     }
 
     /**
-     * 유저가 방에 참여한 상태에서 접속 끊김 등으로 인해 재접속 및 재로그인을 할 경우 해당 방으로 자동 재진입하며 호출
+     * ユーザーがルームに参加した状態で接続切断などによって、再接続および再ログインした場合、該当ルームに自動的に再入場して呼び出し
      *
-     * @param user       방으로 들어가는 유저 객체
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param user      ルームに入場するユーザーオブジェクト
+     * @param outPayloadクライアントに送信するペイロード
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onRejoinRoom(SampleGameUser user, Payload outPayload) throws SuspendExecution {    
     }
 
    /**
-     * 처리할 타이머 핸들러를 등록하기 위한 콜백
-     * 이 콜백이 호출되었을 때 사용자는 처리하고 싶은 타이머 핸들러들을 원하는 만큼 등록합니다.
-     * (자세한 내용은 "타이머" 챕터를 참고하십시오.)
+     * 処理するタイマーハンドラを登録するためのコールバック
+     * このコールバックが呼び出された場合、ユーザーは処理したいタイマーハンドラを好きなだけ登録します。
+     * (詳細については"タイマー"チャプターを参照してください。)
      */
     @Override
     public void onRegisterTimerHandler() {
@@ -605,34 +605,34 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
 
 
     /**
-     * 방이 다른 노드로 이동(전송) 가능한 상태인지 확인하기 위해 호출
+     * ルームが他のノードに移動(転送)可能な状態であるかどうかを確認するために呼び出し
      *
-     * @return 반환값이 true이면 전송 가능한 상태이고 false이면 불가능한 상태이다. 불가능한 상태의 경우, 만일 NonStopPatch가 진행 중이라면 패치가 종료되기 전까진 해당 방을 전송하기 위해 지속적으로 호출
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @returnの戻り値がtrueの場合は、転送可能な状態であり、falseの場合は不可能な状態である。不可能な場合、NonStopPatchが進行中であれば、パッチが終了する前に該当ルームを転送するために継続的に呼び出し
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public boolean canTransfer() throws SuspendExecution {    
     }
   
     /**
-	 * 해당 방이 다른 노드로 이동(전송)할 때, 소스 노드에서 전달할 데이터를 꾸리기 위해서 호출
-	 * (자세한 내용은 "전송 가능 객체" 챕터를 참고하십시오.)
+	 * 該当ルームが他のノードに移動(転送)する時、ソースノードから送信するデータを構築するために呼び出し
+	 * (詳細については「転送可能なオブジェクト」チャプターを参照してください。)
      *
-     * @param transferPack 다른 노드로 가지고 갈 데이터를 저장하기 위한 꾸러미
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param transferPack他のノードに移動させるデータを保存するためのパッケージ
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
     }
 
     /**
-     * 해당 방이 다른 노드로 이동(전송)할 때, 대상 노드에서 새롭게 생성된 방 객체를 원래의 상태로 복원하기 위해 호출
-     * (자세한 내용은 "전송 가능 객체" 챕터를 참고하십시오.)
+     * 該当ルームが他のノードに移動(転送)する時、対象ノードで新たに作成されたルームオブジェクトを元の状態に復元するために呼び出し
+     * (詳細については"転送可能なオブジェクト"チャプターを参照してください。)
      * 
-     * 이 시점에는 방은 완전히 복구되지 않았으므로, 다른 곳(노드, 유저 등)으로의 메시지 요청이 제한된다.
+     * この時点ではルームは完全に復元していないため、他の場所(ノード、ユーザーなど)へのメッセージリクエストが制限される。
      *
-     * @param transferPack 다른 노드에서 가지고 온 데이터 꾸러미
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param transferPack他のノードから取得したデータパッケージ
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onTransferIn(List<SampleGameUser> userList,
@@ -640,33 +640,33 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     }
 
     /**
-     * 방이 속한 노드가 pause될 때, 해당 방도 pause 되면서 호출
+     * ルームが属するノードがpauseされた時、該当ルームもpauseされて呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onPause() throws SuspendExecution {
     }
 
     /**
-     * 방이 속한 노드가 resume될 때, 해당 방도 resume 되면서 호출
+     * 部屋が属するノードがresumeされた時、該当ルームもresumeされて呼び出し
      *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public void onResume() throws SuspendExecution {
     }
 
     /**
-     * 클라이언트에서 파티 매치 메이킹을 요청했을 경우 호출되는 콜백
-     * (파티 매치 메이킹을 위해서는 2명 이상의 유저가 NamedRoom에 들어가 있어야 한다. 이때, 해당 NamedRoom에서 이 콜백이 호출된다.)
+     * クライアントがパーティマッチメイキングをリクエストした場合、呼び出されるコールバック
+     * (パーティマッチメイキングのためには、2人以上のユーザーがNamedRoomに入場していなければならない。この時、該当NamedRoomでこのコールバックが呼び出される。)
      *
-     * @param roomType   클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
-     * @param user       파티 매칭을 요청한 유저(방장)
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 파티 매치 메이킹 요청 성공이고 false 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param roomType クライアントとサーバー間にあらかじめ定義したルームの種類を区別する任意の値
+     * @param user     パーティマッチングをリクエストしたユーザー(ルームリーダー)
+     * @param payload  クライアントから送信されたペイロード
+     * @param outPayloadクライアントに送信するペイロード
+     * @return戻り値がtrueの場合は、パーティマッチメイキングリクエストが成功し、falseの場合は失敗
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */  
     @Override
     public boolean onMatchParty(final String roomType,
@@ -678,48 +678,48 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
 }
 ```
 
-방은 가장 기본적인 3가지 콜백인 onCreateRoom, onJoinRoom, onLeaveRoom을 제공합니다. 각각 방의 생성, 참여 그리고 떠나기에 대해 호출됩니다. 사용자는 해당 콜백에서 관련한 기능을 직접 구현할 수 있습니다. 예를 들어, 방을 생성하면서 방장을 지정하고 기본적인 자료 구조들을 초기화할 수 있습니다. 또한 임의의 방 참여 요청에 대해서는 방의 유저 목록을 갱신하거나 각 유저 사이에 상태 동기화 등을 수행할 수 있습니다.
+ルームは最も基本的な3つのコールバックであるonCreateRoom、onJoinRoom、onLeaveRoomを提供します。それぞれ、ルームの作成、参加、そして退出に対して呼び出されます。ユーザーは該当コールバックで関連する機能を直接実装できます。例えば、ルームを作成してルームリーダーを指定し、基本的なデータ構造を初期化できます。また、任意のルームへの参加リクエストに対しては、ルームのユーザーリスト更新や、各ユーザー間での状態同期を実行できます。
 
-이러한 방의 생성과 참여는 클라이언트의 명시적 요청뿐만 아니라 매치 메이킹에 의해 엔진이 자동으로 처리하기도 합니다. 예를 들어 정원이 2명인 게임에서 유저 A와 유저 B가 매칭되었다면 한 사람은 자동으로 방을 생성하고, 다른 한 사람은 해당 방에 참여하게 됩니다. 이 과정은 유저 A와 유저 B의 요청이 아닌 엔진에서 자동으로 처리하는 것입니다. 이 과정에서도 물론 onCreateRoom과 onJoinRoom 콜백이 호출됩니다.
+このようなルームの作成と参加は、クライアントの明示的なリクエストだけでなく、マッチメイキングによってエンジンが自動的に処理することもあります。例えば、定員が2人のゲームでユーザーAとユーザーBがマッチングした場合、1人が自動的にルームを作成し、もう1人はそのルームに参加することになります。このプロセスは、ユーザーAとユーザーBのリクエストではなく、エンジンが自動的に処理するものです。このプロセスでももちろん、onCreateRoomとonJoinRoomコールバックが呼び出されます。
 
-이러한 방의 콜백을 정리하면 아래의 표와 같습니다.
+これらのルームのコールバックを整理すると、次の表のようになります。
 
 
-| 콜백 이름              | 의미                             | 설명                                                                                                                                                                                              |
+| コールバック名            | 意味                            | 説明                                                                                                                                                                                            |
 | ------------------------ | ---------------------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onInit                 | 초기화                           | 방이 생성될 때 초기화를 위해 호출됩니다. 토픽 등록 등의 해당 방에 대한 초기화 코드를 작성할 수 있습니다.                                                                                                                                   |
-| onDestroy              | 방 사라짐                        | 방에서 마지막 유저가 나가고 더 이상 처리할 메시지가 없으면 해당 방은 사라집니다. 이때 호출되는 콜백입니다.                                                                                                                                   |
-| onCreateRoom           | 방 생성                          | 클라이언트가 방 생성을 요청하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 위한 자료 구조를 생성하거나 기타 방 생성과 함께 처리되어야 할 코드를 작성합니다.                                                                                                        |
-| onJoinRoom             | 방 참여                          | 클라이언트가 서버상에 존재하는 임의의 방으로 참여를 요청하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 갱신하거나 방 안의 유저들 사이에 동기화할 정보를 처리할 수 있습니다.                                                                                               |
-| onLeaveRoom            | 방 떠남                          | 클라이언트가 방 떠나기 요청을 하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 위한 자료 구조를 갱신하거나 기타 방에서 나오면서 함께 처리되어야 할 코드를 작성합니다.                                                                                                   |
-| onPostLeaveRoom        | 방 떠남 후처리                   | onLeaveRoom이 성공하면 후처리를 위해 호출됩니다. 방을 나온 직후에 처리할 코드를 작성합니다.                                                                                                                                       |
-| onRejoinRoom           | 방 다시 참여                     | 유저가 방에 들어가 있는 상태에서 접속 끊김 등으로 인해 재로그인(ReLogin)을 하는 경우 엔진에 의해 자동으로 해당 방에 재진입(ReJoin)합니다. 이때, 호출되는 콜백입니다. 재진입 과정에서 동기화에 필요한 정보 등을 처리할 수 있습니다.                                                      |
-| canTransfer            | 방 전송이 가능한 상태인지 확인   | 해당 방이 다른 노드로 전송될 수 있는 상태인지 체크하기 위해 호출됩니다.  만일 방에서 아직 게임이 플레이 중이거나 준비가 안 된 경우에는 false를 반환하여 전송을 미룰 수 있습니다. false를 반환한 경우에는 엔진이 임의의 시간 이후에 지속적으로 이 콜백을 호출합니다. 참고로 방 전송은 오직 무점검 패치를 진행할 때에만 사용됩니다. |
-| onTransferOut          | 기존 노드에서 전송되어 나갈 준비 | 방이 다른 GameNode로 전송될 때, 소스 노드에서 전송을 시작할 때 호출됩니다. 사용자는 이 콜백에서 방 객체와 함께 전송할 데이터 꾸러미를 꾸릴 수 있습니다. 참고로 방 전송은 방 안의 유저들 각각에 대한 유저 전송을 포함합니다.                                                            |
-| onTransferIn           | 새로운 노드로 전송 완료 처리     | 방이 다른 GameNode로 전송될 때, 대상 노드에서 전송 완료하면서 호출됩니다. 사용자는 함께 가지고 온 데이터 꾸러미를 풀어서 원래의 방 상태로 복구할 수 있습니다. 참고로 방 전송은 방 안의 유저들 각각에 대한 유저 전송을 포함합니다.                                                         |
-| onPause                | 일시 정지                        | 콘솔을 통해 GameNode를 일시 정지하면 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 방에서 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                                                                     |
-| onResume               | 재개                             | 콘솔을 통해 GameNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 재개 상태에서 방에 대해 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                                                            |
-| onMatchParty           | 파티 매치메이킹 요청             | 사용자가 파티 매치메이킹을 요청하면 호출됩니다. 파티 매치 메이킹은 임의의 NamedRoom을 파티 용도로 생성한 후, 방 안의 모든 유저가 하나의 파티로 매칭을 요청하는 기능입니다. 사용자는 이 콜백에서 엔진이 제공하는 파티 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                      |
-| getMessageDispatcher | 처리할 패킷이 있음 | 노드에 처리할 메시지가 있을 때 반환시킵니다. 사용자는 자신이 선언한 디스패처를 사용할 수 있습니다. 자세한 내용은 [메시지 처리](./server-impl-07-message-handling#13-getMessageDispatcher)를 참고하십시오.                                                     |
+| onInit                 | 初期化                         | ルームが作成された時に初期化するために呼び出されます。トピックの登録など、該当ルームの初期化コードを作成できます。                                                                                                                                   |
+| onDestroy              | ルームの消滅                       | ルームから最後のユーザーが退出し、それ以上処理するメッセージが存在しない場合、該当ルームは消滅します。この時に呼び出されるコールバックです。                                                                                                                                   |
+| onCreateRoom           | ルーム作成                        | クライアントがルームの作成をリクエストすると呼び出されます。コンテンツで使用するユーザーリスト用のデータ構造の作成や、他のルームの作成と一緒に処理される必要があるコードを作成します。                                                                                                        |
+| onJoinRoom             | ルーム参加                       | クライアントがサーバー上に存在する任意のルームに参加をリクエストすると呼び出されます。コンテンツで使用するユーザーリストの更新や、ルーム内のユーザー間に同期する情報を処理できます。                                                                                               |
+| onLeaveRoom            | ルーム退出                         | クライアントがルームからの退出をリクエストすると呼び出されます。コンテンツで使用するユーザーリスト用のデータ構造の更新や、他のルームからの退出と一緒に処理される必要があるコードを作成します。                                                                                                   |
+| onPostLeaveRoom        | ルーム退出の後処理                 | onLeaveRoomが成功すると、後処理のために呼び出されます。ルーム退出直後に処理するコードを作成します。                                                                                                                                       |
+| onRejoinRoom           | ルームへの再入場                    | ユーザーがルームに入場している状態で接続切断などにより再ログイン(ReLogin)した場合、エンジンによって自動的に該当ルームに再入場(ReJoin)します。この時、呼び出されるコールバックです。再入場過程で同期に必要な情報などを処理できます。                                                      |
+| canTransfer            | ルームの転送が可能な状態であるかを確認 | 該当ルームが他のノードに転送できる状態であるかどうかをチェックするために呼び出されます。もしルームでゲームプレイ中や、まだ準備が完了していない場合は、falseを返して転送を延期できます。falseを返した場合は、エンジンが任意の時間が経過した後、継続的にこのコールバックを呼び出します。また、ルームの転送は、無点検パッチを行う時にのみ使用されます。 |
+| onTransferOut          | 既存ノードから転送される準備 | ルームが他のGameNodeに転送される時、ソースノードから転送を開始する際に呼び出されます。ユーザーは、このコールバックからルームオブジェクトと共に転送するデータパッケージを構築できます。また、ルームの転送はルーム内の各ユーザーへのユーザー転送が含まれます。                                                            |
+| onTransferIn           | 新しいノードへの転送完了処理   | ルームが他のGameNodeに転送される時、対象ノードからの転送が完了すると呼び出されます。ユーザーは共にインポートされたデータパッケージを展開して、元のルームの状態に復元できます。また、ルームの転送はルーム内の各ユーザーへのユーザー転送が含まれます。                                                         |
+| onPause                | 一時停止                      | コンソールを介してGameNodeを一時停止すると、該当GameNodeのすべてのルームに呼び出されます。ユーザーは、ノードが一時停止した時にルームで追加で処理したいコードをここに実装できます。                                                                                     |
+| onResume               | 再開                           | コンソールを介してGameNodeが一時停止状態から動作を再開すると、該当GameNodeのすべてのルームに呼び出されます。ユーザーは再開状態でルームに対して処理したいコードをここに実装できます。                                                                            |
+| onMatchParty           | パーティマッチメイキングリクエスト           | ユーザーがパーティマッチメイキングをリクエストすると呼び出されます。パーティマッチメイキングは、任意のNamedRoomをパーティ用途で作成した後、ルーム内のすべてのユーザーが1つのパーティでマッチングをリクエストする機能です。ユーザーは、このコールバックでエンジンが提供するパーティマッチメイキングAPIもしくは、第3のマッチメイキングソリューションを任意で使用できます。                      |
+| getMessageDispatcher | 処理するパケット有り | ノードに処理するメッセージがある場合に返します。ユーザーは、自分が宣言したディスパッチャーを使用できます。詳細については[メッセージ処理](./server-impl-07-message-handling#13-getMessageDispatcher)を参照してください。                                                     |
 
-## 방 종류
+## ルームの種類
 
-앞서 살펴본 방의 구현법과 별개로 엔진에서 제공하는 방의 종류는 크게 두 가지입니다. 이 두 가지의 방을 총 네 가지의 방법으로 사용합니다.
+前述したルームの実装方法と別に、エンジンが提供するルームの種類は、大きく分けて2種類あります。この2つのルームを計4つの方法で使用します。
 
-| 방 종류     | 설명                                                         |
+| ルームの種類   | 説明                                                       |
 | ----------- | ------------------------------------------------------------ |
-| Normal Room | 클라이언트가 명시적으로 CreateRoom을 요청해서 생성합니다. 다른 클라이언트도 해당 방의 아이디를 이용해 명시적으로 JoinRoom을 하여 참여할 수 있습니다. 그러므로 참여할 유저는 미리 해당 방의 아이디를 공유 받아야 합니다. |
-| Named Room  | NamedRoom은 그 이름처럼 유일한 방 이름을 중심으로 명명된 방(NamedRoom)에 대해 동작을 수행합니다. 클라이언트는 서버군 내에서 유일한 방 이름으로 NamedRoom을 요청합니다. 이때, 만일 서버에 해당 방 이름이 존재하지 않으면 요청자는 직접 방을 생성하게 됩니다. 반대로 만일 서버에 해당 방 이름이 이미 존재할 경우에는 그 방으로 자동 진입하게 됩니다. 예를 들어, 스타크래프트의 커스텀 게임 목록에 나타나는 "3:3 헌터 초보!"와 같은 온갖 방제목을 생각하면 이해하기 쉽습니다. |
+| Normal Room | クライアントが明示的にCreateRoomをリクエストして作成します。他のクライアントも該当ルームのIDを利用し、明示的にJoinRoomすることで参加できます。したがって、参加するユーザーは、事前に該当ルームIDを共有してもらう必要があります。 |
+| Named Room  | NamedRoomは、その名のとおり唯一のルーム名を中心に命名されたルーム(NamedRoom)に対して動作を実行します。クライアントはサーバー群内で唯一の名を持つルームとしてNamedRoomをリクエストします。この時、もしサーバーに該当ルーム名が存在しない場合、リクエスト者は直接ルームを作成します。一方で、もしサーバーに該当ルーム名がすでに存在する場合は、そのルームに自動的に入場します。例えば、スタークラフトのカスタムゲームリストに表示される"3：3ハンター初心者！"のようなルームタイトルを考えると、理解しやすいです。 |
 
-이러한 두 가지 방 종류는 총 네 가지의 방법으로 사용됩니다.
+この2つのルームは、計4つの方法で使用されます。
 
-| 방 종류     | 사용법                                                       |
+| ルームの種類   | 使用方法                                                     |
 | ----------- | ------------------------------------------------------------ |
-| Normal Room | 1. 클라이언트는 CreateRoom / JoinRoom 요청을 통해 생성 및 참여합니다.<br>2. 룸 매치 메이킹을 통해 NormalRoom을 생성하거나 참여할 수 있습니다. 또한 CreateRoom으로 만든 방도 룸 매치 메이킹 대상으로 등록이 가능합니다. 이때, 방 아이디는 엔진에 의해 관리되고 매칭되는 방과 유저 사이에서 자동으로 공유됩니다. |
-| Named Room  | 3. 클라이언트는 NamedRoom 요청을 통해 생성 및 참여합니다.<br>4. 유저 매치 메이킹을 통해 NamedRoom을 생성하거나 참여할 수 있습니다. 이때, 생성되는 NamedRoom의 방 이름은 엔진에서 고유하게 생성하고 관리합니다. 룸 매치 메이킹과 달리 일반적인 NamedRoom으로 생성한 방은 유저 매치 메이킹 대상이 될 수 없습니다. 단, 파티 매치 메이킹을 위해 NamedRoom으로 파티 룸을 생성한 후 여러 명의 유저들이 하나의 파티로 매치 메이킹을 요청할 수 있습니다. |
+| Normal Room | 1. クライアントはCreateRoom / JoinRoomリクエストによって作成および参加します。<br>2.ルームマッチメイキングによって、NormalRoomを作成し、参加できます。また、CreateRoomで作成したルームもルームマッチメイキングの対象として登録可能です。この時、ルームIDはエンジンによって管理され、マッチングしたルームとユーザー間で自動的に共有されます。 |
+| Named Room  | 3. クライアントはNamedRoomリクエストによって作成および参加します。<br>4.ユーザーマッチメイキングによって、NamedRoomを作成し、参加できます。この時、作成されるNamedRoomのルーム名はエンジンが作成し、管理します。ルームマッチメイキングとは異なり、一般的なNamedRoomとして作成したルームはユーザーマッチメイキングの対象になれません。ただし、パーティマッチメイキングのために、NamedRoomとしてパーティルームを作成した後、複数のユーザーが1つのパーティでマッチメイキングをリクエストできます。 |
 
 
 
-## 채널
+## チャンネル
 
-GameNode들은 그 용도에 맞춰 논리적으로 그룹화할 수 있습니다. 이러한 논리 그룹을 [채널](server-impl-09-channel)이라고 합니다. 예를 들어, GameNode 1과 2를 "Beginner" 채널로 묶고, GameNode 3과 4를 "Expert" 채널로 묶을 수 있습니다. 이에 대한 자세한 설명은 [별도의 챕터](server-impl-09-channel)에서 더 자세하게 다루도록 합니다.
+GameNodeは、その用途に合わせて論理的にグループ化できます。これらの論理グループを[チャンネル](server-impl-09-channel)といいます。例えば、GameNode 1と2を"Beginner"チャンネルで結び、GameNode 3と4を"Expert"チャンネルで結ぶことができます。これに関する詳細は[別途のチャプター](server-impl-09-channel)で再度扱います。

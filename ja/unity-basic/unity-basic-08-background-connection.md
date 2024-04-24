@@ -1,17 +1,17 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 백그라운드 접속 끊김 방지
+## Game > GameAnvil > Unity基礎開発ガイド > バックグラウンド接続の切断を防止
 
-## 백그라운드 접속 끊김 방지
+## バックグラウンド接続の切断を防止
 
-모바일 기기에서 게임이 백그라운드로 전환될 경우 Unity의 애플리케이션이 멈추게 됩니다. 애플리케이션이 멈추면 GameAnvilConnector의 Update()를 호출하는 과정이 이루어지지 않아 게임 서버와 패킷을 주고받지 못하게 됩니다. 이 상태가 지속되면 연결 확인을 위한 패킷도 주고받지 못하게 되므로 결국 서버와의 연결이 끊길 수 있습니다.
+モバイル端末でゲームがバックグラウンドに切り替わる場合、Unityのアプリケーションが停止します。アプリケーションが停止すると、GameAnvilConnectorのUpdate()を呼び出す過程が行われず、ゲームサーバーとパケットを送受信できなくなります。この状態が続くと、接続確認のためのパケットも送受信できなくなるため、最終的にサーバーとの接続が切断される可能性があります。
 
-특정 시간 동안 게임이 백그라운드로 전환되더라도 연결이 끊어지는 것을 원치 않을 경우 ConnectionAgent의 PauseClientStateCheck(), ResumeClientStateCheck()를 사용하여 서버의 연결 확인 기능을 일시 정지시킬 수 있습니다.
+特定の時間の間、ゲームがバックグラウンドに切り替わっても接続が切れることを望まない場合は、ConnectionAgentのPauseClientStateCheck(), ResumeClientStateCheck()を使用してサーバーの接続確認機能を一時停止させることができます。
 
-서버의 연결 확인 일시 정지 시간은 GameAnvilConnector의 pauseClientStateCheckTime 값을 이용해 조절할 수 있습니다.
+サーバーの接続確認の一時停止時間はGameAnvilConnectorのpauseClientStateCheckTime値を利用して調節できます。
 
-더 자세한 내용은 [Unity 심화 개발 가이드 > 백그라운드 접속 끊김 방지](../unity-advanced/unity-advanced-06-background-connection.md)를 참고하십시오.
+詳細は、[Unity深層開発ガイド > バックグラウンド接続切断防止](../unity-advanced/unity-advanced-06-background-connection.md)を参照してください。
 
-### 재접속
+### 再接続
 
-PauseClientStateCheck()에 입력한 시간이 지나면 서버의 연결 확인 기능이 다시 동작하게 되고, 접속이 끊어질 수 있습니다. 이럴 경우에는 재접속을 진행해야 합니다.
+PauseClientStateCheck()に入力した時間が過ぎると、サーバーの接続確認機能が再び動作し、接続が切断されることがあります。この場合、再接続を行う必要があります。
 
-재접속과 관련된 자세한 내용은 [Unity 심화 개발 가이드 > 재접속](../unity-advanced/unity-advanced-07-reconnect.md)에서 확인할 수 있습니다.
+再接続に関する詳細は[Unity深層発ガイド > 再接続](../unity-advanced/unity-advanced-07-reconnect.md)で確認できます。
