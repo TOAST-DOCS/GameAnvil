@@ -1,39 +1,39 @@
-## Game > GameAnvil > 서버 개발 가이드 > 매치 노드 구현
+## Game > GameAnvil > サーバー開発ガイド > マッチノード実装
 
 
 
-## MatchNode와 MatchMaker
+## MatchNodeとMatchMaker
 
 
 
 ![MatchNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_matchnode_on_network.png)
 
 
-사용자는 간단하게 매칭 로직만 구현하고 MatchNode를 활성화해 매치 메이킹을 적용할 수 있습니다. 매치 메이커는 매칭 로직에 기반하여 유저들을 임의의 방으로 입장시켜 줍니다. GameAnvil은 두 가지 매치 메이커를 제공합니다. 각각 유저 단위의 매칭을 수행하는 UserMatchMaker와 방 단위의 매칭을 수행하는 RoomMatchMaker입니다.
+ユーザーは簡単にマッチングロジックのみを実装し、MatchNodeを有効にしてマッチメイキングを適用できます。マッチメイカーは、マッチングロジックに基づいてユーザーを任意のルームに入場させます。GameAnvilは2つのマッチメイカーを提供しています。それぞれユーザー単位のマッチングを行うUserMatchMakerとルーム単位のマッチングを行うRoomMatchMakerです。
 
-이러한 매치 메이커는 MatchNode에서 독립적으로 구동됩니다. 이때, MatchNode는 매치 메이킹을 수행하는 용도 외에 추가적인 콘텐츠를 구현할 수 없습니다. 그러므로 사용자는 MatchNode가 아닌 매치 메이커에만 집중하면 됩니다. 단, 매치 메이커를 수행하기 위해서는 최소 한 개 이상의 MatchNode를 활성화해야 합니다.
+これらのマッチメイカーは、MatchNodeから独立して動作します。この時、MatchNodeはマッチメイキングを行う用途以外に追加でコンテンツを実装できません。したがって、ユーザーはMatchNodeではなく、マッチメイカーにのみ集中できます。ただし、マッチメイカーを実行するためには、少なくとも1つ以上のMatchNodeを有効にする必要があります。
 
-> [참고] 
+> [参考] 
 > 
-> 매치 메이커는 매칭 그룹 단위로 생성됩니다. 즉, 동일한 매칭 그룹끼리 매치 메이킹을 수행합니다. 
+> マッチメイカーはマッチンググループ単位で作成されます。すなわち、同じマッチンググループ同士でマッチメイキングを行います。 
 > 
-> MatchNode는 필수 노드가 아니므로 매치 메이킹을 사용하지 않을 경우에는 구동할 필요가 없습니다.
+> MatchNodeは必須ノードではないため、マッチメイキングを使用しない場合は、動作する必要がありません。
 
-## 매칭 그룹(MatchingGroup)
+## マッチンググループ(MatchingGroup)
 
-매칭 그룹도 채널과 마찬가지로 단일 서버군을 논리적으로 나눌 수 있는 방법 중 하나입니다. 단, 매칭 그룹은 채널과 달리 명확하게 미리 설정해 두고 사용하는 값이 아닙니다. 또한 채널은 GameNode를 논리적으로 나누기 위한 방법인 반면에 매칭 그룹은 매치 메이킹을 논리적으로 나누기 위한 방법입니다. 같은 매칭 그룹에서 유저 매칭 또는 룸 매칭을 요청한 경우 매칭을 요청한 채널 내에서 매칭된 룸이 생성됩니다. 
+マッチンググループもチャンネルと同様に単一サーバー群を論理的に分ける方法の1つです。ただし、マッチンググループはチャンネルとは異なり、あらかじめ明確に設定して使用する値ではありません。また、チャンネルはGameNodeを論理的に分かるための方法であるのに対し、マッチンググループは、マッチメイキングを論理的に分けるための方法です。同じマッチンググループでユーザーマッチングまたはルームマッチングをリクエストした場合、マッチングをリクエストしたチャンネル内でマッチングしたルームが作成されます。 
 
-앞서 게임 유저에서 살펴본 유저 매치 메이킹 콜백 메서드인 onMatchUser를 다시 한번 살펴보겠습니다. 콜백 메서드의 문자열 인자 matchingGroup은 클라이언트가 유저 매치 메이킹을 요청할 때 함께 전달한 값입니다. 즉, 매칭 그룹은 클라이언트와 서버 사이에서 사전에 약속된 임의의 문자열입니다. 그 종류나 개수는 사용자가 원하는 만큼 사용할 수 있습니다. 모든 매치 메이킹 요청은 각각의 매칭 그룹 단위로 큐가 관리되며, 해당 큐 안에서만 서로 매칭이 가능합니다. 예를 들어 아래의 예제에서 인자 matchingGroup으로 "초보"라는 값이 전달될 경우 이 요청은 다른 "초보" 요청들과 매칭되는 것이 보장됩니다.
+ゲームユーザーで説明したユーザーマッチメイキングのコールバックメソッドであるonMatchUserについて再度説明します。コールバックメソッドの文字列引数であるmatchingGroupは、クライアントがユーザーマッチメイキングをリクエストした時に一緒に送信した値です。すなわち、マッチンググループは、クライアントとサーバー間で事前に約束された任意の文字列です。その種類や数はユーザーが好きなだけ使用できます。すべてのマッチメイキングリクエストは、それぞれのマッチンググループ単位でキューが管理され、該当キュー内でのみマッチングが可能です。例えば、引数であるmatchingGroupに"初心者"という値が送信された場合、このリクエストは他の"初心者"リクエストとのマッチングが保証されます。
 
 ```java
     /**
-     * 클라이언트에서 userMatch를 요청했을 경우 호출되는 콜백
+     * クライアントがuserMatchをリクエストした場合、呼び出されるコールバック
      *
-     * @param roomType   클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 유저 매치메이킹 요청 성공이고 false 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+     * @param roomType クライアントとサーバー間にあらかじめ定義したルームの種類を区別する任意の値
+     * @param payload  クライアントから送信されたペイロード
+     * @param outPayloadクライアントに送信するペイロード
+     * @returnの戻り値がtrueの場合、ユーザーマッチメイキングリクエストが成功し、falseの場合は失敗
+     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
     public final boolean onMatchUser(final String roomType, final String matchingGroup, final Payload payload, Payload outPayload) throws SuspendExecution {
@@ -45,18 +45,18 @@
     }
 ```
 
-매칭 그룹은 "초보", "중수", "고수"처럼 실력을 기반으로 정의할 수도 있고 "한국", "일본", "미국"처럼 국가별로 정의할 수도 있습니다. 즉, 사용자가 원하는 어떤 값도 매칭그룹이 될 수 있습니다.
+マッチンググループは"初心者"、"中級者"、"上級者"のように実力に基づいて定義でき、"韓国"、"日本"、"米国"のように国別で定義することもできます。つまり、ユーザーが希望するどのような値もマッチンググループになることができます。
 
 
 
-## 유저 매치 메이커 구현
+## ユーザーマッチメイカーの実装
 
-유저 매치 메이킹은 게임 유저들의 매칭 요청을 큐에 적재합니다. 특정 시간 주기로 이 요청 큐의 내용을 비교, 분석하여 사용자가 원하는 기준으로 임의의 유저들을 하나의 방으로 입장시켜 줍니다. 여기에서 사용자는 요청 큐의 내용을 어떻게 비교하고 분석해서 어떤 기준으로 유저들을 매칭할지에 대한 로직에만 집중하면 됩니다. 참고로 가장 대표적인 유저 매치 메이킹 게임은 <리그 오브 레전드>가 있습니다.
+ユーザーマッチメイキングは、ゲームユーザーのマッチングリクエストをキューに積みます。特定の時間周期でこのリクエストキューの内容を比較、分析してユーザーが希望する基準で任意のユーザーを1つのルームに入場させます。ここで、ユーザーはリクエストキューの内容をどのように比較、分析し、どのような基準でユーザーをマッチングするかについてのロジックにのみ集中できます。また、最も代表的なユーザーマッチメイキングゲームとして「リーグ・オブ・レジェンド」が挙げられます。
 
 
-### 유저 매치 요청 구현
+### ユーザーマッチリクエストの実装
 
-이러한 유저 매치 메이킹의 가장 기본은 바로 매칭 요청 그 자체입니다. 이러한 매치 요청을 아래와 같이 엔진에서 제공하는 BaseUserMatchInfo 추상 클래스를 상속하여 구현합니다.  이때, 요청자를 구분할 수 있는 게임 유저의 ID를 제공할 수 있도록 getId() 메서드는 반드시 구현해야 합니다. 또한 요청은 언제든 직렬화할 수 있어야 하므로 Serializable 인터페이스를 구현해야 합니다. 아래의 예제는 매칭 요청 사이의 비교를 위해 Comparable 인터페이스를 추가로 구현하고 있습니다.
+このようなユーザーマッチメイキングの最も基本的なものは、マッチングリクエストそのものです。マッチリクエストを次のようにエンジンが提供しているBaseUserMatchInfo抽象クラスを継承して実装します。この時、リクエスト者を区別できるゲームユーザーのIDを提供できるようにgetId()メソッドを必ず実装する必要があります。また、リクエストはいつでもシリアル化できる必要があるため、Serializableインターフェイスを実装する必要があります。次の例はマッチングリクエスト間の比較のために、Comparableインターフェイスを追加で実装しています。
 
 ```java
 public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Comparable<UserMatchInfo> {
@@ -74,9 +74,9 @@ public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Co
     }
 
     /**
-     * 해당 유저 매치 요청이 어느 유저로부터 온 것인지 판단하기 위해 사용됩니다.
+     * 該当のユーザーマッチリクエストがどのユーザーが送ったものなのかを判断するために使用されます。
      *
-     * @return 파티 매칭 요청인 경우 RoomId를, 유저 매칭 요청인 경우 UserId를 반환
+     * @returnパーティマッチングリクエストの場合はRoomIdを、ユーザーマッチングリクエストの場合はUserIdを返す
      */
     @Override
     public int getId() {
@@ -84,16 +84,16 @@ public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Co
     }
 
     /**
-     * 요청 파티의 크기를 반환합니다.
+     * リクエストパーティのサイズを返します。
      *
-     * @return 파티 매칭 요청인 경우 파티의 크기(인원 수)를, 유저 매칭 요청인 경우 0을 반환
+     * @returnパーティマッチングリクエストの場合はパーティのサイズ(ユーザー数)を、ユーザーマッチングリクエストの場合は0を返す
      */
     @Override
     public int getPartySize() {
         return 0;
     }
 
-    // 만일 UserMatchInfo 객체 사이에 비교가 필요하다면 Comparable 인터페이스를 구현합니다.
+    // もしUserMatchInfoオブジェクト間の比較が必要な場合は、Comparableインターフェイスを実装します。
     @Override
     public int compareTo(UserMatchInfo o) {
         if (this.rating < o.getRating())
@@ -113,51 +113,51 @@ public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Co
 
 
 
-유저 매치 요청에서 재정의해야 할 메서드를 표로 정리하면 다음과 같습니다.
+ユーザーマッチリクエストで再定義する必要があるメソッドを表にまとめると、次のとおりです。
 
-| 콜백 이름    | 의미                | 설명                                                                                                                         |
+| コールバック名  | 意味               | 説明                                                                                                                       |
 | ------------ | ------------------- |----------------------------------------------------------------------------------------------------------------------------|
-| getId        | 매치 요청자 정보    | 해당 유저 매치 요청이 어느 유저로부터 온 것인지 판단하기 위해 사용됩니다. 그러므로 반드시 요청자의 ID를 반환하도록 재정의해 주어야 합니다.                                           |
-| getPartySize | 매치 요청 파티 규모 | 요청 파티의 크기를 반환합니다. 이 값으로 파티 매치 메이킹 요청 여부를 판단하므로 유저 매치 메이킹 요청인 경우에는 반드시 0을 반환하도록 재정의합니다. 파티 매치 요청의 경우에는 해당 파티원의 인원 수를 반환하도록 합니다. |
+| getId        | マッチリクエスト者の情報  | 該当ユーザーマッチリクエストがどのユーザーが送信したものかを判断するために使用されます。したがって、必ずリクエスト者のIDを返すように再定義する必要があります。                                           |
+| getPartySize | マッチリクエストパーティの規模 | リクエストパーティのサイズを返します。この値でパーティマッチメイキングリクエストの有無を判断するため、ユーザーマッチメイキングリクエストの場合は、必ず0を返すように再定義します。パーティマッチリクエストの場合は、該当パーティのユーザー数を返します。 |
 
 
 
-### 유저 매치 메이커
+### ユーザーマッチメイカー
 
-유저 매치 메이커는 유저 매치 요청을 실제로 처리하며, 엔진에서 제공하는 BaseUserMatchMaker 추상 클래스를 상속 구현합니다. 특히 onMatch() 메서드는 실제 매칭을 수행하기 위해 호출되는 콜백이므로 주의 깊게 살펴보십시오. onRefill() 메서드는 이미 완료된 매치 메이킹에 대해 충원 요청을 처리하는 콜백입니다. 예를 들어 4명이 매치 메이킹된 상태에서 1명이 게임을 종료했을 때 1명을 더 충원하기 위해 사용할 수 있습니다. 아래의 예제 코드는 이러한 유저 매치 메이커를 구현하는 방법을 보여줍니다.
+ユーザーマッチメイカーは、ユーザーマッチリクエストを実際に処理し、エンジンが提供するBaseUserMatchMaker抽象クラスを継承実装します。特にonMatch()メソッドは、実際にマッチングを行うために呼び出されるコールバックであるため注意が必要です。onRefill()メソッドはすでに完了したマッチメイキングに対してユーザーの補充リクエストを処理するコールバックです。例えば、4人がマッチメイキングした状態で1人がゲームを終了した時に1人を補充するために使用できます。次のサンプルコードは、これらのユーザーマッチメイカーを実装する方法を示しています。
 
 
-특히 매치 메이커를 구현한 클래스는 @ServiceName 애너테이션을 사용하여 특정 서비스에 대한 용도로 엔진에 등록합니다. 또한 매치 메이커에 의해 생성될 방의 타입을 @RoomType 애너테이션으로 미리 정의합니다. 이때, 하나의 매치 메이커 클래스는 오직 하나의 서비스에 대해서만 등록할 수 있습니다.
+特にマッチメイカーを実装したクラスは、@ServiceNameアノテーションを使用して特定のサービスに対する用途でエンジンに登録します。また、マッチメイカーによって作成されるルームのタイプを@RoomTypeアノテーションであらかじめ定義します。この時、1つのマッチメイカークラスは1つのサービスに対してのみ登録できます。
 
 ```java
-@ServiceName("MyGame") // "MyGame"이라는 서비스에 대한 매치 메이커를 엔진에 등록
-@RoomType("1vs1") // 이 매치 메이커에 의해 생성되는 방의 종류를 의미하는 문자열
+@ServiceName("MyGame") // "MyGame"というサービスに対するマッチメイカーをエンジンに登録
+@RoomType("1vs1") // このマッチメイカーによって作成されるルームの種類を意味する文字列
 public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
 
     private static final Logger logger = getLogger(UserMatchMaker.class);
 
     public UserMatchMaker() {
-        super(2, 5000); // 매치 메이킹의 정원은 2명이며 요청이 5초 내에 매칭되지 않으면 Timeout 처리되도록 인자를 설정
+        super(2, 5000); // マッチメイカーの定員は2人であり、リクエストが5秒以内にマッチングしなければ、Timeout処理されるように引数を設定
     }
 
     private Multiset<UserMatchInfo> ratingSet = TreeMultiset.create();
-    private final int matchMultiple = 1; // match 정원의 몇 배수까지 인원을 모은 후에 rating 별로 정렬해서 매칭할 것인가?
+    private final int matchMultiple = 1; // match定員の何倍のユーザーを集めてから、rating別にソートしてマッチングするのか？
     private int currentMultiple = matchMultiple;
     private long lastMatchTime = System.currentTimeMillis();
     private int totalMatchMakings = 0;
 
     /**
-     * 유저 매치 메이킹과 파티 매치메이킹 요청을 처리. 첫번째 호출 이후 주기적으로 호출됩니다.
+     * ユーザーマッチメイキングとパーティマッチメイキングリクエストを処理。最初の呼び出し後、定期的に呼び出されます。
      * 
-     * getMatchRequests(int)를 이용해 현재까지 누적된 전체 매치 요청 목록을 얻어올 수 있습니다.
-     * 사용자는 이 목록을 이용해 조건에 맞는 요청들을 별도의 Collection에 순서대로 적재한 후 matchSingles(Collection)이나 assignRoom(BaseUserMatchInfo) 또는 assignRoom(Collection) API를 이용해 매칭을 완성할 수 있습니다.
-     * 만일, 최소한의 요청 수가 모이지 않았으면 다음 호출 시에 처리합니다.
+     * getMatchRequests(int)を利用して現在まで累積されたマッチリクエストリストの全体を取得できます。
+     * ユーザーは、このリストを利用して条件に合うリクエストを別途のCollectionに順番に並べた後、matchSingles(Collection)やassignRoom(BaseUserMatchInfo)または、assignRoom(Collection) APIを利用してマッチングを完了できます。
+     * もし最小限のリクエスト数が集まらなければ、次の呼び出しで処理します。
      */
     @Override
     public void onMatch() {
         List<UserMatchInfo> matchRequests = getMatchRequests(matchSize * currentMultiple);
 
-        // 최소 개수(minAmount)만큼 적재되지 않았음
+        // 最小数(minAmount)が積まれなかった
         if (matchRequests == null) {
             if (System.currentTimeMillis() - lastMatchTime >= 10000)
                 currentMultiple = Math.max(--currentMultiple, 1);
@@ -165,14 +165,14 @@ public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
             return;
         }
 
-        // matching이 성사되지 않은 항목들은 ratingSet에 그대로 남아 있을 수 있으나 따로 보관할 필요는 없다.
-        // 이 항목들은 다음 getMatchRequests()에서 다시 전달 받는다.
+        // matchingが成立していない項目は、ratingSetにそのまま残っている可能性があるが、別途で保管する必要はない。
+        // この項目は次のgetMatchRequests()で再送信される。
         ratingSet.clear();
         ratingSet.addAll(matchRequests);
 
         if (ratingSet.size() >= matchSize) {
 
-            // ratingSet의 순서대로 matchingAmount * matchSize만큼 항목들을 소비
+            // ratingSetの順にmatchingAmount * matchSizeだけの項目を消費
             int matchingAmount = matchSingles(ratingSet);
 
             if (matchingAmount > 0) {
@@ -186,14 +186,14 @@ public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
     }
 
     /**
-     * 유저/파티 매치 메이킹 과정에서 임의의 유저가 나간 경우 새로운 유저를 채우기 위한 처리
+     * ユーザー/パーティマッチメイキングプロセス中に任意のユーザーが退出した場合に新しいユーザーを補充するための処理
      * 
-     * 일반적으로 매치 메이킹된 방에 대해 onLeaveRoom이 호출될 때 matchRefill을 호출하여 연동할 수 있습니다. 즉, 매칭된 방에서 누군가 나갈 때 리필을 요청하는 것입니다. 리필은 큐에 쌓여 있는 매치 요청은 사용하지 않습니다. 리필 요청 이후에 들어오는 새로운 매치 요청만 그 대상으로 합니다.
+     * 通常、マッチメイキングしたルームに対してonLeaveRoomが呼び出された時、matchRefillを呼び出して連動できます。すなわち、マッチングしたルームから誰かが退出した時に補充をリクエストすることです。補充はキューに溜まっているマッチリクエストには使用しません。補充リクエスト後に新しく入ってくるマッチリクエストのみ対象とします。
      * 
-     * getRefillRequests API를 이용하여 리필 요청들을 획득할 수 있습니다. 게임에 따라 리필을 사용하기 보다는 임의의 유저가 나간 상태로 게임을 진행하거나, 매칭된 게임을 취소한 후 다시 매치 메이킹을 요청하는 것이 더 나은 방법일 수 있습니다.
+     * getRefillRequests APIを利用して、補充リクエストを取得できます。ゲームによっては、補充を使用するよりも任意のユーザーが退出した状態でゲームを進行したり、マッチングしたゲームをキャンセルした後、再度マッチメイキングをリクエストしたりする方が適している場合もあります。
      *
-     * @param req 리필에 사용할 신규 매치 요청 정보
-     * @return 리필이 성공하면 true를 실패하면 false를 반환합니다.
+     * @param req補充に使用する新規マッチリクエストの情報
+     * @return補充に成功した場合はtrueを、失敗した場合はfalseを返します。
      */
     @Override
     public boolean onRefill(UserMatchInfo matchReq) {
@@ -205,9 +205,9 @@ public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
             }
 
             for (UserMatchInfo refillInfo : refillRequests) {
-                // 100점 이상 차이 나지 않으면 리필
+                // 100点以上の差が出なければ補充
                 if (Math.abs(matchReq.getRating() - refillInfo.getRating()) < 100) {
-                    if (refillRoom(matchReq, refillInfo)) { // 해당 매칭 요청을 리필이 필요한 방으로 매칭
+                    if (refillRoom(matchReq, refillInfo)) { // 該当マッチングリクエストを補充が必要なルームとしてマッチング
                         return true;
                     }
                 }
@@ -223,36 +223,36 @@ public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
 
 
 
-이러한 유저 매치 메이커의 콜백 메서드를 정리하면 다음의 표와 같습니다.
+これらのユーザーマッチメイキングのコールバックメソッドをまとめると、次の表のようになります。
 
-| 콜백 이름 | 의미                | 설명                                                                                                                                                                                                                                                                                                                                                                                        |
+| コールバック名 | 意味               | 説明                                                                                                                                                                                                                                                                                                                                                                                      |
 | --------- | ------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onMatch   | 매치 요청들을 처리  | 사용자는 BaseUserMatchMaker가 제공하는 API를 사용하여 직접 매치 요청을 처리할 수 있습니다. 이때, 사용자가 원하는 대로 로직을 직접 구현할 수 있습니다. 예제 코드의 처리 흐름이 가장 기본적인 방식입니다. <br> 즉, getMatchRequests API를 이용하여 최소한의 매치 요청들을 획득한 후 사용자가 원하는 대로 인원수에 맞춰 요청들을 조합한 후 임의의 Collection에 순서대로 담습니다. 이 Collection을 matchSingles API에 인자로 전달하면 정원수에 맞춰 매치가 이루어집니다. 예제 코드의 경우 정원이 2명인 유저 매치 메이킹이므로 Collection을 순회하며 순서대로 2명씩 추출하여 하나의 게임으로 매칭시킵니다. |
-| onRefill  | 매치 리필 요청 처리 | 유저/파티 매치 메이킹 과정에서 임의의 유저가 나간 경우 새로운 유저를 채우기 위한 처리를 합니다. 일반적으로 매치 메이킹된 방에 대해 onLeaveRoom이 호출될 때 matchRefill을 호출하여 연동할 수 있습니다. 즉, 매칭된 방에서 누군가 나갈 때 리필을 요청하는 것입니다. 리필은 큐에 쌓여 있는 매치 요청은 사용하지 않습니다. 리필 요청 이후에 들어오는 새로운 매치 요청만 그 대상으로 합니다.                                                                                                                                                      |
+| onMatch   | マッチリクエストを処理 | ユーザーは、BaseUserMatchMakerが提供するAPIを使用して直接マッチリクエストを処理できます。この時、ユーザーの思いどおりにロジックを直接実装できます。サンプルコードの処理フローが最も基本的な方式です。<br>すなわち、getMatchRequests APIを利用して最小限のマッチリクエストを取得した後、ユーザーの希望する人数に合わせてリクエストを組み合わせて、任意のCollectionに順番に入れます。このCollectionをmatchSingles APIに引数として送信すると、定員に合わせてマッチメイキングが行われます。サンプルコードの場合、定員が2人のユーザーマッチメイキングであるため、Collectionを巡回し、順番に2人ずつ抽出して1つのゲームでマッチングさせます。 |
+| onRefill  | マッチ補充リクエストの処理 | ユーザー/パーティマッチメイキングプロセス中に任意のユーザーが退出した場合、新しいユーザーを補充するための処理を行います。通常、マッチメイキングしたルームに対してonLeaveRoomが呼び出された時、matchRefillを呼び出して連動できます。すなわち、マッチングしたルームから誰かが退出した時に補充をリクエストするということです。補充はキューに溜まったリクエストには使用しません。補充リクエスト後に新しく入ってくるマッチリクエストのみ対象とします。                                                                                                                                                      |
 
 
 
-### GameUser에서 매치 메이커로 요청 전달하기
+### GameUserからマッチメイカーにリクエストを送信する
 
-이제 클라이언트는 서버로 유저 매치 메이킹을 요청할 수 있습니다. 이 요청은 GameUser에 전달된 후 엔진에 의해 onMatchUser 콜백 메서드를 호출합니다. 이에 대해서는 앞서 GameNode와 GameUser를 설명하면서 한 번 살펴보았습니다. 사용자는 이 콜백 메서드에서 GameAnvil이 제공하는 유저 매치 메이커를 사용해도 되고 직접 구현한 별도의 매치 메이커나 다른 솔루션을 사용해도 됩니다. 하지만 특별한 이유가 없다면 GameAnvil의 유저 매치 메이킹을 사용하길 권장합니다.
+クライアントはサーバーにユーザーマッチメイキングをリクエストできます。このリクエストはGameUserに送信された後、エンジンによってonMatchUserコールバックメソッドを呼び出します。これについては、GameNodeとGameUserを説明しながら見てきました。ユーザーは、このコールバックメソッドでGameAnvilが提供しているユーザーマッチメイカーや、直接実装した別のマッチメイカー、他のソリューションを使用できます。しかし、特別な理由がなければ、GameAnvilのユーザーマッチメイキングの使用を推奨します。
 
-아래의 예제는 엔진에서 제공하는 유저 매치 메이커를 사용하기 위해 앞서 살펴본 매치 요청을 생성하여 matchUser API를 호출하는 모습입니다. 특히, 매개 변수로 전달된 매칭 그룹은 매치 메이킹을 논리적으로 나눌 수 있는 개념이라고 앞서 설명했습니다. 만일 "Newbie"라는 매칭 그룹을 전달했다면 동일한 "Newbie" 매칭 그룹끼리 같은 매칭 큐를 공유하게 됩니다.
+次の例は、エンジンが提供しているユーザーマッチメイカーを使用するために、前述したマッチリクエストを作成してmatchUser APIを呼び出す様子です。特に、引数で送信されたマッチンググループは、マッチメイキングを論理的に分けることができる概念であると先ほども説明しました。仮に"Newbie"というマッチンググループを送信した場合、同じ"Newbie"マッチンググループ同士で同じマッチングキューを共有します。
 
 ```java
     /**
-     * 클라이언트에서 userMatch를 요청했을 경우 호출되는 콜백
+     * クライアントがuserMatchをリクエストした場合、呼び出されるコールバック
      *
-     * @param roomType   클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
-     * @param matchingGroup 클라이언트가 요청한 매칭 그룹
-     * @param payload    클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 유저 매치 메이킹 요청 성공이고 false 실패
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param roomType クライアントとサーバー間にあらかじめ定義したルームの種類を区別する任意の値
+     * @param matchingGroupクライアントがリクエストしたマッチンググループ
+     * @param payload  クライアントから送信されたペイロード
+     * @param outPayloadクライアントに送信するペイロード
+     * @returnの戻り値がtrueの場合、ユーザーマッチメイキングリクエストが成功し、false場合は失敗
+     * @throws SuspendExecution このメソッドはファイバーがsuspendになることがある。
      */
     public boolean onMatchUser(final String roomType, final String matchingGroup,
                                final Payload payload, Payload outPayload) throws SuspendExecution {
 
-        UserMatchInfo userMatchInfo = new UserMatchInfo(getUserId()); // 매치 요청 생성
+        UserMatchInfo userMatchInfo = new UserMatchInfo(getUserId()); // マッチリクエスト作成
         userMatchInfo.setRating(rating);
 
         return matchUser(matchingGroup, roomType, userMatchInfo, payload);
@@ -261,15 +261,15 @@ public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
 
 
 
-마지막으로 클라이언트는 언제든 앞서 요청한 유저 매치 메이킹을 취소할 수 있습니다. 이때, 엔진은 취소 처리가 성공적으로 진행되면 다음과 같이 GameUser의 onMatchUserCancel 콜백 메서드를 호출합니다. 사용자는 이 콜백에서 취소 타이밍에 처리하고 싶은 부분을 구현하면 됩니다.
+最後に、クライアントはいつでも事前にリクエストしたユーザーマッチメイキングをキャンセルできます。この時、エンジンはキャンセル処理が成功すると、次のようにGameUserのonMatchUserCancelコールバックメソッドを呼び出します。ユーザーは、このコールバックでキャンセルのタイミングに処理したい部分を実装できます。
 
 ```java
     /**
-     * 클라이언트에서 userMatch가 취소되었을 때 호출되는 콜백
+     * クライアントでuserMatchがキャンセルされた時に呼び出されるコールバック
      *
-     * @param reason 취소된 이유(TIMEOUT/CANCEL)
-     * @return 성공적으로 취소되었으면 true를, 취소할 수 없는 경우에는 false를 반환한다.
-     * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param reasonキャンセルされた理由(TIMEOUT/CANCEL)
+     * @return正常にキャンセルされた場合はtrueを、キャンセルできない場合はfalseを返す。
+     * @throws SuspendExecution このメソッドはファイバーがsuspendになることがある。
      */
     public boolean onMatchUserCancel(final MatchCancelReason reason) throws SuspendExecution {
     }
@@ -277,26 +277,26 @@ public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
 
 
 
-## 룸 매치 메이커 구현
+## ルームマッチメイカーの実装
 
-룸 매치 메이킹은 유저를 가장 적합한 방으로 자동 입장시켜 주는 기능입니다. 룸 매치 메이킹을 요청한 유저를 어떤 기준으로 어느 방에 입장시킬지는 사용자가 구현하기에 달렸습니다. 가장 유저 수가 많은 방으로 입장시킬 수도 있고, 가장 한산한 방으로 입장시킬 수도 있습니다. 혹은 평균 점수가 가장 높은 방으로 입장시킬 수도 있습니다. 사용자는 이러한 매칭 로직에만 집중하면 됩니다. 참고로 가장 대표적인 룸 매치 메이킹 게임은 <한게임 포커>나 <카트라이더> 등이 있습니다.
+ルームマッチマッチングは、ユーザーを最適なルームに自動的に入場させる機能です。ルームマッチメイキングをリクエストしたユーザーをどのような基準で、どのルームに入場させるかは、ユーザーの実装にかかっています。最もユーザーが多いルームに入場させることや、最もユーザーが少ないルームに入場させることもあります。もしくは、平均スコアが最も高いルームに入場させることもあります。ユーザーは、これらのマッチングロジックにのみ集中できます。また、最も代表的なルームマッチメイキングゲームには「ハンゲームポーカー」や「カートライダー」などが挙げられます。
 
 
-> [참고]
+> [参考]
 >
-> 매치 메이커는 매칭 그룹 단위로 생성됩니다. 즉, 동일한 매칭 그룹끼리 매치 메이킹을 수행합니다.
+> マッチメイカーは、マッチンググループ単位で作成されます。すなわち、同じマッチンググループ同士でマッチメイキングを行います。
 > 
-> 룸 매치 메이커와 유저 매치 메이커는 서로 독립적으로 운영됩니다. 즉, 동일한 매칭 그룹으로 유저 매칭과 룸 매칭을 각각 요청하더라도 이 두 요청이 함께 매칭되는 일은 없습니다.
+> ルームマッチメイカーとユーザーマッチメイカーは、互いに独立して運営されています。すなわち、同じマッチンググループでユーザーマッチングとルームマッチングをそれぞれリクエストしても、この2つのリクエストが同時にマッチングすることはありません。
 
 
-### 룸 매치 요청 구현
+### ルームマッチリクエストの実装
 
-이러한 룸 매치 메이킹의 가장 기본은 바로 매칭 요청 그 자체입니다. 매칭 요청은 한 명의 유저가 보낸 요청을 의미하며 아래와 같이 엔진에서 제공하는 BaseRoomMatchForm 추상 클래스를 상속 구현합니다. 요청은 언제든 직렬화할 수 있어야 하므로 Serializable 인터페이스를 추가로 구현해야 합니다. 다음은 이러한 매치 요청을 구현한 예제입니다.
+このようなルームマッチメイキングの最も基本的なものは、マッチングリクエストそのものです。マッチングリクエストとは、1人のユーザーが送ったリクエストを意味し、次のようにエンジンが提供しているBaseRoomMatchForm抽象クラスを継承実装します。リクエストはいつでもシリアル化できる必要があるため、Serializableインターフェイスを追加で実装する必要があります。以下は、これらのマッチリクエストを実装した例です。
 
 ```java
 public class GameRoomMatchForm extends BaseRoomMatchForm implements Serializable {
 	
-	// 사용자가 매칭에서 사용할 조건 추가
+	// ユーザーがマッチングで使用する条件を追加
 	private int money;
 	private int level;
 
@@ -313,20 +313,20 @@ public class GameRoomMatchForm extends BaseRoomMatchForm implements Serializable
 }
 ```
 
-룸 매치 요청은 기본적으로 매칭 로직에서 사용할 정보를 포함합니다. 이는 사용자가 매치 메이킹 로직을 직접 구현할 때 사용하게 됩니다. 룸 매치 요청에서 한 가지 중요한 정보는 매칭 유저 카테고리입니다. 매칭 유저 카테고리는 하나의 방에서 유저들이 속한 그룹을 구분하기 위한 임의의 문자열입니다. 예를 들어 4인 정원인 방에서 두 개의 팀으로 나눠서 2 vs 2의 게임을 할 경우, 각각의 유저가 속할 팀을 지정하기 위한 용도로 사용될 수 있습니다. 만일 아무런 값도 지정하지 않으면 엔진의 기본 값이 사용됩니다.
+ルームマッチのリクエストは基本的にマッチングロジックで使用する情報が含まれています。これは、ユーザーがマッチメイキングロジックを直接実装する時に使用されます。ルームマッチのリクエストにおいて重要な情報は、マッチングユーザーカテゴリーです。マッチングユーザーカテゴリーは、1つのルームでユーザーが属するグループを区別するための任意の文字列です。例えば、4人が定員のルームで2チームに分けて2vs2のゲームをする場合、それぞれのユーザーが属するチームを指定するために使用されることがあります。もし何の値も指定しなかった場合は、エンジンのデフォルト値が使用されます。
 
 
 
-### 룸 매치 정보 구현
+### ルームマッチ情報の実装
 
-매칭 대상이 되는 방은 룸 매치 메이커에 의해 매치 정보가 관리됩니다. 즉, 하나의 룸 매치 정보는 하나의 매칭 가능한 방 정보를 의미한다고 생각할 수 있습니다. 이때, 해당 방의 여러 가지 정보와 상태값들을 포함할 수 있습니다. BaseRoomMatchInfo를 상속 구현하며 필수로 방의 ID와 매칭 유저 카테고리 그리고 각 매칭 카테고리별 최대 정원 수를 설정해야 합니다. 그리고 마지막으로 룸 매치 정보도 직렬화를 위해 반드시 Serializable 인터페이스를 구현해야 합니다. 아래는 예제 코드를 보여줍니다. 
+マッチング対象となるルームは、ルームマッチメイカーによってマッチ情報が管理されます。すなわち、1つのルームマッチ情報は1つのマッチング可能なルーム情報を示していると考えることができます。この時、該当ルームのさまざまな情報と状態値を含めることができます。BaseRoomMatchInfoを継承実装し、必ずルームIDとマッチングユーザーカテゴリーそして、各マッチングカテゴリー別に最大定員数を設定する必要があります。そして最後に、ルームマッチ情報もシリアル化のために必ずSerializableインターフェイスを実装する必要があります。以下はサンプルコードを示しています。 
 
 ```java
 public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable {
 	private static final int MAX_USER = 3;
 	
 	public GameRoomMatchInfo(int roomId) {
-		// 별도의 매칭 유저 카테고리가 필요 없을 경우에는 기본값을 사용할 수 있습니다.
+		// 別途のマッチングユーザーカテゴリーが不要な場合はデフォルト値を使用できます。
     	super(roomId, MAX_USER);
 	}
     
@@ -335,23 +335,23 @@ public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable
 ```
 
 
-아래의 예제는 사용자가 임의의 매칭 유저 카테고리를 설정하는 경우입니다. 하나의 게임 방에 레드팀과 블루팀이 각각 3명씩으로 구성되어 있습니다. 이와 같이 카테고리를 나누어 둘 경우 룸 매치 메이커가 각각의 매칭 카테고리별 유저 수를 알아서 관리해 줍니다. 또한 매치 메이킹에 사용할 추가 정보를 원하는 대로 구성할 수 있습니다.
+次の例は、ユーザーが任意のマッチングユーザーカテゴリーを設定する場合です。1つのゲームルームにレッドチームとブルーチームがそれぞれ3人ずつで構成されています。このようにカテゴリーを分ける場合、ルームマッチメイカーがそれぞれのマッチングカテゴリー別にユーザー数を管理してくれます。また、マッチメイキングに使用する追加情報を好きなように構成できます。
 
 ```java
 public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable {    
     private static final int MAX_USER = 3;
 
-	// 매칭 조건 정보
+	// マッチング条件情報
 	int mapId;
     int maxLevel;
 	int avgLevel = 0;
     
 	public GameRoomMatchInfo(int roomId) {
-		// RED_TEAM 최대 인원 3명으로 인원 정보를 추가합니다.
+		// RED_TEAM最大人数は3人で人数情報を追加します。
     	super(roomId, "RED_TEAM", 3);
         
-        // 필요할 경우 추가 매치 카테고리를 등록합니다.
-        // BLUE_TEAM 최대 인원 3명으로 인원 정보를 추가합니다.
+        // 必要な場合は追加マッチカテゴリーを登録します。
+        // BLUE_TEAM最大人数は3人で人数情報を追加します。
 		addMatchingUserCategory("BLUE_TEAM", 3);
 	}
     
@@ -365,9 +365,9 @@ public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable
 
 
 
-### 룸 매치 정보 등록/갱신
+### ルームマッチ情報の登録/更新
 
-이러한 룸 매치 정보는 사용자가 직접 등록/갱신할 수 있습니다. 즉, 사용자가 원하지 않을 경우에는 특정 방은 룸 매치 메이킹 대상으로 등록하지 않을 수도 있습니다. 이런 등록 절차는 일반적으로 다음과 같이 방이 생성되는 onCreateRoom 콜백 메서드에서 주로 진행합니다.
+これらのルームマッチ情報は、ユーザーが直接登録/更新できます。つまり、ユーザーが希望しない場合、特定のルームをルームマッチメイキングの対象に登録しないこともあります。このような登録手続きは通常、次のようにルームを作成するonCreateRoomコールバックメソッドで主に実行します。
 
 ```java
 @Override
@@ -375,60 +375,60 @@ public final boolean onCreateRoom(final GameUser user, final Payload payload, Pa
     
     ...
         
-	// 이제부터 이 방은 룸 매치 메이킹에 사용됩니다.
+	// これからこのルームはルームマッチメイキングに使用されます。
 	registerRoomMatch(gameRoomMatchInfo, user.getUserId());
 }
 ```
 
-임의의 방에 대해 룸 매치 메이킹 등록 여부를 확인하기 위해 BaseRoom 클래스는 다음과 같은 API를 제공합니다.
+任意のルームに対してルームマッチメイキングを登録するかどうかを確認するために、BaseRoomクラスは次のようなAPIを提供しています。
 
 ```java
 /**
- * 룸 매치에 등록된 방인지 확인합니다.
+ * ルームマッチに登録されたルームかどうかを確認します。
  *
- * @return 등록된 방이면 true를 반환합니다.
+ * @return登録されたルームである場合は、trueを返します。
  */
 final public boolean isRegisteredRoomMatch()
 ```
 
-이렇게 등록해 둔 룸 매치 정보는 언제든 필요에 따라 사용자가 그 정보를 갱신할 수도 있습니다.  갱신을 위해 새로운 룸 매치 정보를 만든 후에 updateRoomMatch API를 호출하면 됩니다.
+このように登録したルームマッチ情報は、必要に応じていつでもユーザーがその情報を更新できます。更新するためには、新しいルームマッチ情報を作成した後、updateRoomMatch APIを呼び出してください。
 
 ```java
 GameRoomMatchInfo gameRoomMatchInfo = new GameRoomMatchInfo(getId());
 gameRoomMatchInfo.setMemberMoney(1000);
 
-updateRoomMatch(gameRoomMatchInfo); // 이 룸 매치 정보를 갱신합니다.
+updateRoomMatch(gameRoomMatchInfo); // このルームマッチ情報を更新します。
 ```
 
 
 
-해당 방이 사라질 때 룸 매치 정보는 엔진에서 자동으로 삭제되므로 사용자가 따로 삭제할 필요가 없습니다.
+該当ルームが削除される場合、ルームマッチ情報はエンジンが自動的に削除するため、ユーザーが削除する必要はありません。
 
 
 
-### 룸 매치 메이커
+### ルームマッチメイカー
 
-이제 룸 매치 메이커를 만들 차례입니다. 룸 매치 메이커는 엔진에서 제공하는 BaseRoomMatchMaker 추상 클래스를 상속 구현 합니다. 룸 매치 메이킹은 가장 적합한 방을 찾는 과정이므로 실제 매칭 전/후를 위한 특별한 콜백 메서드들이 제공됩니다. 사용자는 이 콜백 메서드들을 재정의하여 원하는 대로 매칭을 수행할 수 있습니다. 아래의 예제 코드는 이러한 룸 매치 메이커를 어떤 식으로 구현할 수 있는지 보여줍니다.  
+次はルームマッチメイカーを作成する番です。ルームマッチメイカーは、エンジンが提供しているBaseRoomMatchMaker抽象クラスを継承実装します。ルームマッチメイキングは、最適な部屋を検索するプロセスであるため、実際にマッチング前後用に特別なコールバックメソッドが提供されています。ユーザーは、このコールバックメソッドを再定義して、希望するマッチングを行えます。以下のサンプルコードは、このようなルームマッチメイカーをどのように実装するかを示しています。
 
 
 
-특히 매치 메이커를 구현한 클래스는 @ServiceName 애너테이션을 사용하여 특정 서비스에 대한 용도로 엔진에 등록합니다. 또한 매치 메이커에 의해 생성될 방의 타입을 @RoomType 애너테이션으로 미리 정의합니다. 이때, 하나의 매치 메이커 클래스는 오직 하나의 서비스에 대해서만 등록할 수 있습니다.
+特にマッチメイカーを実装したクラスは、@ServiceNameアノテーションを使用して特定のサービスに対する用途でエンジンに登録します。また、マッチメイカーによって作成されるルームのタイプを@RoomTypeアノテーションで事前に定義します。この時、1つのマッチメイカークラスは1つのサービスに対してのみ登録できます。
 
 ```java
-@ServiceName("MyGame") // "MyGame"이라는 서비스에 대한 매치 메이커를 엔진에 등록
-@RoomType("REDvsBLUE") // 이 매치 메이커에 의해 생성되는 방의 종류를 의미하는 문자열
+@ServiceName("MyGame") // "MyGame"というサービスに対するマッチメイカーをエンジンに登録
+@RoomType("REDvsBLUE") // このマッチメイカーによって作成されるルームの種類を意味する文字列
 public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, GameRoomMatchInfo> {
     
     /**
-     * 룸 매치를 시작하기 전에 요청 정보를 기반으로 필요한 사전 처리를 구현합니다.
+     * ルームマッチを開始する前に、リクエスト情報に基づいて必要な事前処理を実装します。
      *
-     * @param baseRoomMatchForm 전달 받은 룸 매칭 요청
-     * @param args  추가로 전달 받은 데이터
-     * @return 매칭 결과 코드
+     * @param baseRoomMatchForm送信されたルームマッチングリクエスト
+     * @param args追加で送信されたデータ
+     * @returnマッチング結果コード
      */
     @Override
     public RoomMatchResultCode onPreMatch(GameRoomMatchForm roomMatchForm, Object... args) {
-        // 매칭 요청서의 Money가 100보다 작을 경우 매칭을 시작하지 않고, 매칭을 신청한 클라이언트에게 실패 결과 코드(1000)를 전달
+        // マッチングリクエスト書のMoneyが100より少ない場合、マッチングを開始せず、マッチングを申請したクライアントに失敗結果コード(1000)を送信
         if (roomMatchForm.getMoney() < 100)
             return RoomMatchResultCode.FAIL(1000);
 
@@ -436,13 +436,13 @@ public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, Ga
     }
     
     /**
-     * 룸 매치 요청과 임의의 룸 매치 정보가 매칭 가능한 상태인지 확인합니다.
-     * 엔진은 룸 매치 메이킹이 성공할 때까지 전체 방 목록에 대해 한번씩 이 콜백 메서드를 호출합니다.
+     * ルームマッチリクエストと任意のルームマッチ情報がマッチング可能な状態であるかどうかを確認します。
+     * エンジンは、ルームマッチメイキングが成功するまで、ルームリスト全体に対して1度ずつこのコールバックメソッドを呼び出します。
      *
-     * @param baseRoomMatchForm 전달 받은 룸 매치 요청
-     * @param baseRoomMatchInfo 매칭 풀에 등록되어 있는 룸 매치 정보(매칭이 가능한 방 정보)
-     * @param args  추가로 전달 받은 데이터
-     * @return 매칭 성공 여부
+     * @param baseRoomMatchForm送信されたルームマッチリクエスト
+     * @param baseRoomMatchInfoマッチングプールに登録されているルームマッチ情報(マッチング可能なルーム情報)
+     * @param args追加で送信されたデータ
+     * @returnマッチングの成否
      */
     @Override
     public boolean canMatch(GameRoomMatchForm roomMatchForm, GameRoomMatchInfo roomMatchInfo, Object... args) {
@@ -452,22 +452,22 @@ public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, Ga
     }
     
     /**
-     * 룸 매치가 성공한 후 필요한 처리를 구현합니다.
+     * ルームマッチに成功した後、必要な処理を実装します。
      *
-     * @param baseRoomMatchForm 룸 매치 요청
-     * @param baseRoomMatchInfo 매칭된 룸 매치 정보
-     * @param args  추가로 전달 받은 데이터
+     * @param baseRoomMatchFormルームマッチリクエスト
+     * @param baseRoomMatchInfoマッチングしたルームマッチ情報
+     * @param args追加で送信されたデータ
      */
     @Override
     public void onPostMatch(GameRoomMatchForm baseRoomMatchForm, GameRoomMatchInfo baseRoomMatchInfo, Object... args) {
-        // 매칭이 정상적으로 진행되고 있는 지 확인한다.
+        // マッチングが正常に進んでいるかどうかを確認する。
         logger.debug("GameRoomMatchMaker::onPostMatch() matching success, roomId({})", baseRoomMatchInfo.getRoomId());
     }
     
     /**
-     * 룸 매치 정보를 정렬하기 위해 구현합니다.
+     * ルームマッチ情報をソートするために実装します。
      *
-     * @return 비교 결과를 반환
+     * @return比較結果を返す
      */
     @Override
     public int compare(GameRoomMatchInfo o1, GameRoomMatchInfo o2) {
@@ -481,43 +481,43 @@ public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, Ga
     }
     
     /**
-     * 룸 매치 메이킹 대상인 방에서 유저 수가 증가할 때 호출됩니다.
+     * ルームマッチメイキングの対象であるルームでユーザー数が増加した時に呼び出されます。
      *
-     * @param roomId 유저 수가 증가한 방의 아이디
-     * @param matchingUserCategory 증가한 유저의 매칭 유저 카테고리
-     * @param currentUserCount 해당 매칭 유저 카테고리에 속하는 유저수
+     * @param roomIdユーザー数が増加したルームのID
+     * @param matchingUserCategory増加したユーザーのマッチングユーザーカテゴリー
+     * @param currentUserCount該当マッチングユーザーカテゴリーに属するユーザー数
      */
     @Override
     public void onIncreaseUserCount(int roomId, String matchingUserCategory, int currentUserCount) {
-        // 유저 수가 변경되었으므로 매칭 풀을 다시 정렬하여 유저가 적은 방이 먼저 매칭되도록 하기 위함
+        // ユーザー数が変更されたため、マッチングプールを再度ソートして、ユーザーが少ないルームが先にマッチングするようにするため
         sort();
     }
     
     /**
-     * 룸 매치 메이킹 대상인 방에서 유저 수가 감소할 때 호출됩니다.
+     * ルームマッチメイキングの対象であるルームでユーザー数が減少した時に呼び出されます。
      *
-     * @param roomId 유저 수가 감소한 방의 아이디
-     * @param matchingUserCategory 감소한 매칭 유저 카테고리
-     * @param currentUserCount 해당 매칭 유저 카테고리에 속하는 유저 수
+     * @param roomIdユーザー数が減少したルームのID
+     * @param matchingUserCategory減少したマッチングユーザーカテゴリー
+     * @param currentUserCount該当マッチングユーザーカテゴリーに属するユーザー数
      */
     @Override
     public void onDecreaseUserCount(int roomId, String matchingUserCategory, int currentUserCount) {
-        // 유저 수가 변경되었으므로 매칭 풀을 다시 정렬하여 유저가 적은 방이 먼저 매칭되도록 하기 위함
+        // ユーザー数が変更されたため、マッチングプールを再度ソートして、ユーザーが少ないルームが先にマッチングするようにするため
         sort();
     }
     
     /**
-     * 임의의 룸 매치 정보 목록을 반환합니다. 
-     * 인자로 넘겨받은 현재 매칭풀(전체 매칭 가능한 방의 목록)을 원하는 대로 가공하여 원하는 목록을 만들어 반환할 수 있습니다.
-     * 만일 이 메서드를 재정의하지 않으면 전체 방 목록을 반환합니다.
+     * 任意のルームマッチ情報のリストを返します。 
+     * 引数として渡された現在のマッチングプール(マッチング可能なルームの全体リスト)を好きなように加工し、希望するリストを作成して返せます。
+     * もしこのメソッドを再定義しない場合は、ルームの全体リストを返します。
      *
-     * @return 가공한 룸 매치 정보의 목록
+     * @return加工したルームマッチ情報のリスト
      */
     @Override
     public List<GameRoomMatchInfo> getRooms(List<GameRoomMatchInfo> rooms){
-        // 매칭풀에서 방 10개를 가져온다.
+        // マッチングプールからルーム10個を取得する。
         List<GameRoomMatchInfo> gameRoomMatchInfoList = rooms.stream().limit(10).collect(Collectors.toList());
-        // 가져온 방 10개를 랜덤으로 순서를 섞는다.
+        // 取得したルーム10個の順番をランダムに並び替える。
         Collections.shuffle(gameRoomMatchInfo);
 
         return gameRoomMatchInfoList;
@@ -527,35 +527,35 @@ public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, Ga
 
 
 
-앞서 살펴본 룸 매치 메이커의 콜백 메서드를 정리하면 아래의 표와 같습니다.
+これらのルームマッチメイカーのコールバックメソッドを表にまとめると、次のようになります。
 
-| 콜백 이름           | 의미                              | 설명                                                                                                                                                    |
+| コールバック名         | 意味                             | 説明                                                                                                                                                  |
 | ------------------- | --------------------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onPreMatch          | 룸 매치 시작 전 처리              | 룸 매치 요청에 저장된 각종 정보를 사용하여, 현재 룸 매치 메이킹을 수행할 수 있는 상태인지 미리 체크하는 용도로 사용합니다. 예를 들어, 한 번의 룸 매치 메이킹에 100코인이 필요하다면 여기에서 해당 유저가 100코인 이상을 보유하고 있는지 확인할 수 있습니다. |
-| canMatch            | 매치 확인                         | 인자로 전달 받은 룸 매치 요청과 룸 매치 정보 사이에 매칭이 가능한지 확인하기 위해 호출합니다. 즉,  전체 룸 매치 풀을 순회하면서 해당 룸 매치 요청이 들어갈 가장 적합한 방을 찾기 위한 로직을 여기에 구현할 수 있습니다.                       |
-| onPostMatch         | 룸 매치 성공 후 처리              | 룸 매치 메이킹이 성공한 후에 호출됩니다. 룸 매치가 완료된 후 처리할 로직은 여기에 구현할 수 있습니다.                                                                                           |
-| onIncreaseUserCount | 임의의 매칭 대상 방에서 유저 증가 | 임의의 방에서 유저가 증가할 경우 호출됩니다. 이때, 증가한 유저가 어떤 매칭 유저 카테고리인지 그리고 해당 매칭 유저 카테고리의 총원이 몇 명인지도 인자로 전달됩니다.                                                        |
-| onDecreaseUserCount | 임의의 매칭 대상 방에서 유저 감소 | 임의의 방에서 유저가 감소할 경우 호출됩니다.  이때, 감소한 유저가 어떤 매칭 유저 카테고리인지 그리고 해당 매칭 유저 카테고리의 총원이 몇 명인지도 인자로 전달됩니다.                                                       |
-| getRooms            | 임의의 방 목록을 획득             | 엔진의 기본 구현은 전체 룸 매치메이킹이 가능한 방의 목록을 반환합니다. 사용자는 이를 재정의하여 원하는 특정 방 목록만 반환할 수 있습니다.                                                                       |
+| onPreMatch          | ルームマッチの開始前処理            | ルームマッチリクエストに保存された各種情報を使用して、現在ルームマッチメイキングを実行できる状態であるかどうかを事前にチェックするために使用します。例えば、1度のルームマッチメイキングに100コインが必要な場合、該当ユーザーが100コイン以上を保有しているかどうかをここで確認できます。 |
+| canMatch            | マッチ確認                       | 引数として送信されたルームマッチリクエストとルームマッチ情報間でマッチングが可能かどうかを確認するために呼び出します。つまり、ルームマッチプール全体を巡回しながら、該当ルームマッチリクエストが入る最適なルームを検索するためのロジックをここに実装できます。                       |
+| onPostMatch         | ルームマッチ成功後の処理            | ルームマッチメイキングに成功した後に呼び出されます。ルームマッチが完了した後、処理するロジックはここに実装できます。                                                                                           |
+| onIncreaseUserCount | 任意のマッチング対象であるルームでユーザーが増加 | 任意のルームでユーザーが増加した場合に呼び出されます。この時、増加したユーザーがどのマッチングユーザーカテゴリーなのか、そのマッチングユーザーカテゴリーの総員は何人なのかも引数として送信されます。                                                        |
+| onDecreaseUserCount | 任意のマッチング対象であるルームでユーザーが減少 | 任意のルームでユーザーが減少した場合に呼び出されます。この時、減少したユーザーがどのマッチングユーザーカテゴリーなのか、そのマッチングユーザーカテゴリーの総員は何人なのかも引数として送信されます。                                                       |
+| getRooms            | 任意のルームリストを取得            | エンジンの基本実装は、全体ルームマッチメイキングが可能なルームのリストを返します。ユーザーは、これを再定義して、希望する特定のルームリストのみ返せます。                                                                       |
 
 
 
-### GameUser에서 매치 메이커로 요청 전달하기
+### GameUserからマッチメイカーにリクエストを送信する
 
-이제 클라이언트는 서버로 룸 매치 메이킹을 요청할 수 있습니다. 이 요청은 GameUser에 전달된 후 엔진에 의해 onMatchRoom 콜백 메서드를 호출합니다. 이에 대해서는 앞서 GameNode와 GameUser를 설명하면서 한 번 살펴보았습니다. 사용자는 이 콜백 메서드에서 GameAnvil이 제공하는 룸 매치 메이커를 사용해도 되고 직접 구현한 별도의 매치 메이커나 다른 솔루션을 사용해도 됩니다. 하지만 특별한 이유가 없다면 GameAnvil의 룸 매치 메이킹을 사용하길 권장합니다.
+クライアントはサーバーにルームマッチメイキングをリクエストできます。このリクエストはGameUserに送信された後、エンジンによってonMatchRoomコールバックメソッドを呼び出します。これについては、GameNodeとGameUserを説明しながら見てきました。ユーザーは、このコールバックメソッドでGameAnvilが提供しているルームマッチメイカーや、直接実装した別のマッチメイカー、他のソリューションを使用できます。しかし、特別な理由がなければ、GameAnvilのルームマッチメイカーの使用を推奨します。
 
-아래의 예제는 엔진에서 제공하는 룸 매치 메이커를 사용하기 위해 앞서 살펴본 매치 요청을 생성하여 matchRoom API를 호출하는 모습입니다. 특히, 매개 변수로 전달된 매칭 그룹은 매치 메이킹을 논리적으로 나눌 수 있는 개념이라고 앞서 설명했습니다. 만일 "Newbie"라는 매칭 그룹을 전달했다면 동일한 "Newbie" 매칭 그룹끼리 같은 매칭 큐를 공유하게 됩니다.
+次の例は、エンジンが提供しているルームマッチメイカーを使用するために前述したマッチリクエストを作成してmatchRoom APIを呼び出す様子です。特に、引数で送信されたマッチンググループは、マッチメイカーを論理的に分けることができる概念であると先ほども説明しました。仮に"Newbie"というマッチンググループを送信した場合、同じ"Newbie"マッチンググループ同士で同じマッチングキューを共有します。
 
 ```java
     /**
-     * 클라이언트에서 roomMatch를 요청했을 경우 발생하는 콜백
+     * クライアントがroomMatchをリクエストした場合に発生するコールバック
      *
-     * @param roomType 클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
-     * @param matchingGroup 클라이언트가 요청한 매칭 그룹
-     * @param matchingUserCategory 해당 유저가 속한 방 안에서의 카테고리
-     * @param payload  클라이언트로부터 전달 받은 페이로드
-     * @return {@link MatchRoomResult}로 matching된 room의 정보 반환, null을 반환할 시 클라이언트 요청 옵션에 따라 새로운 Room이 생성되거나, 요청 실패 처리된다.
- * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+     * @param roomTypeクライアントとサーバー間にあらかじめ定義したルームの種類を区別する任意の値
+     * @param matchingGroupクライアントがリクエストしたマッチンググループ
+     * @param matchingUserCategory該当ユーザーが属するルーム内のカテゴリー
+     * @param payloadクライアントから送信されたペイロード
+     * @return {@link MatchRoomResult}によってmatchingしたroomの情報を返す。nullを返した場合は、クライアントリクエストオプションによって新しいRoomが作成されるか、リクエストが失敗処理される。
+ * @throws SuspendExecution このメソッドはファイバーがsuspendになることがある。
      */
     public MatchRoomResult onMatchRoom(final String roomType, final String matchingGroup, final String matchingUserCategory, final Payload payload) throws SuspendExecution {
         
@@ -564,4 +564,3 @@ public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, Ga
         return matchRoom(matchingGroup, roomType, gameRoomMatchForm);
     }
 ```
-
