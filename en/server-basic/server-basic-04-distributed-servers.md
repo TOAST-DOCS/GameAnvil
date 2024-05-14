@@ -1,20 +1,20 @@
-## Game > GameAnvil > 서버 개념 설명 > 분산 서버
+## Game > GameAnvil > Server Concept Description > Distribution Servers
 
 
 
-## 분산 서버
+## Distributed Server
 
-앞서 기본 개념에서 GameAnvil의 노드 구성은 아래의 그림과 같다고 했습니다. 즉, 하나의 프로세스는 여러 가지의 노드를 자유롭게 구성해서 구동할 수 있습니다. 단, 모든 GameAnvil 프로세스는 반드시 하나의 IPC(inter-process communication)노드가 필수적으로 포함됩니다. 이 IPC 노드는 GameAnvil 프로세스 간의 통신을 담당합니다. 사실 실제 네트워크 처리를 담당하는 로우 레벨 노드가 더 있지만 사용자는 이 부분을 통틀어 IPC 노드로 이해하면 됩니다.
+Previously, in the basic concept, GameAnvil's node configuration is as shown in the image below. In other words, a process can be operated by freely configuring multiple nodes. However, all GameAnvil processes must have one inter-process communication (IPC) node. This IPC node is responsible for communication between GameAnvil processes. In fact, there are more low-level nodes that are responsible for actual network processing, but the user should understand this as an IPC node as a whole.
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/NodeLayer.png)
 
 
 
-### 노드 간 통신
+### Node-to-Node Communication
 
-이러한 IPC 노드를 통해 두 개 이상의 GameAnvil 프로세스가 통신하는 모습은 아래의 그림과 같습니다. 이 그림에서 두 개의 GameAnvil 프로세스는 서로 다른 구성의 노드들을 구동합니다. 이때, 각각의 노드들은 서로 통신이 가능합니다.
+The picture below depicts two or more GameAnvil processes communicating each other through these IPC nodes. In the picture, two different GameAnvil processes run the nodes in different configurations. At this point, each node can communicate each other.
 
-서로 다른 프로세스의 노드들과 통신하기 위해 각 노드들은 IPC 노드를 통해 메시지를 전달합니다. 반면에 동일한 프로세스 상의 노드들은 큐를 이용해서 상호 통신합니다. 그러므로 이 경우에는 IPC 노드를 통하지 않습니다.
+In order to communicate with many different process nodes, each node passes messages through IPC nodes. On the other hand, the nodes on the same process use queue to communicate with each other. Therefore, in this case, the communication does not go through IPC nodes.
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/IPC.png)
 
@@ -22,7 +22,7 @@
 
 ### Meetpoint
 
-이러한 IPC를 위해 프로세스는 Meetpoint를 통해 상호 접속합니다. GameAnvil은 아래와 같은 형태로 하나 이상의 Meetpoint IP 주소 쌍을 설정할 수 있습니다. GameAnvil 프로세스는 최초 구동 시 설정된 Meetpoint 주소 중 하나에 접속을 시도하여 전체 서버군 정보를 동기화합니다.
+For these IPCs, processes interconnect through Meetpoint. GameAnvil can set one or more Meetpoint IP address pairs in the following form. GameAnvil process synchronizes the entire server group information by attempting to access one of the Meetpoint addresses set during initial drive.
 
 ```
 "common": {
