@@ -31,8 +31,7 @@ Let's take a look again at onMatchUser, the user matchmaking callback method des
      *  
      * @param roomType   Any value that separates the pre-defined room types between client and server  
      * @param payload    Payload received from clients  
-     * @param outPayload Payload to be forwarded to clients 
- 
+     * @param outPayload Payload to be forwarded to clients
      * @return If the return value is true, the user matchmaking request is successful and false is failed  
      * @throws SuspendExecution This method means that the fiber can be suspended 
  
@@ -144,7 +143,7 @@ public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
   
     private Multiset<UserMatchInfo> ratingSet = TreeMultiset.create();  
     private final int matchMultiple = 1; // match  How many times the number of people will be gathered and then sorted by rating and matched?     
-private int currentMultiple = matchMultiple;  
+    private int currentMultiple = matchMultiple;  
     private long lastMatchTime = System.currentTimeMillis();  
     private int totalMatchMakings = 0;  
   
@@ -195,8 +194,7 @@ private int currentMultiple = matchMultiple;
      * Can obtain refill request by using getRefillRequests API. Depending on the game, rather than using refill, it may be better to proceed with the game with any user out, or cancel the matched game and ask for matchmaking again. 
      *  
      * @param req New match request information to be used for refills 
-     * @return Returns true if the refill is successful and false if fails. 
- 
+     * @return Returns true if the refill is successful and false if fails.  
      */  
     @Override  
     public boolean onRefill(UserMatchInfo matchReq) {  
@@ -246,10 +244,9 @@ The example below shows calling the matchUser API by creating a match request th
      * Callback called when client requests userMatch 
      *  
      * @param roomType   Any value that separates the pre-defined room types between client and server   
-    * @param matchingGroup Matching group requested by client 
+     * @param matchingGroup Matching group requested by client 
      * @param payload    Payload delivered from clients  
-     * @param outPayload Payload to be forwarded to clients 
-  
+     * @param outPayload Payload to be forwarded to clients   
      * @return If the return value is true, the user match making request is successful, if false it is failed 
      * @throws SuspendExecution This method means that the fiber can be suspended 
      */  
@@ -335,7 +332,6 @@ public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable
       
     ...  
 } 
-
 ```
 
 
@@ -346,22 +342,22 @@ public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable
     private static final int MAX_USER = 3;
 
 	// match condition information
-	int mapId;
+    int mapId;
     int maxLevel;
-	int avgLevel = 0;
+    int avgLevel = 0;
     
-	public GameRoomMatchInfo(int roomId) {
-		// Adds the room information for RED_TEAM with a maximum of 3 players.
+    public GameRoomMatchInfo(int roomId) {
+	// Adds the room information for RED_TEAM with a maximum of 3 players.
     	super(roomId, "RED_TEAM", 3);
         
         // Register additional match categories if needed.
         // BLUE_TEAM Adds people information with a maximum of 3 people.
-		addMatchingUserCategory("BLUE_TEAM", 3);
-	}
+        addMatchingUserCategory("BLUE_TEAM", 3);
+    }
     
-    } public void setAvgLevel(int avgLevel) {
-		this.avgLevel = avgLevel;
-	}
+    public void setAvgLevel(int avgLevel) {
+        this.avgLevel = avgLevel;
+    }
     
     ...
 }
@@ -438,8 +434,7 @@ public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, Ga
             return RoomMatchResultCode.FAIL(1000);  
   
         return RoomMatchResultCode.SUCCESS;  
-    }  
-      
+    }        
    
   /**  
      * Verify that the room matching request and any room matching information are matchable. 
@@ -455,8 +450,7 @@ public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, Ga
         if (roomMatchForm.getLevel() > roomMatchInfo.getAvgLevel())  
             return false;  
         return true;  
-    }  
-      
+    }
  
     /**  
      * Implement the necessary processing after the room matching is successful. 
@@ -486,13 +480,12 @@ public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, Ga
             return 0;  
         }  
     }  
-      
- 
+    
     /**  
      * Called when the number of users increases in the room where the room matching is being made.  
      *  
      * @param roomId   ID of Room where the number of users increased      
-    * @param matchingUserCategory Matching user categories for increased users 
+     * @param matchingUserCategory Matching user categories for increased users 
      * @param currentUserCount  Number of users in that matching user category 
      */  
     @Override  
@@ -513,8 +506,7 @@ public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, Ga
         // Because the number of users has changed, it is to rearrange the matching pool so that rooms with fewer users match first 
         sort();  
     }  
-     
-  
+       
     /**  
      * Returns a list of random room matching information.   
      * You can process the current matching pool (the list of all matchable rooms) that you have taken over as a factor to create and return the list you want. 
@@ -563,8 +555,8 @@ The example below shows a call to matchRoom API by creating a match request that
      * @param matchingGroup Matching group requested by client  
      * @param matchingUserCategory categories within the room to which the user belongs to  
      * @param payload  Payload delivered from clients  
-     * @return   information return that matched with {@link MatchRoomResult}, When null is returned, a new Room is created or a request failure is processed according to the client request option. 
- * @throws SuspendExecution This method means that the fiber can be suspended.  
+     * @return   information return that matched with {@link MatchRoomResult}, When null is returned, a new Room is created or a request failure is processed according to the client request option.
+     * @throws SuspendExecution This method means that the fiber can be suspended.  
      */  
     public MatchRoomResult onMatchRoom(final String roomType, final String matchingGroup, final String matchingUserCategory, final Payload payload) throws SuspendExecution {  
           

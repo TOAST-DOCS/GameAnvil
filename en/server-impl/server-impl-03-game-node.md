@@ -83,11 +83,10 @@ public class SampleGameNode extends BaseGameNode {
   
     /**  
      * Call when a user change occurs on another node on the same channel  
-     * I.e , updateChannelUser() Occurs when calling API   
+     * i.e , updateChannelUser() Occurs when calling API   
      *  
      * @param type            Forward Channel Information Change Type (Renew/Delete).  
-     * @param channelUserInfo  
-Forward User information to be changed.  
+     * @param channelUserInfo Forward User information to be changed.  
      * @param userId          Forward UserId of Change target.  
      * @param accountId       Forward Account Id of Change Target.  
      * @throws SuspendExecution This method means that the fiber can be suspended 
@@ -99,10 +98,10 @@ Forward User information to be changed.
   
     /**  
      * Call when room state changes occur on other nodes on the same channel 
-     *i.e , updateChannelRoomInfo() Occurrs when calling API   
+     * i.e , updateChannelRoomInfo() Occurrs when calling API   
      *  
      * @param type            Forward Channel Information Change Type (Renew/Delete). 
-     * @param channelRoomInfo  Forward Room information to be changed.  
+     * @param channelRoomInfo Forward Room information to be changed.  
      * @param roomId          Forward RoomId of Change target.  
      * @throws SuspendExecution This method means that the fiber can be suspended 
      */  
@@ -114,7 +113,7 @@ Forward User information to be changed.
      * Called when client requests channel information 
      *  
      * @param outPayload Forward the Channel information to be forwarded Client.      
-* @throws SuspendExecution This method means that the fiber can be suspended 
+     * @throws SuspendExecution This method means that the fiber can be suspended 
      */  
     @Override  
     public void onChannelInfo(Payload outPayload) throws SuspendExecution {    
@@ -164,7 +163,7 @@ public class SampleGameUser extends BaseUser {
      * @param payload        Information received from the client
      * @param sessionPayload Payload receivedf from onPreLogin 
      * @param outPayload     Information to be forwarded to client 
-     * @return  If successful login return true, if not return false 
+     * @return If successful login return true, if not return false 
      * @throws SuspendExecution This method means that the fiber can be suspended
      */ 
     @Override 
@@ -188,7 +187,7 @@ public class SampleGameUser extends BaseUser {
      * 
      * @param newDeviceId           deviceId value of newly connected user
      * @param outPayloadForKickUser Payload to be forwarded to clients
-     * @return  If the return value is true, the existing user is forced to log out after the newly connected user is logged in. If it is false, the newly connected user fails to log in
+     * @return If the return value is true, the existing user is forced to log out after the newly connected user is logged in. If it is false, the newly connected user fails to log in
      * @throws SuspendExecution This method means that the fiber can be suspended 
      */ 
     @Override 
@@ -215,8 +214,7 @@ public class SampleGameUser extends BaseUser {
     /** 
      * Called if you are already logged in and attempt to log in through another connection (for reasons such as reconnection)
      * 
-     * @param outPayload Payload to be forwarded to clients
- 
+     * @param outPayload Payload to be forwarded to clients 
      * @throws SuspendExecution This method means that the fiber can be suspended
      */ 
     @Override 
@@ -229,8 +227,7 @@ public class SampleGameUser extends BaseUser {
      * 
      * @param payload        Any payload delivered by the client 
      * @param sessionPayload Payload to be forwarded  onPreLogin 
-     * @param outPayload    Any payload to be forwarded to clients
- 
+     * @param outPayload    Any payload to be forwarded to clients 
      * @return If return value is true, successful ReLogin, if fals, failed ReLogin 
      * @throws SuspendExecution: This method means that the fiber can be suspended 
      */ 
@@ -350,20 +347,19 @@ public class SampleGameUser extends BaseUser {
      * Call to see if the user is able to move (transfer) to another node
      * 
      * @return If the return value is true, it is a state that can be transferred, and if it is false, it is impossible. In the case of an impossible state, if NonStopPatch is in progress, it is called continuously to send the user until the patch is over     
-* @throws SuspendExecution This method means that the fiber can be suspended
+     * @throws SuspendExecution This method means that the fiber can be suspended
      */ 
     @Override 
     public boolean canTransfer() throws SuspendExecution { 
     } 
      
-    /** 
-	 * When a user moves (sends) to another node, a call is made to collect data to be transferred from the source node
-	 * (Refer to " Transferrable objects" chapter for more information.) 
+    /**
+     * When a user moves (sends) to another node, a call is made to collect data to be transferred from the source node
+     * (Refer to " Transferrable objects" chapter for more information.) 
      * 
      * @param transferPack Packages for storing data to be taken to other nodes 
      * @throws SuspendExecution This method means that the fiber can be suspended
-    
- */ 
+     */ 
     @Override 
     public void onTransferOut(final TransferPack transferPack) throws SuspendExecution {     
     } 
@@ -392,9 +388,9 @@ public class SampleGameUser extends BaseUser {
 
  
     /** 
-     * When a client requests a move to another channel, the call is made to verify that the current user is able to move the channel 
-	 * 
-	 * Caution> If the user explicitly calls the moveChannel() API to move the channel, the onCheckMoveOutChannel() is not called;it is called only when an implicit channel movement occurs by engine.
+     * When a client requests a move to another channel, the call is made to verify that the current user is able to move the channel
+     *
+     * Caution> If the user explicitly calls the moveChannel() API to move the channel, the onCheckMoveOutChannel() is not called;it is called only when an implicit channel movement occurs by engine.
      * 
      * @param destinationChannelId      ID of the channel to be moved 
      * @param payload              Payload delivered from clients 
@@ -415,8 +411,7 @@ public class SampleGameUser extends BaseUser {
      * @param destinationChannelId  channel ID to be transferred 
      * @param outPayload           Payloads to be forwarded to the channel to be transferred
      * @throws SuspendExecution This method means that the fiber can be suspended
-     
-*/ 
+     */ 
     @Override 
     public void onMoveOutChannel(final String destinationChannelId, 
                                  Payload outPayload) throws SuspendExecution { 
@@ -548,8 +543,7 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
      *  
      * @param user       Requested user object  
      * @param inPayload  Payload delivered from clients 
-     * @param outPayload Payload to be forwarded to clients 
- 
+     * @param outPayload Payload to be forwarded to clients
      * @return If the return value is true, room creation is successful, if false, it fails 
      * @throws SuspendExecution This method means that the fiber can be suspended 
      */  
@@ -580,8 +574,7 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
      *  
      * @param user       Requested user object 
      * @param inPayload  Payload delivered from clients  
-     * @param outPayload Payload to be forwarded to clients 
- 
+     * @param outPayload Payload to be forwarded to clients  
      * @return If the return value is true, exit is successful; if false, it fails 
      * @throws SuspendExecution This method means that the fiber can be suspended 
      */  
@@ -590,8 +583,7 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
                                final Payload inPayload,  
                                Payload outPayload) throws SuspendExecution {  
     }  
- 
-  
+   
     /**  
      * onLeaveRoom   If the callback is successful, call for post-processing after exit is complete     *  
      * @param user User object left a room  
@@ -615,8 +607,7 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
    /**  
      * Callback for registering timer handlers to process 
      * When this callback is called, the user registers as many timer handlers as they want to process. 
-     * (Refer to "Timer" chapter for more information.)  
- 
+     * (Refer to "Timer" chapter for more information.)   
      */  
     @Override  
     public void onRegisterTimerHandler() {  
@@ -633,9 +624,9 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
     public boolean canTransfer() throws SuspendExecution {      
     }  
     
-    /**  
-	 * It is called when the room is forwarded (transferred) to another node, to collect data to be sent from source node.  
-	 * (Refer to "Transferable Objects" chapter for more information.)  
+    /**
+     * It is called when the room is forwarded (transferred) to another node, to collect data to be sent from source node.
+     * (Refer to "Transferable Objects" chapter for more information.)  
      *  
      * @param transferPack   Package for storing data to be taken to other nodes  
      * @throws SuspendExecution This method means that the fiber can be suspended  
@@ -684,7 +675,8 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
      * @param user       User requested party matching (room manager)  
      * @param payload    Payload received from clients  
      * @param outPayload Payload to be forwarded to clients 
-     * @return If the return value is true, the party matchmaking request is successful and false is failed     * @throws SuspendExecution This method means that the fiber can be suspended 
+     * @return If the return value is true, the party matchmaking request is successful and false is failed     
+     * @throws SuspendExecution This method means that the fiber can be suspended 
      */    
     @Override  
     public boolean onMatchParty(final String roomType,  

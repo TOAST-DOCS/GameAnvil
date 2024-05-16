@@ -22,18 +22,18 @@ These GatewayNodes only need to inherit the BaseGatewayNode class and override t
 @GatewayNode // Register this GatewayNode class with the engine
 public class SampleGatewayNode extends BaseGatewayNode {
 
-    /**]
+    /**
      * Called at initialization time
-     *]
+     *
      * @throws SuspendExecution This method means that the fiber can be suspended.
      */
     @Override
     public void onInit() throws SuspendExecution { 
     }
 
-    /**]
+    /**
      * Called for parts to be processed before they're ready
-     *]
+     *
      * @throws SuspendExecution This method means we can suspend the fiber
      */
     @Override
@@ -42,7 +42,7 @@ public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
      * Called when ready
-     *]
+     *
      * @throws SuspendExecution This method means that the fiber can be suspended.
      */
     @Override
@@ -51,7 +51,7 @@ public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
      * Called when paused
-     * * * @param payload contents
+     * 
      * @param payload contents any additional information you wish to pass
      * @throws SuspendExecution This method means the fiber can be suspended
      */
@@ -59,11 +59,11 @@ public class SampleGatewayNode extends BaseGatewayNode {
     public void onPause(Payload payload) throws SuspendExecution { 
     }
 
-    /** */ /** */ @Override.
+    /** 
      * Called when resuming
-     * * /** * Returns.
+     * 
      * @param payload contents any additional information you wish to pass
-     * * @throws SuspendExecution This method means that the fiber can be suspended
+     * @throws SuspendExecution This method means that the fiber can be suspended
      */
     @Override
     public void onResume(Payload payload) throws SuspendExecution { 
@@ -71,7 +71,7 @@ public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
      * Called when a shutdown command is received
-     *]
+     *
      * @throws SuspendExecution This method means that the fiber can be suspended.
      */
     @Override
@@ -79,9 +79,6 @@ public class SampleGatewayNode extends BaseGatewayNode {
     }
 }
 ```
-
-
-
 ### Connection implementation
 
 Connection means the client's physical connection itself. Clients can use their own AccountId to proceed with the authentication process on the connection. If authentication is successful, the AccountId is mapped to the connection that was created.
@@ -102,11 +99,6 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
      * @param outPayload Payload to be forwarded to clients 
      * @return Authentication successful or not: If false, the connection to the client is terminated 
      * @throws SuspendExecution This method means that the fiber can be suspended 
- 
- 
- 
- 
- 
      */  
     @Override  
     public boolean onAuthenticate(final String accountId, final String password, final String deviceId, final Payload payload, final Payload outPayload) throws SuspendExecution {        
