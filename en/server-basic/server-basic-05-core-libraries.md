@@ -1,16 +1,16 @@
-## Game > GameAnvil > 서버 개념 설명 > 핵심 라이브러리
+## Game > GameAnvil > Server Concept Description > Core Library
 
 
 
-## 핵심 라이브러리
+## Key Libraries
 
-아래의 4가지가 GameAnvil에서 사용하는 핵심 라이브러리입니다. Quasar와 ZeroMQ 그리고 Netty는 엔진 내부에서 사용하므로 GameAnvil 사용자가 직접 사용할 일은 없습니다. Protocol Buffers는 메시지를 직렬화/역직렬화하는 과정에서 사용합니다. 직접 사용 여부와 관계없이 아래의 4가지 라이브러리를 잘 이해하고 있다면 엔진 사용에 많은 도움이 될 것입니다.
+The four key libraries used by GameAnvil are listed below. Quasar, ZeroMQ, and Netty are used inside the engine, so GameAnvil users don't need to use them themselves. Protocol Buffers are used to serialize/deserialize messages. If you understand these four libraries well, whether you use them directly or not, it will help you use the engine a lot.
 
-| 라이브러리       | 용도                            |
+| Library       | Usage                            |
 | ---------------- | ------------------------------- |
-| Quasar           | 파이버 기반의 Continuation 지원 |
-| ZeroMQ           | 서버의 IPC                      |
-| Netty            | 서버-클라이언트 통신            |
-| Protocol Buffers | 서버-클라이언트 메시지 직렬화   |
+| Quasar           | Supports Fiber-based Continuation |
+| ZeroMQ           | Server's IPC                      |
+| Netty            | Communication between server and client            |
+| Protocol Buffers | Parallelization of messages between server and client   |
 
-특히, 게임 개발 과정에서 위의 라이브러리를 직접 사용할 필요가 있을 경우에는 별도로 다른 버전을 사용하기보다는 GameAnvil과 동일한 버전을 그대로 사용하길 권장합니다. 예를 들어, Netty를 사용할 필요가 있을 경우에 임의의 버전에 대한 종속성을 추가하기보다는 GameAnvil에서 사용 중인 Netty를 그대로 사용하시기 바랍니다.
+In particular, if you need to use the library directly during game development, we recommend that you use the same version as GameAnvil, rather than using another version separately. For example, if you need to use Netty, rather than adding dependencies for any version, please use the Netty that GameAnvil is using.

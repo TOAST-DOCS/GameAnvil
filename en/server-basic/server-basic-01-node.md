@@ -1,32 +1,32 @@
-## Game > GameAnvil > 서버 개념 설명 > 노드
+## Game > GameAnvil > Server Concept Description > Node
 
 
 
 ## Node
 
-GameAnvil 서버 구성의 가장 기본이 되는 단위는 노드입니다. 각 노드는 그 역할에 맞는 기능을 독립적으로 수행합니다.  몇 개의 노드로 어떤 역할을 수행할지는 자유롭게 설정 가능합니다. 노드를 자세히 설명하기에 앞서 역할별로 노드를 나누면 다음과 같습니다. 
+The most basic unit of GameAnvil server configuration is a node. Each node independently performs the features appropriate for that role. You can freely set up how many nodes you want to perform. Before describing the nodes in detail, the nodes are divided by roles as follows. 
 
-| 노드       | 필수/선택      | 기능                                        | 콘텐츠 구현 | 네트워크 접근       |
+| Node       | Required/Optional      | Features                                        | Implement content | Network access       |
 | ---------- |------------| ------------------------------------------- | ----------- | ------------------- |
-| Gateway    | 필수         | 클라이언트 접속과 인증을 처리               | 가능        | public              |
-| Game       | 필수         | 실제 게임 서버로서 콘텐츠를 처리            | 가능        | private             |
-| Support    | 선택         | 필요에 따라 독립된 서비스로 구현하도록 지원 | 가능        | private 또는 public |
-| Match      | 선택         | 매치 메이킹을 수행                          | 가능        | private             |
-| Location   | 필수(자동 구성) | 유저와 룸 등의 위치 정보를 저장 및 관리     | 불가능      | private             |
-| Management | 필수(자동 구성) | 서버 정보 취합 및 Console/Agent와 통신      | 불가능      | private             |
-| Ipc        | 필수(자동 구성) | GameAnvil 서버의 Inter-process 통신 처리    | 불가능      | private             |
+| Gateway    | tokenId         | Handles client connection and authentication               | Available        | public              |
+| Game       | tokenId         | Handles content as actual game server            | Available        | private             |
+| Support    | Optional         | Supports independent services as necessary | Available        | private or public |
+| Match      | Optional         | Performs matchmaking                          | Available        | private             |
+| Location   | Required (auto-configured) | Stores and manages the location information of users and rooms     | Unavailable      | private             |
+| Management | Required (auto-configured) | Collection of server information and communication with Console/Agent      | Unavailable      | private             |
+| Ipc        | Required (auto-configured) | Process of the Inter-process communication of the GameAnvil server    | Unavailable      | private             |
 
-특히 사용자는 이 중에서 콘텐츠 구현이 가능한 노드들(Gateway, Game, Support, Match)에만 집중하면 됩니다. 나머지는 엔진이 내부적으로 사용하며 사용자가 추가로 구현할 부분은 없습니다. 또한 필수 노드는 반드시 하나 이상 존재해야 전체 서버가 정상적으로 구동 가능합니다. 이때 Location 노드는 명시적으로 GameAnvilConfig.json에 명시적으로 선언이 필요합니다.
+In particular, the user only needs to focus on the nodes (Gateway, Game, Support, Match) that can implement the content. The rest is used internally by engine and there is nothing additionally for the user to implement. In addition, there must be at least one required node to enable the entire server to operate normally. The location node needs to be explicitly declared in GameAnvilConfig.json.
 
-이러한 노드의 계층 구조는 아래의 그림과 같은 모습입니다.
+This node hierarchy is described in the picture below:
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/NodeLayer.png)
 
 
 
-## 싱글 스레드 (Single-Threaded)
+## Single-Threaded
 
-GameAnvil에서 하나의 노드는 하나의 스레드로 처리됩니다. 이것은 매우 중요합니다. 각 노드는 기본적으로 모든 처리를 비동기적으로 해야 하며 이 노드 스레드는 블로킹 없이 지속적으로 구동되는 것이 보장되어야 합니다. 이러한 구동 모델은 Vert.x나 Node.js의 그것과 매우 흡사합니다.
+In GameAnvil, a single node is processed by a single thread. This is important. Each node basically process everything asynchronously and this node thread must be guaranteed to be run uninterrupted. This model is similar to that of Vert.x or Node.js.
 
-싱글 스레드의 가장 큰 장점은 역시 Lock-Free입니다. 사용자는 특수한 경우를 제외하고는 명시적으로 락을 사용할 필요가 없고 사용해서도 안 됩니다. 락을 쓰는 순간 해당 노드 스레드가 처리를 멈출 수 있습니다. 이는 해당 노드 전체의 로직이 멈추는 것을 의미하므로 GameAnvil에서 개발할 때는 절대로 노드 스레드에 대해 락을 사용해서는 안 됩니다. 그러므로 노드 스레드와 외부 스레드 사이에는 절대로 게임 관련 객체가 공유되어서는 안 됩니다. 단, 별도로 외부 스레드를 생성하고 작업을 위임하는 경우에 외부 스레드들 사이의 락은 상관없습니다. 만일 외부 스레드로 작업을 위임하거나 위임한 작업에 대한 결과를 획득할 필요가 있을 때는 GameAnvil에서 제공하는 [비동기 지원 API](../server-impl/server-impl-10-async.md)를 사용하십시오.
+The biggest advantage of single threads is definitely Lock-Free. Users do not need and should not explicitly use Lock, except in special cases. As soon as you use a lock, that node thread can stop processing. This means that logic stops across that node, so you should never use Lock for node threads when you develop it in GameAnvil. Therefore, game-related objects should never be shared between node threads and external threads. However, if you create an external thread separately and delegate tasks, the lock between external threads is fine. If you need to delegate tasks to external threads or obtain results for delegated tasks, use [Async Support API](../server-impl/server-impl-10-async.md) provided by GameAnvil.
 
