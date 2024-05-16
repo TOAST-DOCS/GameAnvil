@@ -1,34 +1,35 @@
-## Game > GameAnvil > 서버 개발 가이드 > 메시지 핸들링
+## Game > GameAnvil > Server Development Guide > Message Handling
 
 ![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/three_steps_for_message_process_1213.png)
 
-## 일반 메시지 처리
+## Process general messages
 
-* GameAnvil의 메시지 처리는 위의 그림과 같이 크게 세 부분으로 나뉩니다. 이 세 부분이 서로 맞물려 메시지 처리 흐름을 만들게 됩니다.
-* 이 중 onDispatch 콜백 구현은 엔진에서 자체적으로 하고 있으며 엔진 사용자는 Dispatcher의 선언과 메시지 핸들러를 구현하여 패킷을 처리합니다.
+* GameAnvil's message processing is largely divided into three parts, as shown in the image above. These three parts interlock together to create a message processing flow.
+* Among these, onDispatch callback implementation is done by engine itself, and the engine user implements the Dispatcher's declaration and message handler to handle the packet.
 
-### 패킷 디스패처 생성 및 메시지와 핸들러 연결
+### Create packet dispatchers and connect messages to handlers
 
-우선 메시지 처리를 하기 위한 패킷 디스패처를 생성합니다. 이 디스패처는 해당 클래스에 대해 사용되므로 불필요한 리소스 낭비를 막기 위해 반드시 static으로 생성합니다.
+First, create a packet dispatcher for message processing. This dispatcher is used for the corresponding class, so be sure to generate static to prevent unnecessary waste of resources.
 
 ```java
-// (패킷 디스패처 생성    
+// (create packet dispatcher      
 private static final MessageDispatcher<MY_USER_CLASS> messageDispatcher = new MessageDispatcher<>();
 ```
 
-이렇게 생성한 디스패처에 원하는 메시지와 핸들러를 연결합니다.
+Connect the desired message and handler to the dispatcher that you created.
 
 ```java
-// 처리하고 싶은 메시지와 핸들러를 매핑
-static {
+// Mapping Handlers and Messages you want to process 
+static {  
     messageDispatcher.registerMsg(MyProto.MyMsg.class, _MyMsgHandler.class);
-}
+ 
+} 
 ```
 
 
-### 메시지 핸들러 구현
+### Implementing message handler
 
-이제 해당 메시지 핸들러를 직접 구현합니다. 이때, GameAnvil은 엔진 내부는 물론이고 모든 샘플 코드에서 메시지 핸들러에 대해 _로 시작하는 네이밍을 사용합니다. 앞으로 등장하는 모든 예제 코드에서도 _로 시작하는 클래스는 모두 메시지 핸들러입니다.  가장 기본적인 형태의 메시지 핸들러는 아래와 같습니다. RECEIVER_CLASS는 해당 메시지를 받는 클래스를 의미합니다.
+We now implement that message handler directly. At this time, GameAnvil uses naming that starts with \__ for the message handler in all sample codes as well as inside the engine. In all of the example codes that appear in the future, all classes that begin with _ are message handlers. The most basic forms of message handlers are as follows. RECEVER_CLASS means the class that receives the message.
 
 ```java
 public class _MyGameMsg implements MessageHandler<RECEIVER_CLASS, MyProto.MyMsg> {
@@ -42,7 +43,7 @@ public class _MyGameMsg implements MessageHandler<RECEIVER_CLASS, MyProto.MyMsg>
 }
 ```
 
-예를 들어, 패킷 수신자가 GameUser라면 그 메시지 핸들러는 아래와 같습니다.
+For example, if the recipient of the packet is a GameUser, the message handler is as follows.
 
 ```java
 public class _MyGameMsg implements MessageHandler<GameUser, MyProto.MyMsg> {
@@ -57,54 +58,54 @@ public class _MyGameMsg implements MessageHandler<GameUser, MyProto.MyMsg> {
 ```
 
 
-### getMessageDispatcher 콜백 구현
+### Implementing getMessageDispatcher callback
 
-패킷 디스패처와 메시지 핸들러를 모두 구현하였습니다. 이제 엔진에서 처리할 패킷이 있을 때 디스패처를 넘겨 주기만 하면 됩니다.
+We have implemented both packet dispatchers and message handlers. Now we just need to hand over the dispatcher when the engine has a packet to process.
 
 ```java
-public class GameUser {
-    // .. 생략
-    @Override
-    public final MessageDispatcher<GameUser> getMessageDispatcher() {
-        return packetDispatcher;
-    }
-    // .. 생략
+public class GameUser {  
+    // .. omitted  
+    @Override  
+    public final MessageDispatcher<GameUser> getMessageDispatcher() {  
+        return packetDispatcher;  
+    }  
+    // .. omitted  
 }
 ```
 
-지금까지 일반적인 패킷 처리에 대한 흐름을 살펴보았습니다. 그와 더불어 RESTful 요청에 대한 처리를 바로 달아서 살펴보도록 하겠습니다.
+So far, we've looked at the flow of general packet processing. We'll look at the processing of RESTful requests right away.
 
 
 
-## RESTful 요청 처리
+## Processing RESTful request
 
-패킷 디스패처는 두 가지가 존재합니다. 하나는 앞서 살펴본 일반적인 패킷 디스패처이고 다른 하나는 RESTful 요청을 처리하기 위한 디스패처입니다. 전체적인 사용법은 두 가지가 거의 동일합니다.  단, 이러한 RESTful 메시지 처리는 오직 SupportNode만 지원합니다. 
+There are two types of packet dispatchers. One is a typical packet dispatcher we've shared earlier, and the other is a dispatcher for processing RESTful requests. Overall usage is about the same. However, this RESTful message processing supports only the SupportNode. 
 
 
 
-### REST 패킷 디스패처 생성 및 메시지와 핸들러 연결
+### Create REST packet dispatchers and connect messages to handlers
 
-다음의 예제 코드는 RESTful 요청을 처리하기 위해 이전과 다른 RestPacketDispatcher를 생성하고 있습니다. 또한 메시지 클래스가 아닌 URL 형태의 API를 핸들러에 연결하고 있습니다.
+The following example code is creating a different RestPacketDispatcher to handle RESTful requests. It is also connecting an API in the form of a URL to the handler rather than a message class.
 
 ```java
-private static final RestMessageDispatcher<RECEIVER_CLASS> restDispatcher = new RestMessageDispatcher<>();
-
-static {
-    // path 와 method(GET, POST, ...) 조합으로 등록.
-    restDispatcher.registerMsg("/auth", RestObject.GET, _RestAuthReq.class);
-    restDispatcher.registerMsg("/echo", RestObject.GET, _RestEchoReq.class);
-    restDispatcher.registerMsg("/testGET", RestObject.GET, _RestTestGET.class);
-    restDispatcher.registerMsg("/testPOST", RestObject.POST, _RestTestPOST.class);
+private static final RestMessageDispatcher<RECEIVER_CLASS> restDispatcher = new RestMessageDispatcher<>();  
+  
+static {  
+    //Restered with  path and method(GET, POST, ...) .  
+    restDispatcher.registerMsg("/auth", RestObject.GET, _RestAuthReq.class);  
+    restDispatcher.registerMsg("/echo," RestObject.GET, _RestEchoReq.class);  
+    restDispatcher.registerMsg("/testGET," RestObject.GET, _RestTestGET.class);  
+    restDispatcher.registerMsg("/testPOST," RestObject.POST, _RestTestPOST.class);  
 }
 ```
 
-예제 코드와 같이 RestMessageDispatcher 사용하여 사용자가 원하는 RESTful API와 메시지 핸들러를 연결하고 있습니다.
+As in the example code, RestMessageDispatcher is used to connect the RESTful API and the message handler that the user wants.
 
 
 
-### 핸들러 구현
+### Implement handler
 
-RESTful 메시지 핸들러는 Packet 대신 RestObject가 인자로 전달되는 차이점 외에는 동일한 모습입니다. 
+RESTful message handlers look the same except for the difference that RestObject is passed to the factor instead of Packet. 
 
 ```java
 public class _RestAuthReq implements RestMessageHandler<WebSupportNode> {
@@ -119,9 +120,9 @@ public class _RestAuthReq implements RestMessageHandler<WebSupportNode> {
 
 
 
-### RestMessageDispatcher 구현
+### Implement RestMessageDispatcher
 
-RESTful 메시지 처리를 위한 getRestMessageDispatcher는 SupportNode만 지원합니다. restMessageDispatcher를 넘기도록 간단하게 구현할 수 있습니다.
+getRestMessageDispatcher for RESTful message processing supports only SupportNode. It can be easily implemented to pass the restMessageDispatcher.
 ```java
 @Override
 public final RestMessageDispatcher<WebSupportNode> getRestMessageDispatcher() {
