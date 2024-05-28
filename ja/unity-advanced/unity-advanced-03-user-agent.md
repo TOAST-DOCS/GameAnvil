@@ -1,9 +1,9 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > UserAgent
+## Game > GameAnvil > Unity深層開発ガイド > UserAgent
 
 ## UserAgent
 
-UserAgent는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고받으며 여러 가지 콘텐츠를 구현할 수 있습니다.
-UserAgent를 사용하기 위해서는 Connector.CreateUserAgent() 함수를 이용해 새로운 UserAgent를 생성해야 합니다. ServiceName과 SubId로 구분되는 여러 개의 UserAgent를 생성할 수 있습니다. 생성된 UserAgent는 Connector에서 내부적으로 관리되어 Connector.GetUserAgent() 함수를 이용해 다시 사용할 수 있습니다. 
+UserAgentはGameAnvilサーバーのGameNodeに関する作業を担当します。ログイン(Login())、ログアウト(Logout())、ルーム管理などの基本機能を提供し、直接定義したプロトコルに基づいて、クライアントは自分のユーザーオブジェクトを通じて他のオブジェクトとメッセージをやり取りし、様々なコンテンツを実装できます。
+UserAgentを使うためにはConnector.CreateUserAgent()関数を使って新しいUserAgentを作成する必要があります。ServiceNameとSubIdで区分される複数のUserAgentを作成できます。作成されたUserAgentはConnectorで内部的に管理され、Connector.GetUserAgent()関数を使って再使用できます。
 
 ```c#
 UserAgent userAgent = ConnectHandler.getInstance().GetUserAgent(serviceName, subID);
@@ -12,788 +12,788 @@ if (userAgent == null) {
 }
 ```
 
-GameAnvil 서버는 여러 개의 서비스를 동시에 운영할 수 있으며, 하나의 UserAgent는 하나의 서비스에 로그인하여 서로 독립적으로 동작하게 됩니다. 즉, 여러 개의 UserAgent를 만들어 서로 다른 서비스에 로그인하여 동시에 사용이 가능합니다. SubId를 다르게 한다면 같은 서비스에 여러 개의 UserAgent를 동시에 로그인하여 사용하는 것도 가능합니다. 
+GameAnvilサーバーは複数のサービスを同時に運営することができ、1つのUserAgentは1つのサービスにログインして互いに独立して動作することになります。つまり、複数のUserAgentを作成して違うサービスにログインして同時に使用できます。SubIdを変えれば、同じサービスに複数のUserAgentを同時にログインして使うことも可能です。
 
-### 로그인/로그아웃
+### ログイン/ログアウト
 
-로그인은 클라이언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 로그아웃은 로그인의 반대 개념입니다. 다시 말해, GameNode 상에서 자신의 유저 객체를 제거하는 과정입니다. 
+ログインはクライアントがサーバーに接続した後、GameNodeに自分のユーザーオブジェクトを作成するプロセスと定義できます。ログアウトはログインの反対の概念です。つまり、GameNode上で自分のユーザーオブジェクトを削除するプロセスです。
 
-로그인 시 어떤 UserType으로 어떤 채널에 로그인할지 입력해 줘야 합니다. 추가 정보가 필요하다면 Payload에 담아 보낼 수 있습니다. 
+ログイン時、どのUserTypeでどのチャンネルにログインするかを入力する必要があります。追加情報が必要な場合は、Payloadに含めることができます。
 
 ```c#
 /// <summary>
-/// 서비스에 로그인
+/// サービスにログイン
 /// </summary>
-/// <param name="userType">유저의 타입 </param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="channelId">로그인할 채널의 아이디</param>
-/// <param name="onLogin">결과를 받을 대리자</param>
+/// <param name="userType">ユーザーのタイプ </param>
+/// <param name="payload">サーバーに伝達する追加情報</param>
+/// <param name="channelId">ログインするチャンネルのID</param>
+/// <param name="onLogin">結果を受け取るデリゲート</param>
 userAgent.Login(userType, channelId, payload, (UserAgent user, Defines.ResultCodeLogin result, UserAgent.LoginInfo loginInfo) => {
-    /// <param name="userAgent">Login()을 요청한 유저 에이전트</param>
-    /// <param name="result">Login() 요청 결과</param>
-    /// <param name="loginInfo">로그인 정보</param>
+    /// <param name="userAgent">Login()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">Login()リクエスト結果</param>
+    /// <param name="loginInfo">ログイン情報</param>
     if(result == Defines.ResultCodeLogin.LOGIN_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 
 /// <summary>
-/// 현재 서비스에서 로그아웃 
+/// 現在のサービスからログアウト 
 /// </summary>
-/// <param name="onLogout">로그아웃 대리자</param>
+/// <param name="onLogout">ログアウトデリゲート</param>
 userAgent.Logout((UserAgent user, Defines.ResultCodeLogout result, bool force, Payload payload) => {
-    /// <param name="userAgent">Logout()을 요청한 유저 에이전트</param>
-    /// <param name="result">Logout() 결과</param>
-    /// <param name="force">서버에 의한 강제 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">Logout()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">Logout()結果</param>
+    /// <param name="force">サーバーによる強制かどうか</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     if(result == Defines.ResultCodeLogout.LOGOUT_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ...
 ```
 
-### 방 생성, 입장, 퇴장
+### ルームの作成、入室、退室
 
-[Unity 기초 개발 가이드 > UserAgent](../unity-basic/unity-basic-04-user-agent.md)의 방 생성, 입장, 퇴장 내용과 동일합니다.
+[Unity基礎開発ガイド > UserAgent](../unity-basic/unity-basic-04-user-agent.md)のルーム作成、入室、退室の内容と同じです。
 
-### 매치 메이킹
+### マッチメイキング
 
-GameAnvil은 두 가지 매치 메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치 메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치 메이킹입니다. 자세한 내용은 [Unity 기초 개발 가이드 > UserAgent](../unity-basic/unity-basic-04-user-agent.md)의 매치 메이킹 부분을 참고하십시오.
+GameAnvilは2種類のマッチメイキングを提供しています。1つはルーム単位のマッチングを行うルームマッチメイキング、もう1つはユーザー単位のマッチングを行うユーザーマッチメイキングです。詳細は[Unity基礎開発ガイド > UserAgent](../unity-basic/unity-basic-04-user-agent.md)のマッチメイキングの部分を参照してください。
 
-#### 파티 매치 메이킹
+#### パーティーマッチメイキング
 
-파티 매치 메이킹은 유저 매치 메이킹의 특수한 형태로, 2명 이상의 유저가 한 파티로 묶여 유저 풀에 등록되고, 조건이 맞는 다른 유저들을 찾아 새로 생성한 방으로 함께 입장시켜 주는 방식입니다. 파티로 묶은 유저들은 항상 같은 방으로 입장합니다. 파티 외에 같이 매칭 유저들은 서버의 매치 메이커 구현에 따라 또 다른 파티일 수도 있고, 개인일 수도 있습니다.
+パーティーマッチメイキングは、ユーザーマッチメイキングの特殊な形で、2人以上のユーザーが1つのパーティーとしてユーザープールに登録され、条件に合う他のユーザーを探し、新しく作成したルームに一緒に入室させる方式です。パーティーを組んだユーザーは、常に同じルームに入室します。パーティー以外で一緒にマッチングするユーザーは、サーバーのマッチメーカーの実装により、別のパーティーになることもあれば、個人になることもあります。
 
-파티 매치 메이킹을 하기 위해서는 먼저 NamedRoom()을 호출해야 합니다. NamedRoom() 호출 시 isParty 매개변수를 true로 넘겨주면, 해당 NamedRoom이 파티의 역할을 합니다. NamedRoom에 파티 유저를 모두 모으고 나서 파티 매치 메이킹을 시작합니다.
+パーティーマッチメイキングを行うためには、まずNamedRoom()を呼び出す必要があります。NamedRoom()呼び出し時にisPartyパラメータをtrueで渡すと、そのNamedRoomがパーティーの役割をします。NamedRoomにパーティーユーザーを全て集めた後、パーティーマッチメイキングを始めます。
 
 ```c#
 /// <summary>
-/// 지정한 이름의 방에 입장<para></para>
-/// 지정한 이름의 방이 없을 경우 지정한 이름의 방을 생성하고 해당 방에 입장
+/// 指定した名前のルームに入室<para></para>
+/// 指定した名前のルームがない場合、指定した名前のルームを作成し、そのルームに入室
 /// </summary>
-/// <param name="roomType">입장할 방의 타입</param>
-/// <param name="roomName">입장하고자 하는 방의 이름</param>
-/// <param name="isParty">파티 여부</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onNamedRoom">결과를 받을 대리자</param>
+/// <param name="roomType">入室するルームのタイプ</param>
+/// <param name="roomName">入室するルームの名前</param>
+/// <param name="isParty">パーティーかどうか</param>
+/// <param name="payload">サーバーに伝達する追加情報</param>
+/// <param name="onNamedRoom">結果を受け取るデリゲート</param>
 userAgent.NamedRoom(roomType, roomName, isParty, payload, (UserAgent user, Defines.ResultCodeNamedRoom result, int roomId, string roomName, bool created, Payload payload) => {
-    /// <param name="userAgent">NameRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">NameRoom() 요청 결과</param>
-    /// <param name="roomName">방 이름</param>
-    /// <param name="roomId">입장한 방의 아이디</param>
-    /// <param name="created">입장한 방의 신설 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">NameRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">NameRoom()リクエスト結果</param>
+    /// <param name="roomName">ルーム名</param>
+    /// <param name="roomId">入室したルームのID</param>
+    /// <param name="created">入室したルームの新設の有無</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     if(result == Defines.ResultCodeNamedRoom.NAMED_ROOM_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 <br>
 
-MatchPartyStart()를 호출하여 파티 매치 메이킹을 시작할 수 있습니다. 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패할 수 있습니다. 
+MatchPartyStart()を呼び出してパーティーマッチメイキングを開始できます。すでにルームに入室している場合など、サーバーの条件によってリクエストが失敗することがあります。
 
 ```c#
 /// <summary>
-/// 파티 매칭을 요청<para></para>
-/// 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패<para></para>
-/// 매칭이 성공한 경우 OnMatchUserDone()을 통해 알림
+/// パーティーマッチングをリクエスト<para></para>
+/// 既にルームに入室している場合など、サーバーの条件によりリクエストが失敗<para></para>
+/// マッチングが成功した場合、OnMatchUserDone()を通じて通知
 /// </summary>
-/// <param name="roomType">매치를 요청할 방의 타입</param>
-/// <param name="matchingGroup">방 생성 시 사용될 매칭그룹</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onMatchPartyStart">결과를 받을 대리자</param>
+/// <param name="roomType">マッチングをリクエストするルームのタイプ</param>
+/// <param name="matchingGroup">ルーム作成時に使用するマッチンググループ</param>
+/// <param name="payload">サーバーに伝達する追加情報</param>
+/// <param name="onMatchPartyStart">結果を受け取るデリゲート</param>
 userAgent.MatchPartyStart(Constants.RoomType, Constants.ChannelId1, customPayload, (UserAgent user, Defines.ResultCodeMatchPartyStart result, Payload payload) => {
-    /// <param name="userAgent">MatchPartyStart()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchPartyStart() 요청 결과</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MatchPartyStart()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchPartyStart()リクエスト結果</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     if(result == Defines.ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 <br>
 
-파티 매칭이 성공한 경우 유저 매치 메이킹에서 사용했던 onMatchUserDoneListeners 또는 IUserListener.OnMatchUserDone을 통해 알림을 받을 수 있고, 시간 안에 매칭이 성공하지 못한 경우 onMatchUserTimeoutListeners 또는 IUserListener.OnMatchUserTimeout을 통해 알림을 받을 수 있습니다.
+パーティーマッチングが成功した場合、ユーザーマッチメイキングで使ったonMatchUserDoneListenersまたはIUserListener.OnMatchUserDoneを通じて通知を受けることができ、時間内にマッチングが成功しなかった場合、onMatchUserTimeoutListenersまたはIUserListener.OnMatchUserTimeoutを通じて通知を受けることができます。
 
 ```c#
 /// <summary>
-/// 유저 매칭 결과를 받을 대리자
+/// ユーザーマッチング結果を受け取るデリゲート
 /// </summary>
 userAgent.onMatchUserDoneListeners += (UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserDone result, bool created, int roomId, Payload payload) => {
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserStart()나 MatchPartyStart() 요청 결과</param>
-    /// <param name="created">방 신설 여부</param>
-    /// <param name="roomId">매칭된 방의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MatchUserStart()またMatchPartyStart()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchUserStart()またはMatchPartyStart()のリクエスト結果</param>
+    /// <param name="created">ルームの新設の有無</param>
+    /// <param name="roomId">マッチングされたルームのID</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
 };
 
 /// <summary>
-/// 유저 매칭 타임아웃 알림 대리자
+/// ユーザーマッチングタイムアウト通知デリゲート
 /// </summary>
 userAgent.onMatchUserTimeoutListeners  += (UserAgent userAgent) => {
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
+    /// <param name="userAgent">MatchUserStart()またMatchPartyStart()をリクエストしたユーザーエージェント</param>
 };
 ```
 <br>
 
-MatchPartyCancel()을 호출하여 파티 매치 메이킹을 취소할 수 있습니다. 파티 매치 요청 중이 아닌 경우, 이미 파티 매치 메이킹이 성공했거나 Timeout이 발생했으면 취소 요청이 실패할 수 있습니다. 
+MatchPartyCancel()を呼び出すことで、パーティーマッチメイキングをキャンセルできます。パーティーマッチリクエスト中でない場合や、すでにパーティーマッチメイキングが成功している場合、またはタイムアウトが発生した場合、キャンセルリクエストは失敗する可能性があります。
 
 ```c#
 /// <summary>
-/// 파티 매칭 요청을 취소<para></para>
-/// 매치 요청 중이 아닌 경우, 이미 매칭이 성공했거나 타임아웃이 발생했을 경우 실패
+/// パーティーマッチングリクエストをキャンセル<para></para>
+/// マッチリクエスト中でない場合や、すでにマッチングが成功した場合、またはタイムアウトが発生した場合は失敗します。
 /// </summary>
-/// <param name="roomType">매치를 요청한 방의 타입</param>
-/// <param name="onMatchPartyCancel">결과를 받을 대리자</param>
+/// <param name="roomType">マッチングをリクエストしたルームのタイプ</param>
+/// <param name="onMatchPartyCancel">結果を受け取るデリゲート</param>
 userAgent.MatchPartyCancel(Constants.RoomType, (UserAgent user, Defines.ResultCodeMatchPartyCancel result) => {
-    /// <param name="userAgent">MatchPartyCancel()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchPartyCancel() 요청 결과</param>
+    /// <param name="userAgent">MatchPartyCancel()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchPartyCancel()リクエスト結果</param>
     if(result == Defines.ResultCodeMatchPartyCancel.MATCH_PARTY_CANCEL_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
-#### 채널 이동
+#### チャンネル移動
 
-경우에 따라서 매치 메이킹의 결과로 채널 이동이 발생할 수 있습니다. 채널 이동이 되었을 경우 onMoveChannelListeners 또는 IUserListener.OnMoveChannel을 통해 알림을 받을 수 있습니다.
+場合によっては、マッチメイキングの結果、チャンネル移動が発生することがあります。チャンネル移動が行われた場合、onMoveChannelListenersまたはIUserListener.OnMoveChannelを通じて通知を受けることができます。
 
 ```c#
 /// <summary>
-/// 채널 이동 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// チャネル移動リクエストの結果、またはサーバーが強制的に実行したチャンネル移動の通知を受けるデリゲート
 /// </summary>
 userAgent.onMoveChannelListeners  += (UserAgent userAgent, GameAnvil.Defines.ResultCodeMoveChannel result, bool force, string channelId, Payload payload) => {
-    /// <param name="userAgent">MoveChannel()한 유저 에이전트</param>
-    /// <param name="result">MoveChannel() 결과 코드</param>
-    /// <param name="force">서버에서 강제로 채널을 이동했는지 여부</param>
-    /// <param name="channelId">이동한 채널의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MoveChannel()したユーザーエージェント</param>
+    /// <param name="result">MoveChannel()結果コード</param>
+    /// <param name="force">サーバーが強制的にチャンネルを移動したかどうか</param>
+    /// <param name="channelId">移動したチャンネルのID</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
 };
 ```
 <br>
 
-MoveChannel()을 호출하여 서비스 내의 다른 채널로 이동할 수 있습니다. 
+MoveChannel()を呼び出してサービス内の他のチャンネルに移動できます。
 
 ```c#
 /// <summary>
-/// 지정한 채널로 이동
+/// 指定したチャンネルに移動
 /// </summary>
-/// <param name="channelId">이동할 채널의 아이디</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onMoveChannel">결과를 받을 대리자</param>
+/// <param name="channelId">移動するチャンネルのID</param>
+/// <param name="payload">サーバーに伝達する追加情報</param>
+/// <param name="onMoveChannel">結果を受け取るデリゲート</param>
 userAgent.MoveChannel(channelId, usePayload ? customPayload : null, (UserAgent user, Defines.ResultCodeMoveChannel result, bool force, string channelID, Payload payload) => {
-    /// <param name="userAgent">MoveChannel()한 유저 에이전트</param>
-    /// <param name="result">MoveChannel() 결과 코드</param>
-    /// <param name="force">서버에서 강제로 채널을 이동했는지 여부</param>
-    /// <param name="channelId">이동한 채널의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MoveChannel()したユーザーエージェント</param>
+    /// <param name="result">MoveChannel()結果コード</param>
+    /// <param name="force">サーバーが強制的にチャンネルを移動したかどうか</param>
+    /// <param name="channelId">移動したチャンネルのID</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
 	if(result == ResultCodeMoveChannel.ALL_CHANNEL_INFO_SUCCESS){
-		// 모든 채널 정보 요청 성공
+		// 全てのチャンネル情報リクエスト成功
 	} else {
-		// 모든 채널 정보 요청 실패
+		// 全てのチャンネル情報リクエスト失敗
 	}
 });
 ```
 
-### 채널 정보
+### チャンネル情報
 
-GameAnvil은 설정에서 자유롭게 채널 구성을 변경할 수 있습니다. 이런 채널 구성은 서버와 클라이언트 간에 미리 약속하여 고정된 형태로 사용할 수도 있지만, 상황에 따라 유연하게 변경하여 사용할 수도 있습니다. UserAgent에서는 이렇게 변경된 채널 정보를 얻어오거나 채널을 이동할 수 있도록 몇 가지 함수를 제공합니다. 
+GameAnvilは設定で自由にチャンネル構成を変更できます。このようなチャンネル構成はサーバーとクライアントの間であらかじめ約束して固定された形で使うこともできますが、状況によって柔軟に変更して使うこともできます。UserAgentでは、このように変更されたチャンネル情報を取得したり、チャンネルを移動できるようにいくつかの関数を提供しています。
 
-| 함수 | 설명 |
+| 関数 | 説明 |
 | --- | --- |
-| GetChannelCountInfo() | 특정 채널의 카운트 정보(유저와 방 개수) 요청 | 
-| GetChannelInfo() | 특정 채널의 정보(사용자 정의) 요청 |
-| GetAllChannelCountInfo() | 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수) 요청 |
-| GetAllChannelInfo() | 특정 서비스의 모든 채널에 대한 정보(사용자 정의) 요청 |
+| GetChannelCountInfo() | 特定チャンネルのカウント情報(ユーザーとルーム数)リクエスト | 
+| GetChannelInfo() | 特定チャンネルの情報(ユーザー定義)リクエスト |
+| GetAllChannelCountInfo() | 特定サービスの全てのチャンネルのカウント情報(ユーザーとルーム数)リクエスト |
+| GetAllChannelInfo() | 特定サービスの全てのチャンネルの情報(ユーザー定義)リクエスト |
 
-아래에서 코드를 통해 더욱 자세하게 살펴보겠습니다.
+下記のコードでさらに詳しく説明します。
 
-GetChannelCountInfo()는 특정 채널의 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 
+GetChannelCountInfo()は特定チャンネルのカウント情報(ユーザーとルーム数)をリクエストして取得できます。
 
 ```c#
 /// <summary>
-/// 접속 중인 채널의 유저와 방의 개수를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// 接続中のチャンネルのユーザーとルームの数をリクエスト<para></para>
+/// サーバーがサポートしている場合、使用可能
 /// </summary>
-/// <param name="onChannelCountInfo">결과를 전달 받을 대리자</param>
+/// <param name="onChannelCountInfo">結果を受け取るデリゲート</param>
 userAgent.GetChannelCountInfo((ConnectionAgent connection, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) => {
-    /// <param name="userAgent">GetChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+    /// <param name="userAgent">GetChannelCountInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GetChannelCountInfo()リクエスト結果</param>
+    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報</param>
 	if(result == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS){
-		// 채널 카운트 정보 요청 성공
+		// チャンネルカウント情報リクエスト成功
 	} else {
-		// 채널 카운트 정보 요청 실패
+		// チャンネルカウント情報リクエスト失敗
 	}
 });
 
 /// <summary>
-/// 특정 채널의 유저와 방의 개수를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// 特定チャンネルのユーザーとルームの数をリクエスト<para></para>
+/// サーバーがサポートしている場合、使用可能
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="channelId">채널 정보를 요청할 채널의 아이디</param>
-/// <param name="onChannelCountInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
+/// <param name="channelId">チャンネル情報をリクエストするチャンネルのID</param>
+/// <param name="onChannelCountInfo">結果を受け取るデリゲート</param>
 userAgent.GetChannelCountInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) => {
-    /// <param name="userAgent">GetChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+    /// <param name="userAgent">GetChannelCountInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GetChannelCountInfo()リクエスト結果</param>
+    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報</param>
 	if(result == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS){
-		// 채널 카운트 정보 요청 성공
+		// チャンネルカウント情報リクエスト成功
 	} else {
-		// 채널 카운트 정보 요청 실패
+		// チャンネルカウント情報リクエスト失敗
 	}
 });
 ```
 <br>
 
-GetChannelInfo()는 채널의 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 
+GetChannelInfo()はチャンネルの情報(ユーザー定義)をリクエストして取得できます。
 
 ```c#
 /// <summary>
-/// 접속중인 채널 정보를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// 接続中のチャンネル情報をリクエスト<para></para>
+/// サーバーがサポートしている場合、使用可能
 /// </summary>
-/// <param name="onChannelInfo">결과를 전달 받을 대리자</param>
+/// <param name="onChannelInfo">結果を受け取るデリゲート</param>
 userAgent.GetChannelInfo((ConnectionAgent connection, ResultCodeChannelInfo result, Payload payload) => {
-    /// <param name="userAgent">GetChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelInfo() 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보</param>
+    /// <param name="userAgent">GetChannelInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GetChannelInfo()リクエスト結果</param>
+    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報</param>
 	if(result == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS){
-		// 채널 정보 요청 성공
+		// チャンネル情報リクエスト成功
 	} else {
-		// 채널 정보 요청 실패
+		// チャンネル情報リクエスト失敗
 	}
 });
 
 /// <summary>
-/// 특정 채널의 정보를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// 特定チャンネルの情報をリクエスト<para></para>
+/// サーバーがサポートしている場合、使用可能
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="channelId">채널 정보를 요청할 채널의 아이디</param>
-/// <param name="onChannelInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
+/// <param name="channelId">チャンネル情報をリクエストするチャンネルのID</param>
+/// <param name="onChannelInfo">結果を受け取るデリゲート</param>
 userAgent.GetChannelInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelInfo result, Payload payload) => {
-    /// <param name="userAgent">GetChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelInfo() 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보</param>
+    /// <param name="userAgent">GetChannelInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GetChannelInfo()リクエスト結果</param>
+    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報</param>
 	if(result == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS){
-		// 채널 정보 요청 성공
+		// チャンネル情報リクエスト成功
 	} else {
-		// 채널 정보 요청 실패
+		// チャンネル情報リクエスト失敗
 	}
 });
 ```
 <br>
 
-GetAllChannelCountInfo()는 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 매개변수로 서비스 이름과 응답을 처리할 콜백을 넘겨줍니다. 
+GetAllChannelCountInfo()はサービスの全てのチャンネルのカウント情報(ユーザーとルーム数)をリクエストして取得できます。パラメータでサービス名とレスポンスを処理するコールバックを渡します。
 
 ```c#
 /// <summary>
-/// 접속 중인 서비스에 있는 모든 채널의 유저와 방의 개수를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// 接続しているサービスの全てのチャンネルのユーザーとルームの数をリクエスト<para></para>
+/// サーバーがサポートしている場合、使用可能
 /// </summary>
-/// <param name="onAllChannelCountInfo">결과를 전달 받을 대리자</param>
+/// <param name="onAllChannelCountInfo">結果を受け取るデリゲート</param>
 userAgent.GetAllChannelCountInfo((ConnectionAgent connection, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) => {
-    /// <param name="userAgent">GetAllChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보 목록</param>
+    /// <param name="userAgent">GetAllChannelCountInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
+    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報リスト</param>
 	if(result == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS){
-		// 모든 채널 카운트 정보 요청 성공
+		// 全てのチャンネルカウント情報リクエスト成功
 	} else {
-		// 모든 채널 카운트 정보 요청 실패
+		// 全てのチャンネルカウント情報リクエスト失敗
 	}
 });
 
 /// <summary>
-/// 특정 서비스에 있는 모든 채널의 유저와 방의 개수를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// 特定サービスに存在する全てのチャンネルのユーザーとルームの数をリクエスト<para></para>
+/// サーバーがサポートしている場合、使用可能
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="onAllChannelCountInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
+/// <param name="onAllChannelCountInfo">結果を受け取るデリゲート</param>
 userAgent.GetAllChannelCountInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) => {
-    /// <param name="userAgent">GetAllChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보 목록</param>
+    /// <param name="userAgent">GetAllChannelCountInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
+    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報リスト</param>
 	if(result == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS){
-		// 모든 채널 카운트 정보 요청 성공
+		// 全てのチャンネルカウント情報リクエスト成功
 	} else {
-		// 모든 채널 카운트 정보 요청 실패
+		// 全てのチャンネルカウント情報リクエスト失敗
 	}
 });
 ```
 <br>
 
-GetAllChannelInfo()는 서비스의 모든 채널에 대한 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 매개변수로 서비스 이름과 응답을 처리할 콜백을 넘겨줍니다. 
+GetAllChannelInfo()はサービスの全てのチャンネルの情報(ユーザー定義)をリクエストして取得できます。パラメータでサービス名とレスポンスを処理するコールバックを渡します。
 
 ```c#
 /// <summary>
-/// 특정 서비스의 모든 채널 정보 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// 特定サービスの全てのチャンネル情報リクエスト<para></para>
+/// サーバーがサポートしている場合、使用可能
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="onAllChannelInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
+/// <param name="onAllChannelInfo">結果を受け取るデリゲート</param>
 userAgent.GetAllChannelInfo((ConnectionAgent connection, ResultCodeAllChannelInfo result, Dictionary<string, Payload> payload) => {
-    /// <param name="userAgent">GeAllChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GeAllChannelInfo() 정보 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+    /// <param name="userAgent">GeAllChannelInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GeAllChannelInfo()情報リクエスト結果</param>
+    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報リスト</param>
 	if(result == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS){
-		// 모든 채널 정보 요청 성공
+		// 全てのチャンネル情報リクエスト成功
 	} else {
-		// 모든 채널 정보 요청 실패
+		// 全てのチャンネル情報リクエスト失敗
 	}
 });
 
 /// <summary>
-/// 특정 서비스의 모든 채널 정보 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// 特定サービスの全てのチャンネル情報リクエスト<para></para>
+/// サーバーがサポートしている場合、使用可能
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="onAllChannelInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
+/// <param name="onAllChannelInfo">結果を受け取るデリゲート</param>
 userAgent.GetAllChannelInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelInfo result, Dictionary<string, Payload> payload) => {
-    /// <param name="userAgent">GeAllChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GeAllChannelInfo() 정보 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+    /// <param name="userAgent">GeAllChannelInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GeAllChannelInfo()情報リクエスト結果</param>
+    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報リスト</param>
 	if(result == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS){
-		// 모든 채널 정보 요청 성공
+		// 全てのチャンネル情報リクエスト成功
 	} else {
-		// 모든 채널 정보 요청 실패
+		// 全てのチャンネル情報リクエスト失敗
 	}
 });
 ```
 
 ### Listener
 
-UserAgent에서 모든 요청에 대한 결과 또는 서버로부터의 알림을 전달 받는 방법은 크게 두 가지입니다.
-하나는 UserAgent에 정의되어 있는 delegate에 함수를 추가하는 방법입니다. 다른 하나는 IUserListener 인터페이스를 구현한 리스너를 등록하는 방법입니다.
+UserAgentで全てのリクエストに対する結果やサーバーからの通知を受け取る方法は大きく2つです。
+1つはUserAgentで定義されているdelegateに関数を追加する方法です。もう1つはIUserListenerインターフェイスを実装したリスナーを登録する方法です。
 
-UserAgent는 모든 동작의 결과 또는 알림을 받을 수 있도록 각각의 delegate를 멤버로 가지고 있습니다. 이 delegate에 함수를 등록하면 앞서 설명한 API에 콜백 매개변수를 생략하고 호출했을 경우 또는 서버에서 알림을 보냈을 경우 등록한 함수로 응답을 받을 수 있습니다.
+UserAgentは全ての動作の結果や通知を受けることができるようにそれぞれのdelegateをメンバーとして持っています。このdelegateに関数を登録すると、先に説明したAPIにコールバックパラメータを省略して呼び出した場合、またはサーバーから通知を送った場合、登録した関数でレスポンスを受けることができます。
 
 ```c#
 /// <summary>
-/// 로그인 결과를 받을 대리자
+/// ログイン結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">Login()을 요청한 유저 에이전트</param>
-/// <param name="result">Login() 요청 결과</param>
-/// <param name="loginInfo">로그인 정보</param>
+/// <param name="userAgent">Login()をリクエストしたユーザーエージェント</param>
+/// <param name="result">Login()リクエスト結果</param>
+/// <param name="loginInfo">ログイン情報</param>
 public Interface.DelUserOnLogin onLoginListeners;
 
 /// <summary>
-/// 룸 매치 요청 결과를 받을 대리자
+/// ルームマッチリクエストの結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">MatchRoom()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchRoom() 요청 결과</param>
-/// <param name="resultCode">사용자 결과 코드</param>
-/// <param name="roomId">매치된 방의 아이디</param>
-/// <param name="roomName">매치된 방의 이름</param>
-/// <param name="created">매치된 방의 신설 여부</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">MatchRoom()をリクエストしたユーザーエージェント</param>
+/// <param name="result">MatchRoom()リクエスト結果</param>
+/// <param name="resultCode">ユーザー結果コード</param>
+/// <param name="roomId">マッチしたルームのID</param>
+/// <param name="roomName">マッチしたルームの名前</param>
+/// <param name="created">マッチしたルームの新設有無</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnMatchRoom onMatchRoomListeners;
 
 /// <summary>
-/// 방 생성 요청 결과를 받을 대리자
+/// ルーム作成リクエスト結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">CreateRoom()을 요청한 유저 에이전트</param>
-/// <param name="result"> CreateRoom() 요청 요청 결과</param>
-/// <param name="roomName">생성된 방의 이름</param>
-/// <param name="roomId">생성된 방의 아이디</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">CreateRoom()をリクエストしたユーザーエージェント</param>
+/// <param name="result"> CreateRoom()リクエスト結果</param>
+/// <param name="roomName">作成されたルームの名前</param>
+/// <param name="roomId">作成されたルームのID</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnCreateRoom onCreateRoomListeners;
 
 /// <summary>
-/// 방 입장 요청 결과를 받을 대리자
+/// ルーム入室リクエスト結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">JoinRoom()을 요청한 유저 에이전트</param>
-/// <param name="result">JoinRoom() 요청 결과</param>
-/// <param name="roomId">입장한 방의 아이디</param>
-/// <param name="roomName">입장한 방의 이름</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">JoinRoom()をリクエストしたユーザーエージェント</param>
+/// <param name="result">JoinRoom()リクエスト結果</param>
+/// <param name="roomId">入室したルームのID</param>
+/// <param name="roomName">入室したルームの名前</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnJoinRoom onJoinRoomListeners;
 
 /// <summary>
-/// 이름 있는 방 요청 결과를 받을 대리자
+/// 名前のあるルームリクエスト結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">NameRoom()을 요청한 유저 에이전트</param>
-/// <param name="result">NameRoom() 요청 결과</param>
-/// <param name="roomName">방 이름</param>
-/// <param name="roomId">입장한 방의 아이디</param>
-/// <param name="created">입장한 방의 신설 여부</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">NameRoom()をリクエストしたユーザーエージェント</param>
+/// <param name="result">NameRoom()リクエスト結果</param>
+/// <param name="roomName">ルームの名前</param>
+/// <param name="roomId">入室したルームのID</param>
+/// <param name="created">入室したルームの新設の有無</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnNamedRoom onNamedRoomListeners;
 
 /// <summary>
-/// 파티 매칭 요청 결과를 받을 대리자
+/// パーティーマッチングリクエスト結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">MatchPartyStart()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchPartyStart() 요청 결과</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">MatchPartyStart()をリクエストしたユーザーエージェント</param>
+/// <param name="result">MatchPartyStart()リクエスト結果</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnMatchPartyStart onMatchPartyStartListeners;
 
 /// <summary>
-/// 파티 매칭 요청 취소 결과를 받을 대리자
+/// パーティーマッチングリクエストキャンセル結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">MatchPartyCancel()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchPartyCancel() 요청 결과</param>
+/// <param name="userAgent">MatchPartyCancel()をリクエストしたユーザーエージェント</param>
+/// <param name="result">MatchPartyCancel()リクエスト結果</param>
 public Interface.DelUserOnMatchPartyCancel onMatchPartyCancelListeners;
 
 /// <summary>
-/// 유저 매칭 요청 결과를 받을 대리자
+/// ユーザーマッチングリクエスト結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">MatchUserStart()를 요청한 유저 에이전트</param>
-/// <param name="result">MatchUserStart() 요청 결과</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">MatchUserStart()をリクエストしたユーザーエージェント</param>
+/// <param name="result">MatchUserStart()リクエスト結果</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnMatchUserStart onMatchUserStartListeners;
 
 /// <summary>
-/// 유저 매칭 요청 결과를 받을 대리자
+/// ユーザーマッチングリクエスト結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchUserStart()나 MatchPartyStart() 요청 결과</param>
-/// <param name="created">방 신설 여부</param>
-/// <param name="roomId">매칭된 방의 아이디</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">MatchUserStart()またはMatchPartyStart()をリクエストしたユーザーエージェント</param>
+/// <param name="result">MatchUserStart()またはMatchPartyStart()リクエストの結果</param>
+/// <param name="created">ルームの新設の有無</param>
+/// <param name="roomId">マッチングされたルームのID</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnMatchUserDone onMatchUserDoneListeners;
 
 /// <summary>
-/// 유저 매칭 타임아웃 알림 대리자
+/// ユーザーマッチングタイムアウト通知デリゲート
 /// </summary>
-/// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
+/// <param name="userAgent">MatchUserStart()またはMatchPartyStart()をリクエストしたユーザーエージェント</param>
 public Interface.DelUserOnMatchUserTimeout onMatchUserTimeoutListeners;
 
 /// <summary>
-/// 유저 매칭 요청 취소 결과를 받을 대리자
+/// ユーザーマッチングリクエストのキャンセル結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">MatchUserCancel()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchUserCancel() 요청 결과</param>
+/// <param name="userAgent">MatchUserCancel()をリクエストしたユーザーエージェント</param>
+/// <param name="result">MatchUserCancel()リクエスト結果</param>
 public Interface.DelUserOnMatchUserCancel onMatchUserCancelListeners;
 
 /// <summary>
-/// 방 퇴장 또는 강제 퇴장 알림을 받을 대리자
+/// ルーム退室または強制退室通知を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">LeaveRoom()을 요청한 유저 에이전트</param>
-/// <param name="result">LeaveRoom() 요청 결과</param>
-/// <param name="force">강제 퇴장 여부</param>
-/// <param name="roomId">퇴장한 방의 아이디</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">LeaveRoom()をリクエストしたユーザーエージェント</param>
+/// <param name="result">LeaveRoom()リクエスト結果</param>
+/// <param name="force">強制退室かどうか</param>
+/// <param name="roomId">退室したルームのID</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnLeaveRoom onLeaveRoomListeners;
 
 /// <summary>
-/// 채널 정보 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// チャネル情報リクエストの結果、またはサーバーが強制的に行ったチャネルの移動について通知を受けるデリゲート
 /// </summary>
-/// <param name="userAgent">GetChannelInfo()를 요청한 유저 에이전트</param>
-/// <param name="result">GetChannelInfo() 요청 결과</param>
-/// <param name="channelInfo">서버에서 받은 채널 정보</param>
+/// <param name="userAgent">GetChannelInfo()をリクエストしたユーザーエージェント</param>
+/// <param name="result">GetChannelInfo()リクエスト結果</param>
+/// <param name="channelInfo">サーバーから受け取ったチャンネル情報</param>
 public Interface.DelUserOnChannelInfo onChannelInfoListeners;
 
 /// <summary>
-/// 모든 채널 정보 목록 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// 全てのチャンネル情報リストのリクエスト結果や、サーバーで強制的に行ったチャンネル移動の通知を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">GeAllChannelInfo()를 요청한 유저 에이전트</param>
-/// <param name="result">GeAllChannelInfo() 정보 요청 결과</param>
-/// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+/// <param name="userAgent">GeAllChannelInfo()をリクエストしたユーザーエージェント</param>
+/// <param name="result">GeAllChannelInfo()情報リクエスト結果</param>
+/// <param name="channelInfo">サーバーから受け取ったチャンネル情報リスト</param>
 public Interface.DelUserOnAllChannelInfo onAllChannelInfoListeners;
 
 /// <summary>
-/// 채널 정보 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// チャネル情報リクエストの結果、またはサーバーが強制的に行ったチャネルの移動について通知を受けるデリゲート
 /// </summary>
-/// <param name="userAgent">GetChannelCountInfo()를 요청한 유저 에이전트</param>
-/// <param name="result">GetChannelCountInfo() 요청 결과</param>
-/// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+/// <param name="userAgent">GetChannelCountInfo()をリクエストしたユーザーエージェント</param>
+/// <param name="result">GetChannelCountInfo()リクエスト結果</param>
+/// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報</param>
 public Interface.DelUserOnChannelCountInfo onChannelCountInfoListeners;
 
 /// <summary>
-/// 모든 채널 정보 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// 全てのチャンネル情報要求の結果、またはサーバーで強制的に行ったチャンネル移動の通知を受けるデリゲート
 /// </summary>
-/// <param name="userAgent">GetAllChannelCountInfo()를 요청한 유저 에이전트</param>
-/// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-/// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보 목록</param>
+/// <param name="userAgent">GetAllChannelCountInfo()をリクエストしたユーザーエージェント</param>
+/// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
+/// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報リスト</param>
 public Interface.DelUserOnAllChannelCountInfo onAllChannelCountInfoListeners;
 
 /// <summary>
-/// 채널 이동 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// チャネル移動リクエストの結果、またはサーバーが強制的に実行したチャンネル移動の通知を受けるデリゲート
 /// </summary>
-/// <param name="userAgent">MoveChannel()한 유저 에이전트</param>
-/// <param name="result">MoveChannel() 결과 코드</param>
-/// <param name="force">서버에서 강제로 채널을 이동했는지 여부</param>
-/// <param name="channelId">이동한 채널의 아이디</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">MoveChannel()したユーザーエージェント</param>
+/// <param name="result">MoveChannel()結果コード</param>
+/// <param name="force">サーバーで強制的にチャンネルを移動したかどうか</param>
+/// <param name="channelId">移動したチャンネルのID</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnMoveChannel onMoveChannelListeners;
 
 /// <summary>
-/// 스냅샷 요청 결과를 받을 대리자
+/// スナップショットリクエスト結果を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">Snapshot()한 유저 에이전트</param>
-/// <param name="result">Snapshot() 요청 결과</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">Snapshot()したユーザーエージェント</param>
+/// <param name="result">Snapshot()リクエスト結果</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnSnapshot onSnapshotListeners;
 
 /// <summary>
-/// 기본 기능 사용 중 오류 발생 시 알림을 받을 대리자
+/// 基本機能使用中にエラーが発生した時、通知を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">오류가 발생한 유저 에이전트</param>
-/// <param name="errorCode">오류 코드</param>
-/// <param name="command">오류 발생 기능</param>
+/// <param name="userAgent">エラーが発生したユーザーエージェント</param>
+/// <param name="errorCode">エラーコード</param>
+/// <param name="command">エラー発生機能</param>
 public Interface.DelUserOnErrorCommand onErrorCommandListeners;
 
 /// <summary>
-/// 패킷 전송 오류 발생 시 알림을 받을 대리자
+/// パケット送信エラーが発生した時に通知を受けるデリゲート
 /// </summary>
-/// <param name="userAgent">오류가 발생한 유저 에이전트</param>
-/// <param name="errorCode">오류 코드</param>
-/// <param name="command">오류가 발생한 메시지</param>
+/// <param name="userAgent">エラーが発生したユーザーエージェント</param>
+/// <param name="errorCode">エラーコード</param>
+/// <param name="command">エラーが発生したメッセージ</param>
 public Interface.DelUserOnErrorCustomCommand onErrorCustomCommandListeners;
 
 /// <summary>
-/// 로그아웃 요청 결과 또는 강제 로그아웃 알림을 받을 대리자
+/// ログアウト要求の結果または強制ログアウトの通知を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">Logout()을 요청한 유저 에이전트</param>
-/// <param name="result">Logout() 결과</param>
-/// <param name="force">서버에 의한 강제 여부</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">Logout()をリクエストしたユーザーエージェント</param>
+/// <param name="result">Logout()結果</param>
+/// <param name="force">サーバーによる強制かどうか</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnLogout onLogoutListeners;
 
 /// <summary>
-/// 고지 알림을 받을 대리자
+/// 告知通知を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">Notice()를 받은 유저 에이전트</param>
-/// <param name="message">고지 메시지</param>
+/// <param name="userAgent">Notice()を受け取ったユーザーエージェント</param>
+/// <param name="message">告知メッセージ</param>
 public Interface.DelUserOnNotice onNoticeListeners;
 
 /// <summary>
-/// 킥아웃 알림을 받을 대리자
+/// キックアウト通知を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">킥아웃 된 유저 에이전트</param>
-/// <param name="message">어드민으로부터 받은 메시지</param>
+/// <param name="userAgent">キックアウトされたユーザーエージェント</param>
+/// <param name="message">Adminから受け取ったメッセージ</param>
 public Interface.DelUserOnAdminKickout onAdminKickoutListeners;
 
 /// <summary>
-/// 서버의 세션이 닫힌 경우 알림을 받을 대리자
+/// サーバーのセッションが閉じられた場合、通知を受け取るデリゲート
 /// </summary>
-/// <param name="userAgent">세션이 닫힌 유저 에이전트</param>
-/// <param name="result">세션이 닫힌 이유</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">セッションが閉じられたユーザーエージェント</param>
+/// <param name="result">セッションが閉じられた理由</param>
+/// <param name="payload">サーバーから受け取った追加情報</param>
 public Interface.DelUserOnSessionClose onSessionCloseListeners;
 ```
 <br>
 
-IUserListener는 UserAgent의 모든 동작의 결과 또는 알림을 정의한 인터페이스입니다. 이 인터페이스를 구현한 리스너를 UserAgent.AddUserListener()로 등록하면 등록한 리스너로 응답을 받을 수 있습니다.
+IUserListenerはUserAgentの全ての動作の結果や通知を定義したインターフェイスです。このインターフェイスを実装したリスナーをUserAgent.AddUserListener()で登録すると、登録したリスナーでレスポンスを受けることができます。
 
 ```c#
 class UserListener : IUserListener{
     /// <summary>
-    /// Login() 요청 결과
+    /// Login()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">Login()을 요청한 유저 에이전트</param>
-    /// <param name="result">Login() 요청 결과</param>
-    /// <param name="loginInfo">로그인 정보</param>
+    /// <param name="userAgent">Login()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">Login()リクエスト結果</param>
+    /// <param name="loginInfo">ログイン情報</param>
     void OnLogin(UserAgent userAgent, GameAnvil.Defines.ResultCodeLogin result, UserAgent.LoginInfo loginInfo);
     
     /// <summary>
-    /// MatchRoom() 요청 결과
+    /// MatchRoom()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">MatchRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchRoom() 요청 결과</param>
-    /// <param name="resultCode">사용자 결과 코드</param>
-    /// <param name="roomId">매치된 방의 아이디</param>
-    /// <param name="roomName">매치된 방의 이름</param>
-    /// <param name="created">매치된 방의 신설 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MatchRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchRoom()リクエスト結果</param>
+    /// <param name="resultCode">ユーザー結果コード</param>
+    /// <param name="roomId">マッチしたルームのID</param>
+    /// <param name="roomName">マッチしたルームの名前</param>
+    /// <param name="created">マッチしたルームの新設有無</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnMatchRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchRoom result, int resultCode, int roomId, string roomName, bool created, Payload payload);
     
     /// <summary>
-    /// CreateRoom() 요청 결과
+    /// CreateRoom()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">CreateRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">CreateRoom() 요청 결과</param>
-    /// <param name="roomId">생성된 방의 아이디</param>
-    /// <param name="roomName">생성된 방의 이름</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">CreateRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">CreateRoom()リクエスト結果</param>
+    /// <param name="roomId">作成されたルームのID</param>
+    /// <param name="roomName">作成されたルームの名前</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnCreateRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeCreateRoom result, int roomId, string roomName, Payload payload);
     
     /// <summary>
-    /// JoinRoom() 요청 결과
+    /// JoinRoom()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">JoinRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">JoinRoom() 요청 결과</param>
-    /// <param name="roomId">입장한 방의 아이디</param>
-    /// <param name="roomName">입장한 방의 이름</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">JoinRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">JoinRoom()リクエスト結果</param>
+    /// <param name="roomId">入室したルームのID</param>
+    /// <param name="roomName">入室したルームの名前</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnJoinRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeJoinRoom result, int roomId, string roomName, Payload payload);
     
     /// <summary>
-    /// NameRoom() 요청 결과
+    /// NameRoom()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">NameRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">NameRoom() 요청 결과</param>
-    /// <param name="roomName">방 이름</param>
-    /// <param name="roomId">입장한 방의 아이디</param>
-    /// <param name="created">입장한 방의 신설 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">NameRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">NameRoom()リクエスト結果</param>
+    /// <param name="roomName">ルーム名</param>
+    /// <param name="roomId">入室したルームのID</param>
+    /// <param name="created">入室したルームの新設の有無</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnNamedRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeNamedRoom result, int roomId, string roomName, bool created, Payload payload);
     
     /// <summary>
-    /// MatchUserStart() 결과
+    /// MatchUserStart()結果
     /// </summary>
-    /// <param name="userAgent">MatchUserStart()를 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserStart() 요청 결과</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MatchUserStart()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchUserStart()リクエスト結果</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnMatchUserStart(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserStart result, Payload payload);
     
     /// <summary>
-    /// MatchUserStart()나 MatchPartyStart() 요청 결과
+    /// MatchUserStart()またはMatchPartyStart()リクエストの結果
     /// </summary>
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserStart()나 MatchPartyStart() 요청 결과</param>
-    /// <param name="created">방 신설 여부</param>
-    /// <param name="roomId">매칭된 방의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MatchUserStart()またMatchPartyStart()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchUserStart()またはMatchPartyStart()のリクエスト結果</param>
+    /// <param name="created">ルームの新設の有無</param>
+    /// <param name="roomId">マッチングされたルームのID</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnMatchUserDone(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserDone result, bool created, int roomId, Payload payload);
     
     /// <summary>
-    /// MatchUserStart()나 MatchPartyStart() 타임아웃
+    /// MatchUserStart()またはMatchPartyStart()のタイムアウト
     /// </summary>
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
+    /// <param name="userAgent">MatchUserStart()またMatchPartyStart()をリクエストしたユーザーエージェント</param>
     void OnMatchUserTimeout(UserAgent userAgent);
     
     /// <summary>
-    /// MatchUserCancel() 결과
+    /// MatchUserCancel()の結果
     /// </summary>
-    /// <param name="userAgent">MatchUserCancel()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserCancel() 요청 결과</param>
+    /// <param name="userAgent">MatchUserCancel()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchUserCancel()リクエスト結果</param>
     void OnMatchUserCancel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserCancel result);
     
     /// <summary>
-    /// MatchPartyStart() 요청 결과
+    /// MatchPartyStart()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">MatchPartyStart()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchPartyStart() 요청 결과</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MatchPartyStart()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchPartyStart()リクエスト結果</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnMatchPartyStart(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchPartyStart result, Payload payload);
     
     /// <summary>
-    /// MatchPartyCancel() 요청 결과
+    /// MatchPartyCancel()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">MatchPartyCancel()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchPartyCancel() 요청 결과</param>
+    /// <param name="userAgent">MatchPartyCancel()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchPartyCancel()リクエスト結果</param>
     void OnMatchPartyCancel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchPartyCancel result);
     
     /// <summary>
-    /// LeaveRoom() 요청 결과
+    /// LeaveRoom()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">LeaveRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">LeaveRoom() 요청 결과</param>
-    /// <param name="force">강제 퇴장 여부</param>
-    /// <param name="roomId">퇴장한 방의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">LeaveRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">LeaveRoom()リクエスト結果</param>
+    /// <param name="force">強制退室するかどうか</param>
+    /// <param name="roomId">退室したルームのID</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnLeaveRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeLeaveRoom result, bool force, int roomId, Payload payload);
     
     /// <summary>
-    /// GetChannelInfo() 요청 결과
+    /// GetChannelInfo()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">GetChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelInfo() 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보</param>
+    /// <param name="userAgent">GetChannelInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GetChannelInfo()リクエスト結果</param>
+    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報</param>
     void OnChannelInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeChannelInfo result, Payload channelInfo);
     
     /// <summary>
-    /// GeAllChannelInfo() 요청 결과
+    /// GeAllChannelInfo()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">GeAllChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GeAllChannelInfo() 정보 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+    /// <param name="userAgent">GeAllChannelInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GeAllChannelInfo()情報リクエスト結果</param>
+    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報リスト</param>
     void OnAllChannelInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeAllChannelInfo result, Dictionary<string, Payload> channelInfo);
     
     /// <summary>
-    /// GetChannelCountInfo() 요청 결과
+    /// GetChannelCountInfo()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">GetChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+    /// <param name="userAgent">GetChannelCountInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GetChannelCountInfo()リクエスト結果</param>
+    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報</param>
     void OnChannelCountInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo);
     
     /// <summary>
-    /// GetAllChannelCountInfo() 요청 결과
+    /// GetAllChannelCountInfo()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">GetAllChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보 목록</param>
+    /// <param name="userAgent">GetAllChannelCountInfo()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
+    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報リスト</param>
     void OnAllChannelCountInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo);
     
     /// <summary>
-    /// MoveChannel() 결과
+    /// MoveChannel()結果
     /// </summary>
-    /// <param name="userAgent">MoveChannel()한 유저 에이전트</param>
-    /// <param name="result">MoveChannel() 결과 코드</param>
-    /// <param name="force">서버에서 강제로 채널을 이동했는지 여부</param>
-    /// <param name="channelId">이동한 채널의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MoveChannel()したユーザーエージェント</param>
+    /// <param name="result">MoveChannel()結果コード</param>
+    /// <param name="force">サーバーが強制的にチャンネルを移動したかどうか</param>
+    /// <param name="channelId">移動したチャンネルのID</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnMoveChannel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMoveChannel result, bool force, string channelId, Payload payload);
     
     /// <summary>
-    /// Snapshot() 요청 결과
+    /// Snapshot()リクエスト結果
     /// </summary>
-    /// <param name="userAgent">Snapshot() 요청한 유저 에이전트</param>
-    /// <param name="result">Snapshot() 요청 결과</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">Snapshot()リクエストしたユーザーエージェント</param>
+    /// <param name="result">Snapshot()リクエスト結果</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnSnapshot(UserAgent userAgent, GameAnvil.Defines.ResultCodeSnapshot result, Payload payload);
     
     /// <summary>
-    /// 기본 기능 오류 발생
+    /// 基本機能エラー発生
     /// </summary>
-    /// <param name="userAgent">오류가 발생한 유저 에이전트</param>
-    /// <param name="errorCode">오류 코드</param>
-    /// <param name="command">오류 발생 기능</param>
+    /// <param name="userAgent">エラーが発生したユーザーエージェント</param>
+    /// <param name="errorCode">エラーコード</param>
+    /// <param name="command">エラー発生機能</param>
     void OnError(UserAgent userAgent, GameAnvil.Defines.ErrorCode errorCode, User.Defines.Commands command);
     
     /// <summary>
-    /// 패킷 전송 오류 발생
+    /// パケット送信エラー発生
     /// </summary>
-    /// <param name="userAgent">오류가 발생한 유저 에이전트</param>
-    /// <param name="errorCode">오류 코드</param>
-    /// <param name="command">오류가 발생한 메시지</param>
+    /// <param name="userAgent">エラーが発生したユーザーエージェント</param>
+    /// <param name="errorCode">エラーコード</param>
+    /// <param name="command">エラーが発生したメッセージ</param>
     void OnError(UserAgent userAgent, GameAnvil.Defines.ErrorCode errorCode, string command);
     
     /// <summary>
-    /// Logout() 결과
+    /// Logout()結果
     /// </summary>
-    /// <param name="userAgent">Logout()을 요청한 유저 에이전트</param>
-    /// <param name="result">Logout() 결과</param>
-    /// <param name="force">서버에 의한 강제 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">Logout()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">Logout()結果</param>
+    /// <param name="force">サーバーによる強制かどうか</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnLogout(UserAgent userAgent, GameAnvil.Defines.ResultCodeLogout result, bool force, Payload payload);
     
     /// <summary>
-    /// Notice() 알림
+    /// Notice()通知
     /// </summary>
-    /// <param name="userAgent">Notice()를 받은 유저 에이전트</param>
-    /// <param name="message">고지 메시지</param>
+    /// <param name="userAgent">Notice()を受け取ったユーザーエージェント</param>
+    /// <param name="message">告知メッセージ</param>
     void OnNotice(UserAgent userAgent, string message);
     
     /// <summary>
-    /// 킥아웃 된 경우 알림
+    /// キックアウトされた場合の通知
     /// </summary>
-    /// <param name="userAgent">킥아웃 된 유저 에이전트</param>
-    /// <param name="message">어드민으로부터 받은 메시지</param>
+    /// <param name="userAgent">キックアウトされたユーザーエージェント</param>
+    /// <param name="message">Adminから受け取ったメッセージ</param>
     void OnAdminKickout(UserAgent userAgent, string message);
     
     /// <summary>
-    /// 유저 리스너에서 서버의 세션이 닫힌 경우 알림<para></para>
-    /// 이 알림을 받을 경우 다시 로그인하여 재시작한다.
+    /// ユーザーリスナーでサーバーのセッションが閉じられた場合の通知<para></para>
+    /// この通知を受け取った場合、再ログインして再起動します。
     /// </summary>
-    /// <param name="userAgent">세션이 닫힌 유저 에이전트</param>
-    /// <param name="result">세션이 닫힌 이유</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">セッションが閉じられたユーザーエージェント</param>
+    /// <param name="result">セッションが閉じられた理由</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     void OnSessionClose(UserAgent userAgent, GameAnvil.Defines.ResultCodeSessionClose result, Payload payload);
 }
 

@@ -1,252 +1,252 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > UserAgent
+## Game > GameAnvil > Unity基礎開発ガイド > UserAgent
 
 ## UserAgent
 
-UserAgent는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고 받으며 여러 가지 콘텐츠를 구현할 수 있습니다. 
+UserAgentはGameAnvilサーバーのGameNodeと関連した作業を担当します。ログイン(Login())、ログアウト(Logout())、ルーム管理などの基本機能を提供し、直接定義したプロトコルに基づいて、クライアントは自分のユーザーオブジェクトを通じて他のオブジェクトとメッセージをやり取りし、様々なコンテンツを実装できます。
 
-GameAnvilConnector는 기본적으로 QuickConnect 과정에서 생성된 하나의 UserAgent를 제공합니다. GameAnvilConnector.getUserAgent()를 통해서 얻을 수 있습니다.
+GameAnvilConnectorは基本的にQuickConnectの過程で作成された1つのUserAgentを提供します。GameAnvilConnector.getUserAgent()を通じて取得できます。
 
-### 로그인
+### ログイン
 
-로그인은 클라언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 
+ログインはクライアントがサーバーに接続した後、GameNodeに自分のユーザーオブジェクトを作成するプロセスと定義できます。
 
-로그인은 QuickConnect에서 한 번에 처리되기 때문에 설명을 생략합니다. 자세한 내용은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md)를 참고하십시오.
+ログインはQuickConnectで一度に処理されるので説明を省略します。詳細は[Unity深層開発ガイド > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md)を参照してください。
 
-### 로그아웃
+### ログアウト
 
-GameAnvilConnector에서는 로그아웃하면 자동으로 접속 종료까지 처리됩니다. 로그아웃에 대한 더 자세한 설명은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md)를 참고하십시오.
+GameAnvilConnectorでは、ログアウトすると自動的に接続終了まで処理されます。ログアウトの詳細については、[Unity深層開発ガイド > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md)を参照してください。
 
 ```c#
 /// <summary>
-/// 현재 서비스에서 로그아웃 
+/// 現在のサービスからログアウト 
 /// </summary>
-/// <param name="onLogout">로그아웃 대리자</param>
+/// <param name="onLogout">ログアウトデリゲート</param>
 userAgent.Logout((UserAgent user, Defines.ResultCodeLogout result, bool force, Payload payload) => {
-    /// <param name="userAgent">Logout()을 요청한 유저 에이전트</param>
-    /// <param name="result">Logout() 결과</param>
-    /// <param name="force">서버에 의한 강제 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">Logout()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">Logout()結果</param>
+    /// <param name="force">サーバーによる強制かどうか</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     if(result == Defines.ResultCodeLogout.LOGOUT_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
-### 방 생성, 입장, 퇴장
+### ルームの作成、入室、退室
 
-2명 이상의 유저는 방을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 유저들의 요청은 방 안에서 모두 순서가 보장됩니다. 물론 1명의 유저를 위한 방 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. 방을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다. 
+2人以上のユーザーはルームを通じて同期されたメッセージフローを作ることができます。つまり、ユーザーのリクエストはルーム内で全て順番が保証されます。もちろん、1人のユーザーのためのルームの作成もコンテンツによって意味を持つことができます。ルームをどのように使うかはあくまでエンジンユーザー次第です。
 
-CreateRoom()을 호출하여 방을 생성하고 그 방으로 입장합니다.
+CreateRoom()を呼び出してルームを作成し、そのルームに入室します。
 
 ```c#
 /// <summary>
-/// 임의의 방 생성 후 해당 방에 입장
+/// 任意のルームを作成し、そのルームに入室
 /// </summary>
-/// <param name="roomName">생성할 방의 이름</param>
-/// <param name="roomType">생성할 방의 타입</param>
-/// <param name="matchingGroup">매칭할 방의 매칭 그룹</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onCreateRoom">결과를 받을 대리자</param>
+/// <param name="roomName">作成するルームの名前</param>
+/// <param name="roomType">作成するルームのタイプ</param>
+/// <param name="matchingGroup">マッチングするルームのマッチンググループ</param>
+/// <param name="payload">サーバーに渡す追加情報</param>
+/// <param name="onCreateRoom">結果を受け取るデリゲート</param>
 userAgent.CreateRoom(roomName, roomType, matchingGroup, payload, (UserAgent user, Defines.ResultCodeCreateRoom result, int roomId, string roomName, Payload payload) => {
-    /// <param name="userAgent">CreateRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result"> CreateRoom() 요청 요청 결과</param>
-    /// <param name="roomName">생성된 방의 이름</param>
-    /// <param name="roomId">생성된 방의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">CreateRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result"> CreateRoom()リクエスト結果</param>
+    /// <param name="roomName">作成されたルームの名前</param>
+    /// <param name="roomId">作成されたルームのID</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
 	if(result == Defines.ResultCodeCreateRoom.CREATE_ROOM_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 <br>
 
-JoinRoom()을 호출하여 이미 생성된 방에 입장합니다. 
+JoinRoom()を呼び出して既に作成されたルームに入ります。
 
 ``` c#
 /// <summary>
-/// 지정한 아이디의 방에 입장<para></para>
-/// 지정한 아이디의 방이 없을 경우 실패
+/// 指定したIDのルームに入室<para></para>
+/// 指定したIDのルームがない場合は失敗
 /// </summary>
-/// <param name="roomType">입장할 방의 타입</param>
-/// <param name="roomId">입장하고자 하는 방의 아이디</param>
-/// <param name="matchingUserCategory">룸 매칭을 사용 중인 방에 입장할 경우 사용</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onJoinRoom">결과를 받을 대리자</param>
+/// <param name="roomType">入室するルームのタイプ</param>
+/// <param name="roomId">入室するルームのID</param>
+/// <param name="matchingUserCategory">ルームマッチングを使用中のルームに入室する場合に使用</param>
+/// <param name="payload">サーバーに渡す追加情報</param>
+/// <param name="onJoinRoom">結果を受け取るデリゲート</param>
 userAgent.JoinRoom(roomType, roomId, matchingUserCategory, payload, (UserAgent user, Defines.ResultCodeJoinRoom result, int id, string roomName, Payload payload) => {
-    /// <param name="result">JoinRoom() 요청 결과</param>
-    /// <param name="roomId">입장한 방의 아이디</param>
-    /// <param name="roomName">입장한 방의 이름</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="result">JoinRoom()リクエスト結果</param>
+    /// <param name="roomId">入室したルームのID</param>
+    /// <param name="roomName">入室したルームの名前</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
 	if(result == Defines.ResultCodeJoinRoom.JOIN_ROOM_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 <br>
 
-LeaveRoom()을 호출하여 입장한 방에서 퇴장할 수 있습니다.
+LeaveRoom()を呼び出して入室したルームから退室できます。
 
 ``` c#
 /// <summary>
-/// 유저 에이전트가 속한 방에서 퇴장
+/// ユーザーエージェントが所属しているルームから退室
 /// </summary>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onLeaveRoom">결과를 받을 대리자</param>
+/// <param name="payload">サーバーに渡す追加情報</param>
+/// <param name="onLeaveRoom">結果を受け取るデリゲート</param>
 userAgent.LeaveRoom(payload, (UserAgent user, Defines.ResultCodeLeaveRoom result, bool force, int roomId, Payload payload) => {
-    /// <param name="userAgent">LeaveRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">LeaveRoom() 요청 결과</param>
-    /// <param name="force">강제 퇴장 여부</param>
-    /// <param name="roomId">퇴장한 방의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">LeaveRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">LeaveRoom()リクエスト結果</param>
+    /// <param name="force">強制退室するかどうか</param>
+    /// <param name="roomId">退室したルームのID</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
 	if(result == Defines.ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 <br>
 
-NamedRoom()을 호출하여 지정한 이름의 방에 입장할 수 있습니다. 지정한 이름의 방이 없을 경우에는 방을 생성한 후 그 방으로 입장합니다.
+NamedRoom()を呼び出して指定した名前のルームに入室できます。指定した名前のルームがない場合は、ルームを作成した後、そのルームに入室します。
 
 ```c#
 /// <summary>
-/// 지정한 이름의 방에 입장<para></para>
-/// 지정한 이름의 방이 없을 경우 지정한 이름의 방을 생성하고 해당 방에 입장
+/// 指定した名前のルームに入室<para></para>
+/// 指定した名前のルームがない場合、指定した名前のルームを作成し、そのルームに入室
 /// </summary>
-/// <param name="roomType">입장할 방의 타입</param>
-/// <param name="roomName">입장하고자 하는 방의 이름</param>
-/// <param name="isParty">파티 여부</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onNamedRoom">결과를 받을 대리자</param>
+/// <param name="roomType">入室するルームのタイプ</param>
+/// <param name="roomName">入室するルームの名前</param>
+/// <param name="isParty">パーティーかどうか</param>
+/// <param name="payload">サーバーに渡す追加情報</param>
+/// <param name="onNamedRoom">結果を受け取るデリゲート</param>
 userAgent.NamedRoom(roomType, roomName, isParty, payload, (UserAgent user, Defines.ResultCodeNamedRoom result, int roomId, string roomName, bool created, Payload payload) => {
-    /// <param name="userAgent">NameRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">NameRoom() 요청 결과</param>
-    /// <param name="roomName">방 이름</param>
-    /// <param name="roomId">입장한 방의 아이디</param>
-    /// <param name="created">입장한 방의 신설 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">NameRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">NameRoom()リクエスト結果</param>
+    /// <param name="roomName">ルーム名</param>
+    /// <param name="roomId">入室したルームのID</param>
+    /// <param name="created">入室したルームの新設の有無</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     if(result == Defines.ResultCodeNamedRoom.NAMED_ROOM_SUCCESS){
-        // 성공
+        // 成功
     } else {
-        // 실패
+        // 失敗
     }
 });
 ```
 
-### 매치 메이킹
+### マッチメイキング
 
-GameAnvil은 크게 두 가지 매치 메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치 메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치 메이킹입니다.
+GameAnvilは大きく2つのマッチメイキングを提供しています。1つはルーム単位のマッチングを行うルームマッチメイキング、もう1つはユーザー単位のマッチングを行うユーザーマッチメイキングです。
 
-#### 룸 매치 메이킹
+#### ルームマッチメイキング
 
-룸 매치 메이킹은 조건에 맞는 방으로 유저를 입장시켜 주는 방식입니다. 룸 매치 메이킹 요청 시 조건에 맞는 방이 있으면 해당 방으로 바로 입장시켜 주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장시켜 줍니다.
+ルームマッチメイキングは、条件に合ったルームにユーザーを入室させる方法です。ルームマッチメイキングのリクエスト時、条件に合うルームがあればそのルームに直接入室させて、条件に合うルームがなければ新しいルームを作成して入室させます。
 
-MatchRoom()을 호출하여 룸 매치 메이킹을 요청할 수 있습니다.
+MatchRoom()を呼び出してルームマッチメイキングをリクエストできます。
 
 ```c#
 /// <summary>
-/// 룸 매칭 요청<para></para>
-/// 방이 없을 경우, 임의의 방을 생성하고 해당 방에 입장하거나 매칭 실패 처리
+/// ルームマッチングリクエスト<para></para>
+/// ルームがない場合、任意のルームを作成してそのルームに入室するか、マッチング失敗処理
 /// </summary>
-/// <param name="roomType">입장할 방의 타입</param>
-/// <param name="matchingGroup">매칭할 방의 매칭 그룹</param>
-/// <param name="matchingUserCategory">매칭시 사용할 매칭 유저 카테고리</param>
-/// <param name="isCreateRoomIfNotJoinRoom">방 생성 허용</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onMatchRoom">결과를 받을 대리자</param>
+/// <param name="roomType">入室するルームのタイプ</param>
+/// <param name="matchingGroup">マッチングするルームのマッチンググループ</param>
+/// <param name="matchingUserCategory">マッチング時に使用するマッチングユーザーカテゴリー</param>
+/// <param name="isCreateRoomIfNotJoinRoom">ルームの作成を許可</param>
+/// <param name="payload">サーバーに渡す追加情報</param>
+/// <param name="onMatchRoom">結果を受け取るデリゲート</param>
 userAgent.MatchRoom(roomType, matchingGroup, matchingUserCategory, isCreateRoomIfNotJoinRoom, isMoveRoomIfJoinedRoom, payload, leaveRoomPayload, (UserAgent user, Defines.ResultCodeMatchRoom result, int resultCode, int roomId, string roomName, bool created, Payload payload) => {
-    /// <param name="userAgent">MatchRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchRoom() 요청 결과</param>
-    /// <param name="resultCode">사용자 결과 코드</param>
-    /// <param name="roomId">매치된 방의 아이디</param>
-    /// <param name="roomName">매치된 방의 이름</param>
-    /// <param name="created">매치된 방의 신설 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MatchRoom()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchRoom()リクエスト結果</param>
+    /// <param name="resultCode">ユーザー結果コード</param>
+    /// <param name="roomId">マッチしたルームのID</param>
+    /// <param name="roomName">マッチしたルームの名前</param>
+    /// <param name="created">マッチしたルームの新設有無</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
     if(result == Defines.ResultCodeMatchRoom.MATCH_ROOM_SUCCESS){
-        // 매치 메이킹 취소 성공
+        // マッチメイキングキャンセル成功
     } else {
-        // 매치 메이킹 취소 실패
+        // マッチメイキングキャンセル失敗
     }
 });
 ```
 
-#### 유저 매치 메이킹
+#### ユーザーマッチメイキング
 
-유저 매치 메이킹은 유저 풀을 만들고 그 안에서 조건에 맞는 유저들을 찾아 새로 생성한 방으로 입장시켜 주는 방식입니다. 유저 풀에 조건에 맞는 유저의 수가 모자랄 경우 매치 메이킹이 완료될 때까지 시간이 걸릴 수 있고, 시간 내에 매치 메이킹이 완료되지 않으면 시간 초과되어 매칭이 취소될 수 있습니다.
+ユーザーマッチメイキングは、ユーザープールを作成し、その中で条件に合うユーザーを探し、新しく作成したルームに入室させる方式です。ユーザープールに条件に合うユーザーの数が足りない場合、マッチメイキングが完了するまで時間がかかることがあり、時間内にマッチメイキングが完了しない場合、タイムアウトしてマッチングがキャンセルされることがあります。
 
-MatchUserStart()를 호출하여 유저 매치 메이킹을 시작할 수 있습니다. 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패할 수 있습니다. 
+MatchUserStart()を呼び出すことで、ユーザーのマッチメイキングを開始できます。すでにルームに入室している場合など、サーバーの条件によってリクエストが失敗する場合があります。
 
 ```c#
 /// <summary>
-/// 유저 매칭을 요청<para></para>
-/// 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패<para></para>
-/// 매칭이 성공한 경우 OnMatchUserDone()을 통해 알림<para></para>
+/// ユーザーマッチングをリクエスト<para></para>
+/// 既にルームに入室している場合など、サーバーの条件によりリクエストが失敗<para></para>
+/// マッチングが成功した場合、OnMatchUserDone()で通知<para></para>
 /// </summary>
-/// <param name="roomType">매치를 요청할 방의 타입</param>
-/// <param name="matchingGroup">방 생성 시 사용될 매칭 그룹</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onMatchUserStart">결과를 받을 대리자</param>
+/// <param name="roomType">マッチをリクエストするルームのタイプ</param>
+/// <param name="matchingGroup">ルーム作成時に使用するマッチンググループ</param>
+/// <param name="payload">サーバーに渡す追加情報</param>
+/// <param name="onMatchUserStart">結果を受け取るデリゲート</param>
 userAgent.MatchUserStart(roomType, matchingGroup, payload, (UserAgent user, Defines.ResultCodeMatchUserStart result, Payload payload) => {
-    /// <param name="userAgent">MatchUserStart()를 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserStart() 요청 결과</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MatchUserStart()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchUserStart()リクエスト結果</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
 	if(result == Defines.ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS){
-        // 매치 메이킹 요청 성공
+        // マッチメイキングリクエスト成功
     } else {
-        // 매치 메이킹 요청 실패
+        // マッチメイキングリクエスト失敗
     }
 });
 ```
 <br>
 
-매칭이 성공한 경우 onMatchUserDoneListeners 또는 IUserListener.OnMatchUserDone을 통해 알림을 받을 수 있고, 시간 안에 매칭이 성공하지 못한 경우 onMatchUserTimeoutListeners 또는 IUserListener.OnMatchUserTimeout을 통해 알림을 받을 수 있습니다.
+マッチングが成功した場合、onMatchUserDoneListenersまたはIUserListener.OnMatchUserDoneを通じて通知を受けることができ、時間内にマッチングが成功しなかった場合、onMatchUserTimeoutListenersまたはIUserListener.OnMatchUserTimeoutを通じて通知を受けることができます。
 
 ```c#
 /// <summary>
-/// 유저 매칭 결과를 받을 대리자
+/// ユーザーマッチング結果を受け取るデリゲート
 /// </summary>
 userAgent.onMatchUserDoneListeners += (UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserDone result, bool created, int roomId, Payload payload) => {
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserStart()나 MatchPartyStart() 요청 결과</param>
-    /// <param name="created">방 신설 여부</param>
-    /// <param name="roomId">매칭된 방의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">MatchUserStart()またはMatchPartyStart()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchUserStart()またはMatchPartyStart()のリクエスト結果</param>
+    /// <param name="created">ルームの新設の有無</param>
+    /// <param name="roomId">マッチングしたルームのID</param>
+    /// <param name="payload">サーバーから受け取った追加情報</param>
 };
 
 /// <summary>
-/// 유저 매칭 타임아웃 알림 대리자
+/// ユーザーマッチングタイムアウト通知デリゲート
 /// </summary>
 userAgent.onMatchUserTimeoutListeners  += (UserAgent userAgent) => {
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
+    /// <param name="userAgent">MatchUserStart()またはMatchPartyStart()をリクエストしたユーザーエージェント</param>
 };
 ```
 <br>
 
-MatchUserCancel()을 호출하여 유저 매치 메이킹을 취소할 수 있습니다. 유저 매치 요청 중이 아닌 경우, 이미 유저 매치 메이킹이 성공했거나 Timeout이 발생했으면 취소 요청이 실패할 수 있습니다. 
+MatchUserCancel()を呼び出すことで、ユーザーマッチメイキングをキャンセルすることができます。ユーザーマッチリクエスト中でない場合や、すでにユーザーマッチメイキングが成功している場合、またはTimeoutが発生した場合、キャンセルリクエストは失敗する可能性があります。
 
 ```c#
 /// <summary>
-/// 유저 매칭 요청을 취소<para></para>
-/// 매치 요청 중이 아닌 경우, 이미 매칭이 성공했거나 타임아웃이 발생했을 경우 실패<para></para>
+/// ユーザーマッチングリクエストをキャンセル<para></para>
+/// マッチリクエスト中でない場合や、すでにマッチングが成功した場合、またはタイムアウトが発生した場合は、失敗<para></para>
 /// </summary>
-/// <param name="roomType">매치를 요청한 방의 타입</param>
-/// <param name="onMatchUserCancel">결과를 받을 대리자</param>
+/// <param name="roomType">マッチをリクエストしたルームのタイプ</param>
+/// <param name="onMatchUserCancel">結果を受け取るデリゲート</param>
 userAgent.MatchUserCancel(Constants.RoomType, (UserAgent user, Defines.ResultCodeMatchUserCancel result) => {
-    /// <param name="userAgent">MatchUserCancel()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserCancel() 요청 결과</param>
+    /// <param name="userAgent">MatchUserCancel()をリクエストしたユーザーエージェント</param>
+    /// <param name="result">MatchUserCancel()リクエスト結果</param>
 	if(result == Defines.ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS){
-        // 매치 메이킹 취소 성공
+        // マッチメイキングキャンセル成功
     } else {
-        // 매치 메이킹 취소 실패
+        // マッチメイキングキャンセル失敗
     }
 });
 ```
 
-이 밖에 파티 매치 메이킹, 채널, 리스너 등 유저 에이전트의 다양한 기능들에 대한 자세한 내용은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md)를 참고하십시오.
+その他、パーティーマッチメイキング、チャンネル、リスナーなどユーザーエージェントの様々な機能の詳細は、[Unity深層開発ガイド > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md)を参照してください。

@@ -1,8 +1,8 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > 백그라운드 접속 끊김 방지
+## Game > GameAnvil > Unity深層開発ガイド > バックグラウンド接続の切断防止
 
-[Unity 기초 개발 가이드 > 백그라운드 접속 끊김 방지](../unity-basic/unity-basic-08-background-connection.md) 문서의 내용처럼 모바일 기기에서 게임이 백그라운드로 전환될 경우 서버 접속이 끊길 수 있는데, 이를 방지하기 위해 서버와의 연결 확인 기능을 일시정지시킬 수 있습니다.
+[Unity基礎開発ガイド > バックグラウンド接続の切断防止](../unity-basic/unity-basic-08-background-connection.md)文書の内容のように、モバイルデバイスでゲームがバックグラウンドに切り替わる場合、サーバー接続が切断されることがありますが、これを防止するためにサーバーとの接続確認機能を一時停止できます。
 
-이를 구현한 코드 예시는 아래와 같습니다.
+これを実装したコード例は次のとおりです。
 
 ```c#
 public class ConnectHandler : MonoBehaviour
@@ -12,28 +12,28 @@ public class ConnectHandler : MonoBehaviour
     {
         if (pause)
         {
-            // 앱이 pause되기 전에 해야 할 작업이 있다면 여기에서 처리한다.
+            // アプリがpauseされる前にやるべき作業があればここで処理します。
 
-            // 입력한 시간(sec)동안 서버의 clientStateCheck 기능을 정지시킨다
-            // 이 시간이 지나면 clientStateCheck 기능이 동작하여 연결이 끊어질 수 있다. 
+            // 入力した時間(sec)の間、サーバーのclientStateCheck機能を停止します。
+            // この時間が過ぎるとclientStateCheck機能が動作して接続が切れることがあります。
             connector.GetConnectionAgent().PauseClientStateCheck(600);
 
-            // 앱이 pause되기 직전 connector.Update()를 호출하여
-            // Connector에 쌓은 메시지를 처리하고 상태를 업데이트해 준다.
+            // アプリがpauseされる直前にconnector.Update()を呼び出して
+            // Connectorに溜まったメッセージを処理して状態をアップデートします。
             connector.Update();
         } else
         {
-            // 앱이 resume된 직후 connector.Update()를 호출하여
-            // Connector에 쌓은 메시지를 처리하고 상태를 업데이트해 준다.
+            // アプリがresumeされた直後にconnector.Update()を呼び出して
+            // Connectorに溜まったメッセージを処理して状態をアップデートします。
             connector.Update();
 
-            // 서버의 clientStateCheck 기능을 다시 동작시킨다.
+            // サーバーのclientStateCheck機能を再開します。
             connector.GetConnectionAgent().ResumeClientStateCheck();
 
-            // 장시간 pause되었다가 resume될 경우 연결이 끊어질 수 있으므로 상태를 체크한다.
+            // 長時間pauseされた後、resumeされた場合、接続が切断される可能性があるので、状態をチェックします。
             if (connector.IsConnected())
             {
-                // 앱이 resume된 후 해야 할 작업이 있다면 여기에서 처리한다.
+                // アプリがresumeされた後、やるべき作業があればここで処理します。
             }
         }
     }

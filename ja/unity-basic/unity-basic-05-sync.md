@@ -1,247 +1,247 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 동기화
+## Game > GameAnvil > Unity基礎開発ガイド > 同期
 
-## 동기화
+## 同期
 
-GameAnvilConnector에서는 게임 오브젝트의 생성/파괴, Transform, Animation, Rigidbody2D, Rigidbody 속성을 간편하게 동기화할 수 있는 기능을 제공합니다.
+GameAnvilConnectorでは、ゲームオブジェクトの作成/破壊、Transform、Animation、Rigidbody2D、Rigidbodyプロパティを簡単に同期できる機能を提供します。
 
-동기화할 게임 오브젝트에 각각 Sync, TransformSync, AnimatorSync, Rigidbody2DSync, RigidbodySync 컴포넌트를 붙이기만 하면 해당 속성이 동기화됩니다.
+同期するゲームオブジェクトにそれぞれSync、TransformSync、AnimatorSync、Rigidbody2DSync、RigidbodySyncコンポーネントを付けるだけで、そのプロパティが同期されます。
 
-동기화 컴포넌트를 사용할 게임 오브젝트에는 Sync 컴포넌트도 반드시 함께 추가해야 합니다. 각 동기화 컴포넌트를 추가할 때 필요한 컴포넌트가 없을 경우 자동으로 추가됩니다.
+同期コンポーネントを使用するゲームオブジェクトには、Syncコンポーネントも必ず一緒に追加する必要があります。各同期コンポーネントを追加する際、必要なコンポーネントがない場合は自動的に追加されます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/01-component.png)
 
-한 클라이언트에서 특정 속성을 변화시키면 동기화 요청 패킷이 전송되고, 서버에서 이를 같은 방에 속한 모든 유저에게 브로드캐스트하여 다른 클라이언트에서 동기화될 수 있도록 합니다.
+あるクライアントで特定のプロパティを変更すると、同期リクエストパケットが送信され、サーバーでこれを同じルームに属する全てのユーザーにブロードキャストして他のクライアントで同期できるようにします。
 
 ## SyncController
 
-동기화 기능을 사용하려는 씬에 SyncController가 존재해야 합니다. 동기화 게임오브젝트를 생성하고 파괴하는 Instantiate(), Destroy() 함수를 포함하여 동기화 기능 동작에 핵심적인 역할을 합니다.
+同期機能を使用するシーンにSyncControllerが存在する必要があります。 SyncControllerは、同期ゲームオブジェクトを作成し、破壊するInstantiate(), Destroy()関数を含め、同期機能の動作に中核的な役割を果たします。
 
-### SyncController 생성
+### SyncController作成
 
-GameObject를 생성하고 SyncController 컴포넌트를 추가합니다. **Add Component > GameAnvil > SyncController**를 선택해 컴포넌트로 추가할 수 있습니다.
+GameObjectを作成してSyncControllerコンポーネントを追加します。**Add Component > GameAnvil > SyncController**を選択してコンポーネントとして追加できます。
 
-또는 Unity Hierarchy에서 마우스 오른쪽 버튼을 클릭한 뒤 **GameAnvil > SyncController**를 선택해 바로 생성할 수도 있습니다.
+または、Unity Hierarchyで右クリックした後、**GameAnvil > SyncController**を選択して直接作成することもできます。
 
-## 게임 오브젝트 생성/파괴 동기화, Sync
+## ゲームオブジェクトの作成/破壊の同期、Sync
 
-게임 오브젝트 생성/파괴를 동기화할 게임 오브젝트에 Sync 컴포넌트를 추가하면 같은 방에 있는 유저들이 서로 생성한 게임 오브젝트의 생성/파괴가 동기화됩니다.
-**Add Component > GameAnvil > GameAnvil Sync > Sync**를 선택해 컴포넌트로 추가할 수 있습니다.
+ゲームオブジェクトの作成/破壊を同期するゲームオブジェクトにSyncコンポーネントを追加すると、同じルームにいるユーザーがお互いに作成したゲームオブジェクトの作成/破壊が同期されます。
+**Add Component > GameAnvil > GameAnvil Sync > Sync**を選択してコンポーネントとして追加できます。
 
 ### Sync Id
 
-유저별로 고유한 동기화 키가 부여되고, 게임 오브젝트마다 오브젝트 아이디가 부여되며 이 둘을 조합하여 생성한 동기화 아이디로 모든 유저별 동기화 게임오브젝트가 구분됩니다.
+ユーザーごとに固有の同期キーが付与され、ゲームオブジェクトごとにオブジェクトIDが付与され、この2つを組み合わせて作成した同期IDですべてのユーザー別同期ゲームオブジェクトが区別されます。
 
-Sync.SyncId로 동기화 게임오브젝트의 동기화 아이디를 얻을 수 있습니다.
+Sync.SyncIdで同期ゲームオブジェクトの同期IDを取得できます。
 
 ### Create Option
 
-동기화 게임 오브젝트가 생성된 방식을 나타냅니다. 클라이언트에서 직접 생성한 게임오브젝트의 경우 LOCAL로 표시하고, 다른 클라이언트에서 생성한 게임오브젝트가 생성 동기화에 의해 자신의 씬에서도 만들어지는 경우에는 REMOTE로 표시됩니다.
+同期ゲームオブジェクトの作成方法を指定します。クライアントで直接作成したゲームオブジェクトの場合はLOCALと表示し、他のクライアントで作成したゲームオブジェクトが作成同期によって自分のシーンでも作成される場合はREMOTEと表示します。
 
-### 게임 오브젝트 생성 동기화
+### ゲームオブジェクト作成同期
 
-Sync 컴포넌트를 추가한 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장합니다. 방에 입장한 뒤 SyncController의 Instantiate()를 통해 원하는 시점에 해당 prefab을 생성합니다.
+Syncコンポーネントを追加したゲームオブジェクトをprefabで作成し、UnityのAssets/Resourcesフォルダの下に保存します。ルームに入室した後、SyncControllerのInstantiate()を使って好きなタイミングで該当prefabを作成します。
 
-방에 입장한 상태에서만 생성/파괴가 동기화되는 게임 오브젝트를 생성할 수 있습니다.
+ルームに入室した状態でのみ作成/破壊が同期されるゲームオブジェクトを作成できます。
 
 ```c#
 /// <summary>
-/// 동기화 게임 오브젝트를 생성한다.
+/// 同期ゲームオブジェクトを作成する。
 /// </summary>
-/// <param name="prefabName">생성하려는 prefab의 이름. 해당 prefab은 Assets/Resources 폴더 하위에 존재해야 한다.</param>
-/// <param name="v">prefab을 생성할 position</param>
-/// <param name="r">prefab의 rotation</param>
+/// <param name="prefabName">作成するprefabの名前。該当prefabはAssets/Resourcesフォルダの下に存在する必要があります。</param>
+/// <param name="v">prefabを作成するposition</param>
+/// <param name="r">prefabのrotation</param>
 /// <returns></returns>
 public GameObject Instantiate(string prefabName, Vector3 v, Quaternion r);
 ```
 
-### 방에 중입한 경우 게임 오브젝트 생성 동기화
+### ルームに途中参加した場合、ゲームオブジェクト作成の同期
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/02-instantiate-sync-object-immediatly.png)
 
-| 옵션 | 설명 |
+| オプション | 説明 |
 | --- | --- |
-| InstantiateSyncObjectImmediatly | 방에 입장한 뒤 바로 동기화 진행 여부를 설정한다. true면 유저가 방에 입장한 뒤 바로 동기화를 진행하며, false면 직접 동기화 함수를 호출해야 한다. |
+| InstantiateSyncObjectImmediatly | ルームに入室した後、すぐに同期を行うかどうかを設定します。 trueの場合、ユーザーがルームに入室した後、すぐに同期を行い、falseの場合、直接同期関数を呼び出す必要があります。 |
 
-방에 중입한 경우 유저 입장 시 호출되는 콜백에서 SyncController.roomSyncStart()가 호출되면서 서버로부터 받아온 기존 방의 동기화 데이터를 이용해 게임 오브젝트를 생성하고 동기화합니다.
+ルームに途中参加した場合、ユーザーが入室時に呼び出されるコールバックでSyncController.roomSyncStart()が呼び出され、サーバーから受け取った既存のルームの同期データを利用してゲームオブジェクトを作成して同期します。
 
-하지만 방에 입장한 직후에 바로 동기화를 하고 싶지 않은 경우에는 SyncController의 InstantiateSyncObjectImmediatly 옵션을 false로 설정하고, 원하는 시점에 SyncController.InstantiateSyncObject()를 호출하면 됩니다.
+しかし、ルームに入った直後にすぐに同期をしたくない場合は、SyncControllerのInstantiateSyncObjectImmediatlyオプションをfalseに設定して、好きなタイミングでSyncController.InstantiateSyncObject()を呼び出すことができます。
 
-### 게임 오브젝트 파괴 동기화
+### ゲームオブジェクトの破壊同期
 
-Sync 컴포넌트가 붙은 게임 오브젝트가 삭제되면 onDestroy() 함수에서 파괴 동기화가 처리되어서 다른 유저의 씬에서도 해당 게임오브젝트가 사라집니다.
+Syncコンポーネントが付いたゲームオブジェクトが削除されると、onDestroy()関数で破壊同期が処理され、他のユーザーのシーンでもそのゲームオブジェクトが消えます。
 
-현재 스펙에서는 유저가 방에 입장하고 동기화 게임 오브젝트들을 생성한 뒤 씬을 이동하면 게임 오브젝트들이 모두 파괴되고, 이를 동기화하면서 서버에 저장된 데이터도 삭제됩니다.
+現在の仕様では、ユーザーがルームに入室して同期ゲームオブジェクトを作成した後、シーンを移動すると、ゲームオブジェクトが全て破壊され、これを同期しながらサーバーに保存されたデータも削除されます。
 
-따라서 다른 씬으로 이동했다가 다시 원래 씬으로 돌아왔을 때 생성했던 동기화 게임오브젝트들이 없어져 있을 수 있습니다. 그리고 한 쪽 클라이언트에서 씬 이동을 하면서 동기화 게임오브젝트가 모두 파괴되면, 파괴 동기화에 의해 다른 쪽 클라이언트에서도 게임오브젝트들이 파괴될 수 있습니다. 이에 유념해서 씬 이동을 해야 합니다. 이는 다음 스펙에서 개선될 예정입니다.
+したがって、別のシーンに移動して、再び元のシーンに戻った時、作成した同期ゲームオブジェクトがなくなっている可能性があります。そして、一方のクライアントでシーン移動を行い、同期ゲームオブジェクトがすべて破壊されると、破壊同期により、もう一方のクライアントでもゲームオブジェクトが破壊される可能性があります。この点に注意してシーン移動を行う必要があります。これは次の仕様で改善される予定です。
 
-## Transform 동기화, TransformSync
+## Transform同期、 TransformSync
 
-Transform 동기화를 원하는 게임 오브젝트에 TransformSync 컴포넌트를 추가하면 동기화 게임 오브젝트의 Transform이 동기화됩니다.
-**Add Component > GameAnvil > GameAnvil Sync > TransformSync**를 선택해 컴포넌트로 추가할 수 있습니다. Sync 컴포넌트가 자동으로 함께 추가됩니다.
+Transform同期をしたいゲームオブジェクトにTransformSyncコンポーネントを追加すると、同期ゲームオブジェクトのTransformが同期されます。
+**Add Component > GameAnvil > GameAnvil Sync > TransformSync**を選択してコンポーネントとして追加できます。Syncコンポーネントが自動的に一緒に追加されます。
 
-TransformSync 컴포넌트를 붙인 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장합니다.
+TransformSyncコンポーネントを付けたゲームオブジェクトをprefabで作成し、UnityのAssets/Resourcesフォルダの下に保存します。
 
-방에 입장해서 SyncController의 Instantiate()를 통해서 해당 prefab을 생성한 다음 Transform을 변화시켰을 때, 다른 클라이언트에서도 모두 변화된 Transform으로 동기화되는 것을 확인할 수 있습니다.
+ルームに入室してSyncControllerのInstantiate()を通じて該当prefabを作成した後、Transformを変化させた時、他のクライアントでも全て変化したTransformで同期されることが確認できます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/03-transform-sync.gif)
 
-### Transform 동기화 옵션
+### Transform同期オプション
 
-Transform 중 동기화할 속성을 옵션에 따라 선택할 수 있습니다.
+Transform中に同期するプロパティをオプションによって選択できます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/04-transform-sync-option.png)
 
-| 옵션 | 설명 |
+| オプション | 説明 |
 | --- | --- |
-| Synchronize Position | Position 속성 동기화 여부를 설정합니다. true면 Position 값을 동기화하고, false면 Position 값을 동기화하지 않습니다. |
-| Synchronize Rotation | Rotation 속성 동기화 여부를 설정합니다. true면 Rotation 값을 동기화하고, false면 Rotation 값을 동기화하지 않습니다. |
-| Synchronize Scale | Scale 속성 동기화 여부를 설정합니다. true면 Scale 값을 동기화하고, false면 Scale 값을 동기화하지 않습니다. |
-| Use Local | localPosition 및 localRotation을 사용해야 하는지 여부를 설정합니다. Scale은 이 설정을 무시하고 항상 localScale을 사용하여 lossyScale 관련 문제를 방지합니다. |
+| Synchronize Position | Positionプロパティを同期するかどうかを設定します。 trueの場合、Position値を同期させ、falseの場合、Position値を同期しません。 |
+| Synchronize Rotation | Rotationプロパティを同期するかどうかを設定します。 trueの場合、Rotation値を同期し、falseの場合、Rotation値を同期しません。 |
+| Synchronize Scale | Scaleプロパティを同期するかどうかを設定します。 trueの場合、Scale値を同期し、falseの場合、Scale値を同期しません。 |
+| Use Local | localPositionとlocalRotationを使用するかどうかを設定します。Scaleはこの設定を無視して常にlocalScaleを使用し、lossyScale関連の問題を防止します。 |
 
-## Animation 동기화, AnimatorSync
+## Animation同期、 AnimatorSync
 
-Animation 동기화를 원하는 게임 오브젝트에 AnimatorSync 컴포넌트를 붙이고, Animator의 파라미터 값을 바꿔서 Animation State를 변경시키면 해당 변경 사항이 다른 클라이언트에서도 동기화됩니다.
-**Add Component > GameAnvil > GameAnvil Sync > AnimatorSync**를 선택해 컴포넌트로 추가할 수 있습니다. Sync, Animator 컴포넌트가 자동으로 함께 추가됩니다.
+Animation同期をしたいゲームオブジェクトにAnimatorSyncコンポーネントを付けて、Animatorのパラメータ値を変更してAnimation Stateを変更すると、その変更が他のクライアントでも同期されます。
+**Add Component > GameAnvil > GameAnvil Sync > AnimatorSync**を選択してコンポーネントとして追加できます。Sync、Animatorコンポーネントが自動的に一緒に追加されます。
 
-AnimatorSync 컴포넌트를 추가한 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장합니다.
+AnimatorSyncコンポーネントを追加したゲームオブジェクトをprefabで作成し、UnityのAssets/Resourcesフォルダの下に保存します。
 
-방에 입장해서 SyncController의 Instantiate()를 통해서 해당 prefab을 생성한 다음 Animation을 변화시켰을 때, 다른 클라이언트에서도 모두 변화된 Animation으로 동기화되는 것을 확인할 수 있습니다.
+ルームに入室してSyncControllerのInstantiate()を通じて該当prefabを作成した後、Animationを変化させた時、他のクライアントでも全て変化したAnimationで同期されることが確認できます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/05-animator-sync.gif)
 
-## Rigidbody2D 동기화, Rigidbody2DSync
+## Rigidbody2D同期、 Rigidbody2DSync
 
-Rigidbody2D 동기화를 원하는 게임 오브젝트에 Rigidbody2DSync 컴포넌트를 붙이면 동기화 게임오브젝트의 Rigidbody2D가 동기화됩니다.
-**Add Component > GameAnvil > GameAnvil Sync > Rigidbody2DSync**를 선택해 컴포넌트로 추가할 수 있습니다. Sync, TransformSync, Rigidbody2D 컴포넌트가 자동으로 함께 추가됩니다.
+Rigidbody2D同期をしたいゲームオブジェクトにRigidbody2DSyncコンポーネントを付けると、同期ゲームオブジェクトのRigidbody2Dが同期されます。
+**Add Component > GameAnvil > GameAnvil Sync > Rigidbody2DSync** を選択してコンポーネントとして追加できます。Sync、TransformSync、Rigidbody2Dコンポーネントが自動的に一緒に追加されます。
 
-Rigidbody2DSync 컴포넌트를 붙인 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장합니다.
+Rigidbody2DSyncコンポーネントを付けたゲームオブジェクトをprefabで作成し、UnityのAssets/Resourcesフォルダの下に保存します。
 
-방에 입장해서 SyncController의 Instantiate()를 통해서 해당 prefab을 생성한 다음 Rigidbody2D를 변화시켰을 때 다른 클라이언트에서도 모두 변화된 Rigidbody2D로 동기화되는 것을 확인할 수 있습니다.
+ルームに入室してSyncControllerのInstantiate()を通じて該当prefabを作成した後、Rigidbody2Dを変化させた時、他のクライアントでも全て変化したRigidbody2Dで同期されることが確認できます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/06-rigidbody2d-sync.gif)
 
-### Rigidbody2D 동기화 옵션
+### Rigidbody2D同期オプション
 
-Rigidbody2D 중 동기화할 속성을 옵션에 따라 선택할 수 있습니다.
+Rigidbody2Dのうち、同期するプロパティをオプションで選択できます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/07-rigidbody2d-sync-option.png)
 
-| 옵션 | 설명 |
+| オプション | 説明 |
 | --- | --- |
-| Synchronize Velocity | Velocity 속성 동기화 여부를 설정합니다. true면 Velocity 값을 동기화하고, false면 Velocity 값을 동기화하지 않습니다. |
-| Synchronize Angular Velocity | Angular Velocity 속성 동기화 여부를 설정합니다. true면 Angular Velocity 값을 동기화하고, false면 Angular Velocity 값을 동기화하지 않습니다. |
-| Teleport Enabled | Teleport 허용 여부를 설정합니다. |
-| Teleport if distance greater than | 거리가 설정한 기준 이상으로 차이가 나면 Rigidbody2D의 Position에 동기화할 위치 값을 적용한 다음, Velocity 값을 이용해서 동기화합니다. |
-| Teleport if angle greater than | 각도가 설정한 기준 이상으로 차이가 나면 Rigidbody2D의 Rotation에 동기화할 각도 값을 적용한 다음, Angular Velocity 값을 이용해서 동기화합니다. |
+| Synchronize Velocity | Velocityプロパティを同期するかどうかを設定します。 trueの場合、Velocity値を同期し、falseの場合、Velocity値を同期しません。 |
+| Synchronize Angular Velocity | Angular Velocityプロパティを同期するかどうかを設定します。 trueの場合、Angular Velocity値を同期し、falseの場合、Angular Velocity値を同期しません。 |
+| Teleport Enabled | Teleportを許可するかどうかを設定します。 |
+| Teleport if distance greater than | 距離が設定した基準以上の差がある場合、Rigidbody2DのPositionに同期する位置の値を適用し、Velocityの値を利用して同期します。 |
+| Teleport if angle greater than | 角度が設定した基準より大きく異なる場合、Rigidbody2DのRotationに同期する角度値を適用し、Angular Velocity値を利用して同期します。 |
 
-## Rigidbody 동기화, RigidbodySync
+## Rigidbody同期、 RigidbodySync
 
-Rigidbody 동기화를 원하는 게임 오브젝트에 RigidbodySync 컴포넌트를 추가하면 동기화 게임 오브젝트의 Rigidbody가 동기화됩니다.
-**Add Component > GameAnvil > GameAnvil Sync > RigidbodySync**를 선택해 컴포넌트로 추가할 수 있습니다. Sync, TransformSync, Rigidbody 컴포넌트가 자동으로 함께 추가됩니다.
+Rigidbody同期をしたいゲームオブジェクトにRigidbodySyncコンポーネントを追加すると、同期ゲームオブジェクトのRigidbodyが同期されます。
+**Add Component > GameAnvil > GameAnvil Sync > RigidbodySync**を選択してコンポーネントとして追加できます。Sync、TransformSync、Rigidbodyコンポーネントが自動的に一緒に追加されます。
 
-RigidbodySync 컴포넌트를 붙인 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장합니다.
+RigidbodySyncコンポーネントを付けたゲームオブジェクトをprefabで作成し、UnityのAssets/Resourcesフォルダの下に保存します。
 
-방에 입장해서 SyncController의 Instantiate()를 통해서 해당 prefab을 생성한 다음 Rigidbody를 변화시켰을 때 다른 클라이언트에서도 모두 변화된 Rigidbody로 동기화되는 것을 확인할 수 있습니다.
+ルームに入室してSyncControllerのInstantiate()を通じて該当prefabを作成した後、Rigidbodyを変更した時、他のクライアントでも全て変更されたRigidbodyで同期されることを確認することができます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/08-rigidbody-sync.gif)
 
-### Rigidbody 동기화 옵션
+### Rigidbody同期オプション
 
-Rigidbody 중 동기화할 속성을 옵션에 따라 선택할 수 있습니다.
+Rigidbodyの中で同期するプロパティをオプションによって選択できます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/09-rigidbody-sync-option.png)
 
-| 옵션 | 설명 |
+| オプション | 説明 |
 | --- | --- |
-| Synchronize Velocity | Velocity 속성 동기화 여부를 설정합니다. true면 Velocity 값을 동기화하고, false면 Velocity 값을 동기화하지 않습니다. |
-| Synchronize Angular Velocity | Angular Velocity 속성 동기화 여부를 설정합니다. true면 Angular Velocity 값을 동기화하고, false면 Angular Velocity 값을 동기화하지 않습니다. |
-| Teleport Enabled | Teleport 허용 여부를 설정합니다. |
-| Teleport if distance greater than | 거리가 설정한 기준 이상으로 차이가 나면 Rigidbody의 Position에 동기화할 위치 값을 적용한 다음, Velocity 값을 이용해서 동기화합니다. |
-| Teleport if angle greater than | 각도가 설정한 기준 이상으로 차이가 나면 Rigidbody의 Rotation에 동기화할 각도 값을 적용한 다음, Angular Velocity 값을 이용해서 동기화합니다. |
+| Synchronize Velocity | Velocityプロパティを同期するかどうかを設定します。 trueの場合、Velocity値を同期し、falseの場合、Velocity値を同期しません。 |
+| Synchronize Angular Velocity | Angular Velocityプロパティを同期するかどうかを設定します。 trueの場合、Angular Velocity値を同期し、falseの場合、Angular Velocity値を同期しません。 |
+| Teleport Enabled | Teleportを許可するかどうかを設定します。 |
+| Teleport if distance greater than | 距離が設定した基準以上の差がある場合、RigidbodyのPositionに同期する位置の値を適用した後、Velocity値を利用して同期します。 |
+| Teleport if angle greater than | 角度が設定した基準より大きい場合、RigidbodyのRotationに同期する角度値を適用し、Angular Velocityの値を利用して同期します。 |
 
-## 사용자 정의 값 동기화
+## ユーザー定義値の同期
 
-int, float, bool, string 타입의 사용자 정의 값을 동기화하는 기능을 제공합니다.
+int、float、bool、stringタイプのユーザー定義値を同期する機能を提供します。
 
-### 사용자 정의 값 추가 또는 변경
+### ユーザー定義値の追加または変更
 
-SyncController.SetCustomProperty\<T\>()로 사용자 정의 값을 추가 또는 변경할 수 있습니다. 함수 호출 시 사용자 정의 값의 타입을 지정해줍니다. 사용자 정의 값을 구분하기 위한 키를 string 타입의 매개변수로 전달합니다. 서버에서는 해당 사용자 정의 값 데이터를 저장하고, 같은 방의 모든 유저에게 브로드캐스트하여 동기화할 수 있도록 합니다.
+SyncController.SetCustomProperty\<T\>()でユーザー定義値を追加または変更できます。関数呼び出し時、ユーザー定義値のタイプを指定します。ユーザー定義値を区別するためのキーをstringタイプの引数で渡します。サーバーではそのユーザー定義値のデータを保存し、同じルームの全てのユーザーにブロードキャストして同期できるようにします。
 
 ```c#
 /// <summary>
-/// 사용자 정의 값을 추가합니다.
+/// ユーザー定義値を追加します。
 /// </summary>
-/// <typeparam name="T">사용자 정의 값 타입</typeparam>
-/// <param name="key">사용자 정의 값 구분용 키</param>
-/// <param name="value">사용자 정의 값</param>
+/// <typeparam name="T">ユーザー定義値のタイプ</typeparam>
+/// <param name="key">ユーザー定義値区分用キー</param>
+/// <param name="value">ユーザー定義値</param>
 public static void SetCustomProperty<T>(string key, T value);
 ```
 
-사용 예시를 살펴보겠습니다.
+使用例を見てみましょう。
 
 ```c#
 SyncController.SetCustomProperty<float>("custom_key", 0.9f);
 ```
 
-### 사용자 정의 값이 최신 상태인지 확인 후 변경
+### ユーザー定義値が最新の状態であることを確認して変更
 
-SyncController.SetCustomPropertyCAS\<T\>()를 호출하면 매개변수로 받은 사용자 정의 값 구분용 키, 변경하려는 사용자 정의 값과 더불어 기존에 클라이언트에 저장되어 있던 사용자 정의 값을 함께 패킷에 담아서 서버로 전송합니다.
+SyncController.SetCustomPropertyCAS\<T\>()を呼び出すと、引数で受け取ったユーザー定義値区分用キー、変更するユーザー定義値と、既存のクライアントに保存されていたユーザー定義値を一緒にパケットに入れてサーバーに送信します。
 
-그러면 서버에서는 기존에 클라이언트에 저장되어 있던 사용자 정의 값과 서버에 저장되어 있는 데이터에서 구분용 키로 얻어온 사용자 정의 값을 비교합니다. 
+すると、サーバーでは、既存のクライアントに保存されていたユーザー定義値とサーバーに保存されているデータから区別用キーで取得したユーザー定義値を比較します。
 
-만약 이 둘이 같으면 클라이언트의 사용자 정의 값이 최신 상태로 동기화되어 있었다고 판단하고 변경을 원한 값으로 대체해서 서버에 저장한 다음, 다른 유저에게도 브로드캐스트하여 동기화될 수 있도록 합니다.
+もし、この2つが同じであれば、クライアントのユーザー定義値が最新の状態で同期されていたと判断し、変更したい値に置き換えてサーバーに保存し、他のユーザーにもブロードキャストして同期できるようにします。
 
-만약 클라이언트와 서버에 각각 저장되어 있던 사용자 정의 값이 다른 경우 해당 요청을 무시합니다.
+もし、クライアントとサーバーにそれぞれ保存されたユーザー定義値が違う場合、そのリクエストを無視します。
 
 ```c#
 /// <summary>
-/// 사용자 정의 값이 최신 상태인지 확인 후 변경
+/// ユーザー定義値が最新の状態であることを確認して変更
 /// </summary>
-/// <typeparam name="T">사용자 정의 값 타입</typeparam>
-/// <param name="key">사용자 정의 값 구분용 키</param>
-/// <param name="value">사용자 정의 값</param>
+/// <typeparam name="T">ユーザー定義値のタイプ</typeparam>
+/// <param name="key">ユーザー定義値区分用キー</param>
+/// <param name="value">ユーザー定義値</param>
 public static void SetCustomPropertyCAS<T>(string key, T value);
 ```
 
-사용 예시를 살펴보겠습니다.
+使用例を見てみましょう。
 
 ```c#
 SyncController.SetCustomPropertyCAS<float>("custom_key", 0.9f);
 ```
 
-### 사용자 정의 값 조회
+### ユーザー定義値の照会
 
-SyncController.GetCustomProperty\<T\>()로 사용자 정의 값을 조회할 수 있습니다. 함수 호출 시 사용자 정의 값의 타입을 지정합니다. 원하는 사용자 정의 값을 찾기 위해서 구분용 키를 string 타입의 매개변수로 전달합니다.
+SyncController.GetCustomProperty\<T\>()でユーザー定義値を照会できます。関数呼び出し時、ユーザー定義値のタイプを指定します。目的のユーザー定義値を探すため、区別用キーをstringタイプの引数で渡します。
 
 ```c#
 /// <summary>
-/// 사용자 정의 값을 조회합니다.
+/// ユーザー定義値を照会します。
 /// </summary>
-/// <typeparam name="T">사용자 정의 값 타입</typeparam>
-/// <param name="key">사용자 정의 값 구분용 키</param>
-/// <returns>사용자 정의 값</returns>
+/// <typeparam name="T">ユーザー定義値のタイプ</typeparam>
+/// <param name="key">ユーザー定義値区分用キー</param>
+/// <returns>ユーザー定義値</returns>
 public static T GetCustomProperty<T>(string key);
 ```
 
-사용 예시를 살펴보겠습니다.
+使用例を見てみましょう。
 
 ```c#
 float custom_value = SyncController.GetCustomProperty<float>("custom_key");
 ```
 
-### 사용자 정의 값 삭제
+### ユーザー定義値の削除
 
-SyncController.RemoveCustomProperty\<T\>()로 사용자 정의 값을 삭제할 수 있습니다. 함수 호출 시 사용자 정의 값의 타입을 지정합니다. 원하는 사용자 정의 값을 찾기 위해서 구분용 키를 string 타입의 매개변수로 전달합니다. 서버에서도 저장했던 사용자 정의 값 데이터를 삭제합니다.
+SyncController.RemoveCustomProperty\<T\>()でユーザー定義値を削除できます。関数呼び出し時、ユーザー定義値のタイプを指定します。希望するユーザー定義値を探すため、区別用キーをstringタイプの引数で渡します。サーバーでも保存していたユーザー定義値のデータを削除します。
 
 ```c#
 /// <summary>
-/// 사용자 정의 값을 삭제합니다.
+/// ユーザー定義値を削除します。
 /// </summary>
-/// <param name="key">사용자 정의 값 구분용 키</param>
+/// <param name="key">ユーザー定義値区分用キー</param>
 public static void RemoveCustomProperty(string key)
 ```
 
-사용 예시를 살펴보겠습니다.
+使用例を見てみましょう。
 
 ```c#
 SyncController.RemoveCustomProperty("custom_key");

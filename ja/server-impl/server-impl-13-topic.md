@@ -1,103 +1,103 @@
-## Game > GameAnvil > 서버 개발 가이드 > 토픽 사용하기
+## Game > GameAnvil > サーバー開発ガイド > トピックを使用する
 
 
 
-## 구독과 발행
+## 購読と発行
 
-GameAnvil은 구독-발행 모델을 지원합니다. 즉, 임의의 토픽을 구독한 대상들은 모두 발행을 통해 동일하게 메시지를 전달받을 수 있습니다. 이러한 구독과 발행에 대한 사용법은 토픽을 중심으로 이루어집니다.
+GameAnvilは購読-発行モデルをサポートします。つまり、任意のトピックを購読した対象はすべて、発行を通じて同じようにメッセージを受け取ることができます。これらの購読と発行の使用方法は、トピックを中心に成り立ちます。
 
 
 
-### 토픽
+### トピック
 
-사용자는 언제든 임의의 토픽을 구독할 수 있습니다. 또한 GameAnvil은 내부적으로 몇 가지 토픽을 기본적으로 구독하고 있습니다. 이러한 토픽은 크게 노드 토픽과 사용자 토픽으로 나뉩니다. 이를 통해 메시지는 노드 단위로 전송된 뒤 노드 내의 객체에 전달됩니다. 다음은 이러한 노드 토픽과 사용자 토픽을 이용해서 발행하는 코드의 예입니다.
+ユーザーはいつでも任意のトピックを購読できます。また、GameAnvilは内部的にいくつかのトピックを基本的に購読しています。これらのトピックは、ノードトピックとユーザートピックに大きく分けられます。これにより、メッセージはノード単位で送信された後、ノード内のオブジェクトに送信されます。以下は、これらのノードトピックとユーザートピックを利用して発行するコードの例です。
 
 ```java
 publishToUser(NodeTopic, Topic, Packet);
 ```
 
 
-### GameAnvil 토픽
+### GameAnvilのトピック
 
-GameAnvil은 내부적으로 아래의 토픽들을 기본적으로 구독합니다. GameAnvilTopic은 절대 사용자가 임의로 구독하지 말아야 합니다.
+GameAnvilは内部的に以下のトピックを基本的に購読します。GameAnvilTopicは絶対にユーザーが任意で購読してはいけません。
 
-| 토픽                         | 발행 대상                 | 구독 대상   |
+| トピック                       | 発行対象               | 購読対象 |
 | ---------------------------- |-----------------------| ----------- |
-| GameAnvilTopic.GAME_NODE     | 모든 게임 노드              | GameNode    |
-| GameAnvilTopic.GATEWAY_NODE  | 모든 게이트웨이 노드           | GatewayNode |
-| GameAnvilTopic.SUPPORT_NODE  | 모든 서포트 노드             | SupportNode |
-| GameAnvilTopic.ALL_CLIENT    | 접속 중인 모든 클라이언트        | Session     |
-| GameAnvilTopic.ALL_GAME_USER | 게임 노드에 있는 모든 게임 유저 객체 | GameUser    |
+| GameAnvilTopic.GAME_NODE     | すべてのゲームノード            | GameNode    |
+| GameAnvilTopic.GATEWAY_NODE  | すべてのゲートウェイノード         | GatewayNode |
+| GameAnvilTopic.SUPPORT_NODE  | すべてのサポートノード           | SupportNode |
+| GameAnvilTopic.ALL_CLIENT    | 接続中のすべてのクライアント      | Session     |
+| GameAnvilTopic.ALL_GAME_USER | ゲームノードにあるすべてのゲームユーザーオブジェクト | GameUser    |
 
 
 
-### 토픽 구독 및 구독 취소
+### トピックの購読および購読キャンセル
 
-앞서 토픽은 크게 노드 토픽과 사용자 토픽으로 나뉜다고 했습니다. 노드 토픽은 BaseNode를 상속하는 모든 종류의 노드 클래스에서 구독합니다. 반면에 사용자 토픽은 노드 내부의 객체들을 위한 것이므로 BaseUser와 BaseRoom을 상속하는 모든 유저와 방 클래스에서 구독 가능합니다. 노드 토픽과 사용자 토픽의 구독 및 구독 취소 방법은 다음의 예제 코드와 같이 동일합니다.
+トピックは、ノードトピックとユーザートピックに大きく分けられると説明しました。ノードトピックは、BaseNodeを継承するすべての種類のノードクラスで購読します。一方で、ユーザートピックはノード内部のオブジェクトのためのものであるため、BaseUserとBaseRoomを継承するすべてのユーザーとルームクラスで購読可能です。ノードトピックとユーザートピックの購読および購読キャンセル方法は、次のサンプルコードのとおりです。
 
 ```java
-// "GameUser1" 토픽을 구독합니다.
+// "GameUser1"トピックを購読します。
 addTopic("GameUser1");
 
-// "GameUser1" 토픽을 구독 취소합니다.
+// "GameUser1"トピックの購読をキャンセルします。
 removeTopic("GameUser1");
 ```
 
-아래는 토픽 사용을 위한 전체 API 목록입니다.
+以下は、トピックを使用するためのAPI全体リストです。
 ```java
 /**
- * 토픽이 구독 상태인지 확인
+ * トピックが購読状態であるかを確認
  *
- * @param topic 확인할 토픽
- * @return 해당 토픽을 구독 중이면 true를 반환
+ * @param topic確認するトピック
+ * @return該当トピックを購読中の場合はtrueを返す
  */
 boolean hasTopic(String topic)
 
 /**
- * 구독중인 토픽 목록을 반환
+ * 購読中のトピックリストを返す
  *
- * @return String 의 Set으로 토픽 목록을 반환
+ * @return StringのSetでトピックリストを返す
  */
 Set<String> getTopics()
 
 /**
- * 토픽을 구독
+ * トピックを購読
  *
- * @param topic 구독할 토픽
+ * @param topic購読するトピック
  *
- * @return 성공적으로 구독할 경우 true를 반환
+ * @return正常に購読した場合はtrueを返す
  */
 boolean addTopic(String topic)
 
 /**
- * 여러 개의 토픽을 구독
+ * 複数のトピックを購読
  *
- * @param topics 구독할 토픽 목록
+ * @param topics購読するトピックリスト
  *
- * @return 성공적으로 구독할 경우 true를 반환
+ * @return正常に購読した場合はtrueを返す
  */
 boolean addTopics(List<String> topics)
 
  /**
-  * 토픽을 구독 취소
+  * トピックを購読キャンセル
   *
-  * @param topic 구독 취소할 토픽
+  * @param topic購読をキャンセルするトピック
   */
 void removeTopic(String topic)
 
  /**
-  * 여러 개의 토픽을 구독 취소
+  * 複数のトピックの購読をキャンセル
   *
-  * @param topics 구독 취소할 토픽 목록
+  * @param topics購読をキャンセルするトピックリスト
   */
 void removeTopics(List<String> topics)
 ```
 
 
 
-### 클라이언트 토픽
+### クライアントトピック
 
-클라이언트 토픽은 서버 내 객체가 아닌 클라이언트로 발행하기 위한 토픽입니다. 즉, 사용자는 아래의 예제 코드와 같이 클라이언트를 대상으로 토픽을 구독할 수 있습니다.
+クライアントトピックはサーバー内のオブジェクトではなく、クライアントとして発行するためのトピックです。つまり、ユーザーは次のサンプルコードのように、クライアントを対象にトピックを購読できます。
 
 ```java
 @Override
@@ -105,31 +105,31 @@ public final boolean onLogin(final Payload payload, final Payload sessionPayload
 
     ...
         
-	// 해당 유저와 연결된 클라이언트에 토픽을 구독
+	// 該当ユーザーと接続されたクライアントにトピックを購読
 	if (isVIP())
 		addClientTopics(Arrays.asList("VIP"));
 }
 ```
-아래는 이러한 클라이언트 토픽 사용을 위한 API 목록입니다.
+以下は、これらのクライアントトピックを使用するためのAPIリストです。
 ```java
 /**
- * 여러 개의 클라이언트 토픽 목록을 구독합니다.
+ * 複数のクライアントトピックリストを購読します。
  *
- * @param topics 등록할 토픽 리스트 전달.
+ * @param topics登録するトピックリストを送信。
  */
 public void addClientTopics(List<String> topics)
 
 /**
- * 여러 개의 클라이언트 토픽 목록을 구독 취소합니다.
+ * 複数のクライアントトピックリストの購読をキャンセルします。
  *
- * @param topics 구독 취소할 토픽 목록
+ * @param topics購読をキャンセルするトピックリスト
  */
 public void removeClientTopics(List<String> topics)
 
 /**
- * 클라이언트 토픽 목록을 반환
+ * クライアントトピックリストを返す
  *
- * @return 구독 중인 클라이언트 토픽 문자열을 포함한 Set을 반환
+ * @return購読中のクライアントトピックの文字列を含むSetを返す
  */
 public Set<String> getClientTopics() {
     return this.gameUserHelper.getClientTopics();
@@ -138,14 +138,14 @@ public Set<String> getClientTopics() {
 
 
 
-### 발행하기
+### 発行する
 
-사용자는 임의의 토픽으로 메시지를 발행할 수 있습니다. 이때, 해당 토픽을 구독 중인 대상은 모두 동일한 메시지를 수신하게 됩니다.
+ユーザーは任意のトピックでメッセージを発行できます。この時、該当トピックを購読中の対象はすべて、同じメッセージを受信します。
 
 ```java
-// 노드 토픽과 토픽을 구분하여 사용해야 합니다.
+// ノードトピックとトピックを区別して使用する必要があります。
 publishToUser(NodeTopic, Topic, Packet)
 
-// 클라이언트 토픽은 노드 토픽이 필요 없습니다.
+// クライアントトピックはノードトピックが必要ありません。
 publishToClient(Topic, Packet)
 ```
