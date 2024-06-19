@@ -1,9 +1,9 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > GameAnvil 커넥터 종료
+## Game > GameAnvil > Unity Basic Development Guide > Exit the GameAnvil Connector
 
-## GameAnvil 커넥터 종료
+## Terminate the GameAnvil connector
 
-게임 플레이 종료 전 GameAnvilConnector.Disconnect() 함수를 호출해 연결을 종료할 것을 권장합니다. 종료하지 않으면 서버에서 클라이언트의 종료를 인지하지 못할 수 있으며, 이 경우 불필요한 동작을 계속할 수 있습니다.
-GameAnvilConnector의 OnDestroy()에 해당 기능이 내장되어 있습니다.
+It is recommended that you terminate the connection by calling the GameAnvilConnector.Disconnect() function before the end of gameplay. If you do not terminate, the server may not be aware of the client's termination, which could cause it to continue unnecessary behavior.
+GameAnvilConnector's OnDestroy() has built-in functionality for this.
 
 ```c#
 private void OnDestroy()
