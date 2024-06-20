@@ -1,9 +1,10 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > UserAgent
+## Game > GameAnvil > Unity Advanced Development Guide > UserAgent
 
 ## UserAgent
 
-UserAgent는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고받으며 여러 가지 콘텐츠를 구현할 수 있습니다.
-UserAgent를 사용하기 위해서는 Connector.CreateUserAgent() 함수를 이용해 새로운 UserAgent를 생성해야 합니다. ServiceName과 SubId로 구분되는 여러 개의 UserAgent를 생성할 수 있습니다. 생성된 UserAgent는 Connector에서 내부적으로 관리되어 Connector.GetUserAgent() 함수를 이용해 다시 사용할 수 있습니다. 
+The UserAgent is responsible for operations related to GameNodes on the GameAnvil server. It provides basic functionality such as login(), logout(), and room management. Based on the protocols you define, clients can message other objects through their user objects and implement different content. 
+
+To use UserAgent, you need to create a new UserAgent using the Connector.CreateUserAgent() function. You can create multiple UserAgents, separated by ServiceName and SubId. The created UserAgent is managed internally by the Connector and can be used again using the Connector.GetUserAgent() function. 
 
 ```c#
 UserAgent userAgent = ConnectHandler.getInstance().GetUserAgent(serviceName, subID);
@@ -12,788 +13,788 @@ if (userAgent == null) {
 }
 ```
 
-GameAnvil 서버는 여러 개의 서비스를 동시에 운영할 수 있으며, 하나의 UserAgent는 하나의 서비스에 로그인하여 서로 독립적으로 동작하게 됩니다. 즉, 여러 개의 UserAgent를 만들어 서로 다른 서비스에 로그인하여 동시에 사용이 가능합니다. SubId를 다르게 한다면 같은 서비스에 여러 개의 UserAgent를 동시에 로그인하여 사용하는 것도 가능합니다. 
+The GameAnvil server can run multiple services simultaneously, and a UserAgent can log in to one service and operate independently of another. This means that you can create multiple UserAgents to log in to different services and use them simultaneously. It is also possible to have multiple UserAgents logged into the same service at the same time by using different SubIds. 
 
-### 로그인/로그아웃
+### Login/Logout
 
-로그인은 클라이언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 로그아웃은 로그인의 반대 개념입니다. 다시 말해, GameNode 상에서 자신의 유저 객체를 제거하는 과정입니다. 
+Login can be defined as the process by which a client connects to the server and creates its own user object in GameNode. Logging out is the opposite of logging in. In other words, it is the process of removing a user object from the GameNode. 
 
-로그인 시 어떤 UserType으로 어떤 채널에 로그인할지 입력해 줘야 합니다. 추가 정보가 필요하다면 Payload에 담아 보낼 수 있습니다. 
+When logging in, you'll need to enter which UserType is logging in to which channel. If you need more information, you can send it in the payload. 
 
 ```c#
 /// <summary>
-/// 서비스에 로그인
+/// Logs in to the service
 /// </summary>
-/// <param name="userType">유저의 타입 </param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="channelId">로그인할 채널의 아이디</param>
-/// <param name="onLogin">결과를 받을 대리자</param>
+/// <param name="userType">User's type</param>
+/// <param name="payload">Additional information to pass to the server</param>
+/// <param name="channelId">Id of the channel to log in to</param>
+/// <param name="onLogin">The agent to receive the result</param>
 userAgent.Login(userType, channelId, payload, (UserAgent user, Defines.ResultCodeLogin result, UserAgent.LoginInfo loginInfo) => {
-    /// <param name="userAgent">Login()을 요청한 유저 에이전트</param>
-    /// <param name="result">Login() 요청 결과</param>
-    /// <param name="loginInfo">로그인 정보</param>
+    /// <param name="userAgent">The user agent that requested Login()</param>
+    /// <param name="result">Result of the Login() request</param>
+    /// <param name="loginInfo">Login information</param>
     if(result == Defines.ResultCodeLogin.LOGIN_SUCCESS){
-        // 성공
+        // Success
     } else {
-        // 실패
+        // Failure
     }
 });
 
 /// <summary>
-/// 현재 서비스에서 로그아웃 
+/// Logs out of the current service 
 /// </summary>
-/// <param name="onLogout">로그아웃 대리자</param>
+/// <param name="onLogout">Logout bridge</param>
 userAgent.Logout((UserAgent user, Defines.ResultCodeLogout result, bool force, Payload payload) => {
-    /// <param name="userAgent">Logout()을 요청한 유저 에이전트</param>
-    /// <param name="result">Logout() 결과</param>
-    /// <param name="force">서버에 의한 강제 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested Logout()</param>
+    /// <param name="result">Logout() result</param>
+    /// <param name="force">Whether forced by the server</param>
+    /// <param name="payload">Additional information received from the server</param>
     if(result == Defines.ResultCodeLogout.LOGOUT_SUCCESS){
-        // 성공
+        // Success
     } else {
-        // 실패
+        // Failure
     }
 });
 ...
 ```
 
-### 방 생성, 입장, 퇴장
+### Create, enter, and leave rooms
 
-[Unity 기초 개발 가이드 > UserAgent](../unity-basic/unity-basic-04-user-agent.md)의 방 생성, 입장, 퇴장 내용과 동일합니다.
+This is the same as creating, entering, and leaving rooms in [Unity Basic Development Guide > UserAgent](../unity-basic/unity-basic-04-user-agent.md).
 
-### 매치 메이킹
+### Matchmaking
 
-GameAnvil은 두 가지 매치 메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치 메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치 메이킹입니다. 자세한 내용은 [Unity 기초 개발 가이드 > UserAgent](../unity-basic/unity-basic-04-user-agent.md)의 매치 메이킹 부분을 참고하십시오.
+GameAnvil offers two types of matchmaking. One is Room Matchmaking, which performs room-by-room matching, and the other is User Matchmaking, which performs user-by-user matching. For more information, see Matchmaking in the [Unity Basic Development Guide > UserAgent](../unity-basic/unity-basic-04-user-agent.md).
 
-#### 파티 매치 메이킹
+#### Party matchmaking
 
-파티 매치 메이킹은 유저 매치 메이킹의 특수한 형태로, 2명 이상의 유저가 한 파티로 묶여 유저 풀에 등록되고, 조건이 맞는 다른 유저들을 찾아 새로 생성한 방으로 함께 입장시켜 주는 방식입니다. 파티로 묶은 유저들은 항상 같은 방으로 입장합니다. 파티 외에 같이 매칭 유저들은 서버의 매치 메이커 구현에 따라 또 다른 파티일 수도 있고, 개인일 수도 있습니다.
+Party matchmaking is a specialized form of user matchmaking where two or more users are grouped together as a party, added to a user pool, and matched with other eligible users to enter a newly created room together. Partyed users will always enter the same room. Outside of parties, the matching users can be other parties or individuals, depending on the server's matchmaker implementation.
 
-파티 매치 메이킹을 하기 위해서는 먼저 NamedRoom()을 호출해야 합니다. NamedRoom() 호출 시 isParty 매개변수를 true로 넘겨주면, 해당 NamedRoom이 파티의 역할을 합니다. NamedRoom에 파티 유저를 모두 모으고 나서 파티 매치 메이킹을 시작합니다.
+To do party matchmaking, you must first call NamedRoom(). If you pass the isParty parameter to true when calling NamedRoom(), that NamedRoom will act as the party. After gathering all the party users in the NamedRoom, start party matchmaking.
 
 ```c#
 /// <summary>
-/// 지정한 이름의 방에 입장<para></para>
-/// 지정한 이름의 방이 없을 경우 지정한 이름의 방을 생성하고 해당 방에 입장
+/// Enters a room with the specified name<para></para>
+/// Creates a room with the specified name if it doesn't exist and enters it
 /// </summary>
-/// <param name="roomType">입장할 방의 타입</param>
-/// <param name="roomName">입장하고자 하는 방의 이름</param>
-/// <param name="isParty">파티 여부</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onNamedRoom">결과를 받을 대리자</param>
+/// <param name="roomType">Type of room to enter</param>
+/// <param name="roomName">Name of the room you want to enter</param>
+/// <param name="isParty">Is it a party</param>
+/// <param name="payload">Additional information to pass to the server</param>
+/// <param name="onNamedRoom">The agent to receive the results</param>.
 userAgent.NamedRoom(roomType, roomName, isParty, payload, (UserAgent user, Defines.ResultCodeNamedRoom result, int roomId, string roomName, bool created, Payload payload) => {
-    /// <param name="userAgent">NameRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">NameRoom() 요청 결과</param>
-    /// <param name="roomName">방 이름</param>
-    /// <param name="roomId">입장한 방의 아이디</param>
-    /// <param name="created">입장한 방의 신설 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested NameRoom()</param>
+    /// <param name="result">Result of the NameRoom() request</param>
+    /// <param name="roomName">Room name</param>
+    /// <param name="roomId">Id of the room entered</param>
+    /// <param name="created">Whether the entered room was created</param>
+    /// <param name="payload">Additional information received from the server</param>
     if(result == Defines.ResultCodeNamedRoom.NAMED_ROOM_SUCCESS){
-        // 성공
+        // Success
     } else {
-        // 실패
+        // Failure
     }
 });
 ```
 <br>
 
-MatchPartyStart()를 호출하여 파티 매치 메이킹을 시작할 수 있습니다. 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패할 수 있습니다. 
+You can start party matchmaking by calling MatchPartyStart(). The request might fail depending on conditions on the server, such as if you've already entered the room. 
 
 ```c#
 /// <summary>
-/// 파티 매칭을 요청<para></para>
-/// 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패<para></para>
-/// 매칭이 성공한 경우 OnMatchUserDone()을 통해 알림
+/// Requests party matching<para></para>
+/// Request fails based on conditions on the server, such as if you've already entered the room<para></para>
+/// Notify via OnMatchUserDone() if matching is successful
 /// </summary>
-/// <param name="roomType">매치를 요청할 방의 타입</param>
-/// <param name="matchingGroup">방 생성 시 사용될 매칭그룹</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onMatchPartyStart">결과를 받을 대리자</param>
+/// <param name="roomType">The type of room to request to match</param>
+/// <param name="matchingGroup">Matching group to use when creating the room</param>
+/// <param name="payload">Additional information to pass to the server</param>
+/// <param name="onMatchPartyStart">The agent that will receive the results</param>.
 userAgent.MatchPartyStart(Constants.RoomType, Constants.ChannelId1, customPayload, (UserAgent user, Defines.ResultCodeMatchPartyStart result, Payload payload) => {
-    /// <param name="userAgent">MatchPartyStart()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchPartyStart() 요청 결과</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested MatchPartyStart()</param>.
+    /// <param name="result">Result of the MatchPartyStart() request</param>
+    /// <param name="payload">Additional information received from the server</param>
     if(result == Defines.ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS){
-        // 성공
+        // Success
     } else {
-        // 실패
+        // Failure
     }
 });
 ```
 <br>
 
-파티 매칭이 성공한 경우 유저 매치 메이킹에서 사용했던 onMatchUserDoneListeners 또는 IUserListener.OnMatchUserDone을 통해 알림을 받을 수 있고, 시간 안에 매칭이 성공하지 못한 경우 onMatchUserTimeoutListeners 또는 IUserListener.OnMatchUserTimeout을 통해 알림을 받을 수 있습니다.
+You can be notified via the onMatchUserDoneListeners or IUserListener.OnMatchUserDone that you used for user matchmaking if the party match was successful, or via the onMatchUserTimeoutListeners or IUserListener.OnMatchUserTimeout if the match was not successful in time.
 
 ```c#
 /// <summary>
-/// 유저 매칭 결과를 받을 대리자
+/// Representative to receive user matching results
 /// </summary>
 userAgent.onMatchUserDoneListeners += (UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserDone result, bool created, int roomId, Payload payload) => {
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserStart()나 MatchPartyStart() 요청 결과</param>
-    /// <param name="created">방 신설 여부</param>
-    /// <param name="roomId">매칭된 방의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
+    /// <param name="result">Result of the MatchUserStart() or MatchPartyStart() request</param>
+    /// <param name="created">Whether a room was created</param>
+    /// <param name="roomId">Id of the matched room</param>
+    /// <param name="payload">Additional information received from the server</param>
 };
 
 /// <summary>
-/// 유저 매칭 타임아웃 알림 대리자
+/// User matching timeout notification proxy
 /// </summary>
-userAgent.onMatchUserTimeoutListeners  += (UserAgent userAgent) => {
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
+userAgent.onMatchUserTimeoutListeners += (UserAgent userAgent) => {
+    /// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
 };
 ```
 <br>
 
-MatchPartyCancel()을 호출하여 파티 매치 메이킹을 취소할 수 있습니다. 파티 매치 요청 중이 아닌 경우, 이미 파티 매치 메이킹이 성공했거나 Timeout이 발생했으면 취소 요청이 실패할 수 있습니다. 
+You can cancel party matchmaking by calling MatchPartyCancel(). If you are not in the middle of requesting a party match, the cancel request might fail if party matchmaking has already succeeded or a timeout has occurred. 
 
 ```c#
 /// <summary>
-/// 파티 매칭 요청을 취소<para></para>
-/// 매치 요청 중이 아닌 경우, 이미 매칭이 성공했거나 타임아웃이 발생했을 경우 실패
+/// Cancels a party matching request<para></para>
+/// If not requesting a match, fails if the match has already succeeded or a timeout has occurred.
 /// </summary>
-/// <param name="roomType">매치를 요청한 방의 타입</param>
-/// <param name="onMatchPartyCancel">결과를 받을 대리자</param>
+/// <param name="roomType">The type of room requested to be matched</param>
+/// <param name="onMatchPartyCancel">The agent that will receive the results</param>.
 userAgent.MatchPartyCancel(Constants.RoomType, (UserAgent user, Defines.ResultCodeMatchPartyCancel result) => {
-    /// <param name="userAgent">MatchPartyCancel()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchPartyCancel() 요청 결과</param>
+    /// <param name="userAgent">The user agent that requested MatchPartyCancel()</param>
+    /// <param name="result">Result of the MatchPartyCancel() request</param>
     if(result == Defines.ResultCodeMatchPartyCancel.MATCH_PARTY_CANCEL_SUCCESS){
-        // 성공
+        // Success
     } else {
-        // 실패
+        // Failed
     }
 });
 ```
 
-#### 채널 이동
+#### Moving channels
 
-경우에 따라서 매치 메이킹의 결과로 채널 이동이 발생할 수 있습니다. 채널 이동이 되었을 경우 onMoveChannelListeners 또는 IUserListener.OnMoveChannel을 통해 알림을 받을 수 있습니다.
+In some cases, channel moves can occur as a result of matchmaking. You can be notified via onMoveChannelListeners or IUserListener.OnMoveChannel when a channel move has occurred.
 
 ```c#
 /// <summary>
-/// 채널 이동 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// A representative to be notified of the results of channel move requests or channel moves forced by the server.
 /// </summary>
-userAgent.onMoveChannelListeners  += (UserAgent userAgent, GameAnvil.Defines.ResultCodeMoveChannel result, bool force, string channelId, Payload payload) => {
-    /// <param name="userAgent">MoveChannel()한 유저 에이전트</param>
-    /// <param name="result">MoveChannel() 결과 코드</param>
-    /// <param name="force">서버에서 강제로 채널을 이동했는지 여부</param>
-    /// <param name="channelId">이동한 채널의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+userAgent.onMoveChannelListeners += (UserAgent userAgent, GameAnvil.Defines.ResultCodeMoveChannel result, bool force, string channelId, Payload payload) => {
+    /// <param name="userAgent">The user agent that performed the MoveChannel()</param>.
+    /// <param name="result">MoveChannel() result code</param>
+    /// <param name="force">Whether the server forced the channel to be moved</param>
+    /// <param name="channelId">Id of the moved channel</param>
+    /// <param name="payload">Additional information received from the server</param>
 };
 ```
 <br>
 
-MoveChannel()을 호출하여 서비스 내의 다른 채널로 이동할 수 있습니다. 
+You can move to a different channel within the service by calling MoveChannel(). 
 
 ```c#
 /// <summary>
-/// 지정한 채널로 이동
+/// Goes to the specified channel
 /// </summary>
-/// <param name="channelId">이동할 채널의 아이디</param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="onMoveChannel">결과를 받을 대리자</param>
+/// <param name="channelId">Id of the channel to move to</param>
+/// <param name="payload">Additional information to pass to the server</param>
+/// <param name="onMoveChannel">Agent to receive the result</param>
 userAgent.MoveChannel(channelId, usePayload ? customPayload : null, (UserAgent user, Defines.ResultCodeMoveChannel result, bool force, string channelID, Payload payload) => {
-    /// <param name="userAgent">MoveChannel()한 유저 에이전트</param>
-    /// <param name="result">MoveChannel() 결과 코드</param>
-    /// <param name="force">서버에서 강제로 채널을 이동했는지 여부</param>
-    /// <param name="channelId">이동한 채널의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that did the MoveChannel()</param>.
+    /// <param name="result">MoveChannel() result code</param>
+    /// <param name="force">Whether the server forced the channel to be moved</param>
+    /// <param name="channelId">Id of the moved channel</param>
+    /// <param name="payload">Additional information received from the server</param>
 	if(result == ResultCodeMoveChannel.ALL_CHANNEL_INFO_SUCCESS){
-		// 모든 채널 정보 요청 성공
+		// All channel information request succeeded
 	} else {
-		// 모든 채널 정보 요청 실패
+		// All channel information request failed
 	}
 });
 ```
 
-### 채널 정보
+### Channel information
 
-GameAnvil은 설정에서 자유롭게 채널 구성을 변경할 수 있습니다. 이런 채널 구성은 서버와 클라이언트 간에 미리 약속하여 고정된 형태로 사용할 수도 있지만, 상황에 따라 유연하게 변경하여 사용할 수도 있습니다. UserAgent에서는 이렇게 변경된 채널 정보를 얻어오거나 채널을 이동할 수 있도록 몇 가지 함수를 제공합니다. 
+GameAnvil allows you to freely change channel configurations in the settings. These channel configurations can be pre-agreed between the server and the client and used in a fixed form, or they can be changed flexibly to suit the situation. UserAgent provides several functions to get information about these changed channels or to move channels. 
 
-| 함수 | 설명 |
+| Functions | Description |
 | --- | --- |
-| GetChannelCountInfo() | 특정 채널의 카운트 정보(유저와 방 개수) 요청 | 
-| GetChannelInfo() | 특정 채널의 정보(사용자 정의) 요청 |
-| GetAllChannelCountInfo() | 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수) 요청 |
-| GetAllChannelInfo() | 특정 서비스의 모든 채널에 대한 정보(사용자 정의) 요청 |
+| GetChannelCountInfo() | Request count information (number of users and rooms) for a specific channel | 
+| GetChannelInfo() | Request information (user-defined) for a specific channel |
+| GetAllChannelCountInfo() | Request count information (number of users and rooms) for all channels of a specific service |
+| GetAllChannelInfo() | Request information about all channels for a specific service (custom) |
 
-아래에서 코드를 통해 더욱 자세하게 살펴보겠습니다.
+Let's take a closer look at this in code below.
 
-GetChannelCountInfo()는 특정 채널의 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 
+GetChannelCountInfo() can request and receive count information (number of users and rooms) for a specific channel. 
 
 ```c#
 /// <summary>
-/// 접속 중인 채널의 유저와 방의 개수를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// Gets the number of users and rooms on the channel being connected<para></para>
+/// Available if supported by the server
 /// </summary>
-/// <param name="onChannelCountInfo">결과를 전달 받을 대리자</param>
+/// <param name="onChannelCountInfo">The agent to send the result to</param>.
 userAgent.GetChannelCountInfo((ConnectionAgent connection, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) => {
-    /// <param name="userAgent">GetChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+    /// <param name="userAgent">The user agent that requested GetChannelCountInfo()</param>
+    /// <param name="result">Result of the GetChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">Channel's user count and room count information received from the server</param>
 	if(result == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS){
-		// 채널 카운트 정보 요청 성공
+		// Channel count information request success
 	} else {
-		// 채널 카운트 정보 요청 실패
+		// Channel count information request failed
 	}
 });
 
 /// <summary>
-/// 특정 채널의 유저와 방의 개수를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// Requests the number of users and rooms in a specific channel<para></para>
+/// Can be used if supported by the server
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="channelId">채널 정보를 요청할 채널의 아이디</param>
-/// <param name="onChannelCountInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the service to request channel information from</param>
+/// <param name="channelId">Id of the channel to request channel information for</param>
+/// <param name="onChannelCountInfo">An agent to receive the result</param>.
 userAgent.GetChannelCountInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) => {
-    /// <param name="userAgent">GetChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+    /// <param name="userAgent">The user agent that requested GetChannelCountInfo()</param>
+    /// <param name="result">Result of the GetChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">Channel's user count and room count information received from the server</param>
 	if(result == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS){
-		// 채널 카운트 정보 요청 성공
+		// Channel count information request success
 	} else {
-		// 채널 카운트 정보 요청 실패
+		// Channel count information request failed
 	}
 });
 ```
 <br>
 
-GetChannelInfo()는 채널의 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 
+GetChannelInfo() can request and receive information about a channel (user-defined). 
 
 ```c#
 /// <summary>
-/// 접속중인 채널 정보를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// Requests information about the channel being connected<para></para>
+/// Available if supported by the server
 /// </summary>
-/// <param name="onChannelInfo">결과를 전달 받을 대리자</param>
+/// <param name="onChannelInfo">The agent to send the result to</param>
 userAgent.GetChannelInfo((ConnectionAgent connection, ResultCodeChannelInfo result, Payload payload) => {
-    /// <param name="userAgent">GetChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelInfo() 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보</param>
+    /// <param name="userAgent">The user agent who requested GetChannelInfo()</param>
+    /// <param name="result">Result of the GetChannelInfo() request</param>
+    /// <param name="channelInfo">Channel information received from the server</param>
 	if(result == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS){
-		// 채널 정보 요청 성공
+		// Channel information request success
 	} else {
-		// 채널 정보 요청 실패
+		// Channel information request failed
 	}
 });
 
 /// <summary>
-/// 특정 채널의 정보를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// Requests information about a specific channel<para></para>
+/// Can be used if supported by the server
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="channelId">채널 정보를 요청할 채널의 아이디</param>
-/// <param name="onChannelInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the service for which to request channel information</param>
+/// <param name="channelId">Id of the channel to request channel information for</param>
+/// <param name="onChannelInfo">The agent to receive the result</param>.
 userAgent.GetChannelInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelInfo result, Payload payload) => {
-    /// <param name="userAgent">GetChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelInfo() 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보</param>
+    /// <param name="userAgent">The user agent that requested GetChannelInfo()</param>
+    /// <param name="result">Result of the GetChannelInfo() request</param>
+    /// <param name="channelInfo">Channel information received from the server</param>
 	if(result == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS){
-		// 채널 정보 요청 성공
+		// Channel information request success
 	} else {
-		// 채널 정보 요청 실패
+		// Channel information request failed
 	}
 });
 ```
 <br>
 
-GetAllChannelCountInfo()는 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 매개변수로 서비스 이름과 응답을 처리할 콜백을 넘겨줍니다. 
+GetAllChannelCountInfo() can request and receive count information (number of users and rooms) for all channels in a service. Pass the service name as a parameter and a callback to handle the response. 
 
 ```c#
 /// <summary>
-/// 접속 중인 서비스에 있는 모든 채널의 유저와 방의 개수를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// Gets the number of users and rooms on all channels in the service being connected<para></para>
+/// Available if supported by the server
 /// </summary>
-/// <param name="onAllChannelCountInfo">결과를 전달 받을 대리자</param>
+/// <param name="onAllChannelCountInfo">The agent to receive the result</param>.
 userAgent.GetAllChannelCountInfo((ConnectionAgent connection, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) => {
-    /// <param name="userAgent">GetAllChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보 목록</param>
+    /// <param name="userAgent">The user agent that requested GetAllChannelCountInfo()</param>
+    /// <param name="result">Result of the GetAllChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">List of channel's user count and room count information received from server</param>
 	if(result == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS){
-		// 모든 채널 카운트 정보 요청 성공
+		// All channel count information request success
 	} else {
-		// 모든 채널 카운트 정보 요청 실패
+		// All channel count information request failed
 	}
 });
 
 /// <summary>
-/// 특정 서비스에 있는 모든 채널의 유저와 방의 개수를 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// Gets the number of users and rooms in all channels on a specific service<para></para>.
+/// Available if supported by the server
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="onAllChannelCountInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the service for which to request channel information</param>
+/// <param name="onAllChannelCountInfo">Agent to receive the result</param>
 userAgent.GetAllChannelCountInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) => {
-    /// <param name="userAgent">GetAllChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보 목록</param>
+    /// <param name="userAgent">The user agent that requested GetAllChannelCountInfo()</param>.
+    /// <param name="result">Result of the GetAllChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">List of channel's user count and room count information received from server</param>
 	if(result == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS){
-		// 모든 채널 카운트 정보 요청 성공
+		// All channel count information request success
 	} else {
-		// 모든 채널 카운트 정보 요청 실패
+		// All channel count information request failed
 	}
 });
 ```
 <br>
 
-GetAllChannelInfo()는 서비스의 모든 채널에 대한 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 매개변수로 서비스 이름과 응답을 처리할 콜백을 넘겨줍니다. 
+GetAllChannelInfo() can request and receive information (user-defined) about all channels of a service. As parameters, you pass the service name and a callback to handle the response. 
 
 ```c#
 /// <summary>
-/// 특정 서비스의 모든 채널 정보 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// Request all channel information for a specific service<para></para>
+/// Available if supported by the server
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="onAllChannelInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the service to request channel information for</param>
+/// <param name="onAllChannelInfo">Agent to receive the result</param>
 userAgent.GetAllChannelInfo((ConnectionAgent connection, ResultCodeAllChannelInfo result, Dictionary<string, Payload> payload) => {
-    /// <param name="userAgent">GeAllChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GeAllChannelInfo() 정보 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+    /// <param name="userAgent">The user agent that requested GeAllChannelInfo()</param>
+    /// <param name="result">Result of the GeAllChannelInfo() information request</param>
+    /// <param name="channelInfo">List of channel information received from the server</param>
 	if(result == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS){
-		// 모든 채널 정보 요청 성공
+		// All channel information request success
 	} else {
-		// 모든 채널 정보 요청 실패
+		// All channel information request failed
 	}
 });
 
 /// <summary>
-/// 특정 서비스의 모든 채널 정보 요청<para></para>
-/// 서버에서 지원할 경우 사용할 수 있음
+/// Request all channel information for a specific service<para></para>
+/// Available if supported by the server
 /// </summary>
-/// <param name="serviceName">채널 정보를 요청할 서비스의 이름</param>
-/// <param name="onAllChannelInfo">결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the service for which to request channel information</param>
+/// <param name="onAllChannelInfo">Agent to receive the result</param>
 userAgent.GetAllChannelInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelInfo result, Dictionary<string, Payload> payload) => {
-    /// <param name="userAgent">GeAllChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GeAllChannelInfo() 정보 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+    /// <param name="userAgent">The user agent that requested GeAllChannelInfo()</param>
+    /// <param name="result">Result of the GeAllChannelInfo() information request</param>
+    /// <param name="channelInfo">List of channel information received from the server</param>
 	if(result == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS){
-		// 모든 채널 정보 요청 성공
+		// All channel information request success
 	} else {
-		// 모든 채널 정보 요청 실패
+		// All channel information request failed
 	}
 });
 ```
 
 ### Listener
 
-UserAgent에서 모든 요청에 대한 결과 또는 서버로부터의 알림을 전달 받는 방법은 크게 두 가지입니다.
-하나는 UserAgent에 정의되어 있는 delegate에 함수를 추가하는 방법입니다. 다른 하나는 IUserListener 인터페이스를 구현한 리스너를 등록하는 방법입니다.
+There are two main ways that UserAgent can receive results or notifications from the server for every request.
+One is to add a function to the delegate defined on the UserAgent. The other is to register a listener that implements the IUserListener interface.
 
-UserAgent는 모든 동작의 결과 또는 알림을 받을 수 있도록 각각의 delegate를 멤버로 가지고 있습니다. 이 delegate에 함수를 등록하면 앞서 설명한 API에 콜백 매개변수를 생략하고 호출했을 경우 또는 서버에서 알림을 보냈을 경우 등록한 함수로 응답을 받을 수 있습니다.
+The UserAgent has each delegate as a member so that it can receive the results or notifications of any action. By registering a function on this delegate, you can call the APIs described earlier without callback parameters, or receive a response from the registered function when the server sends a notification.
 
 ```c#
 /// <summary>
-/// 로그인 결과를 받을 대리자
+/// Delegate to receive login results
 /// </summary>
-/// <param name="userAgent">Login()을 요청한 유저 에이전트</param>
-/// <param name="result">Login() 요청 결과</param>
-/// <param name="loginInfo">로그인 정보</param>
+/// <param name="userAgent">The user agent that made the Login() request</param>
+/// <param name="result">Login() request result</param>
+/// <param name="loginInfo">Login information</param>
 public Interface.DelUserOnLogin onLoginListeners;
 
 /// <summary>
-/// 룸 매치 요청 결과를 받을 대리자
+/// Delegate to receive room match request results.
 /// </summary>
-/// <param name="userAgent">MatchRoom()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchRoom() 요청 결과</param>
-/// <param name="resultCode">사용자 결과 코드</param>
-/// <param name="roomId">매치된 방의 아이디</param>
-/// <param name="roomName">매치된 방의 이름</param>
-/// <param name="created">매치된 방의 신설 여부</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that requested MatchRoom().
+/// <param name="result">Result of the MatchRoom() request</param>
+/// <param name="resultCode">User result code</param>
+/// <param name="roomId">Id of the matched room</param>
+/// <param name="roomName">Name of the matched room</param>
+/// <param name="created">Whether the matched room was created</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnMatchRoom onMatchRoomListeners;
 
 /// <summary>
-/// 방 생성 요청 결과를 받을 대리자
+/// Representatives to receive the results of room creation requests.
 /// </summary>
-/// <param name="userAgent">CreateRoom()을 요청한 유저 에이전트</param>
-/// <param name="result"> CreateRoom() 요청 요청 결과</param>
-/// <param name="roomName">생성된 방의 이름</param>
-/// <param name="roomId">생성된 방의 아이디</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that requested CreateRoom().
+/// <param name="result">Result of the CreateRoom() request</param>
+/// <param name="roomName">Name of the created room</param>
+/// <param name="roomId">Id of the created room</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnCreateRoom onCreateRoomListeners;
 
 /// <summary>
-/// 방 입장 요청 결과를 받을 대리자
+/// Delegates to receive room entry request results.
 /// </summary>
-/// <param name="userAgent">JoinRoom()을 요청한 유저 에이전트</param>
-/// <param name="result">JoinRoom() 요청 결과</param>
-/// <param name="roomId">입장한 방의 아이디</param>
-/// <param name="roomName">입장한 방의 이름</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that requested JoinRoom().
+/// <param name="result">Result of the JoinRoom() request</param>
+/// <param name="roomId">Id of the room entered</param>
+/// <param name="roomName">Name of the room you joined</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnJoinRoom onJoinRoomListeners;
 
 /// <summary>
-/// 이름 있는 방 요청 결과를 받을 대리자
+/// Delegate to receive the results of a named room request.
 /// </summary>
-/// <param name="userAgent">NameRoom()을 요청한 유저 에이전트</param>
-/// <param name="result">NameRoom() 요청 결과</param>
-/// <param name="roomName">방 이름</param>
-/// <param name="roomId">입장한 방의 아이디</param>
-/// <param name="created">입장한 방의 신설 여부</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that requested NameRoom().
+/// <param name="result">Result of the NameRoom() request</param>
+/// <param name="roomName">Room name</param>
+/// <param name="roomId">Id of the room entered</param>
+/// <param name="created">Whether the entered room was created</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnNamedRoom onNamedRoomListeners;
 
 /// <summary>
-/// 파티 매칭 요청 결과를 받을 대리자
+/// Delegate to receive the results of the party matching request.
 /// </summary>
-/// <param name="userAgent">MatchPartyStart()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchPartyStart() 요청 결과</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that requested MatchPartyStart().
+/// <param name="result">Result of the MatchPartyStart() request</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnMatchPartyStart onMatchPartyStartListeners;
 
 /// <summary>
-/// 파티 매칭 요청 취소 결과를 받을 대리자
+/// Delegates to receive the results of canceling a party matching request.
 /// </summary>
-/// <param name="userAgent">MatchPartyCancel()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchPartyCancel() 요청 결과</param>
+/// <param name="userAgent">The user agent that requested MatchPartyCancel()</param>.
+/// <param name="result">Result of the MatchPartyCancel() request</param>
 public Interface.DelUserOnMatchPartyCancel onMatchPartyCancelListeners;
 
 /// <summary>
-/// 유저 매칭 요청 결과를 받을 대리자
+/// Delegate to receive the result of a user matching request.
 /// </summary>
-/// <param name="userAgent">MatchUserStart()를 요청한 유저 에이전트</param>
-/// <param name="result">MatchUserStart() 요청 결과</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that requested MatchUserStart()</param>.
+/// <param name="result">Result of the MatchUserStart() request</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnMatchUserStart onMatchUserStartListeners;
 
 /// <summary>
-/// 유저 매칭 요청 결과를 받을 대리자
+/// Delegates to receive the results of user matching requests.
 /// </summary>
-/// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchUserStart()나 MatchPartyStart() 요청 결과</param>
-/// <param name="created">방 신설 여부</param>
-/// <param name="roomId">매칭된 방의 아이디</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
+/// <param name="result">Result of the MatchUserStart() or MatchPartyStart() request</param>
+/// <param name="created">Whether a room was created</param>
+/// <param name="roomId">Id of the matched room</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnMatchUserDone onMatchUserDoneListeners;
 
 /// <summary>
-/// 유저 매칭 타임아웃 알림 대리자
+/// Delegate for user matching timeout notification.
 /// </summary>
-/// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
+/// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
 public Interface.DelUserOnMatchUserTimeout onMatchUserTimeoutListeners;
 
 /// <summary>
-/// 유저 매칭 요청 취소 결과를 받을 대리자
+/// The agent to receive the result of canceling a user matching request.
 /// </summary>
-/// <param name="userAgent">MatchUserCancel()을 요청한 유저 에이전트</param>
-/// <param name="result">MatchUserCancel() 요청 결과</param>
+/// <param name="userAgent">The user agent that requested MatchUserCancel()</param>.
+/// <param name="result">Result of the MatchUserCancel() request</param>
 public Interface.DelUserOnMatchUserCancel onMatchUserCancelListeners;
 
 /// <summary>
-/// 방 퇴장 또는 강제 퇴장 알림을 받을 대리자
+/// Delegates to be notified when a user leaves a room or is forced to leave.
 /// </summary>
-/// <param name="userAgent">LeaveRoom()을 요청한 유저 에이전트</param>
-/// <param name="result">LeaveRoom() 요청 결과</param>
-/// <param name="force">강제 퇴장 여부</param>
-/// <param name="roomId">퇴장한 방의 아이디</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that requested LeaveRoom().
+/// <param name="result">Result of the LeaveRoom() request</param>
+/// <param name="force">Whether to force the user to leave</param>
+/// <param name="roomId">Id of the room to leave</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnLeaveRoom onLeaveRoomListeners;
 
 /// <summary>
-/// 채널 정보 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// Delegates to be notified of the results of channel information requests or channel moves forced by the server.
 /// </summary>
-/// <param name="userAgent">GetChannelInfo()를 요청한 유저 에이전트</param>
-/// <param name="result">GetChannelInfo() 요청 결과</param>
-/// <param name="channelInfo">서버에서 받은 채널 정보</param>
+/// <param name="userAgent">The user agent that requested GetChannelInfo().
+/// <param name="result">Result of the GetChannelInfo() request</param>
+/// <param name="channelInfo">Channel information received from the server</param>
 public Interface.DelUserOnChannelInfo onChannelInfoListeners;
 
 /// <summary>
-/// 모든 채널 정보 목록 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// Delegates to be notified of the results of any channel information list requests or channel moves forced by the server.
 /// </summary>
-/// <param name="userAgent">GeAllChannelInfo()를 요청한 유저 에이전트</param>
-/// <param name="result">GeAllChannelInfo() 정보 요청 결과</param>
-/// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+/// <param name="userAgent">The user agent that requested GeAllChannelInfo().
+/// <param name="result">GeAllChannelInfo() information request result</param>
+/// <param name="channelInfo">List of channel information received from the server</param>
 public Interface.DelUserOnAllChannelInfo onAllChannelInfoListeners;
 
 /// <summary>
-/// 채널 정보 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// Delegates to be notified of channel information request results or channel moves forced by the server.
 /// </summary>
-/// <param name="userAgent">GetChannelCountInfo()를 요청한 유저 에이전트</param>
-/// <param name="result">GetChannelCountInfo() 요청 결과</param>
-/// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+/// <param name="userAgent">The user agent that requested GetChannelCountInfo().
+/// <param name="result">Result of the GetChannelCountInfo() request</param>
+/// <param name="channelCountInfo">The channel's user count and room count information received from the server</param>.
 public Interface.DelUserOnChannelCountInfo onChannelCountInfoListeners;
 
 /// <summary>
-/// 모든 채널 정보 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// A delegate to be notified of the results of any channel information requests or channel moves forced by the server.
 /// </summary>
-/// <param name="userAgent">GetAllChannelCountInfo()를 요청한 유저 에이전트</param>
-/// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-/// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보 목록</param>
+/// <param name="userAgent">The user agent that requested GetAllChannelCountInfo().
+/// <param name="result">Result of the GetAllChannelCountInfo() request</param>
+/// <param name="channelCountInfo">List of channel's user count and room count information received from the server</param>
 public Interface.DelUserOnAllChannelCountInfo onAllChannelCountInfoListeners;
 
 /// <summary>
-/// 채널 이동 요청 결과 또는 서버에서 강제로 수행한 채널 이동에 대한 알림을 받을 대리자
+/// Delegates to be notified of channel move request results or channel moves forced by the server.
 /// </summary>
-/// <param name="userAgent">MoveChannel()한 유저 에이전트</param>
-/// <param name="result">MoveChannel() 결과 코드</param>
-/// <param name="force">서버에서 강제로 채널을 이동했는지 여부</param>
-/// <param name="channelId">이동한 채널의 아이디</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that performed the MoveChannel()</param>.
+/// <param name="result">MoveChannel() result code</param>
+/// <param name="force">Whether the server forced the channel to be moved</param>
+/// <param name="channelId">Id of the moved channel</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnMoveChannel onMoveChannelListeners;
 
 /// <summary>
-/// 스냅샷 요청 결과를 받을 대리자
+/// Delegate to receive snapshot request results.
 /// </summary>
-/// <param name="userAgent">Snapshot()한 유저 에이전트</param>
-/// <param name="result">Snapshot() 요청 결과</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that took the snapshot</param>.
+/// <param name="result">Snapshot() request result</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnSnapshot onSnapshotListeners;
 
 /// <summary>
-/// 기본 기능 사용 중 오류 발생 시 알림을 받을 대리자
+/// Delegates to be notified when errors occur while using basic functionality.
 /// </summary>
-/// <param name="userAgent">오류가 발생한 유저 에이전트</param>
-/// <param name="errorCode">오류 코드</param>
-/// <param name="command">오류 발생 기능</param>
+/// <param name="userAgent">The user agent where the error occurred</param>
+/// <param name="errorCode">Error code</param>
+/// <param name="command">Command to raise the error</param>
 public Interface.DelUserOnErrorCommand onErrorCommandListeners;
 
 /// <summary>
-/// 패킷 전송 오류 발생 시 알림을 받을 대리자
+/// Delegates to be notified when a packet transmission error occurs.
 /// </summary>
-/// <param name="userAgent">오류가 발생한 유저 에이전트</param>
-/// <param name="errorCode">오류 코드</param>
-/// <param name="command">오류가 발생한 메시지</param>
+/// <param name="userAgent">The user agent where the error occurred</param>
+/// <param name="errorCode">Error code</param>
+/// <param name="command">The message where the error occurred</param>
 public Interface.DelUserOnErrorCustomCommand onErrorCustomCommandListeners;
 
 /// <summary>
-/// 로그아웃 요청 결과 또는 강제 로그아웃 알림을 받을 대리자
+/// The delegate to be notified of the result of a logout request or forced logout.
 /// </summary>
-/// <param name="userAgent">Logout()을 요청한 유저 에이전트</param>
-/// <param name="result">Logout() 결과</param>
-/// <param name="force">서버에 의한 강제 여부</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent that requested Logout().
+/// <param name="result">Logout() result</param>
+/// <param name="force">Whether forced by the server</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnLogout onLogoutListeners;
 
 /// <summary>
-/// 고지 알림을 받을 대리자
+/// Representatives to be notified.
 /// </summary>
-/// <param name="userAgent">Notice()를 받은 유저 에이전트</param>
-/// <param name="message">고지 메시지</param>
+/// <param name="userAgent">The user agent that received the Notice()</param>.
+/// <param name="message">Notice message</param>
 public Interface.DelUserOnNotice onNoticeListeners;
 
 /// <summary>
-/// 킥아웃 알림을 받을 대리자
+/// Delegates to receive kickout notifications.
 /// </summary>
-/// <param name="userAgent">킥아웃 된 유저 에이전트</param>
-/// <param name="message">어드민으로부터 받은 메시지</param>
+/// <param name="userAgent">The user agent that was kicked out</param>.
+/// <param name="message">Message received from the child</param>
 public Interface.DelUserOnAdminKickout onAdminKickoutListeners;
 
 /// <summary>
-/// 서버의 세션이 닫힌 경우 알림을 받을 대리자
+/// Delegates to be notified when a session on the server is closed.
 /// </summary>
-/// <param name="userAgent">세션이 닫힌 유저 에이전트</param>
-/// <param name="result">세션이 닫힌 이유</param>
-/// <param name="payload">서버에서 받은 추가 정보</param>
+/// <param name="userAgent">The user agent whose session has been closed</param>
+/// <param name="result">Reason the session was closed</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelUserOnSessionClose onSessionCloseListeners;
 ```
 <br>
 
-IUserListener는 UserAgent의 모든 동작의 결과 또는 알림을 정의한 인터페이스입니다. 이 인터페이스를 구현한 리스너를 UserAgent.AddUserListener()로 등록하면 등록한 리스너로 응답을 받을 수 있습니다.
+IUserListener is an interface that defines the results or notifications of any action of UserAgent. You can register a listener implementing this interface with UserAgent.AddUserListener() to receive responses as a registered listener.
 
 ```c#
 class UserListener : IUserListener{
     /// <summary>
-    /// Login() 요청 결과
+    /// Login() request result
     /// </summary>
-    /// <param name="userAgent">Login()을 요청한 유저 에이전트</param>
-    /// <param name="result">Login() 요청 결과</param>
-    /// <param name="loginInfo">로그인 정보</param>
+    /// <param name="userAgent">The user agent that made the Login() request</param>
+    /// <param name="result">Login() request result</param>
+    /// <param name="loginInfo">Login information</param>
     void OnLogin(UserAgent userAgent, GameAnvil.Defines.ResultCodeLogin result, UserAgent.LoginInfo loginInfo);
     
     /// <summary>
-    /// MatchRoom() 요청 결과
+    /// MatchRoom() request result
     /// </summary>
-    /// <param name="userAgent">MatchRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchRoom() 요청 결과</param>
-    /// <param name="resultCode">사용자 결과 코드</param>
-    /// <param name="roomId">매치된 방의 아이디</param>
-    /// <param name="roomName">매치된 방의 이름</param>
-    /// <param name="created">매치된 방의 신설 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested MatchRoom()</param>.
+    /// <param name="result">Result of the MatchRoom() request</param>
+    /// <param name="resultCode">User result code</param>
+    /// <param name="roomId">Id of the matched room</param>
+    /// <param name="roomName">Name of the matched room</param>
+    /// <param name="created">Whether the matched room was created</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnMatchRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchRoom result, int resultCode, int roomId, string roomName, bool created, Payload payload);
     
     /// <summary>
-    /// CreateRoom() 요청 결과
+    /// CreateRoom() request result
     /// </summary>
-    /// <param name="userAgent">CreateRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">CreateRoom() 요청 결과</param>
-    /// <param name="roomId">생성된 방의 아이디</param>
-    /// <param name="roomName">생성된 방의 이름</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested CreateRoom()</param>.
+    /// <param name="result">CreateRoom() request result</param>
+    /// <param name="roomId">Id of the created room</param>
+    /// <param name="roomName">Name of the created room</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnCreateRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeCreateRoom result, int roomId, string roomName, Payload payload);
     
     /// <summary>
-    /// JoinRoom() 요청 결과
+    /// JoinRoom() request result
     /// </summary>
-    /// <param name="userAgent">JoinRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">JoinRoom() 요청 결과</param>
-    /// <param name="roomId">입장한 방의 아이디</param>
-    /// <param name="roomName">입장한 방의 이름</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested JoinRoom()</param>
+    /// <param name="result">Result of the JoinRoom() request</param>
+    /// <param name="roomId">Id of the room entered</param>
+    /// <param name="roomName">Name of the room you joined</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnJoinRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeJoinRoom result, int roomId, string roomName, Payload payload);
     
     /// <summary>
-    /// NameRoom() 요청 결과
+    /// NameRoom() request result
     /// </summary>
-    /// <param name="userAgent">NameRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">NameRoom() 요청 결과</param>
-    /// <param name="roomName">방 이름</param>
-    /// <param name="roomId">입장한 방의 아이디</param>
-    /// <param name="created">입장한 방의 신설 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested NameRoom()</param>
+    /// <param name="result">Result of the NameRoom() request</param>
+    /// <param name="roomName">Room name</param>
+    /// <param name="roomId">Id of the room entered</param>
+    /// <param name="created">Whether the entered room was created</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnNamedRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeNamedRoom result, int roomId, string roomName, bool created, Payload payload);
     
     /// <summary>
-    /// MatchUserStart() 결과
+    /// MatchUserStart() result
     /// </summary>
-    /// <param name="userAgent">MatchUserStart()를 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserStart() 요청 결과</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested MatchUserStart()</param>
+    /// <param name="result">Result of the MatchUserStart() request</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnMatchUserStart(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserStart result, Payload payload);
     
     /// <summary>
-    /// MatchUserStart()나 MatchPartyStart() 요청 결과
+    /// The result of a MatchUserStart() or MatchPartyStart() request.
     /// </summary>
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserStart()나 MatchPartyStart() 요청 결과</param>
-    /// <param name="created">방 신설 여부</param>
-    /// <param name="roomId">매칭된 방의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
+    /// <param name="result">Result of the MatchUserStart() or MatchPartyStart() request</param>
+    /// <param name="created">Whether a room was created</param>
+    /// <param name="roomId">Id of the matched room</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnMatchUserDone(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserDone result, bool created, int roomId, Payload payload);
     
     /// <summary>
-    /// MatchUserStart()나 MatchPartyStart() 타임아웃
+    /// MatchUserStart() or MatchPartyStart() timeout
     /// </summary>
-    /// <param name="userAgent">MatchUserStart()나 MatchPartyStart()을 요청한 유저 에이전트</param>
+    /// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
     void OnMatchUserTimeout(UserAgent userAgent);
     
     /// <summary>
-    /// MatchUserCancel() 결과
+    /// Results of MatchUserCancel()
     /// </summary>
-    /// <param name="userAgent">MatchUserCancel()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchUserCancel() 요청 결과</param>
+    /// <param name="userAgent">The user agent that requested MatchUserCancel()</param>.
+    /// <param name="result">Result of the MatchUserCancel() request</param>
     void OnMatchUserCancel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserCancel result);
     
     /// <summary>
-    /// MatchPartyStart() 요청 결과
+    /// The result of a MatchPartyStart() request.
     /// </summary>
-    /// <param name="userAgent">MatchPartyStart()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchPartyStart() 요청 결과</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested MatchPartyStart()</param>.
+    /// <param name="result">Result of the MatchPartyStart() request</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnMatchPartyStart(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchPartyStart result, Payload payload);
     
     /// <summary>
-    /// MatchPartyCancel() 요청 결과
+    /// The result of a MatchPartyCancel() request.
     /// </summary>
-    /// <param name="userAgent">MatchPartyCancel()을 요청한 유저 에이전트</param>
-    /// <param name="result">MatchPartyCancel() 요청 결과</param>
+    /// <param name="userAgent">The user agent that requested MatchPartyCancel()</param>.
+    /// <param name="result">Result of the MatchPartyCancel() request</param>
     void OnMatchPartyCancel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchPartyCancel result);
     
     /// <summary>
-    /// LeaveRoom() 요청 결과
+    /// LeaveRoom() request result
     /// </summary>
-    /// <param name="userAgent">LeaveRoom()을 요청한 유저 에이전트</param>
-    /// <param name="result">LeaveRoom() 요청 결과</param>
-    /// <param name="force">강제 퇴장 여부</param>
-    /// <param name="roomId">퇴장한 방의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested LeaveRoom()</param>
+    /// <param name="result">Result of the LeaveRoom() request</param>
+    /// <param name="force">Whether to force the user to leave</param>
+    /// <param name="roomId">Id of the room to leave</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnLeaveRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeLeaveRoom result, bool force, int roomId, Payload payload);
     
     /// <summary>
-    /// GetChannelInfo() 요청 결과
+    /// GetChannelInfo() request result
     /// </summary>
-    /// <param name="userAgent">GetChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelInfo() 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보</param>
+    /// <param name="userAgent">The user agent that requested GetChannelInfo()</param>.
+    /// <param name="result">Result of the GetChannelInfo() request</param>
+    /// <param name="channelInfo">Channel information received from the server</param>
     void OnChannelInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeChannelInfo result, Payload channelInfo);
     
     /// <summary>
-    /// GeAllChannelInfo() 요청 결과
+    /// GeAllChannelInfo() request result
     /// </summary>
-    /// <param name="userAgent">GeAllChannelInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GeAllChannelInfo() 정보 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+    /// <param name="userAgent">The user agent that requested GeAllChannelInfo()</param>
+    /// <param name="result">Result of the GeAllChannelInfo() information request</param>
+    /// <param name="channelInfo">List of channel information received from the server</param>
     void OnAllChannelInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeAllChannelInfo result, Dictionary<string, Payload> channelInfo);
     
     /// <summary>
-    /// GetChannelCountInfo() 요청 결과
+    /// GetChannelCountInfo() request result
     /// </summary>
-    /// <param name="userAgent">GetChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+    /// <param name="userAgent">The user agent that requested GetChannelCountInfo()</param>.
+    /// <param name="result">Result of the GetChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">The number of users and rooms in the channel received from the server</param>
     void OnChannelCountInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo);
     
     /// <summary>
-    /// GetAllChannelCountInfo() 요청 결과
+    /// GetAllChannelCountInfo() request result
     /// </summary>
-    /// <param name="userAgent">GetAllChannelCountInfo()를 요청한 유저 에이전트</param>
-    /// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보 목록</param>
+    /// <param name="userAgent">The user agent that requested GetAllChannelCountInfo()</param>.
+    /// <param name="result">Result of the GetAllChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">List of channel's user count and room count information received from the server</param>
     void OnAllChannelCountInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo);
     
     /// <summary>
-    /// MoveChannel() 결과
+    /// MoveChannel() result
     /// </summary>
-    /// <param name="userAgent">MoveChannel()한 유저 에이전트</param>
-    /// <param name="result">MoveChannel() 결과 코드</param>
-    /// <param name="force">서버에서 강제로 채널을 이동했는지 여부</param>
-    /// <param name="channelId">이동한 채널의 아이디</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that did the MoveChannel()</param>.
+    /// <param name="result">MoveChannel() result code</param>
+    /// <param name="force">Whether the server forced the channel to be moved</param>
+    /// <param name="channelId">Id of the moved channel</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnMoveChannel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMoveChannel result, bool force, string channelId, Payload payload);
     
     /// <summary>
-    /// Snapshot() 요청 결과
+    /// Snapshot() request result
     /// </summary>
-    /// <param name="userAgent">Snapshot() 요청한 유저 에이전트</param>
-    /// <param name="result">Snapshot() 요청 결과</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">Snapshot() requested user agent</param>
+    /// <param name="result">Snapshot() request result</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnSnapshot(UserAgent userAgent, GameAnvil.Defines.ResultCodeSnapshot result, Payload payload);
     
     /// <summary>
-    /// 기본 기능 오류 발생
+    /// A basic functionality error occurred.
     /// </summary>
-    /// <param name="userAgent">오류가 발생한 유저 에이전트</param>
-    /// <param name="errorCode">오류 코드</param>
-    /// <param name="command">오류 발생 기능</param>
+    /// <param name="userAgent">User agent where the error occurred</param>
+    /// <param name="errorCode">Error code</param>
+    /// <param name="command">Command to raise the error</param>
     void OnError(UserAgent userAgent, GameAnvil.Defines.ErrorCode errorCode, User.Defines.Commands command);
     
     /// <summary>
-    /// 패킷 전송 오류 발생
+    /// A packet transmission error occurred.
     /// </summary>
-    /// <param name="userAgent">오류가 발생한 유저 에이전트</param>
-    /// <param name="errorCode">오류 코드</param>
-    /// <param name="command">오류가 발생한 메시지</param>
+    /// <param name="userAgent">The user agent where the error occurred</param>
+    /// <param name="errorCode">Error code</param>
+    /// <param name="command">The message where the error occurred</param>
     void OnError(UserAgent userAgent, GameAnvil.Defines.ErrorCode errorCode, string command);
     
     /// <summary>
-    /// Logout() 결과
+    /// Logout() result
     /// </summary>
-    /// <param name="userAgent">Logout()을 요청한 유저 에이전트</param>
-    /// <param name="result">Logout() 결과</param>
-    /// <param name="force">서버에 의한 강제 여부</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent that requested Logout()</param>
+    /// <param name="result">Logout() result</param>
+    /// <param name="force">Whether forced by the server</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnLogout(UserAgent userAgent, GameAnvil.Defines.ResultCodeLogout result, bool force, Payload payload);
     
     /// <summary>
-    /// Notice() 알림
+    /// Notice()
     /// </summary>
-    /// <param name="userAgent">Notice()를 받은 유저 에이전트</param>
-    /// <param name="message">고지 메시지</param>
+    /// <param name="userAgent">The user agent that received the Notice()</param>.
+    /// <param name="message">Notice message</param>
     void OnNotice(UserAgent userAgent, string message);
     
     /// <summary>
-    /// 킥아웃 된 경우 알림
+    /// Notify if kicked out
     /// </summary>
-    /// <param name="userAgent">킥아웃 된 유저 에이전트</param>
-    /// <param name="message">어드민으로부터 받은 메시지</param>
+    /// <param name="userAgent">The user agent that was kicked out</param>.
+    /// <param name="message">Message received from admin</param>
     void OnAdminKickout(UserAgent userAgent, string message);
     
     /// <summary>
-    /// 유저 리스너에서 서버의 세션이 닫힌 경우 알림<para></para>
-    /// 이 알림을 받을 경우 다시 로그인하여 재시작한다.
+    /// Notifies the user listener when the session on the server is closed<para></para>
+    /// If you receive this notification, log back in and restart.
     /// </summary>
-    /// <param name="userAgent">세션이 닫힌 유저 에이전트</param>
-    /// <param name="result">세션이 닫힌 이유</param>
-    /// <param name="payload">서버에서 받은 추가 정보</param>
+    /// <param name="userAgent">The user agent whose session was closed</param>
+    /// <param name="result">Reason the session was closed</param>
+    /// <param name="payload">Additional information received from the server</param>
     void OnSessionClose(UserAgent userAgent, GameAnvil.Defines.ResultCodeSessionClose result, Payload payload);
 }
 
