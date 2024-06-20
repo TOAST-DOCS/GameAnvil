@@ -1,14 +1,14 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 메시지 핸들링
+## Game > GameAnvil > Unity Basic Development Guide > Message Handling
 
-## 메시지 핸들링
+## Message handling
 
-UserAgent의 기본 기능 외에 Request()와 Send()를 이용하여 메시지를 서버로 전송할 수 있습니다. 메시지를 전송하기 위해서는 메시지를 생성하고 등록하는 과정이 필요합니다.
+In addition to the basic functionality of the UserAgent, you can send messages to the server using Request() and Send(). Sending a message involves creating and registering a message.
 
-### 메시지 생성
+### Create a message
 
-GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/proto3)를 사용합니다. .proto 파일에 메시지를 정의하고, protoc 컴파일러로 실제 클래스 소스 코드를 생성하게 됩니다. 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. protoc 컴파일러는 GameAnvil/protoc 폴더에서 찾을 수 있습니다.  protoc에 대한 자세한 설명은 [여기](https://developers.google.com/protocol-buffers/docs/proto3#generating)를 참고하십시오.
+GameAnvil uses [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/proto3)as its default messaging protocol. You will define your messages in a .proto file, and generate the actual class source code with the protoc compiler. You can use the generated source code by adding it to your project. The protoc compiler can be found in the GameAnvil/protoc folder. For a detailed description of protoc, see [here](https://developers.google.com/protocol-buffers/docs/proto3#generating).
 
-이제 메시지를 만들기 위해 Assets 폴더 아래에 protocols 폴더를 생성하고 다음과 같이 messages.proto 파일을 생성합니다.
+Now let's create a message. First, create a protocols folder under the Assets folder and create a messages.proto file like this
 
 ```protobuf
 // messages.proto
@@ -37,55 +37,55 @@ message SampleReceive
 }
 ```
 
-그리고 윈도우즈 명령 프롬프트(cmd)를 실행해 protocols 폴더로 이동한 다음 아래와 같이 입력합니다.
+Then, run the Windows Command Prompt (cmd) to navigate to the protocols folder and enter
 
 ```
 ../GameAnvil/protoc/protoc --csharp_out=./ messages.proto
 ```
 
-그러면 protocols 폴더에 Messages.cs 파일이 생성된 것을 확인할 수 있습니다. 
+You'll then see that a Messages.cs file has been created in the protocols folder. 
 
-### 메시지 등록
+### Register messages
 
-새로 생성한 메시지를 사용하려면 사용할 메시지를 ProtocolManager에 미리 등록해야 합니다. 미리 등록하지 않으면, 동작하지 않거나 오동작하거나 예외가 발생할 수 있습니다.
+To use newly created messages, you must pre-register the messages you want to use with ProtocolManager. If you don't pre-register them, they might not work, malfunction, or throw exceptions.
 
 ```c#
 ProtocolManager.getInstance().RegisterProtocol(Messages.MessagesReflection.Descriptor);
 ```
 
-### 메시지 전송
+### Send messages
 
-Request()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 응답을 기다리는 동안 추가적인 Request()는 큐에 저장되고 서버 응답을 처리한 후 순차적으로 처리하게 됩니다. 서버 응답을 받아 처리하려면 콜백 매개변수를 전달해야 합니다.
+When you send a message to Request(), it waits for a server response. While waiting for the server response, additional Request() are queued and processed sequentially after the server response is processed. To receive and process a server response, you must pass callback parameters.
 
 ```c#
 /// <summary>
-/// 유저 에이전트를 사용해 프로토 버프 메시지 전송
+/// Sends a proto-buff message using the user agent.
 /// </summary>
-/// <typeparam name="T">프로토 버프 타입 메시지</typeparam>
-/// <param name="agent">전송할 유저 에이전트</param>
-/// <param name="message">전송할 프로토 버프 메시지</param>
-/// <param name="action">응답 처리할 동작</param>
+/// <typeparam name="T">Proto buff type message</typeparam>
+/// <param name="agent">User agent to send</param>
+/// <param name="message">The proto buff message to send</param>
+/// <param name="action">Action to handle in response</param>
 static public void Request<T>(User.UserAgent agent, IMessage message, Action<User.UserAgent, T> action) where T : IMessage;
 
 /// <summary>
-/// 유저 에이전트를 사용해 패킷 전송
+/// Sends a packet using a user agent.
 /// </summary>
-/// <param name="agent">전송할 유저 에이전트</param>
-/// <param name="packet">전송할 패킷</param>
-/// <param name="action">응답 처리할 동작</param>
+/// <param name="agent">The user agent to send the packet to</param>.
+/// <param name="packet">Packet to send</param>
+/// <param name="action">Action to handle in response</param>
 static public void Request(User.UserAgent agent, Packet packet, Action<User.UserAgent, Packet> action);
 ```
 
-Request 응답을 받기 위해 리스너를 등록하는 방법도 있는데, 이는 [Unity 심화 개발 가이드 > 메시지 핸들링](../unity-advanced/unity-advanced-04-message-handling.md)에서 확인할 수 있습니다.
+You can also register a listener to receive the request response, which can be found in the [Unity Advanced Development Guide > Message Handling](../unity-advanced/unity-advanced-04-message-handling.md).
 
-지정된 시간 내에 응답이 오지 않으면 타임아웃을 발생시키고 다음 메시지를 처리합니다. 타임아웃은 UserAgent.OnErrorCommandListeners 리스너와 UserAgent.OnErrorCustomCommandListeners 리스너에 ErrorCode.TIMEOUT으로 전달됩니다.
+If no response is received within the specified time, a timeout occurs and the next message is processed. The timeout is passed to the UserAgent.OnErrorCommandListeners listener and the UserAgent.OnErrorCustomCommandListeners listener as ErrorCode.TIMEOUT.
 
-Send()로 메시지를 전송하면 Send()의 호출 즉시 서버로 전송되며 별도의 응답을 기다리지 않습니다. Request()에 대한 응답을 기다리는 중에도 Send()를 사용한 메시지는 바로 서버로 전송됩니다.
+When you send a message with Send(), it is sent to the server immediately upon the call to Send() and does not wait for a separate response. Messages sent with Send() are sent to the server immediately, even if you are waiting for a response to Request().
 
 ```c#
 Connector connector = new Connector();
 UserAgent user = GameAnvilConnector.getUserAgent();
-// UserAgent로 전달되는 서버 알림을 받는 리스너 등록
+// register a listener to receive server notifications delivered to the UserAgent
 user.AddListener((UserAgent user, Messages.SampleReceive msg)=> { }); 
 
 // UserAgent Send
@@ -94,12 +94,12 @@ user.Send(sampleSend);
 
 // UserAgent Request
 Messages.SampleRequest SampleRequest = new Messages.SampleRequest();
-user.Request(SampleRequest, (UserAgent user, Messages.SampleResponse res) => { }); // 콜백 매개변수 전달
+user.Request(SampleRequest, (UserAgent user, Messages.SampleResponse res) => { }); // pass callback parameters
 ```
 
-### 커스텀 패킷
+### Custom packets
 
-패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [Unity 심화 개발 가이드 > 패킷](../unity-advanced/unity-advanced-05-packet.md)을 참고합니다.
+You can use the Packet class to serialize arbitrary data other than a ProtocolBuffer into a byte stream. For more information about Packets, see [Unity Advanced Development Guide > Packets](../unity-advanced/unity-advanced-05-packet.md).
 
 ```c#
 Connector connector = new Connector();
@@ -109,13 +109,13 @@ int resMsgId = 2;
 
 user.AddListener(resMsgId, (UserAgent user, Packet packet)=> { });
 
-Messages.SampleSend sampleSend = new Messages.SampleSend (); 
-// 패킷 클래스 이용
+Messages.SampleSend sampleSend = new Messages.SampleSend(); 
+// using the packet class
 Packet sampleSendPacket = new Packet(reqMsgIndex, sampleSend.ToByteArray())
 user.Send(sampleSendPacket);
 
 Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
-// 패킷 클래스 이용
+// using the packet class
 Packet sampleRequestPacket = new Packet(reqMsgIndex, sampleRequestPacket.ToByteArray())
 user.Request(sampleRequestPacket, (UserAgent user, Packet packet)=> { });
 ```
