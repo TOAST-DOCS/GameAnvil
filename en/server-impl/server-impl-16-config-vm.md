@@ -203,6 +203,7 @@ Game nodes are the nodes where actual game-related objects are created and conte
 > If the corresponding set("game") key-value is missing or nodeCnt is 0, the process will not create a game node.
 
 Each configuration item is described below.
+
 | Name        | Description                                                                         | Default value |
 | ----------- |----------------------------------------------------------------------------| ------ |
 | nodeCnt     | Number of nodes                                                                      |        |
