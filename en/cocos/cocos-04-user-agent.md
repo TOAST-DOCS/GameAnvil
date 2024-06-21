@@ -773,9 +773,8 @@ class UserListener implements IUserListener {
     /** 
      * Result of MatchPartyCancel() 
      * @param user User agent requested MatchPartyCancel()
-     * @param resultCode Result code of 
-MatchPartyCancel()     
-*/ 
+     * @param resultCode Result code of MatchPartyCancel()     
+    */ 
     OnMatchPartyCancel?(user: UserAgent, resultCode: ResultCodeMatchPartyCancel): void { } 
     /** 
      * Results of MoveChannel() or notification of forced channel move by the server

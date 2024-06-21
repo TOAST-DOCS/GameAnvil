@@ -37,7 +37,7 @@ public class StateA extends State<TestActor> {
         System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onExit " + getStateName()); 
     } 
 } 
-public class StateB extends State<TestActor> { 
+
  
     @Override 
     protected void onEnter(TestActor scenarioActor) { 
@@ -49,6 +49,7 @@ public class StateB extends State<TestActor> {
         System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onExit " + getStateName()); 
     } 
 } 
+
 public class StateC extends State<TestActor> { 
  
     @Override 

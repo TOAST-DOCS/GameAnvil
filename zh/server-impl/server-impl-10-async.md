@@ -1,106 +1,106 @@
-## Game > GameAnvil > 서버 개발 가이드 > 비동기 지원
+## Game > GameAnvil > Server Development Guide > Asynchronous Support
 
-## 비동기 지원
+## Asynchronous Support
 
-GameAnvil은 다음과 같은 목적을 위해 비동기 처리를 지원합니다.
+GameAnvil provides asynchronous support for the following purposes
 
 ![async-goal.png](https://static.toastoven.net/prod_gameanvil/images/async-goal.png)
 
-파이버상에서의 비동기 처리를 위해 GameAnvil은 Async 클래스를 제공합니다. 아래와 같은 import문을 통해 Async 클래스를 이용하면 일반적인 블로킹/논블로킹 호출을 모두 파이버화할 수 있습니다.
+For asynchronous processing on the fiber, GameAnvil provides the Async class. Using the Async class, you can fiberize all common blocking/non-blocking calls using the following import statement.
 
 ```java
 import com.nhn.gameanvil.async.Async;
 ```
 
 
-> [참고]
-> 
-> 모든 비동기 지원 API에 대한 설명은 [GameAnvil API Reference](https://gameplatform.nhncloud.com/docs/api/gameanvil/1.4/com/nhn/gameanvil/async/Async.html) 에서 JavaDoc으로 작성된 문서를 확인할 수 있습니다.
+> [Note]
+>
+> Descriptions of all asynchronous support APIs can be found in JavaDoc in [the GameAnvil API Reference](https://gameplatform.nhncloud.com/docs/api/gameanvil/1.4/com/nhn/gameanvil/async/Async.html).*
 
 
 
-호출용 API는 크게 call과 run으로 나뉘며 각각 반환값이 있는 경우와 그렇지 않은 경우에 사용합니다. 그 외 스레드 기반의 future를 파이버 기반으로 사용할 수 있도록 전환해 줍니다. 각각의 용도에 따른 사용법은 다음 부분에서 더 자세하게 다룹니다.
+The API for invocation is broadly divided into call and run, which are used when there is a return value and when there isn't, respectively. Otherwise, it converts thread-based futures to fiber-based ones. The usage of each is covered in more detail in the next part of the documentation.
 
-### 블로킹 호출 처리
+### **Handling Blocking Calls
 
-일반적인 블로킹 호출은 스레드 블로킹을 의미합니다. 즉, 현재 코드가 수행 중인 파이버뿐만 아니라 이 파이버를 스케줄링하는 스레드까지 블로킹시킨다는 뜻입니다. 이 말은 곧 노드가 멈춘다는 의미이므로 절대 블로킹 호출을 직접적으로 사용해서는 안 됩니다. GameAnvil은 이러한 스레드 블로킹 호출을 파이버 블로킹으로 전환해 주는 Async API를 제공합니다. 이 API는 외부 executor를 사용하여 해당 블로킹 호출을 처리한 후 완료 이후의 코드 흐름을 다시 파이버화합니다. 반환값 유무에 따라 runBlocking()과 callBlocking() 중 하나를 사용하면 됩니다. 또한 기본 개념에서 설명했듯이 이러한 파이버 블로킹 API는 Suspendable 하므로 API 호출 메서드는 반드시 SuspendExecution 예외 시그니처를 명시해야 합니다.
+A typical blocking call is thread blocking, which means that it blocks not only the fiber that the current code is doing, but also the thread that is scheduling this fiber. You should never use blocking calls directly, as this means that your node will freeze. GameAnvil provides an Async API that converts these thread blocking calls into fiber blocking. This API uses an external executor to handle those blocking calls and then re-fiberizes the code flow after completion. You can use either runBlocking() or callBlocking(), depending on whether you want a return value or not. Also, as described in the basic concepts, these fiber blocking APIs are suspendable, so API call methods must specify the SuspendExecution exception signature.
 
 ```java
 import com.nhn.gameanvil.async.Async;
 
 void runningBlockingMethod() throws SuspendExecution {
 
-    Async.runBlocking(executor, runnable); // 스레드 블로킹 호출을 파이버 블로킹 호출로 전환
+    Async.runBlocking(executor, runnable); // Convert thread blocking calls to fiber blocking calls
 
 }
-import com.nhn.gameanvil.async.Async;
+} import com.nhn.gameanvil.async.Async;
 
 int callingBlockingMethod() throws SuspendExecution {
 
-    return Async.callBlocking(executor, callable);  // 스레드 블로킹 호출을 파이버 블로킹 호출로 전환
+    return Async.callBlocking(executor, callable); // Convert a thread blocking call to a fiber blocking call
 
 }
 ```
 
-### Future 처리
+### Future Handling
 
-Future에 대한 대기는 스레드 블로킹을 유발합니다. 예를 들어 아래와 같은 코드는 호출 스레드를 블로킹합니다.
+Waiting on Future causes thread blocking. For example, the code below blocks the calling thread.
 
 ```java
 Future<SomeObject> future = someAsyncJob();
 
-SomeObject ret = future.get(); // 스레드 블로킹을 유발
+SomeObject ret = future.get(); // cause thread blocking
 ```
 
-GameAnvil은 이런 future에 대한 대기를 스레드 블로킹에서 파이버 블로킹으로 전환해 주는 API를 제공합니다. 단, 이 API들은 Java의 CompletableFuture와 Guava의 ListenableFuture만 지원합니다. 다행히도 대부분의 라이브러리는 이 2가지의 future를 기반으로 비동기를 지원하기 때문에 큰 무리 없이 적용 가능할 것입니다. 아래의 코드는 이러한 Async API를 이용해서 future에 대한 대기를 파이버 블로킹으로 처리하는 예입니다.
+GameAnvil provides APIs to switch waiting for these futures from thread-blocking to fiber-blocking. However, these APIs only support Java's CompletableFuture and Guava's ListenableFuture. Fortunately, most libraries support asynchrony based on these two futures, so you should be able to adapt without too much trouble. The code below is an example of using these Async APIs to fiber-block waiting for a future.
 
 ```java
-// lettuce future, jdk CompletableFuture 등 
+// lettuce future, jdk CompletableFuture, etc. 
 CompletionStage<SomeObject> future = someAsyncJob();
 
-SomeObject ret = Async.awaitFuture(future); // 해당 파이버만 블로킹
+SomeObject ret = Async.awaitFuture(future); // block only that fiber
 ```
 
-### 블로킹 처리 위임
+### Delegate Blocking Handling
 
-앞서 블로킹 호출에 대한 처리를 살펴보았습니다. Async API의 runBlocking()이나 callBlocking()은 블로킹 처리를 완료한 이후에 다시 해당 파이버의 실행 흐름을 이어가는 경우에 사용합니다. 반면 외부 스레드로 블로킹 호출을 위임한 후 그 결과에 대해 신경 쓸 필요가 없다면 실행 흐름을 계속 이어갈 수 있을 것입니다. 이런 경우에는 아래의 API를 사용하면 됩니다. 이 API는 블로킹 호출의 결과를 대기하지 않으므로 Suspendable 하지 않음에 주의하십시오.
+The process for blocking calls is covered earlier. The runBlocking() or callBlocking () of Async API is used only when continuing the execution flow of the corresponding Fiber after blocking process is finished. However, if the user does not need to concern after delegating blocking calls to an external thread, the execution flow can be continued. In this case, use the API below. This API does not wait for the result of blocking call and cannot be suspended.
 
 ```java
 import com.nhn.gameanvil.async.Async;
 
 void runningBlockingMethod() { // NOT suspendable
-    Async.exec(executor, runnable); // 외부 스레드로 블로킹 호출을 위임했으므로 이 파이버는 블로킹되지 않는다.
+    Async.exec(executor, runnable); // This fiber is not blocked because we delegated the blocking call to an external thread.
 }
 ```
 
-## 비동기 Redis 지원
+## Asynchronous Redis Support
 
-GameAnvil 사용자는 어떤 Redis 클라이언트를 사용할지 선택할 수 있지만 이로 인해 Redis 관련 이슈의 종류와 복잡도가 사용자가 선택한 Redis 클라이언트 종류 및 사용 방식에 비례해 증가하였습니다. 이에 따라 GameAnvil은 GameAnvil에서 지원하는 Redis 클라이언트의 종류와 기본적인 사용법을 API화하고, Redis 클라이언트 사용법을 포함한 기본 가이드라인을 제공합니다. 제공되는 API가 아닌 다른 종류의 Redis 클라이언트를 선택해 별도로 사용하는 것도 가능하지만 특별한 이유가 없을 경우 지양하길 권장합니다.
+Previously, it was entirely GameAnvil user's responsibility to determine which type of Redis client to be used. However, it is learned that the type and complexity of the issues related to Redis increase proportionate to the difference in the type and usage of the Redis client selected by the user. To prevent this, we decided to include the information on how to use the Redis client to the basic guideline of GameAnvil. This guideline aims to consolidate the Redis clients supported by GameAnvil by turning the Redis clients and the basic usage into API. Of course, it is possible to use a Redis client other than the provided API, this should be avoided if possible.
 
-> [참고]
-> 
-> 이후의 내용에서 GameAnvil에서 제공하는 Lettuce 클래스와 제품명인 "Lettuce"를 구분하기 위해 전자의 경우는 가능한 "Lettuce 클래스"라고 표기하고, 일부 내용상 필요에 의해 "Lettuce"로 표기할 수도 있습니다. 이와 구분하기 위해 제품명은 전체 대문자 LETTUCE로 표기합니다. 이 글에서 설명하는 LETTUCE는 GameAnvil에서의 사용 방법에 포커스를 두기 때문에 그 이상의 설명이 필요할 경우에는 [LETTUCE 공식 페이지](https://github.com/lettuce-io/lettuce-core)를 참고하십시오.
+> [Note]
+>
+> In the following, to distinguish between the Lettuce classes provided by GameAnvil and the product name "Lettuce", the former will be referred to as "Lettuce classes" whenever possible, and simply as "Lettuce" in some cases. To distinguish between the two, the product name is written in all capital letters "LETTUCE". The [LETTUCE](https://github.com/lettuce-io/lettuce-core)described in this article focuses on how to use it in GameAnvil, so if you need more information, please refer to the [official LETTUCE page](https://github.com/lettuce-io/lettuce-core).*
 
 
-GameAnvil은 Redis 클라이언트로 LETTUCE의 사용을 권장합니다. GameAnvil에서 제공하는 Redis 래핑 API 또한 LETTUCE를 사용합니다. 참고로 LETTUCE는 비동기 Redis 클라이언트로서 대부분의 비동기 API는 CompletableFuture를 기반으로 합니다. 이는 곧 GameAnvil의 Async API를 이용해서 파이버 기반의 비동기화로 전환할 수 있음을 의미합니다.
+> GameAnvil recommends using LETTUCE as the Redis client. The Redis wrapping API provided by GameAnvil uses LETTUCE as well. For reference, LETTUCE is as an asynchronous Redis client and the most of asynchronous APIs are based on CompletableFuture. This means that GameAnvil's Async API can be converted into Fiber-based asynchronization.
 
-GameAnvil에서 제공하는 Redis 래핑 API는 크게 3가지의 클래스인 Lettuce, RedisCluster 그리고 RedisSingle로 나뉩니다. Lettuce는 가장 일반적인 형태의 사용법을 제공하며 내부적으로 LETTUCE 객체를 관리하지 않는 static 클래스입니다. 그러므로 LETTUCE를 가장 일반적인 형태로 사용하고 싶을 경우에는 이 Lettuce 클래스가 가장 적합합니다. RedisCluster와 RedisSingle은 각각 Redis 클러스터와 스탠드얼론에 대응하기 위한 클래스로서 내부적으로 LETTUCE 객체들을 관리합니다.
+The Redis wrapping API provided by GameAnvil can be categorized into the Lettuce, RedisCluster, and RedisSingle classes. Lettuce provides the most common usage and it is a static class that does not internally manage the LETTUCE object. Therefore, if the user wants to use LETTUCE in the most common form, this Lettuce class is the most proper. RedisCluster and RedisSingle are the classes for responding to the Redis cluster and standalone and they internally manage the LETTUCE objects.
 
 ### Lettuce
 
-Lettuce 클래스는 파이버 단위의 처리를 위한 가장 핵심적인 static API들을 제공합니다. 내부적으로 Redis에 관한 그 어떤 상태도 보관하지 않으므로 별도의 객체를 만들 필요가 없이 바로 사용이 가능합니다. 만일 Lettuce 라이브러리에 대해 어느 정도 익숙하다면 Lettuce 클래스를 직접 사용하는 것이 가장 좋습니다.
+The Lettuce class provides the most essential static APIs used to process Fiber-units. Internally, no status related to Redis are stored, it can be used without having to create a separate object. If the user is familiar with the Lettuce library, it is best to use the Lettuce class directly.
 
 ```java
 import com.nhn.gameanvil.async.redis.Lettuce;
 ```
 
-다음의 3가지 주의 사항 외에는 기본적인 Lettuce 사용법을 그대로 유지할 수 있습니다.
+The basic Lettuce usage can be maintained except the following three cautions.
 
-- 첫째, 반드시 connect는 GameAnvil의 Lettuce.connect() 혹은 Lettuce.connectAsync()를 사용한다. 커넥션은 기본적으로 스레드를 블로킹하므로 이에 대한 파이버화 처리를 포함합니다.
-- 둘째, shutdown 또한 커넥션과 동일한 이유로 Lettuce.shutdown()을 사용해야 합니다.
-- 셋째, RedisFuture에 대한 대기는 반드시 Lettuce.awaitFuture()를 사용해서 파이버 블로킹화해야 합니다.
+- First, connect must use the Lettuce.connect() or Lettuce.connectAsync() of GameAnvil. As connection basically blocks threads, it includes the Fiber process.
+- Second, shutdown must use Lettuce.shutdown as well for the same reason with connection.
+- Third, the wait for RedisFuture must use Lettuce.awaitFuture() to block Fiber.
 
-이런 Lettuce 클래스를 사용하여 Redis에 접속하는 코드는 아래와 같습니다.
+The code that is used to connect to Redis using the Lettuce class.
 
 ```java
 RedisURI clusterURI = RedisURI.Builder.redis(IP_ADDRESS, 7500).build();
@@ -118,9 +118,9 @@ if (clusterConnection.isOpen()) {
 import com.nhn.gameanvil.async.redis.RedisCluster;
 ```
 
-Redis Cluster에 대한 API를 래핑합니다. 기본적으로 앞서 설명한 Lettuce와 사용법은 크게 다르지 않습니다. 하지만 이 클래스는 Lettuce 관련 객체들(e.g.RedisClusterClient, StatefulRedisClusterConnection 등)을 자체적으로 관리합니다. 이러한 Lettuce 객체들을 직접 관리하기보다 RedisCluster를 통해 관리하고자 할 때 사용을 고려할 수 있습니다.
+Wraps the API for Redis Cluster. The usage is basically not different from the usage for Lettuce. However, this class manages the objects related to Lettuce (e.g. RedisClusterClient, StatefulRedisClusterConnection etc.)on its own. Consider using this API if the user wants to manage these Lettuce objects through RedisCluster.
 
-주의 사항은 Lettuce의 경우와 완전히 동일합니다. 아래는 RedisCluster를 이용해서 Redis에 접속하는 코드입니다.
+The cautions to be observed are the same with Lettuce. Below is the code that is used to connect to Redis using RedisCluster.
 
 ```java
 redisClient = RedisSingle.create("redis://IP_ADDRESS:6379");
@@ -137,9 +137,9 @@ if (redisClient.isOpen()) {
 import com.nhn.gameanvil.async.redis.RedisSingle;
 ```
 
-RedisCluster와 비교했을 때, 대상 Redis가 스탠드얼론이라는 차이점 밖에 없습니다.
+When compared to RedisCluster, the only difference is that the target Redis is standalone.
 
-주의 사항은 Lettuce의 경우와 완전히 동일합니다. 아래는 RedisSingle을 이용해서 Redis에 접속하는 코드입니다.
+The cautions to be observed are the same with Lettuce. Below is the code that is used to connect to Redis using RedisCluster.
 
 ```java
 redisCluster = new RedisCluster<>(IP_ADDRESS, 7500);
@@ -149,9 +149,9 @@ if (redisCluster.isConnected()) {
 }
 ```
 
-### RedisFuture를 파이버에서 사용하기
+### Using RedisFuture on Fiber
 
-Lettuce, RedisCluster 그리고 RedisSingle은 모두 Lettuce 라이브러리가 지원하는 RedisFuture를 파이버상에서 대기할 수 있는 API를 제공합니다. 내부 구현은 모두 엔진에서 제공하는 Async.awaitFuture()를 동일하게 사용하므로 혼용해도 무방합니다. 아래의 4가지 코드는 모두 동일한 코드입니다. GameAnvil의 파이버 상에서 RedisFuture에 대한 get()은 반드시 이 4가지 중 하나의 방법을 사용해야 합니다.
+Lettuce, RedisCluster, and RedisSingle provide the API that can make the RedisFuture supported by the Lettuce library wait on Fiber. As the internal implementation uses the Async.awaitFuture() provided by the engine, they can be interchangeably used. The four code below are the same code. The get() of the RedisFuture on the Fiber of GameAnvil must use one of the four methods.
 
 - Async.awaitFuture()
 
@@ -193,12 +193,12 @@ try {
 }
 ```
 
-- **잘못된 사용법**: 직접 Future에 대한 대기를 할 경우 해당 Node(Thread)가 블로킹되므로 절대 아래와 같은 코드는 사용하면 안 됩니다.
+- **Incorrect usage: If directly wait for Future, the Node (Thread) is blocked, so never use the code below.
 
 ```java
 try {
     RedisFuture future = clusterAsyncCommands.mget("testKey", getUserId()));
-    future.get(); // 스레드 블로킹을 유발
+    future.get(); // Causes thread blocking
 } catch (TimeoutException e) {
     logger.error("GameUser::onLogin() - timeout", e);
 }
@@ -206,48 +206,48 @@ try {
 
 ### set/get
 
-가장 기본이 되는 set과 get은 RedisCluser와 RedisSingle에서 기본 제공합니다.
+Set and get, the most basic components, are provided by RedisCluster and RedisSingle by default.
 
-- RedisCluster를 이용한 set/get 예제
+- Set/get examples with RedisCluster
 
 ```java
 String setResult = redisCluster.set(key, value);
 String getResult = redisCluster.get(key);
 ```
 
-- RedisSingle을 이용한 set/get 예제
+- Set/get examples with RedisSingle
 
 ```java
 String setResult = redisSingle.set(key, value);
 String getResult = redisSingle.get(key);
 ```
 
-- 직접 LETTUCE의 RedisAsyncCommands 객체를 사용한 예제
+- Example using RedisAsyncCommands object in LETTUCE directly
 
 ```java
 RedisFuture<String> setFuture = redisAsyncCommands.set(key, value);RedisFuture<String> getFuture = redisAsyncCommands.get(key);String setResult = Async.awaitFuture(setFuture);String getResult = Async.awaitFuture(getFuture);
 ```
 
-### 본격적인 LETTUCE 비동기 처리
+### Asynchronous Process of LETTUCE
 
-Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 통해 사용 가능합니다. 기본적으로 LETTUCE는 Sync방식의 Commands 객체와 Async방식의 Commands 객체를 제공하는데 GameAnvil은 그중 Aync방식의 사용을 권장합니다. 기본적으로 AsyncCommands는 Redis Cluster인 경우와 StandAlone인 경우에 대해 각각 아래와 같습니다.
+The various commands provided by Redis can be used through the Commands object of LETTUCE. Basically, LETTUCE provides the Commands object in Sync and the Commands object in Async. GameAnvil recommends using the Async method. Basically, AsyncCommands for Redis Cluster and StandAlone are as below:
 
 - RedisAdvancedClusterAsyncCommands
 - RedisAsyncCommands
 
-아래의 예제들은 이런 AsyncCommands 객체를 이용하여 mget을 수행하는 예제들입니다. LETTUCE의 비동기 처리는 기본적으로 RedisFuture를 사용하고 이 RedisFuture는 CompletableFuture입니다. CompletableFuture에 대한 자세한 내용은 [Java 공식 레퍼런스](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에서 확인 가능합니다. 참고로 아래의 예제들은 LETTUCE에 대한 비동기 처리의 극히 일부 방식만을 보여주고 있으므로 그대로 사용하기보다는 개발 중인 코드에 알맞게 작성하십시오. 완벽한 비동기 코드의 제어를 위해서는 반드시 [LETTUCE](https://github.com/lettuce-io/lettuce-core)와 [CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html)에 대한 내용을 숙지해야 합니다.
+The examples below are examples of using these AsyncCommands objects to perform mget. Asynchronous processing in LETTUCE uses RedisFuture by default, and this RedisFuture is a CompletableFuture. You can learn more about CompletableFuture in the [official Java reference](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html). Note that the examples below show only a small subset of asynchronous handling for LETTUCE, so don't use them verbatim, but tailor them to the code you're developing. For complete control of asynchronous code, you must familiarize yourself with [LETTUCE and](https://github.com/lettuce-io/lettuce-core) [CompletableFuture](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html).
 
-> [참고]
+> [Note]
 >
-> thenApply()와 thenAccept() 등은 임의의 외부 스레드에서 호출되므로 Node에서 관리하는 내부 리소스에 접근하거나 리소스에 대한 Lock을 사용하면 안 됩니다.
-> 
-> - 예제 1> key1과 key2에 대한 값을 비동기로 획득
+> thenApply(), thenAccept() and others are called by arbitrary external thread, do not access the internal resources managed by Node or use Lock on such resources.
+
+- Example 1> Obtain values for key1 and key2 asynchronously
 >
 > ```java
 > Lettuce.awaitFuture(asyncCommands.mget("key1", "key2"));
 > ```
 > 
-> - 예제 2> 이후의 코드 흐름과 상관없는 경우 future chain으로 외부 스레드에 처리를 위임 (즉, mget으로 값 획득을 완료할 때까지 대기할 필요가 없을 경우)
+> - Example 2> Delegate processing to an external thread with a future chain when it is irrelevant to the subsequent code flow (i.e., when you don't need to wait for mget to finish acquiring the value)
 >
 > ```java
 > RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
@@ -263,7 +263,7 @@ Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 �
 > });
 > ```
 >
-> - 예제 3> 이후의 코드 흐름과 상관있는 경우에 해당 future를 대기한 후 처리
+> - Example 3> Wait for that future and process it if it's relevant to the later code flow
 >
 > ```java
 > RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
@@ -278,7 +278,7 @@ Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 �
 > // do something here
 >
 > try {
->     // 파이버상에서 해당 future를 대기하기 위해 Lettuce.awaitFuture()를 사용해야 함을 명심하세요
+>    // Remember to use Lettuce.awaitFuture() to wait for that future on the fiber
 >     Map<String, String> map = Lettuce.awaitFuture(cs);
 >
 >     for (Entry<String, String> entry : map.entrySet())
@@ -288,27 +288,27 @@ Redis가 제공하는 다양한 커맨드들은 LETTUCE의 Commands 객체를 �
 > }
 > ```
 
-## 비동기 HttpReqeust & HttpResponse 사용법
+## How to Use Asynchronous HttpRequest & HttpResponse
 
-Http 처리에 관한 부분도 Redis와 마찬가지로 GameAnvil에서 기본적인 API와 가이드라인을 제공합니다. 물론 다른 종류의 Http 사용법 역시 선택이 가능하지만 특별한 이유가 없다면 지양하길 권합니다. GameAnvil은 비동기 기반의 Http 사용을 위해 내부적으로 [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client)를 사용합니다. 다음에서 설명할 API와 그 사용 범위를 넘는 경우에는 저희가 제공하는 API 보다 직접 [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client)를 사용하길 권합니다. LETTUCE와 마찬가지로 AsyncHttpClient도 내부적으로 CompletableFuture를 사용하므로 future에 대한 대기를 Async.awaitFuture()를 이용해 파이버화해 주기만 하면 나머지는 일반 스레드상에서의 사용법과 완전히 동일합니다.
+As with Redis, GameAnvil provides a basic API and guidelines for handling HTTP. You can of course choose to use other kinds of Http, but we recommend avoiding them unless you have a specific reason to do so. GameAnvil uses [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client)internally for asynchronous Http usage. We recommend that you use [AsyncHttpClient](https://github.com/AsyncHttpClient/async-http-client)directly rather than the API we provide if you are beyond the scope of the API and its usage. Like LETTUCE, AsyncHttpClient uses CompletableFuture internally, so all you need to do is fiber the wait for the future with Async.awaitFuture() and the rest is exactly the same as using it on a normal thread.
 
 ```java
-Async.awaitFuture(future.get()); // 파이버상에서 해당 future를 대기합니다.
+Async.awaitFuture(future.get()); // Wait for that future on the fiber.
 ```
 
-GameAnvil에서 제공하는 Http API는 요청과 응답을 위한 HttpRequest, HttpResponse 클래스 그리고 결과에 대한 일반적인 처리를 위한 HttpResultTemplate 클래스로 이루어집니다. 이 클래스들을 이용하면 간단하고 직관적으로 Http 요청과 응답을 처리할 수 있으며 그 결과를 원하는 형태로 취할 수도 있습니다. 또한 모든 코드는 비동기이므로 특별한 처리가 필요 없습니다. 다음은 이를 사용한 예제 코드들입니다.
+The Http API provided by GameAnvil consists of the HttpRequest and HttpResponse classes for requests and responses, and the HttpResultTemplate class for general handling of results. These classes allow you to handle Http requests and responses in a simple and intuitive way, and the results can take any form you want. Also, all code is asynchronous, so no special handling is required. Here is some example code that uses them.
 
-### HttpReqeust & HttpResponse 사용
-HttpRequest 라이브러리는 GameAnvil에서 오랫동안 사용되어 왔지만 관련 라이브러리가 업데이트되지 않아 사용 시 몇 가지 문제점이 발생했습니다. 이러한 문제를 해결하기 위해 내부 Http 라이브러리를 변경한 HttpRequest2 클래스를 지원합니다. 만약 HttpRequest를 사용하는 도중 문제가 발생한다면 HttpRequest2 구성으로 변경을 권장합니다. 이후 릴리즈 시 HttpReuqest2에 문제가 발생하지 않는다면 기존 HttpRequest는 제거될 수 있습니다.
+### Using HttpReqeust & HttpResponse
+The HttpRequest library has been used in GameAnvil for a long time, but the related libraries have not been updated, causing some issues when using it. To address these issues, the HttpRequest2 class exists, which has changed the internal Http library, and if you are experiencing issues while using HttpRequest, we recommend changing to the HttpRequest2 configuration. In future releases, if HttpReuqest2 does not cause issues, the existing HttpRequest may be removed.
 
-- 예제 1> 가장 기본적인 사용법 내부적으로 파이버 단위의 future 처리를 알아서 해주므로 가장 직관적인 방식입니다. 특별한 이유가 없다면 이러한 기본적인 사용법만으로도 충분합니다.
+- Example 1> The most basic usage This is the most intuitive, as it takes care of handling future on a per-fiber basis internally. Unless you have a specific reason to do otherwise, this basic usage should suffice.
 
 ```java
 HttpRequest request = new HttpRequest(URL);
 HttpResponse response = request.GET();
 ```
 
-- 예제 2> future 기반의 비동기 방식 HTTP 요청과 응답 대기 사이에 다른 작업을 하고 싶을 경우 아래와 같이 future를 직접 이용할 수 있습니다.
+- Example 2> Asynchronous HTTP requests based on future If you want to do something else between requesting and waiting for a response, you can use future directly as shown below.
 
 ```java
 HttpRequest request = new HttpRequest("abc");
@@ -319,7 +319,7 @@ CompletableFuture<Response> future = request.GETAsync();
 HttpResponse response = new HttpResponse(Async.awaitFuture(future, 10000, TimeUnit.MILLISECONDS));
 ```
 
-- 예제 3> HTTP 요청 header 구성 아래의 예제와 같이 AsyncHttpClient는 다양한 API를 제공합니다. AsyncHttpClient에 대한 자세한 사용법은 [공식 페이지](https://github.com/AsyncHttpClient/async-http-client)를 참고하십시오.
+- Example 3> Configuring HTTP request headers As shown in the example below, AsyncHttpClient provides a variety of APIs. For more information on how to use AsyncHttpClient, see the [official page](https://github.com/AsyncHttpClient/async-http-client).
 
 ```java
 HttpRequest request = new HttpRequest(url);
@@ -331,7 +331,7 @@ request.getBuilder()
 HttpResponse httpResponse = request.GET();
 ```
 
-- 예제 4> 이후의 코드 흐름과 상관없는 경우 future chain으로 외부 스레드에 처리를 위임(Lettuce의 경우와 동일한 방식)
+- Example 4> Delegate processing to an external thread with a future chain if it is irrelevant to the subsequent flow of code (same way as in the case of Lettuce)
 
 ```java
 HttpRequest request = new HttpRequest("abc");
@@ -362,7 +362,7 @@ future.thenApplyAsync(r -> {
 });
 ```
 
-- 예제 5> 이후의 코드 흐름과 상관있는 경우에 해당 future를 대기한 후 처리
+- Example 5> Wait for that future and process it if it's relevant to the later code flow
 
 ```java
 RedisFuture<List<KeyValue<String, String>>> future = asyncCommands.mget("key1", "key2");
@@ -387,7 +387,7 @@ CompletionStage<JsonObject> cs = future.thenApplyAsync(r -> {
 // do something here
 
 try {
-    // 파이버상에서 해당 future를 대기하기 위해 Async.awaitFuture()를 사용해야 한다.
+    // Remember to use Async.awaitFuture() to wait for that future on the fiber.
     JsonObject jsonObject = Async.awaitFuture(cs);
     if (jsonObject != null) {
         JsonElement element = jsonObject.get(ELEMENT_NAME);
@@ -400,11 +400,11 @@ try {
 }
 ```
 
-### HttpReqeust2 사용
+### Using HttpReqeust2
 
-위 HttpRequest 라이브러리는 GameAnvil에서 오랫동안 사용되어 왔지만 관련 라이브러리가 업데이트되지 않아 사용 시 몇 가지 문제점이 발생했습니다. 이러한 문제를 해결하기 위해 내부 Http 라이브러리를 변경한 HttpRequest2 클래스를 지원합니다. 만약 HttpRequest를 사용하는 도중 문제가 발생한다면 HttpRequest2 구성으로 변경을 권장합니다. 이후 릴리즈 시 HttpReuqest2에 문제가 발생하지 않는다면 기존 HttpRequest는 제거될 수 있습니다.
+The above HttpRequest library has been used in GameAnvil for a long time, but the related libraries have not been updated, causing some issues when using it. To solve these issues, the HttpRequest2 class exists, which changes the internal Http library, and if you encounter issues while using HttpRequest, we recommend changing to the HttpRequest2 configuration. In future releases, if HttpReuqest2 does not cause issues, the existing HttpRequest may be removed.
 
-- 예제 1> 이후의 코드 흐름과 상관있는 경우에 해당 future를 대기한 후 처리
+- Example 1> Wait for that future and process it if it's relevant to the subsequent code flow
 
 ```java
 HttpRequest2 request = new HttpRequest2(Method.GET, GET_LIST_URL);
@@ -418,21 +418,21 @@ try {
 }
 ```
 
-## RDBMS 비동기 처리
+## RDBMS asynchronous processing
 
-RDBMS에 대한 쿼리는 일반적으로 블로킹입니다. 이런 블로킹 쿼리를 GameAnvil 상에서 처리하는 방법은 앞서 살펴보았던 다른 Async 사용법과 크게 다르지 않습니다. 어떤 종류의 RDBMS를 사용하던 SQL 쿼리에 대한 코드는 동일한 방법으로 구현할 수 있습니다. 또한 엔진 사용자는 DB 접근을 위해 자유롭게 SQL Mapper나 ORM 등을 선택할 수 있습니다.
+The query for RDBMS is generally blocking. The way to process this blocking query on GameAnvil is not that different from the usage of other Asyncs. Regardless of the type of RDBMS used, the code for the SQL query can be implemented in the same way. And engine users can freely choose from SQL Mapper, ORM, or others to access DB.
 
-반면에 이러한 쿼리를 기본적으로 논블로킹 방식의 비동기 처리를 해주는 [MySQL X DevAPI](https://dev.mysql.com/doc/x-devapi-userguide/en/)나 [jasync-sql](https://github.com/jasync-sql/jasync-sql)과 같은 비동기 DB 드라이버가 있습니다. GameAnvil은 이 두 가지 모두를 지원합니다. 하지만 MySQL X DevAPI는 몇 가지 결함이 발견되어 베타 버전의 독립된 라이브러리 형태로만 제공합니다. 즉, GameAnvil은 jasync-sql을 기반으로 비동기 쿼리를 완벽하게 지원합니다. 특별한 이유가 없다면 사용자도 jasync-sql을 사용하길 제안합니다.
+On the other hand, there are asynchronous DB drivers such as the [MySQL X](https://dev.mysql.com/doc/x-devapi-userguide/en/)DevAPI or [jasync-sql](https://github.com/jasync-sql/jasync-sql)that provide native, non-blocking asynchronous processing of these queries. GameAnvil supports both of these. However, MySQL X DevAPI has been found to have some flaws and is only available as a standalone library in beta. That said, GameAnvil has full support for asynchronous queries based on jasync-sql, and we suggest that you use jasync-sql as well, if for no other reason.
 
-### 블로킹 쿼리
+### Blocking queries
 
-블로킹 쿼리는 호출 스레드를 블로킹하므로 반드시 처리해 줘야 합니다. 이런 블로킹 쿼리에 대한 비동기 처리는 쿼리의 결과가 필요한 경우와 그렇지 않은 경우로 나눌 수 있습니다. 이 두 경우는 쿼리의 결과 유무에만 차이가 있으며, 전체 쿼리 수행이 완료될 때까지 해당 파이버가 대기하는 것은 동일합니다. 즉, 비동기로 요청한 쿼리가 완료된 뒤 다음 코드로 진행되므로 엔진 사용자는 일반적인 블로킹 코드를 작성하듯이 구현할 수 있습니다.
+Because blocking queries block the calling thread, they must be handled asynchronously. Asynchronous handling of these blocking queries can be divided into two main categories. The only difference between these two cases is whether the result of the query is needed or not, and the fiber waits until the entire query execution is complete. This means that the asynchronously requested query completes and then proceeds to the next code, so engine users can implement it as if they were writing normal blocking code.
 
-> [참고]
+> [Note]
 > 
-> DB에 대한 쿼리를 구현하는 과정에서 가장 중요하지만 흔히 놓치는 부분은 DB에 대한 CP(ConnectionPool) 크기와 이를 비동기로 처리할 TP(ThreadPool)의 개수에 대한 설정과 이들 사이의 관계에 대한 이해입니다. 일반적으로 이들 두 수치는 처리할 쿼리의 양을 고려하여 동일한 값으로 설정하거나 TP를 CP보다 조금 더 넉넉하게 설정하면 됩니다. 참고로 GameAnvil를 이용한 대규모 성능 테스트 결과, 서버 프로세스 하나당 6000~8000명 처리 기준 TP와 CP 250개 설정이 가장 좋은 결과를 보여주었습니다. 이는 어디까지나 쿼리 복잡도와 빈도 등 복합적인 요소를 고려하여 가능한 많은 테스트를 거쳐 최적의 값을 찾는 것이 최선입니다.
+> The most important thing while implementing the query for DB but often overlooked is the size of CP (ConnectionPool) for DB, the number of TPs (ThreadPool) to asynchronously process them, and understanding of the relationship between them. These two values are usually set the same, considering the amount of queries to be processed or set TP slightly larger than CP. For your information, in a large scale performance test using GameAnvil, setting TP for 6000~8000 people and CP for 250 per server process showed the optimal result. It is important to find the optimal value by running as many tests as possible considering the complex elements such as the complexity and frequency of query.
 
-첫째, 쿼리의 결과를 획득하고자 할 경우에는 다음의 예제와 같이 Async 클래스의 callBlocking API를 사용합니다. callBlocking은 파이버상에서 임의의 블로킹 호출을 수행한 후 결과를 반환합니다.
+> First, when the user wants to obtain the query result, they need to use the callBlocking API of the Async class as shown in the example below. callBlocking calls an arbitrary blocking and returns the result.
 
 ```java
 try {
@@ -449,19 +449,19 @@ try {
 logger.info("Query has finished.");
 ```
 
-이때, 비동기 처리를 위한 스레드 풀은 Bootstrap 단계에서 미리 생성해 둘 수 있습니다.
+At this time, the thread pool for processing asynchronously can be created during the Bootstrap step.
 
 ```
 gameAnvilServer.createExecutorService("MyThreadPool", 250);
 ```
 
-혹은 엔진 사용자가 필요에 따라 직접 생성한 외부 스레드 풀을 사용할 수도 있습니다.
+Or if it is necessary, engine users may use the external thread pool directly created.
 
 ```
 gameAnvilServer.createExecutorService(myExecutorService, 250);
 ```
 
-둘째, 쿼리의 결과가 필요 없는 경우에는 다음의 예제와 같이 Async 클래스의 runBlocking API를 사용합니다. runBlocking은 파이버상에서 임의의 블로킹 호출을 수행합니다.
+Second, when the user does not need to obtain the query result, they need to use the runBlocking API of the Async class as shown in the example below. runBlocking calls arbitrary blocking on Fiber.
 
 ```java
 try {
@@ -482,19 +482,19 @@ try {
 logger.info("Query has finished.");
 ```
 
-이 경우도 마찬가지로 임의의 스레드 풀을 runBlocking API에 매개변수로 전달할 수 있습니다.
+In this case, the arbitrary thread pool can be passed to runBlocking API as a parameter.
 
-### 논블로킹 비동기 쿼리
+### Non-Blocking Asynchronous Queries
 
-앞서 설명하였듯이 GameAnvil은 jasync-sql을 기본 비동기 DB 드라이버로 사용합니다. 그 사용법은 매우 직관적이고 쉽기 때문에 기존의 블로킹 쿼리보다 코드 생산성이 올라가며 그 성능 또한 훨씬 우수합니다.  우선 GameAnvil에서 제공하는 Jasync-sql를 사용하기 위해서는 다음과 같은 import문을 추가합니다.
+As mentioned earlier, GameAnvil uses jasync-sql as its default asynchronous DB driver, which is very intuitive and easy to use, resulting in more productive code and much better performance than traditional blocking queries.  First of all, to use the Jasync-sql provided by GameAnvil, add the following import statement
 
 ```java
 import com.nhn.gameanvil.async.db.JAsyncSql
 ```
 
-JasyncSql 클래스는 비동기 쿼리를 위한 기능을 GameAnvil 파이버상에서 유연하게 동작하도록 지원합니다. 일반적으로 특별한 이유가 없다면 노드당 하나의 JasyncSql 객체를 만들어 두고 사용하는 것이 가장 좋습니다. 그리고 비동기 쿼리를 사용할 때는 블로킹 방식과 달리 사용자가 별도의 스레드 풀이나 커넥션 풀을 생성할 필요가 없습니다.
+The JasyncSql class provides functionality for asynchronous queries to work flexibly over the GameAnvil fiber. In general, it is best to create and use one JasyncSql object per node unless there is a specific reason to do so. And unlike blocking, asynchronous queries do not require the user to create a separate thread pool or connection pool when using them.
 
-다음은 JasyncSql 객체를 생성하는 코드입니다. 인자 중 64개의  최대 활성 커넥션 수는 사용 용도와 쿼리 빈도에 맞춰 최적화할 수 있습니다.
+Here is the code to create a JasyncSql object. The maximum number of active connections of 64 in the argument can be optimized for your usage and query frequency.
 
 ```java
 JAsyncSql jasyncSql = new JAsyncSql(new com.github.jasync.sql.db.Configuration(
@@ -502,31 +502,31 @@ JAsyncSql jasyncSql = new JAsyncSql(new com.github.jasync.sql.db.Configuration(
                                     "127.0.0.1",
                                     13306,
                                     "%gameanvil1",
-                                    "GameDB_1"), 64));  // 64개의 최대 활성 커넥션
+                                    "GameDB_1"), 64)); // 64 maximum active connections
 ```
 
-JasyncSql 객체를 통해 비동기 쿼리를 요청한 후 CompletableFuture를 반환 받을 수 있습니다. 일반적인 future 기반의 비동기 코드입니다.
+You can request an asynchronous query through a JasyncSql object and get a CompletableFuture returned. This is typical future-based asynchronous code.
 
 ```java
 CompletableFuture<QueryResult> future = jasyncSql.executeAsync("SELECT * FROM UserInfo");
 
-... // do something others
+... // do something else
 
-Async.awaitFuture(future); // 해당 파이버 상에서 비동기로 future를 대기
+Async.awaitFuture(future); // wait for future asynchronously on that fiber
 ```
 
-또한 쿼리 결과를 바로 획득하기 위해 해당 파이버에 대한 대기를 내포하는 동기화 API도 제공합니다.
+It also provides a synchronization API that implicitly waits on that fiber to get the query results immediately.
 
 ```java
 QueryResult result = jasyncSql.execute("SELECT * FROM UserInfo");
 ```
 
-이 코드는 앞서 살펴본 future 기반의 비동기 코드를 하나로 함축한 것과 동일합니다. 이 모든 코드는 스레드 단위로 비동기화를 하는 것이 아니라 파이버 단위로 동작합니다.
+This code is the same as the future-based asynchronous code we saw earlier, all rolled into one. All of this code works on a per-fiber basis, rather than asynchronizing on a per-thread basis.
 
-### 논블로킹 비동기 쿼리 vs 블로킹 쿼리
+### No-blocking asynchronous queries vs. blocking queries
 
-이 두 방식은 사용법과 코드 생산성뿐만 아니라 성능 또한 확연하게 차이가 납니다. 동일한 환경에서 두 가지 쿼리 방식의 성능을 측정한 결과는 아래의 그림과 같습니다.
+In addition to the usage and code productivity differences between the two methods, there is a significant difference in performance.  We measured the performance of the two query methods in the same environment, and the results are shown in the figure below.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/mysql-async-performance.png)
 
-jasync-sql 기반의 비동기 쿼리가 가장 성능이 높습니다. 이는 Mapper나 ORM을 사용한 블로킹 쿼리에 비해 약 2배의 성능 향상을 보여줍니다.  그런 측면에서 GameAnvil은 사용자들로 하여금 특별한 이유가 없다면 이러한 비동기 쿼리의 사용을 지향할 것을 제안합니다.
+Asynchronous queries based on jasync-sql are the most performant, showing about a 2x performance improvement over blocking queries using Mapper or the ORM. In that respect, GameAnvil suggests that users should strive to use these asynchronous queries unless there is a specific reason not to.
