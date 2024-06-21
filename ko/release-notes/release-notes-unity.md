@@ -1,5 +1,18 @@
 ## Game > GameAnvil > 릴리스 노트 > Connector-CSharp 
 
+### 1.4.0 (2023.12.13)
+
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.4.0.unitypackage)
+
+#### New
+Payload에서 압축 패킷을 지원합니다. protobuf 3.24.1로 업데이트되었으며, Protocol 등록 시 index를 지정하지 않아도 되도록 개선되었습니다.
+
+#### Change
+로그인 시 잘못된 ChannelId를 입력할 경우 SystemError 응답 대신 Login 실패 응답을 주도록 수정되었습니다.
+
+#### Fix
+CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수정되었습니다.
+
 ### 1.3.0 (2022.12.27)
 
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.3.0.unitypackage)

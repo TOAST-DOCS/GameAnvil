@@ -1,4 +1,63 @@
 ## Game > GameAnvil > 릴리스 노트 > GameAnvil
+### 1.4.2 (2024.02.26)
+
+#### New
+* Safe-Pause 기능을 개선했습니다. 
+  * 이미 Safe-Pause가 진행중인 경우라도, 진행중이 아닌 노드를 출발지/도착지 노드로 지정하여 새로운 Safe-pause를 실행할 수 있도록 개선했습니다. 
+  * GameNode 와 더불어 MatchNode 도 Safe-Paue를 지원합니다. 
+
+#### Fix
+* 엔진의 로그 내용을 보강하고 가독성을 개선했습니다. 
+  * request 실패시 보내는 패킷의 자세한 정보 추가했습니다.
+  * 시스템 정보 로그에 대한 마커를 SYSTEM_INFO 하나에서 SYSTEM_INFO와 SYSTEM_WARN으로 분리하였습니다.
+  * MultiRequest에서 개별 요청이 실패할 경우 어떤 요청이 실패했는지 로그를 남기도록 했습니다.
+  * 머신간 연결 상태와 관련된 로그 내용을 보강했습니다. 
+
+#### Change
+* GameAnvilConfig.json 에서 managementIp와 더불어 managementPort도 설정할 수 있도록 변경되었습니다.
+
+------
+
+### 1.4.1 (2023.12.13)
+
+#### New
+###### 엔진 Protobuf 버전을 3.24.1로 업데이트
+###### Protobuf 관련 편의 기능 추가
+  * send, reply에서 Protobuf를 직접 사용할 수 있습니다.
+  * 패킷을 직접 Protobuf로 변경할 수 있습니다. (`MyProto.MyMessage resMsg = resPacket.toProtoBufferMessage();`)
+  * 대부분의 상황에서 retain release를 호출하지 않아도 정상적으로 동작합니다.
+###### Protocol 등록 시 index를 지정하지 않아도 되도록 개선 
+  * 기존 number는 엔진에서 자동으로 할당합니다.
+
+#### Fix
+* 서버에서 Request 호출 시 대상이 없으면 즉각 실패 응답을 하도록 개선했습니다.
+    * 엔진의 requestToGameUser와 같은 요청(request) API를 호출했을 때 대상을 찾지 못하면 Timeout까지 기다리는 대신 즉시 실패를 반환하도록 개선했습니다.
+* 엔진의 로그 내용을 보강하고 가독성 개선
+    * 엔진 로그 중 DEBUG와 TRACE 레벨을 모두 체계적으로 분리하고 내용을 이해하기 쉽게 정리했습니다.
+    * 유저와 관련된 엔진의 로그 내용을 보강했습니다.
+    * 일부 엔진 오류 메시지를 이해하기 쉽도록 개선했습니다.
+* 매니지먼트 노드는 로케이션 노드가 구성될 때만 함께 구동되도록 개선했습니다.
+    * 매니지먼트 노드가 로케이션 노드 구성 위치에서 자동으로 구동되므로 더 이상 사용자가 직접 설정하고 관리할 필요가 없습니다. 또한 구동 순서도 신경쓸 필요가 없습니다.
+* 로그인 과정에서 잘못된 채널ID를 입력할 경우에 대한 응답을 개선했습니다.
+    * 이제 막연한 SystemError 응답 대신 로그인 실패 응답을 주도록 수정하여 더욱 명확해졌습니다.
+* 등록되지 않은 프로토콜이 페이로드에 담겨 게임 서버로 전달될 경우 서버에서 오류를 처리하고 클라이언트로 응답을 전달하도록 개선
+    * 기존 서버에 WARN 로그만 남기던 방식의 경우 디버깅 과정에서 로그를 놓칠 수 있는 문제가 있어 클라이언트로 응답을 전달하도록 개선했습니다.
+* Apache HttpComponent 기반의 새로운 HttpClient2를 제공합니다.
+    * 기존의 AsyncHttpClient 오픈소스가 더 이상 업데이트되지 않으므로 선택적으로 사용할 수 있도록 새로운 라이브러리 기반의 HttpClient2를 제공합니다.
+* 페이로드에서 압축 패킷을 지원합니다.
+    * 이제 페이로드에도 압축 패킷을 사용할 수 있도록 개선했습니다.
+* 매치 메이킹 실패 시에 클라이언트로 알림을 전달합니다.
+    * 매치 메이킹이 실패했을 때에도 클라이언트로 적절한 결과를 전달하도록 개선했습니다.
+
+#### Change
+* 설정
+    * GameAnvilConfig.json에서 ip 항목 대신 ipcIp와 managementIp를 사용합니다.
+    * BaseChannelInfo에서 정상적으로 직렬화하지 않는 문제를 수정했습니다. BaseChannelInfo 대신 GameAnvilServer에서 setObjectSerializer를 호출하여 직렬화할 수 있습니다.
+* matchUser, matchParty 호출 시 Payload를 넣지 않습니다. 자체적으로 보관합니다.
+ * 모든 로케이션 노드(마스터 노드)가 클러스터링이 완료된 이후에만 로케이션 노드로 요청을 보낼 수 있도록 수정했습니다. 모든 로케이션 노드가 클러스터링이 완료되었는지 확인하고, 일정 시간 내에 전체 클러스터링이 완료되지 않을 경우 오류 로그를 남기는 기능을 추가했습니다.
+ * 유저 매칭 시 랜덤 채널에서 매칭된 룸이 생성되던 기존 방식에서 매칭을 요청한 채널 중에서 매칭된 룸이 생성되는 방식으로 변경했습니다.
+  
+------
 
 ### 1.3.1 (2023.04.20)
 
@@ -179,7 +238,7 @@ public class GameUser extends BaseUser {
   * 사용자가 쉽게 비동기 sql를 처리하도록 지원
   
 * 사용자 가이드 문서 보강
-  * 하나의 문서에 함축적으로 나열되어 있던 여러가지 중요한 주제들을 모두 별도의 메뉴로 구성하여 그 내용의 질과 양을 업그레이드 하였습니다
+  * 하나의 문서에 함축적으로 나열되어 있던 여러 중요한 주제들을 모듈화하여 문서의 질과 양을 업그레이드하였습니다.
   * 튜토리얼을 통해 쉽고 간단하지만 꽤 멋진 직소 퍼즐 게임(서버&클라이언트)을 직접 개발해 볼 수 있습니다. 
   * JavaDoc API 레퍼런스에서 내용이 부족하거나 누락된 부분을 모두 보충하였습니다. 또한 설명이 애매하거나 잘못 이해될 수 있는 문장들을 모두 다듬었습니다.
 
@@ -247,12 +306,12 @@ public class GameUser extends BaseUser {
 | GameAnvilTopic.ALL\_GAME\_USER | 게임 노드에 있는 모든 게임 유저 객체 | GameUser |
 
 
-* 예외 처리 및 메소드 시그니쳐 최적화
+* 예외 처리 및 메서드 시그니처 최적화
 
 
-  * 무분별하게 사용된 예외 처리와 메소드 시그니처를 정리하고 사용자에게 필요한 정보만 넘겨주도록 수정
+  * 무분별하게 사용된 예외 처리와 메서드 시그니처를 정리하고 사용자에게 필요한 정보만 넘겨주도록 수정
 
-* HttpRequest에 PATCH 메소드 추가
+* HttpRequest에 PATCH 메서드 추가
 * 인증서 없이 테스트용으로 SSL를 사용할 수 있는 기능 설정명이 useSelf에서 useSelfSignedCert으로 변경되었습니다.
 
 ---
@@ -289,7 +348,7 @@ public class GameUser extends BaseUser {
 
 #### Change
 
-* HttpReqest에 PATCH 메소드를 사용할 수 있는 API 추가
+* HttpReqest에 PATCH 메서드를 사용할 수 있는 API 추가
     * httpRequest.PATCH()
     * httpRequest.PATCH(AsyncHttpCompletionHandler asyncHttpCompletionHandler)
     * httpRequest.PATCHAsync()

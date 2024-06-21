@@ -6,9 +6,9 @@ UserAgent의 기본 기능 외에 Request()와 Send()를 이용하여 메시지�
 
 ### 메시지 생성
 
-GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/proto3)를 사용합니다. .proto 파일에 메시지를 정의하고, protoc 컴파일러로 실제 클래스 소스 코드를 생성하게 됩니다. 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. protoc 컴파일러는 GameAnvil/protoc 폴더에서 찾을 수 있습니다.  protoc에 대한 자세한 설명은 [여기](https://developers.google.com/protocol-buffers/docs/proto3#generating)를 참고하세요.
+GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/proto3)를 사용합니다. .proto 파일에 메시지를 정의하고, protoc 컴파일러로 실제 클래스 소스 코드를 생성하게 됩니다. 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. protoc 컴파일러는 GameAnvil/protoc 폴더에서 찾을 수 있습니다.  protoc에 대한 자세한 설명은 [여기](https://developers.google.com/protocol-buffers/docs/proto3#generating)를 참고하십시오.
 
-이제 메시지를 만들어 보도록 하겠습니다. 먼저 Assets 폴더 아래에 protocols 폴더를 생성하고 다음과 같이 messages.proto 파일을 생성합니다.
+이제 메시지를 만들기 위해 Assets 폴더 아래에 protocols 폴더를 생성하고 다음과 같이 messages.proto 파일을 생성합니다.
 
 ```protobuf
 // messages.proto
@@ -47,11 +47,10 @@ message SampleReceive
 
 ### 메시지 등록
 
-새로 생성한 메시지를 사용하려면 사용할 메시지를 ProtocolManager에 서버와 같은 값으로 미리 등록해야 합니다. 미리 등록하지 않거나 서버와 다르면, 동작하지 않거나 오동작 하거나 예외가 발생할 수 있습니다.
+새로 생성한 메시지를 사용하려면 사용할 메시지를 ProtocolManager에 미리 등록해야 합니다. 미리 등록하지 않으면, 동작하지 않거나 오동작하거나 예외가 발생할 수 있습니다.
 
 ```c#
-// 서버와 같은 값으로 등록해야 한다.
-ProtocolManager.getInstance().RegisterProtocol(0, Messages.MessagesReflection.Descriptor);
+ProtocolManager.getInstance().RegisterProtocol(Messages.MessagesReflection.Descriptor);
 ```
 
 ### 메시지 전송
@@ -60,24 +59,24 @@ Request()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 
 
 ```c#
 /// <summary>
-/// 유저 에이전트를 사용 해서 프로토 버프 메세지 전송
+/// 유저 에이전트를 사용해 프로토 버프 메시지 전송
 /// </summary>
-/// <typeparam name="T">프로토 버프 타입 메세지</typeparam>
+/// <typeparam name="T">프로토 버프 타입 메시지</typeparam>
 /// <param name="agent">전송할 유저 에이전트</param>
-/// <param name="message">전송할 프로토 버프 메세지</param>
-/// <param name="action">응답 처리 할 동작</param>
+/// <param name="message">전송할 프로토 버프 메시지</param>
+/// <param name="action">응답 처리할 동작</param>
 static public void Request<T>(User.UserAgent agent, IMessage message, Action<User.UserAgent, T> action) where T : IMessage;
 
 /// <summary>
-/// 유저 에이전트를 사용 해서 패킷 전송
+/// 유저 에이전트를 사용해 패킷 전송
 /// </summary>
 /// <param name="agent">전송할 유저 에이전트</param>
 /// <param name="packet">전송할 패킷</param>
-/// <param name="action">응답 처리 할 동작</param>
+/// <param name="action">응답 처리할 동작</param>
 static public void Request(User.UserAgent agent, Packet packet, Action<User.UserAgent, Packet> action);
 ```
 
-Request 응답을 받기 위해 리스너를 등록하는 방법도 있는데, 이는 [Unity 심화 개발 가이드 > 메세지 핸들링](../unity-advanced/unity-advanced-04-message-handling.md)에서 확인하실 수 있습니다.
+Request 응답을 받기 위해 리스너를 등록하는 방법도 있는데, 이는 [Unity 심화 개발 가이드 > 메시지 핸들링](../unity-advanced/unity-advanced-04-message-handling.md)에서 확인할 수 있습니다.
 
 지정된 시간 내에 응답이 오지 않으면 타임아웃을 발생시키고 다음 메시지를 처리합니다. 타임아웃은 UserAgent.OnErrorCommandListeners 리스너와 UserAgent.OnErrorCustomCommandListeners 리스너에 ErrorCode.TIMEOUT으로 전달됩니다.
 

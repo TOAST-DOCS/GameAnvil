@@ -1,46 +1,46 @@
-## Game > GameAnvil > Error Code
+## Game > GameAnvil > Error Codes
 
 ## Client
 
 | ResultCode | Name | Value | Description |
 | ---- | ---- | ---- | ---- |
-| ErrorCode                 | SUCCESS                                     |     0 | Success                                                         |
+| ErrorCode                 | SUCCESS                                     |     0 | Successful                                                         |
 |                           | SYSTEM_ERROR                                |     1 | System error                                                  |
 |                           | TIMEOUT                                     |    -1 | Timeout                                                    |
-| ResultCodeConnect         | CONNECT_SUCCESS                             |     0 | Connection success                                                    |
+| ResultCodeConnect         | CONNECT_SUCCESS                             |     0 | Connection succeeded                                                    |
 |                           | CONNECT_FAIL                                |     1 | Connection failed                                                    |
-|                           | CONNECT_ALREADY_CONNECTED                   |     2 | Already connected                                           |
+|                           | CONNECT_ALREADY_CONNECTED                   |     2 | Already connected.                                           |
 |                           | CONNECT_ALREADY_REQUEST                     |     3 | Already trying to connect.                                           |
-| ResultCodeAuth            | AUTH_SUCCESS                                |     0 | Authentication successful                                                    |
+| ResultCodeAuth            | AUTH_SUCCESS                                |     0 | Authentication succeeded                                                    |
 |                           | AUTH_FAIL_CONTENT                           |   201 | Authentication failed. Rejected from content.                                |
-|                           | AUTH_FAIL_MAINTENANCE                       |   202 | Authentication failed. Under maintenance.                                           |
+|                           | AUTH_FAIL_MAINTENANCE                       |   202 | Authentication failed. Checking.                                           |
 |                           | AUTH_FAIL_INVALID_ACCOUNT_ID                |   203 | Authentication failed. Invalid AccountId.                               |
-| ResultCodeChannelList     | CHANNEL_LIST_SUCCESS                        |     0 | Retrieve channel list success                                      |
-|                           | CHANNEL_LIST_FAIL_INVALID_SERVICEID         |  1801 | Failed to retrieve channel list. Invalid service ID.               |
-| ResultCodeChannelInfo     | CHANNEL_INFO_SUCCESS                        |     0 | Channel information retrieval success                                      |
-|                           | CHANNEL_INFO_FAIL_INVALID_SERVICEID         |  1901 | Failed to retrieve channel information. Invalid service ID.                |
-| ResultCodeLogin           | LOGIN_SUCCESS                               |     0 | Login successful |
-|                           | LOGIN_FAIL_CONTENT                          |   301 | Failed to log in. Rejected from content.                                  |
-|                           | LOGIN_FAIL_NOT_EXIST_NODE                   |   302 | Failed to log in. Node does not exist.                               |
-|                           | LOGIN_FAIL_MAINTENANCE                      |   303 | Failed to log in. Under maintenance.                                             |
-|                           | LOGIN_FAIL_TIMEOUT_GAME_SERVER              |   304 | Failed to log in. Game server does not respond.                           |
-|                           | LOGIN_FAIL_INVALID_SERVICEID                |   310 | Failed to log in. Invalid service ID.                               |
-|                           | LOGIN_FAIL_INVALID_USERTYPE                 |   311 | Failed to log in. Invalid user type.                                   |
-|                           | LOGIN_FAIL_INVALID_USERID                   |   312 | Failed to log in. Invalid user ID.                                 |
-|                           | LOGIN_FAIL_INVALID_SUB_ID                   |   313 | Failed to log in. Invalid SubId.                                       |
-|                           | LOGIN_FAIL_LOGINED_OTHER_SERVICE            |   320 | Failed to log in. Already logged into another service.                      |
-|                           | LOGIN_FAIL_LOGINED_OTHER_CHANNEL            |   321 | Failed to log in. Logged into another channel.                        |
-|                           | LOGIN_FAIL_LOGINED_OTHER_USER_TYPE          |   322 | Failed to log in. A different UserType is logged in using the same account ID. |
-|                           | LOGIN_FAIL_LOGINED_OTHER_DEVICE             |   323 | Failed to log in. A different DeviceId is logged in using the same account ID. |
-| ResultCodeLogout          | LOGOUT_SUCCESS                              |     0 | Logout success.                                                   |
-|                           | LOGOUT_FAIL_CONTENT                         |   401 | Failed to log out. Rejected from content.                                 |
-| ResultCodeCreateRoom | CREATE_ROOM_SUCCESS                  |     0 | Room creation success.                   |
-|                      | CREATE_ROOM_FAIL_CONTENT             |   601 | Failed to create a room. Rejected from content. |
-|                      | CREATE_ROOM_FAIL_ALREADY_<br/>JOINED_ROOM |   602 | Failed to create a room. Already in a room. |
-|                      | CREATE_ROOM_FAIL_CREATE_ROOM_ID      |   603 | Failed to create a room. Failed to issue a room ID |
-| ResultCodeJoinRoom | JOIN_ROOM_SUCCESS                  |     0 | Joined a room.                   |
-|                    | JOIN_ROOM_FAIL_CONTENT             |   701 | Failed to join a room. Rejected from content. |
-|                    | JOIN_ROOM_FAIL_ROOM_<br/>DOES_NOT_EXIST |   702 | Failed to join a room. The room does not exist. |
+| ResultCodeChannelList     | CHANNEL_LIST_SUCCESS                        |     0 | Importing the channel list succeeded                                      |
+|                           | CHANNEL_LIST_FAIL_INVALID_SERVICEID         |  1801 | Failed to import chanel list. Invalid service id.               |
+| ResultCodeChannelInfo     | CHANNEL_INFO_SUCCESS                        |     0 | Importing the channel information succeeded                                      |
+|                           | CHANNEL_INFO_FAIL_INVALID_SERVICEID         |  1901 | Failed to get channel information. Invalid service ID                |
+| ResultCodeLogin           | LOGIN_SUCCESS                               |     0 | Login succeeded |
+|                           | LOGIN_FAIL_CONTENT                          |   301 | Login failed. Rejected from content.                                  |
+|                           | LOGIN_FAIL_NOT_EXIST_NODE                   |   302 | Login failed. Node does not exist.                               |
+|                           | LOGIN_FAIL_MAINTENANCE                      |   303 | Login failed. Checking.                                             |
+|                           | LOGIN_FAIL_TIMEOUT_GAME_SERVER              |   304 | Login failed. Game server not responding.                           |
+|                           | LOGIN_FAIL_INVALID_SERVICEID                |   310 | Login failed. Invalid service ID.                               |
+|                           | LOGIN_FAIL_INVALID_USERTYPE                 |   311 | Login failed. Invalid user type.                                   |
+|                           | LOGIN_FAIL_INVALID_USERID                   |   312 | Login failed. Invalid username.                                 |
+|                           | LOGIN_FAIL_INVALID_SUB_ID                   |   313 | Login Failed. Invalid SubId.                                       |
+|                           | LOGIN_FAIL_LOGINED_OTHER_SERVICE            |   320 | Login failed. You're signed in to another service.                      |
+|                           | LOGIN_FAIL_LOGINED_OTHER_CHANNEL            |   321 | Login failed. You're signed in to a different channel.                        |
+|                           | LOGIN_FAIL_LOGINED_OTHER_USER_TYPE          |   322 | Login failed. A different UserType is logged in with the same Account ID. |
+|                           | LOGIN_FAIL_LOGINED_OTHER_DEVICE             |   323 | Login failed. Another DeviceId is logged in with the same Account ID. |
+| ResultCodeLogout          | LOGOUT_SUCCESS                              |     0 | Logout succeeded.                                                   |
+|                           | LOGOUT_FAIL_CONTENT                         |   Appkey is invalid | Logout failed. Rejected from content.                                 |
+| ResultCodeCreateRoom | CREATE_ROOM_SUCCESS                  |     0 | Room creation succeeded.                   |
+|                      | CREATE_ROOM_FAIL_CONTENT             |   601 | Room creation failed. Rejected from content. |
+|                      | CREATE_ROOM_FAIL_ALREADY_<br/>JOINED_ROOM |   602 | Room creation failed. Already in a room. |
+|                      | CREATE_ROOM_FAIL_CREATE_ROOM_ID      |   603 | Room creation failed. Failed to issue room ID |
+| ResultCodeJoinRoom | JOIN_ROOM_SUCCESS                  |     0 | Joined the room.                   |
+|                    | JOIN_ROOM_FAIL_CONTENT             |   701 | Failed to join the room. Rejected from content. |
+|                    | JOIN_ROOM_FAIL_ROOM_<br/>DOES_NOT_EXIST |   702 | Failed to join the room. The room does not exist. |
 |                    | JOIN_ROOM_FAIL_ALREADY_<br/>JOINED_ROOM |   703 | Failed to join a room. Already in a room. |
 | ResultCodeLeaveRoom | LEAVE_ROOM_SUCCESS      |     0 | Left the room.              |
 |                     | LEAVE_ROOM_FAIL_CONTENT |   801 | Failed to leave the room. Rejected from content. |
@@ -68,31 +68,31 @@
 | ResultCodeMatchPartyCancel | MATCH_PARTY_CANCEL_SUCCESS                |     0 | Canceled party matching.                                           |
 |                            | MATCH_PARTY_CANCEL_FAIL_CONTENT           |  1401 | Failed to cancel party matching. Rejected from content.                           |
 |                            | MATCH_PARTY_CANCEL_FAIL_PARTY_<br/>MATCH_WEIRD |  1402 | Failed to cancel party matching. When the room is not for party matching when party matching is canceled. |
-| ResultCodeMatchUserDone | MATCH_USER_DONE_SUCCESS                  |     0 | User matching (party matching) success                                           |
-|                         | MATCH_USER_DONE_FAIL_CONTENT             |  1501 | User matching (party matching) failed. Rejected from content (couldn't find the room that meets the conditions). |
+| ResultCodeMatchUserDone | MATCH_USER_DONE_SUCCESS                  |     0 | Successful user match (party match).                                           |
+|                         | MATCH_USER_DONE_FAIL_CONTENT             |  1501 | User match (party match) failed. Rejected by content (no rooms found for the sword). |
 |                         | MATCH_USER_DONE_FAIL_ROOM_<br/>DOES_NOT_EXIST |  1502 | Failed to match users (party matching). The room that meets the condition disappears while entering it. |
 | ResultCodeMoveChannel | MOVE_CHANNEL_SUCCESS                     |     0 | Moved a channel.                                      |
 |                       | MOVE_CHANNEL_FAIL_CONTENT                |  1601 | Failed to move a channel. Rejected from content.                   |
 |                       | MOVE_CHANNEL_FAIL_NODE_<br/>NOT_FOUND    |  1602 | Failed to move a channel. Cannot find the channel node.            |
 |                       | MOVE_CHANNEL_FAIL_ALREADY_<br/>JOINED_CHANNEL |  1603 | Failed to move a channel. Already in the requested channel.             |
 |                       | MOVE_CHANNEL_FAIL_ALREADY_<br/>JOINED_ROOM |  1604 | Failed to move a channel. Cannot move a channel as the user already joined a channel. |
-| ResultCodeDisconnect | FORCE_CLOSE_SYSTEM_ERROR            |  2000 | Forcibly closed due to system error.<br />It is unlikely for client to receive this code. If you received this code, contact the GameAnvil development team. |
+| ResultCodeDisconnect | FORCE_CLOSE_SYSTEM_ERROR            |  2000 | Forced shutdown due to a system error.<br />It is rare for clients to receive this code, and if you do, please contact the GameAnvil development team. |
 |                      | FORCE_CLOSE_BASE_CONNECTION         |  2010 | Calls the close() of BaseConnection from the server                       |
 |                      | FORCE_CLOSE_BASE_USER               |  2011 | Calls the closeConnection() of BaseUser from the server                   |
-|                      | FORCE_CLOSE_ADMIN_KICK              |  2012 | Forcibly shut down from Admin.                                         |
-|                      | FORCE_CLOSE_MAINTENANCE             |  2020 | Forcibly shut down due to server maintenance.                                |
+|                      | FORCE_CLOSE_ADMIN_KICK              |  2012 | Force shutdown from Admin.                                         |
+|                      | FORCE_CLOSE_MAINTENANCE             |  2020 | Forced shutdown due to server maintenance.                                |
 |                      | FORCE_CLOSE_INVALID_NODE            |  2021 | When the status of GameNode has changed to invalid.                       |
 |                      | FORCE_CLOSE_USER_TRANSFER_FAIL      |  2022 | When user transfer failed.                                 |
 |                      | FORCE_CLOSE_USER_TRANSFER_ERROR     |  2023 | When a system error occurs while transferring user.                   |
 |                      | FORCE_CLOSE_AUTHENTICATION_FAIL     |  2030 | Forcibly shut down due to authentication failure.                                  |
 |                      | FORCE_CLOSE_DUPLICATE_LOGIN         |  2031 | Forcibly shut down due to duplicate login.                                 |
-|                      | FORCE_CLOSE_BY_NEW_CONNECTION       |  2040 | When a new login request is received to the same account information and<br />the user tries to reconnect to the network due to a temporary power shortage, sever the existing connection and use this code.<br />It is not likely the user would receive this code, so if you received this code, contact the GameAnvil development team. |
-|                      | FORCE_CLOSE_DISCONNECT_ALARM        |  2041 | If the session information cannot be found,.<br />the client rarely receives this code. Please contact the GameAnvil development team if this code is received. |
-|                      | FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL |  2042 | If the client does not respond to the server status check,.<br />the client rarely receives this code. Please contact the GameAnvil development team if this code is received. |
-|                      | FORCE_CLOSE_GHOST_USER              |  2043 | For a ghost user,.<br />the client rarely receives this code. Please contact the GameAnvil development team if this code is received. |
-|                      | SOCKET_DISCONNECT                   |  2100 | The network connection is lost.<br />The client rarely receives this code. Please contact the GameAnvil development team if this code is received. |
-|                      | SOCKET_TIME_OUT                     |  2101 | A timeout occurred and the connector severed the connection.<br />The client rarely receives this code. Please contact the GameAnvil development team if this code is received. |
-|                      | SOCKET_ERROR                        |  2102 | The connection is severed due to a socket error.<br />The client rarely receives this code. Please contact the GameAnvil development team if this code is received. |
+|                      | FORCE_CLOSE_BY_NEW_CONNECTION       |  2040 | A new login request comes in with the same account information. <br />When you reconnect, for example, to a network drop, use this code to terminate the previous connection.<br />It is rare for clients to receive this code, and if you do, please contact the GameAnvil development team. |
+|                      | FORCE_CLOSE_DISCONNECT_ALARM        |  2041 | Can't find session information.<br />It is rare for clients to receive this code, and if you do, please contact the GameAnvil development team. |
+|                      | FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL |  2042 | The client has not responded to a health check from the server.<br />It is rare for clients to receive this code, and if you do, please contact the GameAnvil development team. |
+|                      | FORCE_CLOSE_GHOST_USER              |  2043 | For a ghost user,<br />It is rare for clients to receive this code, and if you do, please contact the GameAnvil development team. |
+|                      | SOCKET_DISCONNECT                   |  2100 | Disconnected from the network<br />It is rare for clients to receive this code, and if you do, please contact the GameAnvil development team. |
+|                      | SOCKET_TIME_OUT                     |  2101 | Timeout occurred, disconnecting from the connector<br />It is rare for clients to receive this code, and if you do, please contact the GameAnvil development team. |
+|                      | SOCKET_ERROR                        |  2102 | A socket error occurred and disconnected<br />It is rare for clients to receive this code, and if you do, please contact the GameAnvil development team. |
 
 ## Server
 
