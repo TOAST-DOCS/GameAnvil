@@ -1,39 +1,39 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > 백그라운드 접속 끊김 방지
+## Game > GameAnvil > Unity Advanced Development Guide > Prevent Background Disconnection
 
-[Unity 기초 개발 가이드 > 백그라운드 접속 끊김 방지](../unity-basic/unity-basic-08-background-connection.md) 문서의 내용처럼 모바일 기기에서 게임이 백그라운드로 전환될 경우 서버 접속이 끊길 수 있는데, 이를 방지하기 위해 서버와의 연결 확인 기능을 일시정지시킬 수 있습니다.
+As described in the [Unity Basic Development Guide > Prevent Background Disconnection](../unity-basic/unity-basic-08-background-connection.md), your game may lose connection to the server when it goes into the background on a mobile device. To prevent this, you can pause the ability to check for connections to the server.
 
-이를 구현한 코드 예시는 아래와 같습니다.
+Here's an example of code that implements this
 
 ```c#
 public class ConnectHandler : MonoBehaviour
-{
+{ 
     ...
     private void OnApplicationPause(bool pause)
-    {
+    { ...
         if (pause)
-        {
-            // 앱이 pause되기 전에 해야 할 작업이 있다면 여기에서 처리한다.
+        { ...
+            // If there's any work to be done before the app pauses, it's handled here.
 
-            // 입력한 시간(sec)동안 서버의 clientStateCheck 기능을 정지시킨다
-            // 이 시간이 지나면 clientStateCheck 기능이 동작하여 연결이 끊어질 수 있다. 
+            // Suspend the server's clientStateCheck function for the entered number of seconds.
+            // After this time, the clientStateCheck function may be triggered and the connection may be disconnected. 
             connector.GetConnectionAgent().PauseClientStateCheck(600);
 
-            // 앱이 pause되기 직전 connector.Update()를 호출하여
-            // Connector에 쌓은 메시지를 처리하고 상태를 업데이트해 준다.
+            // Just before the app pauses, call connector.Update() to process the messages that have accumulated on the connector. 
+            // to process any messages that have accumulated in the connector and update the state. 
             connector.Update();
         } else
-        {
-            // 앱이 resume된 직후 connector.Update()를 호출하여
-            // Connector에 쌓은 메시지를 처리하고 상태를 업데이트해 준다.
+        { 
+            // Call connector.Update() immediately after the app resumes to process the messages that have been accumulated in the 
+            // process the messages accumulated in the Connector and update the status. 
             connector.Update();
 
-            // 서버의 clientStateCheck 기능을 다시 동작시킨다.
+            // Reactivate the server's clientStateCheck function.
             connector.GetConnectionAgent().ResumeClientStateCheck();
 
-            // 장시간 pause되었다가 resume될 경우 연결이 끊어질 수 있으므로 상태를 체크한다.
+            // Check the status of the connection as it may be disconnected if it is resumed after a long pause.
             if (connector.IsConnected())
-            {
-                // 앱이 resume된 후 해야 할 작업이 있다면 여기에서 처리한다.
+            { 
+                // If there's any work to be done after the app resumes, we'll do it here.
             }
         }
     }

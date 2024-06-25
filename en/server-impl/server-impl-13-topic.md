@@ -1,16 +1,16 @@
-## Game > GameAnvil > 서버 개발 가이드 > 토픽 사용하기
+## Game > GameAnvil > Server Development Guide > Use Topics
 
 
 
-## 구독과 발행
+## Subscription and Publishing
 
-GameAnvil은 구독-발행 모델을 지원합니다. 즉, 임의의 토픽을 구독한 대상들은 모두 발행을 통해 동일하게 메시지를 전달받을 수 있습니다. 이러한 구독과 발행에 대한 사용법은 토픽을 중심으로 이루어집니다.
+GameAnvil supports a subscription-publishing model, meaning that any audience that subscribes to a topic can all receive the same message through a publication. The usage of these subscriptions and publications is centered around topics.
 
 
 
-### 토픽
+### Topics
 
-사용자는 언제든 임의의 토픽을 구독할 수 있습니다. 또한 GameAnvil은 내부적으로 몇 가지 토픽을 기본적으로 구독하고 있습니다. 이러한 토픽은 크게 노드 토픽과 사용자 토픽으로 나뉩니다. 이를 통해 메시지는 노드 단위로 전송된 뒤 노드 내의 객체에 전달됩니다. 다음은 이러한 노드 토픽과 사용자 토픽을 이용해서 발행하는 코드의 예입니다.
+Users can subscribe to any topic at any time. GameAnvil also subscribes to a few topics internally by default. These topics are broadly divided into node topics and user topics. These allow messages to be sent on a per-node basis and then delivered to objects within the node. The following is an example of code that uses these node topics and user topics to publish.
 
 ```java
 publishToUser(NodeTopic, Topic, Packet);
@@ -19,85 +19,85 @@ publishToUser(NodeTopic, Topic, Packet);
 
 ### GameAnvil 토픽
 
-GameAnvil은 내부적으로 아래의 토픽들을 기본적으로 구독합니다. GameAnvilTopic은 절대 사용자가 임의로 구독하지 말아야 합니다.
+GameAnvil is internally subscribed to the following topics by default. GameAnvilTopic should never be arbitrarily subscribed to by users.
 
-| 토픽                         | 발행 대상                 | 구독 대상   |
-| ---------------------------- |-----------------------| ----------- |
-| GameAnvilTopic.GAME_NODE     | 모든 게임 노드              | GameNode    |
-| GameAnvilTopic.GATEWAY_NODE  | 모든 게이트웨이 노드           | GatewayNode |
-| GameAnvilTopic.SUPPORT_NODE  | 모든 서포트 노드             | SupportNode |
-| GameAnvilTopic.ALL_CLIENT    | 접속 중인 모든 클라이언트        | Session     |
-| GameAnvilTopic.ALL_GAME_USER | 게임 노드에 있는 모든 게임 유저 객체 | GameUser    |
+| Topics                         | Publish Target                            | Subscribe Target   |
+| ---------------------------- | ------------------------------------ | ----------- |
+| GameAnvilTopic.GAME_NODE     | All game nodes                       | GameNode    |
+| GameAnvilTopic.GATEWAY_NODE  | All gateway nodes                 | GatewayNode |
+| GameAnvilTopic.SUPPORT_NODE  | All support nodes                     | SupportNode |
+| GameAnvilTopic.ALL_CLIENT    | All connected clients             | Session     |
+| GameAnvilTopic.ALL_GAME_USER | All Game User objects in the Game node | GameUser    |
 
 
 
-### 토픽 구독 및 구독 취소
+### Subscribe and unsubscribe to topics
 
-앞서 토픽은 크게 노드 토픽과 사용자 토픽으로 나뉜다고 했습니다. 노드 토픽은 BaseNode를 상속하는 모든 종류의 노드 클래스에서 구독합니다. 반면에 사용자 토픽은 노드 내부의 객체들을 위한 것이므로 BaseUser와 BaseRoom을 상속하는 모든 유저와 방 클래스에서 구독 가능합니다. 노드 토픽과 사용자 토픽의 구독 및 구독 취소 방법은 다음의 예제 코드와 같이 동일합니다.
+As described above, the topics are broadly divided into node topics and user topics. Node topics are subscribed to by any kind of node class that inherits from BaseNode. User topics, on the other hand, are for objects inside the node and can be subscribed to by all user and room classes that inherit from BaseUser and BaseRoom. Subscribing and unsubscribing to node topics and user topics is the same for both, as shown in the following example code.
 
 ```java
-// "GameUser1" 토픽을 구독합니다.
+// Subscribe to the "GameUser1" topic.
 addTopic("GameUser1");
 
-// "GameUser1" 토픽을 구독 취소합니다.
+// Unsubscribe from the "GameUser1" topic.
 removeTopic("GameUser1");
 ```
 
-아래는 토픽 사용을 위한 전체 API 목록입니다.
+Below is a complete list of APIs for using Topics.
 ```java
 /**
- * 토픽이 구독 상태인지 확인
- *
- * @param topic 확인할 토픽
- * @return 해당 토픽을 구독 중이면 true를 반환
+ * Check if the topic is subscribed
+ * 
+ * @param topic The topic to check
+ * @return true if the topic is subscribed to
  */
 boolean hasTopic(String topic)
 
 /**
- * 구독중인 토픽 목록을 반환
- *
- * @return String 의 Set으로 토픽 목록을 반환
- */
+ * Returns a list of subscribed topics
+ * 
+ * @returns a list of topics as a Set of Strings
+ */ 
 Set<String> getTopics()
 
-/**
- * 토픽을 구독
- *
- * @param topic 구독할 토픽
- *
- * @return 성공적으로 구독할 경우 true를 반환
+/*
+ * Subscribe to a topic
+ * 
+ * @param topic the topic to subscribe to
+ * 
+ * @return true on successful subscription
  */
 boolean addTopic(String topic)
 
 /**
- * 여러 개의 토픽을 구독
- *
- * @param topics 구독할 토픽 목록
- *
- * @return 성공적으로 구독할 경우 true를 반환
+ * Subscribe to multiple topics.
+ * 
+ * @param topics list of topics to subscribe to
+ * 
+ * @return true if subscribed successfully
  */
 boolean addTopics(List<String> topics)
 
  /**
-  * 토픽을 구독 취소
+  * Unsubscribes topics
   *
-  * @param topic 구독 취소할 토픽
-  */
+  * @param topic the topic to unsubscribe from
+  */ 
 void removeTopic(String topic)
 
- /**
-  * 여러 개의 토픽을 구독 취소
-  *
-  * @param topics 구독 취소할 토픽 목록
-  */
+ /** 
+  * Unsubscribes from multiple topics
+  * 
+  * @param topics list of topics to unsubscribe from
+  */ 
 void removeTopics(List<String> topics)
 ```
 
 
 
-### 클라이언트 토픽
+### Client Topics
 
-클라이언트 토픽은 서버 내 객체가 아닌 클라이언트로 발행하기 위한 토픽입니다. 즉, 사용자는 아래의 예제 코드와 같이 클라이언트를 대상으로 토픽을 구독할 수 있습니다.
+A client topic is a topic that is intended to be published to a client rather than an object on the server. This means that users can subscribe to a topic as a client, as shown in the example code below.
 
 ```java
 @Override
@@ -105,31 +105,31 @@ public final boolean onLogin(final Payload payload, final Payload sessionPayload
 
     ...
         
-	// 해당 유저와 연결된 클라이언트에 토픽을 구독
+	// Subscribe the topic to the client associated with the user.
 	if (isVIP())
 		addClientTopics(Arrays.asList("VIP"));
 }
 ```
-아래는 이러한 클라이언트 토픽 사용을 위한 API 목록입니다.
+Below is a list of APIs for using these client topics.
 ```java
 /**
- * 여러 개의 클라이언트 토픽 목록을 구독합니다.
+ * Subscribe to multiple client topic lists.
  *
- * @param topics 등록할 토픽 리스트 전달.
+ * @param topics Pass a list of topics to subscribe to.
  */
 public void addClientTopics(List<String> topics)
 
 /**
- * 여러 개의 클라이언트 토픽 목록을 구독 취소합니다.
+ * Subscribes to a list of multiple client topics.
  *
- * @param topics 구독 취소할 토픽 목록
+ * @param topics A list of topics to unsubscribe from.
  */
 public void removeClientTopics(List<String> topics)
 
 /**
- * 클라이언트 토픽 목록을 반환
+ * Returns a list of client topics.
  *
- * @return 구독 중인 클라이언트 토픽 문자열을 포함한 Set을 반환
+ * @returns a Set containing the subscribed client topic strings
  */
 public Set<String> getClientTopics() {
     return this.gameUserHelper.getClientTopics();
@@ -138,14 +138,14 @@ public Set<String> getClientTopics() {
 
 
 
-### 발행하기
+### Publish
 
-사용자는 임의의 토픽으로 메시지를 발행할 수 있습니다. 이때, 해당 토픽을 구독 중인 대상은 모두 동일한 메시지를 수신하게 됩니다.
+Users can publish messages to any topic. Anyone who is subscribed to that topic will receive the same message.
 
 ```java
-// 노드 토픽과 토픽을 구분하여 사용해야 합니다.
+// Node topics and topics should be used separately.
 publishToUser(NodeTopic, Topic, Packet)
 
-// 클라이언트 토픽은 노드 토픽이 필요 없습니다.
+// Client topics do not need a node topic.
 publishToClient(Topic, Packet)
 ```

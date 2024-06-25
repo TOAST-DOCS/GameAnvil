@@ -1,390 +1,390 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > ConnectionAgent
+## Game > GameAnvil > Unity Advanced Development Guide > ConnectionAgent
 
 ## ConnectionAgent
 
-ConnectionAgent는 GameAnvil 서버의 커넥션 노드와 관련된 작업을 담당합니다. 접속(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공하며, 직접 정의한 프로토콜을 기반으로 여러 가지 콘텐츠를 구현할 수 있습니다. ConnectionAgent는 커넥터가 초기화될 때 자동으로 생성되며 Connector.GetConnectionAgent() 함수를 이용해 얻을 수 있습니다.
+The ConnectionAgent is responsible for operations related to the Connection node on the GameAnvil server. It provides basic session management functions such as Connect() and Authentication(), as well as a list of channels, and can implement different content based on your own defined protocols. The ConnectionAgent is automatically created when the connector is initialized and can be obtained using the Connector.GetConnectionAgent() function.
 
 ```c#
 ConnectionAgent connectionAgent = connector.GetConnectionAgent();
 ```
 
-### 서버 접속
+### Connect to the server
 
-ConnectionAgent의 Connect 함수를 이용해 서버에 접속합니다. 
+Connect to the server using the ConnectionAgent's Connect function. 
 
 ```c#
 /// <summary>
-/// GameAnvil 서버에 연결 시도
+/// Attempts to connect to the GameAnvil server.
 /// </summary>
-/// <param name="ip">대상 아이피 주소</param>
-/// <param name="port">대상 포트</param>
-/// <param name="onConnect">연결 시도 결과를 전달 받을 대리자</param>
+/// <param name="ip">Target IP address</param>
+/// <param name="port">Target port</param>
+/// <param name="onConnect">A delegate to receive connection attempt results</param>
 connector.GetConnectionAgent().Connect(ip, port, (ConnectionAgent connectionAgent, ResultCodeConnect result) => {
-    /// <param name="connectionAgent">Connect()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">Connect() 요청 결과 코드</param>
+    /// <param name="connectionAgent">The connection agent that requested Connect()</param>
+    /// <param name="result">Connect() request result code</param>
     if (result == ResultCodeConnect.CONNECT_SUCCESS) {
-		// 접속 성공
+		// Successful connection
     } else {
-	    // 접속 실패
+	    // Connection failed
     }
 });
 ```
 
-### 인증
+### Authentication
 
-ConnectionAgent의 Authenticate 함수를 이용해 인증 절차를 진행합니다. 매개변수로 deviceId, accountId, password, payload, 응답을 처리할 콜백을 넘겨줍니다. deviceId는 중복 접속에 대한 처리에 활용되며, accountId와 password를 활용하여 서버에서 인증 처리를 할 수 있습니다. 인증을 위해 deviceId, accountId, password 외의 추가 정보가 필요할 경우 payload에 담아 보낼 수 있으며 사용하지 않을 경우 payload 매개변수는 생략할 수 있습니다. 
-Authenticate 함수를 호출하면 서버에서는 BaseConnection의 onAuthentication() 콜백이 호출되며 이 콜백의 처리 결과로 인증의 성공, 실패가 결정됩니다.
+Use the ConnectionAgent's Authenticate function to perform the authentication process. It takes as parameters deviceId, accountId, password, payload, and a callback to handle the response. The deviceId is used to handle duplicate connections, and the accountId and password can be used to handle authentication on the server. If additional information beyond the deviceId, accountId, and password is needed for authentication, it can be sent in the payload, and the payload parameter can be omitted if not used.
+When you call the Authenticate function, the server calls the onAuthentication() callback of the BaseConnection, and the processing of this callback determines whether the authentication succeeds or fails.
 
 ```c#
 /// <summary>
-/// GameAnvil 서버에 인증 요청<para></para>
-/// 인증 성공 후 커넥터 사용 가능
+/// Authenticates with the GameAnvil server<para></para>
+/// Enable connector after successful authentication
 /// </summary>
-/// <param name="deviceId">사용자 기기 식별용 고유 아이디. 서버 구현에 따라 사용하지 않는 경우 빈 문자열 전달</param>
-/// <param name="accountId">사용자 계정을 식별할 수 있는 고유 아이디</param>
-/// <param name="passwd">사용자 계정의 비밀번호. 서버 구현에 따라 사용하지 않는 경우 빈 문자열 전달</param>
-/// <param name="onAuthentication">요청 결과를 전달 받을 대리자</param>
+/// <param name="deviceId">Unique ID to identify the user's device. Depending on the server implementation, pass an empty string if not used</param>
+/// <param name="accountId">Unique ID to identify the user's account</param>
+/// <param name="passwd">Password for the user account. Depending on the server implementation, pass an empty string if not used</param>
+/// <param name="onAuthentication">A delegate to receive the results of the request</param>.
 connector.GetConnectionAgent().Authenticate(deviceId, accountId, password, payload
          (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
-    /// <param name="connectionAgent">Authentication()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">Authentication() 요청 결과</param>
-    /// <param name="loginedUserInfoList">서버에 남아 있는 로그인 정보 목록</param>
-    /// <param name="message">서버로부터 받은 메시지</param>
-    /// <param name="payload">서버로부터 받은 추가 정보</param>
+    /// <param name="connectionAgent">The connection agent that requested Authentication().
+    /// <param name="result">Authentication() request result</param>
+    /// <param name="loginedUserInfoList">List of login information left on the server</param>
+    /// <param name="message">Message received from the server</param>
+    /// <param name="payload">Additional information received from the server</param>
     if (result == ResultCodeAuth.AUTH_SUCCESS) {
-		// 인증 성공
+		// Authentication success
     } else {
-		// 인증 실패
+		// Authentication failed
     }
 });
 ```
 
-### 채널 정보
+### Channel information
 
-GameAnvil은 설정에서 자유롭게 채널을 구성할 수 있습니다. 이런 채널 구성은 서버와 클라이언트 간에 미리 약속하여 고정된 형태로 사용할 수도 있지만, 상황에 따라 다양하게 변경하여 사용할 수도 있습니다. ConnectionAgent에서는 이렇게 변경된 채널 정보를 얻어올 수 있도록 몇 가지 함수를 제공합니다. 
+GameAnvil allows you to freely configure channels in the settings. These channel configurations can be pre-agreed between the server and client and used in a fixed form, or they can be varied to suit the situation. ConnectionAgent provides a few functions to get this changed channel information. 
 
-| 함수 | 설명 |
+| Functions | Description |
 | --- | --- |
-| GetChannelList() | 특정 서비스의 채널 아이디 목록 요청 | 
-| GetChannelCountInfo() | 특정 채널의 카운트 정보(유저와 방 개수) 요청 | 
-| GetChannelInfo() | 특정 채널의 정보(사용자 정의) 요청 |
-| GetAllChannelCountInfo() | 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수) 요청 |
+| GetChannelList | Request a list of channel IDs for a specific service | 
+| GetChannelCountInfo() | Request count information (number of users and rooms) for a specific channel | 
+| GetChannelInfo() | Request information (user-defined) for a specific channel |
+| GetAllChannelCountInfo() | Request count information (number of users and rooms) for all channels of a specific service |
 
 <br>
 
-아래에서 코드를 통해 더욱 자세하게 살펴보겠습니다.
+Let's take a closer look at this in code below.
 
 
-GetChannelList()는 특정 서비스의 채널 아이디 목록을 요청하여 받아올 수 있습니다. 
+GetChannelList() can request and receive a list of channel IDs for a specific service. 
 
 ```c#
 /// <summary>
-/// 서비스의 사용 가능한 채널 목록 요청 
+/// Request a list of available channels for a service 
 /// </summary>
-/// <param name="serviceName">대상 서비스의 이름</param>
-/// <param name="onChannelList">요청 결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the target service</param>
+/// <param name="onChannelList">The agent to receive the results of the request</param>
 connector.GetConnectionAgent().GetChannelList(serviceName, (ConnectionAgent connection, ResultCodeChannelList result, List<string> channelIdList) => {
-    /// <param name="connectionAgent">GetChannelList()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">GetChannelList() 요청 결과</param>
-    /// <param name="channelIdList">서버에서 받은 채널 목록</param>
+    /// <param name="connectionAgent">The connection agent that requested GetChannelList()</param>
+    /// <param name="result">Result of the GetChannelList() request</param>
+    /// <param name="channelIdList">Channel list received from the server</param>
 	if(result == ResultCodeChannelList.CHANNEL_LIST_SUCCESS){
-		// 채널 목록 요청 성공
+		// Channel list request success
 	} else {
-		// 채널 목록 요청 실패
+		// Channel list request failed
 	}
 });
 ```
 <br>
 
-GetChannelCountInfo()는 특정 채널의 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 
+GetChannelCountInfo() can request and receive count information (number of users and rooms) for a specific channel. 
 
 ```c#
 /// <summary>
-/// 채널의 유저와 방 개수 요청<para></para>
-/// 서버에서 지원하는 경우 사용 가능
+/// Request the number of users and rooms in a channel<para></para>
+/// Available if supported by the server
 /// </summary>
-/// <param name="serviceName">대상 채널이 속한 서비스의 이름</param>
-/// <param name="channelId">대상 채널의 아이디</param>
-/// <param name="onChannelCountInfo">요청 결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the service the target channel belongs to</param>
+/// <param name="channelId">Identifier of the target channel</param>
+/// <param name="onChannelCountInfo">A delegate to receive the request result</param>
 connector.GetConnectionAgent().GetChannelCountInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) => {
-    /// <param name="connectionAgent">GetChannelCountInfo()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">GetChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+    /// <param name="connectionAgent">The connection agent that requested GetChannelCountInfo()</param>
+    /// <param name="result">Result of the GetChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">Channel's user count and room count information received from the server</param>
 	if(result == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS){
-		// 채널 카운트 정보 요청 성공
+		// Channel count information request success
 	} else {
-		// 채널 카운트 정보 요청 실패
+		// Channel count information request failed
 	}
 });
 ```
 <br>
 
-GetChannelInfo()는 특정 채널의 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 
+GetChannelInfo() can request and receive information (user-defined) for a specific channel. 
 
 ```c#
 /// <summary>
-/// 채널 정보 요청<para></para>
-/// 서버에서 지원하는 경우 사용 가능
+/// Requests channel information<para></para>
+/// Available if supported by the server
 /// </summary>
-/// <param name="serviceName">대상 채널이 속한 서비스의 이름</param>
-/// <param name="channelId">대상 채널의 아이디</param>
-/// <param name="onChannelInfo">요청 결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the service to which the target channel belongs</param>
+/// <param name="channelId">Identifier of the target channel</param>
+/// <param name="onChannelInfo">A delegate to receive the request result</param>
 connector.GetConnectionAgent().GetChannelInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelInfo result, Payload payload) => {
-    /// <param name="connectionAgent">GetChannelInfo()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">GetChannelInfo() 요청 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보</param>
+    /// <param name="connectionAgent">The connection agent that requested GetChannelInfo()</param>
+    /// <param name="result">Result of the GetChannelInfo() request</param>
+    /// <param name="channelInfo">Channel information received from the server</param>
 	if(result == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS){
-		// 채널 정보 요청 성공
+		// Channel information request success
 	} else {
-		// 채널 정보 요청 실패
+		// Channel information request failed
 	}
 });
 ```
 <br>
 
-GetAllChannelCountInfo()는 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다. 
+GetAllChannelCountInfo() can request and receive count information (number of users and rooms) for all channels in a specific service. 
 
 ```c#
 /// <summary>
-/// 서비스 내 모든 채널의 유저와 방 개수 요청<para></para>
-/// 서버에서 지원하는 경우 사용 가능
+/// Gets the number of users and rooms on all channels in a service<para></para>
+/// Available if supported by the server
 /// </summary>
-/// <param name="serviceName">대상 서비스의 이름</param>
-/// <param name="onAllChannelCountInfo">요청 결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the target service</param>
+/// <param name="onAllChannelCountInfo">A delegate to receive the request result</param>
 connector.GeConnectionAgent().GetAllChannelCountInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) => {
-    /// <param name="connectionAgent">GetAllChannelCountInfo()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보들</param>
+    /// <param name="connectionAgent">The connection agent that requested GetAllChannelCountInfo().
+    /// <param name="result">Result of the GetAllChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">The number of users and rooms in the channel received from the server</param>
 	if(result == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS){
-		// 모든 채널 카운트 정보 요청 성공
+		// All channel count information request succeeded
 	} else {
-		// 모든 채널 카운트 정보 요청 실패
+		// All channel count information request failed
 	}
 });
 ```
 <br>
 
-GetAllChannelInfo()는 특정 서비스의 모든 채널에 대한 정보(사용자 정의)를 요청하여 받아올 수 있습니다. 
+GetAllChannelInfo() can request and receive information (user-defined) about all channels of a specific service. 
 
 ```c#
 /// <summary>
-/// 서비스 내 모든 채널의 정보 요청<para></para>
-/// 서버에서 지원하는 경우 사용 가능
+/// Request information from all channels in the service<para></para>
+/// Available if supported by the server
 /// </summary>
-/// <param name="serviceName">대상 서비스의 이름</param>
-/// <param name="onAllChannelInfo">요청 결과를 전달 받을 대리자</param>
+/// <param name="serviceName">Name of the target service</param>
+/// <param name="onAllChannelInfo">A delegate to receive request results</param>
 connector.GetConnectionAgent().GetAllChannelInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelInfo result, Dictionary<string, Payload> payload) => {
-    /// <param name="connectionAgent"> GetAllChannelInfo()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">GetAllChannelInfo() 요청의 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+    /// <param name="connectionAgent"> The connection agent that requested GetAllChannelInfo().
+    /// <param name="result">Result of the GetAllChannelInfo() request</param>
+    /// <param name="channelInfo">List of channel information received from the server</param>
 	if(result == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS){
-		// 모든 채널 정보 요청 성공
+		// All channel information request success
 	} else {
-		// 모든 채널 정보 요청 실패
+		// All channel information request failed
 	}
 });
 ```
 
-### 접속 종료
+### Terminate the connection
 
-ConnectionAgent의 Disconnect 함수를 이용해 서버와의 접속을 종료합니다. 
+Use the ConnectionAgent's Disconnect function to terminate the connection to the server. 
 
 ```c#
 /// <summary>
-/// GameAnvil 서버와의 연결 해제 요청
+/// Request to disconnect from the GameAnvil server.
 /// </summary>
-/// <param name="onDisconnect">요청 결과를 전달 받을 대리자</param>
+/// <param name="onDisconnect">A delegate to receive the result of the request</param>.
 connector.GetConnectionAgent().Disconnect((ConnectionAgent connectionAgent, ResultCodeDisconnect result) => {
-    /// <param name="connectionAgent">Disconnect()발생한 커넥션 에이전트</param>
-    /// <param name="result">>Disconnect() 결과</param>
+    /// <param name="connectionAgent">The connection agent where the disconnect()occurred</param>
+    /// <param name="result">>Disconnect() result</param>
     if (result == ResultCodeDisconnect.SOCKET_DISCONNECT) {
-		// 정상 종료
+		// Normal exit
     } else {
-	    // 비정상 종료
+	    // Abnormal termination
     }
 });
 ```
 
 ### Listener
 
-ConnectionAgent에서 모든 요청에 대한 결과 또는 서버로부터의 알림을 전달 받는 방법은 크게 두 가지입니다.
-하나는 ConnectionAgent에 정의되어 있는 delegate에 함수를 추가하는 방법입니다. 다른 하나는 IConnectionListener 인터페이스를 구현한 리스너를 등록하는 방법입니다.
+There are two main ways that ConnectionAgent can receive results or notifications from the server for every request.
+One is to add a function to the delegate defined on the ConnectionAgent. The other is to register a listener that implements the IConnectionListener interface.
 
-먼저, 첫 번째 방법입니다. ConnectionAgent는 모든 동작의 결과 또는 알림을 받을 수 있도록 각각의 delegate를 멤버로 가지고 있습니다. 앞서 설명한 API에 콜백 매개변수를 생략하고 호출했거나 서버에서 알림을 보냈을 경우 delegate에 등록된 함수로 응답을 받을 수 있습니다.  
+First, the first method. The ConnectionAgent has a delegate as a member for each of its actions so that it can receive the result or notification of any action. If you call the APIs described earlier without callback parameters, or if the server sends you a notification, you'll receive the response as a function registered with the delegate.  
 
 ```c#
 /// <summary>
-/// Connect()의 결과
+/// The result of Connect()
 /// </summary>
-/// <param name="connectionAgent">Connect()를 요청한 커넥션 에이전트</param>
-/// <param name="result">Connect()의 결과</param>
+/// <param name="connectionAgent">The connection agent that requested Connect().
+/// <param name="result">Result of Connect()</param>
 public Interface.DelConnectionOnConnect onConnectListeners;
 
 /// <summary>
-/// Authentication() 결과
+/// Authentication() result
 /// </summary>
-/// <param name="connectionAgent">Authentication()를 요청한 커넥션 에이전트</param>
-/// <param name="result">Authentication() 요청 결과</param>
-/// <param name="loginedUserInfoList">서버에 남아있는 로그인 정보 목록</param>
-/// <param name="message">서버로부터 받은 메시지</param>
-/// <param name="payload">서버로부터 받은 추가 정보</param>
+/// <param name="connectionAgent">The connection agent that requested Authentication()</param>.
+/// <param name="result">Authentication() request result</param>
+/// <param name="loginedUserInfoList">List of login information left on the server</param>
+/// <param name="message">Message received from the server</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelConnectionOnAuthentication onAuthenticationListeners;
 
 /// <summary>
-/// GetChannelList() 요청 결과
+/// GetChannelList() request result
 /// </summary>
-/// <param name="connectionAgent">GetChannelList()를 요청한 커넥션 에이전트</param>
-/// <param name="result">GetChannelList() 요청 결과</param>
-/// <param name="channelIdList">서버에서 받은 채널 목록</param>
+/// <param name="connectionAgent">The connection agent that requested GetChannelList()</param>.
+/// <param name="result">Result of the GetChannelList() request</param>
+/// <param name="channelIdList">The list of channels received from the server</param>
 public Interface.DelConnectionOnChannelList onChannelListListeners;
 
 /// <summary>
-/// GetChannelInfo() 요청 결과
+/// GetChannelInfo() request result
 /// </summary>
-/// <param name="connectionAgent">GetChannelInfo()를 요청한 커넥션 에이전트</param>
-/// <param name="result">GetChannelInfo() 요청 결과</param>
-/// <param name="channelInfo">서버에서 받은 채널 정보</param>
+/// <param name="connectionAgent">The connection agent that requested GetChannelInfo()</param>.
+/// <param name="result">Result of the GetChannelInfo() request</param>
+/// <param name="channelInfo">Channel information received from the server</param>
 public Interface.DelConnectionOnChannelInfo onChannelInfoListeners;
 
 /// <summary>
-/// GetAllChannelInfo() 요청 결과
+/// GetAllChannelInfo() request result
 /// </summary>
-/// <param name="connectionAgent"> GetAllChannelInfo()를 요청한 커넥션 에이전트</param>
-/// <param name="result">GetAllChannelInfo() 요청의 결과</param>
-/// <param name="channelInfo">서버에서 받은 채널 정보 목록</param>
+/// <param name="connectionAgent"> The connection agent that made the GetAllChannelInfo() request</param>.
+/// <param name="result">The result of the GetAllChannelInfo() request</param>
+/// <param name="channelInfo">List of channel information received from the server</param>
 public Interface.DelConnectionOnAllChannelInfo onAllChannelInfoListeners;
 
 /// <summary>
-/// GetChannelCountInfo() 요청 결과
+/// The result of the GetChannelCountInfo() request.
 /// </summary>
-/// <param name="connectionAgent">GetChannelCountInfo()를 요청한 커넥션 에이전트</param>
-/// <param name="result">GetChannelCountInfo() 요청 결과</param>
-/// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+/// <param name="connectionAgent">The connection agent that requested GetChannelCountInfo()</param>.
+/// <param name="result">Result of the GetChannelCountInfo() request</param>
+/// <param name="channelCountInfo">The number of users and rooms in the channel received from the server</param>
 public Interface.DelConnectionOnChannelCountInfo onChannelCountInfoListeners;
 
 /// <summary>
-/// GetAllChannelCountInfo() 요청 결과
+/// The result of the GetAllChannelCountInfo() request.
 /// </summary>
-/// <param name="connectionAgent">GetAllChannelCountInfo()를 요청한 커넥션 에이전트</param>
-/// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-/// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보들</param>
+/// <param name="connectionAgent">The connection agent that requested GetAllChannelCountInfo()</param>.
+/// <param name="result">Result of the GetAllChannelCountInfo() request</param>
+/// <param name="channelCountInfo">The number of users and rooms for the channel received from the server</param>
 public Interface.DelConnectionOnAllChannelCountInfo onAllChannelCountInfoListeners;
 
 /// <summary>
-/// Disconnect() 알림
+/// Disconnect() notification
 /// </summary>
-/// <param name="connectionAgent">Disconnect()발생한 커넥션 에이전트</param>
-/// <param name="result">>Disconnect() 이유</param>
-/// <param name="force">강제 종료 여부</param>
-/// <param name="payload">서버로부터 받은 추가 정보</param>
+/// <param name="connectionAgent">The connection agent where the Disconnect() occurred</param>
+/// <param name="result">>Disconnect() reason</param>
+/// <param name="force">Whether to force termination</param>
+/// <param name="payload">Additional information received from the server</param>
 public Interface.DelConnectionOnDisconnect onDisconnectListeners;
 
 /// <summary>
-/// 커넥션의 기본 기능 사용 중 오류 발생
+/// Errors while using the basic functionality of the connection.
 /// </summary>
-/// <param name="connectionAgent">오류 발생한 커넥션 에이전트</param>
-/// <param name="errorCode">오류 코드</param>
-/// <param name="commands">오류 발생 기능</param>
+/// <param name="connectionAgent">The connection agent where the error occurred</param>.
+/// <param name="errorCode">Error code</param>
+/// <param name="commands">Commands to raise an error</param>
 public Interface.DelConnectionOnErrorCommand onErrorCommandListeners;
 
 /// <summary>
-/// 패킷 전송 후 오류 발생
+/// Raises an error after a packet is sent.
 /// </summary>
-/// <param name="connectionAgent">처리를 요청할 커넥션 에이전트</param>
-/// <param name="errorCode">오류 코드</param>
-/// <param name="command">패킷의 메시지 이름</param>
+/// <param name="connectionAgent">The connection agent to request processing from</param>.
+/// <param name="errorCode">Error code</param>
+/// <param name="command">Message name of the packet</param>
 public Interface.DelConnectionOnErrorCustomCommand onErrorCustomCommandListeners;
 ```
 <br>
 
-다음으로, 두 번째 방법입니다. IConnectionListener는 ConnectionAgent의 모든 동작의 결과 또는 알림을 정의한 인터페이스입니다. 이 인터페이스를 구현한 리스너를 ConnectionAgent.AddConnectionListener()로 등록하면 등록한 리스너로 응답을 받을 수 있습니다. 
+Next, the second method. IConnectionListener is an interface that defines the results or notifications of any action of the ConnectionAgent. You can register a listener that implements this interface with ConnectionAgent.AddConnectionListener() to receive responses from the registered listener. 
 
 ```c#
 public class ConnectionListener : IConnectionListener
 {
     /// <summary>
-    /// Connect()의 결과
+    /// The result of Connect()
     /// </summary>
-    /// <param name="connectionAgent">Connect()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">Connect()의 결과</param>
+    /// <param name="connectionAgent">The connection agent that requested Connect()</param>
+    /// <param name="result">The result of Connect()</param>
     public void OnConnect(ConnectionAgent connectionAgent, ResultCodeConnect result) { }
     
     /// <summary>
-    /// Authentication() 결과
+    /// Authentication() result
     /// </summary>
-    /// <param name="connectionAgent">Authentication()울 요청한 커넥션 에이전트</param>
-    /// <param name="result">Authentication() 요청 결과</param>
-    /// <param name="loginedUserInfoList">서버에 남아있는 로그인 정보 목록</param>
-    /// <param name="message">서버로부터 받은 메시지</param>
-    /// <param name="payload">서버로부터 받은 추가 정보</param>
+    /// <param name="connectionAgent">The connection agent that requested Authentication()</param>.
+    /// <param name="result">Authentication() request result</param>
+    /// <param name="loginedUserInfoList">List of login information left on the server</param>
+    /// <param name="message">Message received from the server</param>
+    /// <param name="payload">Additional information received from the server</param>
     public void OnAuthentication(ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) { }
 
     /// <summary>
-    /// GetChannelList() 요청 결과 
+    /// GetChannelList() request result 
     /// </summary>
-    /// <param name="connectionAgent">GetChannelList()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">GetChannelList() 요청 결과</param>
-    /// <param name="channelIdList">서버에서 받은 채널 목록</param>
+    /// <param name="connectionAgent">The connection agent that requested GetChannelList()</param>.
+    /// <param name="result">Result of the GetChannelList() request</param>
+    /// <param name="channelIdList">List of channels received from the server</param>
     public void OnChannelList(ConnectionAgent connectionAgent, ResultCodeChannelList result, List<string> channelIdList) { }
 
     /// <summary>
-    /// GetChannelInfo의 결과
+    /// The result of GetChannelInfo
     /// </summary>
     /// <param name="connectionAgent">ConnectionAgent</param>
-    /// <param name="result">GetChannelInfo의 결과</param>
-    /// <param name="channelInfo">채널 정보</param>
+    /// <param name="result">Result of GetChannelInfo</param>
+    /// <param name="channelInfo">Channel information</param>
     public void OnChannelInfo(ConnectionAgent connectionAgent, ResultCodeChannelInfo result, Payload channelInfo) { }
 
     /// <summary>
-    /// 모든 채널 정보 요청 결과
+    /// Results of all channel information requests.
     /// </summary>
-    /// <param name="connectionAgent">GetAllChannelInfo()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">GetAllChannelInfo() 요청의 결과</param>
-    /// <param name="channelInfo">서버에서 받은 채널 정보</param>
+    /// <param name="connectionAgent">The connection agent that requested GetAllChannelInfo().
+    /// <param name="result">Result of the GetAllChannelInfo() request</param>
+    /// <param name="channelInfo">Channel information received from the server</param>
     public void OnAllChannelInfo(ConnectionAgent connectionAgent, ResultCodeAllChannelInfo result, Dictionary<string, Payload> channelInfo) { }
 
     /// <summary>
-    /// GetChannelCountInfo() 요청 결과
+    /// GetChannelCountInfo() request result
     /// </summary>
-    /// <param name="connectionAgent">GetChannelCountInfo()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">GetChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보</param>
+    /// <param name="connectionAgent">The connection agent that requested GetChannelCountInfo().
+    /// <param name="result">Result of the GetChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">Channel's user count and room count information received from the server</param>
     public void OnChannelCountInfo(ConnectionAgent connectionAgent, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) { }
 
     /// <summary>
-    /// GetAllChannelCountInfo() 정보 요청 결과
+    /// GetAllChannelCountInfo() information request result
     /// </summary>
-    /// <param name="connectionAgent">GetAllChannelCountInfo()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">GetAllChannelCountInfo() 요청 결과</param>
-    /// <param name="channelCountInfo">서버에서 받은 채널의 유저 수와 방 개수 정보들</param>
+    /// <param name="connectionAgent">The connection agent that requested GetAllChannelCountInfo().
+    /// <param name="result">Result of the GetAllChannelCountInfo() request</param>
+    /// <param name="channelCountInfo">The channel's user count and room count information received from the server</param>
     public void OnAllChannelCountInfo(ConnectionAgent connectionAgent, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) { }
     
     /// <summary>
-    /// Disconnect() 또는 강제 접속 종료 결과 알림
+    /// Notifies the result of Disconnect() or forced connection termination.
     /// </summary>
-    /// <param name="connectionAgent">Disconnect()발생한 커넥션 에이전트</param>
-    /// <param name="result">Disconnect() 결과 또는 강제 접속 종료 이유</param>
-    /// <param name="force">종료 강제 여부</param>
-    /// <param name="payload">서버로부터 받은 추가 정보</param>
+    /// <param name="connectionAgent">The connection agent where Disconnect() occurred</param>
+    /// <param name="result">Disconnect() result or reason for forced connection termination</param>
+    /// <param name="force">Whether to force termination</param>
+    /// <param name="payload">Additional information received from the server</param>
     public void OnDisconnect(ConnectionAgent connectionAgent, ResultCodeDisconnect result, bool force, Payload payload) { }
     
     /// <summary>
-    /// 커넥션의 기본 기능 사용 중 오류 발생
+    /// Error while using the basic functions of the connection.
     /// </summary>
-    /// <param name="connectionAgent">오류 발생한 커넥션 에이전트</param>
-    /// <param name="errorCode">오류 코드</param>
-    /// <param name="commands">오류 발생 기능</param>
+    /// <param name="connectionAgent">The connection agent where the error occurred</param>
+    /// <param name="errorCode">Error code</param>
+    /// <param name="commands">Commands to throw on error</param>
     public void OnError(ConnectionAgent connectionAgent, ErrorCode errorCode, Commands commands) { }
     
     /// <summary>
-    /// 패킷 전송 후 오류 발생
+    /// Raises an error after sending a packet.
     /// </summary>
-    /// <param name="connectionAgent">처리를 요청할 커넥션 에이전트</param>
-    /// <param name="errorCode">오류 코드</param>
-    /// <param name="command">패킷의 메시지 이름</param>
+    /// <param name="connectionAgent">The connection agent to request processing from</param>.
+    /// <param name="errorCode">Error code</param>
+    /// <param name="command">Message name of the packet</param>
     public void OnError(ConnectionAgent connectionAgent, ErrorCode errorCode, string command) { }
 }
 
-connector.GetConnectionAgent().AddConnectionListener(new ConnectionListener);
+/// <param name="command" /> connector.GetConnectionAgent().AddConnectionListener(new ConnectionListener);
 ```
 

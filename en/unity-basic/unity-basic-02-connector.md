@@ -1,55 +1,55 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > GameAnvilConnector
+## Game > GameAnvil > Unity Basic Development Guide > GameAnvilConnector
 
 ## GameAnvilConnector
 
-GameAnvilConnector는 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 옵션을 설정하거나 콜백을 등록할 수 있습니다. GameAnvilConnector를 사용하려면 먼저 GameAnvilConnector를 생성해야 합니다.
+The GameAnvilConnector is responsible for basic setup and agent management, and can set options or register callbacks to view logs related to its internal behavior. To use GameAnvilConnector, you must first create a GameAnvilConnector.
 
-### 생성
+### Create
 
-GameObject를 생성하고 GameAnvilConnector 컴포넌트를 추가합니다. **Add Component > GameAnvil > GameAnvilConnector**를 선택해 컴포넌트로 추가할 수 있습니다.
+Create a GameObject and add the GameAnvilConnector component. You can add it as a component by selecting Add Component > GameAnvil > GameAnvilConnector.
 
-또는 Unity Hierarchy에서 마우스 오른쪽 버튼을 클릭한 뒤 **GameAnvil > GameAnvilConnector**를 선택해 바로 생성할 수도 있습니다.
+Alternatively, you can create it directly from the Unity Hierarchy by right-clicking and selecting GameAnvil > GameAnvilConnector.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/02-connector/01-component.png)
 
-### 설정
+### Settings
 
-GameAnvilConnector 동작에 사용되는 설정값이 있습니다. GameAnvilConnector 생성 시 기본값으로 설정되지만 필요하다면 인스펙터 창에서 직접 값을 변경할 수 있습니다.  
+There are settings used for GameAnvilConnector behavior. These are set to the default values when the GameAnvilConnector is created, but you can change them directly in the inspector window if needed.  
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/02-connector/02-config.png)
 
-설정의 종류는 다음과 같습니다.
+There are the following types of settings
 
-| 이름                         | 설명                                                                    | 기본값 |
-| --------------------------- |-----------------------------------------------------------------------| :----: |
-| defaultReqestTimeout        | TimeOut 기본 대기 시간                                                      | 3(sec) |
-| packetTimeout               | 패킷이 지정된 시간 안에 업데이트되지 않으면 disconnect 되었다고 판단. pingInterval보다 큰 값으로 설정. | 5(sec) |
-| pingInterval                | 서버와의 연결을 확인하기 위한 ping 주기. 사용하지 않을 경우 0으로 설정.                          | 3(sec) |
-| useIPv6                     | IPv6 환경에서 IPv4 주소를 이용하여 서버에 접속할 때 IPv4 주소를 Ipv6 주소로 변환하여 사용 여부        | false  |
-| useSocketNoDelay            | 소켓의 Nodelay 사용 여부                                                     | true   |
-| useArgumentDelegateOnly     | 리스너에 등록한 콜백이 아닌 매개변수로 넘긴 콜백만 호출되도록 하는 옵션                              | true   |
-| Request Direct              | Request 호출 시 응답 대기 중이 아닐 경우 queue에 넣지 않고 바로 서버로 전송                    | true   |
+| Name                         | Description                                                           | Default value |
+| --------------------------- | ------------------------------------------------------------- | :----: |
+| defaultReqestTimeout        | TimeOut default wait time                                           | 3(sec) |
+| packetTimeout               | If the packet is not updated within the specified time, it is assumed to be disconnected. Must be set to a value greater than pingInterval. | 5(sec) |
+| pingInterval                | Ping frequency to check connectivity with the server. Set to 0 if not used.      | 3(sec) |
+| useIPv6                     | Whether to convert an IPv4 address to an Ipv6 address when connecting to a server using an IPv4 address in an IPv6 environment.  | false  |
+| useSocketNoDelay            | Whether the socket uses Nodelay                                          | true   |
+| useArgumentDelegateOnly     | Option to have only the callbacks passed in as parameters called, not the callbacks registered to the listener.          | true   |
+| Request Direct              | If the request is not waiting for a response when it is called, it is sent directly to the server without queuing it.  | true   |
 
 
-### 로그
+### Log
 
-GameAnvilConnector는 직접 로그를 남기지 않고 콜백을 통해 로그를 전달합니다. 다음과 같이 OnLogMessage 콜백에 리스너를 등록해서 전달된 로그 메시지를 출력할 수 있습니다.
+GameAnvilConnector does not log directly, but rather passes logs through a callback. You can register a listener to the OnLogMessage callback to print the log messages that are passed, as shown below.
 
 ```c#
 GameAnvilConnector.getInstance().OnLogMesseage.AddListener(log => Debug.Log("OnLogMesseage test : " + log));
 ```
 
-GameAnvilConnector 로그에 사용되는 설정값이 있습니다.
+There are settings used in the GameAnvilConnector logs.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/02-connector/03-log.png)
 
-설정의 종류는 다음과 같습니다.
+There are the following types of settings
 
-| 이름 | 설명 | 기본값 | 
+| Name | Description | Default value | 
 | --- | --- | :----: |
-| Use Debug Log | GameAnvilConnector 내부 로그 출력 여부 | true |
-| Enable Ping Pong Logs | PingPong에 의해 발생하는 로그를 출력 여부 | false |
-| Log Level | GameAnvilConnector 로그 레벨 | Info |
-| on Log Message (String) | GameAnvilConnector 내부 로그가 string 형태로 전달되는 콜백 | - |
+| Use Debug Log | Whether to output GameAnvilConnector internal logs | true |
+| Enable Ping Pong Logs | Whether to output logs generated by PingPong | false |
+| Log Level | GameAnvilConnector Log Levels | Info |
+| on Log Message (String) | A callback that passes the GameAnvilConnector internal logs as a string | - |
 
-이제 GameAnvilConnector의 사용 준비가 완료되었습니다.
+The GameAnvilConnector is now ready for use.

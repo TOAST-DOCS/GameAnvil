@@ -1,98 +1,98 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > 재접속
+## Game > GameAnvil > Unity Advanced Development Guide > Reconnect
 
-## 재접속
+## Reconnect
 
-게임 중 다양한 이유로 서버와의 접속이 끊어질 수 있습니다. 접속이 끊어졌을 때 기존의 플레이를 이어서 할 수 있도록 재접속 기능을 지원합니다. 사용하는 API는 일반적인 접속 방법과 동일하지만 결과로 받아오는 정보에 차이가 있습니다. 
+During a game, you may lose connection to the server for a variety of reasons. We support reconnect so that you can continue playing when you lose connection. The API used is the same as the normal connection method, but the information you receive as a result is different. 
 
-### 서버 접속
+### Connect to the server
 
-ConnectionAgent의 Connect 함수를 이용해 서버에 접속합니다. 일반적인 경우와 동일합니다. 
+Connect to the server using the ConnectionAgent's Connect function. This is the same as in the normal case. 
 
 ```c#
 /// <summary>
-/// GameAnvil 서버에 연결 시도
+/// Attempts to connect to the GameAnvil server.
 /// </summary>
-/// <param name="ip">대상 아이피 주소</param>
-/// <param name="port">대상 포트</param>
-/// <param name="onConnect">연결 시도 결과를 전달 받을 대리자</param>
+/// <param name="ip">Target IP address</param>
+/// <param name="port">Target port</param>
+/// <param name="onConnect">A delegate to receive connection attempt results</param>
 connector.GetConnectionAgent().Connect(ip, port, (ConnectionAgent connectionAgent, ResultCodeConnect result) => {
-    /// <param name="connectionAgent">Connect()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">Connect() 요청 결과 코드</param>
+    /// <param name="connectionAgent">The connection agent that requested Connect()</param>
+    /// <param name="result">Connect() request result code</param>
     if (result == ResultCodeConnect.CONNECT_SUCCESS) {
-      // 접속 성공
+      // Connection success
     } 
     else {
-      // 접속 실패
+      // Connection failed
     }
 });
 ```
 
-### 인증
+### Verify
 
-ConnectionAgent의 Authenticate 함수를 이용해 인증 절차를 진행합니다. 입력 값은 일반적인 경우와 동일합니다. 다만 인증의 결과로 받아오는 값 중 loginedUserInfoList에 이전에 플레이하던 유저 정보가 포함되어 오게 됩니다. 
+Use the ConnectionAgent's Authenticate function to perform the authentication process. The input values are the same as in the normal case. However, the loginedUserInfoList will contain the information of previously played users. 
 
 ```c#
 /// <summary>
-/// GameAnvil 서버에 인증 요청<para></para>
-/// 인증 성공 후 커넥터 사용 가능
+/// Authenticates with the GameAnvil server<para></para>
+/// Enable connector after successful authentication
 /// </summary>
-/// <param name="deviceId">사용자 기기 식별용 고유 아이디. 서버 구현에 따라 사용하지 않는 경우 빈 문자열 전달</param>
-/// <param name="accountId">사용자 계정을 식별할 수 있는 고유 아이디</param>
-/// <param name="passwd">사용자 계정의 비밀번호. 서버 구현에 따라 사용하지 않는 경우 빈 문자열 전달</param>
-/// <param name="onAuthentication">요청 결과를 전달 받을 대리자</param>
+/// <param name="deviceId">Unique ID to identify the user's device. Depending on the server implementation, pass an empty string if not used</param>
+/// <param name="accountId">Unique ID to identify the user's account</param>
+/// <param name="passwd">Password for the user account. Depending on the server implementation, pass an empty string if not used</param>
+/// <param name="onAuthentication">A delegate to receive the results of the request</param>.
 connector.GetConnectionAgent().Authenticate(deviceId, accountId, password, payload
          (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
-    /// <param name="connectionAgent">Authentication()를 요청한 커넥션 에이전트</param>
-    /// <param name="result">Authentication() 요청 결과</param>
-    /// <param name="loginedUserInfoList">서버에 남아 있는 로그인 정보 목록</param>
-    /// <param name="message">서버로부터 받은 메시지</param>
-    /// <param name="payload">서버로부터 받은 추가 정보</param>
+    /// <param name="connectionAgent">The connection agent that requested Authentication().
+    /// <param name="result">Authentication() request result</param>
+    /// <param name="loginedUserInfoList">List of login information left on the server</param>
+    /// <param name="message">Message received from the server</param>
+    /// <param name="payload">Additional information received from the server</param>
     if (result == ResultCodeAuth.AUTH_SUCCESS) {
       foreach(ConnectionAgent.LoginedUserInfo loginedUserInfo in loginedUserInfoList)
-      {
-        // 플레이 유저 정보
+      { 
+        // Play user info
       }
     } 
 });
 ```
 
-### 로그인
+### Sign in
 
-인증 결과로 받은 유저 정보를 이용해 로그인을 진행합니다. 이때 userType이나 channelId 등 이전 유저 정보와 동일한 값을 이용해 로그인을 해야 합니다. 그렇지 않으면 로그인이 실패할 수 있습니다.
+Proceed with login using the user information received as a result of authentication. Make sure to use the same values as the previous user information, such as userType or channelId, otherwise the login may fail. 
 
 ```c#
 /// <summary>
-/// 유저 에이전트를 찾아 반환
+/// Finds and returns the user agent
 /// </summary>
-/// <param name="serviceName">유저 에이전트가 사용할 서비스 이름</param>
-/// <param name="subId">서비스별 유저 에이전트를 식별할 수 있는 고유 아이디</param>
-/// <returns>해당 유저 에이전트, 없으면 널</returns>
+/// <param name="serviceName">The name of the service to be used by the user agent</param>
+/// <param name="subId">Unique ID to identify the user agent by service</param>
+/// <returns>The corresponding user agent, or null if none</returns>
 UserAgent userAgent = Connector.GetUserAgent(loginedUserInfo.ServiceName, loginedUserInfo.SubId);
 
 /// <summary>
-/// 서비스에 로그인
+/// Logs in to the service
 /// </summary>
-/// <param name="userType">유저의 타입 </param>
-/// <param name="payload">서버에 전달할 추가 정보</param>
-/// <param name="channelId">로그인할 채널의 아이디</param>
-/// <param name="onLogin">결과를 받을 대리자</param>
+/// <param name="userType">User's type </param>
+/// <param name="payload">Additional information to pass to the server</param>
+/// <param name="channelId">Id of the channel to log in to</param>
+/// <param name="onLogin">Agent to receive the result</param>
 userAgent.Login(loginedUserInfo.UserType, loginedUserInfo.ChannelId, null,
                  (UserAgent agent, ResultCodeLogin result, UserAgent.LoginInfo loginInfo) => {
-    /// <param name="userAgent">Login()을 요청한 유저 에이전트</param>
-    /// <param name="result">Login() 요청 결과</param>
-    /// <param name="loginInfo">로그인 정보</param>
+    /// <param name="userAgent">The user agent that requested Login()</param>
+    /// <param name="result">Result of the Login() request</param>
+    /// <param name="loginInfo">Login information</param>
 	if (result == ResultCodeLogin.LOGIN_SUCCESS) {
         if(loginInfo.IsRelogined){
-            // 재접속
+            // Reconnect
         }else{
-            // 처음 접속
+            // First time login
         }
 	}
 });
 ```
 
-로그인 성공 시 UserAgent.LoginInfo의 IsRelogined가 true이면 재접속 로그인에 성공한 것입니다. UserAgent.LoginInfo에 포함된 정보들을 바탕으로 재접속 처리하면 됩니다. 이때 제일 중요한 것이 재접속 시간 동안 서버의 변경된 데이터를 클라이언트에 동기화하는 것입니다. 이 동기화에 필요한 데이터를 UserAgent.LoginInfo의 Payload에 담아 처리할 수 있습니다.
+If IsRelogined in UserAgent.LoginInfo is true upon successful login, the reconnection login is successful. Based on the information contained in UserAgent.LoginInfo, you can process the reconnection. The most important thing is to synchronize the changed data on the server to the client during the reconnection time. The data required for this synchronization can be handled in the payload of UserAgent.LoginInfo.  
 
-재접속 로그인을 하면 서버에서는 BaseUser.onRelogin() 콜백이 호출됩니다. 이때 동기화에 필요한 메시지를 정의하여 outPayload 매개변수에 추가하면 UserAgent.LoginInfo의 Payload로 받아 처리할 수 있습니다.
+The reconnection login will cause the BaseUser.onRelogin() callback to be called on the server. At this point, you can define the messages required for synchronization and add them to the outPayload parameter so that they can be received and processed as a payload in UserAgent.LoginInfo. 
 
-만약 IsRelogined가 false이면 시간이 지나 이전 유저 정보가 제거된 다음 로그인이 된 것입니다. 이 경우에는 처음 로그인하는 절차를 수행하면 됩니다. 
+If IsRelogined is false, then you've been logged in after time has passed and the old user information has been removed. In this case, you can follow the steps to log in for the first time. 
