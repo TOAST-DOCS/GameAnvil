@@ -1,4 +1,4 @@
-## Game > GameAnvil > CocosCreator Development Guide > Message handling
+## Game > GameAnvil > CocosCreator Development Guide > Message Handling
 
 ## Message
 
