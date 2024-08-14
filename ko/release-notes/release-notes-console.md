@@ -5,16 +5,16 @@
 * 기타 안정성 개선
 
 ### Change
-* Safe pause 대상 노드 선택 UI 개편
+* Safe Pause 대상 노드 선택 UI 개편
   * 서버 그룹별 노드 확인 및 선택 가능
   * 선택된 노드 상태 유지 기능 추가
   * 동시에 하나 이상의 Safe Pause 실행 가능
   * Match 노드 지원
   * Safe Pause 실행 메모 추가
-* Safe pause 실행 화면 UI 개편
+* Safe Pause 실행 화면 UI 개편
   * Safe Pause 실행 단위로 확인 가능 및 상세 노드정보 확인 가능
   * 전체 혹은 Safe Pause별 중지 가능 기능 추가
-* Safe pause 이력 UI 개편
+* Safe Pause 이력 UI 개편
   * Safe Pause 실행 이력 상세 필터 추가
   * Safe Pause별 상세 이력 제공
 
