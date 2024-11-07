@@ -266,71 +266,31 @@ GameAnvil 서버의 구동을 위해 개발팀에서 사용하는 VM 옵션의 �
 
 ### 권장 VM 옵션
 
-첫 번째 행의 javaagent 옵션은 파이버 코드를 JIT 방식으로 사용할 경우에만 필요하므로 AOT 방식으로 사용하는 경우 이 행을 삭제하십시오. 이러한 [Bytecode Instrumentation](../server-basic/server-basic-06-bytecode-instrument)에 대해서는 뒤에서 자세히 다룹니다. 메모리 크기는 시스템에 맞추어 설정합니다. 참고로 개발팀은 8GB 머신에서는 46GB를, 16GB 머신에서는 1012GB를 사용합니다. 그리고 GameAnvil은 G1GC를 공식 GC로 사용합니다. 그러므로 특별한 이유가 없다면 G1GC를 사용하길 권장합니다. 마지막으로 GC 로그를 위한 최소한의 옵션을 추가하길 강력히 권장합니다. 특히, 개발 과정에서는 필수입니다.
+* JVM의 메모리 크기는 시스템에 맞추어 설정합니다. 참고로 개발팀은 8GB 머신에서는 4\~6GB를, 16GB 머신에서는 10\~12GB를 사용합니다. 
+* GameAnvil은 G1GC를 공식 GC로 사용합니다. 그러므로 특별한 이유가 없다면 G1GC를 사용하길 권장합니다. 
+* GC 로그를 위한 최소한의 옵션을 추가하길 강력히 권장합니다. 특히, 개발 과정에서는 필수입니다.
 
-####  Java 8 
 
+#### Java 21
 ```
--javaagent:YOUR_PATH\quasar-core-0.7.10-jdk8.jar=bm
--Xms4g
--Xmx4g
--XX:+UseG1GC
+--add-opens java.base/java.lang=ALL-UNNAMED
+--add-opens java.base/java.lang.invoke=ALL-UNNAMED 
+-Xms6g
+-Xmx6g
 -XX:MaxGCPauseMillis=100
 -XX:+UseStringDeduplication
 
--XX:+PrintGCDetails
--XX:+PrintGCTimeStamps
 -Xloggc:gc.log
 ```
-
-#### Java 11
-
-```
--javaagent:YOUR_PATH\quasar-core-0.8.0-jdk11.jar=bm
-
---add-opens=java.base/java.lang=ALL-UNNAMED
---illegal-access=deny
-
--Xms4g
--Xmx4g
--XX:+UseG1GC
--XX:MaxGCPauseMillis=100
--XX:+UseStringDeduplication
-
--Xlog:gc*,safepoint:./log/gc.log:time,level,tags
-```
-
+* 첫 줄의 `--add-opens java.base/java.lang=ALL-UNNAMED` 구문은 GameAnvil 에서 Virtual Thread 를 커스텀하여 사용하고 있기 때문에 필요한 jvm 옵션입니다. 이 설정을 제거 시 정상적으로 동작하지 않을 수 있습니다.
+* 두 번째 줄의 `--add-opens java.base/java.lang.invoke=ALL-UNNAMED` 구문은 GameAnvil 에서 리플렉션 성능 최적화를 위한 구문입니다. 이 옵션을 제거해도 시작할 수는 있지만 성능이 저하될 수 있습니다.
 
 
 ### GC 로그를 위한 VM 옵션
 
 GC 로그를 위한 옵션은 메모리 릭 등을 추적하기 위해 필수입니다. 그러므로 특별한 이유가 없다면 최소한 개발 과정에서는 다음과 같은 GC 로그 관련 옵션들을 추가하기를 권합니다. 하지만 실제 서비스에서는 성능에 영향을 줄 수 있으므로 일부 최적화된 옵션들만 필요에 따라 추가해야 할 수도 있습니다. 앞서 권장한 옵션들과 더불어 각 Java 버전에 따라 다음과 같은 옵션들을 추가할 수 있습니다.
 
-#### Java 8
-```
--XX:+PrintGCDetails
--XX:+PrintGCApplicationStoppedTime
--XX:+PrintGCDateStamps
--XX:+PrintGCTimeStamps
--XX:+PrintHeapAtGC
--XX:+PrintReferenceGC
--Xloggc:YOUR_PATH/gc.log
-```
-다음과 같이 파일 로테이션 옵션을 추가할 수도 있습니다.
-```
--XX:+PrintGCDetails
--XX:+PrintGCApplicationStoppedTime
--XX:+PrintGCDateStamps
--XX:+PrintGCTimeStamps
--XX:+PrintHeapAtGC
--XX:+PrintReferenceGC
--XX:+UseGCLogFileRotation
--XX:NumberOfGCLogFiles=100
--XX:GCLogFileSize=10M
--Xloggc:YOUR_PATH/gc.log
-```
-
-#### Java 11
+#### Java 21
 ```
 -Xlog:gc*,safepoint:YOUR_PATH/gc.log:time,level,tags,uptime
 ```
