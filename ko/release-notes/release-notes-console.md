@@ -1,5 +1,41 @@
 ## Game > GameAnvil > 릴리스 노트 > Console
 
+## 2024. 12. 10.
+### Change
+* GameAnvil 1.x 지원 중단
+* GameAnvil 2.0 지원
+* SafePause 화면 개편
+  * 페이지를 벗어나도 선택한 노드 유지 기능 추가
+  * SafePause 대상 노드 목록 조회 화면 개편
+  * SafePause 진행 확인 화면 개편. 상세 노드 정보 추가
+  * SafePause 이력 확인 화면 개편. 상세 노드 정보 추가
+  * 매치노드 SafePause 지원
+  * 동시에 하나 이상의 SafePause 진행 가능
+* 대시보드 > 서버현황
+  * 룸 수 그래프 추가
+* GameAnvil 2.0의 멀티노드 지원
+  * Config에서 `channeldIDs` 필드가 이중 배열 형태로 변경 <br/>
+    채널이 포함되어있는 배열은 하나의 스레드를 의미하며, 배열에 2개 이상의 채널이 있을 경우 한 스레드에서 두개 이상의 게임 노드가 동작함 <br/>
+  ``` json
+  {
+    "game": [
+      {
+        "serviceId": 1,
+        "serviceName": "RPSGame",
+        "nodeCnt": 3,
+        "channelIDs": [
+          ["ch1"], 
+          ["ch2"],
+          ["ch3", "ch4"]
+        ]
+      }
+    ]
+  }
+  ```
+
+### Fix
+* 기타 안정성 개선
+
 ## 2024. 04. 09.
 ### Change
 * SafePause 개선
@@ -24,7 +60,7 @@
     * 검색 기능 수정
   * Safe Pause 화면 수정 
   * 노드 메뉴 개편
-    * 정보 확인 및 상세 검색 기능 추가
+    * 정보 확인 및 상세 검색 기능 ㅂ
   * 서버, 오토스케일 그룹 생성 화면 수정
     * GameAnvil Config를 미리 JSON 형식으로 작성하여 생성 가능
 
