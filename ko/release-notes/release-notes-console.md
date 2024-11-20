@@ -16,21 +16,21 @@
 * GameAnvil 2.0의 멀티노드 지원
   * Config에서 `channeldIDs` 필드가 이중 배열 형태로 변경 <br/>
     채널이 포함되어있는 배열은 하나의 스레드를 의미하며, 배열에 2개 이상의 채널이 있을 경우 한 스레드에서 두개 이상의 게임 노드가 동작함 <br/>
-``` json
-  {
-    "game": [
-      {
-        "serviceId": 1,
-        "serviceName": "RPSGame",
-        "nodeCnt": 3,
-        "channelIDs": [
-          ["ch1"], 
-          ["ch2"],
-          ["ch3", "ch4"]
-        ]
-      }
-    ]
-  }
+```
+{
+  "game": [
+    {
+      "serviceId": 1,
+      "serviceName": "RPSGame",
+      "nodeCnt": 3,
+      "channelIDs": [
+        ["ch1"], 
+        ["ch2"],
+        ["ch3", "ch4"]
+      ]
+    }
+  ]
+}
 ```
 
 ### Fix
