@@ -1,4 +1,211 @@
 ## Game > GameAnvil > 릴리스 노트 > GameAnvil
+
+
+### 2.0.0 (2024.12.04)
+
+#### New
+##### Java 21
+* GameAnvil 2.0 은 Java 21 혹은 그 이상 버전에서만 동작합니다.
+* 엔진팀에서는 현재 LTS 인 Java 21 사용을 권장합니다 
+
+##### Virtual Thread 도입
+* Quasar 의존성이 제거되어 throws SuspendExecution 을 사용하지 않고 코드를 작성할 수 있습니다
+* Java 21 의 동작에 맞게 GameAnvil 의 모든 사용자 호출 코드에서 비동기 작업을 사용할 수 있습니다
+* Java 21 사용 시 **synchronized** 코드를 사용하지 않도록 주의하십시오 Pinning 이슈가 발생할 수 있습니다
+    * 이 제한은 Java 24 에서 해제될 수 있습니다.  https://openjdk.org/jeps/491
+* GameAnvil 에서는 기존 Node 와  코드를 쉽게 작성할 수 있도록 커스텀한 Virtual Thread 를 사용합니다. 이 스레딩 모델은 1 Thread N Virtual Thread 로 기존 Fiber 와 동일합니다. 
+    * 다음의 JVM 옵션을 실행 시 추가 하십시오 
+    * `--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED`
+
+##### 다수의 클라이언트에게 메세지를 보낼 수 있는 API 추가
+* Room.sendToClients API 가 추가되었습니다 
+
+
+##### 패킷 파싱 중 오류 발생시 오류 로그를 출력
+
+#### Remove
+##### Quasar 의존성 제거
+* Quasar 와 관련 코드가 제거되었습니다. 
+* GameAnvil 1.4 에서 제공한 비동기 기능 대신 Java 21 의 Virtual Thread 를 사용합니다 
+
+##### MySql 의존성과 관련 코드 제거 
+* `com.github.jasync-sql:jasync-mysql` 의존성과 엔진의 비동기 관련 코드가 제거되었습니다. 
+* GameAnvil 1.4 에서 제공한 기능 대신 위 라이브러리를 직접 사용하여도 비동기로 동작합니다
+
+##### Redis 의존성과 관련 코드 제거
+* `io.lettuce:lettuce-core`의존성과 엔진의 비동기 관련 코드가 제거되었습니다. 
+* GameAnvil 1.4 에서 제공한 기능 대신 위 라이브러리를 직접 사용하여도 비동기로 동작합니다
+
+##### HttpClient 의존성과 관련 코드 제거
+* `org.asynchttpclient:async-http-client`, `org.apache.httpcomponents.client5:httpclient5` 의존성과 엔진의 비동기 관련 코드가 제거되었습니다. 
+* GameAnvil 1.4 에서 제공한 기능 대신 위 라이브러리를 직접 사용하여도 비동기로 동작합니다
+
+##### MultiRequest 제거
+* MultiRequest 대신 사용자 지정 프로토 버퍼를 사용할 수 있습니다
+* 여러 대상 또는 여러 패킷을 동시에 요청할 때 MultiRequest 대신 새로 추가된 Future 방식의 Request API 를 사용할 수 있습니다
+
+
+##### TimerHandler 의 Object 인자 제거
+* 활용하지 않는 Object 인자가 삭제되었습니다
+
+##### addTopics(List\<T\>), removeTopics(List\<T\>) 삭제  
+* 대신 addTopic(String), removeTopic(String) 을 사용합니다
+
+
+#### Change
+#####  응답을 받는 API 의 반환 값이 Future 로 변경 
+* Java 21 과 Virtual Thread 사용으로 Future 를 사용할 수 있게 되었습니다
+* 기존 버전과 활용성을 유지해야 한다면 반환 받은 Future 에 즉시 get 을 호출하십시오 
+
+##### Handler 실행이 Context 기반으로 변경 
+* Handler 실행이 각 대상에 맞는 DispatchContext 기반으로 변경되었습니다
+* 예를 들어 User 에서 EchoReq 를 처리하는 메세지 핸들러는 다음과 같습니다 
+```java
+public class _EchoReq implements IMessageHandler<IUserDispatchContext, EchoReq> {
+    @Override
+    public void execute(IUserDispatchContext ctx, EchoReq request) {
+        final MyUser user = ctx.getUser();
+        ctx.reply(응답_프로토_버퍼);
+    }
+}
+```
+
+##### Base 클래스 대신 인터페이스로 변경
+* 사용자 구현 Base 클래스가 인터페이스로 변경되었습니다 
+* 기존 Base 클래스에서 제공하던 메서드 구현체는 클래스Context 에서 제공됩니다 
+* 예를 들어 BaseUser 에서 사용하던 API 는 다음과 같이 마이그레이션 할 수 있습니다
+* 기존 PacketDispatcher, Base 클래스 정의 Annotation 은 삭제되었습니다 
+```java
+public class MyUser implements IUser {
+    private IUserContext userContext;
+    public void onCreate(IUserContext ctx) {
+        this.userContext = ctx;
+        
+        userContext.send(..패킷..);  // 이렇게 IUserContext 를 활용하여 
+                                     // 기존 Base 클래스에서 제공하던 기능을 그대로 활용할 수 있습니다
+    }
+}
+```
+
+
+| 기존 |변경  | 비고 |
+| --- | --- | --- |
+| BaseConnection | IConnection, IConnectionContext | |
+| BaseSession|  ISession, ISessionContext|  |
+| BaseGatewayNode | IGatewayNode, IGatewayNodeContext |  |
+| BaseGameNode | IGameNode, IGameNodeContext|  |
+| BaseUser | IUser, IUserContext|  |
+| BaseRoom | IRoom, IRoomContext |
+| BaseSupportNode | ISupportNode, ISupportNodeContext |
+
+##### 사용자 지정 클래스 / 메세지 처리자 등록 방법 변경
+* 사용자 지정 클래스와 메세지 처리자의 등록 방법이 각자 따로 있었던 것을 한 곳에서 등록하도록 변경하였습니다
+* 간단한 사용 방법은 다음과 같습니다
+
+```java
+var gameAnvilServer = GameAnvilServer.getInstance();
+var builder = gameAnvilServer.getServerTemplateBuilder();
+
+builder.connection(MyConnection::new, config -> {
+     config.protoBufferHandler(MyProto.HelloProto.class, new _HelloMessageHandler());
+});
+
+var gameServiceBuilder = builder.createGameService("MyGame"); // 게임 서비스 정의
+gameServiceBuilder.user("MyUserType", MyGameUser::new, config -> {
+    config.protoBufferHandler(MyProto.UserHello.class, new _UserHelloMessageHandler());
+});
+```
+
+
+
+##### ServiceId 대신 ServiceName 사용
+* 엔진 사용자가 인지하기 어려운 ServiceId 를 받는 API 가 사용자가 입력한 ServiceName 을 그대로 받도록 변경되었습니다
+
+##### ProtoBuffer 3.25.5 사용
+* ProtoBuffer 를 4.x 버전으로 업데이트 시 정상적으로 동작하지 않을 수 있습니다
+
+
+##### 1 Thread 에서 N 개의 GameNode 를 실행 가능, 게임 노드의 ChannelID 설정 변경 
+* 여러 GameNode 를 실행 시킬 수 있도록 게임 노드의 ChannelID 설정이 변경되었습니다 
+```
+ "channelIDs": [
+        ["ch1"]
+        ["ch2"],
+]
+```
+* 위과 같이 작성 시 기존처럼 1 Thread = 1 GameNode 입니다
+```
+ "channelIDs": [
+        ["ch1", "ch2"]
+]
+```
+* 위과 같이 작성 시 1 Thread = 2 GameNode 입니다
+
+
+##### AutoIp 실패 시 서버가 강제 종료되도록 변경
+* 초기 정상적으로 동작하지 않는 상태로 멈추는 대신 사용자가 쉽게 인지할 수 있도록 강제 종료합니다
+
+##### Timer 인터페이스 수정
+* 이해하기 어려운 기존 타이머 인터페이스 대신 표준 라이브러리의 ScheduledExecutorService 에서 제공하는 함수와 유사하게 Timer 인터페이스를 수정했습니다
+
+```
+scheduleTimer - 1회
+scheduleTimerWithFixedDelay - N회, 최근 구동 이후 딜레이
+scheduleTimerAtFixedRate - N회, 고정 딜레이
+```
+
+##### Reply 를 2번 이상 보낼 수 없도록 변경
+* 기존 Reply 를 2회 이상 보낼 시 알 수 없는 문제가 발생하던 현상이 해결되었습니다
+
+##### User, Room 에서 Node 를 접근하는 방법 변경
+* 이제 getGameNode 호출 시 Node 를 직접 반환하는 대신 NodeView 를 반환합니다
+* NodeView 에서 기존처럼 Node 를 직접 접근할 수 있지만 함수를 넘겨 Node 동작을 하는 것을 권장합니다
+
+##### Room 에서 User 의 목록 제공
+* 이제 Room 이 가지고 있는 User 의 목록을 제공 받을 수 있습니다
+
+##### 콜백의 의미가 좀더 명확하게 나타나도록 콜백 이름 수정
+* 다음 콜백이 추가/변경되었습니다 
+
+| 대상 |기존  |변경  | 비고 |
+| --- | --- | --- | -- |
+| Session | onPreLogin |onBeforeLogin  |
+| Session  | onPostLogin | onAfterLogin |
+| Session  |  onPostLogout| onAftterLogout |
+| User | onPostLogin | onAfterLogin |
+| User  | onPostLeaveRoom |  onAfterLeaveRoom |
+| User  |  canTransfer | canTransferOut  |
+| User  |  onTransferInTimerHandler | onTransferIn | 기존 onTransferIn 메서드로 병합 | 
+| User  | onPostTransferIn  | onAfterTransferIn  |
+|  Room | onPostLeaveRoom | onAfterLeaveRoom |
+| Room  | onLeaveRoom | canLeaveRoom | LeaveRoom 조건 검사|
+| Room  |  없음 | onMatchPartyCancel | 매칭 취소 시 호출|
+| RoomMatchMaker | onPreMatch | 삭제 | onMatch 로 병합 |
+| RoomMatchMaker | onPostMatch | 삭제 |  onMatch 로 병합 |
+
+#### Fix
+
+* Request API 사용 중 실패 시 오류 로그에 패킷 정보 추가
+* Request API 사용 중 대상을 찾을 수 없을 때 Timeout 대신 즉시 실패 응답
+* 대상 노드 타입별로 있던 Send, Request API를 대상 노드의 Id를 받는 단일 API로 통합
+* 노드 또는 서버 종료 시 데이터 정리 프로세스 강화
+* 엔진에서 주기적으로 남기는 로그의 마커 추가
+* 노드 간 연결이 끊어졌을 때 대상의 로그를 남기도록 수정
+* 특정 상황에서 ConcurrentModificationException 발생 수정
+* 엔진 내부 데이터 크기 최적화
+* 가끔 엔진 내부의 오류 로그가 정상적으로 나오지 않는 문제 수정 
+* 내부 타이머 최적화
+* 내부 Location 동작 개선
+* Gateway Bind 실패 상황에서 서버가 가끔 좀비 상태가 될 수 있는 문제 수정 
+* Timer 인자가 long 으로 변경되어 인자가 Integer 값 이상일 시 정상적으로 동작하지 않는 문제가 수정
+* Cpu 코어 수 보다 Node 수가 많을 때 서버 시작 시 경고 발생하도록 수정
+* 로그아웃으로 방에서 나갈 때 가끔 정상적으로 처리 되지 않는 문제 수정
+* 특정 상황에서 GameAnvil 서버 내부 통신이 정상적으로 동작하지 않을 수 있는 문제가 수정
+* 내부 메모리 최적화
+
+
+---
+
 ### 1.4.2 (2024.02.26)
 
 #### New
