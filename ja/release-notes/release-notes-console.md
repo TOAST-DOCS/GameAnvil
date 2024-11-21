@@ -1,5 +1,22 @@
 ## Game > GameAnvil > リリースノート > Console
 
+## 2024. 09. 10.
+### Fix
+* その他安定性の改善
+
+### Change
+* Safe Pause対象ノード選択UIを改編
+  * サーバーグループ別ノード確認及び選択可能
+  * 選択されたノードの状態を維持する機能を追加
+  * 同時に1つ以上のSafe Pauseを実行できるように変更
+  * Matchノードをサポート
+  * Safe Pause実行メモを追加
+* Safe Pause実行画面UIを改編
+  * Safe Pauseを実行単位で表示し、詳細なノード情報を確認できるように変更
+  * 全体またはSafe Pauseごとに停止する機能を追加
+* Safe Pause履歴UIを改編
+  * Safe Pause実行履歴詳細フィルタを追加
+  * Safe Pauseごとの詳細履歴を提供
 
 ## 2024. 01. 09.
 ### Fix
