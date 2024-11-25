@@ -97,9 +97,9 @@ console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 
 ```typescript
 if (authResult.errorCode === ResultCodeAuth.AUTH_SUCCESS) {
-    console.log("Authentication Success");
+    console.log("Authentication success");
 } else {
-    console.log("Authentication Fail");
+    console.log("Authentication fail");
 }
 ```
 
@@ -311,3 +311,15 @@ connector.onException = (exception: Error) => {
 ```
 
 등록된 함수의 첫 번째 인자로는 에러 객체를 전달합니다.
+
+#### 연결 종료
+
+서버와 명시적으로 연결을 종료하도록 요청할 수 있습니다.
+
+```typescript
+connector.disconnect();
+```
+
+서버와 연결 중이 아닌데 연결 종료 요청을 한 경우 에러가 발생합니다.
+
+게임 플레이 종료 전 connector.disconnect() 함수를 호출해 연결을 종료하는 것이 좋습니다. 종료하지 않으면 서버에서 클라이언트의 종료를 인지하지 못할 수 있으며, 그럴 경우 불필요한 동작을 계속할 수 있습니다. connector를 관리하는 컴포넌트를 게임 종료시에만 파괴 되도록 만들고 OnDestroy()에서 connector.disconnect()를 호출하도록 만들어 놓는것도 좋은 방법입니다. 
