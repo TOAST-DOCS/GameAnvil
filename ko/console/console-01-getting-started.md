@@ -27,19 +27,19 @@
 
 GameAnvil을 사용하려면 NHN Cloud 콘솔에서 GameAnvil 서비스를 활성화해야 합니다. **서비스 선택** 또는 **서비스 추가**를 클릭합니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-1.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/activation-1.png)
 
 **Game** 카테고리에서 **GameAnvil**을 선택합니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-2.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/activation-2.png)
 
 서비스 활성화를 최초로 진행할 경우 다음과 같은 결제 수단 등록 팝업 화면이 나타납니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-3-1.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/activation-3-1.png)
 
 화면의 안내에 따라 결제 수단을 등록하면 다음과 같이 조직 생성 또는 선택 화면이 표시됩니다. 조직을 설정한 뒤 확인을 클릭해 서비스 활성화를 완료합니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/org-and-project.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/org-and-project.png)
 
 서비스가 활성화되고 조직이 생성되면 사용자는 고유한 콘솔 접근 권한을 갖게 됩니다. 사용자는 콘솔에 접속하여 운영 단계에서 필요한 모든 기능을 설정하고 관리할 수 있습니다.
 
@@ -49,7 +49,7 @@ GameAnvil을 사용하려면 NHN Cloud 콘솔에서 GameAnvil 서비스를 활�
 
 먼저 라이선스 스크롤을 맨 아래로 내린 후, 약관에 동의하기에 체크할 수 있습니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/license_agree.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/license_agree.png)
 
 
 
@@ -57,7 +57,7 @@ GameAnvil을 사용하려면 NHN Cloud 콘솔에서 GameAnvil 서비스를 활�
 
 서비스를 활성화하면 GameAnvil 상품 선택 화면이 표시됩니다. GameAnvil 콘솔을 사용하기 전 상품을 선택해야 합니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/choose_product.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/choose_product.png)
 
 GameAnvil은 게임 서버의 시스템 노드 규모와 기술 지원 범위가 다른 두 종류의 상품을 제공합니다. 시스템 노드는 GameAnvil 내부적으로 인스턴스와 노드, 그리고 유저 정보 등을 관리하는 데 사용되는 자원이며, 사용자에게는 노출되지 않습니다.
 Standard 상품은 중·소규모 게임에 적절한 상품으로 이중화된 시스템 노드와 풍부한 기술 지원을 제공합니다. Premium 상품은 대규모 게임을 위해 최적화된 시스템 노드와 좀 더 넓은 범위의 기술 지원을 제공합니다. 서비스할 게임의 특성과 규모에 맞추어 상품을 선택하십시오.
@@ -66,4 +66,4 @@ Standard 상품은 중·소규모 게임에 적절한 상품으로 이중화된 
 
 위 과정을 완료하면 GameAnvil 서비스를 사용할 모든 준비가 완료되었습니다. 콘솔에서 GameAnvil 대시보드를 확인할 수 있습니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/dashboard_init.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/dashboard_init.png)
