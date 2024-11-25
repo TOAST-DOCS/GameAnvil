@@ -17,13 +17,13 @@ GameAnvil은 AdoptOpenJDK를 사용합니다. Java 버전은 21을 지원합니�
 
 1. **File** > **Settings...** 를 클릭합니다.
 
-  ![jdk21-settings.png](https://static.toastoven.net/prod_gameanvil/images/2024/jdk21-settings.png)
+  ![jdk21-settings.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/15-java-env/jdk21-settings.png)
 
 
 
 2. **Build, Execution, Deployment** > **Build Tools** > **Gradle** 을 선택한 뒤 **Gradle JVM**를 JDK 21로 설정합니다.
 
-  ![jdk21-importer.png](https://static.toastoven.net/prod_gameanvil/images/2024/jdk21-gradle-jvm.png)
+  ![jdk21-importer.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/15-java-env/jdk21-gradle-jvm.png)
 
 
 
@@ -31,12 +31,12 @@ GameAnvil은 AdoptOpenJDK를 사용합니다. Java 버전은 21을 지원합니�
 
 1. **File** > **Project Structure...** 를 클릭합니다.
 
-  ![jdk21-project-structure.png](https://static.toastoven.net/prod_gameanvil/images/2024/jdk21-project-structure.png)
+  ![jdk21-project-structure.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/15-java-env/jdk21-project-structure.png)
 
 
 2. **Project Settings** -> **Project**를 선택한 뒤 **Project SDK** 와 **Project language level**을 21로 동일하게 설정합니다.
 
-  ![jdk21-project-sdk.png](https://static.toastoven.net/prod_gameanvil/images/2024/jdk21-lang-level.png)
+  ![jdk21-project-sdk.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/15-java-env/jdk21-lang-level.png)
 
 
 
@@ -44,7 +44,7 @@ GameAnvil은 AdoptOpenJDK를 사용합니다. Java 버전은 21을 지원합니�
 
 1. **Project Settings** -> **Modules**를 선택한 뒤 사용자의 개발 프로젝트를 지정하여 **Language level**을 이전의 Project SDK의 그것과 동일하게 설정합니다.
 
-  ![jdk21-lang-level.png](https://static.toastoven.net/prod_gameanvil/images/2024/jdk21-lang-module-default.png)
+  ![jdk21-lang-level.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/15-java-env/jdk21-lang-module-default.png)
 
 
 

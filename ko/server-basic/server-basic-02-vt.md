@@ -6,11 +6,11 @@ Virtual Thread는 JDK 21 에서 추가된 기능으로 경량 유저 스레드(L
 
 표준 구현의 Virtual Thread들은 JDK 내부의 스레드풀에서 스케줄링됩니다. GameAnvil 에서는 동시 처리의 편의성을 높이기 위해 커스텀한 스레드풀 스케쥴러를 사용하고 있습니다. JDK 내부의 스레드풀의 크기를 1로 고정하면 바로 GameAnvil 노드의 모델이 됩니다. 즉, 노드는 다수의 Virtual Thread를 동시에 처리하기 위한 스케줄러인 것입니다. 이를 그림으로 표현하면 아래와 같습니다.
 
-![VirtualThread_concept.png](https://static.toastoven.net/prod_gameanvil/images/2024/VirtualThreadConcept1.png)
+![VirtualThread_concept.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-basic/02-vt/VirtualThreadConcept1.png)
 
 이와 같이 Virtual Thread를 사용할 때의 장점은 순차적인 코드 작성이 가능하다는 점입니다. 서버 코드는 일반적인 블로킹 코드를 작성하는 것과 매우 흡사해집니다. 별도의 콜백 처리나 완료 통보에 신경 쓸 필요가 전혀 없습니다. 이런 Virtual Thread의 장점에 더해 GameAnvil 사용자는 이 Virtual Thread 단위에 대해 크게 신경 쓸 필요가 없습니다. GameAnvil 엔진단에서 모든 Virtual Thread를 관리하고 있으므로 사용자는 일반적인 싱글 스레딩 코드를 작성하듯이 개발하면 됩니다.
 
-![vt-context-switching.png](https://static.toastoven.net/prod_gameanvil/images/2024/vt-context-switching.png)
+![vt-context-switching.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-basic/02-vt/vt-context-switching.png)
 
 GameAnvil 서버 코드는 비동기 처리를 기반으로 합니다. 이를 위해 [비동기 지원 API](../server-impl/server-impl-10-async)를 제공합니다. 이러한 비동기 API를 사용하여 임의의 Virtual Thread상에서 블로킹 호출을 할 경우에는 해당 Virtual Thread만 park(대기 상태)됩니다.
 
