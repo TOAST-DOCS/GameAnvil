@@ -14,11 +14,10 @@ GameHammer는 대규모 부하 테스트를 위해 대량의 커넥션을 동시
 
 ```java
 public static class TestActor extends ScenarioActor<TestActor> {
-
 }
 ```
 
-각 상태별로 State를 상속 받은 클래스를 정의합니다.
+각 상태별로 State를 상속 받은 클래스를 정의합니다.  
 
 ```java
 public class StateA extends State<TestActor> {
