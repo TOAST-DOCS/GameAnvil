@@ -1,4 +1,4 @@
-## Game > GameAnvil > 릴리스 노트 > Connector-CSharp
+## Game > GameAnvil > 릴리스 노트 > Unity Connector
 
 ### 2.0.0 (2024.12.4)
 

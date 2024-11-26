@@ -1,4 +1,4 @@
-## Game > GameAnvil > Test Development Guide > Scenario Test Development Guide
+## Game > GameAnvil > Test Development Guide > How to implement Scenario Test
 
 ## Large-scale load testing and writing scenarios for it
 

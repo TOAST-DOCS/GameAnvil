@@ -1,4 +1,4 @@
-## Game > GameAnvil > Server Development Guide > Game Node Implementation
+## Game > GameAnvil > Server Development Guide > GameNode Implementation
 
 
 

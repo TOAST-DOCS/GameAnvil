@@ -4,20 +4,20 @@
 
 You can create and manage autoscales from the **Autoscale Group** tab. Autoscale groups automatically scale-out/-in servers within the group based on the conditions you specify.
 
-![Figure](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-group.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/emtpy_autoscale_list.png)
 
 You can create a new autoscale group by clicking **+ Create Autoscale Group **. At this time, it provides a number of settings that affect the behavior of autoscales.
 
-![Figure](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param1.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/register_autoscale.png)
 
 As with server creation, you predefine what configuration information (Config) is used to create servers within an autoscale group. You can also define the instance type and many of the factors on which scaling up and down is based.
 
-![Figure](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param2.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/register_autoscale2.png)
 
 Values for these scale-out/-in conditions can be combined as AND/OR operations. At this time, you can set up hardware resources such as CPU and memory, as well as logical resources such as the number of game users.
 
 Once the autoscale group is created, you can check the list as follows. Also, just like creating a server, you can click each item to see the details of the autoscale group created. 
-![Figure](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-created.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/scalegroup_list.png)
 
 The remainder of this article explores the configuration items used in the creation of an autoscale group.
 

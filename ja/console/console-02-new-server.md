@@ -4,15 +4,15 @@
 
 GameAnvilコンソールは上位のメニューに大きな機能が分かれており、各メニューは下位のタブで構成されています。例えば、**モニタリング**、**サーバー**、**運用**はメニューです。 そしてモニタリングメニューは**ダッシュボード**、**サーバー現況**、**ユーザー分布**、**オートスケールグループ**でタブで構成されます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/menu-server-manage-1.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/menu_1.png)
 
 **サーバー**メニューは**サーバー**、**オートスケールグループ**、**ノード**、**配布ファイル**、**Config**タブで構成されています。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/menu-server-manage-2.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/menu_2.png)
 
-**運営**メニューは**実行**、**履歴**タブで構成されます。
+**Safe Pause**メニューは**実行**、**履歴**タブで構成されます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/menu-server-manage-3.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/menu_3.png)
 
 この文書はこれらのメニューとタブの機能を中心に説明します。
 
@@ -22,19 +22,19 @@ GameAnvilコンソールは上位のメニューに大きな機能が分かれ�
 サーバーを作成するには、少なくともサーバーバイナリと関連設定及びデータなどが必要です。コンソールでは、このためにサーバーメニューの配布ファイルとConfigタブを提供します。 
 
 配布ファイルタブにゲームサーバーのバイナリをアップロードできます。アップロードしたバイナリは下の画面のように履歴が管理されます。サーバーを作成する時、このような配布ファイルのいずれかを選択して各インスタンスに自動配布されます。 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/deploy.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/deploy_file_list.png)
 
 配布ファイルと同じように、サーバーを駆動するための構成情報(Config)を登録する必要があります。 これにより、サーバーのバイナリをどのような設定に基づいて駆動するかを決めることができます。このような構成ファイルも次の画面のようにその内訳が別途管理されます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/config.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/config_list.png)
 
 構成情報(Config)を登録する方法は大きく2つあります。1つ目は、下の画面のようにあらかじめ作成されたJSONファイルをアップロードする方式です。 この時、初めて構成情報(Config)ファイルを作成する場合、Configテンプレートのダウンロードをクリックしてテンプレートをダウンロードして使うことができます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/config-new.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/register_new_config_init.png)
 
 2つ目は下の画面のように編集ウィンドウを利用して直接構成情報を入力する方法です。 登録方法以外には違いがないので、好きな方法を選択して構成情報を登録します。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/config-edit.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/register_config.png)
 
 登録した配布ファイルと構成ファイルはリストだけでなく、履歴タブで今までの全ての履歴を照会することもできます。
 
@@ -45,17 +45,17 @@ GameAnvilコンソールは上位のメニューに大きな機能が分かれ�
 
 サーバーを作成するには、コンソールのサーバーメニューでサーバー作成をクリックしてください。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/create-01.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/empty_server_list.png)
 
 
 下記のようにサーバー作成ページが表示されます。この文書のサーバー基本情報、ノード構成の内容を参考にしてサーバーを作成してください。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/create-new.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/new_server_2.png)
 
 
 ## サーバー基本情報
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/create-03.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/create-03.png)
 
 * サーバー名：現在構成するサーバーを表す固有の識別子を指定します。同じ識別子を持つサーバーを複数台起動する場合は、その識別子の後に1から1ずつ増加する固有の番号が追加されます。
 
@@ -73,15 +73,18 @@ GameAnvilコンソールは上位のメニューに大きな機能が分かれ�
 
 GameAnvilのノードはゲームサーバーの機能単位です。開発が完了したサーバーバイナリには、ゲームで使用するあらゆる種類のノードの実装が含まれています。このようなバイナリログで駆動されるサーバープロセスは、設定によって任意の選択されたノードのみで構成することができ、サーバー作成前に登録しておいた構成情報(Config)を基に設定します。 つまり、構成情報(Config)にはノード構成情報が含まれています。複数の構成情報(Config)が登録されている場合、適用する構成をリストから選択できます。 また、構成情報に含まれているノード設定をノードの種類別に有効または無効にできます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/create-04.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/new_server_node_config.png)
 
 
 上の画像は、次のように合計4つのゲームノードでサーバーを構成します。
 
 | ノード種類  | サービス名   | 駆動数 | 説明                                           |
 |---------|---------|-------|-----------------------------------------------|
+| GATEWAY | -            | 1     | 클라이언트 접속과 인증을 처리하는 노드.                                                                                               |
 | GAME    | RPSGame | 4     | ゲームコンテンツが実装されたゲームノードで、それぞれch1～ch4までのチャンネルを担当します。 |
-
+| MATCH   | -            | 2     | 매치 메이킹을 수행                                                                                                           |
+| Support | DB           | 2     | 필요에 따라 독립된 서비스로 구현하도록 지원                                                                                             |
+| Support | WEB          | 2     | 필요에 따라 독립된 서비스로 구현하도록 지원                                                                                             |
 
 
 この時、構成情報(Config)に入力したサービス名はサーバー開発に使用された情報と同じでなければなりません。サーバーの実装に使用された情報と異なる値を入力した場合、サーバーが正常に動作しません。 チャネル値も構成情報(Config)に設定した値がそのまま表示されます。
@@ -93,11 +96,11 @@ GameAnvilのノードはゲームサーバーの機能単位です。開発が�
 
 サーバーが正常に動作されると、画像のように**RUNNING**状態に変わります。このように生成されたサーバーをクリックすると、次のようにサーバー情報を確認できます。この時、ユーザーはサーバー制御コマンドを使用して、そのサーバーを終了させて削除したり、再起動などを行うことができます。 あるいは、複数選択ボタンを使用して、一度に複数のサーバーを同時に選択してコマンドを実行することもできます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/created.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/server_list.png)
 
 サーバーリストで任意の項目をクリックすると、サーバーの詳細情報を確認できます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/detail.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/server_details.png)
 
 
 ## 作成されたノード情報の確認
@@ -105,12 +108,12 @@ GameAnvilのノードはゲームサーバーの機能単位です。開発が�
 作成されたサーバーを構成する全てのノード情報はノードタブで確認できます。
 
 **状態**、**ノードタイプ**、**サーバータイプ**だけでなく、**ノードID**など、より詳細で明確な情報に基づいて任意のノード情報だけをフィルタリングすることもできます。
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/node.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/node_list.png)
 
 ## ロードバランサー
 
 GameAnvilサービスはクライアントの接続を効率的に処理するためにロードバランサーを連動します。GameAnvilのノードのうち、クライアントが接続できるポイントはゲートウェイノードとサポートノードです。 そして、これらはすべて複数のインスタンスで構成できます。この時、複数の接続ポイントは、適切な負荷分散のためにロードバランサーと連動する必要があります。 また、そのロードバランサーは外部から接続可能なFloating IPに接続する必要があります。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/new-server/lb.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/loadbalancer.png)
 
 このような一連の過程はGameAnvilサービスで自動的に処理され、**ロードバランサー情報**をクリックして接続情報を確認できます。この情報はクライアントの接続アドレス/ポートペアなので、不必要に外部に伝わらないように注意する必要があります。

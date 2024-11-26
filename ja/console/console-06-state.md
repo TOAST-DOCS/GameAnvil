@@ -10,7 +10,7 @@
 
 サーバーの状態は、プロセス(S/W)とインスタンス(H/W)の状態を複合的に表現します。サーバー管理ページで見ることができるダッシュボードは、このようなサーバーの状態を一覧表示し、それぞれの状態に属するサーバーの台数を表示しています。 また、色でそれぞれの状態を表しています。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/state/dashboard.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/state/monitoring_dashboard.png)
 
 <br>
 以下は、各サーバーの状態に関する説明です。

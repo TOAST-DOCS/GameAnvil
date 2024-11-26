@@ -10,7 +10,7 @@ Multiple game servers can be configured for a single game service. And each game
 
 Server states are a combination of the state of processes (S/W) and instances (H/W). The dashboard, which you can see on the Server Management page, lists these server’s state and displays the number of servers in each state. It also displays each state in a distinct color.
 
-![Figure](https://static.toastoven.net/prod_gameanvil/images/console/state/dashboard.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/state/monitoring_dashboard.png)
 
 <br>
 The following describes each server state.

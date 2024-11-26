@@ -27,11 +27,11 @@
 
 GameAnvilを使用するにはNHN CloudコンソールでGameAnvilサービスを有効にする必要があります。**サービス選択**または**サービス追加**をクリックします。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-1.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/activation-1.png)
 
 **Game**カテゴリーから**GameAnvil**を選択します。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activation-2.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/activation-1.png)
 
 サービスの有効化を初めて行う場合、次のような決済手段登録ポップアップ画面が表示されます。
 
@@ -39,15 +39,21 @@ GameAnvilを使用するにはNHN CloudコンソールでGameAnvilサービス�
 
 画面の案内に従って決済手段を登録すると、次のように組織の作成または選択画面が表示されます。組織を設定した後、[OK]をクリックしてサービスの有効化が完了します。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/org-and-project.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/org-and-project.png)
 
 サービスが有効になり、組織が作成されると、ユーザーは固有のコンソールアクセス権限を持ちます。ユーザーはコンソールに接続し、運営段階で必要なすべての機能を設定し、管理できます。
+
+## GameAnvil 라이선스 동의
+
+먼저 라이선스 스크롤을 맨 아래로 내린 후, 약관에 동의하기에 체크할 수 있습니다.
+
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/license_agree.png)
 
 ## GameAnvil商品の選択
 
 サービスを有効にすると、GameAnvil商品選択画面が表示されます。GameAnvilコンソールを使用する前に商品を選択する必要があります。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/activated-1-1.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/choose_product.png)
 
 GameAnvilは、ゲームサーバーのシステムノード規模と技術サポート範囲が異なる2種類の商品を提供しています。システムノードはGameAnvil内部でインスタンスとノード、そしてユーザー情報などを管理するために使用されるリソースであり、ユーザーには公開されません。
 Standard商品は中・小規模のゲームに適した商品で、冗長化されたシステムノードと豊富な技術サポートを提供します。Premium商品は大規模ゲームに最適化されたシステムノードと、より広い範囲の技術サポートを提供します。サービスするゲームの特性と規模に合わせて商品を選択してください。
@@ -56,4 +62,4 @@ Standard商品は中・小規模のゲームに適した商品で、冗長化さ
 
 上記のプロセスが完了したら、GameAnvilサービスを使用するすべての準備が整いました。コンソールでGameAnvilダッシュボードを確認できます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/getting-started/console-dashboard.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/dashboard_init.png)

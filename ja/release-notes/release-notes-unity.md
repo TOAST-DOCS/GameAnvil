@@ -1,4 +1,4 @@
-## Game > GameAnvil > リリースノート > Connector-CSharp 
+## Game > GameAnvil > リリースノート > Unity Connector
 
 ### 1.4.0 (2023.12.13)
 
