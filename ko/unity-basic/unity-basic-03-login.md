@@ -126,7 +126,7 @@ public async void ManagerLogin()
 
 ## Disconnect
 
-GameAnvilManager의 Logout() 함수를 이용해서 서버와의 연결을 해제할 수 있습니다.
+GameAnvilManager의 Logout() 메소드를 이용해서 서버와의 연결을 해제할 수 있습니다.
 
 Logout() 호출 시 로그아웃, 서버 접속 종료, 연결 해제 후 처리할 콜백 호출의 과정을 한 번에 처리할 수 있습니다.
 

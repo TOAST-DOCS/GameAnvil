@@ -2,7 +2,7 @@
 
 ## GameAnvilManager
 
-GameAnvilManager는 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 옵션을 설정하거나 콜백을 등록할 수 있습니다. GameAnvilManager를 사용하려면 먼저 Scene에 GameAnvilManager를 추가해야 합니다.
+GameAnvilManager는 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 옵션을 설정하거나 콜백을 등록할 수 있습니다. GameAnvilManager를 사용하려면 먼저 씬에 GameAnvilManager를 추가해야 합니다.
 
 ### 생성
 

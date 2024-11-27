@@ -7,7 +7,8 @@ LTE, Wi-Fi 전환 등의 이유로 인터넷 연결이 끊길 경우 이를 인�
 
 ### NetworkChecker 생성
 
-GameObject를 생성하고 NetworkChecker 컴포넌트를 추가합니다.
-**Add Component > GameAnvil > NetworkChecker**를 선택해 컴포넌트로 추가할 수 있습니다.
+Unity Hierarchy 창에서 마우스 오른쪽 버튼을 클릭한 뒤 **GameAnvil > NetworkChecker**를 선택해 바로 생성할 수 있습니다.
 
-또는 Unity Hierarchy에서 마우스 오른쪽 버튼을 클릭하고 **GameAnvil > NetworkChecker**를 선택해 바로 생성할 수도 있습니다.
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/08-network-checker/01-network-checker.png)
+
+또는 빈 GameObject를 생성하고 NetworkChecker 컴포넌트를 추가할 수도 있습니다.
