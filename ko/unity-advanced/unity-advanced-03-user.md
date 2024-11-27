@@ -59,11 +59,11 @@ userAgent.Logout((UserAgent user, Defines.ResultCodeLogout result, bool force, P
 
 ### 방 생성, 입장, 퇴장
 
-[Unity 기초 개발 가이드 > UserAgent](../unity-basic/unity-basic-04-user-agent.md)의 방 생성, 입장, 퇴장 내용과 동일합니다.
+[Unity 기초 개발 가이드 > UserAgent](../unity-basic/unity-basic-04-user)의 방 생성, 입장, 퇴장 내용과 동일합니다.
 
 ### 매치 메이킹
 
-GameAnvil은 두 가지 매치 메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치 메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치 메이킹입니다. 자세한 내용은 [Unity 기초 개발 가이드 > UserAgent](../unity-basic/unity-basic-04-user-agent.md)의 매치 메이킹 부분을 참고하십시오.
+GameAnvil은 두 가지 매치 메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치 메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치 메이킹입니다. 자세한 내용은 [Unity 기초 개발 가이드 > UserAgent](../unity-basic/unity-basic-04-user)의 매치 메이킹 부분을 참고하십시오.
 
 #### 파티 매치 메이킹
 
