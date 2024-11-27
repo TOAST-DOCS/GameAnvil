@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity Advanced Development Guide > Reconnect
+## Game > GameAnvil > Unity Advanced Development Guide > Reconnection
 
 ## Reconnect
 

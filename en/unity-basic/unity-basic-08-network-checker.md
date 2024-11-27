@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity Basic Development Guide > Check Network Connectivity
+## Game > GameAnvil > Unity Basic Development Guide > Connectivity Check
 
 ## NetworkChecker
 

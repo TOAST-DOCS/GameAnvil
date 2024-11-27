@@ -1,4 +1,4 @@
-## Game > GameAnvil > 서버 개념 설명 > 메세지 처리와 패킷
+## Game > GameAnvil > Server Concept Description > Packet
 
 ## 패킷
 

@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity Advanced Development Guide > ConnectionAgent
+## Game > GameAnvil > Unity Advanced Development Guide > Connector
 
 ## ConnectionAgent
 

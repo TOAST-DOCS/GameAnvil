@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity Basic Development Guide > Prevent Background Disconnection
+## Game > GameAnvil > Unity Basic Development Guide > Preventing Background Disconnection
 
 ## Prevent Background Disconnections
 
@@ -8,10 +8,10 @@ In some cases, you may not want to be disconnected if the game goes to the backg
 
 The server's connection check pause time can be adjusted via the GameAnvilConnector's pauseClientStateCheckTime value.
 
-For more information, see the [Unity Advanced Development Guide > Prevent background disconnection](../unity-advanced/unity-advanced-06-background-connection.md).
+For more information, see the [Unity Advanced Development Guide > Preventing Background Disconnection](../unity-advanced/unity-advanced-06-pause).
 
 ### Reconnect
 
 After the time entered in PauseClientStateCheck() has elapsed, the server will resume checking for connections and you may be disconnected. If this happens, you'll need to reconnect.
 
-You can learn more about reconnecting in the [Unity Advanced Development Guide > Reconnecting](../unity-advanced/unity-advanced-07-reconnect.md).
+You can learn more about reconnecting in the [Unity Advanced Development Guide > Disconnection](../unity-advanced/unity-advanced-07-reconnect).

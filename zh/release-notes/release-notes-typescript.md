@@ -1,4 +1,4 @@
-## Game > GameAnvil > Release Notes > Connector-Typescript
+## Game > GameAnvil > Release Notes > Typescript Connector
 ### 1.2.1 (2021.11.30)
 
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.1.zip)

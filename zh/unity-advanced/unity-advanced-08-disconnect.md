@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity Basic Development Guide > Exit the GameAnvil Connector
+## Game > GameAnvil > Unity Advanced Development Guide > Disconnection
 
 ## Terminate the GameAnvil connector
 

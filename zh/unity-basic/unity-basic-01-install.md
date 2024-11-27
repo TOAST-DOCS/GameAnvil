@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity Basic Development Guide > Install GameAnvilConnector
+## Game > GameAnvil > Unity Basic Development Guide > Getting Started
 
 ## GameAnvilConnector
 

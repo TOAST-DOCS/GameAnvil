@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity基礎開発ガイド > GameAnvilコネクタの終了
+## Game > GameAnvil > Unity深層開発ガイド > GameAnvilコネクタの終了
 
 ## GameAnvilコネクタの終了
 
