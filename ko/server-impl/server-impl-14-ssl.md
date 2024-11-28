@@ -6,8 +6,6 @@
 
 게이트웨이 노드와 서포트 노드는 공용망에 노출되는 노드들입니다. 그러므로 이 두 노드는 SSL(secure socket layer)을 지원합니다.
 
-
-
 ## SSL 설정하기
 
 SSL은 기본적으로 GameAnvilConfig을 통해 보안 설정을 합니다. 인증키의 루트 경로는 VM 옵션으로 변경할 수 있습니다.
@@ -17,28 +15,27 @@ SSL은 기본적으로 GameAnvilConfig을 통해 보안 설정을 합니다. 인
 다음과 같이 'secure' 설정을 통해 SSL 사용을 활성화할 수 있습니다. 만일 SSL을 사용하지 않을 경우에는 해당 키-값 쌍을 모두 삭제합니다.
 
 
-```java
+```json
 "gateway": {
-	"connectGroup": {
-		"TCP_SOCKET": {
-    		"port": 18200,
-    		// 보안 설정
-			"secure": {
-				"useSelfSignedCert": false,
-				"keyCertChainPath": "gameanvil.crt", 	// 인증서 경로
-				"privateKeyPath": "privatekey.pem" 		// 개인 키 경로
-			}
-		},
-        
-	    "WEB_SOCKET": {
-			"port": 18300,
-			"secure": {
-				"useSelfSignedCert": false,
-				"keyCertChainPath": "gameanvil.crt",	// 인증서 경로
-				"privateKeyPath": "privatekey.pem"		// 개인 키 경로
-			}
-		}
-	},
+    "connectGroup": {
+        "TCP_SOCKET": {
+            "port": 18200,
+            // 보안 설정
+            "secure": {
+                "useSelfSignedCert": false,
+                "keyCertChainPath": "gameanvil.crt",    // 인증서 경로
+                "privateKeyPath": "privatekey.pem"      // 개인 키 경로
+            }
+        },
+        "WEB_SOCKET": {
+            "port": 18300,
+            "secure": {
+                "useSelfSignedCert": false,
+                "keyCertChainPath": "gameanvil.crt",	// 인증서 경로
+                "privateKeyPath": "privatekey.pem"      // 개인 키 경로
+            }
+        }
+    },
 },
 ```
 
@@ -56,17 +53,17 @@ SSL은 기본적으로 GameAnvilConfig을 통해 보안 설정을 합니다. 인
 
 서포트 노드도 게이트웨이 노드와 비슷하게 "restSecure" 설정을 통해 SSL 사용을 활성화할 수 있습니다. 만일 SSL을 사용하지 않을 경우에는 해당 키-값 쌍을 모두 삭제합니다.
 
-```java
+```json
 "support": [
-	{
-		...
-		// 보안 설정
-		"restSecure": {
-			"useSelfSignedCert": false,
-			"keyCertChainPath": "gameanvil.crt", 	// 인증서 경로
-			"privateKeyPath": "privatekey.pem" 		// 개인 키 경로
-		}
-	}
+    {
+        ...
+        // 보안 설정
+        "restSecure": {
+            "useSelfSignedCert": false,
+            "keyCertChainPath": "gameanvil.crt", 	// 인증서 경로
+            "privateKeyPath": "privatekey.pem" 		// 개인 키 경로
+        }
+    }
 ],
 ```
 
