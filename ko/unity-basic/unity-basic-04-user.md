@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 유저 컨트롤러
+## Game > GameAnvil > Unity 기초 개발 가이드 > 유저컨트롤러
 
 ## GameAnvilUser
 
@@ -10,11 +10,11 @@ GameAnvilManager는 기본적으로 간편 로그인 과정에서 생성된 하�
 
 로그인은 클라언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다.
 
-로그인은 간편 로그인에서 한 번에 처리되기 때문에 설명을 생략합니다. 자세한 내용은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user)를 참고하십시오.
+로그인은 간편 로그인에서 한 번에 처리되기 때문에 설명을 생략합니다. 자세한 내용은 [Unity 심화 개발 가이드 > 유저](../unity-advanced/unity-advanced-03-user)를 참고하십시오.
 
 ### 로그아웃
 
-GameAnvilManager에서는 게임 서버에서 로그아웃하고, 자동으로 접속 종료까지 처리됩니다. 로그아웃에 대한 더 자세한 설명은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user)를 참고하십시오.
+GameAnvilManager에서는 게임 서버에서 로그아웃하고, 자동으로 접속 종료까지 처리됩니다. 로그아웃에 대한 더 자세한 설명은 [Unity 심화 개발 가이드 > 유저](../unity-advanced/unity-advanced-03-user)를 참고하십시오.
 
 ### 방 생성, 입장, 퇴장
 
@@ -58,8 +58,7 @@ CreateRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
 | String  | matchingGroup | 매칭 시 사용할 매칭 그룹 이름. 사용하지 않는 경우 string.Empty(빈 문자열) 입력  |
 | Payload | payload       | 방 생성 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
 
-응답으로 ErrorResult<ResultCodeCreateRoom, CreatedRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. CreateRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeCreateRoom.CREATE_ROOM_SUCCESS 가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 CreatedRoomResult 를 얻을 수 있습니다. 이를 통해 생성된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가
-정보를 얻을 수도 있습니다.
+응답으로 ErrorResult<ResultCodeCreateRoom, CreatedRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. CreateRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeCreateRoom.CREATE_ROOM_SUCCESS 가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 CreatedRoomResult 를 얻을 수 있습니다. 이를 통해 생성된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeCreateRoom의 상세 내용은 다음과 같습니다.
 
@@ -88,23 +87,26 @@ CreatedRoomResult의 상세 내용은 다음과 같습니다.
 JoinRoom()을 호출하여 이미 생성된 방에 입장합니다.
 
 ``` c#
-GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-GameAnvilUserController userController = gameAnvilManager.UserController;
-try
+public async void ManagerJoinRoom()
 {
-    Payload joinRoomPayload = new Payload(new Protocol.CreateRoomData());
-    ErrorResult<ResultCodeJoinRoom, JoinRoomResult> result = await userControll.JoinRoom(managerRoomType, managerRoomId, string.Empty, joinRoomPayload);
-    if(result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userControll = gameAnvilManager.UserController;
+    try
     {
-        // 성공
-    } else
-    {
-        // 실패
+        Payload joinRoomPayload = new Payload(new Protocol.JoinRoomData());
+        ErrorResult<ResultCodeJoinRoom, JoinRoomResult> result = await userControll.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload);
+        if(result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
+        {
+            // 성공
+        } else
+        {
+            // 실패
+        }
     }
-}
-catch (Exception e)
-{
-    // 예외
+    catch (Exception e)
+    {
+        // 예외
+    }
 }
 ```
 
@@ -227,8 +229,7 @@ NamedRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
 | bool    | isParty  | 파티 매치메이킹을 위한 방 여부.<br/>같은 파티로 묶인 유저들이 파티 매치메치킹이 완료될 때 까지 함께 대기하기 위한 방을 만들 경우 true로 입력한다. |
 | Payload | payload  | 입장 또는 생성 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                |
 
-응답으로 ErrorResult<ResultCodeNamedRoom, NamedRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. NamedRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeNamedRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 NamedRoomResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가
-정보를 얻을 수도 있습니다.
+응답으로 ErrorResult<ResultCodeNamedRoom, NamedRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. NamedRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeNamedRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 NamedRoomResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeNamedRoom 상세 내용은 다음과 같습니다.
 
@@ -254,9 +255,9 @@ NamedRoomResult 의 상세 내용은 다음과 같습니다.
 | String? | RoomName | 입장한 방의 이름          |
 | Payload | payload  | 클라이언트에서 필요한 추가 정보. |
 
-### 매치 메이킹
+### 매치메이킹
 
-GameAnvil은 크게 두 가지 매치 메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치메이킹입니다.
+GameAnvil은 크게 두 가지 매치메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치메이킹입니다.
 
 #### 룸 매치메이킹
 
@@ -268,11 +269,11 @@ MatchRoom()을 호출하여 룸 매치메이킹을 요청할 수 있습니다.
 public async void ManagerMatchRoom()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userController = gameAnvilManager.UserController;
+    GameAnvilUserController userControll = gameAnvilManager.UserController;
     try
     {
         var matchRoomPayload = new Payload(new Protocol.MatchRoomData());
-        ErrorResult<ResultCodeMatchRoom, MatchResult> result = await userControll.MatchRoom(false, false, managerRoomType, ConstantManager.channelId, string.Empty, matchRoomPayload);
+        ErrorResult<ResultCodeMatchRoom, MatchResult> result = await userControll.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
         if (result.ErrorCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
         {
             // 성공
@@ -297,11 +298,10 @@ MatchRoom()은 다음과 같은 7개의 매개변수를 가지고 있습니다.
 | string  | roomType                  | 방 타입. 같은 타입의 방을 찾는다.                                                                                                             |
 | string  | matchingGroup             | 매칭 그룹. 같은 그룹으로 생성된 방을 찾는다.                                                                                                       |
 | string  | matchingUserCategory      | 매칭 된 방에서 사용항 유저 카테고리.<br/>각 방에서는 방에 속한 유저를 카테고리로 나누고, 각 카테고리별로 인원수 제한을 적용할 수 있다. 지정한 matchingUserCategory의 현재 인원이 최대가 아닌 방을 찾는다. |
-| Payload | payload                   | 매치 메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                          |
+| Payload | payload                   | 매치메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                          |
 | Payload | leaveRoomPayload          | 다른 방으로 이동하는 경우, 방을 나갈때 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                              |
 
-응답으로 ErrorResult<ResultCodeMatchRoom, MatchResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeMatchRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 MatchResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가정보를 얻을
-수도 있습니다.
+응답으로 ErrorResult<ResultCodeMatchRoom, MatchResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeMatchRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 MatchResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가정보를 얻을 수도 있습니다.
 
 ResultCodeMatchRoom 상세 내용은 다음과 같습니다.
 
@@ -347,25 +347,26 @@ MatchResult 의 상세 내용은 다음과 같습니다.
 
 #### 유저 매치메이킹
 
-유저 매치메이킹은 유저 풀을 만들고 그 안에서 조건에 맞는 유저들을 찾아 새로 생성한 방으로 입장시켜 주는 방식입니다. 유저 풀에 조건에 맞는 유저의 수가 모자랄 경우 매치 메이킹이 완료될 때까지 시간이 걸릴 수 있고, 시간 내에 매치 메이킹이 완료되지 않으면 시간 초과되어 매칭이 실패할 수 있습니다.
+유저 매치메이킹은 유저 풀을 만들고 그 안에서 조건에 맞는 유저들을 찾아 새로 생성한 방으로 입장시켜 주는 방식입니다. 유저 풀에 조건에 맞는 유저의 수가 모자랄 경우 매치메이킹이 완료될 때까지 시간이 걸릴 수 있고, 시간 내에 매치메이킹이 완료되지 않으면 시간 초과되어 매칭이 실패할 수 있습니다.
 
-MatchUserStart()를 호출하여 유저 매치메이킹을 시작할 수 있습니다. 이 요청의 결과가 성공이라고 해도 유저 매치메이킹이 완료된 것은 아닙니다. 단시 시작 요청이 성공한 것이며, 매치 메이킹의 결과는 별도의 콜백을 통해 전달됩니다.
+MatchUserStart()를 호출하여 유저 매치메이킹을 시작할 수 있습니다. 이 요청의 결과가 성공이라고 해도 유저 매치메이킹이 완료된 것은 아닙니다. 단시 시작 요청이 성공한 것이며, 매치메이킹의 결과는 별도의 콜백을 통해 전달됩니다.
 
 ```c#
 public async void ManagerMatchUserStart()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userController = gameAnvilManager.UserController;
+    GameAnvilUserController userControll = gameAnvilManager.UserController;
     userControll.onMatchUserDoneSuccess.AddListener((MatchResult matchResult) => {
         // 매칭 성공
     });
     userControll.onMatchUserTimeOut.AddListener((MatchResult matchResult) =>
     {
-        // 시간 내 매칭 실패
+        // 매칭 실패
     });
     try
     {
-        ErrorResult<ResultCodeMatchUserStart, Payload> result = await gameAnvilManager.UserController.MatchUserStart(managerRoomType, "", new Payload(roomOption));
+        Payload matchUserPayload = new Payload(new Protocol.MatchUserData());
+        ErrorResult<ResultCodeMatchUserStart, Payload> result = await gameAnvilManager.UserController.MatchUserStart("RoomType", "MatchingGroup", matchUserPayload);
         if(result.ErrorCode == ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS)
         {  
             // 요청 성공
@@ -389,7 +390,7 @@ MatchUserStart()은 다음과 같은 3개의 매개변수를 가지고 있습니
 | String  | matchingGroup | 매칭 그룹. 같은 그룹의 유저 풀에서 조건에 맞는 유저를 찾는다. 사용하지 않는 경우 string.Empty(빈 문자열) 입력 |
 | Payload | payload       | 유저 매치메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)              |
 
-응답으로 ErrorResult<ResultCodeMatchUserStart, Payload>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchUserStart이 성공하면 ErrorCode 필드의 값이 ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS 가 되며, 아닌 유저 매치메이킹이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload 를 통해 추가 정보를 얻을 수도 있습니다.
+응답으로 ErrorResult<ResultCodeMatchUserStart, Payload>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchUserStart이 성공하면 ErrorCode 필드의 값이 ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS 가 되며, 아닌 경우 유저 매치메이킹이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload 를 통해 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeMatchUserStart 상세 내용은 다음과 같습니다.
 
@@ -416,10 +417,10 @@ MatchUserCancel()을 호출하여 진행중인 유저 매치메이킹을 취소�
 public async void ManagerMatchUserCancel()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userController = gameAnvilManager.UserController;
+    GameAnvilUserController userControll = gameAnvilManager.UserController;
     try
     {
-        ResultCodeMatchUserCancel result = await userControll.MatchUserCancel(managerRoomType);
+        ResultCodeMatchUserCancel result = await userControll.MatchUserCancel("RoomType");
         if (result == ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS)
         {
             // 성공
@@ -450,4 +451,4 @@ ResultCodeMatchUserCancel 상세 내용은 다음과 같습니다.
 | MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM | 1202 | 실패. 이미 방에 들어가 있음.                          |
 | MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS     | 1203 | 실패. 유저 매치메이킹이 진행중이 아님.                     |
 
-이 밖에 파티 매치 메이킹, 채널, 리스너 등 유저 에이전트의 다양한 기능들에 대한 자세한 내용은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user)를 참고하십시오.
+이 밖에 파티 매치메이킹, 채널, 리스너 등 유저 에이전트의 다양한 기능들에 대한 자세한 내용은 [Unity 심화 개발 가이드 > 유저](../unity-advanced/unity-advanced-03-user)를 참고하십시오.

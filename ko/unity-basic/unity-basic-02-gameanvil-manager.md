@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > GameAnvilManager
+## Game > GameAnvil > Unity 기초 개발 가이드 > 매니저
 
 ## GameAnvilManager
 

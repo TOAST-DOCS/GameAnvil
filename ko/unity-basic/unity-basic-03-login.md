@@ -1,8 +1,8 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 서버 연동
+## Game > GameAnvil > Unity 기초 개발 가이드 > 간편 로그인
 
 ## 간편 로그인
 
-GameAnvilManager에서 제공하는 간편 로그인 기능은 GameAnvil 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > ConnectionAgent](../unity-advanced/unity-advanced-02-connection) 또는 서버 개발 가이드를 참고하십시오.
+GameAnvilManager에서 제공하는 간편 로그인 기능은 GameAnvil 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > 커넥션](../unity-advanced/unity-advanced-02-connection) 또는 서버 개발 가이드를 참고하십시오.
 
 ### 간편 로그인 설정
 

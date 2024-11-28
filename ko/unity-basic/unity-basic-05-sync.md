@@ -123,7 +123,7 @@ Rigidbody2DSync 컴포넌트를 붙인 게임 오브젝트를 prefab으로 만�
 
 Rigidbody2D 중 동기화할 속성을 옵션에 따라 선택할 수 있습니다.
 
-![img.png](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/07-rigidbody2d-sync-option.png)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/07-rigidbody2d-sync-option.png)
 
 | 옵션                                | 설명                                                                                                                                       |
 |-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
