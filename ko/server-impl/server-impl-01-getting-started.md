@@ -107,8 +107,8 @@ public class SampleGatewayNode implements IGatewayNode {
 | onPrepare      | 준비    | 노드 초기화가 완료된 후 호출됩니다. 사용자는 노드가 준비 완료되기 전에 임의의 작업을 이곳에서 처리할 수 있습니다. 이때, 노드는 메시지를 처리할 수 있습니다.        |
 | onReady        | 준비 완료 | 노드가 모든 준비를 마친 후, 구동 완료 단계입니다. 이때, 노드는 Ready 상태이므로 사용자는 이때부터 모든 기능을 사용할 수 있습니다.                    |
 | onPause        | 일시 정지 | 노드를 일시 정지하면 호출됩니다. 사용자는 노드가 일시 정지될 때 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                              |
-| onResume       | 재개    | 노드가 일시 정지 상태에서 다시 구동을 재개할 때 호출됩니다. 사용자는 재개 상태에서 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                       |
 | onShuttingdown | 노드 정지 | 노드가 Shutdown 명령을 받을 때 호출됩니다. 중지된 노드는 재개(Resume)할 수 없습니다.                                          |
+| onResume       | 재개    | 노드가 일시 정지 상태에서 다시 구동을 재개할 때 호출됩니다. 사용자는 재개 상태에서 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                       |
 
 ## _(underscore)로 시작하는 메서드와 변수
 
@@ -157,7 +157,6 @@ GameAnvil에서 제공하는 여러 가지 클래스를 바로 생성할 수 있
 |--------------------------------|-------------------------|
 | Connection                     | 커넥션 기본 구현               |
 | GameNode                       | 게임 노드의 기본 구현            |
-| GameService                    | 게임 서비스 기본 구현            |
 | GatewayNode                    | 게이트웨이 노드의 기본 구현         |
 | MessageHandler for GameNode    | 게임 노드의 메세지 핸들러 기본 구현    |
 | MessageHandler for GatewayNode | 게이트웨이 노드의 메세지 핸들러 기본 구현 |
@@ -170,7 +169,6 @@ GameAnvil에서 제공하는 여러 가지 클래스를 바로 생성할 수 있
 | RoomMatchInfo                  | 룸 매칭 정보 기본 구현           |
 | RoomMatchMaker                 | 룸 매치 메이커의 기본 구현         |
 | Session                        | 세션 기본 구현                |
-| StringValues                   | 스트링 값 기본 구현             |
 | SupportNode                    | 서포트 노드의 기본 구현           |
 | User                           | 게임 유저의 기본 구현            |
 | UserMatchInfo                  | 유저 매치 정보의 기본 구현         |

@@ -61,38 +61,36 @@ protoc ./MyGame.proto --java_out=../java --csharp_out=./
 ```
 
 
-## GeneratedMessageV3와 패킷
+## GeneratedMessage와 패킷
 
-GameAnvil 서버에서는 어떠한 전송이 가능한 메서드에서도 프로토 버퍼 객체를 그대로 사용할 수 있도록 대부분 `com.google.protobuf.GeneratedMessageV3` 클래스를 지원합니다. 일반적인 상황에서는 프로토 버퍼 객체를 그대로 사용하여도 문제가 없지만 여러 명의 클라이언트에게 전송하는 등 특정 상황에서는 `com.nhn.gameanvil.packet.Packet` 클래스를 사용하여 성능을 향상시킬 수 있습니다.
+GameAnvil 서버에서는 어떠한 전송이 가능한 메서드에서도 프로토 버퍼 객체를 그대로 사용할 수 있도록 대부분 `com.google.protobuf.GeneratedMessage` 클래스를 지원합니다. 일반적인 상황에서는 프로토 버퍼 객체를 그대로 사용하여도 문제가 없지만 여러 명의 클라이언트에게 전송하는 등 특정 상황에서는 `com.nhn.gameanvil.packet.Packet` 클래스를 사용하여 성능을 향상시킬 수 있습니다.
 
-전달된 GeneratedMessageV3 클래스는 내부적으로 패킷으로 변환되어 직렬화 후 전송하기 때문에 아래의 `broadcastMessage`를 호출하는 상황에서는 패킷으로 변경하는 과정에서 같은 프로토 버퍼를 여러 번 직렬화하는 문제가 발생할 수 있습니다.
-
+다수의 클라이언트에게 메세지를 보낼때는 다음과 같이 사용 할 수 있습니다.
 ```java
-// 아래와 같은 상황에서는 여러 번 직렬화하여 성능 문제가 발생할 수 있습니다.
-void broadcastMessage(List<GameUser> users, GeneratedMessageV3 message) {
-    for (GameUser user : users) {
-        user.send(message);
-    }
+    /**
+ * 입력받은 목록의 유저 클라이언트로 메시지 전송
+ *
+ * @param userList 메시지를 전송할 유저 목록
+ * @param message  전송할 메시지
+ * @param <P>      전송할 메시지 타입
+ */
+default <P extends GeneratedMessageV3.Builder<P>> void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final GeneratedMessageV3.Builder<P> message) {
 }
-```
 
-이러한 상황을 방지하기 위해 아래와 같이 수정합니다. 패킷 객체에서는 내부적으로 직렬화된 정보를 들고 있어 여러 번 전송해도 정상적으로 동작합니다.
-
-```java
-// 성능 문제 수정
-void broadcastMessage(List<GameUser> users, GeneratedMessageV3 message) {
-    Packet p = Packet.makePacket(message); 
-    for (GameUser user : users) {
-        user.send(p);
-    }
+/**
+ * 입력받은 목록의 유저 클라이언트로 메시지 전송
+ *
+ * @param userList 메시지를 전송할 유저 목록
+ * @param message  전송할 메시지
+ */
+default void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final GeneratedMessageV3 message) {
 }
-```
 
-아래와 같은 상황에서는 패킷을 사용하지 않아도 크게 문제가 없으며 코드 가독성이 떨어질 수 있기 때문에 프로토 버퍼 객체를 그대로 넘기는 것이 좋습니다.
-
-```java
-// 아래와 같은 상황에서는 GeneratedMessageV3 사용이 편리합니다. 
-void sendMessage(GameUser user, GeneratedMessageV3 message) {
-    user.send(message);
-}
+/**
+ * 입력받은 목록의 유저 클라이언트로 패킷 전송
+ *
+ * @param userList 메시지를 전송할 유저 목록
+ * @param packet   전송할 패킷
+ */
+void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final Packet packet)
 ```

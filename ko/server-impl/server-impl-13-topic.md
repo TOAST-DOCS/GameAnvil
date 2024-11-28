@@ -168,7 +168,7 @@ void publishToClient(String topic, Packet packet);
  * @param topic   메시지를 수신할 대상이 등록한 토픽
  * @param message 전송할 메시지
  */
-void publishToClient(String topic, GeneratedMessageV3 message);
+void publishToClient(String topic, GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽을 등록한 모든 노드에게 패킷 전송
@@ -184,7 +184,7 @@ void publishToNodeWithServiceName(final String serviceName, final Packet packet)
  * @param serviceName 메시지를 수신할 대상 노드의 서비스 이름
  * @param message     전송할 메시지
  */
-void publishToNodeWithServiceName(final String serviceName, final GeneratedMessageV3 message);
+void publishToNodeWithServiceName(final String serviceName, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽을 등록한 모든 노드에게 패킷 전송
@@ -200,7 +200,7 @@ void publishToNodeWithHostId(final long hostId, final Packet packet);
  * @param hostId  메시지를 수신할 대상 노드의 호스트 아이디
  * @param message 전송할 메시지
  */
-void publishToNodeWithHostId(final long hostId, final GeneratedMessageV3 message);
+void publishToNodeWithHostId(final long hostId, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽을 등록한 모든 노드에게 패킷 전송
@@ -216,7 +216,7 @@ void publishToNodeWithNodeId(final long nodeId, final Packet packet);
  * @param nodeId  메시지를 수신할 대상 노드 아이디
  * @param message 전송할 메시지
  */
-void publishToNodeWithNodeId(final long nodeId, final GeneratedMessageV3 message);
+void publishToNodeWithNodeId(final long nodeId, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽을 등록한 모든 노드에게 패킷 전송
@@ -234,7 +234,7 @@ void publishToNodeWithChannelId(final String serviceName, final String channelId
  * @param channelId   메시지를 수신할 대상 노드의 채널 아이디
  * @param message     전송할 메시지
  */
-void publishToNodeWithChannelId(final String serviceName, final String channelId, final GeneratedMessageV3 message);
+void publishToNodeWithChannelId(final String serviceName, final String channelId, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽을 등록한 모든 노드에게 패킷 전송
@@ -250,7 +250,7 @@ void publishToNode(final String nodeTopic, final Packet packet);
  * @param nodeTopic 메시지를 수신할 대상 노드가 등록한 토픽
  * @param message   전송할 메시지
  */
-void publishToNode(final String nodeTopic, final GeneratedMessageV3 message);
+void publishToNode(final String nodeTopic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 유저에게 패킷 전송
@@ -268,7 +268,7 @@ void publishToUserWithServiceName(final String serviceName, final String topic, 
  * @param topic       메시지를 수신할 유저가 등록한 토픽
  * @param message     전송할 메시지
  */
-void publishToUserWithServiceName(final String serviceName, final String topic, final GeneratedMessageV3 message);
+void publishToUserWithServiceName(final String serviceName, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 유저에게 패킷 전송
@@ -286,7 +286,7 @@ void publishToUserWithHostId(final long hostId, final String topic, final Packet
  * @param topic   메시지를 수신할 유저가 등록한 토픽
  * @param message 전송할 메시지
  */
-void publishToUserWithHostId(final long hostId, final String topic, final GeneratedMessageV3 message);
+void publishToUserWithHostId(final long hostId, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 유저에게 패킷 전송
@@ -305,7 +305,7 @@ void publishToUserWithNodeId(final long nodeId, final String topic, final Packet
  * @param topic   메시지를 수신할 유저가 등록한 토픽
  * @param message 전송할 메시지
  */
-void publishToUserWithNodeId(final long nodeId, final String topic, final GeneratedMessageV3 message);
+void publishToUserWithNodeId(final long nodeId, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 유저에게 패킷 전송
@@ -325,7 +325,7 @@ void publishToUserWithChannelId(final String serviceName, final String channelId
  * @param topic       메시지를 수신할 유저가 등록한 토픽
  * @param message     전송할 메시지
  */
-void publishToUserWithChannelId(final String serviceName, final String channelId, final String topic, final GeneratedMessageV3 message);
+void publishToUserWithChannelId(final String serviceName, final String channelId, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 유저에게 패킷 전송
@@ -343,7 +343,7 @@ void publishToUser(String nodeTopic, String topic, Packet packet);
  * @param topic     메시지를 수신할 유저가 등록한 토픽
  * @param message   전송할 메시지
  */
-void publishToUser(String nodeTopic, String topic, GeneratedMessageV3 message);
+void publishToUser(String nodeTopic, String topic, GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 룸에 패킷 전송
@@ -361,7 +361,7 @@ void publishToRoomWithServiceName(final String serviceName, final String topic, 
  * @param topic       메시지를 수신할 유저가 등록한 토픽
  * @param message     전송할 메시지
  */
-void publishToRoomWithServiceName(final String serviceName, final String topic, final GeneratedMessageV3 message);
+void publishToRoomWithServiceName(final String serviceName, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 룸에 패킷 전송
@@ -379,7 +379,7 @@ void publishToRoomWithHostId(final long hostId, final String topic, final Packet
  * @param topic   메시지를 수신할 유저가 등록한 토픽
  * @param message 전송할 메시지
  */
-void publishToRoomWithHostId(final long hostId, final String topic, final GeneratedMessageV3 message);
+void publishToRoomWithHostId(final long hostId, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 룸에 패킷 전송
@@ -397,7 +397,7 @@ void publishToRoomWithNodeId(final long nodeId, final String topic, final Packet
  * @param topic   메시지를 수신할 유저가 등록한 토픽
  * @param message 전송할 메시지
  */
-void publishToRoomWithNodeId(final long nodeId, final String topic, final GeneratedMessageV3 message);
+void publishToRoomWithNodeId(final long nodeId, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 룸에 패킷 전송
@@ -417,7 +417,7 @@ void publishToRoomWithChannelId(final String serviceName, final String channelId
  * @param topic       메시지를 수신할 유저가 등록한 토픽
  * @param message     전송할 메시지
  */
-void publishToRoomWithChannelId(final String serviceName, final String channelId, final String topic, final GeneratedMessageV3 message);
+void publishToRoomWithChannelId(final String serviceName, final String channelId, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 룸에 패킷 전송
@@ -435,7 +435,7 @@ void publishToRoom(String nodeTopic, String topic, Packet packet);
  * @param topic     메시지를 수신할 룸이 등록한 토픽
  * @param message   전송할 메시지
  */
-void publishToRoom(String nodeTopic, String topic, GeneratedMessageV3 message);
+void publishToRoom(String nodeTopic, String topic, GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 패킷 전송
@@ -453,7 +453,7 @@ void publishToSpotWithServiceName(final String serviceName, final String topic, 
  * @param topic       메시지를 수신할 유저가 등록한 토픽
  * @param message     전송할 메시지
  */
-void publishToSpotWithServiceName(final String serviceName, final String topic, final GeneratedMessageV3 message);
+void publishToSpotWithServiceName(final String serviceName, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 패킷 전송
@@ -471,7 +471,7 @@ void publishToSpotWithHostId(final long hostId, final String topic, final Packet
  * @param topic   메시지를 수신할 유저가 등록한 토픽
  * @param message 전송할 메시지
  */
-void publishToSpotWithHostId(final long hostId, final String topic, final GeneratedMessageV3 message);
+void publishToSpotWithHostId(final long hostId, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 패킷 전송
@@ -489,7 +489,7 @@ void publishToSpotWithNodeId(final long nodeId, final String topic, final Packet
  * @param topic   메시지를 수신할 유저가 등록한 토픽
  * @param message 전송할 메시지
  */
-void publishToSpotWithNodeId(final long nodeId, final String topic, final GeneratedMessageV3 message);
+void publishToSpotWithNodeId(final long nodeId, final String topic, final GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 패킷 전송
@@ -507,5 +507,5 @@ void publishToSpot(String nodeTopic, String topic, Packet packet);
  * @param topic     메시지를 수신할 스팟이 등록한 토픽
  * @param message   전송할 메시지
  */
-void publishToSpot(String nodeTopic, String topic, GeneratedMessageV3 message);
+void publishToSpot(String nodeTopic, String topic, GeneratedMessage message);
 ```

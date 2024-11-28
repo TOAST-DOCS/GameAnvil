@@ -9,8 +9,7 @@
 
 ### 패킷 디스패처 생성 및 메시지와 핸들러 연결
 
-우선 메시지 처리를 하기 위한 패킷 디스패처를 생성합니다. 이 디스패처는 해당 클래스에 대해 사용되므로 불필요한 리소스 낭비를 막기 위해 반드시 static으로 생성합니다.
-
+우선 메시지 처리를 하기 위한 서비스를 생성합니다. 
 ```java
 // 패킷 처리 유저 생성
 var myService = builder.createGameService("MyChatService");
@@ -30,7 +29,6 @@ myService.user("Chat", ChatUser::new, config -> {
 ```
 
 메세지는 설정 시 전달받은 config 를 통해 핸들러를 추가할 수 있습니다. protoBufferHandler 핸들러의 첫번 째 인자는 설정하려는 ProtoBuffer 의 클래스이고 두번 째 인자는 핸들러입니다. 
-
 
 ### 메시지 핸들러 구현
 

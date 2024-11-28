@@ -88,79 +88,122 @@
 
 ### 채널 유저 정보
 
-우선 채널에서 유저 정보를 관리하기 위해서는 다음과 같이 유저 클래스를 구현할 때 애너테이션을 통해 채널 유저 정보를 활성화시켜야 합니다.
+우선 채널에서 유저 정보를 관리하기 위해서는 다음과 같이 유저 클래스를 구현할 때 enableChannelInfo() 메서드를 통해서 채널 유저 정보 관리를 활성화시켜야 합니다.
 
 ```java
+public class Main {
+    public static void main(String[] args) {
+        // 게임앤빌 서버 설정 빌더
+        var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
 
-@ServiceName("MyGame")
-@UserType("BasicUser")
-@UseChannelInfo // 채널 유저 정보 활성화
-public class SampleGameUser extends BaseUser implements TimerHandler {
-	...
+        // 컨텐츠 프로토콜 등록.
+        gameAnvilServerBuilder.addProtocol(SampleGame.class);
+
+        // "MyGame"이라는 서비스를 위한 GameNode로 엔진에 등록
+        var gameServiceBuilder = gameAnvilServerBuilder.createGameService("MyGame");
+        gameServiceBuilder.gameNode(SampleGameNode::new, config -> {
+            config.protoBufferHandler(MyGame.GameNodeTest.class, new _GameNodeTest());
+        });
+
+        // "BasicUser"라는 유저 타입의 유저를 엔진에 등록
+        gameServiceBuilder.user("BasicUser", SampleGameUser::new, config -> {
+            // 채널간의 정보 동기화 설정
+            config.enableChannelInfo();
+            
+            config.protoBufferHandler(MyGame.GameUserTest.class, new _GameUserTest());
+        });
+
+        GameAnvilServer.getInstance().run();
+    }
 }
 ```
 
-그리고 추가로 BaseChannelUserInfo를 구현합니다. 이때, 사용자가 채널에서 관리하고 싶은 정보를 모두 포함하면 됩니다.
+그리고 추가로 IChannelUserInfo 인터페이스를 구현합니다. 이때, 사용자가 채널에서 관리하고 싶은 정보를 모두 포함하면 됩니다.
 
 ```java
-public class GameChannelUserInfo implements Serializable, BaseChannelUserInfo {
-    // 채널에서 보여줄 유저 정보
+public class GameChannelUserInfo implements IChannelUserInfo, Comparable<GameChannelUserInfo> {
+
+    private String userType = "";
     private int userId = 0;
     private String accountId = "";
-    private int level = 0;
 
-    ...
+    public GameChannelUserInfo(String userType, int userId, String accountId) {
+        this.userType = userType;
+        this.userId = userId;
+        this.accountId = accountId;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
 
     /**
-     * 변경될 Channel User 정보의 User Id.
+     * 유저 아이디 반환
      *
-     * @return int type 으로 UserId 반환.
+     * @return 유저 아이디 반환
      */
     @Override
-    int getUserId() {
+    public int getUserId() {
         return userId;
     }
 
     /**
-     * 변경될 Channel User 정보의 Account Id.
+     * 어카운트 아이디 반환
      *
-     * @return String type 으로 AccountId 반환.
+     * @return 어카운트 아이디 반환
      */
     @Override
-    String getAccountId() {
+    public String getAccountId() {
         return accountId;
+    }
+
+    @Override
+    public int compareTo(GameChannelUserInfo o) {
+        if (o.userId != this.userId) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }
 ```
 
-이렇게 작성한 채널 유저 정보는 다음과 같이 유저 객체에서 추가하거나 갱신할 수 있습니다. 이때, updateChannelUserInfo API를 사용합니다. 만일 해당 유저 객체가 서버에서 로그아웃되면 해당 채널
+이렇게 작성한 채널 유저 정보는 다음과 같이 유저 객체에서 추가하거나 갱신할 수 있습니다. 이때, userContext.updateChannelUserInfo() API를 사용합니다. 만일 해당 유저 객체가 서버에서 로그아웃되면 해당 채널
 유저 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
 
 ```java
-public class SampleGameUser extends BaseUser {
+public class SampleGameUser implements IUser {
     GameChannelUserInfo channelUserInfo = new GameChannelUserInfo();
   
 	...
 
     // 유저가 로그인 시 채널 유저 정보를 추가합니다.
-    onLogin(...) throws SuspendExecution {
+    onLogin(...) {
 		...
         channelUserInfo.setUserId(getId())
         channelUserInfo.setAccountId(getAccountId());
         channelUserInfo.setLevel(getLevel());
 
-        updateChannelUserInfo(channelUserInfo);
+        userContext.updateChannelUserInfo(channelUserInfo);
 		...
     }
 
     // 채널 이동 시 대상 채널에 새로운 채널 유저 정보를 추가합니다.
-    onMoveInChannel(...) throws SuspendExecution {
+    onMoveInChannel(...) {
 		...
         channelUserInfo.setUserId(getId());
         channelUserInfo.setAccountId(getAccountId());
         channelUserInfo.setLevel(getLeve());
 
-        updateChannelUserInfo(channelUserInfo);
+        userContext.updateChannelUserInfo(channelUserInfo);
 		...
     }
 
@@ -168,7 +211,7 @@ public class SampleGameUser extends BaseUser {
     updateLevel(int level) {
         channelUserInfo.setLevel(getLevel());
 
-        updateChannelUserInfo(channelUserInfo);
+        userContext.updateChannelUserInfo(channelUserInfo);
     }
 }
 ```
@@ -177,32 +220,51 @@ public class SampleGameUser extends BaseUser {
 
 ### 채널 방 정보
 
-채널에서 방 정보를 관리하기 위해서는 앞서 살펴본 게임 유저와 마찬가지로 방 클래스를 구현할 때 애너테이션을 통해 채널 방 정보를 활성화시켜야 합니다.
+채널에서 방 정보를 관리하기 위해서는 앞서 살펴본 게임 유저와 마찬가지로 방 클래스를 구현할 때 방 정보를 설정 합니다.
 
 ```java
+public class Main {
+    public static void main(String[] args) {
+        // 게임앤빌 서버 설정 빌더
+        var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
 
-@ServiceName("MyGame")
-@RoomType("BasicRoom")
-@UseChannelInfo // 채널 정보 활성화
-public class GameRoom extends BaseUser implements TimerHandler {
-    ...
+        // 컨텐츠 프로토콜 등록.
+        gameAnvilServerBuilder.addProtocol(SampleGame.class);
+
+        // "MyGame"이라는 서비스를 위한 GameNode로 엔진에 등록
+        var gameServiceBuilder = gameAnvilServerBuilder.createGameService("MyGame");
+        gameServiceBuilder.gameNode(SampleGameNode::new, config -> {
+            config.protoBufferHandler(MyGame.GameNodeTest.class, new _GameNodeTest());
+        });
+
+        // "BasicRoom"라는 룸 타입의 유저를 엔진에 등록
+        gameServiceBuilder.room("BasicRoom", SampleGameRoom::new, config -> {
+            // 채널간의 정보 동기화 설정
+            config.enableChannelInfo();
+
+            config.protoBufferHandler(MyGame.GameRoomTest.class, new _GameRoomTest());
+        });
+
+        GameAnvilServer.getInstance().run();
+    }
 }
 ```
 
-그리고 추가로 BaseChannelRoomInfo를 구현합니다. 이때, 사용자가 채널에서 관리하고 싶은 방 관련 정보를 모두 포함하면 됩니다.
+그리고 추가로 IChannelRoomInfo 인터페이스를 구현합니다. 이때, 사용자가 채널에서 관리하고 싶은 방 관련 정보를 모두 포함하면 됩니다.
 
 ```java
-public class GameChannelRoomInfo implements Serializable, BaseChannelRoomInfo {
-    private int roomId = 0;
-    private String roomName = "";
-    private int userCount = 0;
+public class GameChannelRoomInfo implements IChannelRoomInfo, Comparable<GameChannelRoomInfo> {
 
-    ...
+    public static final int MAX_ENTRY_USER = 4;
+    private int roomId = 0;
+
+    private long allUserMoney; // for room sorting comparator.
+
 
     /**
-     * Room 정보의 Room Id.
+     * 룸 아이디 반환
      *
-     * @return int type 으로 RoomId 반환.
+     * @return 룸 아이디 반환
      */
     @Override
     public int getRoomId() {
@@ -210,55 +272,60 @@ public class GameChannelRoomInfo implements Serializable, BaseChannelRoomInfo {
     }
 
     /**
-     * Room 정보를 복사한다.
+     * 룸 정보 복사
      *
-     * @return RoomInfo로 복사된 Room 정보를 반환.
-     * @throws CloneNotSupportedException 복사가 안 되는 경우.
+     * @return 복사된 룸 정보를 반환
+     * @throws CloneNotSupportedException 복사가 안되는 경우 발생
      */
     @Override
-    public BaseChannelRoomInfo copy() throws CloneNotSupportedException {
-        GameChannelRoomInfo channelRoomInfo = (GameChannelRoomInfo) super.clone();
-
-        // 데이터 복사가 필요할 경우 여기에서 진행합니다.
+    public IChannelRoomInfo copy() throws CloneNotSupportedException {
+        GameChannelRoomInfo channelRoomInfo = (GameChannelRoomInfo)super.clone();
+        channelRoomInfo.testListInfo = new ArrayList<>(testListInfo);
 
         return channelRoomInfo;
     }
+
+    @Override
+    public int compareTo(GameChannelRoomInfo o) {
+        return (int)(o.getAllUserMoney() - this.allUserMoney); // descending.
+    }
+
 }
 ```
 
-이렇게 작성한 채널 방 정보는 다음과 같이 방 객체에서 추가하거나 갱신할 수 있습니다. 이때, updateChannelRoomInfo API를 사용합니다. 만일 해당 방 객체가 서버에서 사라지면 해당 채널 방 정보도
+이렇게 작성한 채널 방 정보는 다음과 같이 방 객체에서 추가하거나 갱신할 수 있습니다. 이때, roomContext.updateChannelRoomInfo() API를 사용합니다. 만일 해당 방 객체가 서버에서 사라지면 해당 채널 방 정보도
 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
 
 ```java
-public class GameRoom extends BaseRoom<GameUser> {
+public class SampleGameRoom implements IRoom<SampleGameUser> {
     GameChannelRoomInfo channelRoomInfo = new GameChannelRoomInfo();
   
 	...
 
     // 방 생성 시 updateChannelRoomInfo 함수를 통해서 채널 방 정보를 추가합니다.
-    onCreateRoom(...) throws SuspendExecution {
+    onCreateRoom(...) {
 		...
         channelRoomInfo.setRoomId(getId());
         channelRoomInfo.setRoomName(getRoomName());
         channelRoomInfo.setUserCount(0);
 
-        updateChannelRoomInfo(channelUserInfo);
+        roomContext.updateChannelRoomInfo(channelUserInfo);
     }
 
     // 방에 새로운 유저가 들어오면 updateChannelRoomInfo 함수를 통해서 변경된 방 정보를 적용합니다.
-    onJoinRoom(...) throws SuspendExecution {
+    onJoinRoom(...) {
 		...
         channelRoomInfo.setUserCount(++userCount);
 
-        updateChannelRoomInfo(channelUserInfo);
+        roomContext.updateChannelRoomInfo(channelUserInfo);
     }
 
     // 방에 유저가 나가면 updateChannelRoomInfo 함수를 통해서 변경된 방 정보를 적용합니다.
-    onPostLeaveRoom(...) throws SuspendExecution {
+    onPostLeaveRoom(...) {
 		...
         channelRoomInfo.setUserCount(--userCount);
 
-        updateChannelRoomInfo(channelUserInfo);
+        roomContext.updateChannelRoomInfo(channelUserInfo);
     }
 }
 ```
@@ -269,41 +336,40 @@ public class GameRoom extends BaseRoom<GameUser> {
 메서드가 호출됩니다. 이러한 콜백을 이용하여 동일한 채널 내의 모든 게임 노드가 정보를 동기화할 수 있습니다. 다음은 게임 노드에서 이러한 채널 동기화를 위해 사용되는 콜백 메서드입니다.
 
 ```java
-    /**
- * 같은 채널의 다른 노드에서 유저 변화가 발생할 때 호출
- * 즉, updateChannelUser() API 호출 시 발생
+/**
+ * 같은 채널의 다른 노드에 유저 변화가 있을때 호출
+ * <p>
+ * updateChannelUser() 호출시 발생.
  *
- * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
- * @param channelUserInfo 변경될 User 정보 전달.
- * @param userId          변경 대상의 User Id 전달.
- * @param accountId       변경 대상의 Account Id 전달.
- * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+ * @param type            채널 정보 변경 타입(갱신/삭제) 인 {@link ChannelUpdateType}
+ * @param channelUserInfo 변경될 유저 정보인 {@link IChannelUserInfo}
+ * @param userId          변경 대상의 유저 아이디
+ * @param accountId       변경 대상의 어카운트 아이디
  */
 @Override
-public void onChannelUserInfoUpdate(ChannelUpdateType type, ChannelUserInfo channelUserInfo, final int userId, final String accountId) throws SuspendExecution {
+public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, IChannelUserInfo channelUserInfo, int userId, String accountId) {
 }
 
 /**
- * 같은 채널의 다른 노드에서 방 상태 변화가 발생할 때 호출
- * 즉, updateChannelRoomInfo() API 호출 시 발생
+ * 같은 채널의 다른 노드에 룸 상태 변화가 있을때 호출
+ * <p>
+ * updateChannelRoomInfo() 호출시 발생
  *
- * @param type            Channel 정보 변경 타입(갱신/삭제) 전달.
- * @param channelRoomInfo 변경될 Room 정보 전달.
- * @param roomId          변경 대상의 Room Id 전달.
- * @throws SuspendExecution이 메서드는 파이버가 suspend 될 수 있다.
+ * @param type            채널 정보 변경 타입(갱신/삭제) {@link ChannelUpdateType}
+ * @param channelRoomInfo 변경될 룸 정보인 {@link IChannelRoomInfo}
+ * @param roomId          변경 대상의 룸 아이디
  */
 @Override
-public void onChannelRoomInfoUpdate(ChannelUpdateType type, ChannelRoomInfo channelRoomInfo, final int roomId) throws SuspendExecution {
+public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, IChannelRoomInfo channelRoomInfo, int userId) {
 }
 
 /**
- * 클라이언트에서 채널 정보 요청 시 호출
+ * 클라이언트에서 채널 정보를 요청시 호출   (Base.GetChannelInfoReq)
  *
- * @param outPayload Client로 전달될 Channel 정보 전달.
- * @throws SuspendExecution이 메서드는 파이버가 suspend 될 수 있다.
+ * @param outPayload 클라이언트로 전달될 채널 정보
  */
 @Override
-public void onChannelInfo(Payload outPayload) throws SuspendExecution {
+public void onChannelInfo(IPayload payload) {
 }
 ```
 
@@ -314,34 +380,29 @@ public void onChannelInfo(Payload outPayload) throws SuspendExecution {
 요청은 이전에 캐싱해 둔 정보를 전달합니다. 다음은 이러한 onChannelInfo를 구현한 pseudo 코드입니다.
 
 ```java
-public void onChannelInfo(Payload outPayload) throws SuspendExecution {
+public void onChannelInfo(Payload outPayload) {
 
     // 클라이언트에 보낼 사용자 정의 채널 정보 생성
     Game.GameChannelInfo.Builder channelInfoBuilder = Game.GameChannelInfo.newBuilder();
 
-    channelInfoBuilder.setChannelId(this.getChannelId());
+    channelInfoBuilder.setChannelId(gameNodeContext.getChannelId());
 
     // getChannelUserInfo API를 통해서 채널 유저 정보를 가져옵니다.
-    for (BaseChannelUserInfo channelUserInfo : getChannelUserInfo(UserType_1)) {
-        GameChannelUserInfo gameChannelUserInfo = (GameChannelUserInfo) channelUserInfo;
+    for (IChannelUserInfo channelUserInfo : getContext().getChannelUserInfo(StringValues.userType)) {
+        Game.GameChannelInfo.Builder channelUserInfoBuilder = Game.GameChannelInfo.newBuilder();
+        channelUserInfoBuilder.setAccountId(channelUserInfo.getAccountId());
+        channelUserInfoBuilder.setUserId(channelUserInfo.getUserId());
 
-        Game.GameChannelUserInfo.Builder channelUserInfoBuilder = Game.GameChannelUserInfo.newBuilder();
-        channelUserInfoBuilder.setUserName(gameChannelUserInfo.getUserName());
-        channelUserInfoBuilder.setLevel(gameChannelUserInfo.getlevel());
-
-        channelInfoBuilder.addChannelUserInfos(channelUserInfoBuilder.build());
+        channelInfoBuilder.addChannelUserInfo(channelUserInfoBuilder.build());
     }
 
     // getChannelRoomInfo API를 통해서 채널 방 정보를 가져옵니다.
-    for (BaseChannelRoomInfo channelRoomInfo : getChannelRoomInfo(RoomType_2)) {
-        GameChannelRoomInfo gameChannelRoomInfo = (GameChannelRoomInfo) channelRoomInfo;
-
+    for (IChannelRoomInfo channelRoomInfo : getContext().getChannelRoomInfo(StringValues.roomType_2_User_Match)) {
         Game.GameChannelRoomInfo.Builder channelRoomInfoBuilder = Game.GameChannelRoomInfo.newBuilder();
-        channelRoomInfoBuilder.setRoomId(gameChannelRoomInfo.getRoomId());
-        channelRoomInfoBuilder.setRoomName(gameChannelRoomInfo.getRoomName());
-        channelRoomInfoBuilder.setUserCount(gameChannelRoomInfo.getUserCnt());
+        channelRoomInfoBuilder.setRoomId(channelRoomInfo.getRoomId());
+        channelRoomInfoBuilder.setUserCount(((GameChannelRoomInfo)channelRoomInfo).getUserCnt());
 
-        channelInfoBuilder.addChannelRoomInfos(channelRoomInfoBuilder.build());
+        channelInfoBuilder.addChannelRoomInfo(channelRoomInfoBuilder.build());
     }
 
     // outPayload에 클라이언트에게 보낼 채널 정보를 추가합니다.

@@ -26,21 +26,20 @@
 관리되며, 해당 큐 안에서만 서로 매칭이 가능합니다. 예를 들어 아래의 예제에서 인자 matchingGroup으로 "초보"라는 값이 전달될 경우 이 요청은 다른 "초보" 요청들과 매칭되는 것이 보장됩니다.
 
 ```java
-    /**
- * 클라이언트에서 userMatch를 요청했을 경우 호출되는 콜백
+/**
+ * 클라이언트에서 유저 매치메이킹을 요청했을 경우 호출되는 콜백
  *
- * @param roomType   클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
- * @param payload    클라이언트로부터 전달받은 페이로드
- * @param outPayload 클라이언트로 전달할 페이로드
- * @return 반환값이 true이면 유저 매치메이킹 요청 성공이고 false 실패
- * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
+ * @param roomType      클라이언트와 서버 사이에 사전 정의한 룸 종류를 구분하는 임의의 값
+ * @param matchingGroup 매칭 그룹
+ * @param payload       클라이언트로부터 전달받은 {@link IPayload}
+ * @param outPayload    클라이언트로 전달할 {@link IPayload}
+ * @return 반환값이 true 이면 유저 매치메이킹 요청 성공, false 이면 실패
  */
 @Override
-public final boolean onMatchUser(final String roomType, final String matchingGroup, final Payload payload, Payload outPayload) throws SuspendExecution {
+public boolean onMatchUser(final String roomType, final String matchingGroup, final IPayload payload, IPayload outPayload) {
 
-    UserMatchInfo userMatchInfo = new UserMatchInfo(getUserId());
-    userMatchInfo.setRating(rating);
-
+    SampleUserMatchInfo sampleUserMatchInfo = new SampleUserMatchInfo(getUserId(), rating);
+    
     return matchUser(matchingGroup, roomType, userMatchInfo, payload);
 }
 ```
@@ -54,17 +53,16 @@ public final boolean onMatchUser(final String roomType, final String matchingGro
 
 ### 유저 매치 요청 구현
 
-이러한 유저 매치 메이킹의 가장 기본은 바로 매칭 요청 그 자체입니다. 이러한 매치 요청을 아래와 같이 엔진에서 제공하는 BaseUserMatchInfo 추상 클래스를 상속하여 구현합니다. 이때, 요청자를 구분할 수
+이러한 유저 매치 메이킹의 가장 기본은 바로 매칭 요청 그 자체입니다. 이러한 매치 요청을 아래와 같이 엔진에서 제공하는 AbstractUserMatchInfo 추상 클래스를 상속하여 구현합니다. 이때, 요청자를 구분할 수
 있는 게임 유저의 ID를 제공할 수 있도록 getId() 메서드는 반드시 구현해야 합니다. 또한 요청은 언제든 직렬화할 수 있어야 하므로 Serializable 인터페이스를 구현해야 합니다. 아래의 예제는 매칭 요청
 사이의 비교를 위해 Comparable 인터페이스를 추가로 구현하고 있습니다.
 
 ```java
-public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Comparable<UserMatchInfo> {
-
+public class SampleUserMatchInfo extends AbstractUserMatchInfo implements Comparable<SampleUserMatchInfo> {
     private int userId;
     private int rating;
 
-    public UserMatchInfo(int userId, int rating) {
+    public SampleUserMatchInfo(int userId, int rating) {
         this.userId = userId;
         this.rating = rating;
     }
@@ -74,9 +72,11 @@ public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Co
     }
 
     /**
-     * 해당 유저 매치 요청이 어느 유저로부터 온 것인지 판단하기 위해 사용됩니다.
+     * 요청 주체의 아이디 반환
+     * <p/>
+     * 파티 매치메이킹 요청인 경우 룸 아이디, 유저 매치메이킹 요청인경우 유저 아이디를 반환
      *
-     * @return 파티 매칭 요청인 경우 RoomId를, 유저 매칭 요청인 경우 UserId를 반환
+     * @return 파티 매치메이킹 요청인경우 룸 아이디, 유저 매치메이킹 요청인경우 유저 아이디를 반환
      */
     @Override
     public int getId() {
@@ -84,16 +84,18 @@ public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Co
     }
 
     /**
-     * 요청 파티의 크기를 반환합니다.
+     * 파티 크기 반환
+     * <p/>
+     * 파티 매치메이킹 요청인경우 파티의 크기(인원수), 유저 매치메이킹 요청인경우 0을 반환
      *
-     * @return 파티 매칭 요청인 경우 파티의 크기(인원 수)를, 유저 매칭 요청인 경우 0을 반환
+     * @return 파티 매치메이킹 요청인경우 파티의 크기(인원수), 유저 매치메이킹 요청인경우 0 반환
      */
     @Override
     public int getPartySize() {
         return 0;
     }
 
-    // 만일 UserMatchInfo 객체 사이에 비교가 필요하다면 Comparable 인터페이스를 구현합니다.
+    // 만일 SampleUserMatchInfo 객체 사이에 비교가 필요하다면 Comparable 인터페이스를 구현합니다.
     @Override
     public int compareTo(UserMatchInfo o) {
         if (this.rating < o.getRating())
@@ -120,102 +122,97 @@ public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Co
 
 ### 유저 매치 메이커
 
-유저 매치 메이커는 유저 매치 요청을 실제로 처리하며, 엔진에서 제공하는 BaseUserMatchMaker 추상 클래스를 상속 구현합니다. 특히 onMatch() 메서드는 실제 매칭을 수행하기 위해 호출되는
+유저 매치 메이커는 유저 매치 요청을 실제로 처리하며, 엔진에서 제공하는 AbstractUserMatchMaker 추상 클래스를 상속 구현합니다. 특히 onMatch() 메서드는 실제 매칭을 수행하기 위해 호출되는
 콜백이므로 주의 깊게 살펴보십시오. onRefill() 메서드는 이미 완료된 매치 메이킹에 대해 충원 요청을 처리하는 콜백입니다. 예를 들어 4명이 매치 메이킹된 상태에서 1명이 게임을 종료했을 때 1명을 더
 충원하기 위해 사용할 수 있습니다. 아래의 예제 코드는 이러한 유저 매치 메이커를 구현하는 방법을 보여줍니다.
-
-특히 매치 메이커를 구현한 클래스는 @ServiceName 애너테이션을 사용하여 특정 서비스에 대한 용도로 엔진에 등록합니다. 또한 매치 메이커에 의해 생성될 방의 타입을 @RoomType 애너테이션으로 미리
-정의합니다. 이때, 하나의 매치 메이커 클래스는 오직 하나의 서비스에 대해서만 등록할 수 있습니다.
-
 ```java
+public class SampleUserMatchMaker extends AbstractUserMatchMaker<SampleUserMatchInfo> {
 
-@ServiceName("MyGame") // "MyGame"이라는 서비스에 대한 매치 메이커를 엔진에 등록
-@RoomType("1vs1") // 이 매치 메이커에 의해 생성되는 방의 종류를 의미하는 문자열
-public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
-
-    private static final Logger logger = getLogger(UserMatchMaker.class);
-
-    public UserMatchMaker() {
-        super(2, 5000); // 매치 메이킹의 정원은 2명이며 요청이 5초 내에 매칭되지 않으면 Timeout 처리되도록 인자를 설정
+    public SampleUserMatchMaker() {
+        super(2, 5000);
     }
 
-    private Multiset<UserMatchInfo> ratingSet = TreeMultiset.create();
-    private final int matchMultiple = 1; // match 정원의 몇 배수까지 인원을 모은 후에 rating 별로 정렬해서 매칭할 것인가?
-    private int currentMultiple = matchMultiple;
-    private long lastMatchTime = System.currentTimeMillis();
-    private int totalMatchMakings = 0;
+    private int matchSize = 2;
 
     /**
-     * 유저 매치 메이킹과 파티 매치메이킹 요청을 처리. 첫번째 호출 이후 주기적으로 호출됩니다.
-     *
-     * getMatchRequests(int)를 이용해 현재까지 누적된 전체 매치 요청 목록을 얻어올 수 있습니다.
-     * 사용자는 이 목록을 이용해 조건에 맞는 요청들을 별도의 Collection에 순서대로 적재한 후 matchSingles(Collection)이나 assignRoom(BaseUserMatchInfo) 또는 assignRoom(Collection) API를 이용해 매칭을 완성할 수 있습니다.
-     * 만일, 최소한의 요청 수가 모이지 않았으면 다음 호출 시에 처리합니다.
+     * 유저/파티 매치메이킹 요청을 처리
+     * <p>
+     * {@link IUser#onMatchUser(String, String, com.nhn.gameanvil.packet.IPayload, com.nhn.gameanvil.packet.IPayload)}에서 {@link IUserContext#matchUser(String, String, AbstractUserMatchInfo)}를 호출하거나
+     * {@link IRoom#onMatchParty(String, String, IUser, com.nhn.gameanvil.packet.IPayload, com.nhn.gameanvil.packet.IPayload)}에서 {@link IRoomContext#matchParty(String, String, AbstractUserMatchInfo)}를 호출하면 매치메이킹을 처리할 수 있다
+     * <p>
+     * 첫번째 호출 이후 주기적으로 호출된다
+     * <p>
+     * {@link #getMatchRequests(int)}를 이용해 매치를 요청한 유저/파티 의 UserMatchInfo 목록을 가져온다
+     * <p>
+     * 이 목록을 이용해 조건에 맞는 요청을 모아 {@link #matchSingles(Collection)}, {@link #assignRoom(AbstractUserMatchInfo)}, {@link #assignRoom(Collection)}을 이용해 같은 룸으로 넣어준다
+     * <p>
+     * 조건에 맞는 요청의 수가 모자랄 경우 다음 호출시에 처리
      */
     @Override
     public void onMatch() {
-        List<UserMatchInfo> matchRequests = getMatchRequests(matchSize * currentMultiple);
+        List<SampleUserMatchInfo> matchRequests = getMatchRequests(matchSize);
 
-        // 최소 개수(minAmount)만큼 적재되지 않았음
         if (matchRequests == null) {
-            if (System.currentTimeMillis() - lastMatchTime >= 10000)
-                currentMultiple = Math.max(--currentMultiple, 1);
-
             return;
         }
 
-        // matching이 성사되지 않은 항목들은 ratingSet에 그대로 남아 있을 수 있으나 따로 보관할 필요는 없다.
-        // 이 항목들은 다음 getMatchRequests()에서 다시 전달 받는다.
-        ratingSet.clear();
-        ratingSet.addAll(matchRequests);
-
-        if (ratingSet.size() >= matchSize) {
-
-            // ratingSet의 순서대로 matchingAmount * matchSize만큼 항목들을 소비
-            int matchingAmount = matchSingles(ratingSet);
-
-            if (matchingAmount > 0) {
-                totalMatchMakings += matchingAmount;
-                logger.info("{} match(s) made (total: {}) - {}", matchingAmount, totalMatchMakings, this.getMatchingGroup());
-
-                lastMatchTime = System.currentTimeMillis();
-                currentMultiple = matchMultiple;
-            }
-        }
+        int matchingAmount = matchSingles(matchRequests);
     }
 
     /**
-     * 유저/파티 매치 메이킹 과정에서 임의의 유저가 나간 경우 새로운 유저를 채우기 위한 처리
+     * 유저/파티 매칭으로 만들어진 룸에서 유저가 룸을 나갔을 경우 새로운 유저를 할당
+     * <p>
+     * {@link IRoom#canLeaveRoom(IUser, com.nhn.gameanvil.packet.IPayload, com.nhn.gameanvil.packet.IPayload)} 에서 {@link IRoomContext#matchRefill(AbstractUserMatchInfo)} 을 호출하면 호출되어 새 유저를 채울수 있다
+     * <p>
+     * 유저/파티 매치메이킹 요청이 있을 경우 먼저 한번 {@link #onRefill(AbstractUserMatchInfo)}가 호출되어 리필이 필요한 룸으로부터 유저를 채워 넣을 수 있다
+     * <p>
+     * 유저/파티 매치메이킹 요청마다 처음 한번만 {@link #onRefill(AbstractUserMatchInfo)}가 호출되고 주기적으로 호출되지 않는다
+     * <p>
+     * 리필로 사용되지 않은 요청은 {@link #getMatchRequests(int)}의 목록에 남아 {@link #onMatch()}에서 계속 사용된다
+     * <p>
+     * {@link #getRefillRequests()} 를 이용해 리필을 요청한 룸의 UserMatchInfo 목록을 가져온다
+     * <p>
+     * 이 목록에서 조건 req 에 맞는 요청을 찾아 {@link #refillRoom(AbstractUserMatchInfo, AbstractUserMatchInfo)}를 이용해 방으로 넣어준다
      *
-     * 일반적으로 매치 메이킹된 방에 대해 onLeaveRoom이 호출될 때 matchRefill을 호출하여 연동할 수 있습니다. 즉, 매칭된 방에서 누군가 나갈 때 리필을 요청하는 것입니다. 리필은 큐에 쌓여 있는 매치 요청은 사용하지 않습니다. 리필 요청 이후에 들어오는 새로운 매치 요청만 그 대상으로 합니다.
-     *
-     * getRefillRequests API를 이용하여 리필 요청들을 획득할 수 있습니다. 게임에 따라 리필을 사용하기 보다는 임의의 유저가 나간 상태로 게임을 진행하거나, 매칭된 게임을 취소한 후 다시 매치 메이킹을 요청하는 것이 더 나은 방법일 수 있습니다.
-     *
-     * @param req 리필에 사용할 신규 매치 요청 정보
-     * @return 리필이 성공하면 true를 실패하면 false를 반환합니다.
+     * @param req 유저/파티 매치를 요청한 유저 또는 파티의 UserMatchInfo
+     * @return 반환값이 true 이면 리필 성공, false 이면 실패
      */
     @Override
-    public boolean onRefill(UserMatchInfo matchReq) {
-        try {
-            List<UserMatchInfo> refillRequests = getRefillRequests();
-
-            if (refillRequests.isEmpty()) {
-                return false;
-            }
-
-            for (UserMatchInfo refillInfo : refillRequests) {
-                // 100점 이상 차이 나지 않으면 리필
-                if (Math.abs(matchReq.getRating() - refillInfo.getRating()) < 100) {
-                    if (refillRoom(matchReq, refillInfo)) { // 해당 매칭 요청을 리필이 필요한 방으로 매칭
-                        return true;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            logger.error("UserMatchMaker::refill()", e);
-        }
-
+    public boolean onRefill(SampleUserMatchInfo matchReq) {
         return false;
+    }
+}
+```
+
+특히 매치 메이커를 구현한 클래스는 특정 서비스에 엔진에 등록합니다. 또한 매치 메이커에 의해 생성될 방의 타입을 미리
+정의합니다. 이때, 하나의 매치 메이커 클래스는 오직 하나의 서비스에 대해서만 등록할 수 있습니다.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // 게임앤빌 서버 설정 빌더
+        var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
+
+        // 컨텐츠 프로토콜 등록.
+        gameAnvilServerBuilder.addProtocol(SampleGame.class);
+
+        // "MyGame"이라는 서비스를 위한 GameNode로 엔진에 등록
+        var gameServiceBuilder = gameAnvilServerBuilder.createGameService("MyGame");
+        gameServiceBuilder.gameNode(SampleGameNode::new, config -> {
+            ...
+        });
+
+        // "BasicRoom"라는 룸 타입의 유저를 엔진에 등록
+        gameServiceBuilder.room("BasicRoom", SampleGameRoom::new, config -> {
+            ...
+            
+            // 유저 매치 메이커 등록
+            config.matchMaker(SampleUserMatchMaker::new);
+
+            ...
+        });
+
+        GameAnvilServer.getInstance().run();
     }
 }
 ```
@@ -224,7 +221,7 @@ public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {
 
 | 콜백 이름    | 의미          | 설명                                                                                                                                                                                                                                                                                                                                                                                        |
 |----------|-------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onMatch  | 매치 요청들을 처리  | 사용자는 BaseUserMatchMaker가 제공하는 API를 사용하여 직접 매치 요청을 처리할 수 있습니다. 이때, 사용자가 원하는 대로 로직을 직접 구현할 수 있습니다. 예제 코드의 처리 흐름이 가장 기본적인 방식입니다. <br> 즉, getMatchRequests API를 이용하여 최소한의 매치 요청들을 획득한 후 사용자가 원하는 대로 인원수에 맞춰 요청들을 조합한 후 임의의 Collection에 순서대로 담습니다. 이 Collection을 matchSingles API에 인자로 전달하면 정원수에 맞춰 매치가 이루어집니다. 예제 코드의 경우 정원이 2명인 유저 매치 메이킹이므로 Collection을 순회하며 순서대로 2명씩 추출하여 하나의 게임으로 매칭시킵니다. |
+| onMatch  | 매치 요청들을 처리  | 사용자는 AbstractUserMatchMaker가 제공하는 API를 사용하여 직접 매치 요청을 처리할 수 있습니다. 이때, 사용자가 원하는 대로 로직을 직접 구현할 수 있습니다. 예제 코드의 처리 흐름이 가장 기본적인 방식입니다. <br> 즉, getMatchRequests API를 이용하여 최소한의 매치 요청들을 획득한 후 사용자가 원하는 대로 인원수에 맞춰 요청들을 조합한 후 임의의 Collection에 순서대로 담습니다. 이 Collection을 matchSingles API에 인자로 전달하면 정원수에 맞춰 매치가 이루어집니다. 예제 코드의 경우 정원이 2명인 유저 매치 메이킹이므로 Collection을 순회하며 순서대로 2명씩 추출하여 하나의 게임으로 매칭시킵니다. |
 | onRefill | 매치 리필 요청 처리 | 유저/파티 매치 메이킹 과정에서 임의의 유저가 나간 경우 새로운 유저를 채우기 위한 처리를 합니다. 일반적으로 매치 메이킹된 방에 대해 onLeaveRoom이 호출될 때 matchRefill을 호출하여 연동할 수 있습니다. 즉, 매칭된 방에서 누군가 나갈 때 리필을 요청하는 것입니다. 리필은 큐에 쌓여 있는 매치 요청은 사용하지 않습니다. 리필 요청 이후에 들어오는 새로운 매치 요청만 그 대상으로 합니다.                                                                                                                                                      |
 
 ### GameUser에서 매치 메이커로 요청 전달하기
@@ -237,21 +234,19 @@ GameUser를 설명하면서 한 번 살펴보았습니다. 사용자는 이 콜�
 나눌 수 있는 개념이라고 앞서 설명했습니다. 만일 "Newbie"라는 매칭 그룹을 전달했다면 동일한 "Newbie" 매칭 그룹끼리 같은 매칭 큐를 공유하게 됩니다.
 
 ```java
-    /**
- * 클라이언트에서 userMatch를 요청했을 경우 호출되는 콜백
+/**
+ * 클라이언트에서 유저 매치메이킹을 요청했을 경우 호출되는 콜백
  *
- * @param roomType   클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
- * @param matchingGroup 클라이언트가 요청한 매칭 그룹
- * @param payload    클라이언트로부터 전달 받은 페이로드
- * @param outPayload 클라이언트로 전달할 페이로드
- * @return 반환값이 true이면 유저 매치 메이킹 요청 성공이고 false 실패
- * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+ * @param roomType      클라이언트와 서버 사이에 사전 정의한 룸 종류를 구분하는 임의의 값
+ * @param matchingGroup 매칭 그룹
+ * @param payload       클라이언트로부터 전달받은 {@link IPayload}
+ * @param outPayload    클라이언트로 전달할 {@link IPayload}
+ * @return 반환값이 true 이면 유저 매치메이킹 요청 성공, false 이면 실패
  */
-public boolean onMatchUser(final String roomType, final String matchingGroup,
-                           final Payload payload, Payload outPayload) throws SuspendExecution {
+@Override
+public boolean onMatchUser(final String roomType, final String matchingGroup, final IPayload payload, IPayload outPayload) {
 
-    UserMatchInfo userMatchInfo = new UserMatchInfo(getUserId()); // 매치 요청 생성
-    userMatchInfo.setRating(rating);
+    SampleUserMatchInfo sampleUserMatchInfo = new SampleUserMatchInfo(getUserId(), rating);
 
     return matchUser(matchingGroup, roomType, userMatchInfo, payload);
 }
@@ -261,14 +256,14 @@ public boolean onMatchUser(final String roomType, final String matchingGroup,
 호출합니다. 사용자는 이 콜백에서 취소 타이밍에 처리하고 싶은 부분을 구현하면 됩니다.
 
 ```java
-    /**
- * 클라이언트에서 userMatch가 취소되었을 때 호출되는 콜백
+/**
+ * 유저 매치메이킹이 취소될 때 호출
  *
- * @param reason 취소된 이유(TIMEOUT/CANCEL)
- * @return 성공적으로 취소되었으면 true를, 취소할 수 없는 경우에는 false를 반환한다.
- * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+ * @param reason 취소된 이유. 타임아웃(TIMEOUT), 사용자의 요청에 의한 취소(CANCEL), 매치 노드의 종료에 의한 취소(SHUTDOWN)
  */
-public boolean onMatchUserCancel(final MatchCancelReason reason) throws SuspendExecution {
+@Override
+public boolean onMatchUser(String roomType, String matchingGroup, IPayload payload, IPayload outPayload) {
+    
 }
 ```
 
@@ -287,26 +282,14 @@ public boolean onMatchUserCancel(final MatchCancelReason reason) throws SuspendE
 
 ### 룸 매치 요청 구현
 
-이러한 룸 매치 메이킹의 가장 기본은 바로 매칭 요청 그 자체입니다. 매칭 요청은 한 명의 유저가 보낸 요청을 의미하며 아래와 같이 엔진에서 제공하는 BaseRoomMatchForm 추상 클래스를 상속 구현합니다.
+이러한 룸 매치 메이킹의 가장 기본은 바로 매칭 요청 그 자체입니다. 매칭 요청은 한 명의 유저가 보낸 요청을 의미하며 아래와 같이 엔진에서 제공하는 AbstractRoomMatchForm 추상 클래스를 상속 구현합니다.
 요청은 언제든 직렬화할 수 있어야 하므로 Serializable 인터페이스를 추가로 구현해야 합니다. 다음은 이러한 매치 요청을 구현한 예제입니다.
 
 ```java
-public class GameRoomMatchForm extends BaseRoomMatchForm implements Serializable {
-
-    // 사용자가 매칭에서 사용할 조건 추가
-    private int money;
-    private int level;
-
-    public GameRoomMatchForm(int money, int level) {
-        this.money = money;
-        this.level = level;
+public class SampleRoomMatchForm extends AbstractRoomMatchForm {
+    public SampleRoomMatchForm() {
+        super();
     }
-
-    public GameRoomMatchForm(String matchingUserCategory) {
-        super(matchingUserCategory);
-    }
-    
-    ...
 }
 ```
 
@@ -321,15 +304,12 @@ public class GameRoomMatchForm extends BaseRoomMatchForm implements Serializable
 반드시 Serializable 인터페이스를 구현해야 합니다. 아래는 예제 코드를 보여줍니다.
 
 ```java
-public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable {
-    private static final int MAX_USER = 3;
+public class SampleRoomMatchInfo extends AbstractRoomMatchInfo {
+    private static final int MAX_ENTRY_USER = 4;
 
-    public GameRoomMatchInfo(int roomId) {
-        // 별도의 매칭 유저 카테고리가 필요 없을 경우에는 기본값을 사용할 수 있습니다.
-        super(roomId, MAX_USER);
+    public SampleRoomMatchInfo(int roomId) {
+        super(roomId, MAX_ENTRY_USER);
     }
-    
-    ...
 }
 ```
 
@@ -337,7 +317,7 @@ public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable
 카테고리별 유저 수를 알아서 관리해 줍니다. 또한 매치 메이킹에 사용할 추가 정보를 원하는 대로 구성할 수 있습니다.
 
 ```java
-public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable {
+public class GameRoomMatchInfo extends AbstractRoomMatchInfo {
     private static final int MAX_USER = 3;
 
     // 매칭 조건 정보
@@ -368,9 +348,18 @@ public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable
 생성되는 onCreateRoom 콜백 메서드에서 주로 진행합니다.
 
 ```java
-
+/**
+ * 새로운 룸을 생성할 때 호출
+ * <p/>
+ * 반환값에 의해 룸을 생성할지 여부가 결정
+ *
+ * @param user       요청한 유저 객체
+ * @param inPayload  클라이언트로부터 전달받은 {@link IPayload}
+ * @param outPayload 클라이언트로 전달할 {@link IPayload}
+ * @return 반환값이 true 이면 룸 생성이 성공, false 이면 실패
+ */
 @Override
-public final boolean onCreateRoom(final GameUser user, final Payload payload, Payload outPayload) throws SuspendExecution {
+public final boolean onCreateRoom(final GameUser user, final IPayload payload, IPayload outPayload) {
     
     ...
 
@@ -379,160 +368,105 @@ public final boolean onCreateRoom(final GameUser user, final Payload payload, Pa
 }
 ```
 
-임의의 방에 대해 룸 매치 메이킹 등록 여부를 확인하기 위해 BaseRoom 클래스는 다음과 같은 API를 제공합니다.
+임의의 방에 대해 룸 매치 메이킹 등록 여부를 확인하기 위해 IRoomContext 인터페이스에 다음과 같은 API를 제공합니다.
 
 ```java
 /**
- * 룸 매치에 등록된 방인지 확인합니다.
+ * 룸 매치 등록  여부 반환
  *
- * @return 등록된 방이면 true를 반환합니다.
+ * @return 반환값이 true 이면 룸 매치 등록, false 이면 미등록
  */
-final public boolean isRegisteredRoomMatch()
+public boolean isRegisteredRoomMatch()
 ```
 
 이렇게 등록해 둔 룸 매치 정보는 언제든 필요에 따라 사용자가 그 정보를 갱신할 수도 있습니다. 갱신을 위해 새로운 룸 매치 정보를 만든 후에 updateRoomMatch API를 호출하면 됩니다.
 
 ```java
 GameRoomMatchInfo gameRoomMatchInfo = new GameRoomMatchInfo(getId());
-gameRoomMatchInfo.
+gameRoomMatchInfo.setMemberMoney(1000);
 
-setMemberMoney(1000);
-
-updateRoomMatch(gameRoomMatchInfo); // 이 룸 매치 정보를 갱신합니다.
+roomContext.updateRoomMatch(gameRoomMatchInfo); // 이 룸 매치 정보를 갱신합니다.
 ```
 
 해당 방이 사라질 때 룸 매치 정보는 엔진에서 자동으로 삭제되므로 사용자가 따로 삭제할 필요가 없습니다.
 
 ### 룸 매치 메이커
 
-이제 룸 매치 메이커를 만들 차례입니다. 룸 매치 메이커는 엔진에서 제공하는 BaseRoomMatchMaker 추상 클래스를 상속 구현 합니다. 룸 매치 메이킹은 가장 적합한 방을 찾는 과정이므로 실제 매칭 전/후를
+이제 룸 매치 메이커를 만들 차례입니다. 룸 매치 메이커는 엔진에서 제공하는 AbstractRoomMatchMaker 추상 클래스를 상속 구현 합니다. 룸 매치 메이킹은 가장 적합한 방을 찾는 과정이므로 실제 매칭 전/후를
 위한 특별한 콜백 메서드들이 제공됩니다. 사용자는 이 콜백 메서드들을 재정의하여 원하는 대로 매칭을 수행할 수 있습니다. 아래의 예제 코드는 이러한 룸 매치 메이커를 어떤 식으로 구현할 수 있는지 보여줍니다.
 
-특히 매치 메이커를 구현한 클래스는 @ServiceName 애너테이션을 사용하여 특정 서비스에 대한 용도로 엔진에 등록합니다. 또한 매치 메이커에 의해 생성될 방의 타입을 @RoomType 애너테이션으로 미리
+```java
+public class SampleRoomMatchMaker extends AbstractRoomMatchMaker<SampleRoomMatchForm, SampleRoomMatchInfo> {
+    /**
+     * 룸 매치메이킹 요청시 호출
+     * <p>
+     * 등록된 룸들 중에 매칭 조건과 맞는 룸을 찾아 매치 성공 여부를 결정한다
+     *
+     * @param baseRoomMatchForm 룸 매치메이킹 신청 조건인 {@link AbstractRoomMatchForm}
+     * @param baseRoomMatchInfo 매칭풀의 룸 정보인 {@link AbstractRoomMatchInfo}
+     * @param args              추가로 전달 받은 파라미터
+     * @return 반환값이 true 이면 룸 매치메이킹 성공, false 이면 룸 매치메이킹 실패
+     */
+    @Override
+    public boolean onMatch(SampleRoomMatchForm roomMatchForm, SampleRoomMatchInfo roomMatchInfo, Object... args) {
+        return false;
+    }
+
+    /**
+     * 정렬을 위한 매치메이킹 정보 비교
+     * <p>
+     * {@link com.nhn.gameanvil.node.game.context.IRoomContext#updateChannelRoomInfo(IChannelRoomInfo)} 메서드 호출, 룸 등록, 룸 삭제, 정렬 메서드 호출 시 구현한 compare 로 인해 매칭풀이 정렬된다
+     *
+     * @param o1 비교할 첫번째 파라미터
+     * @param o2 비교할 두번째 파라미터
+     * @return 비교 값 반환 (-1: 오름차순, 0: 변동없음, 1: 내림차순)
+     */
+    @Override
+    public int compare(SampleRoomMatchInfo o1, SampleRoomMatchInfo o2) {
+        return 0;
+    }
+}
+```
+
+특히 매치 메이커를 구현한 클래스는 특정 서비스의 엔진에 등록합니다. 또한 매치 메이커에 의해 생성될 방의 타입을 미리
 정의합니다. 이때, 하나의 매치 메이커 클래스는 오직 하나의 서비스에 대해서만 등록할 수 있습니다.
 
 ```java
+public class Main {
+    public static void main(String[] args) {
+        // 게임앤빌 서버 설정 빌더
+        var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
 
-@ServiceName("MyGame") // "MyGame"이라는 서비스에 대한 매치 메이커를 엔진에 등록
-@RoomType("REDvsBLUE") // 이 매치 메이커에 의해 생성되는 방의 종류를 의미하는 문자열
-public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, GameRoomMatchInfo> {
+        // 컨텐츠 프로토콜 등록.
+        gameAnvilServerBuilder.addProtocol(SampleGame.class);
 
-    /**
-     * 룸 매치를 시작하기 전에 요청 정보를 기반으로 필요한 사전 처리를 구현합니다.
-     *
-     * @param baseRoomMatchForm 전달 받은 룸 매칭 요청
-     * @param args  추가로 전달 받은 데이터
-     * @return 매칭 결과 코드
-     */
-    @Override
-    public RoomMatchResultCode onPreMatch(GameRoomMatchForm roomMatchForm, Object... args) {
-        // 매칭 요청서의 Money가 100보다 작을 경우 매칭을 시작하지 않고, 매칭을 신청한 클라이언트에게 실패 결과 코드(1000)를 전달
-        if (roomMatchForm.getMoney() < 100)
-            return RoomMatchResultCode.FAIL(1000);
+        // "MyGame"이라는 서비스를 위한 GameNode로 엔진에 등록
+        var gameServiceBuilder = gameAnvilServerBuilder.createGameService("MyGame");
+        gameServiceBuilder.gameNode(SampleGameNode::new, config -> {
+            ...
+        });
 
-        return RoomMatchResultCode.SUCCESS;
-    }
+        // "BasicRoom"라는 룸 타입의 유저를 엔진에 등록
+        gameServiceBuilder.room("BasicRoom", SampleGameRoom::new, config -> {
+            ...
+            
+            // 유저 매치 메이커 등록
+            config.matchMaker(SampleRoomMatchMaker::new);
+            
+            ...
+        });
 
-    /**
-     * 룸 매치 요청과 임의의 룸 매치 정보가 매칭 가능한 상태인지 확인합니다.
-     * 엔진은 룸 매치 메이킹이 성공할 때까지 전체 방 목록에 대해 한번씩 이 콜백 메서드를 호출합니다.
-     *
-     * @param baseRoomMatchForm 전달 받은 룸 매치 요청
-     * @param baseRoomMatchInfo 매칭 풀에 등록되어 있는 룸 매치 정보(매칭이 가능한 방 정보)
-     * @param args  추가로 전달 받은 데이터
-     * @return 매칭 성공 여부
-     */
-    @Override
-    public boolean canMatch(GameRoomMatchForm roomMatchForm, GameRoomMatchInfo roomMatchInfo, Object... args) {
-        if (roomMatchForm.getLevel() > roomMatchInfo.getAvgLevel())
-            return false;
-        return true;
-    }
-
-    /**
-     * 룸 매치가 성공한 후 필요한 처리를 구현합니다.
-     *
-     * @param baseRoomMatchForm 룸 매치 요청
-     * @param baseRoomMatchInfo 매칭된 룸 매치 정보
-     * @param args  추가로 전달 받은 데이터
-     */
-    @Override
-    public void onPostMatch(GameRoomMatchForm baseRoomMatchForm, GameRoomMatchInfo baseRoomMatchInfo, Object... args) {
-        // 매칭이 정상적으로 진행되고 있는 지 확인한다.
-        logger.debug("GameRoomMatchMaker::onPostMatch() matching success, roomId({})", baseRoomMatchInfo.getRoomId());
-    }
-
-    /**
-     * 룸 매치 정보를 정렬하기 위해 구현합니다.
-     *
-     * @return 비교 결과를 반환
-     */
-    @Override
-    public int compare(GameRoomMatchInfo o1, GameRoomMatchInfo o2) {
-        if (o1.getCreateTime() < o2.getCreateTime()) {
-            return -1;
-        } else if (o1.getCreateTime() > o2.getCreateTime()) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * 룸 매치 메이킹 대상인 방에서 유저 수가 증가할 때 호출됩니다.
-     *
-     * @param roomId 유저 수가 증가한 방의 아이디
-     * @param matchingUserCategory 증가한 유저의 매칭 유저 카테고리
-     * @param currentUserCount 해당 매칭 유저 카테고리에 속하는 유저수
-     */
-    @Override
-    public void onIncreaseUserCount(int roomId, String matchingUserCategory, int currentUserCount) {
-        // 유저 수가 변경되었으므로 매칭 풀을 다시 정렬하여 유저가 적은 방이 먼저 매칭되도록 하기 위함
-        sort();
-    }
-
-    /**
-     * 룸 매치 메이킹 대상인 방에서 유저 수가 감소할 때 호출됩니다.
-     *
-     * @param roomId 유저 수가 감소한 방의 아이디
-     * @param matchingUserCategory 감소한 매칭 유저 카테고리
-     * @param currentUserCount 해당 매칭 유저 카테고리에 속하는 유저 수
-     */
-    @Override
-    public void onDecreaseUserCount(int roomId, String matchingUserCategory, int currentUserCount) {
-        // 유저 수가 변경되었으므로 매칭 풀을 다시 정렬하여 유저가 적은 방이 먼저 매칭되도록 하기 위함
-        sort();
-    }
-
-    /**
-     * 임의의 룸 매치 정보 목록을 반환합니다. 
-     * 인자로 넘겨받은 현재 매칭풀(전체 매칭 가능한 방의 목록)을 원하는 대로 가공하여 원하는 목록을 만들어 반환할 수 있습니다.
-     * 만일 이 메서드를 재정의하지 않으면 전체 방 목록을 반환합니다.
-     *
-     * @return 가공한 룸 매치 정보의 목록
-     */
-    @Override
-    public List<GameRoomMatchInfo> getRooms(List<GameRoomMatchInfo> rooms) {
-        // 매칭풀에서 방 10개를 가져온다.
-        List<GameRoomMatchInfo> gameRoomMatchInfoList = rooms.stream().limit(10).collect(Collectors.toList());
-        // 가져온 방 10개를 랜덤으로 순서를 섞는다.
-        Collections.shuffle(gameRoomMatchInfo);
-
-        return gameRoomMatchInfoList;
+        GameAnvilServer.getInstance().run();
     }
 }
 ```
 
 앞서 살펴본 룸 매치 메이커의 콜백 메서드를 정리하면 아래의 표와 같습니다.
 
-| 콜백 이름               | 의미                  | 설명                                                                                                                                                    |
-|---------------------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onPreMatch          | 룸 매치 시작 전 처리        | 룸 매치 요청에 저장된 각종 정보를 사용하여, 현재 룸 매치 메이킹을 수행할 수 있는 상태인지 미리 체크하는 용도로 사용합니다. 예를 들어, 한 번의 룸 매치 메이킹에 100코인이 필요하다면 여기에서 해당 유저가 100코인 이상을 보유하고 있는지 확인할 수 있습니다. |
-| canMatch            | 매치 확인               | 인자로 전달 받은 룸 매치 요청과 룸 매치 정보 사이에 매칭이 가능한지 확인하기 위해 호출합니다. 즉,  전체 룸 매치 풀을 순회하면서 해당 룸 매치 요청이 들어갈 가장 적합한 방을 찾기 위한 로직을 여기에 구현할 수 있습니다.                       |
-| onPostMatch         | 룸 매치 성공 후 처리        | 룸 매치 메이킹이 성공한 후에 호출됩니다. 룸 매치가 완료된 후 처리할 로직은 여기에 구현할 수 있습니다.                                                                                           |
-| onIncreaseUserCount | 임의의 매칭 대상 방에서 유저 증가 | 임의의 방에서 유저가 증가할 경우 호출됩니다. 이때, 증가한 유저가 어떤 매칭 유저 카테고리인지 그리고 해당 매칭 유저 카테고리의 총원이 몇 명인지도 인자로 전달됩니다.                                                        |
-| onDecreaseUserCount | 임의의 매칭 대상 방에서 유저 감소 | 임의의 방에서 유저가 감소할 경우 호출됩니다.  이때, 감소한 유저가 어떤 매칭 유저 카테고리인지 그리고 해당 매칭 유저 카테고리의 총원이 몇 명인지도 인자로 전달됩니다.                                                       |
-| getRooms            | 임의의 방 목록을 획득        | 엔진의 기본 구현은 전체 룸 매치메이킹이 가능한 방의 목록을 반환합니다. 사용자는 이를 재정의하여 원하는 특정 방 목록만 반환할 수 있습니다.                                                                       |
+| 콜백 이름       | 의미                   | 설명                                                                                                                              |
+|-------------|----------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| onMatch     | 매치 확인                | 인자로 전달 받은 룸 매치 요청과 룸 매치 정보 사이에 매칭이 가능한지 확인하기 위해 호출합니다. 즉,  전체 룸 매치 풀을 순회하면서 해당 룸 매치 요청이 들어갈 가장 적합한 방을 찾기 위한 로직을 여기에 구현할 수 있습니다. |
+| compare     | 정렬을 위한 매치메이킹 정보 비교   | 정렬을 위한 매치메이킹 정보 비교합니다. 결과 값은 -1: 오름차순, 0: 변동없음, 1: 내림차순 입니다.                                                                    |
 
 ### GameUser에서 매치 메이커로 요청 전달하기
 
@@ -544,21 +478,21 @@ GameUser를 설명하면서 한 번 살펴보았습니다. 사용자는 이 콜�
 수 있는 개념이라고 앞서 설명했습니다. 만일 "Newbie"라는 매칭 그룹을 전달했다면 동일한 "Newbie" 매칭 그룹끼리 같은 매칭 큐를 공유하게 됩니다.
 
 ```java
-    /**
- * 클라이언트에서 roomMatch를 요청했을 경우 발생하는 콜백
+/**
+ * 룸 매치메이킹 요청을 받으면 호출
  *
- * @param roomType 클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
- * @param matchingGroup 클라이언트가 요청한 매칭 그룹
- * @param matchingUserCategory 해당 유저가 속한 방 안에서의 카테고리
- * @param payload  클라이언트로부터 전달 받은 페이로드
- * @return {@link MatchRoomResult}로 matching된 room의 정보 반환, null을 반환할 시 클라이언트 요청 옵션에 따라 새로운 Room이 생성되거나, 요청 실패 처리된다.
- * @throws SuspendExecution 이 메서드는 파이버가 suspend 될 수 있다.
+ * @param roomType             클라이언트와 서버 사이에 사전 정의한 룸 종류를 구분하는 임의의 값
+ * @param matchingGroup        매칭되는 룸 매칭 그룹 전달
+ * @param matchingUserCategory 매칭되는 매칭 유저 카테고리 전달
+ * @param payload              클라이언트로부터 전달받은 {@link IPayload}
+ * @return {@link RoomMatchResult} 타입으로 매칭된 룸의 정보 반환. null 을 반환 할 경우 클라이언트 요청 옵션에 따라서 새로운 룸이 생성되거나 요청 실패 처리
  */
-public MatchRoomResult onMatchRoom(final String roomType, final String matchingGroup, final String matchingUserCategory, final Payload payload) throws SuspendExecution {
+@Override
+public RoomMatchResult onMatchRoom(final String roomType, final String matchingGroup, final String matchingUserCategory, final IPayload payload) {
 
-    GameRoomMatchForm gameRoomMatchForm = new GameRoomMatchForm(RoomMode.NORMAL, innerPayload.getOption(), 0);
+    SampleRoomMatchForm sampleRoomMatchForm = new SampleRoomMatchForm(RoomMode.NORMAL, innerPayload.getOption(), 0);
 
-    return matchRoom(matchingGroup, roomType, gameRoomMatchForm);
+    return userContext.matchRoom(matchingGroup, roomType, sampleRoomMatchForm);
 }
 ```
 

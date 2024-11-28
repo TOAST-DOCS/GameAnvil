@@ -132,13 +132,20 @@ public class SampleGameNode implements IGameNode {
     }
 }
 ```
-공통 콜백을 제외한 콜백의 의미와 용도는 아래의 표를 참고하십시오.
+콜백의 의미와 용도는 아래의 표를 참고하십시오.
 
 | 콜백 이름                   | 의미           | 설명                                                                                                                                                               |
 |-------------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| onCreate                | 객체 생성        | 객체가 생성 되었을 때 호출됩니다. 생성된 타입에서 사용 가능한 API를 사용 할 수 있는 컨텍스트를 전달 받습니다. 컨텐츠에서 필요 하다면 저장 해서 사용 할 수 있습니다. |
 | onChannelUserInfoUpdate | 채널의 유저 정보 갱신 | 같은 채널로 묶인 여러 개의 GameNode 중, 하나의 GameNode에서 채널의 유저 정보가 변경되었을 때 같은 채널 내의 나머지 모든 GameNode에서 동기화를 위하여 호출됩니다. 이때, 사용자는 전달 받은 정보를 바탕으로 현재 GameNode의 채널 정보를 갱신할 수 있습니다. |
 | onChannelRoomInfoUpdate | 채널의 방 정보 갱신  | 같은 채널로 묶인 여러 개의 GameNode 중, 하나의 GameNode에서 채널의 방 정보가 변경되었을 때 같은 채널 내의 나머지 모든 GameNode에서 동기화를 위하여 호출됩니다. 이때, 사용자는 전달 받은 정보를 바탕으로 현재 GameNode의 채널 정보를 갱신할 수 있습니다.  |
 | onChannelInfo           | 채널 정보 요청     | 클라이언트가 채널 정보를 요청할 때 호출됩니다. 사용자는 이 콜백에서 원하는 대로 채널 정보를 구성하여 클라이언트로 전달할 수 있습니다.                                                                                     |
+| onInit                  | 초기화          | 노드가 최초 초기화를 진행할 때 호출합니다. 노드 구동 전에 필요한 초기화 작업이 있다면 이 콜백이 적합합니다. 이때, 노드는 아직 메시지를 처리하지 않습니다.         |
+| onPrepare               | 준비           | 노드 초기화가 완료된 후 호출됩니다. 사용자는 노드가 준비 완료되기 전에 임의의 작업을 이곳에서 처리할 수 있습니다. 이때, 노드는 메시지를 처리할 수 있습니다.        |
+| onReady                 | 준비 완료        | 노드가 모든 준비를 마친 후, 구동 완료 단계입니다. 이때, 노드는 Ready 상태이므로 사용자는 이때부터 모든 기능을 사용할 수 있습니다.                    |
+| onPause                 | 일시 정지        | 노드를 일시 정지하면 호출됩니다. 사용자는 노드가 일시 정지될 때 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                              |
+| onShuttingdown          | 노드 정지        | 노드가 Shutdown 명령을 받을 때 호출됩니다. 중지된 노드는 재개(Resume)할 수 없습니다.                                          |
+| onResume                | 재개           | 노드가 일시 정지 상태에서 다시 구동을 재개할 때 호출됩니다. 사용자는 재개 상태에서 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                       |
 
 모든 노드는 사용자 정의 메시지를 처리하기 위한 메시지 핸들러 등록 과정이 필요합니다. 특히, GameNode는 게임 콘텐츠를 위해 이러한 과정이 필수입니다. 서버 실행전 메인 클래스에서 설정을 진행 합니다. (1)
 GameAnvilConfig에 설정되어 있는 게임 서비스 이름을 생성합니다. 게임서비스 이름은 반드시 GameAnvilConfig에 정의되어 있는 이름을 사용해야 합니다.
@@ -157,7 +164,7 @@ public class Main {
         var gameServiceBuilder = gameAnvilServerBuilder.createGameService("MyGame");
         gameServiceBuilder.gameNode(SampleGameNode::new, config -> {
             // (2) SampleGameNode에서 처리하고 싶은 프로토콜과 핸들러를 매핑
-            config.protoBufferHandler(SampleGame.GameNodeTest.class, new _GameNodeTest());
+            config.protoBufferHandler(MyGame.GameNodeTest.class, new _GameNodeTest());
         });
 
         GameAnvilServer.getInstance().run();
@@ -497,316 +504,29 @@ public class SampleGameUser implements IUser {
 정보가 [채널 간 유저 정보 동기화](server-impl-09-channel#3-채널-정보-동기화)에 사용될지 여부를 결정할 수 있습니다. 만일 채널 간 정보 동기화가 필요 없다면 생략할 수 있습니다.
 
 ```java
+public class Main {
+    public static void main(String[] args) {
+        // 게임앤빌 서버 설정 빌더
+        var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
 
-```
+        // 컨텐츠 프로토콜 등록.
+        gameAnvilServerBuilder.addProtocol(SampleGame.class);
 
+        // "MyGame"이라는 서비스를 위한 GameNode로 엔진에 등록
+        var gameServiceBuilder = gameAnvilServerBuilder.createGameService("MyGame");
+        gameServiceBuilder.gameNode(SampleGameNode::new, config -> {
+            config.protoBufferHandler(MyGame.GameNodeTest.class, new _GameNodeTest());
+        });
 
-특히, 유저는 엔진에 등록하기 위한 애너테이션도 다른 클래스에 비해 많이 요구합니다. 우선, 어떤 게임 서비스를 위한 유저인지 등록 후, 유저 타입을 등록합니다. 이 유저 타입은 이름 그대로 유저의 종류를 구별하기
-위한 용도로서, 클라이언트에서도 마찬가지로 API를 호출할 때 사용됩니다. 즉, 해당 API가 서버의 어떤 유저 타입에 대한 호출인지 명시하는 것입니다. 그러므로 반드시 서버와 클라이언트 사이에 이러한 유저 타입을
-임의의 문자열로 사전 정의해두어야 합니다. 이 예제 코드에서는 "BasicUser"라는 유저 타입을 사용합니다. 이에 대한 더 자세한 설명은 별도의 챕터에서 다시 다루도록 합니다. 마지막으로 이 유저
-정보가 [채널 간 유저 정보 동기화](server-impl-09-channel#3-채널-정보-동기화)에 사용될지 여부를 결정할 수 있습니다. 만일 채널 간 정보 동기화가 필요 없다면 @UseChannelInfo
-애너테이션은 생략할 수 있습니다.
+        // "BasicUser"라는 유저 타입의 유저를 엔진에 등록
+        gameServiceBuilder.user("BasicUser", SampleGameUser::new, config -> {
+            // 채널간의 정보 동기화 설정
+            config.enableChannelInfo();
+            
+            config.protoBufferHandler(MyGame.GameUserTest.class, new _GameUserTest());
+        });
 
-```java
-
-@ServiceName("MyGame")
-@UserType("BasicUser")
-@UseChannelInfo
-public class SampleGameUser extends BaseUser {
-
-    private static final MessageDispatcher<SampleGameUser> messageDispatcher = new MessageDispatcher<>();
-
-    static {
-        messageDispatcher.registerMsg(SampleGame.GameUserTest.class, _GameUserTest.class);
-    }
-
-    @Override
-    public MessageDispatcher<SampleGameUser> getMessageDispatcher() {
-        return messageDispatcher;
-    }
-
-    /**
-     * 로그인할 때 호출
-     *
-     * @param payload        클라이언트에서 전달 받은 정보
-     * @param sessionPayload onPreLogin에서 전달된 페이로드
-     * @param outPayload     클라이언트로 전달할 정보
-     * @return 로그인이 성공이면 true를 반환 그렇지 않으면 false를 반환
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onLogin(final Payload payload,
-                           final Payload sessionPayload,
-                           Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 로그인 성공 이후에 필요한 후처리를 위해 호출 (즉, onLogin 혹은 onReLoin이 성공한 후 호출)
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onPostLogin() throws SuspendExecution {
-
-    }
-
-    /**
-     * 이미 로그인된 상황에서 다른 디바이스로 같은 유저가 로그인할 때 호출
-     *
-     * @param newDeviceId           새로 접속한 유저의 deviceId 값
-     * @param outPayloadForKickUser 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 새로 접속한 유저가 로그인 된 후 기존 유저는 강제 로그아웃 처리. false면 새로 접속한 유저가 로그인 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onLoginByOtherDevice(final String newDeviceId,
-                                        Payload outPayloadForKickUser) throws SuspendExecution {
-        return true;
-    }
-
-    /**
-     * 임의의 유저 타입으로 이미 로그인 한 상태에서 다른 유저 타입으로 로그인을 시도할 때 호출
-     *
-     * @param userType   새로 로그인을 시도하는 유저의 타입
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 새로운 로그인이 성공하고 false이면 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onLoginByOtherUserType(final String userType,
-                                          Payload outPayload) throws SuspendExecution {
-        return true;
-    }
-
-    /**
-     * 이미 로그인 된 상태에서 (재접속 등의 이유로) 다른 커넥션을 통해 로그인을 시도할 경우 호출
-     *
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onLoginByOtherConnection(Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 이미 로그인 된 상태에서, 다시 로그인을 시도할 때 호출
-     * (로그인 된 상태에서는 사용자의 GameUser 객체가 GameNode에 여전히 유효한 상태로 남아 있음)
-     *
-     * @param payload        클라이언트에서 전달한 임의의 페이로드
-     * @param sessionPayload onPreLogin에서 전달된 페이로드
-     * @param outPayload     클라이언트로 전달할 임의의 페이로드
-     * @return 반환값이 true이면 ReLogin 성공, false이면 ReLogin 실패
-     * @throws SuspendExecution: 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onReLogin(final Payload payload,
-                             final Payload sessionPayload,
-                             Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 클라이언트와의 연결이 끊어졌을 때 호출되는 콜백
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onDisconnect() throws SuspendExecution {
-    }
-
-    /**
-     * 유저가 속한 노드가 pause될 때, 해당 유저도 pause 되면서 호출
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onPause() throws SuspendExecution {
-    }
-
-    /**
-     * 유저가 속한 노드가 resume될 때, 해당 유저도 resume 되면서 호출
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onResume() throws SuspendExecution {
-    }
-
-    /**
-     * 유저가 logout할 때 호출
-     *
-     * @param payload    클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onLogout(final Payload payload, Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 해당 유저가 로그아웃 가능한지 확인하기 위해 호출
-     * 엔진 사용자는 이 콜백에서 현재 GameUser가 로그아웃을 해도 문제가 없을지 결정할 수 있음
-     *
-     * @return 반환값이 false이면 로그아웃 진행이 멈추고, 이 후에 주기적으로 다시 콜백을 호출. 반환값이 true이면 로그아웃을 진행
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean canLogout() throws SuspendExecution {
-    }
-
-    /**
-     * 룸 매치 메이킹 요청을 받으면 호출
-     *
-     * @param roomType 클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
-     * @param payload  클라이언트로부터 전달 받은 페이로드
-     * @return 매칭된 룸의 정보 반환를 반환. 만일 null이면 클라이언트의 요청 옵션에 따라 새로운 방이 생성될 수도 있고, 실패 처리될 수도 있음
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public MatchRoomResult onMatchRoom(final String roomType,
-                                       final Payload payload) throws SuspendExecution {
-        return null;
-    }
-
-    /**
-     * 클라이언트에서 유저 매치 메이킹을 요청했을 경우 호출되는 콜백
-     *
-     * @param roomType   클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
-     * @param payload    클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 유저 매치 메이킹 요청 성공이고 false 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onMatchUser(final String roomType,
-                               final Payload payload,
-                               Payload outPayload) throws SuspendExecution {
-        return false;
-    }
-
-    /**
-     * 유저 매칭이 취소될 때 호출
-     *
-     * @param reason 취소된 이유. 일반적으로 타임아웃(TIMEOUT) 이거나 사용자의 요청에 의한 취소(CANCEL) 중 한 가지이다.
-     * @return 반환값이 true이면 매칭 취소 처리가 성공이고 false이면 취소가 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onMatchUserCancel(final MatchCancelReason reason) throws SuspendExecution {
-        return false;
-    }
-
-    /**
-     * 처리할 타이머 핸들러를 등록하기 위한 콜백
-     * 이 콜백이 호출되었을 때, 사용자는 처리하고 싶은 타이머 핸들러들을 원하는 만큼 등록
-     * (자세한 내용은 "타이머" 챕터를 참고하십시오.)
-     */
-    @Override
-    public void onRegisterTimerHandler() {
-    }
-
-    /**
-     * 유저가 다른 노드로 이동(전송) 가능한 상태인지 확인하기 위해 호출
-     *
-     * @return 반환값이 true이면 전송 가능한 상태이고 false이면 불가능한 상태이다. 불가능한 상태의 경우, 만일 NonStopPatch가 진행 중이라면 패치가 종료되기 전까진 해당 유저를 전송하기 위해 지속적으로 호출
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean canTransfer() throws SuspendExecution {
-    }
-
-    /**
-     * 유저가 다른 노드로 이동(전송)할 때, 소스 노드에서 전달할 데이터를 꾸리기 위해서 호출
-     * (자세한 내용은 "전송 가능 객체" 챕터를 참고하십시오.)
-     *
-     * @param transferPack 다른 노드로 가지고 갈 데이터를 저장하기 위한 꾸러미
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onTransferOut(final TransferPack transferPack) throws SuspendExecution {
-    }
-
-    /**
-     * 유저가 다른 노드로 이동(전송)할 때, 대상 노드에서 새롭게 생성된 유저 객체를 원래의 상태로 복원하기 위해 호출
-     * (자세한 내용은 "전송 가능 객체" 챕터를 참고하십시오.)
-     *
-     * 이 시점에는 유저가 완전히 복구되지 않았으므로, 다른 곳(노드, 유저 등)으로의 메시지 요청이 제한된다.
-     *
-     * @param transferPack 다른 노드에서 가지고 온 데이터 꾸러미
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onTransferIn(final TransferPack transferPack) throws SuspendExecution {
-    }
-
-    /**
-     * 노드 간 유저 이동(전송)이 완료된 후 호출
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onPostTransferIn() throws SuspendExecution {
-    }
-
-    /**
-     * 클라이언트에서 다른 채널로 이동 요청을 할 때, 현재 유저가 채널 이동이 가능한 상태인지 확인하기 위해 호출
-     *
-     * 주의> 만일, 사용자가 명시적으로 moveChannel() API를 호출하여 채널을 이동할 경우에는 onCheckMoveOutChannel()가 호출되지 않습니다. 오직 엔진에 의해 암묵적인 채널 이동이 발생할 때 호출됩니다.
-     *
-     * @param destinationChannelId 이동 대상 채널의 ID
-     * @param payload              클라이언트로부터 전달 받은 페이로드
-     * @param errorPayload         채널 이동을 실패할 경우 서버에서 클라이언트로 전달하는 페이로드(성공일 경우에는 전달 안 됨)
-     * @return 반환값이 false이면 채널 이동이 불가능하므로 요청은 실패이고 true면 성공
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onCheckMoveOutChannel(final String destinationChannelId,
-                                         final Payload payload,
-                                         Payload errorPayload) throws SuspendExecution {
-        return false;
-    }
-
-    /**
-     * 다른 노드로 채널 이동을 할 때, 소스 노드에서 호출
-     *
-     * @param destinationChannelId 이동할 channel ID
-     * @param outPayload           이동할 channel에 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onMoveOutChannel(final String destinationChannelId,
-                                 Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 다른 노드로 채널 이동이 완료된 후 소스 노드에서 호출
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onPostMoveOutChannel() throws SuspendExecution {
-    }
-
-    /**
-     * 다른 노드로 채널 이동을 할 때, 대상 노드로 진입하면서 호출
-     *
-     * @param sourceChannelId 이동하기 전의 채널 ID
-     * @param payload         클라이언트로부터 전달 받은 페이로드
-     * @param outPayload      클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onMoveInChannel(final String sourceChannelId,
-                                final Payload payload,
-                                Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 다른 노드로 채널 이동이 완료된 후 대상 노드에서 호출
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onPostMoveInChannel() throws SuspendExecution {
+        GameAnvilServer.getInstance().run();
     }
 }
 ```
@@ -824,34 +544,35 @@ GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저
 
 이러한 유저의 콜백을 정리하면 아래의 표와 같습니다.
 
-| 콜백 이름                    | 의미                      | 설명                                                                                                                                                      |
-|--------------------------|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onLogin                  | 로그인                     | 처음 로그인을 할 때 호출됩니다. 일반적으로 사용자는 이 콜백에서 DB 등의 저장소로부터 유저 정보를 가지고 와서 게임 유저 객체를 초기화하는 작업을 수행합니다.                                                              |
-| onAfterLogin             | 로그인 성공 후처리              | onLogin이 성공한 후에 호출됩니다. 로그인에 대한 후처리 작업을 이 콜백에서 할 수 있습니다.                                                                                                 |
-| onReLogin                | 재로그인                    | 이미 로그인이 되어 있는 상태에서 다시 로그인을 할 경우에는 onLogin이 아닌 onReLogin이 호출됩니다. 즉, 재로그인에 대한 작업은 이 콜백에서 처리합니다.                                                           |
-| onDisconnect             | 접속 종료                   | 클라이언트로부터 접속이 끊겼을 때 호출됩니다. 이때, 추가로 처리할 코드를 이곳에 구현합니다.                                                                                                    |
-| onPause                  | 일시 정지                   | 콘솔을 통해 GameNode를 일시 정지하면 해당 GameNode의 모든 유저에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 유저에서 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                           |
-| onResume                 | 재개                      | 콘솔을 통해 GameNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GameNode의 모든 유저에 대해 호출됩니다. 사용자는 재개 상태에서 유저에 대해 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                  |
-| onLogout                 | 로그아웃                    | 유저가 로그아웃할 때 호출됩니다. 이는 사용자가 명시적으로 요청한 로그아웃일 수도 있고, 접속 끊김 상태에서 설정된 시간을 초과할 경우에 엔진에 의해 자동으로 로그아웃될 수도 있습니다.                                                 |
+| 콜백 이름                    | 의미                      | 설명                                                                                                                                                     |
+|--------------------------|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| onCreate                 | 객체 생성                   | 객체가 생성 되었을 때 호출됩니다. 생성된 타입에서 사용 가능한 API를 사용 할 수 있는 컨텍스트를 전달 받습니다. 컨텐츠에서 필요 하다면 저장 해서 사용 할 수 있습니다.                                                      |
+| onLogin                  | 로그인                     | 처음 로그인을 할 때 호출됩니다. 일반적으로 사용자는 이 콜백에서 DB 등의 저장소로부터 유저 정보를 가지고 와서 게임 유저 객체를 초기화하는 작업을 수행합니다.                                                             |
+| onAfterLogin             | 로그인 성공 후처리              | onLogin이 성공한 후에 호출됩니다. 로그인에 대한 후처리 작업을 이 콜백에서 할 수 있습니다.                                                                                                |
+| onReLogin                | 재로그인                    | 이미 로그인이 되어 있는 상태에서 다시 로그인을 할 경우에는 onLogin이 아닌 onReLogin이 호출됩니다. 즉, 재로그인에 대한 작업은 이 콜백에서 처리합니다.                                                          |
+| onDisconnect             | 접속 종료                   | 클라이언트로부터 접속이 끊겼을 때 호출됩니다. 이때, 추가로 처리할 코드를 이곳에 구현합니다.                                                                                                   |
+| onPause                  | 일시 정지                   | 콘솔을 통해 GameNode를 일시 정지하면 해당 GameNode의 모든 유저에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 유저에서 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                          |
+| onResume                 | 재개                      | 콘솔을 통해 GameNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GameNode의 모든 유저에 대해 호출됩니다. 사용자는 재개 상태에서 유저에 대해 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                 |
+| onLogout                 | 로그아웃                    | 유저가 로그아웃할 때 호출됩니다. 이는 사용자가 명시적으로 요청한 로그아웃일 수도 있고, 접속 끊김 상태에서 설정된 시간을 초과할 경우에 엔진에 의해 자동으로 로그아웃될 수도 있습니다.                                                |
 | canLogout                | 로그아웃 가능성 확인             | 해당 유저가 현재 로그아웃이 가능한 상태인지 체크하기 위해 호출됩니다. 만일 게임 플레이 중이거나 정보를 잃어서는 안 되는 상황에는 false를 반환하여 로그아웃을 미룰 수 있습니다. 만일 false를 반환하면 엔진은 임의의 시간 이후에 지속적으로 이 콜백을 호출합니다. |
-| onAfterLeaveRoom         | 룸 나가고 나서 후처리            |                                                                                                                                                         |
+| onAfterLeaveRoom         | 방 떠난 후처리                | 룸의 onLeavingRoom 실행되고 룸에서 유저가 완전히 나간 후 호출 됩니다. 룸에서 나간 유저가 처리해야 하는 작업을 진행합니다.                                                                           |
 | canTransfer              | 유저 전송이 가능한 상태인지 확인      | 해당 유저가 다른 노드로 전송될 수 있는 상태인지 체크하기 위해 호출됩니다.  만일 게임 플레이 중이거나 아직 준비가 안 된 경우에는 false를 반환하여 전송을 미룰 수 있습니다. false를 반환한 경우에는 엔진이 임의의 시간 이후에 지속적으로 이 콜백을 호출합니다. |
-| onLoginByOtherDevice     | 채널 정보 요청                | 이미 로그인이 되어 있는 상태에서 다른 기기로 추가 로그인 요청이 왔을 때 호출됩니다. 사용자는 기존의 유저와 새로운 유저 중 어느 쪽을 로그인시킬지 반환값으로 결정할 수 있습니다.                                                   |
-| onLoginByOtherUserType   | 다른 유저 타입으로 로그인 시도       | 이미 로그인이 되어 있는 상태에서 다른 유저 타입으로 로그인 요청이 왔을 때 호출됩니다. 새로운 유저 타입에 대해 로그인을 진행할지 여부를 반환값으로 결정할 수 있습니다.                                                         |
-| onLoginByOtherConnection | 다른 커넥션으로 로그인 시도         | 이미 로그인이 되어 있는 상태에서 (재접속으로 인해) 이전과 다른 커넥션으로 로그인 시도를 할 경우에 호출됩니다. 만일, 재접속에 대한 추가 작업이 필요하다면 이 콜백에서 할 수 있습니다.                                               |
-| onMatchRoom              | 룸 매치메이킹 요청              | 사용자가 룸 매치메이킹을 요청하면 호출됩니다. 이때, 사용자는 이 콜백에서 엔진이 제공하는 룸 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                                                        |
-| onMatchRoomFail          | 룸 매치메이킹 요청 실패           | 사용자가 룸 매치메이킹을 요청하면 호출됩니다.                                                                                                                               |
-| onMatchUserFail          | 유저 매치메이킹 요청 실패          | 사용자가 유저 매치메이킹을 요청하면 호출됩니다. 사용자는 이 콜백에서 엔진이 제공하는 유저 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                                                          |
-| onMatchUser              | 유저 매치메이킹 요청             | 사용자가 유저 매치메이킹을 요청하면 호출됩니다. 사용자는 이 콜백에서 엔진이 제공하는 유저 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                                                          |
-| onMatchUserCancel        | 유저 매치메이킹 취소             | 사용자가 이전에 신청한 유저 매치메이킹을 취소하면 호출됩니다. 이미 매칭이 완료된 상황처럼 취소를 할 수 없는 경우에는 실패할 수도 있습니다.                                                                         |
-| onTransferOut            | 기존 노드에서 전송되어 나갈 준비      | 유저가 다른 GameNode로 전송될 때, 소스 노드에서 전송을 시작할 때 호출됩니다. 사용자는 이 콜백에서 유저 객체와 함께 전송할 데이터 꾸러미를 꾸릴 수 있습니다.                                                          |
-| onTransferIn             | 새로운 노드로 전송 완료 처리        | 유저가 다른 GameNode로 전송될 때, 대상 노드에서 전송 완료하면서 호출됩니다. 사용자는 함께 가지고 온 데이터 꾸러미를 풀어서 원래의 유저 상태로 복구할 수 있습니다.                                                       |
-| onAfterTransferIn        | 전송 완료 후처리               | 유저 전송이 성공한 경우, 대상 노드에서 후처리를 위해 호출됩니다.                                                                                                                   |
-| onSnapshot               |                         |                                                                                                                                                         |
-| canMoveOutChannel    | 채널 이동이 가능한 상태인지 확인      | 유저가 다른 채널로 이동할 수 있는 상태인지 체크하기 위해 호출됩니다. 만일, 사용자가 명시적으로 moveChannel() API를 호출하여 채널을 이동하는 경우에는 호출되지 않습니다. 오직 엔진에 의해 암묵적인 채널 이동이 발생할 때만 호출됩니다.             |
-| onMoveOutChannel         | 기존 채널에서 다른 채널로 이동 준비    | 유저가 다른 채널로 이동할 때, 소스 노드에서 호출됩니다. 사용자는 원하는 정보를 outPayload에 담아서 대상 채널로 가지고 갈 수 있습니다.                                                                      |
-| onAfterMoveOutChannel     | 기존 채널에서 다른 채널로 이동 준비 완료 | onMoveOutChannel이 성공하면 후처리를 위해 호출됩니다.                                                                                                                   |
-| onMoveInChannel          | 새로운 채널로 이동 처리           | 유저가 다른 채널로 이동할 때, 대상 노드에서 호출됩니다. 사용자는 임의의 정보를 outPayload에 담아서 클라이언트로 전달할 수 있습니다.                                                                        |
+| onLoginByOtherDevice     | 다른 디바이스로 로그인 시도         | 이미 로그인이 되어 있는 상태에서 다른 기기로 추가 로그인 요청이 왔을 때 호출됩니다. 사용자는 기존의 유저와 새로운 유저 중 어느 쪽을 로그인시킬지 반환값으로 결정할 수 있습니다.                                                  |
+| onLoginByOtherUserType   | 다른 유저 타입으로 로그인 시도       | 이미 로그인이 되어 있는 상태에서 다른 유저 타입으로 로그인 요청이 왔을 때 호출됩니다. 새로운 유저 타입에 대해 로그인을 진행할지 여부를 반환값으로 결정할 수 있습니다.                                                        |
+| onLoginByOtherConnection | 다른 커넥션으로 로그인 시도         | 이미 로그인이 되어 있는 상태에서 (재접속으로 인해) 이전과 다른 커넥션으로 로그인 시도를 할 경우에 호출됩니다. 만일, 재접속에 대한 추가 작업이 필요하다면 이 콜백에서 할 수 있습니다.                                              |
+| onMatchRoom              | 룸 매치메이킹 요청              | 사용자가 룸 매치메이킹을 요청하면 호출됩니다. 이때, 사용자는 이 콜백에서 엔진이 제공하는 룸 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                                                       |
+| onMatchRoomFail          | 룸 매치메이킹 요청 실패           | 사용자가 룸 매치메이킹을 요청하면 호출됩니다.                                                                                                                              |
+| onMatchUserFail          | 유저 매치메이킹 요청 실패          | 사용자가 유저 매치메이킹을 요청하면 호출됩니다. 사용자는 이 콜백에서 엔진이 제공하는 유저 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                                                         |
+| onMatchUser              | 유저 매치메이킹 요청             | 사용자가 유저 매치메이킹을 요청하면 호출됩니다. 사용자는 이 콜백에서 엔진이 제공하는 유저 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                                                         |
+| onMatchUserCancel        | 유저 매치메이킹 취소             | 사용자가 이전에 신청한 유저 매치메이킹을 취소하면 호출됩니다. 이미 매칭이 완료된 상황처럼 취소를 할 수 없는 경우에는 실패할 수도 있습니다.                                                                        |
+| onTransferOut            | 기존 노드에서 전송되어 나갈 준비      | 유저가 다른 GameNode로 전송될 때, 소스 노드에서 전송을 시작할 때 호출됩니다. 사용자는 이 콜백에서 유저 객체와 함께 전송할 데이터 꾸러미를 꾸릴 수 있습니다.                                                         |
+| onTransferIn             | 새로운 노드로 전송 완료 처리        | 유저가 다른 GameNode로 전송될 때, 대상 노드에서 전송 완료하면서 호출됩니다. 사용자는 함께 가지고 온 데이터 꾸러미를 풀어서 원래의 유저 상태로 복구할 수 있습니다.                                                      |
+| onAfterTransferIn        | 전송 완료 후처리               | 유저 전송이 성공한 경우, 대상 노드에서 후처리를 위해 호출됩니다.                                                                                                                  |
+| onSnapshot               | 클라이언트에서 스냅샷 요청          | 클라이언트에서 스냅샷 요청시 호출됩니다. 주로 접속이 끊어 지고 서버 상태가 변할 확률이 있을 경우 호출해서 클라이언트와 서버 상태정보를 동기화 하는데 사용됩니다.                                                            |
+| canMoveOutChannel        | 채널 이동이 가능한 상태인지 확인      | 유저가 다른 채널로 이동할 수 있는 상태인지 체크하기 위해 호출됩니다. 만일, 사용자가 명시적으로 moveChannel() API를 호출하여 채널을 이동하는 경우에는 호출되지 않습니다. 오직 엔진에 의해 암묵적인 채널 이동이 발생할 때만 호출됩니다.            |
+| onMoveOutChannel         | 기존 채널에서 다른 채널로 이동 준비    | 유저가 다른 채널로 이동할 때, 소스 노드에서 호출됩니다. 사용자는 원하는 정보를 outPayload에 담아서 대상 채널로 가지고 갈 수 있습니다.                                                                     |
+| onAfterMoveOutChannel    | 기존 채널에서 다른 채널로 이동 준비 완료 | onMoveOutChannel이 성공하면 후처리를 위해 호출됩니다.                                                                                                                  |
+| onMoveInChannel          | 새로운 채널로 이동 처리           | 유저가 다른 채널로 이동할 때, 대상 노드에서 호출됩니다. 사용자는 임의의 정보를 outPayload에 담아서 클라이언트로 전달할 수 있습니다.                                                                       |
 
 ### 로그인이란?
 
@@ -869,101 +590,218 @@ GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저
 ## 방 구현
 
 2명 이상의 유저는 방을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 유저들의 요청은 방 안에서 모두 순서가 보장됩니다. 물론 1명의 유저를 위한 방 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. 방을
-어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다. 이러한 방은 유저와 마찬가지로 기본 클래스인 BaseRoom을 상속하여 여러 가지 콜백 메서드를 재정의할 수 있으며 자체적으로 메시지를 처리할 수도 있습니다.
+어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다. 이러한 방은 유저와 마찬가지로 기본 클래스인 IRoom 인터페이스를 구현하여 여러 가지 콜백 메서드를 재정의할 수 있으며 자체적으로 메시지를 처리할 수도 있습니다.
 아래의 예제 코드는 SampleUser를 위한 SampleRoom 클래스입니다.
 
 ```java
 public class SampleRoom implements IRoom<SampleUser> {
     private IRoomContext roomContext;
 
+    /**
+     * 룸 컨텍스트를 전달하기 위해 호출
+     * <p/>
+     * 객체가 생성된후 한번 호출된다
+     *
+     * @param roomContext 룸 컨텍스트
+     */
     @Override
     public void onCreate(IRoomContext<SampleUser> roomContext) {
         this.roomContext = roomContext;
     }
 
+    /**
+     * 룸이 초기화 될때 호출
+     */
     @Override
     public void onInit() {
 
     }
 
+    /**
+     * 룸이 삭제 될때 호출
+     */
     @Override
     public void onDestroy() {
 
     }
 
+    /**
+     * 새로운 룸을 생성할 때 호출
+     * <p/>
+     * 반환값에 의해 룸을 생성할지 여부가 결정
+     *
+     * @param user       요청한 유저 객체
+     * @param inPayload  클라이언트로부터 전달받은 {@link IPayload}
+     * @param outPayload 클라이언트로 전달할 {@link IPayload}
+     * @return 반환값이 true 이면 룸 생성이 성공, false 이면 실패
+     */
     @Override
     public boolean onCreateRoom(SampleUser user, IPayload payload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
+    /**
+     * 임의의 룸에 참여할 때 호출
+     * <p/>
+     * 반환값에 의해 룸에 참여할지 여부가 결정
+     *
+     * @param user       요청한 유저 객체
+     * @param inPayload  클라이언트로부터 전달받은 {@link IPayload}
+     * @param outPayload 클라이언트로 전달할 {@link IPayload}
+     * @return 반환값이 true 이면 입장 성공, false 이면 실패
+     */
     @Override
     public boolean onJoinRoom(SampleUser user, IPayload payload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
+    /**
+     * 룸에서 나갈 때 호출
+     * <p/>
+     * 반환값에 의해 룸에서 나갈지 여부가 결정
+     *
+     * @param user       요청을 한 유저 객체
+     * @param inPayload  클라이언트로부터 전달받은 {@link IPayload}
+     * @param outPayload 클라이언트로 전달할 {@link IPayload}
+     * @return 반환값이 true 이면 나가기 성공, false 이면 실패
+     */
     @Override
     public boolean canLeaveRoom(SampleUser user, IPayload payload, IPayload outPayload) {
         return true;
     }
 
+    /**
+     * 유저가 룸에서 나갈 때 호출
+     * <p/>
+     * 유저가 룸에서 나가기 전 마지막 적업을 처리한다
+     *
+     * @param user 룸에서 나가는 유저
+     */
     @Override
     public void onLeaveRoom(SampleUser user) {
 
     }
 
+    /**
+     * 유저가 룸에서 완전히 나간 후 호출
+     * <p/>
+     * 룸과 룸에 남아있는 유저들에 관한 작업을 처리한다
+     */
     @Override
     public void onAfterLeaveRoom() {
 
     }
 
+    /**
+     * 재로그인 시 해당 룸으로 자동으로 재진입 하면서 호출
+     *
+     * @param user       룸으로 들어가는 유저 객체
+     * @param outPayload 클라이언트로 전달할 {@link IPayload}
+     */
     @Override
     public void onRejoinRoom(SampleUser user, IPayload payload) {
 
     }
 
+    /**
+     * 해당 룸이 다른 노드로 이동(전송)할 때, 출발 노드에서 전달할 데이터를 꾸리기 위해서 호출
+     *
+     * @param transferPack 다른 노드로 가지고 갈 데이터를 저장하기 위한 꾸러미인 {@link ITransferPack}
+     */
     @Override
     public void onTransferOut(ITransferPack transferPack) {
 
     }
 
+    /**
+     * 해당 룸이 다른 노드로 이동(전송)할 때, 대상 노드에서 새롭게 생성된 룸 객체를 원래의 상태로 복원, 처리할 타이머 핸들러를 등록하기 위해 호출
+     * <p>
+     * TimerHandlerTransferPack을 통해서 룸에 등록되어 있던 timerKey 목록을 확인한다
+     * <p/>
+     * TimerHandlerTransferPack의 reRegister()를 활용해서 사용할 timerHandler를 다시 등록한다
+     * <p/>
+     * 이 시점에는 룸은 완전히 복구되지 않았으므로, 다른 곳(노드, 유저 등)으로의 메시지 요청이 제한된다
+     *
+     * @param userList                 이동할 유저 리스트
+     * @param transferPack             다른 노드에서 가지고 온 데이터 꾸러미인 {@link ITransferPack}
+     * @param timerHandlerTransferPack
+     */
     @Override
     public void onTransferIn(List<SampleUser> list, ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
 
     }
 
+    /**
+     * 해당 룸이 다른 노드로 이동(전송)이 완료된 후 호출
+     */
     @Override
     public void onAfterTransferIn() {
 
     }
 
+    /**
+     * 룸이 속한 노드가 Pause 될때, 해당 룸도 Pause 되면서 호출
+     */
     @Override
     public void onPause() {
 
     }
 
+    /**
+     * 룸이 속한 노드가 Resume 될때, 해당 룸도 Resume 되면서 호출
+     */
     @Override
     public void onResume() {
 
     }
 
+    /**
+     * 클라이언트에서 파티 매치메이킹을 요청했을 경우 호출
+     * <p/>
+     * 파티 매치메이킹을 위해서는 2명 이상의 유저가 파타 타입의 네임드룸에 입장해야 한다
+     *
+     * @param roomType      클라이언트와 서버 사이에 사전 정의한 룸 종류를 구분하는 임의의 값
+     * @param matchingGroup 매칭 그룹
+     * @param user          파티 매치메이킹을 요청한 유저(방장)
+     * @param payload       클라이언트로부터 전달받은 {@link IPayload}
+     * @param outPayload    클라이언트로 전달할 {@link IPayload}
+     * @return 반환값이 true 이면 파티 매치메이킹 요청 성공, false 이면 실패
+     */
     @Override
     public boolean onMatchParty(String roomType, String matchingGroup, SampleUser user, IPayload payload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
+    /**
+     * 파티 매치메이킹이 취소될 때 호출
+     *
+     * @param reason 취소된 이유. 타임아웃(TIMEOUT), 사용자의 요청에 의한 취소(CANCEL), 매치 노드의 종료에 의한 취소(SHUTDOWN)
+     */
     @Override
     public void onMatchPartyCancel(MatchCancelReason matchCancelReason) {
 
     }
 
+    /**
+     * 룸 매치메이킹이 취소될 때 호출
+     *
+     * @param reason 취소된 이유. (SHUTDOWN: 매치 노드의 종료에 의한 취소)
+     */
     @Override
     public void onForceMatchRoomUnregistered(MatchCancelReason matchCancelReason) {
 
     }
 
+    /**
+     * 룸이 다른 노드로 이동(전송) 가능한 상태인지 확인하기 위해 호출
+     *
+     * @return 반환값이 true 이면 전송 가능한 상태, false 이면 불가능한 상태
+     * <p/>
+     * 불가능한 상태의 경우, 만일 SafePause가 진행 중이라면 SafePause가 종료되기 전까진 해당 룸을 전송하기 위해 지속적으로 호출
+     */
     @Override
     public boolean canTransfer() {
         return true;
@@ -971,194 +809,35 @@ public class SampleRoom implements IRoom<SampleUser> {
 }
 ```
 
-방 역시 엔진에 등록하기 위해 여러 가지의 애너테이션이 필요합니다. 우선, 어떤 게임 서비스를 위한 방인지 등록 후, 방 타입을 등록합니다. 이 방 타입은 이름 그대로 방의 종류를 구별하기 위한 용도로서,
+방 역시 엔진에 등록하기 위해 여러 가지의 설정이 필요합니다. 우선, 어떤 게임 서비스를 위한 방인지 등록 후, 방 타입을 등록합니다. 이 방 타입은 이름 그대로 방의 종류를 구별하기 위한 용도로서,
 클라이언트에서도 마찬가지로 API를 호출할 때 사용됩니다. 즉, 해당 API가 서버의 어떤 방 타입에 대한 호출인지 명시하는 것입니다. 그러므로 반드시 서버와 클라이언트 사이에 이러한 방 타입을 임의의 문자열로 사전
 정의해두어야 합니다. 이 예제 코드에서는 "BasicRoom"이라는 방 타입을 사용합니다. 이에 대한 더 자세한 설명은 별도의 챕터에서 다시 다루도록 합니다. 마지막으로 이 방
-정보가 [채널 간 방 정보 동기화](server-impl-09-channel#3-채널-정보-동기화)에 사용될지 여부를 결정할 수 있습니다. 만일 채널 간 정보 동기화가 필요 없다면 @UseChannelInfo
-애너테이션은 생략할 수 있습니다.
+정보가 [채널 간 방 정보 동기화](server-impl-09-channel#3-채널-정보-동기화)에 사용될지 여부를 결정할 수 있습니다. 만일 채널 간 정보 동기화가 필요 없다면 생략할 수 있습니다.
 
 ```java
+public class Main {
+    public static void main(String[] args) {
+        // 게임앤빌 서버 설정 빌더
+        var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
 
-@ServiceName("MyGame")
-@RoomType("BasicRoom")
-@UseChannelInfo
-public class SampleGameRoom extends BaseRoom<SampleGameUser> {
+        // 컨텐츠 프로토콜 등록.
+        gameAnvilServerBuilder.addProtocol(SampleGame.class);
 
-    private static final RoomMessageDispatcher<SampleGameRoom, SampleGameUser> messageDispatcher = new RoomMessageDispatcher<>();
+        // "MyGame"이라는 서비스를 위한 GameNode로 엔진에 등록
+        var gameServiceBuilder = gameAnvilServerBuilder.createGameService("MyGame");
+        gameServiceBuilder.gameNode(SampleGameNode::new, config -> {
+            config.protoBufferHandler(MyGame.GameNodeTest.class, new _GameNodeTest());
+        });
 
-    static {
-        messageDispatcher.registerMsg(SampleGame.GameRoomTest.class, _GameRoomTest.class);
-    }
+        // "BasicRoom"라는 룸 타입의 유저를 엔진에 등록
+        gameServiceBuilder.room("BasicRoom", SampleGameRoom::new, config -> {
+            // 채널간의 정보 동기화 설정
+            config.enableChannelInfo();
 
-    @Override
-    public RoomMessageDispatcher<SampleGameRoom, SampleGameUser> getMessageDispatcher() {
-        return messageDispatcher;
-    }
+            config.protoBufferHandler(MyGame.GameRoomTest.class, new _GameRoomTest());
+        });
 
-    /**
-     * 방이 초기화될 때 호출
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onInit() throws SuspendExecution {
-    }
-
-    /**
-     * 방이 서버에서 사라질 때 호출
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onDestroy() throws SuspendExecution {
-    }
-
-    /**
-     * 새로운 방을 생성할 때 호출
-     *
-     * @param user       요청한 유저 객체
-     * @param inPayload  클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 방 생성이 성공이고 false이면 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onCreateRoom(SampleGameUser user,
-                                final Payload inPayload,
-                                Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 임의의 방에 참여할 때 호출
-     *
-     * @param user       요청한 유저 객체
-     * @param inPayload  클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 입장 성공이고 false이면 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onJoinRoom(SampleGameUser user,
-                              final Payload inPayload,
-                              Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 방에서 나갈 때 호출
-     *
-     * @param user       요청을 한 유저 객체
-     * @param inPayload  클라이언트로부터 전달 받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 나가기 성공이고 false이면 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onLeaveRoom(SampleGameUser user,
-                               final Payload inPayload,
-                               Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * onLeaveRoom 콜백이 성공한 경우, 나가기가 완료된 다음에 후처리를 위해 호출
-     *
-     * @param user 방에서 나간 유저 객체
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onPostLeaveRoom(SampleGameUser user) throws SuspendExecution {
-    }
-
-    /**
-     * 유저가 방에 참여한 상태에서 접속 끊김 등으로 인해 재접속 및 재로그인을 할 경우 해당 방으로 자동 재진입하며 호출
-     *
-     * @param user       방으로 들어가는 유저 객체
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onRejoinRoom(SampleGameUser user, Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 처리할 타이머 핸들러를 등록하기 위한 콜백
-     * 이 콜백이 호출되었을 때 사용자는 처리하고 싶은 타이머 핸들러들을 원하는 만큼 등록합니다.
-     * (자세한 내용은 "타이머" 챕터를 참고하십시오.)
-     */
-    @Override
-    public void onRegisterTimerHandler() {
-    }
-
-
-    /**
-     * 방이 다른 노드로 이동(전송) 가능한 상태인지 확인하기 위해 호출
-     *
-     * @return 반환값이 true이면 전송 가능한 상태이고 false이면 불가능한 상태이다. 불가능한 상태의 경우, 만일 NonStopPatch가 진행 중이라면 패치가 종료되기 전까진 해당 방을 전송하기 위해 지속적으로 호출
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean canTransfer() throws SuspendExecution {
-    }
-
-    /**
-     * 해당 방이 다른 노드로 이동(전송)할 때, 소스 노드에서 전달할 데이터를 꾸리기 위해서 호출
-     * (자세한 내용은 "전송 가능 객체" 챕터를 참고하십시오.)
-     *
-     * @param transferPack 다른 노드로 가지고 갈 데이터를 저장하기 위한 꾸러미
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
-    }
-
-    /**
-     * 해당 방이 다른 노드로 이동(전송)할 때, 대상 노드에서 새롭게 생성된 방 객체를 원래의 상태로 복원하기 위해 호출
-     * (자세한 내용은 "전송 가능 객체" 챕터를 참고하십시오.)
-     *
-     * 이 시점에는 방은 완전히 복구되지 않았으므로, 다른 곳(노드, 유저 등)으로의 메시지 요청이 제한된다.
-     *
-     * @param transferPack 다른 노드에서 가지고 온 데이터 꾸러미
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onTransferIn(List<SampleGameUser> userList,
-                             final TransferPack transferPack) throws SuspendExecution {
-    }
-
-    /**
-     * 방이 속한 노드가 pause될 때, 해당 방도 pause 되면서 호출
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onPause() throws SuspendExecution {
-    }
-
-    /**
-     * 방이 속한 노드가 resume될 때, 해당 방도 resume 되면서 호출
-     *
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public void onResume() throws SuspendExecution {
-    }
-
-    /**
-     * 클라이언트에서 파티 매치 메이킹을 요청했을 경우 호출되는 콜백
-     * (파티 매치 메이킹을 위해서는 2명 이상의 유저가 NamedRoom에 들어가 있어야 한다. 이때, 해당 NamedRoom에서 이 콜백이 호출된다.)
-     *
-     * @param roomType   클라이언트와 서버 사이에 사전 정의한 방 종류를 구분하는 임의의 값
-     * @param user       파티 매칭을 요청한 유저(방장)
-     * @param payload    클라이언트로부터 전달받은 페이로드
-     * @param outPayload 클라이언트로 전달할 페이로드
-     * @return 반환값이 true이면 파티 매치 메이킹 요청 성공이고 false 실패
-     * @throws SuspendExecution 이 메서드는 파이버를 suspend할 수 있음을 의미
-     */
-    @Override
-    public boolean onMatchParty(final String roomType,
-                                final SampleGameUser user,
-                                final Payload payload,
-                                Payload outPayload) throws SuspendExecution {
-        return false;
+        GameAnvilServer.getInstance().run();
     }
 }
 ```
@@ -1173,25 +852,26 @@ public class SampleGameRoom extends BaseRoom<SampleGameUser> {
 
 이러한 방의 콜백을 정리하면 아래의 표와 같습니다.
 
-| 콜백 이름                         | 의미     | 설명                                                                                                                                                                                              |
-|-------------------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onInit                        | 초기화    | 방이 생성될 때 초기화를 위해 호출됩니다. 토픽 등록 등의 해당 방에 대한 초기화 코드를 작성할 수 있습니다.                                                                                                                                   |
-| onDestroy                     | 방 사라짐  | 방에서 마지막 유저가 나가고 더 이상 처리할 메시지가 없으면 해당 방은 사라집니다. 이때 호출되는 콜백입니다.                                                                                                                                   |
-| onCreateRoom                  | 방 생성   | 클라이언트가 방 생성을 요청하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 위한 자료 구조를 생성하거나 기타 방 생성과 함께 처리되어야 할 코드를 작성합니다.                                                                                                        |
-| onJoinRoom                    | 방 참여   | 클라이언트가 서버상에 존재하는 임의의 방으로 참여를 요청하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 갱신하거나 방 안의 유저들 사이에 동기화할 정보를 처리할 수 있습니다.                                                                                               |
-| canLeaveRoom                  |        |                                                                                                    |
-| onLeaveRoom                   | 방 떠남   | 클라이언트가 방 떠나기 요청을 하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 위한 자료 구조를 갱신하거나 기타 방에서 나오면서 함께 처리되어야 할 코드를 작성합니다.                                                                                                   |
-| onAfterLeaveRoom              | 방 떠남 후처리 | onLeaveRoom이 성공하면 후처리를 위해 호출됩니다. 방을 나온 직후에 처리할 코드를 작성합니다.                                                                                                                                       |
-| onRejoinRoom                  | 방 다시 참여 | 유저가 방에 들어가 있는 상태에서 접속 끊김 등으로 인해 재로그인(ReLogin)을 하는 경우 엔진에 의해 자동으로 해당 방에 재진입(ReJoin)합니다. 이때, 호출되는 콜백입니다. 재진입 과정에서 동기화에 필요한 정보 등을 처리할 수 있습니다.                                                      |
-| onTransferOut                 | 기존 노드에서 전송되어 나갈 준비 | 방이 다른 GameNode로 전송될 때, 소스 노드에서 전송을 시작할 때 호출됩니다. 사용자는 이 콜백에서 방 객체와 함께 전송할 데이터 꾸러미를 꾸릴 수 있습니다. 참고로 방 전송은 방 안의 유저들 각각에 대한 유저 전송을 포함합니다.                                                            |
-| onTransferIn                  | 새로운 노드로 전송 완료 처리 | 방이 다른 GameNode로 전송될 때, 대상 노드에서 전송 완료하면서 호출됩니다. 사용자는 함께 가지고 온 데이터 꾸러미를 풀어서 원래의 방 상태로 복구할 수 있습니다. 참고로 방 전송은 방 안의 유저들 각각에 대한 유저 전송을 포함합니다.                                                         |
-| onAfterTransferIn             | 새로운 노드로 전송 완료 후 처리 | 방이 다른 GameNode로 전송될 때, 대상 노드에서 전송 완료하면서 호출됩니다. 사용자는 함께 가지고 온 데이터 꾸러미를 풀어서 원래의 방 상태로 복구할 수 있습니다. 참고로 방 전송은 방 안의 유저들 각각에 대한 유저 전송을 포함합니다.                                                         |
-| onPause                       | 일시 정지  | 콘솔을 통해 GameNode를 일시 정지하면 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 방에서 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                                                                     |
-| onResume                      | 재개     | 콘솔을 통해 GameNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 재개 상태에서 방에 대해 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                                                            |
-| onMatchParty                  | 파티 매치메이킹 요청 | 사용자가 파티 매치메이킹을 요청하면 호출됩니다. 파티 매치 메이킹은 임의의 NamedRoom을 파티 용도로 생성한 후, 방 안의 모든 유저가 하나의 파티로 매칭을 요청하는 기능입니다. 사용자는 이 콜백에서 엔진이 제공하는 파티 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                      |
-| onMatchPartyCancel            | 파티 매치메이킹 요청 취소 | 사용자가 파티 매치메이킹을 요청하면 호출됩니다. 파티 매치 메이킹은 임의의 NamedRoom을 파티 용도로 생성한 후, 방 안의 모든 유저가 하나의 파티로 매칭을 요청하는 기능입니다. 사용자는 이 콜백에서 엔진이 제공하는 파티 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                      |
-| onForceMatchRoomUnregistered  |        |                                                   |
-| canTransfer                   | 방 전송이 가능한 상태인지 확인 | 해당 방이 다른 노드로 전송될 수 있는 상태인지 체크하기 위해 호출됩니다.  만일 방에서 아직 게임이 플레이 중이거나 준비가 안 된 경우에는 false를 반환하여 전송을 미룰 수 있습니다. false를 반환한 경우에는 엔진이 임의의 시간 이후에 지속적으로 이 콜백을 호출합니다. 참고로 방 전송은 오직 무점검 패치를 진행할 때에만 사용됩니다. |
+| 콜백 이름                        | 의미                 | 설명                                                                                                                                                                                              |
+|------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| onCreate                     | 객체 생성              | 객체가 생성 되었을 때 호출됩니다. 생성된 타입에서 사용 가능한 API를 사용 할 수 있는 컨텍스트를 전달 받습니다. 컨텐츠에서 필요 하다면 저장 해서 사용 할 수 있습니다.                                                                                               |
+| onInit                       | 초기화                | 방이 생성될 때 초기화를 위해 호출됩니다. 토픽 등록 등의 해당 방에 대한 초기화 코드를 작성할 수 있습니다.                                                                                                                                   |
+| onDestroy                    | 방 사라짐              | 방에서 마지막 유저가 나가고 더 이상 처리할 메시지가 없으면 해당 방은 사라집니다. 이때 호출되는 콜백입니다.                                                                                                                                   |
+| onCreateRoom                 | 방 생성               | 클라이언트가 방 생성을 요청하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 위한 자료 구조를 생성하거나 기타 방 생성과 함께 처리되어야 할 코드를 작성합니다.                                                                                                        |
+| onJoinRoom                   | 방 참여               | 클라이언트가 서버상에 존재하는 임의의 방으로 참여를 요청하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 갱신하거나 방 안의 유저들 사이에 동기화할 정보를 처리할 수 있습니다.                                                                                               |
+| canLeaveRoom                 | 방 떠남 확인            | 방에서 나갈 때 호출됩니다. 반환값에 의해 방에서 나갈지 여부가 결정됩니다.                                                                                                                                                      |
+| onLeaveRoom                  | 방 떠남               | 클라이언트가 방 떠나기 요청을 하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 위한 자료 구조를 갱신하거나 기타 방에서 나오면서 함께 처리되어야 할 코드를 작성합니다.                                                                                                   |
+| onAfterLeaveRoom             | 방 떠남 후처리           | onLeaveRoom이 성공하면 후처리를 위해 호출됩니다. 방을 나온 직후에 처리할 코드를 작성합니다.                                                                                                                                       |
+| onRejoinRoom                 | 방 다시 참여            | 유저가 방에 들어가 있는 상태에서 접속 끊김 등으로 인해 재로그인(ReLogin)을 하는 경우 엔진에 의해 자동으로 해당 방에 재진입(ReJoin)합니다. 이때, 호출되는 콜백입니다. 재진입 과정에서 동기화에 필요한 정보 등을 처리할 수 있습니다.                                                      |
+| onTransferOut                | 기존 노드에서 전송되어 나갈 준비 | 방이 다른 GameNode로 전송될 때, 소스 노드에서 전송을 시작할 때 호출됩니다. 사용자는 이 콜백에서 방 객체와 함께 전송할 데이터 꾸러미를 꾸릴 수 있습니다. 참고로 방 전송은 방 안의 유저들 각각에 대한 유저 전송을 포함합니다.                                                            |
+| onTransferIn                 | 새로운 노드로 전송 완료 처리   | 방이 다른 GameNode로 전송될 때, 대상 노드에서 전송 완료하면서 호출됩니다. 사용자는 함께 가지고 온 데이터 꾸러미를 풀어서 원래의 방 상태로 복구할 수 있습니다. 참고로 방 전송은 방 안의 유저들 각각에 대한 유저 전송을 포함합니다.                                                         |
+| onAfterTransferIn            | 새로운 노드로 전송 완료 후 처리 | 방이 다른 GameNode로 전송될 때, 대상 노드에서 전송 완료하면서 호출됩니다. 사용자는 함께 가지고 온 데이터 꾸러미를 풀어서 원래의 방 상태로 복구할 수 있습니다. 참고로 방 전송은 방 안의 유저들 각각에 대한 유저 전송을 포함합니다.                                                         |
+| onPause                      | 일시 정지              | 콘솔을 통해 GameNode를 일시 정지하면 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 방에서 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                                                                     |
+| onResume                     | 재개                 | 콘솔을 통해 GameNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GameNode의 모든 방에 대해 호출됩니다. 사용자는 재개 상태에서 방에 대해 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                                                            |
+| onMatchParty                 | 파티 매치메이킹 요청        | 사용자가 파티 매치메이킹을 요청하면 호출됩니다. 파티 매치 메이킹은 임의의 NamedRoom을 파티 용도로 생성한 후, 방 안의 모든 유저가 하나의 파티로 매칭을 요청하는 기능입니다. 사용자는 이 콜백에서 엔진이 제공하는 파티 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                      |
+| onMatchPartyCancel           | 파티 매치메이킹 요청 취소     | 사용자가 파티 매치메이킹을 요청하면 호출됩니다. 파티 매치 메이킹은 임의의 NamedRoom을 파티 용도로 생성한 후, 방 안의 모든 유저가 하나의 파티로 매칭을 요청하는 기능입니다. 사용자는 이 콜백에서 엔진이 제공하는 파티 매치메이킹 API 혹은 제3의 매치메이킹 솔루션을 임의로 사용할 수 있습니다.                      |
+| onForceMatchRoomUnregistered | 방 매치메이킹이 취소        | 방 매치메이킹이 취소될 때 호출됩니다.                                                                                                                                                                           |
+| canTransfer                  | 방 전송이 가능한 상태인지 확인  | 해당 방이 다른 노드로 전송될 수 있는 상태인지 체크하기 위해 호출됩니다.  만일 방에서 아직 게임이 플레이 중이거나 준비가 안 된 경우에는 false를 반환하여 전송을 미룰 수 있습니다. false를 반환한 경우에는 엔진이 임의의 시간 이후에 지속적으로 이 콜백을 호출합니다. 참고로 방 전송은 오직 무점검 패치를 진행할 때에만 사용됩니다. |
 
 ## 방 종류
 
