@@ -87,13 +87,13 @@ Transform의 동기화를 원하는 게임 오브젝트에 TransformSync 컴포�
 컴포넌트를 추가할 게임 오브젝트를 선택한 후 메뉴에서 **Component > GameAnvil > GameAnvil Sync > TransformSync**를 선택해 컴포넌트로 추가할 수 있습니다. 인스펙터 윈도우에서 **Add Component** 버튼을 누르고 TransformSync 컴포넌트를 찾아 추가할 수도 있습니다.
 이 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장하고, 방에 입장해서 SyncController의 Instantiate()를 통해서 해당 prefab을 생성한 다음 Transform을 변화시켰을 때, 다른 클라이언트에서도 모두 변화된 Transform으로 동기화되는 것을 확인할 수 있습니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/03-transform-sync.gif)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/04-transform-sync.gif)
 
 ### Transform 동기화 옵션
 
 Transform 중 동기화할 속성을 옵션에 따라 선택할 수 있습니다.
 
-![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/04-transform-sync-option.png)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/05-transform-sync-option.png)
 
 | 옵션                   | 설명                                                                                                                |
 |----------------------|-------------------------------------------------------------------------------------------------------------------|
@@ -107,23 +107,22 @@ Transform 중 동기화할 속성을 옵션에 따라 선택할 수 있습니다
 Animation의 동기화를 원하는 게임 오브젝트에 AnimatorSync 컴포넌트를 붙이고, Animator의 파라미터 값을 바꿔서 Animation State를 변경시키면 해당 변경 사항이 다른 클라이언트에서도 동기화됩니다.
 컴포넌트를 추가할 게임 오브젝트를 선택한 후 메뉴에서 **Component > GameAnvil > GameAnvil Sync > AnimatorSync**를 선택해 컴포넌트로 추가할 수 있습니다. 인스펙터 윈도우에서 **Add Component** 버튼을 누르고 AnimatorSync 컴포넌트를 찾아 추가할 수도 있습니다.
 이 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장하고, 방에 입장해서 SyncController의 Instantiate()를 통해서 해당 prefab을 생성한 다음 Animation을 변화시켰을 때, 다른 클라이언트에서도 모두 변화된 Animation으로 동기화되는 것을 확인할 수 있습니다.
-
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/05-animator-sync.gif)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/06-animator-sync.gif)
 
 ## Rigidbody2D 동기화, Rigidbody2DSync
 
 Rigidbody2D의 동기화를 원하는 게임 오브젝트에 Rigidbody2DSync 컴포넌트를 붙이면 동기화 게임오브젝트의 Rigidbody2D가 동기화됩니다.
 컴포넌트를 추가할 게임 오브젝트를 선택한 후 메뉴에서 **Component > GameAnvil > GameAnvil Sync > Rigidbody2DSync**를 선택해 컴포넌트로 추가할 수 있습니다. 인스펙터 윈도우에서 **Add Component** 버튼을 누르고 Rigidbody2DSync 컴포넌트를 찾아 추가할 수도 있습니다.
 
-Rigidbody2DSync 컴포넌트를 붙인 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장하고, 방에 입장해서 SyncController의 Instantiate()를 통해서 해당 prefab을 생성한 다음 Rigidbody2D를 변화시켰을 때 다른 클라이언트에서도 모두 변화된 Rigidbody2D로 동기화되는 것을 확인할 수 있습니다.
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/07-rigidbody2d-sync.gif)
 
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/06-rigidbody2d-sync.gif)
+Rigidbody2DSync 컴포넌트를 붙인 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장하고, 방에 입장해서 SyncController의 Instantiate()를 통해서 해당 prefab을 생성한 다음 Rigidbody2D를 변화시켰을 때 다른 클라이언트에서도 모두 변화된 Rigidbody2D로 동기화되는 것을 확인할 수 있습니다.
 
 ### Rigidbody2D 동기화 옵션
 
 Rigidbody2D 중 동기화할 속성을 옵션에 따라 선택할 수 있습니다.
 
-![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/07-rigidbody2d-sync-option.png)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/08-rigidbody2d-sync-option.png)
 
 | 옵션                                | 설명                                                                                                                                       |
 |-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
@@ -140,12 +139,12 @@ Rigidbody의 동기화를 원하는 게임 오브젝트에 RigidbodySync 컴포�
 
 RigidbodySync 컴포넌트를 붙인 게임 오브젝트를 prefab으로 만든 뒤 Unity의 Assets/Resources 폴더 하위에 저장하고, 방에 입장해서 SyncController의 Instantiate()를 통해서 해당 prefab을 생성한 다음 Rigidbody를 변화시켰을 때 다른 클라이언트에서도 모두 변화된 Rigidbody로 동기화되는 것을 확인할 수 있습니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/08-rigidbody-sync.gif)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/09-rigidbody-sync.gif)
 
 ### Rigidbody 동기화 옵션
 
 Rigidbody 중 동기화할 속성을 옵션에 따라 선택할 수 있습니다.
-![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/09-rigidbody-sync-option.png)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/10-rigidbody-sync-option.png)
 
 | 옵션                                | 설명                                                                                                                                     |
 |-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|

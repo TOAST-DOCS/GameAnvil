@@ -2,54 +2,107 @@
 
 ## 메시지 핸들링
 
-ConnectionAgent, UserAgent의 기본 기능 외에 Request()와 Send()를 이용하여 메시지를 서버로 전송할 수 있습니다.
+GameAvnilConnector, GameAvilUser의 기본 기능 외에도 사용자가 정의한 메시지를 서버로 전송할 수 있습니다.
+
+### 메시지 생성 및 등록
+메시지를 생성하고 등록하는 방법은 GameAnvilManager를 사용하는 경우와 동일 합니다. [Unity 기초 개발 가이드 > 메시지 핸들링](../unity-basic/unity-basic-06-message-handling)에서 소개한 설명을 참고하세요. 
 
 ### 메시지 전송
 
-Request()로 메시지를 전송하면 서버 응답을 기다립니다. 서버 응답을 받아 처리하는 방법에는 먼저 [Unity 기초 개발 가이드 > 메시지 핸들링](../unity-basic/unity-basic-06-message-handling.md)에서 소개한 것처럼 콜백 매개변수를 전달하는 방법이 있습니다.
+#### Request
 
-또 다른 방법으로는 리스너를 등록하는 방법이 있습니다. 두 방법 중 어느 것도 적용하지 않을 경우 서버 응답을 받아도 별도의 알림 없이 다음 메시지를 처리하게 됩니다. 
-
-리스너를 등록해서 Request()의 응답을 받는 예제를 살펴봅시다.
-
-[Unity 기초 개발 가이드 > 메시지 핸들링](../unity-basic/unity-basic-06-message-handling.md)에서 다루지 않았던 ConnectionAgent를 통한 Request(), Send() 사용 예제를 소개합니다.
+GameAvnilConnector에서는 Request(), GameAvilUser에서는 RequestUser()를 호출하여 메시지를 전송하고 응답을 받을 수 있습니다. 
 
 ```c#
-Connector connector = new Connector();
-ConnectionAgent connection = connector.GetConnectionAgent();
-// ConnectionAgent로 전달되는 서버 알림을 받는 리스너 등록
-connection.AddListener((ConnectionAgent connection, Messages.SampleReceive msg)=> { });
-
-// ConnectionAgent Send
-Messages.SampleSend sampleSend= new Messages.SampleSend(); 
-connection.Send(sampleSend);
-
-// ConnectionAgent Request
-Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
-connection.Request(sampleRequest, (ConnectionAgent connection, Packet packet)=> { });
+public async void RequestPacket()
+{
+    try
+    {
+        Packet packet = Packet.MakePacket(new Protocol.SampleRequest());
+        ErrorResult<ResultCode, Protocol.SampleResponse> result = await connector.Request<Protocol.SampleResponse>(packet);
+        if (result.ErrorCode == ResultCode.SUCCESS)
+        {
+            // 성공
+        } else
+        {
+            // 실패
+        }
+    } catch (Exception e)
+    {
+        // 예외
+    }
+}
 ```
 
-### 커스텀 패킷
+Request\<TResponse\>(), RequestUser\<TResponse\>()은 다음과 같이 1개의 타입 매개변수와 1개의 매개변수를 가지고 있습니다.
 
-패킷 클래스를 이용하여 ProtocolBuffer 외의 임의의 데이터를 바이트 스트림으로 직렬화해 사용할 수 있습니다. 패킷에 대한 자세한 내용은 [Unity 심화 개발 가이드 > 패킷](unity-advanced-05-packet.md)을 참고합니다.
+| 타입       | 이름           | 설명             |
+|----------|--------------|----------------|
+| 타입 매개변수  | TResponse | 응답으로 받을 메시지 타입 |
+| IMessage | message      | 서버로 보낼 메시지     |
 
-[Unity 기초 개발 가이드 > 메시지 핸들링](../unity-basic/unity-basic-06-message-handling.md)에서 다루지 않았던 ConnectionAgent를 통한 Request(), Send() 사용 예제를 소개합니다.
+응답으로 ErrorResult<ResultCode, TResponse>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. RequestUser() 가 성공하면 ErrorCode 필드의 값이 ResultCode.SUCCESS 가 되며, 아닌 경우 메시지 전송이 실패한 것입니다. Data 필드를 통해 응답 메시지를 얻을 수 있습니다.
+
+ResultCode의 상세 내용은 다음과 같습니다.
+
+| 이름                | 값  | 설명                                         |
+|-------------------|----|--------------------------------------------|
+| PARSE_ERROR       | -2 | 패킷 파싱 에러. 서버와 클라이언트의 버전이 다를 경우 발생할 수 있음.   |
+| TIMEOUT           | -1 | 타임 아웃. 요청에 대한 응답이 정해진 시간내에 오지 않음.          |
+| SYSTEM_ERROR      | 1  | 서버 시스템 에러.  서버의 알수 없는 오류로 실패.              |
+| INVALID_PROTOCOL  | 2  | 서버에 등록되지 않은 프로토콜. 추가정보에 등록되지 않은 프로토콜이 사용됨. |
+| HANDLER_NOT_EXIST | 10 | 실패. 서버에 핸들러 없음.                            |
+| HANDLER_ERROR     | 11 | 실패. 서버의 핸들러에서 예외 발생.                       |
+| SUCCESS           | 0  | 성공                                         |
+
+#### SendUser
+
+GameAvnilConnector에서는 Send(), GameAvilUser에서는 SendUser()를 호출여 서버로 메시지를 전송하며 별도의 응답을 기다리지는 않습니다.
 
 ```c#
-Connector connector = new Connector();
-ConnectionAgent connection = connector.GetConnectionAgent();
-int reqMsgId = 1;
-int resMsgId = 2;
-
-connection.AddListener(resMsgId, (ConnectionAgent connection, Packet packet)=> { });
-
-Messages.SampleSend sampleSend= new Messages.SampleSend (); 
-// 패킷 클래스 이용
-Packet sampleSendPacket = new Packet(reqMsgId, sampleSend.ToByteArray())
-connection.Send(sampleSendPacket);
-
-Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
-// 패킷 클래스 이용
-Packet sampleRequestPacket = new Packet(reqMsgId, sampleRequest.ToByteArray())
-connection.Request(sampleRequestPacket, (ConnectionAgent connection, Packet packet)=> { });
+public async void SendMessage()
+{
+    try
+    {
+        connector.Send(new Protocol.SampleSend());
+    } catch (Exception e)
+    {
+        // 예외
+    }
+}
 ```
+
+Send(), SendUser()는 다음과 같이 1개의 매개변수를 가지고 있습니다.
+
+| 타입       | 이름      | 설명         |
+|----------|---------|------------|
+| IMessage | message | 서버로 보낼 메시지 |
+
+#### MessageCallback
+
+Send(), SendUser() 로 보내는 메시지와 상관없이 서버에서 보내는 메시지를 수신하기 위해서는 SetMessageCallback\<TProtoBuffer\>() 을 이용해 콜백을 등록할 수 있습니다. 등록된 콜백을 해제할 때는 RemoveMessageCallback\<TProtoBuffer\>()을 이용하면 됩니다.
+
+```c#
+public async void MessageCallback()
+{
+    connector.SetMessageCallback((GameAnvilConnector connector, ResultCode resultCode, Protocol.SampleReceive receive) =>
+    {
+        return Task.CompletedTask;
+    });
+
+    connector.RemoveMessageCallback<Protocol.SampleReceive>();
+}
+```
+
+SetMessageCallback\<TProtoBuffer\>()은 다음과 같이 1개의 타입 매개변수와 1개의 매개변수를 가지고 있습니다.
+
+| 타입                                                            | 이름           | 설명                         |
+|---------------------------------------------------------------|--------------|----------------------------|
+| 타입 매개변수                                                       | TProtoBuffer | 서버로부터 받을 메시지 타입            |
+| Func<GameAnvilUserController, ResultCode, TProtoBuffer, Task> | callback     | 서버에서 메시지를 보냈을 때 호출될 콜백 메소드 |
+
+RemoveMessageCallback\<TProtoBuffer\>()은 다음과 같이 1개의 타입 매개변수를 가지고 있습니다.
+
+| 타입      | 이름           | 설명                |
+|---------|--------------|-------------------|
+| 타입 매개변수 | TProtoBuffer | 등록한 콜백이 받을 메시지 타입 |
