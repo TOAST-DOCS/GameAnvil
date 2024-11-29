@@ -25,6 +25,17 @@
 * GameAnvil 2.0 에 맞는 GameAnvilConnector 2.0을 도 출시 하였습니다
 * 신규 커넥터를 확인 부탁드립니다
 
+##### MatchNode 의 SafePause 기능 추가
+* MatchNode 에서 SafePause 기능을 활용할 수 있습니다
+* MatchNode 의 SafePause 기능은 시작 노드(src) 와  이동 노드(dest) 가 1:1일때만 실행 가능합니다 
+* SafePause 노드의 등록 및 실행 방법은 기존 GameNode 와 동일합니다 
+* MatchNode SafePause 와 관련된 다음 Management HTTP API 가 추가되었습니다
+1. POST /management/matching-group-update
+    *  body: ``` {"nodeId": <Number 노드 아이디>, "matchingGroup": "<String 매칭그룹>" }```
+    *  대상 MatchNode 에서 인자로 받은 matchingGroup 을 제어하도록 합니다
+2. GET /management/matching-queue-clear?nodeId=<Number 노드 아이디>
+    * 대상 MatchNode 의 매칭 큐를 모두 비웁니다. 만약 노드 아이디가 0이라면 모든 노드의 매칭 큐를 비웁니다
+
 ##### 패킷 파싱 중 오류 발생시 오류 로그를 출력
 
 #### Remove
