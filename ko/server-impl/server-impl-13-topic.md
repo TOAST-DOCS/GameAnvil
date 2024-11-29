@@ -28,13 +28,13 @@ void publishToUser(String nodeTopic, String topic, Packet packet);
 
 GameAnvil은 내부적으로 아래의 토픽들을 기본적으로 구독합니다. GameAnvilTopic은 절대 사용자가 임의로 구독하지 말아야 합니다.
 
-| 토픽                         | 발행 대상                 | 구독 대상   |
-| ---------------------------- |-----------------------| ----------- |
-| GameAnvilTopic.GAME_NODE     | 모든 게임 노드              | GameNode    |
-| GameAnvilTopic.GATEWAY_NODE  | 모든 게이트웨이 노드           | GatewayNode |
-| GameAnvilTopic.SUPPORT_NODE  | 모든 서포트 노드             | SupportNode |
-| GameAnvilTopic.ALL_CLIENT    | 접속 중인 모든 클라이언트        | Session     |
-| GameAnvilTopic.ALL_GAME_USER | 게임 노드에 있는 모든 게임 유저 객체 | GameUser    |
+| 토픽                            | 발행 대상                 | 구독 대상       |
+|-------------------------------|-----------------------|-------------|
+| GameAnvilTopic.GAME_NODE      | 모든 게임 노드              | GameNode    |
+| GameAnvilTopic.GATEWAY_NODE   | 모든 게이트웨이 노드           | GatewayNode |
+| GameAnvilTopic.SUPPORT_NODE   | 모든 서포트 노드             | SupportNode |
+| GameAnvilTopic.ALL_CLIENT     | 접속 중인 모든 클라이언트        | Session     |
+| GameAnvilTopic.ALL_GAME_USER  | 게임 노드에 있는 모든 게임 유저 객체 | GameUser    |
 
 
 
