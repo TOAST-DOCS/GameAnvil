@@ -9,8 +9,7 @@
 
 ### 패킷 디스패처 생성 및 메시지와 핸들러 연결
 
-우선 메시지 처리를 하기 위한 패킷 디스패처를 생성합니다. 이 디스패처는 해당 클래스에 대해 사용되므로 불필요한 리소스 낭비를 막기 위해 반드시 static으로 생성합니다.
-
+우선 메시지 처리를 하기 위한 서비스를 생성합니다. 
 ```java
 // 패킷 처리 유저 생성
 var myService = builder.createGameService("MyChatService");
@@ -19,7 +18,7 @@ myService.user("Chat", ChatUser::new, config -> {
 });
 ```
 
-이렇게 생성한 CharUser 에 원하는 메시지와 핸들러를 연결합니다.
+이렇게 생성한 CharUser에 원하는 메시지와 핸들러를 연결합니다.
 
 ```java
 var myService = builder.createGameService("MyChatService");
@@ -29,12 +28,11 @@ myService.user("Chat", ChatUser::new, config -> {
 });
 ```
 
-메세지는 설정 시 전달받은 config 를 통해 핸들러를 추가할 수 있습니다. protoBufferHandler 핸들러의 첫번 째 인자는 설정하려는 ProtoBuffer 의 클래스이고 두번 째 인자는 핸들러입니다. 
-
+메세지는 설정 시 전달받은 config를 통해 핸들러를 추가할 수 있습니다. protoBufferHandler 핸들러의 첫 번째 인자는 설정하려는 ProtoBuffer의 클래스이고 두 번째 인자는 핸들러입니다. 
 
 ### 메시지 핸들러 구현
 
-이제 해당 메시지 핸들러를 직접 구현합니다. 이때, GameAnvil은 엔진 내부는 물론이고 모든 샘플 코드에서 메시지 핸들러에 대해 _로 시작하는 네이밍을 사용합니다. 앞으로 등장하는 모든 예제 코드에서도 _로 시작하는 클래스는 모두 메시지 핸들러입니다.  가장 기본적인 형태의 메시지 핸들러는 아래와 같습니다. CONTEXT_CLASS는 해당 메시지의 흐름을 나타내는 클래스를 의미합니다. Context 클래스에서 대상 객체 획득, 메세지의 응답 등을 할 수 있습니다.
+이제 해당 메시지 핸들러를 직접 구현합니다. 이때, GameAnvil은 엔진 내부는 물론이고 모든 샘플 코드에서 메시지 핸들러에 대해 _로 시작하는 네이밍을 사용합니다. 앞으로 등장하는 모든 예제 코드에서도 _로 시작하는 클래스는 모두 메시지 핸들러입니다.  가장 기본적인 형태의 메시지 핸들러는 아래와 같습니다. CONTEXT_CLASS는 해당 메시지의 흐름을 나타내는 클래스를 의미합니다. Context 클래스에서 대상 객체 획득, 메시지의 응답 등을 할 수 있습니다.
 
 ```java
 public class _MyEchoHandler implements IMessageHandler<CONTEXT_CLASS, EchoSend> {
@@ -70,13 +68,9 @@ private static void runEchoSend(IUserDispatchContext ctx, EchoSend sendMsg) {
     System.out.println("Receive EchoSend Message!");
 }
 ```
-
-
 ## RESTful 요청 처리
 
 패킷 디스패처는 두 가지가 존재합니다. 하나는 앞서 살펴본 일반적인 패킷 디스패처이고 다른 하나는 RESTful 요청을 처리하기 위한 디스패처입니다. 전체적인 사용법은 두 가지가 거의 동일합니다.  단, 이러한 RESTful 메시지 처리는 오직 SupportNode만 지원합니다. 
-
-
 
 ### REST 패킷 디스패처 생성 및 메시지와 핸들러 연결
 
