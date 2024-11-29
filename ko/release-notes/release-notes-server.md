@@ -21,6 +21,9 @@
 ##### 다수의 클라이언트에게 메세지를 보낼 수 있는 API 추가
 * Room.sendToClients API 가 추가되었습니다 
 
+##### GameAnvilConnector 2.0
+* GameAnvil 2.0 에 맞는 GameAnvilConnector 2.0을 도 출시 하였습니다
+* 신규 커넥터를 확인 부탁드립니다
 
 ##### 패킷 파싱 중 오류 발생시 오류 로그를 출력
 
@@ -55,8 +58,28 @@
 
 #### Change
 #####  응답을 받는 API 의 반환 값이 Future 로 변경 
-* Java 21 과 Virtual Thread 사용으로 Future 를 사용할 수 있게 되었습니다
-* 기존 버전과 활용성을 유지해야 한다면 반환 받은 Future 에 즉시 get 을 호출하십시오 
+* GameAnvil의 API도 다른 많은 비동기 방식 API들처럼 Future를 리턴하는 방식으로 변경되었습니다. 이제 더욱 자유롭게 코드 흐름을 만들 수 있습니다. 
+* GameAnvil에서 제공하는 Async API를 사용할 필요가 없어졌습니다. GameAnvil에서 Virtual Thread를 공식 지원하기 때문에, 블로킹 코드를 호출하더라도 Java 21을 지원하는 코드라면 Platform Thread 가 아닌 Virtual Thread가 블록이 됩니다. 이제 Async API는 지원하지 않습니다.
+```java
+// GameAnvil 2.0 이전 버전 
+Packet packetResponse = user.requestToNode(nodeId, myRequest1);
+ListenableFuture<Response> httpFuture =  getHttpClient().executeRequest(myRequest2);
+// Response httpResponse = httpFuture.get(); // !Java 11 일 때 Platform Thread 블락 발생!
+Response httpResponse = Async.awaitFuture(httpFuture.toCompletableFuture());
+```
+```java
+// GameAnvil 2.0 
+Future<Packet> packetFuture = user.requestToNode(nodeId, myRequest1);
+Future<Response> httpFuture = getHttpClient().executeRequest(myRequest2);
+Packet packetResponse = packetFuture.get();  
+Response httpResponse = httpFuture.get();  // Java 21 에서는 Virtual Thread 만 블락
+```
+* 이제 기존 GameAnvil에서는 불편한 점이 있었던 다음 기능들을 개선할 수 있게 되었습니다
+    * 동시에 여러 곳으로 요청을 보내는 기능 개선
+    * 요청을 보낸 후 받기 전까지 필요한 작업 실행 개선
+* 기존 버전과 활용성을 유지해야 하는 코드라면 반환받은 Future에 즉시 get 을 호출하십시오
+> Platform Thread : 기존 Java에서 사용한 Thread. OS 스레드 혹은 자바 스레드입니다
+> Virtual Thread: Java 21에서 추가된 새로운 Thread입니다 이전 버전 GameAnvil의 Fiber 와 유사한 동작을 합니다 자세한 동작은 [여기](https://openjdk.org/jeps/444)를 참고하십시오
 
 ##### Handler 실행이 Context 기반으로 변경 
 * Handler 실행을 각 대상에 맞는 `DispatchContext` 기반으로 변경하였습니다
@@ -155,8 +178,9 @@ gameServiceBuilder.user("MyUserType", MyGameUser::new, config -> {
 ##### ServiceId 대신 ServiceName 사용
 * 엔진 사용자가 인지하기 어려운 ServiceId 를 받는 API 가 사용자가 입력한 ServiceName 을 그대로 받도록 변경되었습니다
 
-##### ProtoBuffer 3.25.5 사용
-* ProtoBuffer 를 4.x 버전으로 업데이트 시 정상적으로 동작하지 않을 수 있습니다
+##### ProtoBuffer 4.28.3 사용
+* ProtoBuffer 를 3.x 버전으로 다운그레이드 시 정상적으로 동작하지 않을 수 있습니다
+* ProtoBuffer 의존성, protoc, 이미 빌드 된 ProtoBuffer 파일의 교체가 필요합니다
 
 
 ##### 1 Thread 에서 N 개의 GameNode 를 실행 가능, 게임 노드의 ChannelID 설정 변경 
