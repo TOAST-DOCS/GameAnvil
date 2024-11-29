@@ -128,13 +128,27 @@ public async void ManagerLogin()
 
 GameAnvilManager의 Logout() 메소드를 이용해서 서버와의 연결을 해제할 수 있습니다.
 
-Logout() 호출 시 로그아웃, 서버 접속 종료, 연결 해제 후 처리할 콜백 호출의 과정을 한 번에 처리할 수 있습니다.
+Logout() 호출 시 로그아웃, 서버 접속 종료, 연결 해제 후 처리할 콜백 호출의 과정을 한 번에 처리할 수 있습니다. 서버의 구현에 따라서 로그아웃 과정에서 추가 정보가 필요할 수 있습니다. 이런 경우에는 logoutPayload 로 추가 정보를 전달할 수 있습니다.
 
 ```c#
 public async void ManagerLogout()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    await gameAnvilManager.Logout();
+    var logoutPayload = new Payload(new Protocol.LogoutData());
+    await gameAnvilManager.Logout(logoutPayload);
 }
 ```
 
+## 상태 변경 알림
+
+Logout()을 호출하지 않더라고 네트워크에 문제가 있거나, 서버에서 강제로 로그아웃을 시키는 등 GameAnvilManager의 상태가 변경될 수 있으며, 이에 대한 알림을 받을 수 있습니다. 
+```c#
+public void addStateChangeListener()
+{
+    gameAnvilManager.onStateChange.AddListener((GameAnvilManager.LoginState oldState, GameAnvilManager.LoginState newState) =>
+    {
+        // 상태 변경 알림
+    });
+}
+```
+oldState로 변경되기전 상태를, newState로 변경된 후의 상태를 알 수 있습니다.  

@@ -90,11 +90,11 @@ JoinRoom()을 호출하여 이미 생성된 방에 입장합니다.
 public async void ManagerJoinRoom()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userControll = gameAnvilManager.UserController;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
     try
     {
         Payload joinRoomPayload = new Payload(new Protocol.JoinRoomData());
-        ErrorResult<ResultCodeJoinRoom, JoinRoomResult> result = await userControll.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload);
+        ErrorResult<ResultCodeJoinRoom, JoinRoomResult> result = await userController.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload);
         if(result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
         {
             // 성공
@@ -134,7 +134,7 @@ ResultCodeJoinRoom 상세 내용은 다음과 같습니다.
 | JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 실패. 입장 요청한 방이 존재하지 않음.                     |
 | JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 실패. 이미 방에 들어가 있음.                          |
 | JOIN_ROOM_FAIL_ALREADY_FULL        | 704 | 실패. 입장 요청한 방이 꽉 차있음.                       |
-| JOIN_ROOM_FAIL_ROOM_MATCH          | 705 | 실패. 룸 매치메이킹에서 문제가 발생함.                    |
+| JOIN_ROOM_FAIL_ROOM_MATCH          | 705 | 실패. 룸 매치메이킹에서 문제가 발생함.                     |
 
 JoinRoomResult의 상세 내용은 다음과 같습니다.
 
@@ -269,11 +269,11 @@ MatchRoom()을 호출하여 룸 매치메이킹을 요청할 수 있습니다.
 public async void ManagerMatchRoom()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userControll = gameAnvilManager.UserController;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
     try
     {
         var matchRoomPayload = new Payload(new Protocol.MatchRoomData());
-        ErrorResult<ResultCodeMatchRoom, MatchResult> result = await userControll.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
+        ErrorResult<ResultCodeMatchRoom, MatchResult> result = await userController.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
         if (result.ErrorCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
         {
             // 성공
@@ -298,7 +298,7 @@ MatchRoom()은 다음과 같은 7개의 매개변수를 가지고 있습니다.
 | string  | roomType                  | 방 타입. 같은 타입의 방을 찾는다.                                                                                                             |
 | string  | matchingGroup             | 매칭 그룹. 같은 그룹으로 생성된 방을 찾는다.                                                                                                       |
 | string  | matchingUserCategory      | 매칭 된 방에서 사용항 유저 카테고리.<br/>각 방에서는 방에 속한 유저를 카테고리로 나누고, 각 카테고리별로 인원수 제한을 적용할 수 있다. 지정한 matchingUserCategory의 현재 인원이 최대가 아닌 방을 찾는다. |
-| Payload | payload                   | 매치메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                          |
+| Payload | payload                   | 매치메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                           |
 | Payload | leaveRoomPayload          | 다른 방으로 이동하는 경우, 방을 나갈때 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                              |
 
 응답으로 ErrorResult<ResultCodeMatchRoom, MatchResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeMatchRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 MatchResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가정보를 얻을 수도 있습니다.
@@ -355,14 +355,14 @@ MatchUserStart()를 호출하여 유저 매치메이킹을 시작할 수 있습�
 public async void ManagerMatchUserStart()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userControll = gameAnvilManager.UserController;
-    userControll.onMatchUserDoneSuccess.AddListener((MatchResult matchResult) => {
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    userController.OnMatchUserDone += (GameAnvilUserController userController, ResultCodeMatchUserDone resultCode, MatchResult matchResult) => {
         // 매칭 성공
-    });
-    userControll.onMatchUserTimeOut.AddListener((MatchResult matchResult) =>
+    };
+    userController.OnMatchUserTimeout += (GameAnvilUserController userController) =>
     {
         // 매칭 실패
-    });
+    };
     try
     {
         Payload matchUserPayload = new Payload(new Protocol.MatchUserData());
@@ -406,8 +406,22 @@ ResultCodeMatchUserStart 상세 내용은 다음과 같습니다.
 
 <br>
 
-유저 매치메이킹이 성공한 경우 onMatchUserDone 을 통해 알림을 받을 수 있습니다. 그리고 MatchResult 매개변수를 통해 매칭된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가정보를 얻을 수도 있습니다.
+유저 매치메이킹이 성공한 경우 onMatchUserDone 을 통해 알림을 받을 수 있습니다. 매개변수 ResultCodeMatchUserDone resultCode 를 통해 결과 코드를 알수 있으며, 매개변수 MatchResult matchResult를 통해 매칭된 방의 정보를 얻을 수 있습니다. 서버 구현에 따라서 MatchResult의 payload를 통해 추가정보를 얻을 수도 있습니다.
 시간 안에 매칭이 성공하지 못한 경우 onMatchUserTimeout 을 통해 알림을 받을 수 있습니다.
+
+ResultCodeMatchUserDone의 상세 내용은 다음과 같습니다.
+
+| 이름                                       | 값    | 설명                                                              |
+|------------------------------------------|------|-----------------------------------------------------------------|
+| PARSE_ERROR                              | -2   | 패킷 파싱 에러. 서버와 클라이언트의 버전이 다를 경우 발생할 수 있음.                        |
+| TIMEOUT                                  | -1   | 타임 아웃. 요청에 대한 응답이 정해진 시간내에 오지 않음.                               |
+| SYSTEM_ERROR                             | 1    | 서버 시스템 에러.  서버의 알수 없는 오류로 실패.                                   |
+| INVALID_PROTOCOL                         | 2    | 서버에 등록되지 않은 프로토콜. 추가정보에 등록되지 않은 프로토콜이 사용됨.                      |
+| MATCH_USER_DONE_SUCCESS                  | 0    | 성공.                                                             |
+| MATCH_USER_DONE_FAIL_CONTENT             | 1501 | 실패. 사용자 코드에서 거부됨.                                               |
+| MATCH_USER_DONE_FAIL_ROOM_DOES_NOT_EXIST | 1502 | 실패. 조건에 맞는 방을 찾아 방에 참가 시키는 도중, 방이 사라짐.                          |
+| MATCH_USER_DONE_FAIL_TRANSFER            | 1503 | 실패. 조건에 맞는 방을 찾아 방에 참가 시키는 도중, 방에 참가하기 위해 transfer 하는 과정에서 실패함. |
+| MATCH_USER_DONE_FAIL_CREATE_ROOM         | 1504 | 실패. 방 생성 실패.                                                    |
 
 <br>
 
@@ -417,10 +431,10 @@ MatchUserCancel()을 호출하여 진행중인 유저 매치메이킹을 취소�
 public async void ManagerMatchUserCancel()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userControll = gameAnvilManager.UserController;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
     try
     {
-        ResultCodeMatchUserCancel result = await userControll.MatchUserCancel("RoomType");
+        ResultCodeMatchUserCancel result = await userController.MatchUserCancel("RoomType");
         if (result == ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS)
         {
             // 성공

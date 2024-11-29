@@ -2,7 +2,7 @@
 
 ## 메시지 핸들링
 
-GameAnvilUserController의 RequestUser()와 Send() 메소드를 이용하여 사용자가 정의한 메시지를 서버로 전송할 수 있습니다. 메시지를 전송하기 위해서는 메시지를 생성하고 등록하는 과정이 필요합니다.
+GameAnvilUserController의 RequestUser()와 SendUser() 메소드를 이용하여 사용자가 정의한 메시지를 서버로 전송할 수 있습니다. 메시지를 전송하기 위해서는 메시지를 생성하고 등록하는 과정이 필요합니다.
 
 ### 메시지 생성
 
