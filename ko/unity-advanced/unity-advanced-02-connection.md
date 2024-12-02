@@ -445,4 +445,15 @@ public async void Disconnect()
 
 별도의 리턴값은 없고 성공할 경우 다음 코드를 실행하게 되며, 실패할 경우 예외가 발생하게 됩니다.
 
+#### 연결 종료 알림
+Disconnect() 를 호출하지 않더라도 서버에서 강제로 연결을 종료하거나, 네트워크에 문제가 생기면 연결이 끊어질 수 있으며, 이에 대한 알림을 받을 수 있습니다. 
+```c#
+private void addOnDisconnect()
+{
+    connector.OnDisconnect += (ResultCodeDisconnect resultCode, Payload payload)=>{
+        // 연결 끊김 알림
+    };
+}
+```
 
+ResultCodeDisconnect 매개변수를 통해 연결이 끊어진 원인에 대한 정보를 얻을 수 있으며, 서버에서 강제 종료를 한 경우 서버의 구현에 따라서 추가정보를 얻을 수도 있습니다.
