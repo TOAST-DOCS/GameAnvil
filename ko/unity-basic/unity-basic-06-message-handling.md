@@ -6,8 +6,7 @@ GameAnvilUserController의 RequestUser()와 SendUser() 메소드를 이용하여
 
 ### 메시지 생성
 
-GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffers](https://developers.google.com/protocol-buffers/docs/proto3)를 사용합니다. .proto 파일에 메시지를 정의하고, protoc 컴파일러로 실제 클래스 소스 코드를 생성하게 됩니다. 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. protoc에 대한 자세한 설명은 [여기](https://developers.google.com/protocol-buffers/docs/proto3#generating)를
-참고하십시오.
+GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffers](https://developers.google.com/protocol-buffers/docs/proto3)를 사용합니다. .proto 파일에 메시지를 정의하고, protoc 컴파일러로 실제 클래스 소스 코드를 생성하게 됩니다. 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. protoc에 대한 자세한 설명은 [여기](https://developers.google.com/protocol-buffers/docs/proto3#generating)를 참고하십시오. 
 
 이제 메시지를 만들기 위해 Assets 폴더 아래에 protocols 폴더를 생성하고 다음과 같이 messages.proto 파일을 생성합니다.
 

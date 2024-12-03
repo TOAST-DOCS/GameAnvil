@@ -931,8 +931,7 @@ GetChannelInfo()은 다음과 같은 2개의 매개변수를 가지고 있습니
 | String | ServiceName | 채널 정보를 요청할 서비스     |
 | String | channelId   | 채널 정보를 요청할 채널의 아이디 |
 
-응답으로 ErrorResult<ResultCodeChannelInfo, Payload>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelInfo() 가 성공하면 ErrorCode 필드의 값이 ResultCodeChannelInfo.| CHANNEL_INFO_SUCCESS                 | 0    | 성공                                         |
-가 되며, 아닌 경우 요청이 실패한 것입니다. 성공시 Data 필드의 Payload 를 사용자가 정의한 채널 정보를 얻을 수도 있습니다.
+응답으로 ErrorResult<ResultCodeChannelInfo, Payload>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelInfo() 가 성공하면 ErrorCode 필드의 값이 ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS가 되며, 아닌 경우 요청이 실패한 것입니다. 성공시 Data 필드의 Payload 를 사용자가 정의한 채널 정보를 얻을 수도 있습니다. 
 
 ResultCodeChannelInfo의 상세 내용은 다음과 같습니다.
 
@@ -978,8 +977,7 @@ GetAllChannelCountInfo()은 다음과 같은 1개의 매개변수를 가지고 �
 |--------|-------------|----------------|
 | String | ServiceName | 채널 정보를 요청할 서비스 |
 
-응답으로 ErrorResult<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelCountInfo가 성공하면 ErrorCode 필드의 값이 ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 Dictionary<
-string, ChannelCountResult> 를 얻을 수 있습니다. 이 Dictionary는 채널 아이디를 키로, ChannelCountResult를 값으로 가지고 있습니다.
+응답으로 ErrorResult<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelCountInfo가 성공하면 ErrorCode 필드의 값이 ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 Dictionary<string, ChannelCountResult> 를 얻을 수 있습니다. 이 Dictionary는 채널 아이디를 키로, ChannelCountResult를 값으로 가지고 있습니다.
 
 ResultCodeAllChannelCountInfo의 상세 내용은 다음과 같습니다.
 

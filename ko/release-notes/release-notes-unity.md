@@ -10,14 +10,14 @@
 * 이제 완료 시 처리 할 함수를 등록하지 않고 반환값으로 완료를 확인합니다
 * GameAnvil 연결 + 인증 코드는 다음과 같습니다
 
- ```csharp
- var (err, res) = await connector.ConnectAndAuthentication(
-                                                 /*host*/"127.0.0.1", 
-                                                 /*port*/18200, 
-                                                 "device_id", 
-                                                 "account_id", 
-                                                 "password");
- ```
+```c#
+var (err, res) = await connector.ConnectAndAuthentication(
+                                             /*host*/"127.0.0.1", 
+                                             /*port*/18200, 
+                                             "device_id", 
+                                             "account_id", 
+                                             "password");
+```
  
 #### <span style="color: #e11d21">Remove</span>
 ###### ConnectionAgent 제거
@@ -37,7 +37,7 @@
 
 #### <span style="color: #e11d21">Change</span>
 
-###### ProtoBuffer 3.27.2 사용
+###### ProtoBuffer 3.28.3 사용
 * 내부 프로토 버퍼 의존성이 3.27.2 로 변경 되었습니다
 
 ###### UserAgent 의 인스턴스 직접 관리
