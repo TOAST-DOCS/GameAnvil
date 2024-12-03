@@ -146,7 +146,7 @@ GameAnvil은 Java 21 버전을 지원합니다. 버전에 따라 일부 설정 �
 
 ### 서버 구동
 
-실행 설정이 완료되면 Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 Main.main() 실행을 선택합니다. 이렇게 한 번 실행한 이후에는 IntelliJ 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
+실행 설정이 완료되면 Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 `Run 'Run With JDK21'` 실행을 선택합니다. 이렇게 한 번 실행한 이후에는 IntelliJ 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/10_gameanvil_run.png)
 
