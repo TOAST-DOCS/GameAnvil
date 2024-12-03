@@ -6,8 +6,8 @@ GameAnvil은 다음과 같은 목적을 위해 비동기 처리를 지원합니�
 
 | 관점        | 설명                                                      |
 |-----------|---------------------------------------------------------|
-| 코드 생산성    | 간결하고 짧아지는 코드비동기화 방식에 따라서는 콜백 처리나 스레드 위임 등의 처리는 모두 생랙 가능 |
-|           | 비동기화 방식에 따라서는 콜백 처리나 스레드 위임 등의 처리는 모두 생랙 가능             |
+| 코드 생산성    | 간결하고 짧아지는 코드비동기화 방식에 따라서는 콜백 처리나 스레드 위임 등의 처리는 모두 생략 가능 |
+|           | 비동기화 방식에 따라서는 콜백 처리나 스레드 위임 등의 처리는 모두 생략 가능             |
 | 성능        | 드라이버나 라이브러리 수준에서 최적의 구현을 제공해 줄 경우 성능 UP                 |
 |           | 외부 스레드 풀을 이용한 스레드 단위의 비동기 처리는 리소스 소비와 비용이 큼             |
 | 가상 스레드 지원 | 스레드가 아닌 가상 스레드 중심의 비동기 처리                               |
@@ -82,7 +82,7 @@ for (Thread thread : threads) {
 ```
 -Djdk.tracePinnedThreads=full
 ```
-VM 옵션 추가 후 위 프로그램을 다시 실행 시 아래와 같은 경고가 표시되어 문제가 발생하는 코드를 확인할 수 있습니다.
+VM 옵션 추가 후 위 프로그램을 다시 실행 시 아래와 같은 경고가 출력되어 문제가 발생하는 코드를 확인할 수 있습니다.
 ```
 Thread[#46,ForkJoinPool-1-worker-3,5,CarrierThreads]
     java.base/java.lang.VirtualThread$VThreadContinuation.onPinned(VirtualThread.java:183)
@@ -102,7 +102,7 @@ Thread[#46,ForkJoinPool-1-worker-3,5,CarrierThreads]
     java.base/java.lang.VirtualThread.run(VirtualThread.java:309)
 ```
 
-GameAnvil 에서는 엔진 사용을 위해 커스텀한 Virtual Thread 를 사용하고 있기 때문에 위와 같은 문제가 발생 시 잠금이 해제되지 않을 수 있습니다. [jasync-sql](https://github.com/jasync-sql/jasync-sql), [Lettuce](https://github.com/redis/lettuce) 사용 시 에도 Connection 을 만드는 부분에서 비슷한 문제가 발생합니다. Connection 연결 이외에서는 문제가 발생하지 않으므로 Connection 생성 시 메인 스레드 혹은 다른 스레드 에서 생성하는 작업을 넣어주는 것이 필요합니다. 아래는 [jasync-sql](https://github.com/jasync-sql/jasync-sql) 을 사용하여 GameAnvil 서버 시작 전 먼저 MySql ConnectionPool 을 만드는 코드입니다.
+GameAnvil 에서는 엔진 사용을 위해 커스텀한 Virtual Thread 를 사용하고 있기 때문에 위와 같은 문제가 발생 시 잠금이 해제되지 않을 수 있습니다. [jasync-sql](https://github.com/jasync-sql/jasync-sql), [Lettuce](https://github.com/redis/lettuce) 사용 시 에도 Connection 을 만드는 부분에서 Pinning 경고가 출력합니다. Connection 연결 이외에서는 문제가 발생하지 않으므로 Connection 생성 시 메인 스레드 혹은 다른 스레드 에서 생성하는 작업을 넣어주는 것이 필요합니다. 아래는 [jasync-sql](https://github.com/jasync-sql/jasync-sql) 을 사용하여 GameAnvil 서버 시작 전 먼저 MySql ConnectionPool 을 만드는 예제입니다.
 
 ```java
 public static Connection connectionPool;
