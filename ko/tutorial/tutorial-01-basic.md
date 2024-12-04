@@ -30,8 +30,7 @@ GameAnvil은 서버 엔진뿐만 아니라, 클라이언트를 서버에 연결�
 
 GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ 템플릿을 제공하여 보다 간단하게 초기 작업을 완료할 수 있습니다. 다음 링크에서 IntelliJ용 프로젝트 파일 템플릿을 다운로드할 수 있습니다. 다운로드한 템플릿은 압축을 풀지 않도록 합니다.
 
-[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Template%202.0.zip?disposition=attachment
-)
+[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Template%202.0.zip?disposition=attachment)
 
 다운로드한 템플릿을 적용하기 위해 IntelliJ를 실행합니다. **Welcome to InteliJ IDEA** 화면 좌측 메뉴에서 **Customize**를 선택한 뒤 **Import Settings...** 를 클릭합니다. 또는 전체 검색창에서 **Import Settings...** 를 검색합니다.
 
@@ -168,8 +167,6 @@ GameAnvil 서버는 여러 개의 노드들로 구성되어 있습니다. 이 �
 GameAnvil은 `I-` 접두사를 붙인 여러 노드 인터페이스를 제공합니다. 기본적인 노드의 기능은 엔진 내부에 이미 구현되어 있고, 사용자는 이 인터페이스들을 구현하여 다양한 콜백 기능을 사용할 수 있습니다. 이번 예제에서는 IGameNode 인터페이스를 구현한 게임 노드 클래스를 만들어 사용해 보려고 합니다.
 
 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **node**라는 이름의 새로운 패키지를 생성합니다. 그리고 node 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil GameNode**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **SyncGameNode**를 입력한 뒤 **OK**를 클릭합니다.
-
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/12_create_from_file_template.png)
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/13_select_game_node_file_template.png)
 
@@ -647,7 +644,7 @@ public class Main {
 
 GameAnvil 커넥터 dll 사용을 위해서 아래 파일을 다운로드합니다.
 
-[gameanvil_connector_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/tutorial/gameanvil_connector_2.0.0.unitypackage)
+[gameanvil_connector_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.0.0.unitypackage)
 
 ### Unity Package 다운로드
 

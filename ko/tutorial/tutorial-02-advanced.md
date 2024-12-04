@@ -40,11 +40,11 @@ GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ �
 
 <br>
 
-파인더 또는 파일 탐색기에서 템플릿을 다운로드한 경로로 이동해 압축 파일을 선택합니다. **Select Components to Import** 창이 열리면 **File templates** 항목과 **Project Templates** 항목을 모두 체크해 선택합니다. **OK**를 클릭한 뒤 가져오기가 완료되면 IntelliJ를 다시 시작해 템플릿 적용을 완료합니다.
+파인더 또는 파일 탐색기에서 템플릿을 다운로드한 경로로 이동해 압축 파일을 선택합니다. **Select Components to Import** 창이 열리면 `File templates` 항목과 `Project Templates` 항목을 모두 체크해 선택합니다. **OK**를 클릭한 뒤 가져오기가 완료되면 IntelliJ를 다시 시작해 템플릿 적용을 완료합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/3_select_import.png)
 
-IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 뒤 왼쪽 목록을 스크롤하여 하단의 **Templates**에 있는 **GameAnvil 2.0.0 Template**을 선택합니다. 프로젝트 이름을 설정합니다. 이름에 공백이 있어서는 안 됩니다. 프로젝트 위치를 확인한 뒤 프로젝트를 생성합니다.
+IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 뒤 왼쪽 목록을 스크롤하여 하단의 **Templates**에 있는 `GameAnvil 2.0.0 Template`을 선택합니다. 프로젝트 이름을 설정합니다. 이름에 공백이 있어서는 안 됩니다. 프로젝트 위치를 확인한 뒤 프로젝트를 생성합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/4_imported_gameanvil_template.png)
 
@@ -56,7 +56,7 @@ IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 �
 - GameAnvilConfig.json: GameAnvil 구동에 필요한 서버 설정 정보를 기록한 파일입니다. 서버 구현에 맞게 수정할 수 있습니다.
 - logback.xml: Java 프로젝트에서 로깅을 구성하는 데 사용되는 파일입니다. Logback 프레임워크의 설정 파일로서, 로깅 시스템의 동작 방식과 로그의 형식, 저장 위치 등을 지정합니다. 이 파일을 사용하여 로깅 수준, 로그 형식, 로그 파일의 경로 및 이름, 로그 롤링 정책 등을 설정할 수 있습니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/gameanvil_projectview_init.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/5_gameanvil_project_view_init.png)
 
 먼저 JDK 설정을 확인합니다. GameAnvil은 Java 21 버전을 지원합니다. 버전에 따라 일부 설정 방법이 다를 수 있으며, 여기에서는 Java 21 버전을 사용하였습니다.
 
@@ -64,48 +64,43 @@ IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 �
 
 Project 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다면 `Add SDK > Download JDK`를 통해서 원하는 버전의 JDK를 다운로드해 설정합니다. Language level은 SDK default로 설정합니다. 다음으로 Modules 탭에서 Language level을 Project default로 설정합니다.
 
-**Project** 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다면 **Add SDK > Download JDK**를 클릭해 원하는 버전의 JDK를 다운로드해 설정합니다. **Language level**은 **SDK default**로 설정합니다. 다음으로 **Modules** 탭에서 **Language level**을 **Project default**로 설정합니다.
+**Project** 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다면 **Add SDK > Download JDK**를 클릭해 원하는 버전의 JDK를 다운로드해 설정합니다. Language level은 `SDK default`로 설정합니다. 다음으로 **Modules** 탭에서 Language level을 `Project default`로 설정합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/7_project_structure.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/6_project_structure.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/8_module_language_level.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/7_module_language_level.png)
 
 **설정** 메뉴에서 **maven** 버전을 확인합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/9_maven_config.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/8_maven_config.png)
 
 프로젝트 준비가 거의 끝났지만 실행을 위해서는 몇 가지 설정이 필요합니다. 여기에서는 우선 클라이언트 프로젝트를 먼저 생성한 뒤 서버 설정을 마치고 실행합니다.
-<br>
 
 ### Unity 프로젝트 구성
 
 Unity Hub를 실행합니다. 오른쪽 상단의 **NEW**를 클릭해 새로운 프로젝트 생성 창을 엽니다
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/18_unity_hub.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/9_unity_hub.png)
 
 템플릿 목록에서 **2D**를 선택하고, 프로젝트 이름과 위치를 확인한 뒤 **CREATE**를 클릭해 프로젝트 생성을 완료합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/19_new_unity_project.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/10_new_unity_project.png)
 
 다음 링크에서 GameAnvil 커넥터를 내려받으십시오. 커넥터는 GameAnvil 서버와의 통신에 필요한 클라이언트 API를 제공하여 간단한 코드만으로 클라이언트를 구현할 수 있도록 도와주는 패키지입니다.
 
-[gameanvil_connector_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/tutorial/gameanvil_connector_2.0.0.unitypackage)
+[gameanvil_connector_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.0.0.unitypackage)
 
 실습에 필요한 클라이언트 프로젝트 생성을 위해 아래 링크에서 튜토리얼용 코드와 이미지 소스 등이 포함된 Unity 패키지를 다운로드합니다.
 
-[gameanvil_tutorial_advanced.unitypackage](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/gameanvil_tutorial_advanced.unitypackage)
+[gameanvil_tutorial_advanced.unitypackage](https://static.toastoven.net/prod_gameanvil/files/tutorial/advanced-tutorial/gameanvil_tutorial_advanced.unitypackage)
 
-다운로드한 패키지 파일을 Unity 프로젝트로 드래그해 가져옵니다. 또는 **Asset > Import Package > Custom Package...** 메뉴를 열어 파인더 또는 파일 탐색기에서 패키지 파일을 선택합니다.
+다운로드한 패키지 파일을 Unity 프로젝트로 드래그해 가져옵니다. 또는 **Asset > Import Package > Custom Package...** 메뉴를 열어 파인더 또는 파일 탐색기에서 패키지 파일을 선택합니다. Import Unity Package 대화 상자에서 목록의 모든 체크 박스를 선택한 뒤 **Import**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_import_custom_package.png)
-
-Import Unity Package 대화 상자에서 목록의 모든 체크 박스를 선택한 뒤 **Import**를 클릭합니다.
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_import_custom_package_window.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/11_import_unity_package.png)
 
 마지막으로, 편리하게 테스트하기 위해서는 Project Settings 윈도우에서 Player 탭을 선택하고, Resoultion and Presentation 항목에서 아래와 같이 프로젝트 기본 창 폭과 높이를 각각 1920, 1080으로 설정합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_project_setting_resolution.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/12_unity_project_setting_resolution.png)
 
 클라이언트 프로젝트 설정이 완료되었습니다.
 
@@ -115,11 +110,11 @@ Import Unity Package 대화 상자에서 목록의 모든 체크 박스를 선�
 
 실행 설정이 완료되면 Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 `Run 'Run With JDK21'` 실행을 선택합니다. 이렇게 한 번 실행한 이후에는 IntelliJ 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/10_gameanvil_run.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/13_gameanvil_run.png)
 
 서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/11_gameanvil_run_log.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/14_gameanvil_run_log.png)
 
 GameAnvil 서버는 여러 개의 노드들로 구성되어 있습니다. 이 노드들은 서버가 수행할 기능을 여러 개의 역할로 분담합니다. 아직은 서버 초기 구동만 확인했을 뿐, 노드나 다른 서버 구동을 위한 코드 작성을 하지 않았기 때문에 완전히 준비된 상태는 아닙니다.
 
@@ -288,7 +283,7 @@ Connect() 함수에서는 GameAnvilConnector의 Connect 메서드를 호출하�
 
 이제 Unity 클라이언트에서 플레이 모드로 진입하여 콘솔 상에 결과 코드가 제대로 출력되는지 확인합니다. 게임 화면의 텍스트 상에 IP, Port의 접속 정보와 더불어 연결 성공 메시지를 확인할 수 있습니다. 게임 서버에 접속 완료된 클라이언트는 이제 서버를 통해 메시지를 주고받을 수 있습니다.
 
-[](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_connection_test.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/15_connect_success.png)
 
 ## Room 및 User 생성
 
@@ -302,7 +297,7 @@ GameAnvil에서는 게임 유저와 게임 룸의 기본 구현을 미리 준비
 
 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **game**이라는 이름의 새로운 패키지를 생성합니다. 그리고 **game** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil User**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUser**를 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/15_create_sync_game_user.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/16_create_user.png)
 
 GameAnvil에서 제공하는 IUser 인터페이스를 구현하여 게임 유저를 구현하는 기본 코드가 작성된 파일이 생성됩니다. GameAnvil에서 원하는 기능의 게임 유저를 구현하려면, IUser 인터페이스를 구현한 후 상황에 맞게 호출되는 여러 콜백 함수들을 오버라이딩하여 원하는 코드를 실행하도록 설정하면 됩니다. 다음은 지원하는 콜백 함수 목록의 일부입니다.
 
@@ -492,7 +487,7 @@ public class BasicUser implements IUser {
 
 로그인 가능한 유저 구현을 완료했습니다. 이제 게임 룸을 구현합니다. 유저 생성 방법과 마찬가지로 **GameAnvil Room** 파일 템플릿을 이용해 IRoom 인터페이스를 구현한 클래스를 생성합니다. 유저 클래스 입력 필드에는 이전 단계에서 생성한 IUser 구현 클래스의 클래스명을 입력합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/16_create_sync_game_room.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/17_create_room.png)
 
 **OK**를 클릭하면 지원하는 콜백 메서드가 자동으로 작성됩니다. GameAnvil에서 지원하는 콜백을 설명하기 위해 잠시 클라이언트의 API를 간단하게 설명하겠습니다. 클라이언트에서는 커넥터로 로그인 후에 다른 유저들과 통신하기 위해 방 관련 API를 호출할 수 있습니다. 방을 만들거나, 다른 유저가 만든 방에 참여하거나, 방에서 나가는 등의 동작을 지원합니다.
 
@@ -648,7 +643,7 @@ public class BasicRoom implements IRoom<BasicUser> {
 이제 게임 유저와 게임 방이 준비되었습니다. 하지만 아직 게임 유저/게임 룸의 생성과 삭제 요청을 처리하는 노드가 없습니다. 게임 유저와 게임 룸을 관리하는 역할을 하는 노드는 GameNode입니다. 이 노드는 일반적으로 게임 서버가 하기를 기대하는 대부분의 게임 로직 처리 역할을 수행하는 노드입니다. GameAnvil에 노드를 추가하는 방법은 자연스럽고 간단합니다. 게임 유저와 게임 룸을 정의했던 것과 마찬가지로, 미리 정의된 인터페이스를 구현하여 클래스를 만든 뒤 원하는 기능을 추가 구현하면 됩니다.
 **GameAnvil GameNode** 템플릿 선택 후 파일명을 **BasicGameNode**로 설정하고 **OK** 버튼을 눌러 게임 노드 클래스를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/16_create_sync_game_node.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/18_create_game_node.png)
 
 노드가 역할을 수행하기 위해서는 우선 노드가 루프를 실행해야 합니다. 노드가 실행될 때는 일련의 과정을 거치게 되므로 약간의 시간이 필요합니다. 노드의 실행 여부나 실행 과정 중 어느 단계에 있느냐를 나타내는 지표를 노드의 상태라고 부릅니다. 노드의 상태는 보통 아래 순서에 따라서 순차적으로 변경되면서 READY 상태에 도달합니다.
 
@@ -876,7 +871,7 @@ public async void Auth()
 
 Unity 클라이언트에서 플레이 모드로 진입합니다. 콘솔 상에 로그가 접속, 인증 순으로 순차 출력됨을 확인합니다. 다시 정리하면, 클라이언트의 Auth 요청에 따라 서버의 게이트웨이 노드에서 사용자 인증이 완료되어 서버에 로그인할 수 있는 상태가 된 것입니다.
 
-[](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_authentication_test.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/19_auth_success.png)
 
 ## 로그인
 
@@ -912,7 +907,7 @@ public async void Login()
 
 Unity 테스트 모드를 통해 성공적으로 로그인되는 것을 확인합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/5_gameanvil_project_view_init.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/20_login_success.png)
 
 ## 방 생성 및 참가
 
@@ -1010,13 +1005,13 @@ public class GameManager : MonoBehaviour
 
 Unity 프로젝트의 상단 도구 모음 바에서 **File > Build Setting**을 선택합니다. 아래와 같이 필요한 씬들을 빌드할 씬 목록에 차례대로 추가합니다. 만약 씬 순서가 잘못되었다면 리스트 상의 항목을 드래그하여 ConnectScene이 맨 위로 오도록 순서를 알맞게 조정합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/add_scene.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/21_add_scene.png)
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 새로운 윈도우가 열리면서 ConnectScene이 로드됩니다. 서버의 IP주소를 입력하고 Connect 버튼을 눌러 서버 접속을 시도합니다. 예제에서는 로컬 서버를 띄워 사용하므로 `127.0.0.1`을 입력합니다. 서버 접속에 성공했다면 콘솔 로그와 함께 게임 화면 상에서 연결 상태가 `CONNECT_SUCCESS`로 보이는 것을 확인할 수 있습니다. 만약 중간 과정에서 실패 로그가 남는다면, 실패 코드를 통해서 원인을 알 수 있습니다. 만약 그것으로 부족하다면 서버의 로그를 확인해서 원인을 분석해 보아야 합니다. 로그인까지 성공했다면 Create Room 버튼을 눌러서 방 생성을 요청합니다. GameScene으로 씬이 이동되고 생성된 방의 아이디가 함께 출력됩니다. 방 아이디는 다음의 예제 이미지와 다를 수 있습니다.
 
 그 상태로 Unity 플레이모드를 실행한 후 로그인까지 완료되는 것을 확인합니다. 그리고 Join Room 버튼을 클릭한 후 앞서 생성한 방의 RoomId를 직접 입력해서 방에 참가하도록 합니다. 방 참가에 성공한다면 게임 씬으로 이동되고, 두 게임 화면에서 동일한 방 아이디를 가지고 있는 것을 확인할 수 있을 것입니다. 테스트 화면은 아래와 비슷하게 나타나면 성공입니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_room_test.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/22_join_room.png)
 
 먄약 제대로 진행되지 않는다면 아래 사항을 다시 확인하십시오.
 
@@ -1190,7 +1185,7 @@ void Start()
 
 임의의 게임 프로세스에서 입력란에 텍스트를 입력한 뒤 엔터를 누릅니다. 그러면 다른 게임 프로세스에서도 동일한 텍스트가 나타날 것입니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_chat_test.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/23_unity_chat_test.png)
 
 간단한 채팅 서버 구현을 통해서 메시지 처리 과정을 학습했습니다. 다음에는 좀 더 실용적인 예제의 구현 과정을 살펴보겠습니다.
 
@@ -1208,8 +1203,6 @@ void Start()
 
 튜토리얼 샘플 프로젝트를 그대로 사용한다면 아래의 Puzzle 프로토콜 생성 과정은 이미 완료되어 있으므로 개념 이해에 참고합니다.
 퍼즐 위치 동기화를 위한 메시지 프로토콜을 작성을 시작하겠습니다. 서버 프로젝트의 src/main/proto 경로에 Puzzle.proto 파일을 추가한 후 아래와 같이 프로토콜 명세를 작성합니다.
-
-[](https://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_proto.png)
 
 ```protobuf
 syntax="proto3";
@@ -1235,11 +1228,11 @@ protoc 실행 파일은 프로젝트 최상위 경로에 있습니다. 해당 �
 
 이제 src/main/java 경로에 새롭게 Puzzle.java 클래스가 생성된 것을 확인할 수 있습니다.
 
-[](https://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_proto_java.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/24_puzzle_proto_java.png)
 
 C# 클래스 파일은 파인더와 파일 탐색기 등의 프로그램을 이용해서 Unity 프로젝트의 Asset/Protocol 경로로 이동합니다.
 
-[](https://static.toastoven.net/prod_gameanvil/images/tutorial/puzzle_proto_csharp.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/25_puzzle_proto_csharp.png)
 
 퍼즐 위치 동기화를 위한 메시지 프로토콜 작성이 끝났습니다.
 
@@ -1435,7 +1428,7 @@ public class GameManager : MonoBehaviour{
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 빌드된 게임에서 방을 생성한 뒤 Unity 플레이 모드를 실행하고 생성된 방의 RoomId를 입력해서 방에 참가합니다. 이제 퍼즐 조각을 드래그해 위치를 이동하면 해당 퍼즐 조각의 위치가 동기화되어 원격 클라이언트에 반영되는 것을 확인할 수 있습니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_puzzle_position_playmode.gif)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/26_unity_puzzle_position_playmode.gif)
 
 <br>
 
@@ -1565,13 +1558,9 @@ public class GameManager : Monobehaviour {
 
 **Hierarchy** 패널의 **Scatter Puzzle Button**을 클릭합니다. **Inspector**의 **Button** 컴포넌트에서 **OnClick** 리스너에 항목을 추가한 뒤 GameManager 컴포넌트를 드래그해 등록하고, 드롭다운에서 Scatter 메서드를 선택합니다.
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/unity_scatter_puzzle_on_click.png"/>
-
 ### 서버 측 구현
 
 섞기 요청이 들어왔을 때의 처리는 앞서 사용한 방식대로 핸들러를 이용합니다. **GameAnvil MessageHandler for Room** 파일 템플릿을 통해 ScatterPuzzleHandler 클래스를 생성합니다. 16개 각 퍼즐의 위치를 랜덤하게 설정한 후 PuzzlePositon 타입의 메시지를 송신합니다. 또한 서버의 puzzlePositions 맵도 새로운 위치 정보로 갱신합니다.
-
-<img src="https://static.toastoven.net/prod_gameanvil/images/tutorial/scatter_puzzle_handler.png"/>
 
 ```java
 package handler;
@@ -1784,7 +1773,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 이제 빌
 
 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **match**라는 이름의 새로운 패키지를 생성합니다. 그리고 **match** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil UserMatchInfo**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUserMatchInfo로**를 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_user_match_info.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial//27_create_user_match_info.png)
 
 이 클래스에는 매칭에 사용될 유저의 정보를 담게 됩니다. 매치 메이킹에 사용될 요소가 있다면 여기에 추가하면 됩니다. 이번 예제에서는 별다른 요소를 추가하지 않고, 기본적으로 구현된 메서드만을 사용하겠습니다. 한 가지 주의할 점은 getId() 메서드가 반드시 요청한 유저의 아이디를 반환하게 구현되어있는지 확인합니다. 그리고 파티 매치메이킹 기능은 사용하지 않으므로 0을 반환하도록 설정합니다.
 
@@ -1847,7 +1836,7 @@ public class BasicUser implements IUser {
 
 프로젝트 패널의 **match** 패키지를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil UserMatchMaker**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUserMatchMaker**, **User Match Info Class**에 **BasicUserMatchInfo**를 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_user_match_maker.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/28_create_user_match_maker.png)
 
 생성자에서는 부모 클래스의 생성자를 호출하면서 인자로 매치 인원 수와 매치 신청 유효 시간을 전달합니다. 유효 시간이 지나면 해당 매치 요청은 자동으로 취소됩니다. 그리고 실제 매치 메이킹을 수행하는 match 메서드는 내부적으로 엔진에 의해 1초에 한 번씩 호출됩니다.
 
@@ -1905,6 +1894,8 @@ public class ConnectHandler : MonoBehaviour
         {
             getUser().OnMatchUserDone += OnMatchUserDone;
             var result = getUser().MatchUserStart("ROOM_TYPE_BASIC", string.Empty);
+            Debug.Log("MATCHING_USER...");
+            logText.text = "MATCHING_USER...";
         }
         catch (Exception e)
         {
@@ -1921,18 +1912,16 @@ public class ConnectHandler : MonoBehaviour
         this.roomId = matchResult.RoomId;
         SceneManager.LoadScene("GameScene");
     }
+
+	...(생략)...
 }
 ```
 
 씬에서 MatchUser 버튼의 OnClick 리스너에 ConnectHandler 컴포넌트를 드래그해서 등록하고, 드롭다운에서 MatchUser 메서드를 선택합니다.
 
-<br>
-
 ### 유저 매치 메이킹 테스트
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태로 Unity 에디터에서 플레이 모드에 진입합니다. 양측에서 모두 User Match Making 버튼을 눌러 매칭이 성사되고 동일한 방 번호로 묶이게 되는 것을 확인합니다.
-
-<br>
 
 ## 룸 매치 메이킹 구현
 
@@ -1941,7 +1930,6 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태
 우선 매치 메이킹을 실제로 수행하는 클래스가 필요합니다. 그리고 룸 매치 메이커에서 방을 관리하기 위한 정보를 담는 인스턴스가 각 방마다 하나씩 있어야 합니다. 마지막으로 유저가 매치 메이킹을 신청할 때마다 유저의 요구 사항을 담은 신청서 인스턴스가 필요합니다. 이렇게 세 개의 새로운 클래스를 작성해 보겠습니다.
 
 추가로 기존 로직을 일부 수정합니다. 룸 매치 메이킹은 모든 방이 아닌 룸 매치 메이킹 대상으로 신청한 방들만을 대상으로 수행됩니다. 따라서 방 생성 시점에 룸 매치 메이킹을 대상으로 신청하는 코드를 추가합니다.
-<br>
 
 ### 서버 측 구현
 
@@ -1949,7 +1937,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태
 
 프로젝트 패널의 **match** 패키지를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil RoomMatchForm**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicRoomMatchForm**을 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_room_match_maker_form.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/29_create_room_match_form.png)
 
 유저가 매치 메이킹 요청을 할 때마다 BasicRoomMatchForm 객체가 생성되어 사용됩니다.
 
@@ -1967,7 +1955,7 @@ public class BasicRoomMatchForm extends AbstractRoomMatchForm {
 
 다음은 매칭 대상이 되는 방의 정보를 표현하는 클래스를 구현합니다. 다음과 같이 BasicRoomMatchInfo 클래스를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_room_match_info.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/30_create_room_match_info.png)
 
 이때, 방의 최대 정원은 MAX_ENTRY_USER 필드에 지정된 4명입니다. 이러한 최대 정원과 roomId를 반드시 상속 받은 AbstractRoomMatchInfo 생성자에 인자로 전달해야 합니다.
 
@@ -1987,11 +1975,11 @@ public class BasicRoomMatchInfo extends AbstractRoomMatchInfo {
 
 다음으로 실제로 룸 매치 메이킹을 처리할 룸 매치 메이커를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/new_room_match_maker.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/31_create_room_match_maker.png)
 
 다음과 같이 BasicRoomMatchMaker를 작성합니다.
 
-```Java
+```java
 package match;
 
 import com.nhn.gameanvil.node.match.AbstractRoomMatchMaker;
@@ -2094,7 +2082,7 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 유저 매치 메이킹과 마찬가지로 클라이언트는 매치 메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 RoomMatchMaking 메서드를 추가합니다.
 
-```csharp
+```c#
 public class ConnectHandler : MonoBehaviour {
 
     ...(생략)...
