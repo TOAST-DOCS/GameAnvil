@@ -83,7 +83,7 @@ GameAnvil 서버와 쉽게 연동 가능한  **게임앤빌 커넥터** 유니�
 
 ## 라이선스
 
-GameAnvil은 고유한 [소프트웨어 라이선스](https://gameplatform.toast.com/kr/services/gameanvil/license)에 의해 보호되고 있습니다. 해당 소프트웨어 라이선스에
+GameAnvil은 고유한 [소프트웨어 라이선스](https://gameplatform.nhncloud.com/kr/services/gameanvil/license)에 의해 보호되고 있습니다. 해당 소프트웨어 라이선스에
 동의할 경우에만 GameAnvil을 사용할 수 있습니다.
 
 ## 아직 지원하지 않는 게임
