@@ -26,12 +26,6 @@ GameHammer는 GameAnvil 엔진을 이용한 게임 서버 개발 뒤 사용할 �
 * 커스텀 바이트 스트림
 * HTTP/HTTPS(특정한 용도로 한정)
 
-### 레퍼런스 프로젝트
-
-| GameAnvil 프로젝트                                            | GameHammer 프로젝트                                          |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [sample-game-server](https://github.com/nhn/gameanvil.sample-game-server.git) | [sample-game-test](https://github.com/nhn/gameanvil.sample-game-test.git) |
-
 ### 프로젝트에 GameHammer 디펜던시 추가
 
 GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.xml 파일의 dependencies 요소에 다음과 같이 추가하면 GameHammer를 사용할 수 있습니다.
@@ -42,7 +36,7 @@ GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.
         <dependency>
 			<groupId>com.nhn.gameanvil</groupId>
 			<artifactId>gamehammer</artifactId>
-			<version>2.0.0-jdk21</version>
+			<version>2.0.0-jdk11</version>
 		</dependency>
 <dependencies>
 ```
@@ -70,3 +64,13 @@ Process finished with exit code 0
 ```
 
 새롭게 생성된 target 디렉터리 안에서 빌드된 파일을 확인할 수 있습니다.
+
+### 불필요한 debug로그 제거 방법
+
+GameHammer를 실행했을 때, 내부 라이브러리 관련 DEBUG레벨 로그가 발생할 수 있습니다. 동작에는 이상이 없으나, 이러한 로그를 제거하고 싶을 때에는 VMOption에 아래 항목을 추가해 주세요.
+
+```
+-Dio.netty.tryReflectionSetAccessible=true
+--add-opens java.base/java.lang=ALL-UNNAMED
+--add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+```
