@@ -209,14 +209,14 @@ scenario.addState("StateC");
 
 sceanrio
     .startEdit("StateA")
-    .addActionOnEnter(changeState(StateB.class), (sceanrioActor) -> new Random().nextBoolean())
-    .addActionOnEnter(changeState(StateC.class))
+    .addActionOnEnter(changeState("StateB"), (sceanrioActor) -> new Random().nextBoolean())
+    .addActionOnEnter(changeState("StateC"))
     .endEdit();
 
 scenario.
     .startEdit("StateB")
     .addActionOnEnter((scenarioActor) -> scenarioActor.setSuccess(true));
-    .addActionOnEnter(changeState(StateC.class))
+    .addActionOnEnter(changeState("StateC"))
     .endEdit();
 
 scenario
@@ -226,13 +226,228 @@ scenario
     .endEdit();
 ```
 
-~~여기서 부터 다시 작성 예정~~
+### 시나리오 테스트 작성 예시
 
-#### 시나리오 엑터
+아래 예시는 실제 서버에 부하를 인가하도록 작성된 예시입니다.
 
-#### 커넥션
+| 샘플 서버 | 샘플 테스터 |
+|---------|----------|
+| | |
 
-#### 유저
+### 액션
+
+시나리오 중에 엔진에 요청 등 수행할 수 있는 동작을 액션이라고 합니다. 액션은 시나리오 중에 특정 시점에 조건과 함께 결합하여 등록할 수 있습니다.
+
+#### 스테이트 이동
+
+```java
+changeState("StateA")
+```
+
+```java
+changeState(StateA.class)
+```
+
+#### 시나리오 종료
+
+```java
+bool isSuccessful = true;
+ScenarioAction.finish(isSuccessful);
+```
+
+#### 연결 진행
+
+```java
+ScenarioAction.connect()
+```
+
+#### 인증 진행
+
+```java
+ScenarioAction.authenticate()
+```
+
+#### 로그인 진행
+
+```java
+ScenarioAction.login()
+```
+
+#### 유저 매치메이킹 진행
+
+```java
+ScenarioAction.matchUserStart()
+```
+
+#### 룸 매치메이킹 진행
+
+```java
+ScenarioAction.matchRoom()
+```
+
+#### 방 퇴장 진행
+
+```java
+ScenarioAction.leaveRoom()
+```
+
+#### 로그아웃 진행
+
+```java
+ScenarioAction.logout()
+```
+
+#### 네임드 룸 동작 요청 진행
+
+```java
+ScenarioAction.namedRoom()
+```
+
+#### 파티 매치메이킹 진행
+
+```java
+ScenarioAction.matchPartyStart()
+```
+
+#### 파티 매치메이킹 취소 진행
+
+```java
+ScenarioAction.matchPartyCancel()
+```
+
+#### 채널 정보 요청 진행
+
+```java
+ScenarioAction.getChannelInfo()
+```
+
+#### 모든 채널 정보 요청 진행
+
+```java
+ScenarioAction.getAllChannelInfo()
+```
+
+#### 채널 유저 수, 룸 수 요청 진행
+
+```java
+ScenarioAction.getChannelCountInfo()
+```
+
+#### 모든 채널의 유저 수, 룸 수 요청 진행
+
+```java
+ScenarioAction.getAllChannelCountInfo()
+```
+
+#### 채널 이동 진행
+
+```java
+ScenarioAction.moveChannel()
+```
+
+#### 스냅샷 요청 진행
+
+```java
+ScenarioAction.snapshot()
+```
+
+### 액션 등록
+
+아래는 액션을 등록하는 메서드 목록입니다.
+
+#### 시나리오 진입 시점
+
+시나리오 진입 시점에 실행할 액션을 등록할 수 있습니다.
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"));
+```
+
+#### 시나리오 이동 시점
+
+시나리오 이동 시점에 실행할 액션을 등록할 수 있습니다.
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnExit(scenarioActor -> scenarioActor.resetChannle());
+```
+
+#### 패킷 수신 시점
+
+패킷 수신 시점에 실행할 액션을 등록할 수 있습니다.
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"));
+```
+
+
+#### 타이머 호출 시점
+
+타이머 호출 시점에 실행할 액션을 등록할 수 있습니다.
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .setActionInTimer("TimerName", changeState("OtherStateNameToEnter"));
+```
+
+### 조건 기능
+
+조건에 따라 액션 수행 여부를 설정할 수 있습니다.
+
+#### 항상
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"), always());
+```
+
+#### 결과 성공시
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
+```
+
+#### 결과 실패시
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
+```
+
+#### 조건 반전
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"), NOT(scenarioActor -> scenarioActor.valid()));
+```
+
+#### 조건 결합
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"), AND(scenarioActor -> scenarioActor.valid(), ifSuccess());
+```
 
 ### 향상된 콜백 등록 기능
 
@@ -314,133 +529,133 @@ public String connectListener(ResultConnect resultConnect, TestActor scenarioAct
 
 아래는 지원하는 리스너 목록입니다. 아래 시그니처를 가진 메서드를 State에 선언한 후 `@Listener` 어노테이션을 부착하십시오.
 
-- connect
+#### connect
 
 ```java
 public void listener(ResultConnec result, ScenarioActor actor);
 ```
 
-- authentication
+#### authentication
 
 ```java
 public void listener(ResultAuthentication result, ScenarioActor actor);
 ```
 
-- login
+#### login
 
 ```java
 public void listener(ResultLogin result, ScenarioActor actor);
 ```
 
-- matchUserStart
+#### matchUserStart
 
 ```java
 public void listener(ResultMatchUserStart result, ScenarioActor actor);
 ```
 
-- logout
+#### logout
 
 ```java
 public void listener(ResultLogout result, ScenarioActor actor);
 ```
 
-- logout
+#### logout
 
 ```java
 public void listener(ResultLogout result, ScenarioActor actor);
 ```
 
-- leaveRoom
+#### leaveRoom
 
 ```java
 public void listener(ResultLeaveRoom result, ScenarioActor actor);
 ```
 
-- leaveRoom
+#### leaveRoom
 
 ```java
 public void listener(ResultLeaveRoom result, ScenarioActor actor);
 ```
 
-- createRoom
+#### createRoom
 
 ```java
 public void listener(ResultCreateRoom result, ScenarioActor actor);
 ```
 
-- namedRoom
+#### namedRoom
 
 ```java
 public void listener(ResultNamedRoom result, ScenarioActor actor);
 ```
 
-- joinRoom
+#### joinRoom
 
 ```java
 public void listener(ResultJoinRoom result, ScenarioActor actor);
 ```
 
-- matchUserCancel
+#### matchUserCancel
 
 ```java
 public void listener(ResultMatchUserCancel result, ScenarioActor actor);
 ```
 
-- matchPartyStart
+#### matchPartyStart
 
 ```java
 public void listener(ResultMatchPartyStart result, ScenarioActor actor);
 ```
 
-- matchPartyCancel
+#### matchPartyCancel
 
 ```java
 public void listener(ResultMatchPartyCancel result, ScenarioActor actor);
 ```
 
-- matchRoom
+#### matchRoom
 
 ```java
 public void listener(ResultMatchRoom result, ScenarioActor actor);
 ```
 
-- getChannelInfo
+#### getChannelInfo
 
 ```java
 public void listener(ResultChannelInfo result, ScenarioActor actor);
 ```
 
-- getAllChannelInfo
+#### getAllChannelInfo
 
 ```java
 public void listener(ResultAllChannelInfo result, ScenarioActor actor);
 ```
 
-- getChannelCountInfo
+#### getChannelCountInfo
 
 ```java
 public void listener(ResultChannelCountIn result, ScenarioActor actor);
 ```
 
-- getAllChannelCountInfo
+#### getAllChannelCountInfo
 
 ```java
 public void listener(ResultAllChannelCoun result, ScenarioActor actor);
 ```
 
-- moveChannel
+#### moveChannel
 
 ```java
 public void listener(ResultMoveChannel result, ScenarioActor actor);
 ```
 
-- snapshot
+#### snapshot
 
 ```java
 public void listener(ResultSnapshot result, ScenarioActor actor);
 ```
 
-- request
+#### request
 
 ```java
 public void listener(PacketResult result, ScenarioActor actor);

@@ -9,7 +9,7 @@
 
 커넥터는 아래에서 다운로드 받을 수 있습니다.
 
-[gameanvil-connector-typescript.zip]()
+[gameanvil-connector-typescript.zip](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-2.0.0.zip)
 
 npm을 통한 다운로드나 git을 통한 다운로드는 지원 예정입니다.
 
