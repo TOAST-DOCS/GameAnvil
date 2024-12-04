@@ -232,7 +232,7 @@ scenario
 
 | 샘플 서버 | 샘플 테스터 |
 |---------|----------|
-| | |
+| [GameAnvil Scenario Server](https://static.toastoven.net/prod_gameanvil/files/GameAnvil 2.0 Scenario Server.zip) | [GameAnvil Scenario Tester](https://static.toastoven.net/prod_gameanvil/files/GameAnvil 2.0 Scenario Tester.zip) |
 
 ### 액션
 
