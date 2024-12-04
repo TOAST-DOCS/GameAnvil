@@ -60,7 +60,7 @@ GameAnvilサーバーと簡単に連動可能な**GameAnvilコネクタ** Unity�
 
 ## ライセンス
 
-GameAnvilは固有の[ソフトウェアライセンス](https://gameplatform.toast.com/kr/services/gameanvil/license)で保護されています。そのソフトウェアライセンスに同意する場合のみ、GameAnvilを使用できます。
+GameAnvilは固有の[ソフトウェアライセンス](https://gameplatform.nhncloud.com/en/services/gameanvil/license)で保護されています。そのソフトウェアライセンスに同意する場合のみ、GameAnvilを使用できます。
 
 ## まだサポートしていないゲーム
 

@@ -60,7 +60,7 @@ Provides a **GameAnvil Connector** Unity package that can easily link with GameA
 
 ## - License:
 
-GameAnvil is protected by a unique [Software License](https://gameplatform.toast.com/kr/services/gameanvil/license). GameAnvil is only available if you agree to the corresponding software license.
+GameAnvil is protected by a unique [Software License](https://gameplatform.nhncloud.com/en/services/gameanvil/license). GameAnvil is only available if you agree to the corresponding software license.
 
 ## Games Not Yet Supported
 
