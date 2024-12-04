@@ -7,8 +7,8 @@
 #### <span style="color: #e11d21">New</span>
 ###### GameAnvil 2.0 Connector
 * async await 을 사용한 신규 커넥터가 출시되었습니다.
-* 이제 완료 시 처리 할 함수를 등록하지 않고 반환값으로 완료를 확인합니다
-* GameAnvil 연결 + 인증 코드는 다음과 같습니다
+* 이제 완료 시 처리 할 함수를 등록하지 않고 반환값으로 완료를 확인합니다.
+* GameAnvil 연결 + 인증 코드는 다음과 같습니다.
 
 ```c#
 var (err, res) = await connector.ConnectAndAuthentication(
@@ -37,8 +37,8 @@ var (err, res) = await connector.ConnectAndAuthentication(
 
 #### <span style="color: #e11d21">Change</span>
 
-###### ProtoBuffer 3.28.3 사용
-* 내부 프로토 버퍼 의존성이 3.27.2 로 변경 되었습니다
+###### ProtoBuffer 4.28.3 사용
+* 내부 프로토 버퍼 의존성이 4.28.3 로 변경 되었습니다
 
 ###### UserAgent 의 인스턴스 직접 관리
 * 아래 예제와 같이 UserAgent 의 인스턴스를 직접 생성하여 사용하도록 변경되었습니다
