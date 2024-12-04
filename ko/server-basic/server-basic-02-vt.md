@@ -12,7 +12,7 @@ Virtual Thread는 JDK 21 에서 추가된 기능으로 경량 유저 스레드(L
 
 ![vt-context-switching.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-basic/02-vt/vt-context-switching.png)
 
-GameAnvil 서버 코드는 비동기 처리를 기반으로 합니다. 이를 위해 [비동기 지원 API](../server-impl/server-impl-10-async)를 제공합니다. 이러한 비동기 API를 사용하여 임의의 Virtual Thread상에서 블로킹 호출을 할 경우에는 해당 Virtual Thread만 park(대기 상태)됩니다.
+GameAnvil 서버 코드는 비동기 처리를 기반으로 합니다. 이를 위해 [비동기 지원 API](../server-impl/server-impl-10-async.md)를 제공합니다. 이러한 비동기 API를 사용하여 임의의 Virtual Thread상에서 블로킹 호출을 할 경우에는 해당 Virtual Thread만 park(대기 상태)됩니다.
 
 ## Virtual Thread 기반의 비동기 처리
 GameAnvil 엔진은 커스텀한 Virtual Thread Executor 를 구현하였습니다. 이 Executor 는 1개의 Platform Thread로 동작하며 1개의 노드에서 여러 Virtual Thread 를 실행 시킬 수 있습니다. 하나의 Virtual Thread에서 임의의 시간이 소요되는 I/O 호출을 했을 경우에 해당 Virtual Thread는 호출이 완료될 때까지 실행 권한을 다른 Virtual Thread에게 양보하여 동작합니다. 이러한 구현은 멀티 스레드 동기화 문제를 고민하지 않고 서버를 작성할 수 있게 하는 대신 코드를 Virtual Thread상에서 비동기로 처리될 수 있게 코드를 작성해야 합니다. GameAnvil 에서 제공하는 메서드는 기본적으로 이러한 비동기 처리를 사용하여 동작하며 엔진 사용자는 동기화 문제를 신경쓰지 않고 읽기 쉬운 코드를 작성할 수 있습니다. 

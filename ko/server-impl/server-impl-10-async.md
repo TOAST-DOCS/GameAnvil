@@ -51,7 +51,7 @@ final String myKey = ForkJoinPool.commonPool().submit(() -> {
 });
 ```
 
-GameAnvil 에서는 Redis 사용을 위해 [Lettuce](https://github.com/redis/lettuce) 사용을 권장합니다. [Lettuce](https://github.com/redis/lettuce) 를 GameAnvil 에서 사용 시 높은 성능을 기대할 수 있지만 몇가지 주의할 점이 있습니다. 이에 대한 내용은 아래 [Pinning 문제](#pinning-문제) 문단을 참고하십시오
+GameAnvil 에서는 Redis 사용을 위해 [Lettuce](https://github.com/redis/lettuce) 사용을 권장합니다. [Lettuce](https://github.com/redis/lettuce) 를 GameAnvil 에서 사용 시 높은 성능을 기대할 수 있지만 몇가지 주의할 점이 있습니다. 이에 대한 내용은 아래 [Pinning 문제](#_pinning-문제) 문단을 참고하십시오
 
 
 

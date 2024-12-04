@@ -10,7 +10,7 @@ Gateway Node is the gateway to which the client accesses. In other words, it man
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
-In general, a client has a connection with a Gateway Node. At this time, you can proceed with the authentication process for that connection and create one or more sessions only if it is successful. Each session is a logical unit of connection between the client and the user. The image above shows the client creating a session with Game and Chat services through a single connection. This structure makes it simple to [Session Recovery ](#21-session-recovery) even if the client is unintentionally disconnected.
+In general, a client has a connection with a Gateway Node. At this time, you can proceed with the authentication process for that connection and create one or more sessions only if it is successful. Each session is a logical unit of connection between the client and the user. The image above shows the client creating a session with Game and Chat services through a single connection. This structure makes it simple to [Session Recovery ](#session-recovery) even if the client is unintentionally disconnected.
 
 
 

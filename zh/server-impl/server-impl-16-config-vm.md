@@ -47,8 +47,6 @@ Each configuration item is described below.
 | meetEndPoints | Register the target node's common IP and communicatePort with the corresponding server endpoint in the list of possible inclusions. |-|
 | debugMode     | This must be false for optional realizations to prevent various timeouts from occurring when debugging. | false   |
 
-
-
 ### Location
 
 Location nodes are actually system nodes that are responsible for user and room location information for the entire server. They are managed by the engine and are intended for direct use, so you don't need to implement anything additional. However, it's up to you to decide how many of these system nodes you want to configure, so we provide a separate configuration method. During development, you can use the example below as is. On the other hand, the configuration for the actual service must be applied appropriately depending on the content or volume of the game, so it is recommended to have a separate discussion with GameAnvil representatives. Each configuration item is shown below.
@@ -103,8 +101,6 @@ Each configuration item is described below.
 | Name    | Description            | Default value |
 | ------- | --------------- | ------ |
 | nodeCnt | Number of match nodes | -      |
-
-
 
 
 ### gateway

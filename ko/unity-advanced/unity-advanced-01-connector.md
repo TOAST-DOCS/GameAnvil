@@ -28,7 +28,7 @@ DLL 파일들은 C#으로 만든 것으로 Android, iOS, PC 등의 플랫폼에�
 
 ## GameAnvilConnector 생성
 GameAnvil 서버와 연결하기 위해서는 반드시 GameAnvilConnector를 사용해야합니다. 다음과 같이 간단하게 GameAnvilConnector를 생성하여 사용할 수 있습니다.
-[Unity 기초 개발 가이드 > 매니저](../unity-basic/unity-basic-06-gameanvil-manager)에서 다루는 GameAnvilManager도 내부적으로 GameAnvilConnector를 사용합니다.  
+[Unity 기초 개발 가이드 > 매니저](../unity-basic/unity-basic-02-gameanvil-manager.md)에서 다루는 GameAnvilManager도 내부적으로 GameAnvilConnector를 사용합니다.  
 ```c#
 using GameAnvil;
 

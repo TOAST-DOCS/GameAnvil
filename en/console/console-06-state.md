@@ -57,4 +57,4 @@ A node in this state cannot perform an external command until the transfer is co
 
 * Some of the multiple nodes that make up the server may be in the SAFE PAUSE or READY (LOCK) state. This is implicitly expressed as SAFE PAUSE state.
 
-For more information on Safe Pause, see [Safe Pause](console-09-safe-pause.md).
+For more information on Safe Pause, see [Safe Pause](console-07-safe-pause.md).

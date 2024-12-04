@@ -111,7 +111,7 @@ GameAnvil은 아직 진화 단계에 있습니다. 그렇다보니 아직 다음
 ## 참고 영상
 
 * NDC 2021 [Java로 실시간 겜서버 엔진 개발 가능? ㅇㅇ 가능](https://youtu.be/kQyu5pAChcA)
-* NHN Cloud On 2022 웨비나 [On.5 온라인 게임 개발도 쉽고 빠르게](https://cloudon.nhn.com/webinar_past?idx=6)
+* NHN Cloud On 2022 웨비나 [On.5 온라인 게임 개발도 쉽고 빠르게](https://www.youtube.com/watch?v=Uv2a6fAU1xM)
 
 ## 개인정보 처리에 대한 안내
 

@@ -87,7 +87,7 @@ GameAnvil is still in the evolving phase, so we don't support the following styl
 ## Reference videos
 
 * Can NDC 2021 [ Java develop real-time game server engine? Yes, it is possible ](https://youtu.be/kQyu5pAChcA)
-* NHN Cloud On 2022 Webinar [On.5 Online game development is easy and fast ](https://cloudon.nhn.com/webinar_past?idx=6)
+* NHN Cloud On 2022 Webinar [On.5 Online game development is easy and fast ](https://www.youtube.com/watch?v=Uv2a6fAU1xM)
 
 ## Information on Processing of Personal Information
 

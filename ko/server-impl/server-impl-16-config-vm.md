@@ -44,6 +44,7 @@ GameAnvilConfig은 서버를 유연하게 구성하기 위해 매우 많은 수�
 | icpIp          | 노드마다 공통으로 사용하는 IP로(머신의 IP를 지정) 값이 없을 경우 private ip로 자동 지정됩니다.                | -          |
 | meetEndPoints  | 대상 노드의 icpIp와 ipcPort 등록합니다.  <br />해당 서버 endpoint 포함 가능 리스트로 여러 개 등록 가능합니다. | -          |
 | debugMode      | 디버깅 시 각종 timeout이 발생하지 않도록 하는 옵션으로 **서비스 시에는 방드시 false 여야 합니다.**             | false      |
+
 ### location
 
 사실 로케이션 노드는 전체 서버의 유저와 방 위치 정보를 담당하는 시스템 노드입니다. 엔진이 관리하며 직접 사용하는 용도이므로 사용자가 추가적인 구현을 할 필요는 없습니다. 하지만 이러한 시스템 노드도 몇 개의
@@ -70,6 +71,7 @@ GameAnvilConfig은 서버를 유연하게 구성하기 위해 매우 많은 수�
 | clusterSize | 구성되는 서버의 수(VM)를 설정 헙나다.                                                                                                                                                                                                 | 0   |
 | replicaSize | 복제 그룹의 크기( master + slave )의 개수를 설정합나다.                                                                                                                                                                                 | 0   |
 | shardFactor | sharding을 위한 인수를 설정합니다. <br />-전체 shard의 개수 = clusterSize x replicaSize x shardFactor <br />-하나의 머신(VM)에서 구동할 shard의 개수 = replicaSize x shardFactor < br />-고유한 shard의 총 개수(master 샤드의 개수) = clusterSize x shardFactor | 0   |
+
 ### Location Cluster
 
 master 로케이션 노드로 요청하여 유저와 룸 등의 위치 정보를 조회할 수 있습니다. 단, 모든 로케이션 노드가 클러스터링이 완료된 이후에만 요청을 보낼 수 있습니다. 로케이션 노드를 사용하는 것으로 설정한 경우
@@ -132,6 +134,7 @@ replicaSize를 2 이상으로 설정하는 경우, master 로케이션 노드와
 | connectGroup : port      | 클라이언트가 접속할 포트를 지정합니다.                                   | 0    |
 | nodeCnt                  | 게이트웨이 노드의 개수를 설정합니다.  <br />  0일 경우 게이트웨이 노드를 생성하지 않습니다. | 0    |
 | duplicateLoginServices   | 중복 로그인 가능 서비스를 설정합니다.                                   | -    |
+
 ### game
 
 게임 노드는 실제 게임 관련 객체들이 생성되고 콘텐츠가 플레이되는 노드입니다. 게임 콘텐츠의 특성에 맞게 노드 수와 채널 등을 구성할 수 있습니다.

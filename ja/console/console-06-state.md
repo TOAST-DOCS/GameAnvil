@@ -57,4 +57,4 @@
 * サーバーを構成する複数のノードの一部がSAFE PAUSEまたはREADY(LOCK)状態になることがあります。このようなサーバーの状態は暗黙的にSAFE PAUSE状態で表現します。
 
 
-Safe Pauseの詳しい説明は[Safe Pause](console-09-safe-pause.md)を参照してください。
+Safe Pauseの詳しい説明は[Safe Pause](console-07-safe-pause.md)を参照してください。

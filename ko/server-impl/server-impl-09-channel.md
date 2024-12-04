@@ -4,8 +4,7 @@
 
 ![channel-sync2.png](https://static.toastoven.net/prod_gameanvil/images/channel-sync2.png)
 
-채널은 단일 서버 군을 논리적으로 나눌 수 있는 방법 중 하나입니다. GameAnvil은 한 개 이상의 게임 노드를 포함할 경우에 채널을 설정할 수 있습니다. 기본적으로 GameAnvilConfig을 통해 게임 노드에
-아래의 예제처럼 채널을 설정할 수 있습니다. 이 예제에서 4개의 게임 노드에 대해 각각 '초보', '초보', '고수', '고수'를 설정합니다.
+채널은 단일 서버 군을 논리적으로 나눌 수 있는 방법 중 하나입니다. GameAnvil은 한 개 이상의 게임 노드를 포함할 경우에 채널을 설정할 수 있습니다. 기본적으로 GameAnvilConfig을 통해 게임 노드에 아래의 예제처럼 채널을 설정할 수 있습니다. 이 예제에서 4개의 게임 노드에 대해 각각 '초보', '초보', '고수', '고수'를 설정합니다.
 
 ```json
 "game": [
@@ -177,8 +176,7 @@ public class GameChannelUserInfo implements IChannelUserInfo, Comparable<GameCha
 }
 ```
 
-이렇게 작성한 채널 유저 정보는 다음과 같이 유저 객체에서 추가하거나 갱신할 수 있습니다. 이때, userContext.updateChannelUserInfo() API를 사용합니다. 만일 해당 유저 객체가 서버에서 로그아웃되면 해당 채널
-유저 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
+이렇게 작성한 채널 유저 정보는 다음과 같이 유저 객체에서 추가하거나 갱신할 수 있습니다. 이때, userContext.updateChannelUserInfo() API를 사용합니다. 만일 해당 유저 객체가 서버에서 로그아웃되면 해당 채널 유저 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
 
 ```java
 public class SampleGameUser implements IUser {
@@ -294,8 +292,7 @@ public class GameChannelRoomInfo implements IChannelRoomInfo, Comparable<GameCha
 }
 ```
 
-이렇게 작성한 채널 방 정보는 다음과 같이 방 객체에서 추가하거나 갱신할 수 있습니다. 이때, roomContext.updateChannelRoomInfo() API를 사용합니다. 만일 해당 방 객체가 서버에서 사라지면 해당 채널 방 정보도
-자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
+이렇게 작성한 채널 방 정보는 다음과 같이 방 객체에서 추가하거나 갱신할 수 있습니다. 이때, roomContext.updateChannelRoomInfo() API를 사용합니다. 만일 해당 방 객체가 서버에서 사라지면 해당 채널 방 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
 
 ```java
 public class SampleGameRoom implements IRoom<SampleGameUser> {
@@ -333,8 +330,7 @@ public class SampleGameRoom implements IRoom<SampleGameUser> {
 
 ## 채널 정보 동기화
 
-동일한 채널의 게임 노드는 서로 채널 관련 정보를 공유합니다. 예를 들면 같은 채널에 속한 하나의 게임 노드에서 앞서 살펴본 방식으로 유저나 방 정보가 변경되면 해당 채널의 나머지 게임 노드는 다음과 같은 콜백
-메서드가 호출됩니다. 이러한 콜백을 이용하여 동일한 채널 내의 모든 게임 노드가 정보를 동기화할 수 있습니다. 다음은 게임 노드에서 이러한 채널 동기화를 위해 사용되는 콜백 메서드입니다.
+동일한 채널의 게임 노드는 서로 채널 관련 정보를 공유합니다. 예를 들면 같은 채널에 속한 하나의 게임 노드에서 앞서 살펴본 방식으로 유저나 방 정보가 변경되면 해당 채널의 나머지 게임 노드는 다음과 같은 콜백 메서드가 호출됩니다. 이러한 콜백을 이용하여 동일한 채널 내의 모든 게임 노드가 정보를 동기화할 수 있습니다. 다음은 게임 노드에서 이러한 채널 동기화를 위해 사용되는 콜백 메서드입니다.
 
 ```java
 /**
@@ -376,9 +372,7 @@ public void onChannelInfo(IPayload payload) {
 
 ### 클라이언트로 채널 정보 동기화
 
-클라이언트는 서버로 언제든 채널 정보를 요청할 수 있습니다. 이때, 앞서 살펴본 게임 노드의 콜백 메서드 중 onChannelInfo가 호출됩니다. 단, 클라이언트의 잘못된 구현 혹은 악의적인 사용을 막고자 이 콜백
-메서드 호출은 최소한의 재호출 주기(기본값 1초)를 가집니다. 예를 들어 클라이언트가 1초 동안 10번의 채널 정보 요청을 하더라도 서버는 단 1회의 onChannelInfo 콜백 메서드를 호출합니다. 나머지 9번의
-요청은 이전에 캐싱 해 둔 정보를 전달합니다. 다음은 이러한 onChannelInfo를 구현한 pseudo 코드입니다.
+클라이언트는 서버로 언제든 채널 정보를 요청할 수 있습니다. 이때, 앞서 살펴본 게임 노드의 콜백 메서드 중 onChannelInfo가 호출됩니다. 단, 클라이언트의 잘못된 구현 혹은 악의적인 사용을 막고자 이 콜백 메서드 호출은 최소한의 재호출 주기(기본값 1초)를 가집니다. 예를 들어 클라이언트가 1초 동안 10번의 채널 정보 요청을 하더라도 서버는 단 1회의 onChannelInfo 콜백 메서드를 호출합니다. 나머지 9번의 요청은 이전에 캐싱 해 둔 정보를 전달합니다. 다음은 이러한 onChannelInfo를 구현한 pseudo 코드입니다.
 
 ```java
 public void onChannelInfo(Payload outPayload) {
@@ -413,5 +407,4 @@ public void onChannelInfo(Payload outPayload) {
 
 ### 클라이언트로 채널에 속한 유저와 방의 개수 전달하기
 
-GameAnvil 커넥터는 이러한 정보를 요청하기 위해 GetChannelCountInfo API를 제공합니다. 엔진에서 항상 채널 단위의 유저/방 개수를 관리하고 있으므로 사용자는 별도의 구현을 할 필요가
-없습니다.
+GameAnvil 커넥터는 이러한 정보를 요청하기 위해 GetChannelCountInfo API를 제공합니다. 엔진에서 항상 채널 단위의 유저/방 개수를 관리하고 있으므로 사용자는 별도의 구현을 할 필요가 없습니다.

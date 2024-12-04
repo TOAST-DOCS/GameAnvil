@@ -5,7 +5,7 @@
 GameAvnilConnector, GameAvilUser의 기본 기능 외에도 사용자가 정의한 메시지를 서버로 전송할 수 있습니다.
 
 ### 메시지 생성 및 등록
-메시지를 생성하고 등록하는 방법은 GameAnvilManager를 사용하는 경우와 동일 합니다. [Unity 기초 개발 가이드 > 메시지 핸들링](../unity-basic/unity-basic-06-message-handling)에서 소개한 설명을 참고하세요. 
+메시지를 생성하고 등록하는 방법은 GameAnvilManager를 사용하는 경우와 동일 합니다. [Unity 기초 개발 가이드 > 메시지 핸들링](../unity-basic/unity-basic-06-message-handling.md)에서 소개한 설명을 참고하세요. 
 
 ### 메시지 전송
 
@@ -34,7 +34,7 @@ public async void RequestPacket()
 }
 ```
 
-Request\<TResponse\>(), RequestUser\<TResponse\>()은 다음과 같이 1개의 타입 매개변수와 1개의 매개변수를 가지고 있습니다.
+Request<\TResponse\>(), RequestUser\<TResponse\>()은 다음과 같이 1개의 타입 매개변수와 1개의 매개변수를 가지고 있습니다.
 
 | 타입       | 이름           | 설명             |
 |----------|--------------|----------------|
