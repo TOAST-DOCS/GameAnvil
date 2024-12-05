@@ -35,7 +35,7 @@ Response httpResponse = httpFuture.get();  // Java 21 에서는 Virtual Thread �
 
 기존 Java 에서 많은 RDBMS 드라이버는 `java.sql.DriverManager` 를 사용하고 있으므로 쿼리는 블로킹입니다. 그러나 Java 21 에서는 Virtual Thread 위에서 실행 시 이러한 블로킹 쿼리를 Virtual Thread 만 정지하는 형태로 바꿔 실행하여 비동기를 활용한 향상의 이점을 누릴 수 있습니다. GameAnvil 역시 Virtual Thread 위에서 실행하여 비동기 쿼리를 통한 성능 향상이 가능합니다. 이러한 드라이버는 대표적으로 [MySQL Connector/J](https://github.com/mysql/mysql-connector-j) 가 있겠습니다. 
 
-비동기 규칙을 자세하게 설정하고 블록킹 방식의 드라이버보다 성능 향상을 필요로 할 때는 Future 방식으로 비동기 처리를 해주는  [jasync-sql](https://github.com/jasync-sql/jasync-sql)과 같은 드라이버를 사용할 수 도 있습니다. [jasync-sql](https://github.com/jasync-sql/jasync-sql) 를 사용 시 높은 유연성과 성능을 기대할 수 있지만 GameAnvil 에서 실행 시 몇가지 주의할 점이 있습니다. 이에 대한 내용은 아래 [Pinning 문제](#pinning-문제) 문단을 참고하십시오.
+비동기 규칙을 자세하게 설정하고 블록킹 방식의 드라이버보다 성능 향상을 필요로 할 때는 Future 방식으로 비동기 처리를 해주는  [jasync-sql](https://github.com/jasync-sql/jasync-sql)과 같은 드라이버를 사용할 수 도 있습니다. [jasync-sql](https://github.com/jasync-sql/jasync-sql) 를 사용 시 높은 유연성과 성능을 기대할 수 있지만 GameAnvil 에서 실행 시 몇가지 주의할 점이 있습니다. 이에 대한 내용은 아래 [Pinning 문제](#pinning) 문단을 참고하십시오.
 
 > [참고]
 >
@@ -51,7 +51,7 @@ final String myKey = ForkJoinPool.commonPool().submit(() -> {
 });
 ```
 
-GameAnvil 에서는 Redis 사용을 위해 [Lettuce](https://github.com/redis/lettuce) 사용을 권장합니다. [Lettuce](https://github.com/redis/lettuce) 를 GameAnvil 에서 사용 시 높은 성능을 기대할 수 있지만 몇가지 주의할 점이 있습니다. 이에 대한 내용은 아래 [Pinning 문제](#_pinning-문제) 문단을 참고하십시오
+GameAnvil 에서는 Redis 사용을 위해 [Lettuce](https://github.com/redis/lettuce) 사용을 권장합니다. [Lettuce](https://github.com/redis/lettuce) 를 GameAnvil 에서 사용 시 높은 성능을 기대할 수 있지만 몇가지 주의할 점이 있습니다. 이에 대한 내용은 아래 [Pinning 문제](#pinning) 문단을 참고하십시오
 
 
 

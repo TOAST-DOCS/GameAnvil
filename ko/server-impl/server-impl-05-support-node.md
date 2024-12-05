@@ -80,7 +80,7 @@ public class SampleSupportNode implements ISupportNode {
 }
 ```
 
-모든 노드는 사용자 정의 메시지를 처리하기 위한 메시지 핸들러 등록 과정이 필요합니다. SupportNode는 GameNode와 마찬가지로 사용자가 임의의 콘텐츠를 구현할 수 있는 노드 중 하나입니다.  우선, (1) GameAnvilConfig에 설정되어 있는 서포트 노드 서비스 이름을 생성합나다. 서포트 노드 서비스 이름은 반드시 GameAnvilConfig에 정의되어 있는 이름을 사용해야 합니다. (2) 그리고 처리하고 싶은  메시지를 구현해둔 [핸들러](server-impl-07-message-handling.md#_패킷-디스패처-생성-및-메시지와-핸들러-연결)와 연결합니다. 
+모든 노드는 사용자 정의 메시지를 처리하기 위한 메시지 핸들러 등록 과정이 필요합니다. SupportNode는 GameNode와 마찬가지로 사용자가 임의의 콘텐츠를 구현할 수 있는 노드 중 하나입니다.  우선, (1) GameAnvilConfig에 설정되어 있는 서포트 노드 서비스 이름을 생성합나다. 서포트 노드 서비스 이름은 반드시 GameAnvilConfig에 정의되어 있는 이름을 사용해야 합니다. (2) 그리고 처리하고 싶은  메시지를 구현해둔 [핸들러](server-impl-07-message-handling.md#_2)와 연결합니다. 
 예제 코드에서 사용한 핸들러는 RESTful 요청을 처리 하시 위한 핸들러입니다. 당연히 일반 패킷을 처리하는 핸들러도 사용 가능하지만 이 예제에서는 RESTful 요청을 처리하기 위해 등록을 했습니다. 둘 사이의 사용법은 거의 동일합니다.
 
 ```java

@@ -21,7 +21,7 @@ These sessions are directed to user objects. GameNode manages these user objects
 
 GameNode inherits and implements the BaseGameNode class. The example code below shows a callback method that can be overridden by default by GameNode. In addition to the node common callback, there is a callback for channel management.
 
-All nodes require a dispatcher generation and message handler registration process to handle custom messages. Especially for GameNode, this process is mandatory for game content.  First, (1) create a static packet dispatcher. At this time, it has to be statically generated so that it can take advantage of memory or performance. (2) And connect it to [Handler](server-impl-07-message-handling.md#_process-general-messages) which has implemented the message you want to process. (3) Lastly, MessageDispatcher processes packets using the dispatcher generated in (1).
+All nodes require a dispatcher generation and message handler registration process to handle custom messages. Especially for GameNode, this process is mandatory for game content.  First, (1) create a static packet dispatcher. At this time, it has to be statically generated so that it can take advantage of memory or performance. (2) And connect it to [Handler](server-impl-07-message-handling.md#process-general-messages) which has implemented the message you want to process. (3) Lastly, MessageDispatcher processes packets using the dispatcher generated in (1).
 
 You can take a look at this set of processes in the example code below, just below the annotations corresponding to (1) ~ (3).
 
