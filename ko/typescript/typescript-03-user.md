@@ -1,10 +1,10 @@
 ## Game > GameAnvil > Typescript 개발 가이드 > User
 
-### GameAnvilUser
+## GameAnvilUser
 
 GameAnvilUser는 서버의 GameNode상에 존재하는 유저와 대응하는 클라이언트측의 객체입니다. 서버의 유저 객체에 명령을 내리거나 유저의 정보를 받아와서 서버와 클라이언트를 동기화할 수 있습니다. 엔진에 미리 정의된 방 기능, 매치메이킹 기능 등을 사용할 수도 있지만 직접 프로토콜을 구현하여 새로운 기능을 추가할 수도 있습니다.
 
-#### 생성
+### 생성
 
 GameAnvilUser를 사용하기 위해서는 먼저 새로운 GameAnvilUser객체를 생성하고, 생성된 유저를 통해 서버에 로그인해야합니다.
 
@@ -15,7 +15,7 @@ const serviceName: string;
 const user = new GameAnvilUser(connector, serviceName, 1);
 ```
 
-#### 다수의 GameUserAgnet 생성
+### 다수의 GameUserAgnet 생성
 
 GameAnvilConnector객체는 프로세스내에서 하나만 사용하는 것이 일반적인 반면에 GameAnvilUser는 여러개를 동시에 생성해서 운용하는 것이 지원됩니다. 여러개가 각각 다른 서비스로 로그인 하는 것이 가능하며, 만일 하나의 서비스에 여러개의 GameAnvilUser를 사용하고 싶다면 subId를 이용해 구분해서 생성할 수 있습니다.
 
@@ -29,7 +29,7 @@ const user2 = new GameAnvilUser(connector, serviceName, 2);
 const user3 = new GameAnvilUser(connector, otherServiceName, 1);
 ```
 
-#### 로그인
+### 로그인
 
 GameNode 안에 클라이언트와 대응하는 서버 유저 객체 생성을 요청합니다. GameNode에 로그인을 완료해야만 유저의 여러 다른 기능들을 사용할 수 있습니다.
 
@@ -84,7 +84,7 @@ if (user.isLoggedIn) {
 }
 ```
 
-#### 로그아웃
+### 로그아웃
 
 서버에서 명시적으로 유저를 삭제하도록 요청할 수 있습니다. 로그아웃 동작 완료 시점에 Promise를 통해 로그아웃에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
 
@@ -123,7 +123,7 @@ user.onForceLogout = (user, payload) => {
 }
 ```
 
-#### 메시지 수신 콜백 등록
+### 메시지 수신 콜백 등록
 
 서버로부터 프로토버퍼 메시지를 수신 받았을 때, 처리 함수를 실행하도록 설정할 수 있습니다. 하나의 프로토버퍼에 대해서 하나의 처리 함수만 등록이 가능하며, 이미 처리 함수를 등록한 상태에서 다시 등록한다면 기존 처리 함수는 지워집니다.
 
@@ -144,7 +144,7 @@ user.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userInfo) =
 });
 ```
 
-#### 방 새로 생성 후 입장
+### 방 새로 생성 후 입장
 
 서버에 방 생성 후 바로 입장할 수 있습니다. 방 이름은 필요하지 않은 경우 빈 문자열을 전달하면 됩니다. 방 타입은 서버와 미리 협의된 값을 사용하여야 합니다.
 
@@ -207,7 +207,7 @@ if (user.isJoinedRoom) {
 console.log(`Current joined room id: ${user.roomId}`);
 ```
 
-#### 기존 방에 입장
+### 기존 방에 입장
 
 서버에 생성된 룸 아이디를 알고 있는 경우 해당 룸에 입장을 요청할 수 있습니다.
 
@@ -257,7 +257,7 @@ if (resultJoinRoom.errorCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
 }
 ```
 
-#### 입장 중인 방에서 퇴장
+### 입장 중인 방에서 퇴장
 
 입장 중인 방에서 퇴장하도록 서버에 요청할 수 있습니다.
 
@@ -298,7 +298,7 @@ user.onForceLeaveRoom = (user, roomId, payload) => {
 }
 ```
 
-#### 유저 매치메이킹 풀에 등록
+### 유저 매치메이킹 풀에 등록
 
 유저 매치메이킹은 유저 풀을 만들고 그 안에서 조건에 맞는 유저들을 묶어서 새로 생성한 방으로 입장 시켜 주는 방식입니다. 유저 풀에 조건에 맞는 유저의 수가 모자랄 경우, 매치메이킹이 완료될 때 까지 시간이 걸릴 수 있습니다. 제한 시간내에 매치메이킹이 완료되지 않으면 매칭이 취소됩니다.
 
@@ -352,7 +352,7 @@ user.onMatchUserDone = (user, resultCode, matchResult) => {
 console.log(`Is in progress of match making?`, user.isUserMatchInPrgress);
 ```
 
-#### 유저 매치메이킹 풀에서 제거
+### 유저 매치메이킹 풀에서 제거
 
 유저 매치메이킹을 요청했지만 매치메이킹이 아직 진행 중인 상태에서, 요청을 취소할 수 있습니다.
 
@@ -386,7 +386,7 @@ if (resultCode === ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS) {
 | `MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM` | 1202  | 실패: 이미 매칭이 이루어짐         |
 | `MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS`     | 1203  | 실패: 매칭이 진행 중이지 않은 경우 |
 
-#### 룸 매치메이킹
+### 룸 매치메이킹
 
 룸 매치메이킹은 조건에 맞는 방 으로 유저를 입장시켜 주는 방식입니다. 룸 매치메이킹 요청 시 조건에 맞는 방이 있으면 해당 방으로 바로 입장시켜 주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장시켜주거나 요청을 실패 처리 합니다.
 
@@ -454,7 +454,7 @@ if (matchRoomResult.errorCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 }
 ```
 
-#### 지정한 이름의 방
+### 지정한 이름의 방
 
 지정한 이름의 방에 입장하거나, 파티 매칭을 위한 방에 입장할 수 있습니다. 지정한 이름의 방이 없을 경우 새롭게 생성하여 입장합니다.
 
@@ -504,7 +504,7 @@ if (namedRoomResult.errorCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
 }
 ```
 
-#### 파티 매칭
+### 파티 매칭
 
 파티 매치메이킹은 유저 매치메이킹의 특수한 형태로, 2명 이상의 유저가 한 파티로 묶여 유저 풀에 등록되고, 조건이 맞는 다른 유저들을 찾아 새로 생성한 방으로 함께 입장하는 것입니다. 파티로 묶인 유저들은 항상 같은 방으로 입장하게 됩니다. 파티와 같이 매칭되는 유저들은 서버의 매치메이커 구현에 따라 또 다른 파티거나 개인일 수도 있습니다.
 
@@ -569,7 +569,7 @@ user.onMatchUserDone = (user, resultCode, matchResult) => {
 console.log(`Is in progress of match making? ${user.isPartyMatchInProgress}`);
 ```
 
-#### 파티 매칭 취소
+### 파티 매칭 취소
 
 파티 매치메이킹이 아직 진행 중인 상태라면 요청을 취소할 수 있습니다.
 
@@ -602,7 +602,7 @@ if (matchCancelResult.errorCode === ResultCodeMatchPartyCancel.MATCH_PARTY_CANCE
 | `MATCH_PARTY_CANCEL_FAIL_CONTENT`            | 1401  | 실패: 컨텐츠에서 거부됨            |
 | `MATCH_PARTY_CANCEL_FAIL_PARTY_MATCH_WEIRD`  | 1402  | 실패: 파티 매칭 취소 시, 방이 파티 매칭용 방이 아닌 경우 |
 
-#### 패킷 전송
+### 패킷 전송
 
 게임 서버로 유저의 패킷을 전송할 수 있습니다. 사전에 등록된 프로토콜만 보낼 수 있는 것에 주의하세요.
 
@@ -617,7 +617,7 @@ const message = new UserInfo({name, age, job});
 user.sendUser(message);
 ```
 
-#### 패킷 전송 후 응답 패킷 대기
+### 패킷 전송 후 응답 패킷 대기
 
 게임 서버로 유저의 패킷을 전송한 후, 서버에서 응답을 보낸다면 받아서 처리할 수 있습니다. 사전에 등록된 프로토콜만 보낼 수 있는 것에 주의하세요.
 
@@ -629,7 +629,7 @@ const echoResult = await user.requestUser<EchoRes>(new EchoReq({ message: "Hello
 console.log(echoResult.message); // Hello World!
 ```
 
-#### 채널 이동
+### 채널 이동
 
 유저가 속한 채널에서 나와서 지정한 채널로 이동시킬 수 있습니다. 
 
@@ -691,7 +691,7 @@ user.onMoveChannel = (user, result) => {
 console.log(`Current channel id: ${user.channelId}`);
 ```
 
-#### 서버로부터의 알림
+### 서버로부터의 알림
 
 서버로부터 알림이 오는 것에 대해서 미리 처리 함수를 등록할 수 있습니다. 좀 더 복잡한 형태의 데이터 전달을 원하는 경우에는 커스텀 프로토콜 등록을 고려해보십시오.
 
@@ -701,7 +701,7 @@ user.onNotice = (user, message) => {
 }
 ```
 
-#### 연결 해제
+### 연결 해제
 
 서버에 의해 연결 해제되거나 기타 이유로 연결이 끊어졌을 때의 처리 함수를 미리 등록할 수 있습니다.
 
@@ -720,7 +720,7 @@ user.onSessionClose = (user, resultCode, payload) => {
 | `SESSION_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041  | 클라이언트와의 연결 끊김 감지. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.       |
 | `SESSION_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | 세션을 찾을 수 없는 경우. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.            |
 
-#### 어드민에 의해 강제 퇴장
+### 어드민에 의해 강제 퇴장
 
 서버의 어드민 툴에 의해 서버에서 쫒겨났을 때의 처리 함수를 미리 등록할 수 있습니다.
 

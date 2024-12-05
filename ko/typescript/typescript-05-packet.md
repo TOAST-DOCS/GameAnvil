@@ -1,10 +1,10 @@
 ## Game > GameAnvil > CocosCreator 개발 가이드 > 패킷
 
-### 패킷
+## 패킷
 
 서버와 주고 받는 모든 메시지는 패킷에 실려서 처리됩니다.
 
-#### 생성
+### 생성
 
 Protocol Buffer를 이용한 생성 방법은 아래와 같습니다.
 
@@ -21,7 +21,7 @@ const data: Unit8Array;
 const packet: Packet = PacketFactory.makeCustomPacket(1, data);
 ```
 
-#### 압축
+### 압축
 
 패킷 크기가 클 경우 압축하여 데이터 사용량을 줄일 수 있습니다.
 

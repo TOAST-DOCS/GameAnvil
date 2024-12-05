@@ -1,10 +1,10 @@
 ## Game > GameAnvil > CocosCreator 개발 가이드 > 메시지 핸들링
 
-### 메시지
+## 메시지
 
 GameAnvilConnector, GameAnvilUser 기본 기능 외에 request()와 send()를 이용하여 커스텀 메시지를 서버로 전송할 수 있습니다. 메시지를 전송하려면 메시지를 미리 등록해야하고, 메시지 객체를 생성하는 과정이 필요합니다.
 
-#### 메시지 생성
+### 메시지 생성
 
 GameAnvil은 메시지 프로토콜로 [Google Protocol Buffers](https://developers.google.com/protocol-buffers/docs/proto3)를 기본으로 제공합니다. .proto 파일에 메시지를 정의하고, protoc로 실제 클래스 소스 코드로 트랜스파일 하게 됩니다. 이렇게 생성된 소스 코드를 프로젝트에 추가하여 사용합니다.
 
@@ -99,7 +99,7 @@ npm run protoc
 
 그러면 ./protocol 폴더에 .ts와 .d.ts 파일이 생성된것을 확인할 수 있습니다.
 
-#### 메시지 등록
+### 메시지 등록
 
 새로 생성한 메시지를 사용하려면 사용하려는 메시지를 GameAnvilProtocolManager에 미리 등록해야합니다. Authenticate전에 미리 등록하지 않거나, 서버와 프로토콜이 다를 경우 오동작 할 수 있습니다.
 
@@ -115,7 +115,7 @@ GameAnvilProtocolManager.registerProtocol(Messages);
 GameAnvilProtocolManager.unregisterProtocol(Messages);
 ```
 
-#### 메시지 전송
+### 메시지 전송
 
 커넥터나 유저를 통해 생성한 메시지를 전송할 수 있습니다. 아래는 커넥터를 통해 메시지를 전송하는 예제입니다.
 

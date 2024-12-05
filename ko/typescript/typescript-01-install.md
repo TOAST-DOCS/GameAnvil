@@ -1,6 +1,6 @@
 ## Game > GameAnvil > TypeScript 개발 가이드 > 설치
 
-### GameAnvil Connector
+## GameAnvil Connector
 
 커넥터는 GameAnvil 서버에 맞춘 클라이언트를 제작하기 위해 개발된 라이브러리입니다. GameAnvil Connector를 이용하면 GameAnvil에서 기본적으로 제공하는 패킷 전송, 유저 및 룸 기능 등을 간편하게 구현할 수 있습니다.
 
