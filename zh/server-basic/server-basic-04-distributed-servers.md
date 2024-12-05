@@ -1,4 +1,4 @@
-## Game > GameAnvil > Server Concept Description > Distribution Servers
+## Game > GameAnvil > Server Concept Description > Distributed Server
 
 
 

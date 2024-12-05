@@ -1,4 +1,4 @@
-## Game > GameAnvil > Test Development Guide > Functional Test Development Guide
+## Game > GameAnvil > Test Development Guide > How to implement Functional Test
 
 ## Tester
 

@@ -4,20 +4,20 @@
 
 **오토스케일 그룹** 탭에서 오토스케일을 생성하고 관리할 수 있습니다. 오토스케일 그룹은 지정한 조건에 따라 그룹 내의 서버가 자동으로 증설되거나 감축됩니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-group.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/emtpy_autoscale_list.png)
 
 **+ 오토스케일 그룹 생성**을 눌러 새로운 오토스케일 그룹을 생성할 수 있습니다. 이때 오토스케일의 동작에 영향을 주는 여러 가지 설정이 제공됩니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param1.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/register_autoscale.png)
 
 서버 생성과 마찬가지로 오토스케일 그룹 내에서 어떤 구성 정보(Config)를 이용하여 서버를 생성할지 미리 정의합니다. 또한 인스턴스 타입과 증설 및 감축의 기준이 되는 여러 요소들을 직접 정의할 수 있습니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param2.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/register_autoscale2.png)
 
 이러한 증설과 감축 조건에 해당하는 값들은 각각 AND/OR 연산으로 조합할 수 있습니다. 여기에는 CPU와 메모리 등 하드웨어 리소스뿐만 아니라 게임 유저 수와 같은 논리적인 리소스를 추가로 설정할 수 있습니다.
 
 오토스케일 그룹이 생성되면 다음과 같이 그 목록을 확인할 수 있습니다. 또한, 서버 생성과 마찬가지로 각 항목을 클릭하여 생성된 오토스케일 그룹의 상세 정보를 확인할 수 있습니다.
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-created.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/scalegroup_list.png)
 
 이 문서의 나머지 내용은 오토스케일 그룹의 생성에서 사용하는 설정 항목에 대해 살펴봅니다.
 

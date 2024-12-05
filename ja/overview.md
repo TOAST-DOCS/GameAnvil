@@ -60,7 +60,7 @@ GameAnvilサーバーと簡単に連動可能な**GameAnvilコネクタ** Unity�
 
 ## ライセンス
 
-GameAnvilは固有の[ソフトウェアライセンス](https://gameplatform.toast.com/kr/services/gameanvil/license)で保護されています。そのソフトウェアライセンスに同意する場合のみ、GameAnvilを使用できます。
+GameAnvilは固有の[ソフトウェアライセンス](https://gameplatform.nhncloud.com/en/services/gameanvil/license)で保護されています。そのソフトウェアライセンスに同意する場合のみ、GameAnvilを使用できます。
 
 ## まだサポートしていないゲーム
 
@@ -87,7 +87,7 @@ GameAnvilはまだ進化段階にあるため、次のようなスタイルの�
 ## 参考映像
 
 * NDC 2021 [Javaでリアルタイムゲームサーバーエンジン開発可能？YES可能](https://youtu.be/kQyu5pAChcA)
-* NHN Cloud On 2022ウェビナー[On.5オンラインゲーム開発も簡単かつ迅速に](https://cloudon.nhn.com/webinar_past?idx=6)
+* NHN Cloud On 2022ウェビナー[On.5オンラインゲーム開発も簡単かつ迅速に](https://www.youtube.com/watch?v=Uv2a6fAU1xM)
 
 ## 個人情報処理に関するご案内
 

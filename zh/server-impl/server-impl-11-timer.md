@@ -1,4 +1,4 @@
-## Game > GameAnvil > Server Development Guide > Use Timer
+## Game > GameAnvil > Server Development Guide > Timer
 
 ## Timer
 

@@ -1,5 +1,36 @@
 ## Game > GameAnvil > 릴리스 노트 > GameHammer
 
+### 2.0.0 (2024.12.04)
+
+#### New
+
+* ClientStateCheckOK 로그 출력 여부를 설정할 수 있는 기능 추가
+* 더 간단한 시나리오 작성 방식 추가
+    * 스테이트에서 자주 호출하는 기능을 미리 정의된 액션과 조건으로 등록할 수 있는 기능 추가
+    * 비 구현형 스테이트 제공. 이제 클래스를 생성하지 않고 스테이트 이름으로 생성 가능 
+* ErrorCode 추가
+    * HANDLER_NOT_EXIST
+    * HANDLER_ERROR
+    * MATCH_PARTY_CANCEL_FAIL_ALREADY_JOINED_ROOM
+    * MATCH_PARTY_CANCEL_FAIL_NOT_IN_PROGRESS
+    
+#### Change
+
+* 헤머가 연결 여부를 더 정확하게 감시하도록 수정
+* 사용자 코드에서는 서비스아이디 대신 서비스 이름만 사용하도록 수정
+* protobuf 의존성을 4.28.3으로 업데이트
+
+#### Fix
+
+* 유저의 상태 체크 응답에 대한 설정이 초기화 되지 않는 이슈 수정
+* 서버와 프로토콜 쌍을 맞춘 후, 로그 생략 메시지 목록을 수정한 경우 덮어씌워질 수 있는 문제 수정
+*  서버와 프로토콜 쌍을 맞추는 중에 때때로 ConcurrentModificationException이 발생하는 문제 수정
+* ForceCloseConnectionNoti를 Authentication이전에도 처리할 수 있도록 수정
+* Ping 재개시 지체 없이 바로 Ping을 수행하도록 수정
+* INVALID_PROTOCOL을 처리해서 ResultCode로 받아볼 수 있도록 수정
+
+---
+
 ### 1.4.0 (2023.12.13)
 
 #### New

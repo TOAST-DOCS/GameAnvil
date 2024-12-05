@@ -1,23 +1,40 @@
 ## Game > GameAnvil > 테스트 개발 가이드 > 시나리오 테스트 개발 가이드
 
-## 대규모 부하 테스트와 이를 위한 시나리오 작성
+### 시나리오 테스트란?
 
-GameHammer는 대규모 부하 테스트를 위해 대량의 커넥션을 동시에 처리할 수 있는 기능을 제공합니다. 그리고 복잡한 테스트를 좀 더 편하게 관리할 수 있도록 상태 기반의 시나리오 테스트를 지원합니다. 
+시나리오 테스트란, 미리 정해진 규칙 대로 서버에 부하를 가한 뒤 TPS 등 성능과 관련된 지표를 얻는 테스트를 말합니다. 여기에서 테스트를 진행하는 규칙을 시나리오라고 합니다. 또, 서버에 부하를 가하기 위해서는 다수의 커넥션을 생성하고 유지해야 하는데, 이 커넥션 각각을 시나리오 액터 라고 부릅니다.
 
-### 시나리오 테스트 작성 예제
+시나리오는 필요에 따라서 구성하여 실행할 수 있습니다. 시나리오 구성은 스테이트 기반으로 이루어 집니다. 시나리오에는 다수의 스테이트가 존재합니다. 각 스테이트는 시나리오 액터가 수행할 동작에 대해 정의하고 있습니다. 시나리오 액터는 자신의 스테이트에 따라 행동합니다. 시나리오 액터는 한 번에 이 중 하나의 스테이트만 가질 수 있습니다. 그리고 특정 조건에 따라 또 다른 스테이트로 이동할 수 있습니다. 이러한 이동에 필요한 조건이나 스테이트 간의 연결 정보도 시나리오에서 정의합니다.
 
-여기에서는 다음과 같은 간단한 시나리오 테스트 작성 예제를 다룹니다.
+스테이트가 시나리오 액터가 수행할 동작에 대해서 정의하는 방법은, 스테이트 첫 진입 시점에 사용자가 정의한 코드를 삽입하는 것입니다. 보통은 서버에 대해 어떤 요청을 보내는 코드를 삽입합니다. 그리고 요청이 처리 완료 되어 응답이 도착하면 다른 스테이트로 이동하도록 하는 방식을 가장 많이 사용합니다.
+
+간단한 예제를 통해 시나리오와 스테이트, 시나리오 액터를 구성하는 방법을 알아보겠습니다. 스테이트 세 개를 가지고 있는 시나리오를 구성해보겠습니다. 먼저, 처음 스테이트 A에서 특정 동작을 수행합니다. 그리고 이 동작의 성공 여부에 따라, 성공이면 스테이트 B, 실패하면 스테이트 C로 이동합니다. 그림으로 나타내면 아래와 같습니다.
 
 ![img](http://static.toastoven.net/prod_gameanvil/images/scenario_1.png)
 
-우선 각 시나리오를 수행할 주체가 될 ScenarioActor를 정의합니다.
+우선 각 시나리오를 수행할 주체가 될 시나리오 액터를 정의합니다. ScenaroActor를 정의하려면 먼저 게임 해머가 제공하는 ScenarioActor 클래스를 상속한 클래스를 생성합니다. 그리고 내부에는 시나리오 액터가 유지해야할 데이터를 정의 하면 됩니다. 이 예제에서는 시나리오 성공 여부를 저장하도록 해보겠습니다.
 
 ```java
 public static class TestActor extends ScenarioActor<TestActor> {
+    private boolean success;
+
+    public void setSuccess(boolean value) {
+        this.success = value
+    }
+
+    public boolean getSuccess() {
+        return this.success;
+    }
+
+    public void reset() {
+        this.success = false;
+    }
 }
 ```
 
-각 상태별로 State를 상속 받은 클래스를 정의합니다.  
+다음은 스테이트를 정의합니다. 먼저 시작 스테이트를 정의해 보겟습니다. 시나리오 액터를 정의할 때와 마찬가지로, 게임 해머가 제공하는 State를 상속한 클래스를 생성합니다. 이 때 타입 파라미터로 아까 정의한 시나리오 액터 클래스를 넣습니다.
+
+각 스테이트에서는 시나리오 액터의 스테이트 진입 시점과 진출 시점에 호출되는 함수를 오버라이딩 할 수 있도록 제공합니다. 또한, 이 스테이트가 시나리오에서 처음으로 진행 되는 스테이트 일 경우에만 호출 되는 함수인 onScenarioTestStart도 제공합니다. 각 함수가 호출 되는 시점을 알 수 있도록, 모든 함수에서 로그를 출력하도록 설정하겠습니다.
 
 ```java
 public class StateA extends State<TestActor> {
@@ -37,6 +54,11 @@ public class StateA extends State<TestActor> {
         System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onExit " + getStateName());
     }
 }
+```
+
+나머지 스테이트 B, C도 생성합니다.
+
+```java
 public class StateB extends State<TestActor> {
 
     @Override
@@ -49,6 +71,7 @@ public class StateB extends State<TestActor> {
         System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onExit " + getStateName());
     }
 }
+
 public class StateC extends State<TestActor> {
 
     @Override
@@ -63,32 +86,88 @@ public class StateC extends State<TestActor> {
 }
 ```
 
-상태를 관리할 ScenarioMachine을 생성합니다. 그리고 앞서 정의한 StateA, StateB, StateC 객체를 생성해 ScenarioMachine에 추가합니다. 
+이제 스테이트간 이동을 위해서 각 클래스를 수정해보겠습니다.
+
+먼저, 첫 번째 스테이트인 StateA에서는 동작 성공/실패 여부에 따라 각각 다른 스테이트로 이동 해야 합니다. 동작 성공/실패 여부는 예시를 위해서 랜덤 값으로 결정하겠습니다. 다른 스테이트로의 이동은 changeState 함수를 이용합니다.
+
+```java
+public class StateA extends State<TestActor> {
+
+    @Override
+    protected void onScenarioTestStart(TestActor scenarioActor) {
+        System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onScenarioTestStart " + getStateName());
+    }
+
+    @Override
+    protected void onEnter(TestActor scenarioActor) {
+        System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onEnter " + getStateName());
+
+        scenarioActor.reset();
+
+        if (new Random().nextBoolean()) {
+            scenarioActor.changeState(StateB);
+        } else {
+            scenarioActor.changeState(StateC);
+        }
+    }
+
+    @Override
+    protected void onExit(TestActor scenarioActor) {
+        System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onExit " + getStateName());
+    }
+}
+```
+
+State B에서는 다음 실행 시점에 곧바로 StateC로 이동하도록 설정합니다.
+
+```java
+public class StateB extends State<TestActor> {
+
+    @Override
+    protected void onEnter(TestActor scenarioActor) {
+        System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onEnter " + getStateName());
+
+        sceanrioActor.setSuccess(true);
+
+        scenarioActor.changeState(StateC);
+    }
+
+    @Override
+    protected void onExit(TestActor scenarioActor) {
+        System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onExit " + getStateName());
+    }
+}
+```
+
+State C에서는 여러 스테이트를 계속해서 이동할 수 있도록 시나리오를 종료 처리 하겠습니다. 시나리오가 종료 되면, 시나리오 액터는 처음 스테이트로 이동해서 테스트를 계속합니다. 시나리오 종료 시에 시나리오를 평가하여 정상적으로 진행 되어서 종료 되었는지 여부를 기록할 수 있습니다. finish() 함수를 통해 시나리오를 종료하고 성공 여부를 기록합니다.
+
+```java
+public class StateC extends State<TestActor> {
+
+    @Override
+    protected void onEnter(TestActor scenarioActor) {
+        System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onEnter " + getStateName());
+
+        scenarioActor.finish(scenarioActor.getSuccess());
+    }
+
+    @Override
+    protected void onExit(TestActor scenarioActor) {
+        System.out.println("ScenarioActor " + scenarioActor.getIndex() + " - onExit " + getStateName());
+    }
+}
+```
+
+이제 정의한 상태들을 관리할 ScenarioMachine을 생성합니다. 그리고 앞서 정의한 StateA, StateB, StateC 객체를 생성해 ScenarioMachine에 추가합니다.
 
 ```java
 ScenarioMachine<TestActor> scenario = new ScenarioMachine<>("Sample A");
 scenario.addState(new StateA());
 scenario.addState(new StateB());
 scenario.addState(new StateC());
-
-sceanrio.editState(StateA.class) // StateA에서는
-    .addActionOnEnter(changeState(StateB.class), (sceanrioActor) -> new Random().nextBoolean()) // 랜덤으로 StateB로 이동
-    .addActionOnEnter(changeState(StateC.class)) // 나머지 경우에는 StateC로 이동
-    .endEdit();
-
-scenario.
-    .editState(StateB.class) // StateB에서는
-    .addActionOnEnter(changeState(StateC.class)) // 항상 StateC로 이동
-    .endEdit();
-
-scenario
-    .editState(StateC.class) // StateC에서는
-    .addActionOnEnter(finishWithSuccess(), (scenarioActor) -> new Random().nextBoolean()) // 랜덤으로 성공 종료로 처리
-    .addActionOnEnter(finishWithFail()) // 나머지 경우는 실패 종료로 처리
-    .endEdit();
 ```
 
-이제 시나리오 테스트를 실행합니다.
+이제 작성한 시나리오를 가지고 시나리오 테스트를 실행합니다. Tester 객체를 생성하며 테스트에 사용할 유저 수와, 시나리오가 종료 되었을 때 몇 번까지 반복할 것인지를 설정합니다. 그 다음, 시나리오 테스트 객체를 생성하고 작성한 시나리오를 인자로 제공합니다. 시나리오 테스트 객체의 start() 함수를 호출하면서 인자로 방금 생성한 Tester, 시나리오 액터 클래스, 첫 스테이트를 인자로 넣으십시오.
 
 ```java
 Tester tester = Tester.newBuilder()
@@ -103,7 +182,7 @@ scenarioTest.start(tester,
                   );
 ```
 
-실행 결과는 Random을 사용하기 때문에 매번 다르겠지만 대략 아래와 비슷합니다.
+실행 결과는 매번 다르겠지만 대략 아래와 비슷합니다.
 
 ```
 ScenarioActor 0 - onScenarioTestStart StateA
@@ -120,155 +199,261 @@ ScenarioActor 1 - onEnter StateC
 ScenarioActor 1 - onExit StateC
 ```
 
-## 시나리오 테스트 기본 개념
-
-시나리오 테스트는 대규모 부하 테스트를 지원하기 위한 개념으로, 시나리오 테스트를 실행할 때 동시에 실행할 ScenarioActor 수, 시작 상태, 최대 실행 시간을 지정해서 실행합니다. 
-
-### ScenarioActor
-
-동시에 실행되는 각각의 주체가  ScenarioActor입니다. 동시에 실행할 개수를 100으로 지정할 경우 100개의 ScenarioActor 객체가 생성되어 각각 시나리오를 수행하게 됩니다. ScenarioActor는 하나의 Connection을 가지고 있어 이를 이용해 GameAnvil 서버의 기능을 실행할 수 있습니다. ScenarioActor를 상속 구현하면서 시나리오 수행에 필요한 기능이나 설정 등을 추가하여 이용할 수 있습니다. `changeState()`를 이용해 현재 상태를 다른 상태로 변경할 수 있고, `finish()`를 이용해 시나리오를 종료할 수 있습니다. 
+시나리오 작성을 위해 각 스테이트를 반드시 클래스를 생성할 필요는 없습니다. 모든 State 클래스를 상속하고, 아래와 같이 시나리오 상에서 각 State의 동작을 한번에 간편하게 정의할 수 있습니다.
 
 ```java
-public static class TestActor extends ScenarioActor<TestActor> {
-    private int value1;
-    private String value2;
+ScenarioMachine<TestActor> scenario = new ScenarioMachine<>("Sample A");
+scenario.addState("StateA");
+scenario.addState("StateB");
+scenario.addState("StateC");
 
-    public void funcion() {
-        // some code
-    }
-}
+sceanrio
+    .startEdit("StateA")
+    .addActionOnEnter(changeState("StateB"), (sceanrioActor) -> new Random().nextBoolean())
+    .addActionOnEnter(changeState("StateC"))
+    .endEdit();
+
+scenario.
+    .startEdit("StateB")
+    .addActionOnEnter((scenarioActor) -> scenarioActor.setSuccess(true));
+    .addActionOnEnter(changeState("StateC"))
+    .endEdit();
+
+scenario
+    .editState("StateC")
+    .addActionOnEnter(finishWithSuccess(), (scenarioActor) -> scenarioActor.getSuccess())
+    .addActionOnEnter(finishWithFail())
+    .endEdit();
 ```
 
-#### ChangeState
+### 시나리오 테스트 작성 예시
 
-ScenarioActor를 현재 상태를 다른 상태로 변경합니다. 주의할 점은 `ChangeState()`가 호출된 시점에 바로 상태가 변경되는 것이 아니라는 점 입니다. 실제 상태가 변경되는 시점은 다음 메시지 루프의 시작 시점이며, 이때 현재 상태를 구현한 State 객체의 `onExit()`와 다음 상태를 구현한 State 객체의 `onEnter()`가 순차적으로 호출됩니다.
+아래 예시는 실제 서버에 부하를 인가하도록 작성된 예시입니다.
+
+| 샘플 서버 | 샘플 테스터 |
+|---------|----------|
+| [GameAnvil Scenario Server](https://static.toastoven.net/prod_gameanvil/files/GameAnvil 2.0 Scenario Server.zip) | [GameAnvil Scenario Tester](https://static.toastoven.net/prod_gameanvil/files/GameAnvil 2.0 Scenario Tester.zip) |
+
+### 액션
+
+시나리오 중에 엔진에 요청 등 수행할 수 있는 동작을 액션이라고 합니다. 액션은 시나리오 중에 특정 시점에 조건과 함께 결합하여 등록할 수 있습니다.
+
+#### 스테이트 이동
 
 ```java
-scenarioActor.changeState(NextState.class);
+changeState("StateA")
 ```
-
-#### Finish
-
-ScenarioActor가 수행 중인 시나리오를 종료합니다. `ChangeState()` 와 마찬가지로 `Finish()`가 호출된 후 다음 메시지 루프의 시작 시점에 실행되며, 이때 현재 상태를 구현한 State 객체의 `onExit()`가 호출됩니다. 그리고 ScenarioActor가 수행된 횟수가 ScenarioLoopCount보다 적은 경우 시나리오를 다시 수행하여 ScenarioLoopCount만큼 수행할 때 까지 반복합니다. ScenarioLoopCount <= 0일 경우 지정된 TestTime(기본값: 30초) 동안 계속 반복합니다. boolean 값을 인자로 받아 시나리오가 성공으로 종료되었는지, 실패로 종료되었는지 구분하여 통계를 기록합니다.
 
 ```java
-scenarioActor.finish(true);
+changeState(StateA.class)
 ```
 
-#### Connection
-
-ScenarioActor는 하나의 Connection를 가지고 있어 이를 이용해 GameAnvil 서버의 기능을 실행할 수 있습니다. 
+#### 시나리오 종료
 
 ```java
-Connection connection = scenarioActor.getConnection();
+bool isSuccessful = true;
+ScenarioAction.finish(isSuccessful);
 ```
 
-시나리오 테스트에서는 기능 테스트에서처럼 Future를 이용해 테스트 코드를 작성할 경우, `Future.get()`에서 블록이 되기 때문에 여러 개의 테스트를 동시에 수행할 수 없습니다. 대신 콜백 방식의 API를 사용하여 동시에 수행하도록 할 수 있습니다. 기능 테스트에서 소개한 모든 API에는 대응하는 콜백 방식의 API가 제공되므로 시나리오 테스트에서는 이 콜백 방식 API를 사용하면 됩니다.
+#### 연결 진행
 
 ```java
-Connection connection = scenarioActor.getConnection();
-connection.connect(new RemoteInfo("127.0.0.1", 11200), resultConnect -> {
-    if (ResultCodeConnect.CONNECT_SUCCESS == resultConnect.getResultCode()) {
-        System.out.println("Connect success.");
-        scenarioActor.changeState(NextState.class);
-    } else {
-        System.out.println("Connect success.");
-        scenarioActor.finish(false);
-    }
-});
+ScenarioAction.connect()
 ```
 
-### State
-
-State를 상속 구현하여 각 상태를 나타내는 State를 정의합니다. 
+#### 인증 진행
 
 ```java
-public class StateA extends State<TestActor> {
-
-    @Override
-    protected void onScenarioTestStart(RPSActor scenarioActor) {
-    }
-
-    @Override
-    protected void onEnter(ScenarioActor<STATE, EVENT> scenarioActor) {
-    }
-
-    @Override
-    protected void onExit(ScenarioActor<STATE, EVENT> scenarioActor) {
-    }
-}
+ScenarioAction.authenticate()
 ```
 
-ScenarioActor가 각 상태로 변경할 때 마다 각 상태를 나타내는 State의 `onEnert()`가 호출되며 그 상태로 변경된 ScenarioActor가 인자로 넘어옵니다. 각 상태에서 빠져나갈 때는`onExit()`가 호출되며 그 상태에서 빠져나간 ScenarioActor가 인자로 넘어옵니다.  
-
-##### ScenarioMachine
-
-ScenarioMachine으로 하나의 시나리오를 정의하며, 하나의 시나리오는 여러 개의 상태와 상태 간의 전이로 정의됩니다. 
+#### 로그인 진행
 
 ```java
-ScenarioMachine<STATE, EVENT> scenario = new ScenarioMachine("Sample A");
-scenario.addState(new StateA());
-scenario.addState(new StateB());
-scenario.addState(new StateC());
+ScenarioAction.login()
 ```
 
-##### ScenarioTest
+#### 유저 매치메이킹 진행
 
-먼저 Tester를 생성합니다. 이때 동시에 실행할 ScenarioActor의 수, 반복할 횟수, 테스트 시간 등을 옵션으로 지정할 수 있습니다.  그리고 ScenarioMachine을 인자로 받아 ScenarioTest를 생성합니다. 이제 앞서 생성한 Tester, ScenarioActo의 Class, 시작 상태를 나타내는 State의 Class를 넘겨 실행합니다. 테스트는 모든 ScenarioActor가 지정된 횟수만큼 반복하거나 지정한 테스트 시간이 될 때까지 수행됩니다. 
-
-```
-Tester tester = Tester.newBuilder()
-    .setActorCount(3)
-    .setScenarioLoopCount(2)
-    .Build();
-
-ScenarioTest<TestActor> scenarioTest = new ScenarioTest<>(scenario);
-scenarioTest.start(tester,
-                   TestActor.class,
-                   StateA.class
-                  );
+```java
+ScenarioAction.matchUserStart()
 ```
 
-테스트를 완료한 후 `printStatistics()`를 이용해 테스트 결과를 얻을 수 있습니다.
+#### 룸 매치메이킹 진행
 
+```java
+ScenarioAction.matchRoom()
 ```
-logger.info(scenarioTest.printStatistics("Finished"));
-```
-```
-## State - Statistics ##
-                                         StateC                      StateA                      StateB
-Total   |                             6                           6                           3
-##################
 
-## Packets - Statistics ##
-TPS
-    Total   0
-    Avg 0
-    Max 0
-    Time    0
-PPS
-    Total   0
-    Avg 0
-    Max 0
-    Time    0
-Heap Memory Avg : NaN MBytes
-## Timeout Total : 0
-##################
-## Packet Count
-## total : 0
+#### 방 퇴장 진행
 
-## Success : 6
-## Fail : 0
-## Disconnected : 0
-## ForceDisconnected : 0
-## SocketException : 0
+```java
+ScenarioAction.leaveRoom()
+```
+
+#### 로그아웃 진행
+
+```java
+ScenarioAction.logout()
+```
+
+#### 네임드 룸 동작 요청 진행
+
+```java
+ScenarioAction.namedRoom()
+```
+
+#### 파티 매치메이킹 진행
+
+```java
+ScenarioAction.matchPartyStart()
+```
+
+#### 파티 매치메이킹 취소 진행
+
+```java
+ScenarioAction.matchPartyCancel()
+```
+
+#### 채널 정보 요청 진행
+
+```java
+ScenarioAction.getChannelInfo()
+```
+
+#### 모든 채널 정보 요청 진행
+
+```java
+ScenarioAction.getAllChannelInfo()
+```
+
+#### 채널 유저 수, 룸 수 요청 진행
+
+```java
+ScenarioAction.getChannelCountInfo()
+```
+
+#### 모든 채널의 유저 수, 룸 수 요청 진행
+
+```java
+ScenarioAction.getAllChannelCountInfo()
+```
+
+#### 채널 이동 진행
+
+```java
+ScenarioAction.moveChannel()
+```
+
+#### 스냅샷 요청 진행
+
+```java
+ScenarioAction.snapshot()
+```
+
+### 액션 등록
+
+아래는 액션을 등록하는 메서드 목록입니다.
+
+#### 시나리오 진입 시점
+
+시나리오 진입 시점에 실행할 액션을 등록할 수 있습니다.
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"));
+```
+
+#### 시나리오 이동 시점
+
+시나리오 이동 시점에 실행할 액션을 등록할 수 있습니다.
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnExit(scenarioActor -> scenarioActor.resetChannle());
+```
+
+#### 패킷 수신 시점
+
+패킷 수신 시점에 실행할 액션을 등록할 수 있습니다.
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"));
+```
+
+
+#### 타이머 호출 시점
+
+타이머 호출 시점에 실행할 액션을 등록할 수 있습니다.
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .setActionInTimer("TimerName", changeState("OtherStateNameToEnter"));
+```
+
+### 조건 기능
+
+조건에 따라 액션 수행 여부를 설정할 수 있습니다.
+
+#### 항상
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"), always());
+```
+
+#### 결과 성공시
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
+```
+
+#### 결과 실패시
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
+```
+
+#### 조건 반전
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"), NOT(scenarioActor -> scenarioActor.valid()));
+```
+
+#### 조건 결합
+
+```java
+scenario
+    .addState("StateNamd")
+    .editState("StateName")
+    .addActionOnEnter(changeState("OtherStateNameToEnter"), AND(scenarioActor -> scenarioActor.valid(), ifSuccess());
 ```
 
 ### 향상된 콜백 등록 기능
 
 이 방식으로 등록한 리스너는 User 에이전트를 통해 등록한 리스너와 다르게 State의 종료 시점에 자동으로 정리되므로 onExit에서 리스너를 제거해 주는 동작을 할 필요가 없어집니다.
 
-예제 코드에서는 request에 대해 콜백을 등록하고, 콜백에서 response를 처리하여 문자열을 리턴하도록 설정하였습니다. 리턴된 값은 ScanarioMachine에서 다음으로 이동할 State를 결정하는 데 쓰일 것입니다. 
+예제 코드에서는 request에 대해 콜백을 등록하고, 콜백에서 response를 처리하여 문자열을 리턴하도록 설정하였습니다. 리턴된 값은 ScanarioMachine에서 다음으로 이동할 State를 결정하는 데 쓰일 것입니다.
 
 ```java
 public class EchoState extends State<TestActor> {
@@ -344,135 +529,134 @@ public String connectListener(ResultConnect resultConnect, TestActor scenarioAct
 
 아래는 지원하는 리스너 목록입니다. 아래 시그니처를 가진 메서드를 State에 선언한 후 `@Listener` 어노테이션을 부착하십시오.
 
-* connect 
+#### connect
 
 ```java
 public void listener(ResultConnec result, ScenarioActor actor);
 ```
 
-* authentication  
+#### authentication
 
 ```java
 public void listener(ResultAuthentication result, ScenarioActor actor);
 ```
 
-* login  
+#### login
 
 ```java
 public void listener(ResultLogin result, ScenarioActor actor);
 ```
 
-* matchUserStart  
+#### matchUserStart
 
 ```java
 public void listener(ResultMatchUserStart result, ScenarioActor actor);
 ```
 
-* logout  
+#### logout
 
 ```java
 public void listener(ResultLogout result, ScenarioActor actor);
 ```
 
-* logout  
+#### logout
 
 ```java
 public void listener(ResultLogout result, ScenarioActor actor);
 ```
 
-* leaveRoom  
+#### leaveRoom
 
 ```java
 public void listener(ResultLeaveRoom result, ScenarioActor actor);
 ```
 
-* leaveRoom  
+#### leaveRoom
 
 ```java
 public void listener(ResultLeaveRoom result, ScenarioActor actor);
 ```
 
-* createRoom  
+#### createRoom
 
 ```java
 public void listener(ResultCreateRoom result, ScenarioActor actor);
 ```
 
-* namedRoom  
+#### namedRoom
 
 ```java
 public void listener(ResultNamedRoom result, ScenarioActor actor);
 ```
 
-* joinRoom  
+#### joinRoom
 
 ```java
 public void listener(ResultJoinRoom result, ScenarioActor actor);
 ```
 
-* matchUserCancel  
+#### matchUserCancel
 
 ```java
 public void listener(ResultMatchUserCancel result, ScenarioActor actor);
 ```
 
-* matchPartyStart  
+#### matchPartyStart
 
 ```java
 public void listener(ResultMatchPartyStart result, ScenarioActor actor);
 ```
 
-* matchPartyCancel  
+#### matchPartyCancel
 
 ```java
 public void listener(ResultMatchPartyCancel result, ScenarioActor actor);
 ```
 
-* matchRoom  
+#### matchRoom
 
 ```java
 public void listener(ResultMatchRoom result, ScenarioActor actor);
 ```
 
-* getChannelInfo  
+#### getChannelInfo
 
 ```java
 public void listener(ResultChannelInfo result, ScenarioActor actor);
 ```
 
-* getAllChannelInfo  
+#### getAllChannelInfo
 
 ```java
 public void listener(ResultAllChannelInfo result, ScenarioActor actor);
 ```
 
-* getChannelCountInfo  
+#### getChannelCountInfo
 
 ```java
 public void listener(ResultChannelCountIn result, ScenarioActor actor);
 ```
 
-* getAllChannelCountInfo  
+#### getAllChannelCountInfo
 
 ```java
 public void listener(ResultAllChannelCoun result, ScenarioActor actor);
 ```
 
-* moveChannel  
+#### moveChannel
 
 ```java
 public void listener(ResultMoveChannel result, ScenarioActor actor);
 ```
 
-* snapshot  
+#### snapshot
 
 ```java
 public void listener(ResultSnapshot result, ScenarioActor actor);
 ```
 
-* request  
+#### request
 
 ```java
 public void listener(PacketResult result, ScenarioActor actor);
 ```
-
