@@ -21,8 +21,8 @@ var (err, res) = await connector.ConnectAndAuthentication(
  
 #### <span style="color: #e11d21">Remove</span>
 ###### ConnectionAgent 제거
-* ConnectionAgent 는 GameAnvilConnector 와 구분이 모호했습니다
-* 이제 GameAnvilConnector 에서 기존 ConnectionAgent 의 동작을 포함합니다
+* ConnectionAgent 는 GameAnvilConnector 와 구분이 모호했습니다.
+* 이제 GameAnvilConnector 에서 기존 ConnectionAgent 의 동작을 포함합니다.
 * 이 변경에 맞춰 다른 클래스들의 이름도 변경되었습니다.
     * UserAgnet는 GameAnvilUser로 이름이 변경되었습니다.
     * ProtocolManager는 GameAnvilProtocolManager로 이름이 변경되었니다.
@@ -31,8 +31,8 @@ var (err, res) = await connector.ConnectAndAuthentication(
 * 이제 Connector 내부에서 자동으로 동작합니다
 
 ###### 요청의 응답을 받기 위한 목적의 대리자 제거
-* 이제 요청의 응답은 반환값으로 받습니다
-* 서버로부터 요청 없이 받는 종류의 메세지는 기존처럼 대리자를 사용합니다
+* 이제 요청의 응답은 반환값으로 받습니다.
+* 서버로부터 요청 없이 받는 종류의 메세지는 기존처럼 대리자를 사용합니다.
     * SetMessageCallback 메서드
 
 #### <span style="color: #e11d21">Change</span>
@@ -41,20 +41,20 @@ var (err, res) = await connector.ConnectAndAuthentication(
 * 내부 프로토 버퍼 의존성이 4.28.3 로 변경 되었습니다
 
 ###### UserAgent 의 인스턴스 직접 관리
-* 아래 예제와 같이 UserAgent 의 인스턴스를 직접 생성하여 사용하도록 변경되었습니다
-* UserAgent.Dispose 시 자동으로 로그아웃하지 않으므로 주의하십시오 UserAgent.Dispose 는 내부에서 관리하는 객체만을 해제합니다
+* 아래 예제와 같이 UserAgent 의 인스턴스를 직접 생성하여 사용하도록 변경되었습니다.
+* UserAgent.Dispose 시 자동으로 로그아웃하지 않으므로 주의하십시오 UserAgent.Dispose 는 내부에서 관리하는 객체만을 해제합니다.
 ```csharp
 using var myUser = new GameAnvilUser(connector, "ServiceName", subId);
 ```
 
 ###### Packet 클래스 사용성 변경
-* 이제 항상 byte[] 로 변환하려고 시도하지 않습니다
-* 이제 패킷의 압축은 생성 시 추가할 수 있습니다
-* 이제 패킷의 압축 해제는 자동으로 동작합니다
+* 이제 항상 byte[] 로 변환하려고 시도하지 않습니다.
+* 이제 패킷의 압축은 생성 시 추가할 수 있습니다.
+* 이제 패킷의 압축 해제는 자동으로 동작합니다.
 
 ###### GameAnvilConnector 동시성
-* 여러 요청을 보내고 받을 시 한번에 1개만 보내던 것을 수정하였습니다
-* 이제 여러 요청을 보내고 받을 수 있습니다
+* 여러 요청을 보내고 받을 시 한번에 1개만 보내던 것을 수정하였습니다.
+* 이제 여러 요청을 보내고 받을 수 있습니다.
 
 ###### MultiRequest 제거
 * 서버에서 MultiRequest 의 기능이 제거되면서 GameAnvilConnector 에서도 이에 대응하는 기능들이 제거되었습니다.
@@ -78,7 +78,7 @@ using var myUser = new GameAnvilUser(connector, "ServiceName", subId);
     ```
 
 #### <span style="color: #e11d21">Fix</span>
-* 인터넷이 빠른 환경에서 가끔 정상적으로 연결이 되지 않는 문제가 수정되었습니다
+* 인터넷이 빠른 환경에서 가끔 정상적으로 연결이 되지 않는 문제가 수정되었습니다.
 
 ### 1.4.0 (2023.12.13)
 

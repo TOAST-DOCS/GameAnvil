@@ -1,76 +1,75 @@
 ## Game > GameAnvil > 릴리스 노트 > GameAnvil
 
-
 ### 2.0.0 (2024.12.04)
 
 #### New
 ##### Java 21
 * GameAnvil 2.0 은 Java 21 혹은 그 이상 버전에서만 동작합니다.
-* 엔진팀에서는 현재 LTS 인 Java 21 사용을 권장합니다 
+* 엔진팀에서는 현재 LTS 인 Java 21 사용을 권장합니다.
 
 ##### Virtual Thread 도입
-* Quasar 의존성이 제거되어 throws SuspendExecution 을 사용하지 않고 코드를 작성할 수 있습니다
-* Java 21 의 동작에 맞게 GameAnvil 의 모든 사용자 호출 코드에서 비동기 작업을 사용할 수 있습니다
-* Java 21 사용 시 **synchronized** 코드를 사용하지 않도록 주의하십시오 Pinning 이슈가 발생할 수 있습니다
-    * 이 제한은 Java 24 에서 해제될 수 있습니다.  https://openjdk.org/jeps/491
-* GameAnvil 에서는 기존 Node 와  코드를 쉽게 작성할 수 있도록 커스텀한 Virtual Thread 를 사용합니다. 이 스레딩 모델은 1 Thread N Virtual Thread 로 기존 Fiber 와 동일합니다. 
-    * 다음의 JVM 옵션을 실행 시 추가 하십시오 
+* Quasar 의존성이 제거되어 throws SuspendExecution을 사용하지 않고 코드를 작성할 수 있습니다.
+* Java 21 의 동작에 맞게 GameAnvil의 모든 사용자 호출 코드에서 비동기 작업을 사용할 수 있습니다.
+* Java 21 사용 시 **synchronized** 코드를 사용하지 않도록 주의하십시오 Pinning 이슈가 발생할 수 있습니다.
+    * 이 제한은 Java 24에서 해제될 수 있습니다. [https://openjdk.org/jeps/491](https://openjdk.org/jeps/491)
+* GameAnvil 에서는 기존 Node 와 코드를 쉽게 작성할 수 있도록 커스텀한 Virtual Thread를 사용합니다. 이 스레딩 모델은 1 Thread N Virtual Thread로 기존 Fiber와 동일합니다. 
+    * 다음의 JVM 옵션을 실행 시 추가 하십시오.
     * `--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED`
-* Virtual Thread 의 자세한 동작은 [여기](https://openjdk.org/jeps/444)를 참고하십시오
+* Virtual Thread의 자세한 동작은 [여기](https://openjdk.org/jeps/444)를 참고하십시오.
 
 ##### 다수의 클라이언트에게 메세지를 보낼 수 있는 API 추가
-* Room.sendToClients API 가 추가되었습니다 
+* Room.sendToClients API가 추가되었습니다.
 
 ##### GameAnvilConnector 2.0
-* GameAnvil 2.0 에 맞는 GameAnvilConnector 2.0을 도 출시 하였습니다
-* 신규 커넥터를 확인 부탁드립니다
+* GameAnvil 2.0에 맞는 GameAnvilConnector 2.0을 출시 하였습니다.
+* 신규 커넥터를 확인 부탁드립니다.
 
 ##### MatchNode 의 SafePause 기능 추가
-* MatchNode 에서 SafePause 기능을 활용할 수 있습니다
-* MatchNode 의 SafePause 기능은 시작 노드(src) 와  이동 노드(dest) 가 1:1일때만 실행 가능합니다 
-* SafePause 노드의 등록 및 실행 방법은 기존 GameNode 와 동일합니다 
-* MatchNode SafePause 와 관련된 다음 Management HTTP API 가 추가되었습니다
+* MatchNode 에서 SafePause 기능을 활용할 수 있습니다.
+* MatchNode 의 SafePause 기능은 시작 노드(src)와  이동 노드(dest)가 1:1일때만 실행 가능합니다.
+* SafePause 노드의 등록 및 실행 방법은 기존 GameNode와 동일합니다.
+* MatchNode SafePause와 관련된 다음 Management HTTP API가 추가되었습니다.
 1. POST /management/matching-group-update
     *  body: ``` {"nodeId": <Number 노드 아이디>, "matchingGroup": "<String 매칭그룹>" }```
-    *  대상 MatchNode 에서 인자로 받은 matchingGroup 을 제어하도록 합니다
-2. GET /management/matching-queue-clear?nodeId=<Number 노드 아이디>
-    * 대상 MatchNode 의 매칭 큐를 모두 비웁니다. 만약 노드 아이디가 0이라면 모든 노드의 매칭 큐를 비웁니다
+    *  대상 MatchNode에서 인자로 받은 matchingGroup을 제어하도록 합니다.
+2. GET /management/matching-queue-clear?nodeId=&lt;Number 노드 아이디&gt;
+    * 대상 MatchNode의 매칭 큐를 모두 비웁니다. 만약 노드 아이디가 0이라면 모든 노드의 매칭 큐를 비웁니다.
 
 ##### 패킷 파싱 중 오류 발생시 오류 로그를 출력
 
 #### Remove
 ##### Quasar 의존성 제거
-* Quasar 와 관련 코드가 제거되었습니다. 
-* GameAnvil 1.4 에서 제공한 비동기 기능 대신 Java 21 의 Virtual Thread 를 사용합니다 
+* Quasar와 관련 코드가 제거되었습니다. 
+* GameAnvil 1.4 에서 제공한 비동기 기능 대신 Java 21 의 Virtual Thread를 사용합니다.
 
 ##### MySql 의존성과 관련 코드 제거 
 * `com.github.jasync-sql:jasync-mysql` 의존성과 엔진의 비동기 관련 코드가 제거되었습니다. 
-* GameAnvil 1.4 에서 제공한 기능 대신 위 라이브러리를 직접 사용하여도 비동기로 동작합니다
+* GameAnvil 1.4 에서 제공한 기능 대신 위 라이브러리를 직접 사용하여도 비동기로 동작합니다.
 
 ##### Redis 의존성과 관련 코드 제거
-* `io.lettuce:lettuce-core`의존성과 엔진의 비동기 관련 코드가 제거되었습니다. 
-* GameAnvil 1.4 에서 제공한 기능 대신 위 라이브러리를 직접 사용하여도 비동기로 동작합니다
+* `io.lettuce:lettuce-core` 의존성과 엔진의 비동기 관련 코드가 제거되었습니다. 
+* GameAnvil 1.4 에서 제공한 기능 대신 위 라이브러리를 직접 사용하여도 비동기로 동작합니다.
 
 ##### HttpClient 의존성과 관련 코드 제거
 * `org.asynchttpclient:async-http-client`, `org.apache.httpcomponents.client5:httpclient5` 의존성과 엔진의 비동기 관련 코드가 제거되었습니다. 
-* GameAnvil 1.4 에서 제공한 기능 대신 위 라이브러리를 직접 사용하여도 비동기로 동작합니다
+* GameAnvil 1.4 에서 제공한 기능 대신 위 라이브러리를 직접 사용하여도 비동기로 동작합니다.
 
 ##### MultiRequest 제거
-* MultiRequest 대신 사용자 지정 프로토 버퍼를 사용할 수 있습니다
-* 여러 대상 또는 여러 패킷을 동시에 요청할 때 MultiRequest 대신 새로 추가된 Future 방식의 Request API 를 사용할 수 있습니다
+* MultiRequest 대신 사용자 지정 프로토 버퍼를 사용할 수 있습니다.
+* 여러 대상 또는 여러 패킷을 동시에 요청할 때 MultiRequest 대신 새로 추가된 Future 방식의 Request API 를 사용할 수 있습니다.
 
 
 ##### TimerHandler 의 Object 인자 제거
-* 활용하지 않는 Object 인자가 삭제되었습니다
+* 활용하지 않는 Object 인자가 삭제되었습니다.
 
-##### addTopics(List\<T\>), removeTopics(List\<T\>) 삭제  
-* 대신 addTopic(String), removeTopic(String) 을 사용합니다
+##### addTopics(List&lt;T&gt;), removeTopics(List&lt;T&gt;) 삭제  
+* 대신 addTopic(String), removeTopic(String) 을 사용합니다.
 
 
 #### Change
 #####  응답을 받는 API 의 반환 값이 Future 로 변경 
 * GameAnvil의 API도 다른 많은 비동기 방식 API들처럼 Future를 리턴하는 방식으로 변경되었습니다. 이제 더욱 자유롭게 코드 흐름을 만들 수 있습니다. 
-* GameAnvil에서 제공하는 Async API를 사용할 필요가 없어졌습니다. GameAnvil에서 Virtual Thread를 공식 지원하기 때문에, 블로킹 코드를 호출하더라도 Java 21을 지원하는 코드라면 Platform Thread 가 아닌 Virtual Thread가 블록이 됩니다. 이제 Async API는 지원하지 않습니다.
+* GameAnvil에서 제공하는 Async API를 사용할 필요가 없어졌습니다. GameAnvil에서 Virtual Thread를 공식 지원하기 때문에, 블로킹 코드를 호출하더라도 Java 21을 지원하는 코드라면 Platform Thread가 아닌 Virtual Thread가 블록이 됩니다. 이제 Async API는 지원하지 않습니다.
 ```java
 // GameAnvil 2.0 이전 버전 
 Packet packetResponse = user.requestToNode(nodeId, myRequest1);
@@ -85,7 +84,7 @@ Future<Response> httpFuture = getHttpClient().executeRequest(myRequest2);
 Packet packetResponse = packetFuture.get();  
 Response httpResponse = httpFuture.get();  // Java 21 에서는 Virtual Thread 만 블락
 ```
-* 이제 기존 GameAnvil에서는 불편한 점이 있었던 다음 기능들을 개선할 수 있게 되었습니다
+* 이제 기존 GameAnvil에서는 불편한 점이 있었던 다음 기능들을 개선할 수 있게 되었습니다.
     * 동시에 여러 곳으로 요청을 보내는 기능 개선
     * 요청을 보낸 후 받기 전까지 필요한 작업 실행 개선
 * 기존 버전과 활용성을 유지해야 하는 코드라면 반환받은 Future에 즉시 get 을 호출하십시오
@@ -93,10 +92,10 @@ Response httpResponse = httpFuture.get();  // Java 21 에서는 Virtual Thread �
 > Virtual Thread: Java 21에서 추가된 새로운 Thread입니다 이전 버전 GameAnvil의 Fiber 와 유사한 동작을 합니다 자세한 동작은 [여기](https://openjdk.org/jeps/444)를 참고하십시오
 
 ##### Handler 실행이 Context 기반으로 변경 
-* Handler 실행을 각 대상에 맞는 `DispatchContext` 기반으로 변경하였습니다
-* DispatchContext 는 각 요청마다 새로 생성합니다 
-* 이제 `reply` 함수는 DispatchContext 에서 제공합니다
-* 예를 들어 User 에서 EchoReq 를 처리하는 메세지 핸들러는 다음과 같습니다
+* Handler 실행을 각 대상에 맞는 `DispatchContext` 기반으로 변경하였습니다.
+* DispatchContext 는 각 요청마다 새로 생성합니다.
+* 이제 `reply` 함수는 DispatchContext에서 제공합니다.
+* 예를 들어 User 에서 EchoReq를 처리하는 메세지 핸들러는 다음과 같습니다.
 
 ```java
 public class _EchoReq implements IMessageHandler<IUserDispatchContext, EchoReq> {
@@ -108,18 +107,18 @@ public class _EchoReq implements IMessageHandler<IUserDispatchContext, EchoReq> 
 }
 ```
 
-* DispatchContext 는 요청 자체의 정보를 가지고 있는 값입니다 기존 GameAnvil 은 Handler 코드 에서 reply 를 보낼 때 반드시 현재 흐름에서만 보낼 수 있었습니다 
-    * 이 제한을 무시하고 비동기 작업에서 reply 를 전송 시 알 수 없는 행동을 할 수 있었습니다 
-    * 요청 정보가 대상(여기서는 User)에 저장하여 발생한 문제인데 서버에 다른 요청이 들어오면 이전 요청 정보를 덮어 쓰기 때문입니다
-* 문제가 발생할 수 있는 간단한 코드를 아래 예제에 작성하였습니다
+* DispatchContext 는 요청 자체의 정보를 가지고 있는 값입니다. 기존 GameAnvil 은 Handler 코드 에서 reply 를 보낼 때 반드시 현재 흐름에서만 보낼 수 있었습니다.
+    * 이 제한을 무시하고 비동기 작업에서 reply 를 전송 시 알 수 없는 행동을 할 수 있었습니다.
+    * 요청 정보가 대상(여기서는 User)에 저장하여 발생한 문제인데 서버에 다른 요청이 들어오면 이전 요청 정보를 덮어 쓰기 때문입니다.
+* 문제가 발생할 수 있는 간단한 코드를 아래 예제에 작성하였습니다.
 ```java 
 // 이전 버전의 GameAnvil
 
 // 클래스 선언 생략. 핸들러
 public void execute(MyUser user, EchoReq request) throws SuspendExecution {
     user.postJob((obj) -> {
-        // 어떠한 비동기 작업 수행 후 응답을 보낼 때 정상적으로 동작하지 않을 수 있습니다
-        // 핸들러 execute 메서드가 끝난 후 다른 핸들러가 reply 정보를 변경 시킬 수 있기 때문입니다
+        // 어떠한 비동기 작업 수행 후 응답을 보낼 때 정상적으로 동작하지 않을 수 있습니다.
+        // 핸들러 execute 메서드가 끝난 후 다른 핸들러가 reply 정보를 변경 시킬 수 있기 때문입니다.
         user.reply(..응답_패킷..);
     }, null);
 }
@@ -132,17 +131,17 @@ public void execute(MyUser user, EchoReq request) throws SuspendExecution {
 public void execute(IUserContext ctx, EchoReq request) throws SuspendExecution {
     IUserContext userContext = ctx.getUserContext();
     userContext.runOnNextMsgLoop(() -> {
-        // 이제 정상적으로 작동합니다 
+        // 이제 정상적으로 작동합니다.
         ctx.reply(..응답_패킷..);
     });
 }
 ```
 
 ##### Base 클래스 대신 인터페이스로 변경
-* 사용자 구현 Base 클래스가 인터페이스로 변경되었습니다 
-* 기존 Base 클래스에서 제공하던 메서드 구현체는 클래스Context 에서 제공됩니다 
-* 예를 들어 BaseUser 에서 사용하던 API 는 다음과 같이 마이그레이션 할 수 있습니다
-* 기존 PacketDispatcher, Base 클래스 정의 Annotation 은 삭제되었습니다 
+* 사용자 구현 Base 클래스가 인터페이스로 변경되었습니다.
+* 기존 Base 클래스에서 제공하던 메서드 구현체는 클래스 Context에서 제공됩니다.
+* 예를 들어 BaseUser에서 사용하던 API 는 다음과 같이 마이그레이션 할 수 있습니다.
+* 기존 PacketDispatcher, Base 클래스 정의 Annotation은 삭제되었습니다.
 ```java
 public class MyUser implements IUser {
     private IUserContext userContext;
@@ -150,7 +149,7 @@ public class MyUser implements IUser {
         this.userContext = ctx;
         
         userContext.send(..패킷..);  // 이렇게 IUserContext 를 활용하여 
-                                     // 기존 Base 클래스에서 제공하던 기능을 그대로 활용할 수 있습니다
+                                     // 기존 Base 클래스에서 제공하던 기능을 그대로 활용할 수 있습니다.
     }
 }
 ```
@@ -163,12 +162,12 @@ public class MyUser implements IUser {
 | BaseGatewayNode | IGatewayNode, IGatewayNodeContext |  |
 | BaseGameNode | IGameNode, IGameNodeContext|  |
 | BaseUser | IUser, IUserContext|  |
-| BaseRoom | IRoom, IRoomContext |
-| BaseSupportNode | ISupportNode, ISupportNodeContext |
+| BaseRoom | IRoom, IRoomContext |  |
+| BaseSupportNode | ISupportNode, ISupportNodeContext |  |
 
 ##### 사용자 지정 클래스 / 메세지 처리자 등록 방법 변경
-* 사용자 지정 클래스와 메세지 처리자의 등록 방법이 각자 따로 있었던 것을 한 곳에서 등록하도록 변경하였습니다
-* 간단한 사용 방법은 다음과 같습니다
+* 사용자 지정 클래스와 메세지 처리자의 등록 방법이 각자 따로 있었던 것을 한 곳에서 등록하도록 변경하였습니다.
+* 간단한 사용 방법은 다음과 같습니다.
 
 ```java
 var gameAnvilServer = GameAnvilServer.getInstance();
@@ -187,35 +186,35 @@ gameServiceBuilder.user("MyUserType", MyGameUser::new, config -> {
 
 
 ##### ServiceId 대신 ServiceName 사용
-* 엔진 사용자가 인지하기 어려운 ServiceId 를 받는 API 가 사용자가 입력한 ServiceName 을 그대로 받도록 변경되었습니다
+* 엔진 사용자가 인지하기 어려운 ServiceId 를 받는 API 가 사용자가 입력한 ServiceName 을 그대로 받도록 변경되었습니다.
 
 ##### ProtoBuffer 4.28.3 사용
-* ProtoBuffer 를 3.x 버전으로 다운그레이드 시 정상적으로 동작하지 않을 수 있습니다
-* ProtoBuffer 의존성, protoc, 이미 빌드 된 ProtoBuffer 파일의 교체가 필요합니다
+* ProtoBuffer 를 3.x 버전으로 다운그레이드 시 정상적으로 동작하지 않을 수 있습니다.
+* ProtoBuffer 의존성, protoc, 이미 빌드 된 ProtoBuffer 파일의 교체가 필요합니다.
 
 
 ##### 1 Thread 에서 N 개의 GameNode 를 실행 가능, 게임 노드의 ChannelID 설정 변경 
-* 여러 GameNode 를 실행 시킬 수 있도록 게임 노드의 ChannelID 설정이 변경되었습니다 
+* 여러 GameNode를 실행 시킬 수 있도록 게임 노드의 ChannelID 설정이 변경되었습니다. 
 ```
  "channelIDs": [
         ["ch1"]
         ["ch2"],
 ]
 ```
-* 위과 같이 작성 시 기존처럼 1 Thread = 1 GameNode 입니다
+* 위과 같이 작성 시 기존처럼 1 Thread = 1 GameNode 입니다.
 ```
  "channelIDs": [
         ["ch1", "ch2"]
 ]
 ```
-* 위과 같이 작성 시 1 Thread = 2 GameNode 입니다
+* 위과 같이 작성 시 1 Thread = 2 GameNode 입니다.
 
 
 ##### AutoIp 실패 시 서버가 강제 종료되도록 변경
-* 초기 정상적으로 동작하지 않는 상태로 멈추는 대신 사용자가 쉽게 인지할 수 있도록 강제 종료합니다
+* 초기 정상적으로 동작하지 않는 상태로 멈추는 대신 사용자가 쉽게 인지할 수 있도록 강제 종료합니다.
 
 ##### Timer 인터페이스 수정
-* 이해하기 어려운 기존 타이머 인터페이스 대신 표준 라이브러리의 ScheduledExecutorService 에서 제공하는 함수와 유사하게 Timer 인터페이스를 수정했습니다
+* 이해하기 어려운 기존 타이머 인터페이스 대신 표준 라이브러리의 ScheduledExecutorService 에서 제공하는 함수와 유사하게 Timer 인터페이스를 수정했습니다.
 
 ```
 scheduleTimer - 1회
@@ -224,19 +223,19 @@ scheduleTimerAtFixedRate - N회, 고정 딜레이
 ```
 
 ##### Reply 를 2번 이상 보낼 수 없도록 변경
-* 기존 Reply 를 2회 이상 보낼 시 알 수 없는 문제가 발생하던 현상이 해결되었습니다
+* 기존 Reply 를 2회 이상 보낼 시 알 수 없는 문제가 발생하던 현상이 해결되었습니다.
 
 ##### User, Room 에서 Node 를 접근하는 방법 변경
-* 이제 getGameNode 호출 시 Node 를 직접 반환하는 대신 INodeView 를 반환합니다
-* INodeView 에서 기존처럼 Node 를 직접 접근할 수 있지만 메서드를 넘겨 Node 동작을 하는 것을 권장합니다
-    * Node 와 User, Room 의 Platform Thread 는 동일하지만 Virtual Thread 는 각자 다릅니다 그러므로 User 에서 Node 에 정의된 비동기 작업을 수행 하는 등 다른 영역의 비동기 작업을 호출 시 의도한 대로 동작하지 않는 문제가 있어 사용 시 주의가 필요했습니다 INodeVIew 에서는 Node 의 직접 접근을 막고 대신 Node 에서 실행할 메서드를 넘기도록 하여 이러한 문제점을 해결합니다
-* GameAnvil 의 고급 사용자에게는 INodeView 의 이러한 제약이 불편할 수 있습니다 단순한 동기 호출 메서드(get/set 등)일 때는 앞서 설명한 동기화의 문제점이 없기 때문에 `INodeVIew.getUnsafeNode` 메서드를 활용하여 Node 를 직접 접근할 수 있습니다 이렇게 getUnsafeNode 를 통해 노드를 직접 접근 시 동기화 문제가 발생하지 않도록 주의하여 사용하십시오
+* 이제 getGameNode 호출 시 Node 를 직접 반환하는 대신 INodeView 를 반환합니다.
+* INodeView 에서 기존처럼 Node 를 직접 접근할 수 있지만 메서드를 넘겨 Node 동작을 하는 것을 권장합니다.
+    * Node 와 User, Room 의 Platform Thread 는 동일하지만 Virtual Thread 는 각자 다릅니다. 그러므로 User 에서 Node 에 정의된 비동기 작업을 수행 하는 등 다른 영역의 비동기 작업을 호출 시 의도한 대로 동작하지 않는 문제가 있어 사용 시 주의가 필요했습니다. INodeVIew 에서는 Node 의 직접 접근을 막고 대신 Node 에서 실행할 메서드를 넘기도록 하여 이러한 문제점을 해결합니다.
+* GameAnvil의 고급 사용자에게는 INodeView의 이러한 제약이 불편할 수 있습니다. 단순한 동기 호출 메서드(get/set 등)일 때는 앞서 설명한 동기화의 문제점이 없기 때문에 `INodeVIew.getUnsafeNode` 메서드를 활용하여 Node 를 직접 접근할 수 있습니다. 이렇게 getUnsafeNode 를 통해 노드를 직접 접근 시 동기화 문제가 발생하지 않도록 주의하여 사용하십시오.
 
 ##### Room 에서 User 의 목록 제공
-* 이제 Room 이 가지고 있는 User 의 목록을 제공 받을 수 있습니다
+* 이제 Room 이 가지고 있는 User 의 목록을 제공 받을 수 있습니다.
 
 ##### 콜백의 의미가 좀더 명확하게 나타나도록 콜백 이름 수정
-* 다음 콜백이 추가/변경되었습니다 
+* 다음 콜백이 추가/변경되었습니다.
 
 | 대상 |기존  |변경  | 비고 |
 | --- | --- | --- | -- |
