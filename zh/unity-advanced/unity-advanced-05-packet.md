@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity Advanced Development Guide > Packets
+## Game > GameAnvil > Unity Advanced Development Guide > Packet
 
 ## Packets
 

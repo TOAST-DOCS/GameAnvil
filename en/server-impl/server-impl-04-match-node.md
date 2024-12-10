@@ -1,4 +1,4 @@
-## Game > GameAnvil > Server Development Guide > Match Node Implementation
+## Game > GameAnvil > Server Development Guide > MatchNode Implementation
 
 
 

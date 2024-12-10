@@ -1,4 +1,4 @@
-## Game > GameAnvil > Server Development Guide > Use IDs
+## Game > GameAnvil > Server Development Guide > IDs
 
 ## Identity (ID)
 

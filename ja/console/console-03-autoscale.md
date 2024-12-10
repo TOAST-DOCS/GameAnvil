@@ -4,20 +4,20 @@
 
 **オートスケールグループ**タブでオートスケールを作成し、管理できます。オートスケールグループは、指定した条件によってグループ内のサーバーが自動的に増設または削減されます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-group.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/emtpy_autoscale_list.png)
 
 **+ オートスケールグループの作成**を押して、新しいオートスケールグループを作成できます。この時、オートスケールの動作に影響を与える様々な設定が提供されます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param1.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/register_autoscale.png)
 
 サーバーの作成と同じように、オートスケールグループ内でどのような構成情報(Config)を利用してサーバーを作成するかを事前に定義します。 また、インスタンスタイプと増設及び削減の基準となる様々な要素を直接定義できます。
 
-![図](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-param2.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/register_autoscale2.png)
 
 このような増設と削減条件に該当する値は、それぞれAND/OR演算で組み合わせることができます。ここには、CPUやメモリなどのハードウェアリソースだけでなく、ゲームユーザー数などの論理的なリソースを追加で設定できます。
 
 オートスケールグループが作成されると、次のようにそのリストを確認できます。 また、サーバーの作成と同様に、各項目をクリックして、作成されたオートスケールグループの詳細情報を確認できます。
-![図](https://static.toastoven.net/prod_gameanvil/images/console/autoscale/autoscale-created.png)
+![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/autoscale/scalegroup_list.png)
 
 この文書の残りの内容はオートスケールグループの作成で使う設定項目について説明します。
 

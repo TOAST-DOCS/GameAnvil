@@ -1,4 +1,4 @@
-## Game > GameAnvil > Server Development Guide > Channels
+## Game > GameAnvil > Server Development Guide > Channel
 
 
 

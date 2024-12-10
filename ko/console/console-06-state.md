@@ -10,7 +10,7 @@
 
 서버 상태는 프로세스(S/W)와 인스턴스(H/W)의 상태를 복합적으로 표현합니다. 서버 관리 페이지에서 볼 수 있는 대시보드는 이러한 서버 상태를 나열하고 각각의 상태에 속한 서버의 대수를 표시하고 있습니다. 또한 구분되는 색깔로 각각의 상태를 나타냅니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/state/dashboard.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/state/monitoring_dashboard.png)
 
 <br>
 다음은 각각의 서버 상태에 관한 설명입니다.
@@ -57,6 +57,6 @@
 * 서버를 구성하는 여러 개의 노드 중 일부가 SAFE PAUSE 혹은 READY(LOCK) 상태일 수 있습니다. 이러한 서버의 상태는 함축적으로 SAFE PAUSE 상태로 표현합니다.
 
 
-Safe Pause에 대한 더 자세한 설명은 [Safe Pause](console-09-safe-pause.md)를 참고하십시오.
+Safe Pause에 대한 더 자세한 설명은 [Safe Pause](console-07-safe-pause.md)를 참고하십시오.
 
 

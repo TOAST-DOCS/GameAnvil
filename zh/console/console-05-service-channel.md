@@ -1,4 +1,4 @@
-## Game > GameAnvil > Console User Guide > Services and Channels
+## Game > GameAnvil > Console User Guide > Service and Channel
 
 ## Service
 
