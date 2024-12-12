@@ -14,7 +14,7 @@ GameNode는 실제 게임 객체가 생성되고 게임 콘텐츠를 구현하�
 
 이러한 세션이 향하는 곳은 바로 유저 객체입니다. GameNode는 이러한 유저 객체와 그들의 그룹인 방 객체를 관리합니다. 이번 챕터는 이러한 GameNode와 GameUser 그리고 GameRoom에 대해 설명합니다.
 
-## GameNode
+## GameNode 구현
 
 GameNode는 IGameNode 인터페이스를 구현합니다. 아래의 예제 코드는 GameNode에서 기본적으로 재정의할 수 있는 콜백 메서드를 보여줍니다. 노드 공통 콜백과 더불어 채널 관리를 위한 콜백이 존재합니다.
 
