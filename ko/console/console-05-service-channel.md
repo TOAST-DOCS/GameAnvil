@@ -10,7 +10,7 @@
 
 서비스명은 사람이 읽기에는 편하지만 서버 프로그램이 읽기에는 불필요하게 길고 큰 값이므로 구성 정보(Config)에서 각 서비스명에 고유한 정수인 서비스 ID를 매핑했습니다. 서비스 ID는 반드시 0보다 큰 정수값이어야 합니다. 자세한 정보는 서버 구현 문서에서 확인할 수 있습니다.
 
-자세한 내용은 [Game > GameAnvil > 서버 개발 가이드 > 게임 노드 구현](../server-impl/server-impl-03-game-node/#gamenode) 이나  [Game > GameAnvil > 서버 개발 가이드 > 서포트 노드 구현](..server-impl/server-impl-05-support-node/#supportnode)을 참고 하십시오.
+자세한 내용은 [Game > GameAnvil > 서버 개발 가이드 > 게임 노드 구현](../server-impl/server-impl-03-game-node/#gamenode) 이나  [Game > GameAnvil > 서버 개발 가이드 > 서포트 노드 구현](../server-impl/server-impl-05-support-node/#supportnode)을 참고 하십시오.
 
 ## 채널
 
