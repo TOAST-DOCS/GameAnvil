@@ -83,92 +83,26 @@ boolean addTopic(String topic);
 void removeTopic(String topic);
 ```
 
-### 클라이언트 토픽
-
-클라이언트 토픽은 서버 내 객체가 아닌 클라이언트로 발행하기 위한 토픽입니다. 즉, 사용자는 아래의 예제 코드와 같이 클라이언트를 대상으로 토픽을 구독할 수 있습니다.
-
-```java
-@Override
-public void onCreate(IUserContext userContext) {
-    this.userContext = userContext;
-}
-
-@Override
-public final boolean onLogin(final IPayload payload, final IPayload sessionPayload, IPayload outPayload) {
-    ...
-
-    // 구독할 topic 등록.
-    final var channelId = userContext.getChannelId();
-    final var serviceName = userContext.getServiceName();
-    userContext.addClientTopics(Arrays.asList(channelId, serviceName));
-
-    ...
-}
-```
-아래는 이러한 클라이언트 토픽 사용을 위한 API 목록입니다.
-```java
-/**
- * 클라이언트 토픽 리스트 등록
- *
- * @param topics 등록할 토픽 리스트
- */
-void addClientTopics(List<String> topics);
-
-/**
- * 클라이언트 토픽 리스트 제거
- *
- * @param topics 제거할 토픽 리스트
- */
-void removeClientTopics(List<String> topics);
-
-/**
- * 클라이언트 토픽 리스트 반환
- *
- * @return String 의 Set 타입으로 등록된 클라이언트 토픽 리스트 반환
- */
-Set<String> getClientTopics();
-```
-
 ### 발행하기
 
 사용자는 임의의 토픽으로 메시지를 발행할 수 있습니다. 이때, 해당 토픽을 구독 중인 대상은 모두 동일한 메시지를 수신하게 됩니다.
 
-```java
-/**
- * 주어진 노드 토픽과 일반 토픽을 등록한 모든 유저에게 패킷 전송
- *
- * @param nodeTopic 패킷을 수신할 대상 노드가 등록한 토픽
- * @param topic     패킷을 수신할 유저가 등록한 토픽
- * @param packet    전송할 {@link Packet}
- */
-void publishToUser(String nodeTopic, String topic, Packet packet);
-
-/**
- * 주어진 토픽을 등록한 모든 클라이언트에게 패킷 전송
- *
- * @param topic  패킷을 수신할 대상이 등록한 토픽
- * @param packet 전송할 {@link Packet}
- */
-void publishToClient(String topic, Packet packet);
-```
 
 아래는 토픽 발행을 위한 API 목록입니다.
 ```java
 /**
- * 주어진 토픽을 등록한 모든 클라이언트에게 패킷 전송
+ * 모든 클라이언트에게 패킷 전송
  *
- * @param topic  패킷을 수신할 대상이 등록한 토픽
  * @param packet 전송할 {@link Packet}
  */
-void publishToClient(String topic, Packet packet);
+void publishToAllClient(Packet packet);
 
 /**
- * 주어진 토픽을 등록한 모든 클라이언트에게 메시지 전송
+ * 모든 클라이언트에게 메시지 전송
  *
- * @param topic   메시지를 수신할 대상이 등록한 토픽
  * @param message 전송할 메시지
  */
-void publishToClient(String topic, GeneratedMessage message);
+void publishToAllClient(GeneratedMessage message);
 
 /**
  * 주어진 노드 토픽을 등록한 모든 노드에게 패킷 전송
@@ -436,76 +370,4 @@ void publishToRoom(String nodeTopic, String topic, Packet packet);
  * @param message   전송할 메시지
  */
 void publishToRoom(String nodeTopic, String topic, GeneratedMessage message);
-
-/**
- * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 패킷 전송
- *
- * @param serviceName 패킷을 수신할 대상 노드가 등록한 토픽
- * @param topic       패킷을 수신할 유저가 등록한 토픽
- * @param packet      전송할 {@link Packet}
- */
-void publishToSpotWithServiceName(final String serviceName, final String topic, final Packet packet);
-
-/**
- * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 메시지 전송
- *
- * @param serviceName 메시지를 수신할 대상 노드가 등록한 토픽
- * @param topic       메시지를 수신할 유저가 등록한 토픽
- * @param message     전송할 메시지
- */
-void publishToSpotWithServiceName(final String serviceName, final String topic, final GeneratedMessage message);
-
-/**
- * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 패킷 전송
- *
- * @param hostId 패킷을 수신할 대상 노드가 등록한 토픽
- * @param topic  패킷을 수신할 유저가 등록한 토픽
- * @param packet 전송할 {@link Packet}
- */
-void publishToSpotWithHostId(final long hostId, final String topic, final Packet packet);
-
-/**
- * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 메시지 전송
- *
- * @param hostId  메시지를 수신할 대상 노드가 등록한 토픽
- * @param topic   메시지를 수신할 유저가 등록한 토픽
- * @param message 전송할 메시지
- */
-void publishToSpotWithHostId(final long hostId, final String topic, final GeneratedMessage message);
-
-/**
- * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 패킷 전송
- *
- * @param nodeId 패킷을 수신할 대상 노드가 등록한 토픽
- * @param topic  패킷을 수신할 유저가 등록한 토픽
- * @param packet 전송할 {@link Packet}
- */
-void publishToSpotWithNodeId(final long nodeId, final String topic, final Packet packet);
-
-/**
- * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 메시지 전송
- *
- * @param nodeId  메시지를 수신할 대상 노드가 등록한 토픽
- * @param topic   메시지를 수신할 유저가 등록한 토픽
- * @param message 전송할 메시지
- */
-void publishToSpotWithNodeId(final long nodeId, final String topic, final GeneratedMessage message);
-
-/**
- * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 패킷 전송
- *
- * @param nodeTopic 패킷을 수신할 대상 노드가 등록한 토픽
- * @param topic     패킷을 수신할 스팟이 등록한 토픽
- * @param packet    전송할 {@link Packet}
- */
-void publishToSpot(String nodeTopic, String topic, Packet packet);
-
-/**
- * 주어진 노드 토픽과 일반 토픽을 등록한 모든 스팟에 메시지 전송
- *
- * @param nodeTopic 메시지를 수신할 대상 노드가 등록한 토픽
- * @param topic     메시지를 수신할 스팟이 등록한 토픽
- * @param message   전송할 메시지
- */
-void publishToSpot(String nodeTopic, String topic, GeneratedMessage message);
 ```

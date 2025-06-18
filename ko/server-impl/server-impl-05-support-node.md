@@ -11,6 +11,7 @@ SupportNode는 이름 그대로 보조적인 기능을 수행하기 위한 노�
 이러한 SupportNode는 기본적으로 ISupportNode 인터페이스를 구현합니다. 노드 공통 콜백 메서드만 가지고 있습니다. SupportNode는 앞서 살펴본 다른 노드들과 다르게  사용자가 정의한 RESTful 처리를 할 수 있다는 것이죠. 다시 말하면, SupportNode는 사용자가 정의한 일반적인 패킷 처리와 더불어 RESTful 메시지를 처리할 수 있는 유일한 사용자 노드입니다.
 
 ```java
+@GameAnvilSupportNode(gameServiceName = "MySupport") // (1) "MySupport"이라는 서비스를 위한 SupportNode로 엔진에 등록
 public class SampleSupportNode implements ISupportNode {
     private ISupportNodeContext supportNodeContext;
 
@@ -79,25 +80,20 @@ public class SampleSupportNode implements ISupportNode {
     }
 }
 ```
-
-모든 노드는 사용자 정의 메시지를 처리하기 위한 메시지 핸들러 등록 과정이 필요합니다. SupportNode는 GameNode와 마찬가지로 사용자가 임의의 콘텐츠를 구현할 수 있는 노드 중 하나입니다.  우선, (1) GameAnvilConfig에 설정되어 있는 서포트 노드 서비스 이름을 생성합나다. 서포트 노드 서비스 이름은 반드시 GameAnvilConfig에 정의되어 있는 이름을 사용해야 합니다. (2) 그리고 처리하고 싶은  메시지를 구현해둔 [핸들러](server-impl-07-message-handling.md#_2)와 연결합니다. 
-예제 코드에서 사용한 핸들러는 RESTful 요청을 처리 하시 위한 핸들러입니다. 당연히 일반 패킷을 처리하는 핸들러도 사용 가능하지만 이 예제에서는 RESTful 요청을 처리하기 위해 등록을 했습니다. 둘 사이의 사용법은 거의 동일합니다.
-
 ```java
-public class Main {
-    public static void main(String[] args) {
-        // 게임앤빌 서버 설정 빌더
-        var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
-
-        // (1) "MySupport"이라는 서비스를 위한 SupportNode로 엔진에 등록
-        final var gameServiceBuilder = gameAnvilServerBuilder.createSupportService("MySupport");
-        gameServiceBuilder.supportNode(SampleSupportNode::new, config -> {
-            // (2) SampleSupportNode에서 처리하고 싶은 RESTful 핸들러를 매핑
-            config.httpHandler("/echo", RestObject.GET, new _RestEchoReq());
-            config.httpHandler("/echo", RestObject.POST, new _RestEchoReq());
-        });
-
-        GameAnvilServer.getInstance().run();
+// 프로토 버퍼 MyGame.GameNodeTest 입력이 들어왔을때 동작하는 메세지 처리 클래스
+@GameAnvilController
+public class _SupportNodeTest {
+    // (2) SampleSupportNode에서 처리하고 싶은 프로토콜과 핸들러를 매핑
+    @GameNodeMapping(
+        value = MyGame.SupportNodeTest.class,   // 처리할 프로토 버퍼
+        loadClass = SampleSupportNode.class     // 메세지를 받는 대상 (SampleSupportNode)
+    )
+    public void runGameNodeTest(IGameNodeDispatchContext ctx) {
+        // 여기서 할 작업을 작성
     }
 }
 ```
+
+
+모든 노드는 사용자 정의 메시지를 처리하기 위한 메시지 핸들러 등록 과정이 필요합니다. SupportNode는 GameNode와 마찬가지로 사용자가 임의의 콘텐츠를 구현할 수 있는 노드 중 하나입니다.  우선, (1) GameAnvilConfig에 설정되어 있는 서포트 노드 서비스 이름을 생성합니다. 서포트 노드 서비스 이름은 반드시 GameAnvilConfig에 정의되어 있는 이름을 사용해야 합니다. (2) 그리고 처리하고 싶은  메시지를 구현해둔 [핸들러](server-impl-07-message-handling.md#_2)와 연결합니다. 
