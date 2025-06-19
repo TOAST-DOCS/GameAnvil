@@ -18,7 +18,7 @@ GameAnvil은 서버 엔진뿐만 아니라, 클라이언트를 서버에 연결�
 
 아래 단계를 진행하면 만들어지는 최종 서버 샘플 프로젝트는 아래 링크에서 다운로드할 수 있습니다. 초기 템플릿에서 여러 단계를 거쳐 서버 기능을 구현하면 어떤 구조가 되는지 미리 확인하려면 해당 프로젝트를 내려받아 참고할 수 있습니다.
 
-[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvil_Tutorial_Basic_Server.zip?disposition=attachment)
+[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/tutorial/basic-tutorial/GameAnvil_Tutorial_Basic_Server.zip?disposition=attachment)
 
 ### 프로젝트 구성
 
@@ -34,11 +34,11 @@ GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ �
 
 다운로드한 템플릿을 적용하기 위해 IntelliJ를 실행합니다. **Welcome to InteliJ IDEA** 화면 좌측 메뉴에서 **Customize**를 선택한 뒤 **Import Settings...** 를 클릭합니다. 또는 전체 검색창에서 **Import Settings...** 를 검색합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/1_import_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/1_import_gameanvil_template.png)
 
 <br>
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/2_search_import_settings.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/2_search_import_settings.png)
 
 <br>
 
@@ -56,7 +56,7 @@ IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 �
 - GameAnvilConfig.json: GameAnvil 구동에 필요한 서버 설정 정보를 기록한 파일입니다. 서버 구현에 맞게 수정할 수 있습니다.
 - logback.xml: Java 프로젝트에서 로깅을 구성하는 데 사용되는 파일입니다. Logback 프레임워크의 설정 파일로서, 로깅 시스템의 동작 방식과 로그의 형식, 저장 위치 등을 지정합니다. 이 파일을 사용하여 로깅 수준, 로그 형식, 로그 파일의 경로 및 이름, 로그 롤링 정책 등을 설정할 수 있습니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/5_gameanvil_project_view_init.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/5_gameanvil_project_view_init.png)
 
 ## GameAnvil 서버 설정 파일 수정
 
@@ -122,7 +122,7 @@ GameAnvilConfig.json 파일의 game 쪽 마지막 부분을 보면, Todo로 표�
   ]
 ```
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/6_gameanvil_config_json.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/6_gameanvil_config_json.png)
 
 참고로 gateway 설정을 보면 TCP_SOCKET 커넥션은 18200 포트를 사용하는 것으로 설정되어 있는 것을 확인할 수 있습니다. 이는 클라이언트와 연결되는 포트로, 이후 클라이언트 프로젝트에서 서버 접속 정보를 기입하는 부분에서 이 포트 번호를 사용하게 됩니다.
 
@@ -136,19 +136,19 @@ GameAnvil은 Java 21 버전을 지원합니다. 버전에 따라 일부 설정 �
 
 **Project** 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다면 **Add SDK > Download JDK**를 통해서 원하는 버전의 JDK를 다운로드해 설정합니다. **Language level**은 **SDK default**로 설정합니다. 다음으로 **Modules** 탭에서 **Language level**을 **Project default**로 설정합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/7_project_structure.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/7_project_structure.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/8_module_language_level.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/8_module_language_level.png)
 
-**설정** 메뉴에서 **maven** 버전을 확인합니다.
+**설정** 메뉴에서 **gradle** 설정을 확인합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/9_maven_config.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/9_gradle_config.png)
 
 ### 서버 구동
 
-실행 설정이 완료되면 Main 클래스의 main() 함수 좌측의 초록색 삼각형 아이콘을 클릭하여 `Run 'Run With JDK21'` 실행을 선택합니다. 이렇게 한 번 실행한 이후에는 IntelliJ 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
+실행 설정이 완료되면 우측의 gradle 메뉴에서 Tasks > other > `runMain` 실행을 더블 클릭합니다. 이렇게 한 번 실행한 이후에는 IntelliJ 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
 
-`Run 'Run With JDK21'`로 실행을 해야 GameAnvil 서버 실행에 필요한 VM 옵션이 적용이 됩니다. 만약 Main 클래스의 main() 함수를 그냥 실행하는 경우에는, **Edit Configurations...**에서 아래의 필수 VM 옵션을 추가해주어야 합니다.
+`runMain`으로 실행을 해야 GameAnvil 서버 실행에 필요한 VM 옵션이 적용이 됩니다. 만약 Main 클래스의 main() 함수를 그냥 실행하는 경우에는, **Edit Configurations...**에서 아래의 필수 VM 옵션을 추가해주어야 합니다.
 
 ```
 "--add-opens", "java.base/java.lang=ALL-UNNAMED",
@@ -156,11 +156,11 @@ GameAnvil은 Java 21 버전을 지원합니다. 버전에 따라 일부 설정 �
 "-XX:+UseG1GC"
 ```
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/10_gameanvil_run.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/10_gameanvil_run.png)
 
 서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/11_gameanvil_run_log.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/11_gameanvil_run_log.png)
 
 GameAnvil 서버는 여러 개의 노드들로 구성되어 있습니다. 이 노드들은 서버가 수행할 기능을 여러 개의 역할로 분담합니다. 아직은 서버 초기 구동만 확인했을 뿐, 노드나 다른 서버 구동을 위한 코드 작성을 하지 않았기 때문에 완전히 준비된 상태는 아닙니다.
 
@@ -185,13 +185,19 @@ GameAnvil은 `I-` 접두사를 붙인 여러 노드 인터페이스를 제공합
 자동으로 작성된 코드는 아래와 같습니다.
 
 ```java
+package com.tutorial.gameanvil.node;
+
+import com.nhn.gameanvil.game.GameAnvilGameNode;
 import com.nhn.gameanvil.node.game.ChannelUpdateType;
 import com.nhn.gameanvil.node.game.IGameNode;
 import com.nhn.gameanvil.node.game.context.IGameNodeContext;
 import com.nhn.gameanvil.node.game.data.IChannelRoomInfo;
 import com.nhn.gameanvil.node.game.data.IChannelUserInfo;
 import com.nhn.gameanvil.packet.IPayload;
+import com.tutorial.gameanvil.StringValues;
 
+@GameAnvilGameNode(  // GameAnvilGameNode 어노테이션으로 엔진에 이 클래스를 게임 노드로 등록합니다
+    gameServiceName = StringValues.serviceName) // 게임 서비스 이름
 public class SyncGameNode implements IGameNode {
     private IGameNodeContext gameNodeContext;
 
@@ -245,6 +251,7 @@ public class SyncGameNode implements IGameNode {
 
     }
 }
+
 ```
 
 ### 노드에 대해
@@ -281,6 +288,7 @@ GameAnvil에서 제공되는 방 기반의 구현을 사용하기 위해서는 �
 ```java
 package com.tutorial.gameanvil.user;
 
+import com.nhn.gameanvil.game.GameAnvilUser;
 import com.nhn.gameanvil.node.game.IUser;
 import com.nhn.gameanvil.node.game.context.IUserContext;
 import com.nhn.gameanvil.node.game.data.MatchCancelReason;
@@ -290,7 +298,12 @@ import com.nhn.gameanvil.node.game.data.RoomMatchResult;
 import com.nhn.gameanvil.packet.IPayload;
 import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
 import com.nhn.gameanvil.serializer.ITransferPack;
+import com.tutorial.gameanvil.StringValues;
 
+@GameAnvilUser( // GameAnvilUser 어노테이션으로 엔진에 이 클래스를 게임 유저로 등록합니다
+    gameServiceName = StringValues.serviceName,  // 게임 서비스 이름
+    gameType = StringValues.userType,            // 게임 타입 (유저 타입)
+    useChannelInfo = true)                       // 체널 정보 사용 여부
 public class SyncGameUser implements IUser {
     private IUserContext userContext;
 
@@ -434,6 +447,7 @@ public class SyncGameUser implements IUser {
 
     }
 }
+
 ```
 
 게임 유저는 클라이언트가 서버에 로그인 요청을 함으로써 생성됩니다. 서버에서는 클라이언트에서 전송된 페이로드 등을 통해서 로그인 허용 여부를 결정해서 반환값으로 내보낼 수 있습니다. 주요 로직만 엔진 사용자가 작성하고, 로그인 성공이나 실패 처리는 엔진에서 담당합니다.
@@ -453,16 +467,22 @@ public class SyncGameUser implements IUser {
 ```java
 package com.tutorial.gameanvil.room;
 
+import com.nhn.gameanvil.game.GameAnvilRoom;
 import com.nhn.gameanvil.node.game.IRoom;
 import com.nhn.gameanvil.node.game.context.IRoomContext;
 import com.nhn.gameanvil.node.game.data.MatchCancelReason;
 import com.nhn.gameanvil.packet.IPayload;
 import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
 import com.nhn.gameanvil.serializer.ITransferPack;
+import com.tutorial.gameanvil.StringValues;
 import com.tutorial.gameanvil.user.SyncGameUser;
 
 import java.util.List;
 
+@GameAnvilRoom( // GameAnvilRoom 어노테이션으로 엔진에 이 클래스를 게임 룸으로 등록합니다
+    gameServiceName = StringValues.serviceName, // 게임 서비스 이름
+    gameType = StringValues.roomType,           // 게임 타입 (방 타입)
+    useChannelInfo = true)                      // 체널 정보 사용 여부
 public class SyncGameRoom implements IRoom<SyncGameUser> {
     private IRoomContext roomContext;
 
@@ -563,82 +583,11 @@ public class SyncGameRoom implements IRoom<SyncGameUser> {
 
 게임 룸은 게임 유저가 서버에 방 생성 요청을 하면 생성됩니다. 클라이언트 측에서는 간단하게 메서드 호출만으로 방을 생성하고 존재하는 방에 입장할 수 있습니다. 유저가 방에 입장하는 시점 또는 방이 생성되는 시점에 커스텀 코드를 삽입하고 싶다면, 적절한 콜백을 오버라이딩하여 쉽게 코드를 끼워 넣기 할 수 있습니다.
 
-### 게임 노드, 유저, 룸 설정
-
-Main 클래스가 위치한 경로에서 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Java Class**를 선택해 **MainSyncGameService**라는 이름의 새로운 클래스를 생성합니다.
-
-```java
-package com.tutorial.gameanvil;
-
-import com.nhn.gameanvil.registry.IGameAnvilServerBuilder;
-import com.nhn.gameanvil.registry.IGameServiceBuilder;
-import com.nhn.gameanvil.registry.IRoomBuilder;
-import com.nhn.gameanvil.registry.IUserBuilder;
-import com.tutorial.gameanvil.node.SyncGameNode;
-import com.tutorial.gameanvil.room.SyncGameRoom;
-import com.tutorial.gameanvil.user.SyncGameUser;
-
-public final class MainSyncGameService {
-    public static void register(IGameAnvilServerBuilder builder) {
-        final IGameServiceBuilder rpsServiceCollectionBuilder = builder.createGameService(StringValues.serviceName);
-        rpsServiceCollectionBuilder.gameNode(SyncGameNode::new, config -> {});
-
-        rpsServiceCollectionBuilder.user(StringValues.userType, SyncGameUser::new, MainSyncGameService::commonUserConfig);
-
-        rpsServiceCollectionBuilder.room(StringValues.roomType, SyncGameRoom::new, MainSyncGameService::commonRoomConfig);
-    }
-
-    private static void commonRoomConfig(final IRoomBuilder<? extends SyncGameRoom, ? extends SyncGameUser> config) {
-        config.enableChannelInfo();
-    }
-
-    private static void commonUserConfig(final IUserBuilder config) {
-        config.enableChannelInfo();
-    }
-}
-```
-
-엔진에서 제공하는 **IGameAnvilServerBuilder**를 통해 게임 노드와 유저, 룸 관련 설정을 등록할 수 있습니다.
-
-**createGameService()** 함수를 사용해서 게임 서비스 설정 빌더를 만들고 gameNode, user, room 관련 설정을 추가합니다.
-
-유저 타입은 각 유저 구현을 구분하는 서버와 클라이언트 간 약속된 문자열이고, 룸 타입은 각 룸 구현을 구분하는 서버와 클라이언트 간 약속된 문자열입니다.
-
-이후 클라이언트 프로젝트 구현 시 해당 타입을 사용해야 하므로 기억해 둡니다. 예제에서 사용한 유저와 룸 타입은 다음과 같습니다.
-
-```java
-public class StringValues {
-    public static final String serviceName = "Sync";
-    public static final String userType = "USER_TYPE_SYNC";
-    public static final String roomType = "ROOM_TYPE_SYNC";
-}
-```
-
-예제에서 사용할 SyncGameNode, SyncGameUser, SyncGameRoom의 생성자를 각각 파라미터로 입력합니다.
-
-마지막으로 config를 등록하는 부분에서는 채널 정보 사용 여부 설정, 프로토콜 등록 등의 작업 등을 진행합니다.
-
-별도의 프로토콜을 사용하는 경우 이곳에서 등록해주어야 하지만, 예제에서 사용자 프로토콜을 사용하지 않으므로 이 문서에서는 자세한 설명을 생략하겠습니다.
-
-```java
-public class Main {
-    public static void main(String[] args) {
-        // 게임 노드, 유저, 룸 설정 추가
-        final IGameAnvilServerBuilder builder = GameAnvilServer.getInstance().getServerTemplateBuilder();
-        MainSyncGameService.register(builder);
-
-        GameAnvilServer.getInstance().run();
-    }
-}
-```
-
-이렇게 생성한 게임 서비스 설정을 **register()** 함수를 이용하여 등록합니다. 게임 서버를 실행하기 전에 필요한 설정들을 미리 등록해주어야 하므로 코드 순서에 유의합니다.
-
 ## 서버 구현을 마무리하며
 
 여기까지 기초 튜토리얼 샘플 실행을 위한 서버 구축이 완료되었습니다. 다시 서버를 실행해 보면, 로그 중에서 `All nodes are ready!!`라는 문구를 확인할 수 있습니다. 이 로그가 떴다는 것은 GameAnvil 서버가 정상적으로 실행되었음을 의미합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/17_all_nodes_are_ready.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/17_all_nodes_are_ready.png)
 
 이제 클라이언트의 요청을 받을 서버가 준비되었습니다. 다음 단계에서는 GameAnvil 커넥터와 유니티 샘플 프로젝트를 활용하여 클라이언트를 구현해 보겠습니다.
 
