@@ -47,7 +47,7 @@ public async void ManagerLogin()
     try
     {
         var result = await gameAnvilManager.Login();
-        if (result.loginFailReasonCode == null){
+        if (result.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
             // 성공
         } else {
             // 실패
@@ -73,7 +73,7 @@ public async void ManagerLogin()
         var authenticatePayload = new Payload(new Protocol.AuthenticateData());
         var loginPayload = new Payload(new Protocol.LoginData());
         var result = await gameAnvilManager.Login(authenticatePayload, loginPayload);
-        if (result.loginFailReasonCode == null){
+        if (result.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
             // 성공
         } else {
             // 실패
@@ -90,7 +90,7 @@ public async void ManagerLogin()
 간편 로그인이 성공하면 LoginResult의 UserController에 로그인 완료된 유저의 GameAnvilUserController 인스턴스가 할당이 됩니다. 이 인스턴스를 이용하여 서버의 유저 객체에 접근할 수 있습니다. 간편 로그인이 실패하면 UserController 에는 null 이 할당됩니다.
 <br>
 
-간편 로그인이 실패했을 때 어떤 이유로 실패했는지는 LoginResult의 loginFailReasonCode를 이용해 LoginFailReason 를 확인할 수 있습니다. LoginFailReason으로 확인할 수 있는 실패 이유는 다음과 같습니다.
+간편 로그인이 실패했을 때 어떤 이유로 실패했는지는 LoginResult의 loginResultCode를 이용해 문제를 확인할 수 있습니다. 확인할 수 있는 실패 이유는 다음과 같습니다.
 
 | 이름                                 | 설명                                            |                                                             |
 |------------------------------------|-----------------------------------------------|-------------------------------------------------------------|
@@ -122,7 +122,7 @@ public async void ManagerLogin()
 | LOGIN_FAIL_TIMEOUT                 | 로그인 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.            |                                                             |
 | UNKNOWN_ERROR                      | 서버의 알수 없는 오류로 실패.                             |                                                             |
 
-위의 LoginFailReason 보다 자세한 실패 이유를 확인하고 싶을 때는 LoginResult의 authenticationResult이나 loginResult를 이용해 확인할 수 있습니다.
+보다 자세한 실패 이유를 확인하고 싶을 때는 LoginResult의 authenticationResult이나 loginResult를 이용해 확인할 수 있습니다.
 
 ## Disconnect
 

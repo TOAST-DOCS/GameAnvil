@@ -661,7 +661,6 @@ Hierarchy 뷰에서 마우스 오른쪽 버튼을 클릭하고 **GameAnvil > Gam
 - Authentication Configuration: 인증 정보를 수정할 수 있습니다.
 - Login Configuration: 로그인 정보를 수정할 수 있습니다.
 - Pause Client Check : 클라이언트 연결 상태를 주기적으로 확인하는 시간 간격을 조정할 수 있습니다.
-- Logger: GameAnvil 커넥터 내부에서 발생하는 로그 출력을 관리합니다.
 
 지금은 세부 설정에 대해서 자세히 알고 있지 않아도 괜찮습니다. 튜토리얼을 진행하면서 각 항목에 대한 설명을 확인할 수 있습니다.
 
@@ -823,11 +822,11 @@ public async void ManagerLogin()
     try
     {
         var result = await gameAnvilManager.Login(null);
-        UI.managerResultCodeInputField.text = result.loginFailReasonCode.ToString();
+        UI.managerResultCodeInputField.text = result.loginResultCode.ToString();
         UI.managerExceptionInputField.text = null;
-        if (result.loginFailReasonCode != null)
-            UI.consoleInputField.text += result.loginFailReasonCode.ToString() + '\n';
-        UI.consoleInputField.text += result.loginFailReasonCode.ToString() + '\n';
+        if (result.loginResultCode != GameAnvilManager.LoginResultCode.SUCCESS)
+            UI.consoleInputField.text += result.loginResultCode.ToString() + '\n';
+        UI.consoleInputField.text += result.loginResultCode.ToString() + '\n';
     }
     catch (Exception e)
     {
