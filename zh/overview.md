@@ -58,10 +58,6 @@ Provides a **GameAnvil Connector** Unity package that can easily link with GameA
 * The engine takes care of most of the features that the real game server needs to handle, so you can only focus on the content.
 
 
-## - License:
-
-GameAnvil is protected by a unique [Software License](https://gameplatform.nhncloud.com/en/services/gameanvil/license). GameAnvil is only available if you agree to the corresponding software license.
-
 ## Games Not Yet Supported
 
 GameAnvil is still in the evolving phase, so we don't support the following styles of games yet, but all our developers are doing our best to support them as soon as possible.

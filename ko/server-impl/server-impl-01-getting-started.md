@@ -2,7 +2,7 @@
 
 ## 시작하기에 앞서
 
-이 문서는 GameAnvil을 이용해 서버를 구현할 때 필요한 기본 요소들과 구현 방법에 대해 설명합니다. 이 문서와 함께 제공되는 튜토리얼 프로젝트 [GameAnvil 튜토리얼](../tutorial/tutorial-01-basic.md)를 참고하시길 권장합니다. 또한 [JavaDoc 문서](https://gameplatform.nhncloud.com/docs/api/)를 통해 각각의 API 설명을 참고하십시오.
+이 문서는 GameAnvil을 이용해 서버를 구현할 때 필요한 기본 요소들과 구현 방법에 대해 설명합니다. 이 문서와 함께 제공되는 튜토리얼 프로젝트 [GameAnvil 튜토리얼](../tutorial/tutorial-01-basic.md)를 참고하시길 권장합니다.
 
 GameAnvil 서버는 기본적으로 노드(Node) 단위로 구성합니다. 그중 사용자의 코드가 구동되는 노드는 아래의 그림과 같이 총 네 가지입니다. 여기에서는 이 네 가지 노드의 구현 방법을 중심으로 서버 개발 방법을 설명합니다.
 
