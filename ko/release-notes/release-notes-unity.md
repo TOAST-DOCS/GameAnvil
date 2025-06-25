@@ -1,5 +1,45 @@
 ## Game > GameAnvil > 릴리스 노트 > Unity Connector
 
+### 2.1.0 (2025.06.30)
+
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.1.0.unitypackage)
+#### GameAnvil 2.1.0 이상
+#### <span style="color: #e11d21">New</span>
+###### GameAnvil 2.1.0 Connector
+* GameAnvil 2.1.0 서버 릴리즈에 맞춰 Connector도 2.1.0 버전을 릴리즈 합니다.
+  * 2.0.0 과 비교하여 기능상의 큰 변경점은 없으며, 일부 버그 수정, ResultCode 이름 변경, 오탈자 및 잘못된 설명 등의 수정사항이 있습니다.
+
+#### <span style="color: #e11d21">Changed</span>
+* GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
+  * GameAnvil 2.1 이전 버전의 서버는 더이상 지원하지 않음
+* GameAnvilConnector 에서 Packet지원 기능 추가
+  * Reauest()의 파라메터로 Packet을 받을 수 있게 기능 추가.
+  * 콜백 파라메터로 Packet을 받을 수 있는 SetPacketCallback() 추가.
+    * 사용자 정의 패킷 지원
+* Payload에 사용자 정의 패킷 지원 기능 추가.
+* GameAnvilConnector 에서 ErrorResult 대신 Result를 리턴하도록 수정
+  * 비동기 호출 결과를 리턴하기 위해 사용하던 클래스 ErrorResult 의 이름을 Result로 변경
+* 일부 ResultCode 변경
+
+    | 변경 전 | 변경 후 |
+    | ---- | ---- |
+    | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
+    | ALL\_CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | ALL\_CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
+    | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
+    | ALL\_CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 채널 정보를 찾을 수 없음 | ALL\_CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 널 일 경우 | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 널 일 경우 |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 널 일 경우 | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 널 일 경우 |
+    | FORCE\_CLOSE\_BASE\_CONNECTION<br>서버에서 BaseConnection의 close() 호출 | FORCE\_CLOSE\_CONNECTION<br>서버에서 IConnection의 close() 호출 |
+    | FORCE\_CLOSE\_BASE\_USER<br>서버에서 BaseUser의 closeConnection() 호출 | FORCE\_CLOSE\_USER<br>서버에서 IUser의 closeConnection() 호출 |
+
+#### <span style="color: #e11d21">Fix</span>
+* 서버에서 강제 종료한 경우 onDisconnect 콜백이 호출된 이후에 User의 상태가 바뀌던것을 User의 상태가 바뀐 후 onDisconnect 콜백이 호출되도록 수정
+* 서버와 해머의 프로토콜 버퍼를 각각 다른 환경에서 생성할 때 생성 환경에 따라 서로 호환되지 않을 수 있는 문제 수정
+* Reqeust 요청시 내부적으로 사용되는 seq 값이 최대치를 넘기는 경우 응답을 받지 못할 수 있는 문제 수정
+
+---
+
+
 ### 2.0.0 (2024.12.4)
 
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.0.0.unitypackage)
