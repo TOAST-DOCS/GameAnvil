@@ -13,6 +13,7 @@
 
     | 변경 전 | 변경 후 |
     | ---- | ---- |
+    | LOGIN\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | LOGIN_FAIL_INVALID_SERVICE_NAME<br>실패. 잘못된 서비스 이름 | 
     | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
     | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
     | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 널 일 경우 | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 널 일 경우 |
