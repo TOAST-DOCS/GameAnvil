@@ -30,7 +30,7 @@ GameAnvil은 서버 엔진뿐만 아니라, 클라이언트를 서버에 연결�
 
 GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ 템플릿을 제공하여 보다 간단하게 초기 작업을 완료할 수 있습니다. 다음 링크에서 IntelliJ용 프로젝트 파일 템플릿을 다운로드할 수 있습니다. 다운로드한 템플릿은 압축을 풀지 않도록 합니다.
 
-[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Template%202.0.zip?disposition=attachment)
+[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/tutorial/basic-tutorial/GameAnvil%20Template.zip?disposition=attachment)
 
 다운로드한 템플릿을 적용하기 위해 IntelliJ를 실행합니다. **Welcome to InteliJ IDEA** 화면 좌측 메뉴에서 **Customize**를 선택한 뒤 **Import Settings...** 를 클릭합니다. 또는 전체 검색창에서 **Import Settings...** 를 검색합니다.
 
@@ -44,11 +44,11 @@ GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ �
 
 파인더 또는 파일 탐색기 창에서 템플릿을 다운로드한 경로로 이동해 압축 파일을 선택합니다. **Select Components to Import** 창이 열리면 **File templates** 항목과 **Project Templates** 항목을 모두 체크해 선택합니다. **OK**를 클릭한 뒤 **Import and Restart**를 클릭하면 IntelliJ가 다시 시작되고, 템플릿 적용이 완료됩니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/3_select_import.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/3_select_import.png)
 
-IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 뒤 왼쪽 목록을 스크롤하여 하단의 **Templates**에 있는 **GameAnvil 2.0.0 Template**을 선택합니다. 프로젝트 이름을 설정합니다. 이름에 공백이 있어서는 안 됩니다. 프로젝트 위치와 베이스 패키지 이름을 확인한 뒤 프로젝트를 생성합니다.
+IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 뒤 왼쪽 목록을 스크롤하여 하단의 **Templates**에 있는 **GameAnvil 2.1.0 Template**을 선택합니다. 프로젝트 이름을 설정합니다. 이름에 공백이 있어서는 안 됩니다. 프로젝트 위치와 베이스 패키지 이름을 확인한 뒤 프로젝트를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/4_imported_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/4_imported_gameanvil_template.png)
 
 이제 IntelliJ에 서버 프로젝트 골격이 구성되었습니다. Project 패널을 보면 코드와 설정 파일들이 생성된 것을 확인할 수 있습니다.
 
@@ -174,11 +174,11 @@ GameAnvil 서버는 여러 개의 노드들로 구성되어 있습니다. 이 �
 
 GameAnvil은 `I-` 접두사를 붙인 여러 노드 인터페이스를 제공합니다. 기본적인 노드의 기능은 엔진 내부에 이미 구현되어 있고, 사용자는 이 인터페이스들을 구현하여 다양한 콜백 기능을 사용할 수 있습니다. 이번 예제에서는 IGameNode 인터페이스를 구현한 게임 노드 클래스를 만들어 사용해 보려고 합니다.
 
-프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **node**라는 이름의 새로운 패키지를 생성합니다. 그리고 node 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil GameNode**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **SyncGameNode**를 입력한 뒤 **OK**를 클릭합니다.
+프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **node**라는 이름의 새로운 패키지를 생성합니다. 그리고 node 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil GameNode**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **SyncGameNode**를, **Service name**에 **Sync**를 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/13_select_game_node_file_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/13_select_game_node_file_template.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/14_create_sync_game_node.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/14_create_sync_game_node.png)
 
 이 기능은 앞서 템플릿을 설치할 때 File templates(schemes)를 함께 적용해 주었기 때문에 사용할 수 있습니다. **New > GameAnvil GameNode** 항목이 보이지 않을 경우 **New > Java Class**를 선택해서 빈 클래스를 생성합니다.
 
@@ -194,10 +194,8 @@ import com.nhn.gameanvil.node.game.context.IGameNodeContext;
 import com.nhn.gameanvil.node.game.data.IChannelRoomInfo;
 import com.nhn.gameanvil.node.game.data.IChannelUserInfo;
 import com.nhn.gameanvil.packet.IPayload;
-import com.tutorial.gameanvil.StringValues;
 
-@GameAnvilGameNode(  // GameAnvilGameNode 어노테이션으로 엔진에 이 클래스를 게임 노드로 등록합니다
-    gameServiceName = StringValues.serviceName) // 게임 서비스 이름
+@GameAnvilGameNode(gameServiceName = "Sync")
 public class SyncGameNode implements IGameNode {
     private IGameNodeContext gameNodeContext;
 
@@ -279,9 +277,9 @@ GameAnvil에서 제공되는 방 기반의 구현을 사용하기 위해서는 �
 
 클라이언트가 서버에 로그인하게 되면 서버에서는 해당 클라이언트 정보를 **게임 유저**라는 객체로 만들어 메모리에 저장하고 유지합니다. 게임 유저가 어떤 정보를 표현할지는 사용자가 필요에 따라 자유롭게 구현이 가능합니다. 게임 유저의 구현 또한 클래스의 상속과 콜백 오버라이딩을 통해 일관성 있게 구현할 수 있습니다.
 
-프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **user**라는 이름의 새로운 패키지를 생성합니다. 그리고 **user** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil User**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **SyncGameUser**를 입력한 뒤 **OK**를 클릭합니다.
+프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **user**라는 이름의 새로운 패키지를 생성합니다. 그리고 **user** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil User**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **SyncGameUser**를, **Service name**에 **Sync**를, **User type**에 **USER_TYPE_SYNC**를 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/15_create_sync_game_user.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/15_create_sync_game_user.png)
 
 자동으로 생성된 코드는 아래와 같습니다.
 
@@ -298,12 +296,12 @@ import com.nhn.gameanvil.node.game.data.RoomMatchResult;
 import com.nhn.gameanvil.packet.IPayload;
 import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
 import com.nhn.gameanvil.serializer.ITransferPack;
-import com.tutorial.gameanvil.StringValues;
 
-@GameAnvilUser( // GameAnvilUser 어노테이션으로 엔진에 이 클래스를 게임 유저로 등록합니다
-    gameServiceName = StringValues.serviceName,  // 게임 서비스 이름
-    gameType = StringValues.userType,            // 게임 타입 (유저 타입)
-    useChannelInfo = true)                       // 체널 정보 사용 여부
+@GameAnvilUser(
+        gameServiceName = "Sync",
+        gameType = "USER_TYPE_SYNC",
+        useChannelInfo = false
+)
 public class SyncGameUser implements IUser {
     private IUserContext userContext;
 
@@ -448,6 +446,7 @@ public class SyncGameUser implements IUser {
     }
 }
 
+
 ```
 
 게임 유저는 클라이언트가 서버에 로그인 요청을 함으로써 생성됩니다. 서버에서는 클라이언트에서 전송된 페이로드 등을 통해서 로그인 허용 여부를 결정해서 반환값으로 내보낼 수 있습니다. 주요 로직만 엔진 사용자가 작성하고, 로그인 성공이나 실패 처리는 엔진에서 담당합니다.
@@ -458,9 +457,9 @@ public class SyncGameUser implements IUser {
 
 성공적으로 게임 유저로서 게임 노드에 접속하게 되면 이제 다른 유저들과 게임 룸을 통해서 패킷을 주고받을 수 있습니다. 게임 룸이란 패킷을 주고받는 유저들을 논리적으로 묶는 그룹입니다. 게임 룸 또한 인터페이스 구현을 통해 생성할 수 있습니다.
 
-프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **room**라는 이름의 새로운 패키지를 생성합니다. 그리고 **room** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil Room**을 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **SyncGameRoom**, **User Class**에 **SyncGameUser**를 입력한 뒤 **OK**를 클릭합니다.
+프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **room**라는 이름의 새로운 패키지를 생성합니다. 그리고 **room** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil Room**을 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **SyncGameRoom**을, **Service name**에 **Sync**를, **Room type**에 **ROOM_TYPE_SYNC**를, **User**에 **SyncGameUser**를 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/16_create_sync_game_room.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/16_create_sync_game_room.png)
 
 자동으로 생성된 코드는 아래와 같습니다.
 
@@ -474,16 +473,16 @@ import com.nhn.gameanvil.node.game.data.MatchCancelReason;
 import com.nhn.gameanvil.packet.IPayload;
 import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
 import com.nhn.gameanvil.serializer.ITransferPack;
-import com.tutorial.gameanvil.StringValues;
 import com.tutorial.gameanvil.user.SyncGameUser;
 
 import java.util.List;
 
-@GameAnvilRoom( // GameAnvilRoom 어노테이션으로 엔진에 이 클래스를 게임 룸으로 등록합니다
-    gameServiceName = StringValues.serviceName, // 게임 서비스 이름
-    gameType = StringValues.roomType,           // 게임 타입 (방 타입)
-    useChannelInfo = true)                      // 체널 정보 사용 여부
-public class SyncGameRoom implements IRoom<SyncGameUser> {
+@GameAnvilRoom(
+        gameServiceName = "Sync",
+        gameType = "ROOM_TYPE_SYNC",
+        useChannelInfo = false
+)
+public class SynGameRoom implements IRoom<SyncGameUser> {
     private IRoomContext roomContext;
 
     @Override
@@ -579,6 +578,7 @@ public class SyncGameRoom implements IRoom<SyncGameUser> {
         return true;
     }
 }
+
 ```
 
 게임 룸은 게임 유저가 서버에 방 생성 요청을 하면 생성됩니다. 클라이언트 측에서는 간단하게 메서드 호출만으로 방을 생성하고 존재하는 방에 입장할 수 있습니다. 유저가 방에 입장하는 시점 또는 방이 생성되는 시점에 커스텀 코드를 삽입하고 싶다면, 적절한 콜백을 오버라이딩하여 쉽게 코드를 끼워 넣기 할 수 있습니다.

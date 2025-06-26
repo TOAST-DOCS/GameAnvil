@@ -28,25 +28,25 @@ GameAnvil을 사용하면 손쉽게 게임 서버와 클라이언트를 개발�
 
 GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ 템플릿을 제공하여 보다 간단하게 초기 작업을 완료할 수 있습니다. 다음 링크에서 IntelliJ용 프로젝트 파일 템플릿을 다운로드할 수 있습니다. 다운로드한 템플릿은 압축을 풀지 않도록 합니다.
 
-[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Template%202.0.zip?disposition=attachment)
+[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/tutorial/basic-tutorial/GameAnvil%20Template.zip?disposition=attachment)
 
 다운로드한 템플릿을 적용하기 위해 IntelliJ를 실행합니다. **Welcome to IntelliJ IDEA** 화면 좌측 메뉴에서 **Customize**를 선택한 뒤 **Import Settings...** 를 클릭합니다. 또는 전체 검색창에서 **Import Settings...** 를 검색합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/1_import_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/1_import_gameanvil_template.png)
 
 <br>
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/2_search_import_settings.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/2_search_import_settings.png)
 
 <br>
 
 파인더 또는 파일 탐색기에서 템플릿을 다운로드한 경로로 이동해 압축 파일을 선택합니다. **Select Components to Import** 창이 열리면 `File templates` 항목과 `Project Templates` 항목을 모두 체크해 선택합니다. **OK**를 클릭한 뒤 가져오기가 완료되면 IntelliJ를 다시 시작해 템플릿 적용을 완료합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/3_select_import.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/3_select_import.png)
 
 IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 뒤 왼쪽 목록을 스크롤하여 하단의 **Templates**에 있는 `GameAnvil 2.0.0 Template`을 선택합니다. 프로젝트 이름을 설정합니다. 이름에 공백이 있어서는 안 됩니다. 프로젝트 위치를 확인한 뒤 프로젝트를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/4_imported_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/4_imported_gameanvil_template.png)
 
 이제 IntelliJ에 서버 프로젝트 골격이 구성되었습니다. Project 패널을 보면 코드와 설정 파일들이 생성된 것을 확인할 수 있습니다.
 
@@ -303,9 +303,9 @@ GameAnvil에서는 게임 유저와 게임 룸의 기본 구현을 미리 준비
 
 서버에서는 게임 유저와 게임 룸의 기능을 클래스로 정의합니다. 우선 게임 유저를 정의해 보겠습니다.
 
-프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **game**이라는 이름의 새로운 패키지를 생성합니다. 그리고 **game** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil User**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUser**를 입력한 뒤 **OK**를 클릭합니다.
+프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **game**이라는 이름의 새로운 패키지를 생성합니다. 그리고 **game** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil User**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUser**를, **Service name**에 **User type**에 **USER_TYPE_BASIC**을 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/16_create_user.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/16_create_user.png)
 
 GameAnvil에서 제공하는 IUser 인터페이스를 구현하여 게임 유저를 구현하는 기본 코드가 작성된 파일이 생성됩니다. GameAnvil에서 원하는 기능의 게임 유저를 구현하려면, IUser 인터페이스를 구현한 후 상황에 맞게 호출되는 여러 콜백 함수들을 오버라이딩하여 원하는 코드를 실행하도록 설정하면 됩니다. 다음은 지원하는 콜백 함수 목록의 일부입니다.
 
@@ -320,9 +320,10 @@ onLogin 콜백 메서드에서는 로그인 과정에 실행되어야 하는 동
 
 ```java
 @GameAnvilUser(
-    gameServiceName = StringValues.serviceName,
-    gameType = StringValues.userType,
-    useChannelInfo = true)
+        gameServiceName = "BASIC_SERVICE",
+        gameType = "USER_TYPE_BASIC",
+        useChannelInfo = true
+)
 public class BasicUser implements IUser {
 
     private static final Logger logger = getLogger(BasicUser.class);
@@ -493,9 +494,9 @@ public class BasicUser implements IUser {
 
 ### Room
 
-로그인 가능한 유저 구현을 완료했습니다. 이제 게임 룸을 구현합니다. 유저 생성 방법과 마찬가지로 **GameAnvil Room** 파일 템플릿을 이용해 IRoom 인터페이스를 구현한 클래스를 생성합니다. 유저 클래스 입력 필드에는 이전 단계에서 생성한 IUser 구현 클래스의 클래스명을 입력합니다.
+로그인 가능한 유저 구현을 완료했습니다. 이제 게임 룸을 구현합니다. 유저 생성 방법과 마찬가지로 **GameAnvil Room** 파일 템플릿을 이용해 IRoom 인터페이스를 구현한 클래스를 생성합니다. **File name**에는 **BasicRoom**을, **Service name**에는 **BASIC_SERVICE**를, **Room type**에는 **ROOM_TYPE_BASIC**을, **User**에는 이전 단계에서 생성한 IUser 구현 클래스의 클래스명 **BasicUser**를 입력합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/17_create_room.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/17_create_room.png)
 
 **OK**를 클릭하면 지원하는 콜백 메서드가 자동으로 작성됩니다. GameAnvil에서 지원하는 콜백을 설명하기 위해 잠시 클라이언트의 API를 간단하게 설명하겠습니다. 클라이언트에서는 커넥터로 로그인 후에 다른 유저들과 통신하기 위해 방 관련 API를 호출할 수 있습니다. 방을 만들거나, 다른 유저가 만든 방에 참여하거나, 방에서 나가는 등의 동작을 지원합니다.
 
@@ -533,9 +534,9 @@ import java.util.concurrent.TimeoutException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @GameAnvilRoom(
-    gameServiceName = StringValues.serviceName,
-    gameType = StringValues.roomType,
-    useChannelInfo = true
+        gameServiceName = "BASIC_SERVICE",
+        gameType = "ROOM_TYPE_BASIC",
+        useChannelInfo = true
 )
 public class BasicRoom implements IRoom<BasicUser> {
 
@@ -656,9 +657,9 @@ public class BasicRoom implements IRoom<BasicUser> {
 ### GameNode
 
 이제 게임 유저와 게임 방이 준비되었습니다. 하지만 아직 게임 유저/게임 룸의 생성과 삭제 요청을 처리하는 노드가 없습니다. 게임 유저와 게임 룸을 관리하는 역할을 하는 노드는 GameNode입니다. 이 노드는 일반적으로 게임 서버가 하기를 기대하는 대부분의 게임 로직 처리 역할을 수행하는 노드입니다. GameAnvil에 노드를 추가하는 방법은 자연스럽고 간단합니다. 게임 유저와 게임 룸을 정의했던 것과 마찬가지로, 미리 정의된 인터페이스를 구현하여 클래스를 만든 뒤 원하는 기능을 추가 구현하면 됩니다.
-**GameAnvil GameNode** 템플릿 선택 후 파일명을 **BasicGameNode**로 설정하고 **OK** 버튼을 눌러 게임 노드 클래스를 생성합니다.
+**GameAnvil GameNode** 템플릿 선택 후 파일명을 **BasicGameNode**로, 서비스 이름을 **BASIC_SERVICE**로 설정하고 **OK** 버튼을 눌러 게임 노드 클래스를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/18_create_game_node.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/18_create_game_node.png)
 
 노드가 역할을 수행하기 위해서는 우선 노드가 루프를 실행해야 합니다. 노드가 실행될 때는 일련의 과정을 거치게 되므로 약간의 시간이 필요합니다. 노드의 실행 여부나 실행 과정 중 어느 단계에 있느냐를 나타내는 지표를 노드의 상태라고 부릅니다. 노드의 상태는 보통 아래 순서에 따라서 순차적으로 변경되면서 READY 상태에 도달합니다.
 
@@ -669,13 +670,15 @@ public class BasicRoom implements IRoom<BasicUser> {
 READY 상태에 도달한 노드는 이제 미리 사용자가 작성한 로직들을 실행할 준비가 된 상태입니다. 각 준비 단계에 도달했을 때 특정한 코드를 실행하고 싶다면, 콜백 메서드를 구현하여 엔진에서 콜백 메서드를 호출했을 때 해당 코드가 실행되도록 설정할 수 있습니다. 지금은 특별하게 실행해야 할 코드가 없으므로 생성된 코드를 그대로 사용합니다.
 
 ```java
+import com.nhn.gameanvil.game.GameAnvilGameNode;
 import com.nhn.gameanvil.node.game.ChannelUpdateType;
 import com.nhn.gameanvil.node.game.IGameNode;
 import com.nhn.gameanvil.node.game.context.IGameNodeContext;
 import com.nhn.gameanvil.node.game.data.IChannelRoomInfo;
 import com.nhn.gameanvil.node.game.data.IChannelUserInfo;
 import com.nhn.gameanvil.packet.IPayload;
-@GameAnvilGameNode(gameServiceName = StringValues.serviceName)
+
+@GameAnvilGameNode(gameServiceName = "BASIC_SERVICE")
 public class BasicGameNode implements IGameNode {
     private IGameNodeContext gameNodeContext;
 
@@ -754,7 +757,7 @@ public class BasicGameNode implements IGameNode {
 
 ### 게임 노드, 유저, 룸 설정
 
-Main 클래스가 위치한 경로에서 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Java Class**를 선택해 **MainGameService**라는 이름의 새로운 클래스를 생성합니다.
+ 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Java Class**를 선택해 직접 클래스를 생성할수도 있습니다. 
 
 ```java
 @GameAnvilGameNode(gameServiceName = StringValues.serviceName)
@@ -765,7 +768,7 @@ public class BasicGameNode implements IGameNode {
 @GameAnvilRoom(
     gameServiceName = StringValues.serviceName,
     gameType = StringValues.roomType,
-    useChannelInfo = true
+    useChannelInfo = false
 )
 public class BasicRoom implements IRoom<BasicUser> {
     // ...
@@ -774,13 +777,13 @@ public class BasicRoom implements IRoom<BasicUser> {
 @GameAnvilUser(
     gameServiceName = StringValues.serviceName,
     gameType = StringValues.userType,
-    useChannelInfo = true)
+    useChannelInfo = false)
 public class BasicUser implements IUser {
     // ...
 }
 ```
 
-엔진에서 제공하는 어노테이션을 통해 게임 노드와 유저, 룸 관련 설정을 등록할 수 있습니다.
+그리고 엔진에서 제공하는 @GameAnvilGameNode 어노테이션을 통해 게임 노드, @GameAnvilUser 어노테이션을 통해 유저, @GameAnvilRoom 어노테이션을 통해 룸 관련 설정이 자동으로 등록됩니다. 
 
 유저 타입은 각 유저 구현을 구분하는 서버와 클라이언트 간 약속된 문자열이고, 룸 타입은 각 룸 구현을 구분하는 서버와 클라이언트 간 약속된 문자열입니다.
 
@@ -1083,9 +1086,11 @@ public class Main {
 
 여기에서는 게임 유저가 전송한 메시지를 서버가 받아 방 안의 유저들에게 전송해 주는 기능을 작성합니다. 클라이언트가 전송한 메시지를 서버의 게임 룸에서 처리하기 위해서는 핸들러를 사용합니다. 핸들러란, 특정 프로토콜을 처리하기 위한 코드 묶음을 의미합니다. 핸들러는 프로토콜 종류에 따라서 여러 개가 될 수 있고, 방에 핸들러를 여러 개 등록할 수 있습니다. 따라서 방은 복수의 프로토콜을 처리 가능합니다.
 
-핸들러도 인터페이스 구현을 통해 생성됩니다. 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **handler**이라는 이름의 새로운 패키지를 생성합니다. 그리고 **handler** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil MessageHandler for Room**을 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicRoom**, **Protobuf Message Class**에 **BasicProtocol.MessageRequest**를 입력한 뒤 **OK**를 클릭합니다.
+핸들러도 인터페이스 구현을 통해 생성됩니다. 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **handler**이라는 이름의 새로운 패키지를 생성합니다. 그리고 **handler** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil RoomMessageHandler**을 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicHandler**, **Message**에 **BasicProtocol.MessageRequest**를, **Room**에 앞서 생성한 IRoom 구현 클래스의 클래스명 **BasicRoom**을 입력한 뒤 **OK**를 클릭합니다.
 
-이렇게 하면 BasicHandler 클래스가 생성됩니다. 실행될 내용, 즉, execute 메서드 내부 구현은 아래와 같이 작성합니다. 아래의 핸들러 예제 구현에서는 수신한 메시지에 대해 송신자에게 응답 메시지를 전송함과 더불어 방 전체 유저에게 방 단위 브로드캐스트용 메시지를 추가로 송신합니다. 이때, 클라이언트는 방 단위 브로드캐스트 메시지를 기준으로 게임을 동기화하도록 구현되어 있습니다.
+이렇게 하면 BasicHandler 클래스가 생성되고 @GameAnvilController 어노테이션과 @GameRoomMapping 어노테이션으로 BasicRoom 에서 사용하는 핸들러로 등록되어 별도의 등록 절차 없이 사용할 수 있습니다. 이제 BasicRoom은 BasicProtocol의 MessageRequest 메시지를 BasicHandler를 통해서 처리할 수 있게 되었습니다.
+
+실행될 내용, 즉, execute 메서드 내부 구현은 아래와 같이 작성합니다. 아래의 핸들러 예제 구현에서는 수신한 메시지에 대해 송신자에게 응답 메시지를 전송함과 더불어 방 전체 유저에게 방 단위 브로드캐스트용 메시지를 추가로 송신합니다. 이때, 클라이언트는 방 단위 브로드캐스트 메시지를 기준으로 게임을 동기화하도록 구현되어 있습니다.
 
 ```java
 package org.example.handler;
@@ -1113,8 +1118,6 @@ public class BasicHandler {
 ```
 
 위 코드에서는 먼저 MessageRequest 객체의 Message 값을 이용하여 MessageResponse, MessageBroadcast 객체를 각각 새로 생성합니다. MessageResponse 타입의 객체는 패킷을 룸으로 전송한 유저 객체에게 전송합니다. MesageBroadcast 객체는 room을 통해 방 내부의 모든 유저에게 전송합니다.
-
-앞서 구현한 BasicHandler를 BasicRoom에서 사용하는 핸들러로 등록합니다. 어노테이션을 통해 엔진 내부에 핸들러를 등록하는 코드를 추가합니다. 핸들러 클래스 파일을 작성했더라도 룸 어노테이션으로 등록하지 않으면 메시지가 도착했을 때 해당 핸들러가 실행될 수 없습니다. 이제 BasicRoom은 BasicProtocol의 MessageRequest 메시지를 BasicHandler를 통해서 처리할 수 있게 되었습니다.
 
 이렇게 해서 클라이언트가 송신한 패킷을 서버가 수신하고, 약간의 처리를 한 뒤 다시 되돌려주는 기능이 서버에 추가되었습니다. 이때 클라이언트 또한 서버에서 송신한 패킷을 어떻게 처리할지 지정해야 합니다.
 
@@ -1309,7 +1312,7 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
 클라이언트 측에서는 지속적으로 퍼즐의 위치를 서버에 보내게 되었습니다. 이제 퍼즐의 위치를 서버에서 어떻게 처리할지 작성해야 합니다. MessageRequest를 가공하여 MessageResponse, MessageBroadcast로 유저에게 되돌려주었던 것과 같이 퍼즐 위치를 다시 게임 룸의 모든 유저에게 되돌려주도록 구현해 보겠습니다.
 
-서버 프로젝트로 돌아와서 **GameAnvil MessageHandler for Room** 파일 템플릿을 이용하여 PuzzlePositionHandler 클래스 파일을 생성합니다. 그리고 받은 패킷을 그대로 방 안의 모든 유저들에게 전달하도록 broadcast 메서드를 사용합니다.
+서버 프로젝트로 돌아와서 **GameAnvil RoomMessageHandler** 파일 템플릿을 이용하여 PuzzlePositionHandler 클래스 파일을 생성합니다. 그리고 받은 패킷을 그대로 방 안의 모든 유저들에게 전달하도록 broadcast 메서드를 사용합니다.
 
 ```java
 package org.example.handler;
@@ -1333,7 +1336,7 @@ public class PuzzlePositionHandler {
 
 ```
 
-PuzzlePositionHandler도 역시 BasicRoom에서 사용하는 핸들러로 등록합니다. @GameAnvilController 어노테이션과 @GameRoomMapping 어노테이션으로 내부에 핸들러를 등록하는 코드를 추가합니다. 이제 BasicRoom은 Puzzle 프로토콜의 PuzzlePosition 메시지를 PuzzlePositionHandler를 통해서 처리할 수 있게 되었습니다.
+PuzzlePositionHandler도 역시 @GameAnvilController 어노테이션과 @GameRoomMapping 어노테이션으로 BasicRoom 에서 사용하는 핸들러로 등록됩니다. 이제 BasicRoom은 Puzzle 프로토콜의 PuzzlePosition 메시지를 PuzzlePositionHandler를 통해서 처리할 수 있게 되었습니다.
 
 
 <br>
@@ -1518,7 +1521,7 @@ public class GameManager : Monobehaviour {
 
 ### 서버 측 구현
 
-섞기 요청이 들어왔을 때의 처리는 앞서 사용한 방식대로 핸들러를 이용합니다. **GameAnvil MessageHandler for Room** 파일 템플릿을 통해 ScatterPuzzleHandler 클래스를 생성합니다. 16개 각 퍼즐의 위치를 랜덤하게 설정한 후 PuzzlePositon 타입의 메시지를 송신합니다. 또한 서버의 puzzlePositions 맵도 새로운 위치 정보로 갱신합니다.
+섞기 요청이 들어왔을 때의 처리는 앞서 사용한 방식대로 핸들러를 이용합니다. **GameAnvil RoomMessageHandler** 파일 템플릿을 통해 ScatterPuzzleHandler 클래스를 생성합니다. 16개 각 퍼즐의 위치를 랜덤하게 설정한 후 PuzzlePositon 타입의 메시지를 송신합니다. 또한 서버의 puzzlePositions 맵도 새로운 위치 정보로 갱신합니다.
 
 ```java
 package org.example.handler;
@@ -1692,7 +1695,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 이제 빌
 
 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **match**라는 이름의 새로운 패키지를 생성합니다. 그리고 **match** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil UserMatchInfo**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUserMatchInfo로**를 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial//27_create_user_match_info.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/27_create_user_match_info.png)
 
 이 클래스에는 매칭에 사용될 유저의 정보를 담게 됩니다. 매치 메이킹에 사용될 요소가 있다면 여기에 추가하면 됩니다. 이번 예제에서는 별다른 요소를 추가하지 않고, 기본적으로 구현된 메서드만을 사용하겠습니다. 한 가지 주의할 점은 getId() 메서드가 반드시 요청한 유저의 아이디를 반환하게 구현되어있는지 확인합니다. 그리고 파티 매치메이킹 기능은 사용하지 않으므로 0을 반환하도록 설정합니다.
 
@@ -1754,9 +1757,9 @@ public class BasicUser implements IUser {
 
 유저 매치 메이킹을 사용하기 위한 기본적인 준비가 되었으면 이제 실제 매치 메이킹을 수행하는 매치 메이커를 작성합니다.
 
-프로젝트 패널의 **match** 패키지를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil UserMatchMaker**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUserMatchMaker**, **User Match Info Class**에 **BasicUserMatchInfo**를 입력한 뒤 **OK**를 클릭합니다.
+프로젝트 패널의 **match** 패키지를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil UserMatchMaker**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUserMatchMaker**, **Room**에 **BasicRoom**, **User Match Info**에 **BasicUserMatchInfo**를 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/28_create_user_match_maker.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/28_create_user_match_maker.png)
 
 생성자에서는 부모 클래스의 생성자를 호출하면서 인자로 매치 인원 수와 매치 신청 유효 시간을 전달합니다. 유효 시간이 지나면 해당 매치 요청은 자동으로 취소됩니다. 그리고 실제 매치 메이킹을 수행하는 match 메서드는 내부적으로 엔진에 의해 1초에 한 번씩 호출됩니다.
 
@@ -1860,7 +1863,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태
 
 프로젝트 패널의 **match** 패키지를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil RoomMatchForm**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicRoomMatchForm**을 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/29_create_room_match_form.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/29_create_room_match_form.png)
 
 유저가 매치 메이킹 요청을 할 때마다 BasicRoomMatchForm 객체가 생성되어 사용됩니다.
 
@@ -1878,7 +1881,7 @@ public class BasicRoomMatchForm extends AbstractRoomMatchForm {
 
 다음은 매칭 대상이 되는 방의 정보를 표현하는 클래스를 구현합니다. 다음과 같이 BasicRoomMatchInfo 클래스를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/30_create_room_match_info.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/30_create_room_match_info.png)
 
 이때, 방의 최대 정원은 MAX_ENTRY_USER 필드에 지정된 4명입니다. 이러한 최대 정원과 roomId를 반드시 상속 받은 AbstractRoomMatchInfo 생성자에 인자로 전달해야 합니다.
 
@@ -1898,9 +1901,9 @@ public class BasicRoomMatchInfo extends AbstractRoomMatchInfo {
 
 다음으로 실제로 룸 매치 메이킹을 처리할 룸 매치 메이커를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/31_create_room_match_maker.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/31_create_room_match_maker.png)
 
-다음과 같이 BasicRoomMatchMaker를 작성합니다.
+다음과 같이 BasicRoomMatchMaker 가 생성됩니다.
 
 ```java
 package org.example.match;
