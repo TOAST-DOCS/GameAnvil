@@ -8,12 +8,13 @@
 * GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
   * GameAnvil 2.1 이전 버전의 서버는 더이상 지원하지 않음
 * GameAnvilConnector 에서 ErrorResult 대신 Result를 리턴하도록 수정
-* 비동기 호출 결과를 리턴하기 위해 사용하던 클래스 ErrorResult 의 이름을 Result로 변경
+  * 비동기 호출 결과를 리턴하기 위해 사용하던 클래스 ErrorResult 의 이름을 Result로 변경
 * 일부 ResultCode 변경
 
     | 변경 전 | 변경 후 |
     | ---- | ---- |
     | LOGIN\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | LOGIN_FAIL_INVALID_SERVICE_NAME<br>실패. 잘못된 서비스 이름 | 
+    | LOGIN\_FAIL\_INVALID\_USERTYPE<br>실패. 잘못된 유저 타입 | LOGIN_FAIL_INVALID_USER_TYPE<br>실패. 잘못된 유저 타입 |
     | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
     | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
     | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 널 일 경우 | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 널 일 경우 |

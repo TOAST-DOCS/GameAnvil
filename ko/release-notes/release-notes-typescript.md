@@ -1,5 +1,36 @@
 ## Game > GameAnvil > 릴리스 노트 > Typescript Connector
 
+### 2.1.0 (2025.06.30)
+
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-2.1.0.zip)
+#### GameAnvil 2.0.0 이상
+
+
+#### New
+* GameAnvil 2.1.0 서버 릴리즈에 맞춰 커넥터도 2.1.0 버전을 릴리즈 합니다.
+* 2.0.0 과 비교하여 기능상의 큰 변경점은 없으며, 일부 버그 수정, ResultCode 이름 변경, 오탈자 및 잘못된 설명 등의 수정사항이 있습니다.
+
+#### Changed
+* GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
+    * GameAnvil 2.1 이전 버전의 서버는 더이상 지원하지 않음
+* 일부 ResultCode 변경
+
+  | 변경 전                                                                        | 변경 후                                                                      |
+  |-----------------------------------------------------------------------------|---------------------------------------------------------------------------|
+  | LOGIN\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디                        | LOGIN_FAIL_INVALID_SERVICE_NAME<br>실패. 잘못된 서비스 이름                         |
+  | LOGIN\_FAIL\_INVALID\_USERTYPE<br>실패. 잘못된 유저 타입                             | LOGIN_FAIL_INVALID_USER_TYPE<br>실패. 잘못된 유저 타입                             |
+  | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디                | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름             |
+  | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디         | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름      |
+  | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 널 일 경우      | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 널 일 경우                |
+  | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 널 일 경우      | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 널 일 경우                |
+  | FORCE\_CLOSE\_BASE\_CONNECTION<br>서버에서 BaseConnection의 close() 호출           | FORCE\_CLOSE\_CONNECTION<br>서버에서 IConnection의 close() 호출                  |
+  | FORCE\_CLOSE\_BASE\_USER<br>서버에서 BaseUser의 closeConnection() 호출             | FORCE\_CLOSE\_USER<br>서버에서 IUser의 closeConnection() 호출                    |
+
+#### Fix
+* Reqeust 요청시 내부적으로 사용되는 seq 값이 최대치를 넘기는 경우 응답을 받지 못할 수 있는 문제 수정
+
+---
+
 ### 2.0.0 (2024.12.05)
 
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-2.0.0.zip)
