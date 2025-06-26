@@ -2,7 +2,7 @@
 
 ### 2.1.0 (2025.06.30)
 
-#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-2.1.0.zip)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector-typescript.zip)
 #### GameAnvil 2.0.0 이상
 
 

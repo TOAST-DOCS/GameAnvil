@@ -20,7 +20,7 @@ GameAnvil을 사용하면 손쉽게 게임 서버와 클라이언트를 개발�
 
 아래 단계를 진행하면 만들어지는 최종 서버 샘플 프로젝트는 아래 링크에서 다운로드할 수 있습니다. 초기 템플릿에서 여러 단계를 거쳐 서버 기능을 구현하면 어떤 구조가 되는지 미리 확인하려면 해당 프로젝트를 내려받아 참고할 수 있습니다.
 
-[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/advanced-tutorial/2.1/GameAnvil_Tutorial_Advanced_Server.zip?disposition=attachment)
+[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Advanced_Server.zip?disposition=attachment)
 
 ### GameAnvil 프로젝트 구성
 
@@ -28,7 +28,7 @@ GameAnvil을 사용하면 손쉽게 게임 서버와 클라이언트를 개발�
 
 GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ 템플릿을 제공하여 보다 간단하게 초기 작업을 완료할 수 있습니다. 다음 링크에서 IntelliJ용 프로젝트 파일 템플릿을 다운로드할 수 있습니다. 다운로드한 템플릿은 압축을 풀지 않도록 합니다.
 
-[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/tutorial/basic-tutorial/GameAnvil%20Template.zip?disposition=attachment)
+[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 다운로드한 템플릿을 적용하기 위해 IntelliJ를 실행합니다. **Welcome to IntelliJ IDEA** 화면 좌측 메뉴에서 **Customize**를 선택한 뒤 **Import Settings...** 를 클릭합니다. 또는 전체 검색창에서 **Import Settings...** 를 검색합니다.
 
@@ -44,7 +44,7 @@ GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ �
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/3_select_import.png)
 
-IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 뒤 왼쪽 목록을 스크롤하여 하단의 **Templates**에 있는 `GameAnvil 2.0.0 Template`을 선택합니다. 프로젝트 이름을 설정합니다. 이름에 공백이 있어서는 안 됩니다. 프로젝트 위치를 확인한 뒤 프로젝트를 생성합니다.
+IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 뒤 왼쪽 목록을 스크롤하여 하단의 **Templates**에 있는 `GameAnvil 2.1.0 Template`을 선택합니다. 프로젝트 이름을 설정합니다. 이름에 공백이 있어서는 안 됩니다. 프로젝트 위치를 확인한 뒤 프로젝트를 생성합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/4_imported_gameanvil_template.png)
 
@@ -88,11 +88,11 @@ Unity Hub를 실행합니다. 오른쪽 상단의 **NEW**를 클릭해 새로운
 
 다음 링크에서 GameAnvil 커넥터를 내려받으십시오. 커넥터는 GameAnvil 서버와의 통신에 필요한 클라이언트 API를 제공하여 간단한 코드만으로 클라이언트를 구현할 수 있도록 도와주는 패키지입니다.
 
-[gameanvil_connector_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.0.0.unitypackage)
+[gameanvil-connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
 
 실습에 필요한 클라이언트 프로젝트 생성을 위해 아래 링크에서 튜토리얼용 코드와 이미지 소스 등이 포함된 Unity 패키지를 다운로드합니다.
 
-[gameanvil_tutorial_advanced.unitypackage](https://static.toastoven.net/prod_gameanvil/files/tutorial/advanced-tutorial/gameanvil_tutorial_advanced.unitypackage)
+[gameanvil_tutorial_advanced.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil_tutorial_advanced.unitypackage)
 
 다운로드한 패키지 파일을 Unity 프로젝트로 드래그해 가져옵니다. 또는 **Asset > Import Package > Custom Package...** 메뉴를 열어 파인더 또는 파일 탐색기에서 패키지 파일을 선택합니다. Import Unity Package 대화 상자에서 목록의 모든 체크 박스를 선택한 뒤 **Import**를 클릭합니다.
 

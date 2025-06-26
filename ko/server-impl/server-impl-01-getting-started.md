@@ -115,7 +115,7 @@ public class SampleGatewayNode implements IGatewayNode {
 
 GameAnvil 프로젝트를 처음부터 하나씩 구성하는 것은 여러 가지 복잡한 과정을 요구합니다. 엔진 라이브러리를 불러오는 것과 더불어 구성 파일을 작성해야 하고, 프로토콜 명세를 작성할 스크립트와 이를 컴파일할 컴파일러도 필요합니다. 이와 같은 일련의 과정으로 인해 개발 시간을 불필요하게 낭비하는 것을 방지하기 위해 GameAnvil은 이러한 내용들을 모두 포함한 IntelliJ 용 템플릿을 제공합니다. 아래 링크에서 템플릿 파일을 다운로드한 뒤 다음 과정을 따라 하십시오.
 
-[GameAnvil 템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Template%202.0.zip?disposition=attachment)
+[GameAnvil 템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 IntelliJ를 실행한 뒤 단축키 `Shift Shift` 로 전체 검색창을 띄워 **Import Settings...** 을 검색합니다. 또는 File > Manage IDE Settings > **Import Settings...** 를 선택합니다.
 

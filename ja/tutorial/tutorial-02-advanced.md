@@ -18,7 +18,7 @@ GameAnvilはサーバーエンジンだけでなく、サーバーにクライ�
 
 GameAnvilではこのような一連の過程を代行してくれるIntelliJテンプレートを提供し、より簡単に初期作業を完了できます。次のリンクからIntelliJ用プロジェクトファイルのテンプレートをダウンロードできます。ダウンロードしたテンプレートは解凍しないようにしてください。
 
-[プロジェクトテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Template.zip?disposition=attachment)
+[プロジェクトテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 ダウンロードしたテンプレートを適用するためにIntelliJを実行します。**Welcome to IntelliJ IDEA]画面の左側のメニューから**Customize**を選択し、**Import Settings...** をクリックします。または検索窓で**Import Settings...**を検索します。
 
@@ -72,11 +72,11 @@ Unity Hubを実行します。右上の**NEW**をクリックして新しいプ�
 
 次のリンクからGameAnvilコネクタをダウンロードしてください。コネクタはGameAnvilサーバーとの通信に必要なクライアントAPIを提供し、簡単なコードだけでクライアントを実装できるようにするパッケージです。
 
-[[ gameanvil-connector.unitypackage ]](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)
+[[ gameanvil-connector.unitypackage ]](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
 
 サーバープロジェクトの作成と同じように、早い進行のため作成されたボイラープレートコードをダウンロードして使います。次のリンクからチュートリアル用コードとイメージソースなどが含まれているパッケージをダウンロードします。
 
-[[ GameAnvilTutorial.unitypacakge ]](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Tutorial.unitypackage)
+[[ GameAnvilTutorial.unitypacakge ]](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Tutorial.unitypackage)
 
 ダウンロードしたパッケージファイルをUnityプロジェクトにドラッグしてインポートします。または、**Asset > Import Package > Custom Package...**メニューを開き、ファインダーまたはファイルエクスプローラーでパッケージファイルを選択します。
 

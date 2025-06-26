@@ -18,7 +18,7 @@ To apply GameAnvil to the project, you will need to download the GameAnvil libra
 
 GameAnvil offers IntelliJ templates that replace this set of processes, making it easier to complete initial tasks. You can download the project file template for IntelliJ from the following link. Do not decompress the templates you download.
 
-[Download project templates](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Template.zip?disposition=attachment)
+[Download project templates](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 Run IntelliJ to apply the downloaded template. Select **Customize** from the left menu on the **Welcome to IntelliJ IDEA** screen and click **Import Settings...** or search **Import Settings...** in the full search bar.
 
@@ -71,11 +71,11 @@ Select **2D** from the template list, verify the project name and location, and 
 
 Download the GameAnvil connector from the link below. Connector is a package that provides the client API needed for communication with the GameAnvil server to help you implement the client with simple code.
 
-[[ gameanvil-connector.unitypackage ]](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)
+[[ gameanvil-connector.unitypackage ]](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
 
 Just like creating a server project, download and use boilerplate code created for quick progress. Download the package from the link below that includes the code for tutorials, image sources and more.
 
-[[ GameAnvilTutorial.unitypacakge ]\](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Tutorial.unitypackage)
+[[ GameAnvilTutorial.unitypacakge ]\](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Tutorial.unitypackage)
 
 Drag the downloaded package file to the Unity project or open the **Asset > Import Package > Custom Package...** menu to select a package file in the Finder or File Explorer.
 

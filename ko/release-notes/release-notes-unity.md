@@ -2,7 +2,7 @@
 
 ### 2.1.0 (2025.06.30)
 
-#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.1.0.unitypackage)
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
 #### GameAnvil 2.1.0 이상
 #### <span style="color: #e11d21">New</span>
 ###### GameAnvil 2.1.0 Connector

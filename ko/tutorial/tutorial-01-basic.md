@@ -18,7 +18,7 @@ GameAnvil은 서버 엔진뿐만 아니라, 클라이언트를 서버에 연결�
 
 아래 단계를 진행하면 만들어지는 최종 서버 샘플 프로젝트는 아래 링크에서 다운로드할 수 있습니다. 초기 템플릿에서 여러 단계를 거쳐 서버 기능을 구현하면 어떤 구조가 되는지 미리 확인하려면 해당 프로젝트를 내려받아 참고할 수 있습니다.
 
-[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/tutorial/basic-tutorial/GameAnvil_Tutorial_Basic_Server.zip?disposition=attachment)
+[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Basic_Server.zip?disposition=attachment)
 
 ### 프로젝트 구성
 
@@ -30,7 +30,7 @@ GameAnvil은 서버 엔진뿐만 아니라, 클라이언트를 서버에 연결�
 
 GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ 템플릿을 제공하여 보다 간단하게 초기 작업을 완료할 수 있습니다. 다음 링크에서 IntelliJ용 프로젝트 파일 템플릿을 다운로드할 수 있습니다. 다운로드한 템플릿은 압축을 풀지 않도록 합니다.
 
-[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/tutorial/basic-tutorial/GameAnvil%20Template.zip?disposition=attachment)
+[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 다운로드한 템플릿을 적용하기 위해 IntelliJ를 실행합니다. **Welcome to InteliJ IDEA** 화면 좌측 메뉴에서 **Customize**를 선택한 뒤 **Import Settings...** 를 클릭합니다. 또는 전체 검색창에서 **Import Settings...** 를 검색합니다.
 
@@ -595,19 +595,19 @@ public class SynGameRoom implements IRoom<SyncGameUser> {
 
 아래 단계를 진행하며 수정을 완료하게 되는 최종 클라이언트 샘플 프로젝트는 아래 링크를 통해 다운로드할 수 있습니다. 유니티 패키지를 다운로드하여 구성한 초기 유니티 프로젝트에서 여러 단계를 거쳐 클라이언트 기능을 구현하고 나면 결국 어떤 구조가 되는지 미리 확인하고 싶다면 해당 프로젝트를 다운로드해 참고하면 됩니다.
 
-[최종 클라이언트 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvil_Tutorial_Basic_Client.zip?disposition=attachment)
+[최종 클라이언트 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Basic_Client.zip?disposition=attachment)
 
 ### GameAnvilConnector 다운로드
 
 GameAnvil 커넥터 dll 사용을 위해서 아래 파일을 다운로드합니다.
 
-[gameanvil_connector_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.0.0.unitypackage)
+[gameanvil_connector_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
 
 ### Unity Package 다운로드
 
 GameAnvil 커넥터 사용 실습을 위해 아래 링크에서 Unity 패키지를 다운로드합니다.
 
-[gameanvil_tutorial_basic.unitypackage](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/gameanvil_tutorial_basic.unitypackage)
+[gameanvil_tutorial_basic.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil_tutorial_basic.unitypackage)
 
 ### Unity 프로젝트 생성
 

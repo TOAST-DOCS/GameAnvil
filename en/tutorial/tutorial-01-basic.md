@@ -30,7 +30,7 @@ To apply GameAnvil to your project, you must download the GameAnvil library to M
 
 GameAnvil offers IntelliJ templates that replace this set of processes, making it easier to complete initial tasks. You can download the project file template for IntelliJ from the following link. Do not decompress the templates you download.
 
-[Template download](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilTemplate.zip?disposition=attachment)
+[Template download](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 Run IntelliJ to apply the downloaded template. Select **Customize** from the left menu on the **Welcome to IntelliJ IDEA** screen and click **Import Settings...**. Or search **Import Settings...** in the search bar.
 
@@ -585,7 +585,7 @@ You can download the final client sample project that you'll complete the fix by
 
 Download the file below for the use of GameAnvil connector dll.
 
-[GameAnvil-Connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)
+[GameAnvil-Connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
 
 ### Download Unity Package
 

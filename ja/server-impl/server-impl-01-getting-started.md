@@ -144,7 +144,7 @@ GameAnvilプロジェクトを最初から1つずつ構成するには、いく�
 
 
 
-[GameAnvilテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Template.zip?disposition=attachment)
+[GameAnvilテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 
 

@@ -230,9 +230,9 @@ scenario
 
 아래 예시는 실제 서버에 부하를 인가하도록 작성된 예시입니다.
 
-| 샘플 서버 | 샘플 테스터 |
-|---------|----------|
-| [GameAnvil Scenario Server](https://static.toastoven.net/prod_gameanvil/files/GameAnvil 2.0 Scenario Server.zip) | [GameAnvil Scenario Tester](https://static.toastoven.net/prod_gameanvil/files/GameAnvil 2.0 Scenario Tester.zip) |
+| 샘플 서버                                                                                                                   | 샘플 테스터                                                                                                              |
+|-------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
+| [GameAnvil Scenario Server](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%202.0%20Scenario%20Server.zip) | [GameAnvil Scenario Tester](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%202.0%20Scenario%20Tester.zip) |
 
 ### 액션
 
