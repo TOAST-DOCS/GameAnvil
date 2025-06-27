@@ -52,7 +52,6 @@ connector.connect()
 ```typescript
 connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) => {
     console.log("Disconnected.");
-    
 }
 ```
 
@@ -84,7 +83,7 @@ connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) =>
 
 ### 인증
 
-서버에 접속 성공한 이후, 엔진의 모든 기능을 사용하기 위해서는 먼저 인증을 진행 해야 합니다. authenticaion() 함수는 서버와 미리 협의된 accountId, deviceId, password 값을 인자로 받아 인증 동작을 수행하고 Promise를 반환합니다. 인증 동작 완료 시점에 Promise를 통해 인증에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
+서버에 접속 성공한 이후, 엔진의 모든 기능을 사용하기 위해서는 먼저 인증을 진행 해야 합니다. authentication() 함수는 서버와 미리 협의된 accountId, deviceId, password 값을 인자로 받아 인증 동작을 수행하고 Promise를 반환합니다. 인증 동작 완료 시점에 Promise를 통해 인증에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
 
 ```typescript
 const deviceId, accountId, password;
@@ -93,10 +92,10 @@ const authResult = await connector.authentication(deviceId, accountId, password)
 console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 ```
 
-인증 성공 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+인증 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (authResult.errorCode === ResultCodeAuth.AUTH_SUCCESS) {
+if (authResult.resultCode === ResultCodeAuth.AUTH_SUCCESS) {
     console.log("Authentication success");
 } else {
     console.log("Authentication fail");
@@ -284,7 +283,7 @@ connector.send(new UserInfo({name, age, job}));
 ```typescript
 const result = await connector.requestMessage(new StartReq(), StartRes.descriptor);
 
-if (result.errorCode === ResultCode.Success) {
+if (result.resultCode === ResultCode.Success) {
     const startRes: StartRes = result.data;
 }
 ```
@@ -295,7 +294,7 @@ if (result.errorCode === ResultCode.Success) {
 const packet = PacketFactory.makePacket(new StartReq());
 const result = await connector.requestPacket(packet, StartRes.descriptor);
 
-if (result.errorCode === ResultCode.Success) {
+if (result.resultCode === ResultCode.Success) {
     const startRes: StartRes = result.data;
 }
 ```

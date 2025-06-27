@@ -7,8 +7,6 @@
 ### Change
 * GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
   * GameAnvil 2.1 이전 버전의 서버는 더이상 지원하지 않음
-* GameAnvilConnector 에서 ErrorResult 대신 Result를 리턴하도록 수정
-  * 비동기 호출 결과를 리턴하기 위해 사용하던 클래스 ErrorResult 의 이름을 Result로 변경
 * 일부 ResultCode 변경
 
     | 변경 전 | 변경 후 |

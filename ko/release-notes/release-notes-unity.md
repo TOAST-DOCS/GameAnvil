@@ -13,7 +13,7 @@
 * GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
   * GameAnvil 2.1 이전 버전의 서버는 더이상 지원하지 않음
 * GameAnvilConnector 에서 Packet지원 기능 추가
-  * Reauest()의 파라메터로 Packet을 받을 수 있게 기능 추가.
+  * Request()의 파라메터로 Packet을 받을 수 있게 기능 추가.
   * 콜백 파라메터로 Packet을 받을 수 있는 SetPacketCallback() 추가.
     * 사용자 정의 패킷 지원
 * Payload에 사용자 정의 패킷 지원 기능 추가.
@@ -37,7 +37,7 @@
 #### <span style="color: #e11d21">Fix</span>
 * 서버에서 강제 종료한 경우 onDisconnect 콜백이 호출된 이후에 User의 상태가 바뀌던것을 User의 상태가 바뀐 후 onDisconnect 콜백이 호출되도록 수정
 * 서버와 해머의 프로토콜 버퍼를 각각 다른 환경에서 생성할 때 생성 환경에 따라 서로 호환되지 않을 수 있는 문제 수정
-* Reqeust 요청시 내부적으로 사용되는 seq 값이 최대치를 넘기는 경우 응답을 받지 못할 수 있는 문제 수정
+* Request 요청시 내부적으로 사용되는 seq 값이 최대치를 넘기는 경우 응답을 받지 못할 수 있는 문제 수정
 
 ---
 
