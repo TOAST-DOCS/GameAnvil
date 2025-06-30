@@ -593,10 +593,6 @@ public class SynGameRoom implements IRoom<SyncGameUser> {
 
 ## 실습 환경 준비 - 클라이언트 프로젝트
 
-아래 단계를 진행하며 수정을 완료하게 되는 최종 클라이언트 샘플 프로젝트는 아래 링크를 통해 다운로드할 수 있습니다. 유니티 패키지를 다운로드하여 구성한 초기 유니티 프로젝트에서 여러 단계를 거쳐 클라이언트 기능을 구현하고 나면 결국 어떤 구조가 되는지 미리 확인하고 싶다면 해당 프로젝트를 다운로드해 참고하면 됩니다.
-
-[최종 클라이언트 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Basic_Client.zip?disposition=attachment)
-
 ### GameAnvilConnector 다운로드
 
 GameAnvil 커넥터 dll 사용을 위해서 아래 파일을 다운로드합니다.

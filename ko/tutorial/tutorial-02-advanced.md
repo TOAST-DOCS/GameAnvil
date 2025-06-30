@@ -132,7 +132,7 @@ GameAnvil 서버는 여러 개의 노드들로 구성되어 있습니다. 이 �
 
 이제 Unity 프로젝트로 이동하여 GameAnvil 서버에 접속할 수 있도록 코드를 작성해 보겠습니다. 서버와 연결하려면 먼저 커넥터 객체를 생성해야 합니다.
 
-Asset 패널에서 Scene 폴더 안의 Connect.scene을 더블 클릭해서 씬을 준비합니다. Hierarchy 뷰 상의 ConnectHandler 게임 오브젝트에 컴포넌트로 추가되어 있는 ConnectHandler 스크립트를 소스 코드 편집기에서 열어 구현 내용을 확인하며 각 과정을 직접 실습합니다.
+Asset 패널에서 Scene 폴더 안의 ConnectScene을 더블 클릭해서 씬을 준비합니다. Hierarchy 뷰 상의 ConnectHandler 게임 오브젝트에 컴포넌트로 추가되어 있는 ConnectHandler 스크립트를 소스 코드 편집기에서 열어 구현 내용을 확인하며 각 과정을 직접 실습합니다.
 
 GameAnvil 서버와 클라이언트는 주기적으로 상태 체크 패킷을 주고받아야 합니다. 클라이언트가 일시 중지된 상황 등에서 상태 체크 패킷을 주고받는 것을 멈추려면 PauseClientStateCheck() 메서드를 이용합니다. 상태 체크를 재개하려면 ResumeClientStateCheck() 메서드를 호출합니다. OnApplicationPause() 함수에서 클라이언트의 일시 중지를 감지해 알맞은 메서드를 호출합니다.
 
@@ -168,9 +168,9 @@ public class ConnectHandler : MonoBehaviour
     public GameObject popupCanvas;
     public InputField roomIdInput;
 
-    private GameAnvilConnector connector;
-    private GameAnvilUser user;
-
+    private static GameAnvilConnector connector;
+    private static GameAnvilUser user;
+    
     void Start()
     {
         // 연결 정보를 화면에 출력합니다.
@@ -201,16 +201,12 @@ public class ConnectHandler : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    public void Quit()
     {
         if (getConnector().IsConnected)
         {
             getConnector().Disconnect();
         }
-    }
-
-    public void Quit()
-    {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
