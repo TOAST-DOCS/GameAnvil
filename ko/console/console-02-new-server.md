@@ -100,8 +100,13 @@ GameAnvil의 노드는 게임 서버의 기능 단위입니다. 개발이 완료
 
 서버 목록에서 임의의 항목을 클릭하면 서버 상세 정보를 확인할 수 있습니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/server_details.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/server_details.png)
 
+## 동적 로그레벨 설정
+
+동적 로그레벨을 설정하기 위해서는 서버가 기동중인 상태에서 서버 상세 화면에서 로그 레벨 설정 버튼을 눌러서 원하는 레벨로 변경이 가능 합니다. 변경된 로그레벨은 서버가 기동되어 있는 상태에서만 적용이되며 logback 파일에 저장되지않습니다. 서버 종료후 기동시에는 logback의 설정으로 다시 초기화가 됩니다.
+
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/dynamic_log_level.png)
 
 ## 생성된 노드 정보 확인
 
