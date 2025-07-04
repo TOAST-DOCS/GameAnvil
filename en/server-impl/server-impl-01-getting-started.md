@@ -151,7 +151,7 @@ Configuring GameAnvil projects one by one from the scratch requires a number of 
 
 
 
-[GameAnvil Template download\](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
+[GameAnvil Template download\](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Template.zip?disposition=attachment)
 
 
 

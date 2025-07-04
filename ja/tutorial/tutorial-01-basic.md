@@ -30,7 +30,7 @@ GameAnvilはサーバーエンジンだけでなく、クライアントをサ�
 
 GameAnvilではこのような一連の過程を代行してくれるIntelliJテンプレートを提供し、より簡単に初期作業を完了できます。次のリンクからIntelliJ用プロジェクトファイルテンプレートをダウンロードできます。ダウンロードしたテンプレートは解凍しないようにしてください。
 
-[テンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvil%20Template%202.1.0.zip?disposition=attachment)
+[テンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilTemplate.zip?disposition=attachment)
 
 ダウンロードしたテンプレートを適用するためにIntelliJを実行します。 **Welcome to InteliJ IDEA**画面の左側のメニューから**Customize**を選択し、**Import Settings...**をクリックします。または全体検索窓で**Import Settings...**を検索します。
 
@@ -585,7 +585,7 @@ public final class SyncGameRoom extends BaseRoom<SyncGameUser> {
 
 GameAnvilコネクタdllを使うため下記のファイルをダウンロードします。
 
-[GameAnvil-Connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.1.0.unitypackage)
+[GameAnvil-Connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)
 
 ### Unity Packageをダウンロード
 

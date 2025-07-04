@@ -585,7 +585,7 @@ You can download the final client sample project that you'll complete the fix by
 
 Download the file below for the use of GameAnvil connector dll.
 
-[GameAnvil-Connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
+[GameAnvil-Connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)
 
 ### Download Unity Package
 
