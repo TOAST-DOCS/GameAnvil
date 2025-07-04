@@ -106,10 +106,11 @@ public async void ManagerLogin()
 | AUTH_FAIL_PARSE_ERROR              | 인증 실패. 추가 정보를 위한 메시지 파싱 실패.                   | 서버와 클라이언트의 프로토콜 정의가 다를경우 발생할 수 있다.                          |
 | LOGIN_FAIL_CONTENT                 | 로그인 실패. 사용자 코드에서 로그인 거부.                      |                                                             |
 | LOGIN_FAIL_NOT_EXIST_NODE          | 로그인 실패. 로그인 대상 노드가 존재하지 않음.                   | 서버 구성시 대상 노드를 포함한 서버를 시작하지 경우 발생할 수 있다.                     |
+| LOGIN_FAIL_INVALID_SERVICEID       | 로그인 실패. 로그인 대상 서비스가 존재하지 않음.                  | 요청시 서비스 이름을 잘못 입력하였거나, 서버 설정의 서비스 이름 설정이 잘못된 경우 발생할 수 있다.   |
 | LOGIN_FAIL_INVALID_SERVICE_NAME    | 로그인 실패. 로그인 대상 서비스가 존재하지 않음.                  | 요청시 서비스 이름을 잘못 입력하였거나, 서버 설정의 서비스 이름 설정이 잘못된 경우 발생할 수 있다.   |
 | LOGIN_FAIL_TIMEOUT_GAME_SERVER     | 로그인 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.            |                                                             |
-| LOGIN_FAIL_INVALID_USER_TYPE       | 로그인 실패. 로그인 대상 UserType이 존재하지 않음.             | 요청시 UserType을 잘못 입력하였거나, 서버에 구현되지 않았을 경우 발생할 수 있다.          |
-| LOGIN_FAIL_INVALID_USER_ID         | 로그인 실패. 서버의 알수없는 이유로 UserId 생성 실패.            |                                                             |
+| LOGIN_FAIL_INVALID_USERTYPE        | 로그인 실패. 로그인 대상 UserType이 존재하지 않음.             | 요청시 UserType을 잘못 입력하였거나, 서버에 구현되지 않았을 경우 발생할 수 있다.          |
+| LOGIN_FAIL_INVALID_USERID          | 로그인 실패. 서버의 알수없는 이유로 UserId 생성 실패.            |                                                             |
 | LOGIN_FAIL_INVALID_CHANNEL_ID      | 로그인 실패. 로그인 대상 채널이 존재하지 않음.                   | 요청시 ChannelId를 잘못 입력하였거나, 서버 설정에 ChannelId가 없는 경우 발생할 수 있다. |
 | LOGIN_FAIL_INVALID_SUB_ID          | 로그인 실패. 잘못된 SubId.                            |                                                             |
 | LOGIN_FAIL_LOGINED_OTHER_SERVICE   | 로그인 실패. 같은 AccountId로 이미 다른 서비스에 로그인 되어있음.    | 서버 구성시 중복 로그인을 허용하지 않을 경우 발생.                               |
