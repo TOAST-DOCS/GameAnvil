@@ -223,7 +223,7 @@ const payload: Payload;
 
 const resultJoinRoom = user.joinRoom(roomType, roomId, matchingUserCategory, payload);
 ```
-방 입장 성공 여부는 Promise 결과같인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+방 입장 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
 if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
