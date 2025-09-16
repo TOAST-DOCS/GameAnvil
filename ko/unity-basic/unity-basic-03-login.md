@@ -112,7 +112,7 @@ public async void ManagerLogin()
 | LOGIN_FAIL_INVALID_USER_ID         | 로그인 실패. 서버의 알 수 없는 이유로 UserId 생성 실패.            |                                                             |
 | LOGIN_FAIL_INVALID_CHANNEL_ID      | 로그인 실패. 로그인 대상 채널이 존재하지 않음.                   | 요청 시 ChannelId를 잘못 입력하였거나, 서버 설정에 ChannelId가 없는 경우 발생할 수 있다. |
 | LOGIN_FAIL_INVALID_SUB_ID          | 로그인 실패. 잘못된 SubId.                            |                                                             |
-| LOGIN_FAIL_LOGINED_OTHER_SERVICE   | 로그인 실패. 같은 AccountId로 이미 다른 서비스에 로그인 되어있음.    | 서버 구성시 중복 로그인을 허용하지 않을 경우 발생.                               |
+| LOGIN_FAIL_LOGINED_OTHER_SERVICE   | 로그인 실패. 같은 AccountId로 이미 다른 서비스에 로그인되어 있음.    | 서버 구성 시 중복 로그인을 허용하지 않을 경우 발생.                               |
 | LOGIN_FAIL_LOGINED_OTHER_CHANNEL   | 로그인 실패. 같은 AccountId로 다른 채널에 로그인 되어있음.        |                                                             |
 | LOGIN_FAIL_LOGINED_OTHER_USER_TYPE | 로그인 실패. 같은 AccountId, 다른 UserType으로 로그인 되어있음. | 서버 구현시 기존 유저와 새로 로그인한 유저 중 선택할 수 있다.                        |
 | LOGIN_FAIL_LOGINED_OTHER_DEVICE    | 로그인 실패. 같은 AccountId로 다른 기기에서 로그인 되어있음.       | 서버 구현시 기존 유저와 새로 로그인한 유저 중 선택할 수 있다.                        |
