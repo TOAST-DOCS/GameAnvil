@@ -110,7 +110,7 @@ Unity Hub를 실행합니다. 오른쪽 상단의 **NEW**를 클릭해 새로운
 
 실행 설정이 완료되면 우측의 gradle 메뉴에서 Tasks > other > `runMain` 실행을 더블 클릭합니다. 이렇게 한 번 실행한 이후에는 IntelliJ 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
 
-`runMain`으로 실행을 해야 GameAnvil 서버 실행에 필요한 VM 옵션이 적용이 됩니다. 만약 Main 클래스의 main() 함수를 그냥 실행하는 경우에는, **Edit Configurations...**에서 아래의 필수 VM 옵션을 추가해주어야 합니다.
+`runMain`으로 실행을 해야 GameAnvil 서버 실행에 필요한 VM 옵션이 적용이 됩니다. 만약 Main 클래스의 main() 함수를 그냥 실행하는 경우에는, **Edit Configurations...**에서 아래의 필수 VM 옵션을 추가해야 합니다.
 
 ```
 "--add-opens", "java.base/java.lang=ALL-UNNAMED",
@@ -753,7 +753,7 @@ public class BasicGameNode implements IGameNode {
 
 ### 게임 노드, 유저, 룸 설정
 
- 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Java Class**를 선택해 직접 클래스를 생성할수도 있습니다. 
+ 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Java Class**를 선택해 직접 클래스를 생성할 수도 있습니다. 
 
 ```java
 @GameAnvilGameNode(gameServiceName = StringValues.serviceName)
@@ -1082,9 +1082,9 @@ public class Main {
 
 여기에서는 게임 유저가 전송한 메시지를 서버가 받아 방 안의 유저들에게 전송해 주는 기능을 작성합니다. 클라이언트가 전송한 메시지를 서버의 게임 룸에서 처리하기 위해서는 핸들러를 사용합니다. 핸들러란, 특정 프로토콜을 처리하기 위한 코드 묶음을 의미합니다. 핸들러는 프로토콜 종류에 따라서 여러 개가 될 수 있고, 방에 핸들러를 여러 개 등록할 수 있습니다. 따라서 방은 복수의 프로토콜을 처리 가능합니다.
 
-핸들러도 인터페이스 구현을 통해 생성됩니다. 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **handler**이라는 이름의 새로운 패키지를 생성합니다. 그리고 **handler** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil RoomMessageHandler**을 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicHandler**, **Message**에 **BasicProtocol.MessageRequest**를, **Room**에 앞서 생성한 IRoom 구현 클래스의 클래스명 **BasicRoom**을 입력한 뒤 **OK**를 클릭합니다.
+핸들러도 인터페이스 구현을 통해 생성됩니다. 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **handler**라는 이름의 새로운 패키지를 생성합니다. 그리고 **handler** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil RoomMessageHandler**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicHandler**, **Message**에 **BasicProtocol.MessageRequest**를, **Room**에 앞서 생성한 IRoom 구현 클래스의 클래스명 **BasicRoom**을 입력한 뒤 **OK**를 클릭합니다.
 
-이렇게 하면 BasicHandler 클래스가 생성되고 @GameAnvilController 어노테이션과 @GameRoomMapping 어노테이션으로 BasicRoom 에서 사용하는 핸들러로 등록되어 별도의 등록 절차 없이 사용할 수 있습니다. 이제 BasicRoom은 BasicProtocol의 MessageRequest 메시지를 BasicHandler를 통해서 처리할 수 있게 되었습니다.
+이렇게 하면 BasicHandler 클래스가 생성되고 @GameAnvilController 어노테이션과 @GameRoomMapping 어노테이션으로 BasicRoom에서 사용하는 핸들러로 등록되어 별도의 등록 절차 없이 사용할 수 있습니다. 이제 BasicRoom은 BasicProtocol의 MessageRequest 메시지를 BasicHandler를 통해서 처리할 수 있게 되었습니다.
 
 실행될 내용, 즉, execute 메서드 내부 구현은 아래와 같이 작성합니다. 아래의 핸들러 예제 구현에서는 수신한 메시지에 대해 송신자에게 응답 메시지를 전송함과 더불어 방 전체 유저에게 방 단위 브로드캐스트용 메시지를 추가로 송신합니다. 이때, 클라이언트는 방 단위 브로드캐스트 메시지를 기준으로 게임을 동기화하도록 구현되어 있습니다.
 
@@ -1332,7 +1332,7 @@ public class PuzzlePositionHandler {
 
 ```
 
-PuzzlePositionHandler도 역시 @GameAnvilController 어노테이션과 @GameRoomMapping 어노테이션으로 BasicRoom 에서 사용하는 핸들러로 등록됩니다. 이제 BasicRoom은 Puzzle 프로토콜의 PuzzlePosition 메시지를 PuzzlePositionHandler를 통해서 처리할 수 있게 되었습니다.
+PuzzlePositionHandler도 역시 @GameAnvilController 어노테이션과 @GameRoomMapping 어노테이션으로 BasicRoom에서 사용하는 핸들러로 등록됩니다. 이제 BasicRoom은 Puzzle 프로토콜의 PuzzlePosition 메시지를 PuzzlePositionHandler를 통해서 처리할 수 있게 되었습니다.
 
 
 <br>
@@ -1431,7 +1431,7 @@ public class PuzzlePositionHandler {
 
 ```
 
-새로운 유저가 방에 들어올 때 저중해 둔 퍼즐 위치 정보를 받을 수 있도록 BasicRoom의 onJoinRoom을 수정해 서버에 저장해 둔 퍼즐의 위치 정보를 전송하도록 합니다.
+새로운 유저가 방에 들어올 때 저장해 둔 퍼즐 위치 정보를 받을 수 있도록 BasicRoom의 onJoinRoom을 수정해 서버에 저장해 둔 퍼즐의 위치 정보를 전송하도록 합니다.
 
 ```java
 public class BasicRoom implements IRoom<BasicUser> {
@@ -1693,7 +1693,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 이제 빌
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/27_create_user_match_info.png)
 
-이 클래스에는 매칭에 사용될 유저의 정보를 담게 됩니다. 매치 메이킹에 사용될 요소가 있다면 여기에 추가하면 됩니다. 이번 예제에서는 별다른 요소를 추가하지 않고, 기본적으로 구현된 메서드만을 사용하겠습니다. 한 가지 주의할 점은 getId() 메서드가 반드시 요청한 유저의 아이디를 반환하게 구현되어있는지 확인합니다. 그리고 파티 매치메이킹 기능은 사용하지 않으므로 0을 반환하도록 설정합니다.
+이 클래스에는 매칭에 사용될 유저의 정보를 담게 됩니다. 매치 메이킹에 사용될 요소가 있다면 여기에 추가하면 됩니다. 이번 예제에서는 별다른 요소를 추가하지 않고, 기본적으로 구현된 메서드만을 사용하겠습니다. 한 가지 주의할 점은 getId() 메서드가 반드시 요청한 유저의 아이디를 반환하게 구현되어 있는지 확인합니다. 그리고 파티 매치메이킹 기능은 사용하지 않으므로 0을 반환하도록 설정합니다.
 
 ```java
 package org.example.match;
@@ -1899,7 +1899,7 @@ public class BasicRoomMatchInfo extends AbstractRoomMatchInfo {
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/31_create_room_match_maker.png)
 
-다음과 같이 BasicRoomMatchMaker 가 생성됩니다.
+다음과 같이 BasicRoomMatchMaker가 생성됩니다.
 
 ```java
 package org.example.match;

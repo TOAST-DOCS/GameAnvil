@@ -4,8 +4,6 @@
 
 #### Change
 * GameAnvil 2.1.0 서버 릴리즈에 맞춰 GameHammer도 2.1.0 버전 릴리즈
-
-### Change
 * GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
   * GameAnvil 2.1 이전 버전의 서버는 더 이상 지원하지 않음
 * 일부 ResultCode 변경
@@ -262,7 +260,7 @@
 
 ---
 
-### 1.0.0-EA (2020.08.03)
+### 1.0.0-EA (2020.08.03)
 
 #### New
 * Tester - GameAnvil Connector를 대신하여 서버와의 연동 기능 테스트를 지원

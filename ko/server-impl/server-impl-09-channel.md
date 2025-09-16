@@ -91,9 +91,9 @@
 우선 채널에서 유저 정보를 관리하기 위해서는 다음과 같이 유저 클래스를 구현할 때 useChannelInfo 설정을 통해서 채널 유저 정보 관리를 활성화시켜야 합니다.
 ```java
 @GameAnvilUser(
-    gameServiceName = "MyGame", // 유저가 소속될 노드 (위 SampleGameNode 와 같은 서비스 이름)
+    gameServiceName = "MyGame", // 유저가 소속될 노드(위 SampleGameNode와 같은 서비스 이름)
     gameType = "BasicUser",     // 유저의 고유 타입, "BasicUser"라는 유저 타입의 유저를 엔진에 등록
-    useChannelInfo = true       // 채널간의 정보 동기화 설정
+    useChannelInfo = true       // 채널 간의 정보 동기화 설정
 )
 public class SampleGameUser implements IUser {
     // ... 
@@ -201,12 +201,12 @@ public class SampleGameUser implements IUser {
 
 ### 채널 방 정보
 
-채널에서 방 정보를 관리하기 위해서는 앞서 살펴본 게임 유저와 마찬가지로 방 클래스를 구현할 때 useChannelInfo를 true 로 설정합니다.
+채널에서 방 정보를 관리하기 위해서는 앞서 살펴본 게임 유저와 마찬가지로 방 클래스를 구현할 때 useChannelInfo를 true로 설정합니다.
 ```java
  @GameAnvilRoom(
-    gameServiceName = "MyGame", // 방이 소속될 노드 (위 SampleGameNode 와 같은 서비스 이름)
-    gameType = "BasicRoom",     // 방이 고유 타입, "BasicRoom"라는 타입의 방을 엔진에 등록
-    useChannelInfo = true       // 채널간의 정보 동기화 설정
+    gameServiceName = "MyGame", // 방이 소속될 노드(위 SampleGameNode와 같은 서비스 이름)
+    gameType = "BasicRoom",     // 방이 고유 타입, "BasicRoom"이라는 타입의 방을 엔진에 등록
+    useChannelInfo = true       // 채널 간의 정보 동기화 설정
 )
 public class SampleRoom implements IRoom<SampleUser> {
     // ...

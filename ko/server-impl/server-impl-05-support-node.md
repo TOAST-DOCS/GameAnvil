@@ -81,13 +81,13 @@ public class SampleSupportNode implements ISupportNode {
 }
 ```
 ```java
-// 프로토 버퍼 MyGame.GameNodeTest 입력이 들어왔을때 동작하는 메세지 처리 클래스
+// 프로토 버퍼 MyGame.GameNodeTest 입력이 들어왔을 때 동작하는 메시지 처리 클래스
 @GameAnvilController
 public class _SupportNodeTest {
     // (2) SampleSupportNode에서 처리하고 싶은 프로토콜과 핸들러를 매핑
     @GameNodeMapping(
         value = MyGame.SupportNodeTest.class,   // 처리할 프로토 버퍼
-        loadClass = SampleSupportNode.class     // 메세지를 받는 대상 (SampleSupportNode)
+        loadClass = SampleSupportNode.class     // 메시지를 받는 대상(SampleSupportNode)
     )
     public void runGameNodeTest(IGameNodeDispatchContext ctx) {
         // 여기서 할 작업을 작성
@@ -96,4 +96,4 @@ public class _SupportNodeTest {
 ```
 
 
-모든 노드는 사용자 정의 메시지를 처리하기 위한 메시지 핸들러 등록 과정이 필요합니다. SupportNode는 GameNode와 마찬가지로 사용자가 임의의 콘텐츠를 구현할 수 있는 노드 중 하나입니다.  우선, (1) GameAnvilConfig에 설정되어 있는 서포트 노드 서비스 이름을 생성합니다. 서포트 노드 서비스 이름은 반드시 GameAnvilConfig에 정의되어 있는 이름을 사용해야 합니다. (2) 그리고 처리하고 싶은  메시지를 구현해둔 [핸들러](server-impl-07-message-handling.md#_2)와 연결합니다. 
+모든 노드는 사용자 정의 메시지를 처리하기 위한 메시지 핸들러 등록 과정이 필요합니다. SupportNode는 GameNode와 마찬가지로 사용자가 임의의 콘텐츠를 구현할 수 있는 노드 중 하나입니다.  우선, (1) GameAnvilConfig에 설정되어 있는 서포트 노드 서비스 이름을 생성합니다. 서포트 노드 서비스 이름은 반드시 GameAnvilConfig에 정의되어 있는 이름을 사용해야 합니다. (2) 그리고 처리하고 싶은  메시지를 구현해 둔 [핸들러](server-impl-07-message-handling.md#_2)와 연결합니다. 

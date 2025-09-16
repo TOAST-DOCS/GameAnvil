@@ -4,7 +4,7 @@
 
 ## 프로토콜 정의와 컴파일
 
-GameAnvil은 [Google Protocol Buffers](https://protobuf.dev/)를 사용하여 프로토콜을 정의하고 빌드 합니다. 아래의 예제는 이러한 프로토콜을 정의하는 법과 빌드 하는 법을 설명합니다. 우선 SampleGame.proto 파일을 텍스트 에디터로 생성한 후 원하는 프로토콜을 정의합니다. 프로토콜 버퍼의 자세한 문법은 [공식 Protocol Buffers 가이드](https://protobuf.dev/programming-guides/proto3/)를 참고할 수 있습니다.
+GameAnvil은 [Google Protocol Buffers](https://protobuf.dev/)를 사용하여 프로토콜을 정의하고 빌드합니다. 아래의 예제는 이러한 프로토콜을 정의하는 법과 빌드하는 법을 설명합니다. 우선 SampleGame.proto 파일을 텍스트 에디터로 생성한 후 원하는 프로토콜을 정의합니다. 프로토콜 버퍼의 자세한 문법은 [공식 Protocol Buffers 가이드](https://protobuf.dev/programming-guides/proto3/)를 참고할 수 있습니다.
 
 ```protobuf
 package [패키지명];

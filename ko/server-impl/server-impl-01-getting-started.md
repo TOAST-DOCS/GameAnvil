@@ -2,7 +2,7 @@
 
 ## 시작하기에 앞서
 
-이 문서는 GameAnvil을 이용해 서버를 구현할 때 필요한 기본 요소들과 구현 방법에 대해 설명합니다. 이 문서와 함께 제공되는 튜토리얼 프로젝트 [GameAnvil 튜토리얼](../tutorial/tutorial-01-basic.md)를 참고하시길 권장합니다.
+이 문서는 GameAnvil을 이용해 서버를 구현할 때 필요한 기본 요소들과 구현 방법에 대해 설명합니다. 이 문서와 함께 제공되는 튜토리얼 프로젝트 [GameAnvil 튜토리얼](../tutorial/tutorial-01-basic.md)을 참고하길 권장합니다.
 
 GameAnvil 서버는 기본적으로 노드(Node) 단위로 구성합니다. 그중 사용자의 코드가 구동되는 노드는 아래의 그림과 같이 총 네 가지입니다. 여기에서는 이 네 가지 노드의 구현 방법을 중심으로 서버 개발 방법을 설명합니다.
 
@@ -21,7 +21,7 @@ GameAnvil 서버는 기본적으로 노드(Node) 단위로 구성합니다. 그�
 IGatewayNode를 포함한 모든 인터페이스 노드들은 공통적으로 아래와 같은 콜백 메서드들을 제공합니다. onCreate() 메서드만 구현하는 타입에 따른 컨텍스트 인터페이스를 파라미터로 전달받습니다. 사용자가 이 콜백 메서드들을 구현하면 엔진이 특정 시점에 해당 콜백을 호출합니다. 이것이 바로 GameAnvil의 가장 기본적인 사용법입니다. 이러한 사용법은 문서 전체에 걸쳐 대동소이하므로, 큰 이질감 없이 각 챕터를 이해할 수 있을 것입니다.
 
 ```java
-@GameAnvilGatewayNode // 엔진에 이 클래스를 Gateway 로 등록
+@GameAnvilGatewayNode // 엔진에 이 클래스를 Gateway로 등록
 public class SampleGatewayNode implements IGatewayNode {
     private IGatewayNodeContext gatewayNodeContext;
 

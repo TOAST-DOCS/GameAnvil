@@ -9,13 +9,13 @@
 
 ### 메시지 핸들러 구현 및 메시지와 핸들러 연결
 
-이제 해당 메시지 핸들러를 직접 구현합니다. 이때, GameAnvil은 엔진 내부는 물론이고 모든 샘플 코드에서 메시지 핸들러에 대해 _로 시작하는 네이밍을 사용합니다. 앞으로 등장하는 모든 예제 코드에서도 _로 시작하는 클래스는 모두 메시지 핸들러입니다.  가장 기본적인 형태의 메시지 핸들러는 아래와 같습니다. CONTEXT_CLASS는 해당 메시지의 흐름을 나타내는 클래스를 의미하고 MAPPING_CLASS는 처리할 메세지를 등록하는 클래스를 의미합니다. Context 클래스에서 대상 객체 획득, 메시지의 응답 등을 할 수 있습니다.
+이제 해당 메시지 핸들러를 직접 구현합니다. 이때, GameAnvil은 엔진 내부는 물론이고 모든 샘플 코드에서 메시지 핸들러에 대해 _로 시작하는 네이밍을 사용합니다. 앞으로 등장하는 모든 예제 코드에서도 _로 시작하는 클래스는 모두 메시지 핸들러입니다.  가장 기본적인 형태의 메시지 핸들러는 아래와 같습니다. CONTEXT_CLASS는 해당 메시지의 흐름을 나타내는 클래스를 의미하고 MAPPING_CLASS는 처리할 메시지를 등록하는 클래스를 의미합니다. Context 클래스에서 대상 객체 획득, 메시지의 응답 등을 할 수 있습니다.
 
 ```java
-@GameAnvilController // 이 클래스를 메세지 처리자로 사용합니다
+@GameAnvilController // 이 클래스를 메시지 처리자로 사용합니다.
 public class _MyEchoHandler {
 
-    @MAPPING_CLASS // 이 메서드가 어떤 메세지를 처리할지 선언합니다
+    @MAPPING_CLASS // 이 메서드가 어떤 메시지를 처리할지 선언합니다.
     public void execute(CONTEXT_CLASS ctx, EchoSend request) {
         System.out.println("Receive EchoSend Message!");
     }
@@ -25,12 +25,12 @@ public class _MyEchoHandler {
 예를 들어, 패킷 수신자가 GameUser라면 그 메시지 핸들러는 아래와 같습니다.
 
 ```java
-@GameAnvilController // 이 클래스를 메세지 처리자로 사용합니다
+@GameAnvilController // 이 클래스를 메시지 처리자로 사용합니다.
 public class _MyEchoHandler {
 
     @GameUserMapping(
         value = EchoSend.class,             // 처리할 프로토 버퍼
-        loadClass = SampleGameUser.class    // 메세지를 받는 대상 
+        loadClass = SampleGameUser.class    // 메시지를 받는 대상 
     )
     public void execute(IUserDispatchContext ctx, EchoSend request) {
         System.out.println("Receive EchoSend Message!");

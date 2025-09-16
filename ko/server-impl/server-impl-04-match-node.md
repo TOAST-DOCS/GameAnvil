@@ -117,7 +117,7 @@ public class SampleUserMatchInfo extends AbstractUserMatchInfo implements Compar
 유저 매치 메이커는 유저 매치 요청을 실제로 처리하며, 엔진에서 제공하는 AbstractUserMatchMaker 추상 클래스를 상속 구현합니다. 특히 onMatch() 메서드는 실제 매칭을 수행하기 위해 호출되는 콜백이므로 주의 깊게 살펴보십시오. onRefill() 메서드는 이미 완료된 매치 메이킹에 대해 충원 요청을 처리하는 콜백입니다. 예를 들어 4명이 매치 메이킹 된 상태에서 1명이 게임을 종료했을 때 1명을 더 충원하기 위해 사용할 수 있습니다. 아래의 예제 코드는 이러한 유저 매치 메이커를 구현하는 방법을 보여줍니다.
 
 ```java
-@GameAnvilUserMatchMaker(loadClass = SampleRoom.class) // SampleRoom 에 등록된 MatchMaker 클래스
+@GameAnvilUserMatchMaker(loadClass = SampleRoom.class) // SampleRoom에 등록된 MatchMaker 클래스
 public class SampleUserMatchMaker extends AbstractUserMatchMaker<SampleUserMatchInfo> {
 
     public SampleUserMatchMaker() {
@@ -344,10 +344,10 @@ roomContext.updateRoomMatch(gameRoomMatchInfo); // 이 룸 매치 정보를 갱�
 이제 룸 매치 메이커를 만들 차례입니다. 룸 매치 메이커는 엔진에서 제공하는 AbstractRoomMatchMaker 추상 클래스를 상속 구현합니다. 룸 매치 메이킹은 가장 적합한 방을 찾는 과정이므로 실제 매칭 전/후를 위한 특별한 콜백 메서드들이 제공됩니다. 사용자는 이 콜백 메서드들을 재정의하여 원하는 대로 매칭을 수행할 수 있습니다. 아래의 예제 코드는 이러한 룸 매치 메이커를 어떤 식으로 구현할 수 있는지 보여줍니다.
 
 ```java
-@GameAnvilUserMatchMaker(loadClass = SampleRoom.class) // SampleRoom 에 등록된 MatchMaker 클래스
+@GameAnvilUserMatchMaker(loadClass = SampleRoom.class) // SampleRoom에 등록된 MatchMaker 클래스
 public class SampleRoomMatchMaker extends AbstractRoomMatchMaker<SampleRoomMatchForm, SampleRoomMatchInfo> {
     /**
-     * 룸 매치메이킹 요청시 호출
+     * 룸 매치메이킹 요청 시 호출
      * <p>
      * 등록된 룸들 중에 매칭 조건과 맞는 룸을 찾아 매치 성공 여부를 결정한다
      *
