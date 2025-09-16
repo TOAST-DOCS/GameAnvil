@@ -118,7 +118,7 @@ public async void ManagerLogin()
 | LOGIN_FAIL_LOGINED_OTHER_DEVICE    | 로그인 실패. 같은 AccountId로 다른 기기에서 로그인 되어있음.       | 서버 구현시 기존 유저와 새로 로그인한 유저 중 선택할 수 있다.                        |
 | LOGIN_FAIL_SYSTEM_ERROR            | 로그인 실패. 서버의 알수 없는 오류로 실패.                     |                                                             |
 | LOGIN_FAIL_PARSE_ERROR             | 로그인 실패. 추가 정보를 위한 메시지 파싱 실패.                  |                                                             |
-| LOGIN_FAIL_TIMEOUT                 | 로그인 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.            |                                                             |
+| LOGIN_FAIL_TIMEOUT                 | 로그인 실패. 요청에 대한 응답이 정해진 시간 내에 오지 않음.            |                                                             |
 | UNKNOWN_ERROR                      | 서버의 알수 없는 오류로 실패.                             |                                                             |
 
 보다 자세한 실패 이유를 확인하고 싶을 때는 LoginResult의 authenticationResult이나 loginResult를 이용해 확인할 수 있습니다.
