@@ -19,7 +19,7 @@
     | FORCE\_CLOSE\_BASE\_CONNECTION<br>서버에서 BaseConnection의 close() 호출 | FORCE\_CLOSE\_CONNECTION<br>서버에서 IConnection의 close() 호출 |
     | FORCE\_CLOSE\_BASE\_USER<br>서버에서 BaseUser의 closeConnection() 호출 | FORCE\_CLOSE\_USER<br>서버에서 IUser의 closeConnection() 호출 |
 
-### Fix
+#### Fix
 * 서버와 해머의 프로토콜 버퍼를 각각 다른 환경에서 생성할 때 생성 환경에 따라 서로 호환되지 않을 수 있는 문제 수정
 
 ---
