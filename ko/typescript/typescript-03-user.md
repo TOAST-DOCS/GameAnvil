@@ -247,7 +247,7 @@ if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
 | `JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST`    | 702   | 실패: 방이 존재하지 않음           |
 | `JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM`    | 703   | 실패: 이미 방에 들어가 있음        |
 | `JOIN_ROOM_FAIL_ALREADY_FULL`           | 704   | 실패: 이미 룸의 인원수가 차있을 경우|
-| `JOIN_ROOM_FAIL_ROOM_MATCH`             | 705   | 실패: 룸매치에서 문제가 발생할 경우 |
+| `JOIN_ROOM_FAIL_ROOM_MATCH`             | 705   | 실패: 룸 매치메이킹에서 문제가 발생할 경우 |
 
 방 입장에 성공했을 경우, 아래와 같이 세부 정보를 확인할 수 있습니다.
 ```typescript
@@ -430,7 +430,7 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 | `MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST`        | 902   | 실패: 방이 존재하지 않음           |
 | `MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM`        | 903   | 실패: 이미 방에 들어가 있음        |
 | `MATCH_ROOM_FAIL_LEAVE_ROOM`                 | 904   | 실패: 기존 방에서 나가기가 실패한 경우 |
-| `MATCH_ROOM_FAIL_IN_PROGRESS`                | 905   | 실패: 이미 매치 메이킹이 진행 중인 경우 |
+| `MATCH_ROOM_FAIL_IN_PROGRESS`                | 905   | 실패: 이미 매치메이킹이 진행 중인 경우 |
 | `MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST`| 906   | 실패: 조건에 맞는 방을 찾던 중 방이 사라짐 |
 | `MATCH_ROOM_FAIL_CREATE_ROOM_ID`             | 907   | 실패: 방 아이디 발급 실패          |
 | `MATCH_ROOM_FAIL_CREATE_ROOM`                | 908   | 실패: 방 생성 실패                 |
@@ -520,7 +520,7 @@ const matchStartResult = await matchPartyStart(roomType, mathchingGroup, payload
 console.log(`Party match start result: ${ResultCodeMatchPartyStart[matchStartResult.errorCode]}`);
 ```
 
-정상적으로 파티 매치 메이킹이 시작되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+정상적으로 파티 매치메이킹이 시작되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
 if (matchStartResult.resultCode === ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS) {

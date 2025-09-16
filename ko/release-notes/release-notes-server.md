@@ -348,8 +348,8 @@ scheduleTimerAtFixedRate - N회, 고정 딜레이
     * 기존의 AsyncHttpClient 오픈소스가 더 이상 업데이트되지 않으므로 선택적으로 사용할 수 있도록 새로운 라이브러리 기반의 HttpClient2를 제공합니다.
 * 페이로드에서 압축 패킷을 지원합니다.
     * 이제 페이로드에도 압축 패킷을 사용할 수 있도록 개선했습니다.
-* 매치 메이킹 실패 시에 클라이언트로 알림을 전달합니다.
-    * 매치 메이킹이 실패했을 때에도 클라이언트로 적절한 결과를 전달하도록 개선했습니다.
+* 매치메이킹 실패 시에 클라이언트로 알림을 전달합니다.
+    * 매치메이킹이 실패했을 때에도 클라이언트로 적절한 결과를 전달하도록 개선했습니다.
 
 #### Change
 * 설정
@@ -402,7 +402,7 @@ GameAnvil 1.3은 완전히 새로워진 Console 1.3과 완벽하게 연동됩니
   - Safe Pause 진행 중 출발지 노드에 있는 방으로 매치메이킹이 되는 문제를 수정하였습니다.
   - 스트레스 테스트와 Safe Pause를 동시에 수행할 경우 MatchRoomException이 발생하는 문제 수정
   - Safe Pause 과정에서 방 전송을 할 때 TimerObject로 인해 NPE가 발생하는 문제 해결
-  - Safe Pause 진행 시 룸매치메이킹이 실패하는 이슈 해결
+  - Safe Pause 진행 시 룸 매치메이킹이 실패하는 이슈 해결
   - Safe Pause를 통해 전송이 된 방의 도착지 노드에서 해당 방과 동일한 아이디의 방이 생성되는 이슈 수정
     - 룸 아이디 생성은 로케이션 노드에서 담당하도록 수정
   - 그 외, 유저 전송 및 방 전송과 관련된 버그 수정
@@ -588,7 +588,7 @@ public class GameUser extends BaseUser {
 	* libzmq 와 jzmq 조합에서 Jeromq로 교체
 	
 * 룸 매치메이킹 리팩토링 및 사용성 개선
-  * 룸매치 메이킹 흐름 개선
+  * 룸 매치메이킹 흐름 개선
   * 스트레스 테스트 진행 시 방을 찾지 못하는 문제 해결하여 스트레스 테스트 진행이 가능
   * 방 인원수 정보 관리 기능 추가하여 사용자가 방 인원수 관리 기능을 구현하지 않아도 됨
   
@@ -1022,11 +1022,11 @@ public class GameUser extends BaseUser {
 - NodeInfoManager의 Comparator 오류 수정
 - 로그아웃한 유저의 세션 객체가 정리되지 않는 문제 수정
 - 매칭 그룹이 서로 다른 채널의 유저들에게 제대로 적용되지 않던 문제 수정
-- 파티 매치 메이킹 시에 Timeout에 대한 콜백을 제대로 받지 못하던 문제 수정
+- 파티 매치메이킹 시에 Timeout에 대한 콜백을 제대로 받지 못하던 문제 수정
 
 #### Change
 
-- 룸 매치 메이킹을 이미 진행 중인 상태에서 중복 요청이 왔을 경우에 대한 에러 코드 추가
+- 룸 매치메이킹을 이미 진행 중인 상태에서 중복 요청이 왔을 경우에 대한 에러 코드 추가
 - MATCH_ROOM_FAIL_IN_PROGRESS
 
 ---
@@ -1056,7 +1056,7 @@ public class GameUser extends BaseUser {
 #### New
 
 - 비정상적으로 남아있는 Room을 주기적으로 체크하고 정리하는 로직 추가
-- 유저 매치 메이킹은 요청을 한 후에 재로그인을 하더라도 이전의 매치 요청이 취소되지 않고 진행 중일 수 있는데, 이러한 이전의 유저 매치 메이킹 처리 상태를 알려주기 위해 재로그인 응답에 새로운 플래그를 추가
+- 유저 매치메이킹은 요청을 한 후에 재로그인을 하더라도 이전의 매치 요청이 취소되지 않고 진행 중일 수 있는데, 이러한 이전의 유저 매치메이킹 처리 상태를 알려주기 위해 재로그인 응답에 새로운 플래그를 추가
 - Packet Expire 가능 추가(기본값 30초)
 
 #### Fix
@@ -1067,7 +1067,7 @@ public class GameUser extends BaseUser {
 - 콘텐츠 콜백 처리부 중 try-catch가 누락된 부분 수정
 - 클라이언트 Reconnect가 약 3초 이상 걸리던 문제를 바로 처리되도록 수정
 - 고스트 유저 체크 시 발생하는 스레드 동시성 문제 수정
-- 룸 매치 메이킹 중복 처리 버그 수정
+- 룸 매치메이킹 중복 처리 버그 수정
 - 룸에 연결이 끊긴 유저가 남는 문제 수정
 
 #### Change
@@ -1129,7 +1129,7 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-- 룸 매치 메이킹에서 사용하는 비교 연산자(Comparator)의 오류 수정
+- 룸 매치메이킹에서 사용하는 비교 연산자(Comparator)의 오류 수정
 
 #### Change
 
@@ -1171,7 +1171,7 @@ public class GameUser extends BaseUser {
 - 채널 ID를 사용하지 않는 경우, 일부 채널 관련 publish가 누락되는 문제 수정
 - CreateRoom, JoinRoom에 대해 콘텐츠가 실패를 반환할 경우에 잘못된 에러코드가 헤더에 실려가던 문제 수정
 - 패킷 헤더 생성 시에 발생하던 메모리 릭 수정
-- 룸 매치 메이킹에서 발생하던 메모리 릭 수정
+- 룸 매치메이킹에서 발생하던 메모리 릭 수정
 
 #### Change
 
@@ -1186,9 +1186,9 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 매치 메이킹을 전담하는 MatchNode 추가
-- 유저 매치 메이킹에 refill 기능 추가
-- 유저 매치 메이킹의 새로운 타입인 파티 매치 메이킹을 추가
+- 매치메이킹을 전담하는 MatchNode 추가
+- 유저 매치메이킹에 refill 기능 추가
+- 유저 매치메이킹의 새로운 타입인 파티 매치메이킹을 추가
 - Admin의 Machine 정보에서 노드 종류별로 부가정보를 추가
 - 유저가 동일한 DeviceId와 UserId로 재로그인 할 때 호출되는 onLoginByOtherConnection() 콜백 추가
 
@@ -1200,13 +1200,13 @@ public class GameUser extends BaseUser {
 - Timer 추가/삭제 오류 수정
 - AsyncAwait.run()에 누락된 timeout 적용
 - 노드 Shutdown 시에 발생하던 오류 수정
-- 룸 매치 메이킹을 사용하지 않음에도 불구하고 매칭 정보를 삭제하면서 NPE(Null Pointer Exception)가 발생하는 문제 수정
+- 룸 매치메이킹을 사용하지 않음에도 불구하고 매칭 정보를 삭제하면서 NPE(Null Pointer Exception)가 발생하는 문제 수정
 
 #### Change
 
 - 일부 인터페이스의 위치 변경
 - 서로 다른 DeviceId로 로그인 시에 중복 로그인 처리 대신 재로그인 처리가 되도록 변경
-- 룸 매치 메이킹의 onMatchRoom() 콜백에서 추가한 payload가 이후의 흐름에 포함되도록 수정
+- 룸 매치메이킹의 onMatchRoom() 콜백에서 추가한 payload가 이후의 흐름에 포함되도록 수정
 
 
 ---
@@ -1215,7 +1215,7 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 유저 매치 메이킹 기능 추가
+- 유저 매치메이킹 기능 추가
 - 채널별 유저와 방 목록 기능 추가
 - Embedded Redis 추가
 - Reconnect 기능 추가

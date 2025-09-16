@@ -11,7 +11,7 @@ GameAnvil 서버 구성의 가장 기본이 되는 단위는 노드입니다. �
 | Gateway    | 필수         | 클라이언트 접속과 인증을 처리               | 가능        | public              |
 | Game       | 필수         | 실제 게임 서버로서 콘텐츠를 처리            | 가능        | private             |
 | Support    | 선택         | 필요에 따라 독립된 서비스로 구현하도록 지원 | 가능        | private 또는 public |
-| Match      | 선택         | 매치 메이킹을 수행                          | 가능        | private             |
+| Match      | 선택         | 매치메이킹을 수행                          | 가능        | private             |
 | Location   | 필수(자동 구성) | 유저와 룸 등의 위치 정보를 저장 및 관리     | 불가능      | private             |
 | Management | 필수(자동 구성) | 서버 정보 취합 및 Console/Agent와 통신      | 불가능      | private             |
 | Ipc        | 필수(자동 구성) | GameAnvil 서버의 Inter-process 통신 처리    | 불가능      | private             |

@@ -1687,13 +1687,13 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 이제 빌
 
 ### 서버 측 구현
 
-유저 매치 메이킹은 유저들의 매치 메이킹 요청을 한데 모아 적절한 기준에 맞춰 비슷한 수준의 유저들끼리 서로 같은 방에서 게임을 시작할 수 있게 합니다. 승점이나 점수 등 다양한 요소를 사용자가 직접 구현해 유저들을 적절하게 구분하고 매칭할 수 있습니다. 여기에서는 유저 2명을 하나의 게임으로 매칭해 주는 로직을 구현합니다.
+유저 매치메이킹은 유저들의 매치메이킹 요청을 한데 모아 적절한 기준에 맞춰 비슷한 수준의 유저들끼리 서로 같은 방에서 게임을 시작할 수 있게 합니다. 승점이나 점수 등 다양한 요소를 사용자가 직접 구현해 유저들을 적절하게 구분하고 매칭할 수 있습니다. 여기에서는 유저 2명을 하나의 게임으로 매칭해 주는 로직을 구현합니다.
 
 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **match**라는 이름의 새로운 패키지를 생성합니다. 그리고 **match** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil UserMatchInfo**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUserMatchInfo로**를 입력한 뒤 **OK**를 클릭합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/27_create_user_match_info.png)
 
-이 클래스에는 매칭에 사용될 유저의 정보를 담게 됩니다. 매치 메이킹에 사용될 요소가 있다면 여기에 추가하면 됩니다. 이번 예제에서는 별다른 요소를 추가하지 않고, 기본적으로 구현된 메서드만을 사용하겠습니다. 한 가지 주의할 점은 getId() 메서드가 반드시 요청한 유저의 아이디를 반환하게 구현되어 있는지 확인합니다. 그리고 파티 매치메이킹 기능은 사용하지 않으므로 0을 반환하도록 설정합니다.
+이 클래스에는 매칭에 사용될 유저의 정보를 담게 됩니다. 매치메이킹에 사용될 요소가 있다면 여기에 추가하면 됩니다. 이번 예제에서는 별다른 요소를 추가하지 않고, 기본적으로 구현된 메서드만을 사용하겠습니다. 한 가지 주의할 점은 getId() 메서드가 반드시 요청한 유저의 아이디를 반환하게 구현되어 있는지 확인합니다. 그리고 파티 매치메이킹 기능은 사용하지 않으므로 0을 반환하도록 설정합니다.
 
 ```java
 package org.example.match;
@@ -1726,7 +1726,7 @@ public class BasicUserMatchInfo extends AbstractUserMatchInfo implements Compara
 
 ```
 
-이러한 UserMatchInfo는 클라이언트가 유저 매치 메이킹을 요청할 때 서버의 게임 유저에서 onMatchUser 콜백을 구현하는 과정에서 생성한 후 사용합니다. GameAnvil은 기본적인 유저 매치 메이커를 제공합니다. 아래의 onMatchUser는 이러한 엔진의 기본 유저 매치 메이킹을 matchUser API를 통해 사용하고 있습니다.
+이러한 UserMatchInfo는 클라이언트가 유저 매치메이킹을 요청할 때 서버의 게임 유저에서 onMatchUser 콜백을 구현하는 과정에서 생성한 후 사용합니다. GameAnvil은 기본적인 유저 매치 메이커를 제공합니다. 아래의 onMatchUser는 이러한 엔진의 기본 유저 매치메이킹을 matchUser API를 통해 사용하고 있습니다.
 
 ```java
 public class BasicUser implements IUser {
@@ -1751,13 +1751,13 @@ public class BasicUser implements IUser {
 }
 ```
 
-유저 매치 메이킹을 사용하기 위한 기본적인 준비가 되었으면 이제 실제 매치 메이킹을 수행하는 매치 메이커를 작성합니다.
+유저 매치메이킹을 사용하기 위한 기본적인 준비가 되었으면 이제 실제 매치메이킹을 수행하는 매치 메이커를 작성합니다.
 
 프로젝트 패널의 **match** 패키지를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil UserMatchMaker**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUserMatchMaker**, **Room**에 **BasicRoom**, **User Match Info**에 **BasicUserMatchInfo**를 입력한 뒤 **OK**를 클릭합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/28_create_user_match_maker.png)
 
-생성자에서는 부모 클래스의 생성자를 호출하면서 인자로 매치 인원 수와 매치 신청 유효 시간을 전달합니다. 유효 시간이 지나면 해당 매치 요청은 자동으로 취소됩니다. 그리고 실제 매치 메이킹을 수행하는 match 메서드는 내부적으로 엔진에 의해 1초에 한 번씩 호출됩니다.
+생성자에서는 부모 클래스의 생성자를 호출하면서 인자로 매치 인원 수와 매치 신청 유효 시간을 전달합니다. 유효 시간이 지나면 해당 매치 요청은 자동으로 취소됩니다. 그리고 실제 매치메이킹을 수행하는 match 메서드는 내부적으로 엔진에 의해 1초에 한 번씩 호출됩니다.
 
 getMatchRequests는 인자로 매칭을 위한 최소 인원수를 받아 현재 매칭 풀 전체를 조회하여 최적의 매칭을 가능한 만큼 만들어 냅니다. 즉, 매칭 요청이 많이 쌓여 있다면 getMatchRequests에 의해 한 번에 100개 또는 1,000개의 매칭도 만들어질 수 있습니다. 이때, 매칭이 성공하면 매칭된 유저들의 UserMatchInfo 목록을 반환합니다. 이 목록을 엔진에서 제공하는 matchSingles API에 전달하면 해당 목록 안의 유저들에 대한 방 생성 및 이동이 알아서 진행됩니다.
 
@@ -1803,7 +1803,7 @@ public class BasicUserMatchMaker extends AbstractUserMatchMaker<BasicUserMatchIn
 
 ### 클라이언트 측 구현
 
-매치 메이킹 로직은 모두 서버에 구현되어 있기 때문에 클라이언트에서는 매치 메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 MatchUser 메서드를 추가합니다. 그리고 매치 메이킹이 끝난 시점에 씬을 이동하도록 코드를 추가합니다.
+매치메이킹 로직은 모두 서버에 구현되어 있기 때문에 클라이언트에서는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 MatchUser 메서드를 추가합니다. 그리고 매치메이킹이 끝난 시점에 씬을 이동하도록 코드를 추가합니다.
 
 ```c#
 public class ConnectHandler : MonoBehaviour
@@ -1841,27 +1841,27 @@ public class ConnectHandler : MonoBehaviour
 
 씬에서 MatchUser 버튼의 OnClick 리스너에 ConnectHandler 컴포넌트를 드래그해서 등록하고, 드롭다운에서 MatchUser 메서드를 선택합니다.
 
-### 유저 매치 메이킹 테스트
+### 유저 매치메이킹 테스트
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태로 Unity 에디터에서 플레이 모드에 진입합니다. 양측에서 모두 User Match Making 버튼을 눌러 매칭이 성사되고 동일한 방 번호로 묶이게 되는 것을 확인합니다.
 
-## 룸 매치 메이킹 구현
+## 룸 매치메이킹 구현
 
-룸 매치 메이킹은 매치 메이커가 관리하는 방들 중에서 유저의 요구 사항에 가장 적합한 방으로 자동 입장시킬 수 있는 기능입니다. 즉, 유저 매치 메이킹이 유저와 유저를 매칭시켜주는 기능이라면, 룸 매치 메이킹은 유저와 방을 매칭시켜주는 기능입니다. 이때, 구현 방식에 따라서 다양한 조건으로 유저를 방에 매칭할 수 있습니다. 여기에서는 아직 정원이 차지 않은 방 중에 인원이 가장 적은 방으로 입장하는 매치 메이킹을 구현합니다.
+룸 매치메이킹은 매치 메이커가 관리하는 방들 중에서 유저의 요구 사항에 가장 적합한 방으로 자동 입장시킬 수 있는 기능입니다. 즉, 유저 매치메이킹이 유저와 유저를 매칭시켜주는 기능이라면, 룸 매치메이킹은 유저와 방을 매칭시켜주는 기능입니다. 이때, 구현 방식에 따라서 다양한 조건으로 유저를 방에 매칭할 수 있습니다. 여기에서는 아직 정원이 차지 않은 방 중에 인원이 가장 적은 방으로 입장하는 매치메이킹을 구현합니다.
 
-우선 매치 메이킹을 실제로 수행하는 클래스가 필요합니다. 그리고 룸 매치 메이커에서 방을 관리하기 위한 정보를 담는 인스턴스가 각 방마다 하나씩 있어야 합니다. 마지막으로 유저가 매치 메이킹을 신청할 때마다 유저의 요구 사항을 담은 신청서 인스턴스가 필요합니다. 이렇게 세 개의 새로운 클래스를 작성해 보겠습니다.
+우선 매치메이킹을 실제로 수행하는 클래스가 필요합니다. 그리고 룸 매치 메이커에서 방을 관리하기 위한 정보를 담는 인스턴스가 각 방마다 하나씩 있어야 합니다. 마지막으로 유저가 매치메이킹을 신청할 때마다 유저의 요구 사항을 담은 신청서 인스턴스가 필요합니다. 이렇게 세 개의 새로운 클래스를 작성해 보겠습니다.
 
-추가로 기존 로직을 일부 수정합니다. 룸 매치 메이킹은 모든 방이 아닌 룸 매치 메이킹 대상으로 신청한 방들만을 대상으로 수행됩니다. 따라서 방 생성 시점에 룸 매치 메이킹을 대상으로 신청하는 코드를 추가합니다.
+추가로 기존 로직을 일부 수정합니다. 룸 매치메이킹은 모든 방이 아닌 룸 매치메이킹 대상으로 신청한 방들만을 대상으로 수행됩니다. 따라서 방 생성 시점에 룸 매치메이킹을 대상으로 신청하는 코드를 추가합니다.
 
 ### 서버 측 구현
 
-우선 매치 메이킹 요청을 나타낼 클래스를 구현합니다. BasicRoomMatchForm 클래스를 생성합니다.
+우선 매치메이킹 요청을 나타낼 클래스를 구현합니다. BasicRoomMatchForm 클래스를 생성합니다.
 
 프로젝트 패널의 **match** 패키지를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil RoomMatchForm**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicRoomMatchForm**을 입력한 뒤 **OK**를 클릭합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/29_create_room_match_form.png)
 
-유저가 매치 메이킹 요청을 할 때마다 BasicRoomMatchForm 객체가 생성되어 사용됩니다.
+유저가 매치메이킹 요청을 할 때마다 BasicRoomMatchForm 객체가 생성되어 사용됩니다.
 
 ```java
 package org.example.match;
@@ -1895,7 +1895,7 @@ public class BasicRoomMatchInfo extends AbstractRoomMatchInfo {
 }
 ```
 
-다음으로 실제로 룸 매치 메이킹을 처리할 룸 매치 메이커를 생성합니다.
+다음으로 실제로 룸 매치메이킹을 처리할 룸 매치 메이커를 생성합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/31_create_room_match_maker.png)
 
@@ -1925,7 +1925,7 @@ public class BasicRoomMatchMaker extends AbstractRoomMatchMaker<BasicRoomMatchFo
 
 compare 메서드는 매칭 풀에 들어 있는 방을 정렬하는 조건을 구현합니다. 예제는 인원수에 따라 방을 정렬하도록 구현했습니다.
 
-이제 룸 매치 메이킹을 위한 준비가 거의 끝났습니다. 클라이언트가 룸 매치 요청을 보내면 서버의 BasicUser는 onMatchRoom 콜백이 호출됩니다. 이 콜백에서 앞서 살펴본 BasicRoomMatchForm 객체를 생성한 뒤 matchRoom API에 인자로 전달하여 호출합니다. 즉, 클라이언트가 보낸 룸 매칭 요청을 여기에서 매치 메이커로 전달했습니다.
+이제 룸 매치메이킹을 위한 준비가 거의 끝났습니다. 클라이언트가 룸 매치 요청을 보내면 서버의 BasicUser는 onMatchRoom 콜백이 호출됩니다. 이 콜백에서 앞서 살펴본 BasicRoomMatchForm 객체를 생성한 뒤 matchRoom API에 인자로 전달하여 호출합니다. 즉, 클라이언트가 보낸 룸 매칭 요청을 여기에서 매치 메이커로 전달했습니다.
 
 ```java
 public class BasicUser implements IUser {
@@ -1947,7 +1947,7 @@ public class BasicUser implements IUser {
 }
 ```
 
-방이 생성된 시점에 룸 매치 메이킹 대상으로 만들기 위해서 BasicRoom의 onCreateRoom 콜백에서 아래와 같이 registerRoomMatch API를 호출합니다.
+방이 생성된 시점에 룸 매치메이킹 대상으로 만들기 위해서 BasicRoom의 onCreateRoom 콜백에서 아래와 같이 registerRoomMatch API를 호출합니다.
 
 ```java
 public class BasicRoom extends BaseRoom<BasicUser> {
@@ -1969,9 +1969,9 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 }
 ```
 
-또한 방 정보가 변동될 때마다 룸 매치 메이킹 정보도 갱신되어야 합니다. 참고로 방의 인원수 변동은 룸 매치 메이커가 자동으로 동기화합니다. 그러므로 인원수를 제외한 추가 정보에 대한 갱신만 수행하면 됩니다.
+또한 방 정보가 변동될 때마다 룸 매치메이킹 정보도 갱신되어야 합니다. 참고로 방의 인원수 변동은 룸 매치 메이커가 자동으로 동기화합니다. 그러므로 인원수를 제외한 추가 정보에 대한 갱신만 수행하면 됩니다.
 
-다음은 onJoinRoom 콜백을 수정해 방에 유저가 참여할 때 매치 메이킹 정보를 갱신하는 코드입니다.
+다음은 onJoinRoom 콜백을 수정해 방에 유저가 참여할 때 매치메이킹 정보를 갱신하는 코드입니다.
 
 ```java
 public class BasicRoom extends BaseRoom<BasicUser> {
@@ -1997,7 +1997,7 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 ### 클라이언트 구현
 
-유저 매치 메이킹과 마찬가지로 클라이언트는 매치 메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 RoomMatchMaking 메서드를 추가합니다.
+유저 매치메이킹과 마찬가지로 클라이언트는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 RoomMatchMaking 메서드를 추가합니다.
 
 ```c#
 public class ConnectHandler : MonoBehaviour {
@@ -2032,7 +2032,7 @@ public class ConnectHandler : MonoBehaviour {
 
 <br>
 
-### 룸 매치 메이킹 테스트
+### 룸 매치메이킹 테스트
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이 상태에서 방을 생성합니다. 그 상태로 Unity 에디터에서 플레이 모드로 진입합니다. 플레이 모드에서 Room Match Making 버튼을 눌러 빌드 모드에서 생성한 방으로 이동하는지 확인합니다.
 
