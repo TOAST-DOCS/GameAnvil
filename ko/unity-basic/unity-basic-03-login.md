@@ -121,7 +121,7 @@ public async void ManagerLogin()
 | LOGIN_FAIL_TIMEOUT                 | 로그인 실패. 요청에 대한 응답이 정해진 시간 내에 오지 않음.            |                                                             |
 | UNKNOWN_ERROR                      | 서버의 알 수 없는 오류로 실패.                             |                                                             |
 
-보다 자세한 실패 이유를 확인하고 싶을 때는 LoginResult의 authenticationResult이나 loginResult를 이용해 확인할 수 있습니다.
+보다 자세한 실패 이유는 LoginResult의 authenticationResult나 loginResult를 이용해 확인할 수 있습니다.
 
 ## Disconnect
 
