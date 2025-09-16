@@ -335,7 +335,7 @@ ResultCodeMatchRoom 상세 내용은 다음과 같습니다.
 | MATCH_ROOM_FAIL_MATCH_FORM_NULL                | 915 | 실패. 매칭 신청서가 NULL일 경우.                                                                 |
 | MATCH_ROOM_FAIL_MATCH_INFO_NULL                | 916 | 실패. 매칭 정보가 NULL일 경우.                                                                  |
 
-MatchResult 의 상세 내용은 다음과 같습니다.
+MatchResult의 상세 내용은 다음과 같습니다.
 
 | 타입       | 이름       | 설명                 |
 |----------|----------|--------------------|
