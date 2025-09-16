@@ -15,7 +15,7 @@
     | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
     | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
     | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 null일 경우 | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 null일 경우 |
-    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 널 일 경우 | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 널 일 경우 |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 null일 경우 | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 null일 경우 |
     | FORCE\_CLOSE\_BASE\_CONNECTION<br>서버에서 BaseConnection의 close() 호출 | FORCE\_CLOSE\_CONNECTION<br>서버에서 IConnection의 close() 호출 |
     | FORCE\_CLOSE\_BASE\_USER<br>서버에서 BaseUser의 closeConnection() 호출 | FORCE\_CLOSE\_USER<br>서버에서 IUser의 closeConnection() 호출 |
 
