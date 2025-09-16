@@ -2,6 +2,7 @@
 
 ### 2.1.0 (2025.06.30)
 
+#### Change
 * GameAnvil 2.1.0 서버 릴리즈에 맞춰 GameHammer도 2.1.0 버전 릴리즈
 
 ### Change
