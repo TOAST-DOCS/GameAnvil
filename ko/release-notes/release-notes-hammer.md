@@ -7,7 +7,7 @@
 
 ### Change
 * GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
-  * GameAnvil 2.1 이전 버전의 서버는 더이상 지원하지 않음
+  * GameAnvil 2.1 이전 버전의 서버는 더 이상 지원하지 않음
 * 일부 ResultCode 변경
 
     | 변경 전 | 변경 후 |
