@@ -165,7 +165,7 @@ public class SampleConnection implements IConnection {
 
 커넥션을 성공적으로 맺은 클라이언트는 해당 커넥션 사이에서 서비스마다 하나씩 GameNode에 대한 논리적인 세션을 맺을 수 있습니다. GameAnvil은 내부적으로 커넥션의 AccountId와 세션의 SubId를 조합하여 전체 서버에서 고유한 세션을 구분할 수 있습니다.
 
-이때, SubId는 사용자가 임의로 정한 규칙에 맞춰서 해당 커넥션 내의 아무 고유한 값으로 할당하면 됩니다. 즉, 서로 다른 커넥션은 동일한 SubId를 가질 수도 있습니다. 하지만 서로 다른 AccountId를 가지므로 구분이 가능합니다
+이때, SubId는 사용자가 임의로 정한 규칙에 맞춰서 해당 커넥션 내의 아무 고유한 값으로 할당하면 됩니다. 즉, 서로 다른 커넥션은 동일한 SubId를 가질 수도 있습니다. 하지만 서로 다른 AccountId를 가지므로 구분이 가능합니다.
 
 ```java
 @GameAnvilGatewaySession  // 엔진에 이 클래스를 Session 으로 등록 
