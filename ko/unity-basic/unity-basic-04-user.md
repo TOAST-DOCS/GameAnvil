@@ -332,7 +332,7 @@ ResultCodeMatchRoom 상세 내용은 다음과 같습니다.
 | MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND         | 912 | 실패. 매칭을 진행하였으나, 방을 찾지 못한 경우.                                                           |
 | MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY | 913 | 실패. 잘못된 매칭 유저 카테고리를 사용하였을 경우.                                                          |
 | MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY   | 914 | 실패. 매칭룸에서 유저 카테고리 사이즈가 0일 경우.                                                          |
-| MATCH_ROOM_FAIL_MATCH_FORM_NULL                | 915 | 실패. 매칭 신청서가 NULL 일 경우.                                                                 |
+| MATCH_ROOM_FAIL_MATCH_FORM_NULL                | 915 | 실패. 매칭 신청서가 NULL일 경우.                                                                 |
 | MATCH_ROOM_FAIL_MATCH_INFO_NULL                | 916 | 실패. 매칭 정보가 NULL 일 경우.                                                                  |
 
 MatchResult 의 상세 내용은 다음과 같습니다.
