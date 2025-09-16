@@ -105,7 +105,7 @@ public async void ManagerLogin()
 | AUTH_FAIL_TIMEOUT                  | 인증 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.             |                                                             |   
 | AUTH_FAIL_PARSE_ERROR              | 인증 실패. 추가 정보를 위한 메시지 파싱 실패.                   | 서버와 클라이언트의 프로토콜 정의가 다를 경우 발생할 수 있다.                          |
 | LOGIN_FAIL_CONTENT                 | 로그인 실패. 사용자 코드에서 로그인 거부.                      |                                                             |
-| LOGIN_FAIL_NOT_EXIST_NODE          | 로그인 실패. 로그인 대상 노드가 존재하지 않음.                   | 서버 구성시 대상 노드를 포함한 서버를 시작하지 경우 발생할 수 있다.                     |
+| LOGIN_FAIL_NOT_EXIST_NODE          | 로그인 실패. 로그인 대상 노드가 존재하지 않음.                   | 서버 구성 시 대상 노드를 포함한 서버를 시작하지 않는 경우 발생할 수 있다.                     |
 | LOGIN_FAIL_INVALID_SERVICE_NAME    | 로그인 실패. 로그인 대상 서비스가 존재하지 않음.                  | 요청시 서비스 이름을 잘못 입력하였거나, 서버 설정의 서비스 이름 설정이 잘못된 경우 발생할 수 있다.   |
 | LOGIN_FAIL_TIMEOUT_GAME_SERVER     | 로그인 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.            |                                                             |
 | LOGIN_FAIL_INVALID_USER_TYPE       | 로그인 실패. 로그인 대상 UserType이 존재하지 않음.             | 요청시 UserType을 잘못 입력하였거나, 서버에 구현되지 않았을 경우 발생할 수 있다.          |
