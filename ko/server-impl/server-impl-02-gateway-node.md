@@ -12,9 +12,9 @@ GatewayNode는 클라이언트가 접속하는 관문(Gateway)입니다. 즉, �
 
 ### GatewayNode 구현
 
-이러한 GatewayNode는 IGatewayNode 인터페이스를 구현하여 콜백 메서드만 재정의하면 됩니다. 이러한 공통 콜백 메서드는 그 이름이 용도를 명확하게 설명하고 있습니다. 
-
+이러한 GatewayNode는 @GameAnvilGatewayNode 어노테이션을 선언하여 엔진에 등록하고 IGatewayNode 인터페이스를 구현하여 콜백 메서드만 재정의하면 됩니다. 이러한 공통 콜백 메서드는 그 이름이 용도를 명확하게 설명하고 있습니다. 
 ```java
+@GameAnvilGatewayNode // 엔진에 이 클래스를 Gateway로 등록
 public class SampleGatewayNode implements IGatewayNode {
     private IGatewayNodeContext gatewayNodeContext;
 
@@ -84,23 +84,6 @@ public class SampleGatewayNode implements IGatewayNode {
 }
 ```
 
-또한 이렇게 구현한 클래스를 엔진에 등록하기 위해서 서버 구성에서 설정 합니다.
-
-```java
-public static void main(String[] args) {
-    final var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
-
-    ...
-    
-    gameAnvilServerBuilder.gatewayNode(SampleGateway::new, config -> {
-        // 필요한 핸들러 등록
-    });
-
-    ...
-
-    GameAnvilServer.getInstance().run();
-}
-```
 
 ### Connection 구현
 
@@ -109,6 +92,7 @@ public static void main(String[] args) {
 이러한 커넥션은 다음과 같이 IConnection을 구현한 후 콜백 메서드들을 재정의합니다. 이때, 임의의 플랫폼에서 인증한 후 획득하는 유저의 키값 등을 AccountId로 사용할 수 있습니다. 예를 들어 Gamebase를 통해 인증한 후 UserId를 획득하면 이 값을 GameAnvil의 인증 과정에서 AccountId로 사용할 수 있습니다. 
 
 ```java
+@GameAnvilGatewayConnection // 엔진에 이 클래스를 Connection으로 등록 
 public class SampleConnection implements IConnection {
     private IConnectionContext connectionContext;
     
@@ -166,23 +150,6 @@ public class SampleConnection implements IConnection {
 }
 ```
 
-또한 GatewayNode 구현과 마찬가지로 구현한 클래스를 엔진에 등록하기 위해 서버 구성에서 설정합니다.
-
-```java
-public static void main(String[] args) {
-    final var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
-
-    ...
-
-    gameAnvilServerBuilder.connection(SampleConnection::new, config -> {
-        // 필요한 핸들러 등록
-    });
-
-    ...
-
-    GameAnvilServer.getInstance().run();
-}
-```
 
 이러한 콜백의 의미와 용도는 아래의 표를 참고하십시오.
 
@@ -198,9 +165,10 @@ public static void main(String[] args) {
 
 커넥션을 성공적으로 맺은 클라이언트는 해당 커넥션 사이에서 서비스마다 하나씩 GameNode에 대한 논리적인 세션을 맺을 수 있습니다. GameAnvil은 내부적으로 커넥션의 AccountId와 세션의 SubId를 조합하여 전체 서버에서 고유한 세션을 구분할 수 있습니다.
 
-이때, SubId는 사용자가 임의로 정한 규칙에 맞춰서 해당 커넥션 내의 아무 고유한 값으로 할당하면 됩니다. 즉, 서로 다른 커넥션은 동일한 SubId를 가질 수도 있습니다. 하지만 서로 다른 AccountId를 가지므로 구분이 가능합니다
+이때, SubId는 사용자가 임의로 정한 규칙에 맞춰서 해당 커넥션 내의 아무 고유한 값으로 할당하면 됩니다. 즉, 서로 다른 커넥션은 동일한 SubId를 가질 수도 있습니다. 하지만 서로 다른 AccountId를 가지므로 구분이 가능합니다.
 
 ```java
+@GameAnvilGatewaySession  // 엔진에 이 클래스를 Session으로 등록 
 public class SampleSession implements ISession {
     private ISessionContext sessionContext;
 
@@ -241,24 +209,6 @@ public class SampleSession implements ISession {
     public void onAfterLogout() {
 
     }
-}
-```
-
-또한 GatewayNode 구현과 마찬가지로 구현한 클래스를 엔진에 등록하기 위해 서버 구성에서 설정합니다.
-
-```java
-public static void main(String[] args) {
-    final var gameAnvilServerBuilder = GameAnvilServer.getInstance().getServerTemplateBuilder();
-
-    ...
-
-    gameAnvilServerBuilder.session(SampleSession::new, config -> {
-        // 필요한 핸들러 등록
-    });
-
-    ...
-
-    GameAnvilServer.getInstance().run();
 }
 ```
 

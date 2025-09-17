@@ -13,11 +13,6 @@ import com.nhn.gameanvil.async.Async;
 ```
 
 
-> [Note]
->
-> Descriptions of all asynchronous support APIs can be found in JavaDoc in [the GameAnvil API Reference](https://gameplatform.nhncloud.com/docs/api/gameanvil/1.4/com/nhn/gameanvil/async/Async.html).*
-
-
 
 The API for invocation is broadly divided into call and run, which are used when there is a return value and when there isn't, respectively. Otherwise, it converts thread-based futures to fiber-based ones. The usage of each is covered in more detail in the next part of the documentation.
 

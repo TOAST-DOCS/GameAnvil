@@ -230,9 +230,9 @@ scenario
 
 아래 예시는 실제 서버에 부하를 인가하도록 작성된 예시입니다.
 
-| 샘플 서버 | 샘플 테스터 |
-|---------|----------|
-| [GameAnvil Scenario Server](https://static.toastoven.net/prod_gameanvil/files/GameAnvil 2.0 Scenario Server.zip) | [GameAnvil Scenario Tester](https://static.toastoven.net/prod_gameanvil/files/GameAnvil 2.0 Scenario Tester.zip) |
+| 샘플 서버                                                                                                           | 샘플 테스터                                                                                                          |
+|-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| [GameAnvil Scenario Server](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvilScenarioServer.zip) | [GameAnvil Scenario Tester](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvilScenarioTester.zip) |
 
 ### 액션
 
@@ -529,134 +529,25 @@ public String connectListener(ResultConnect resultConnect, TestActor scenarioAct
 
 아래는 지원하는 리스너 목록입니다. 아래 시그니처를 가진 메서드를 State에 선언한 후 `@Listener` 어노테이션을 부착하십시오.
 
-#### connect
-
-```java
-public void listener(ResultConnec result, ScenarioActor actor);
-```
-
-#### authentication
-
-```java
-public void listener(ResultAuthentication result, ScenarioActor actor);
-```
-
-#### login
-
-```java
-public void listener(ResultLogin result, ScenarioActor actor);
-```
-
-#### matchUserStart
-
-```java
-public void listener(ResultMatchUserStart result, ScenarioActor actor);
-```
-
-#### logout
-
-```java
-public void listener(ResultLogout result, ScenarioActor actor);
-```
-
-#### logout
-
-```java
-public void listener(ResultLogout result, ScenarioActor actor);
-```
-
-#### leaveRoom
-
-```java
-public void listener(ResultLeaveRoom result, ScenarioActor actor);
-```
-
-#### leaveRoom
-
-```java
-public void listener(ResultLeaveRoom result, ScenarioActor actor);
-```
-
-#### createRoom
-
-```java
-public void listener(ResultCreateRoom result, ScenarioActor actor);
-```
-
-#### namedRoom
-
-```java
-public void listener(ResultNamedRoom result, ScenarioActor actor);
-```
-
-#### joinRoom
-
-```java
-public void listener(ResultJoinRoom result, ScenarioActor actor);
-```
-
-#### matchUserCancel
-
-```java
-public void listener(ResultMatchUserCancel result, ScenarioActor actor);
-```
-
-#### matchPartyStart
-
-```java
-public void listener(ResultMatchPartyStart result, ScenarioActor actor);
-```
-
-#### matchPartyCancel
-
-```java
-public void listener(ResultMatchPartyCancel result, ScenarioActor actor);
-```
-
-#### matchRoom
-
-```java
-public void listener(ResultMatchRoom result, ScenarioActor actor);
-```
-
-#### getChannelInfo
-
-```java
-public void listener(ResultChannelInfo result, ScenarioActor actor);
-```
-
-#### getAllChannelInfo
-
-```java
-public void listener(ResultAllChannelInfo result, ScenarioActor actor);
-```
-
-#### getChannelCountInfo
-
-```java
-public void listener(ResultChannelCountIn result, ScenarioActor actor);
-```
-
-#### getAllChannelCountInfo
-
-```java
-public void listener(ResultAllChannelCoun result, ScenarioActor actor);
-```
-
-#### moveChannel
-
-```java
-public void listener(ResultMoveChannel result, ScenarioActor actor);
-```
-
-#### snapshot
-
-```java
-public void listener(ResultSnapshot result, ScenarioActor actor);
-```
-
-#### request
-
-```java
-public void listener(PacketResult result, ScenarioActor actor);
-```
+| 리스너 이름 | 시그니처 |
+| --- | --- |
+| connect | `public void listener(ResultConnect result, ScenarioActor actor);` |
+| authentication | `public void listener(ResultAuthentication result, ScenarioActor actor);` |
+| login | `public void listener(ResultLogin result, ScenarioActor actor);` |
+| logout | `public void listener(ResultLogout result, ScenarioActor actor);` |
+| createRoom | `public void listener(ResultCreateRoom result, ScenarioActor actor);` |
+| joinRoom | `public void listener(ResultJoinRoom result, ScenarioActor actor);` |
+| namedRoom | `public void listener(ResultNamedRoom result, ScenarioActor actor);` |
+| leaveRoom | `public void listener(ResultLeaveRoom result, ScenarioActor actor);` |
+| matchRoom | `public void listener(ResultMatchRoom result, ScenarioActor actor);` |
+| matchUserStart | `public void listener(ResultMatchUserStart result, ScenarioActor actor);` |
+| matchUserCancel | `public void listener(ResultMatchUserCancel result, ScenarioActor actor);` |
+| matchPartyStart | `public void listener(ResultMatchPartyStart result, ScenarioActor actor);` |
+| matchPartyCancel | `public void listener(ResultMatchPartyCancel result, ScenarioActor actor);` |
+| getChannelInfo | `public void listener(ResultChannelInfo result, ScenarioActor actor);` |
+| getAllChannelInfo | `public void listener(ResultAllChannelInfo result, ScenarioActor actor);` |
+| getChannelCountInfo | `public void listener(ResultChannelCountInfo result, ScenarioActor actor);` |
+| getAllChannelCountInfo | `public void listener(ResultAllChannelCountInfo result, ScenarioActor actor);` |
+| moveChannel | `public void listener(ResultMoveChannel result, ScenarioActor actor);` |
+| snapshot | `public void listener(ResultSnapshot result, ScenarioActor actor);` |
+| request | `public void listener(PacketResult result, ScenarioActor actor);` |

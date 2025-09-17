@@ -82,7 +82,7 @@ GameAnvil의 노드는 게임 서버의 기능 단위입니다. 개발이 완료
 |---------|---------------|-------|---------------------------------------------------|
 | GATEWAY | -             | 1     | 클라이언트 접속과 인증을 처리하는 노드.                    |
 | GAME    | RPSGame       | 4     | 게임 콘텐츠가 구현된 게임 노드이며 각각 ch1~ch4까지의 채널을 담당한다. |
-| MATCH   | -             | 2     | 매치 메이킹을 수행                                     |
+| MATCH   | -             | 2     | 매치메이킹을 수행                                     |
 | Support | DB            | 2     | 필요에 따라 독립된 서비스로 구현하도록 지원                  |
 | Support | WEB           | 2     | 필요에 따라 독립된 서비스로 구현하도록 지원                  |
 
@@ -100,8 +100,13 @@ GameAnvil의 노드는 게임 서버의 기능 단위입니다. 개발이 완료
 
 서버 목록에서 임의의 항목을 클릭하면 서버 상세 정보를 확인할 수 있습니다.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/server_details.png)
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/server_details.png)
 
+## 동적 로그 레벨 설정
+
+기동 중인 서버의 상세 화면에서 **로그 레벨 설정**을 클릭해 동적 로그 레벨을 설정할 수 있습니다. 변경된 로그 레벨은 서버가 기동되어 있는 상태에서만 적용되며 logback 파일에 저장되지 않습니다. 서버를 종료한 뒤 기동할 경우 logback의 설정으로 다시 초기화됩니다.
+
+![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/dynamic_log_level.png)
 
 ## 생성된 노드 정보 확인
 

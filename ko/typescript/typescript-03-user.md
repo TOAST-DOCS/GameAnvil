@@ -44,10 +44,10 @@ const loginResult = await user.login(userType, channelId, payload);
 console.log(`Login Result : ${ResultCodeLogin[loginResult.errorCode]}`);
 ```
 
-로그인 성공 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+로그인 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (loginResult.errorCode === ResultCodeLogin.LOGIN_SUCCESS) {
+if (loginResult.resultCode === ResultCodeLogin.LOGIN_SUCCESS) {
     console.log("Login Success");
 } else {
     console.log("Login Fail");
@@ -94,10 +94,10 @@ const logoutResult = await user.logout();
 
 유저가 로그인 상태가 아닌데 로그아웃을 시도한 경우 서버에는 아무런 요청을 하지 않고 성공으로 응답합니다.
 
-로그아웃 성공 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+로그아웃 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (logoutResult.errorCode === ResultCodeLogout.LOGOUT_SUCCESS) {
+if (logoutResult.resultCode === ResultCodeLogout.LOGOUT_SUCCESS) {
     console.log("Logout Success");
 } else {
     console.log("Logout Fail");
@@ -160,10 +160,10 @@ const payload: Payload;
 const resultCreateRoom = await user.createRoom("", roomType, matchingGroup, payload);
 ```
 
-동작 성공 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+동작 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (resultCreateRoom.errorCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
+if (resultCreateRoom.resultCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
      console.log("Create room success");
 } else {
     console.log("Create room fail");
@@ -187,7 +187,7 @@ if (resultCreateRoom.errorCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
 방 생성과 방 입장에 성공했을 경우, 응답을 통해 roomId를 포함한 정보를 확인할 수 있습니다.
 
 ```typescript
-if (resultCreateRoom.errorCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
+if (resultCreateRoom.resultCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
     console.log(`Created room id: ${resultCreateRoom.roomId}`);
     console.log(`Created room name: ${resultCreateRoom.roomName}`);
 }
@@ -223,10 +223,10 @@ const payload: Payload;
 
 const resultJoinRoom = user.joinRoom(roomType, roomId, matchingUserCategory, payload);
 ```
-방 입장 성공 여부는 Promise 결과같인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+방 입장 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (resultJoinRoom.errorCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
+if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
     console.log("Join room success");
 
 } else {
@@ -247,11 +247,11 @@ if (resultJoinRoom.errorCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
 | `JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST`    | 702   | 실패: 방이 존재하지 않음           |
 | `JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM`    | 703   | 실패: 이미 방에 들어가 있음        |
 | `JOIN_ROOM_FAIL_ALREADY_FULL`           | 704   | 실패: 이미 룸의 인원수가 차있을 경우|
-| `JOIN_ROOM_FAIL_ROOM_MATCH`             | 705   | 실패: 룸매치에서 문제가 발생할 경우 |
+| `JOIN_ROOM_FAIL_ROOM_MATCH`             | 705   | 실패: 룸 매치메이킹에서 문제가 발생할 경우 |
 
 방 입장에 성공했을 경우, 아래와 같이 세부 정보를 확인할 수 있습니다.
 ```typescript
-if (resultJoinRoom.errorCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
+if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
     console.log(`Joined room id: ${resultJoinRoom.roomId}`);
     console.log(`Joined room name: ${resultJoinRoom.roomName}`);
 }
@@ -269,10 +269,10 @@ const payload: Payload;
 const leaveRoomResult = await user.leaveRoom(payload);
 ```
 
-퇴장 완료 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+퇴장 완료 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (leaveRoomResult.errorCode === ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS) {
+if (leaveRoomResult.resultCode === ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS) {
     console.log("Leave room success");
 } else {
     console.log("Leave room fail");
@@ -312,10 +312,10 @@ const payload: Payload;
 const matchUserStartResult = await matchUserStart(roomType, matchingGroup, payload);
 ```
 
-풀에 정상적으로 등록되었는지 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+풀에 정상적으로 등록되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (matchUserStartResult.errorCode === ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS) {
+if (matchUserStartResult.resultCode === ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS) {
     console.log("Match user start success.");
 } else {
     console.log("Match user start fail.");
@@ -363,7 +363,7 @@ const resultCode = await user.matchUserCancel(roomType);
 console.log(`Match user cancel result: `, ResultCodeMatchUserCancel[resultCode]);
 ```
 
-풀에서 제거 요청 성공 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+풀에서 제거 요청 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
 if (resultCode === ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS) {
@@ -407,10 +407,10 @@ const matchRoomResult = await user.matchRoom(isCreateRoomIfNotJoinRoom, isMoveRo
 console.log(`Match room result: ${ResultCodeMatchRoom[matchRoomResult.errorCode]}`);
 ```
 
-동작 성공 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+동작 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (matchRoomResult.errorCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
+if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
     console.log("Match room success");
 } else {
     consoel.log("Match room fail");
@@ -430,7 +430,7 @@ if (matchRoomResult.errorCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 | `MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST`        | 902   | 실패: 방이 존재하지 않음           |
 | `MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM`        | 903   | 실패: 이미 방에 들어가 있음        |
 | `MATCH_ROOM_FAIL_LEAVE_ROOM`                 | 904   | 실패: 기존 방에서 나가기가 실패한 경우 |
-| `MATCH_ROOM_FAIL_IN_PROGRESS`                | 905   | 실패: 이미 매치 메이킹이 진행 중인 경우 |
+| `MATCH_ROOM_FAIL_IN_PROGRESS`                | 905   | 실패: 이미 매치메이킹이 진행 중인 경우 |
 | `MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST`| 906   | 실패: 조건에 맞는 방을 찾던 중 방이 사라짐 |
 | `MATCH_ROOM_FAIL_CREATE_ROOM_ID`             | 907   | 실패: 방 아이디 발급 실패          |
 | `MATCH_ROOM_FAIL_CREATE_ROOM`                | 908   | 실패: 방 생성 실패                 |
@@ -446,7 +446,7 @@ if (matchRoomResult.errorCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 룸 매치메이킹에 성공했을 경우, 응답을 통해 roomId를 포함한 정보를 확인할 수 있습니다.
 
 ```typescript
-if (matchRoomResult.errorCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
+if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
     console.log(`Match room is cancel: ${matchRoomResult.isCancel}`);
     console.log(`Matched room id: ${matchRoomResult.roomId}`);
     console.log(`Matched room name: ${matchRoomResult.roomName}`);
@@ -469,10 +469,10 @@ const namedRoomResult = await user.namedDroom(roomType, roomName, isParty, paylo
 console.log(`Named room result: ${ResultCodeNamedRoom[namedRoomResult.errorCode]}`);
 ```
 
-동작 성공 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+동작 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (namedRoomResult.errorCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
+if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
     console.log("Named room success");
 } else {
     console.log("Named room success");
@@ -497,7 +497,7 @@ if (namedRoomResult.errorCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
 요청에 성공했을 경우, 응답을 통해 정보를 확인할 수 있습니다.
 
 ```typescript
-if (namedRoomResult.errorCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
+if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
     console.log(`Named room id: ${namedRoomResult.roomId}`);
     console.log(`Named room name: ${namedRoomResult.roomName}`);
     console.log(`Is named room created? : ${namedRoomResult.created}`);
@@ -520,10 +520,10 @@ const matchStartResult = await matchPartyStart(roomType, mathchingGroup, payload
 console.log(`Party match start result: ${ResultCodeMatchPartyStart[matchStartResult.errorCode]}`);
 ```
 
-정상적으로 파티 매치 메이킹이 시작되었는지 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+정상적으로 파티 매치메이킹이 시작되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (matchStartResult.errorCode === ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS) {
+if (matchStartResult.resultCode === ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS) {
     console.log("Match party start success");
 } else {
     console.log("Match party start fail");
@@ -581,10 +581,10 @@ const matchCancelResult = await matchPartyCancel(roomType);
 console.log(`Match party cancel result: ${ResultCodeMatchPartyCancel[matchCancelResult.errorCode]}`);
 ```
 
-정상적으로 취소되었는지 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+정상적으로 취소되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (matchCancelResult.errorCode === ResultCodeMatchPartyCancel.MATCH_PARTY_CANCEL_SUCCESS) {
+if (matchCancelResult.resultCode === ResultCodeMatchPartyCancel.MATCH_PARTY_CANCEL_SUCCESS) {
     console.log("Match party cancel success.");
 } else {
     consoel.log("Match party cancel fail.");
@@ -642,10 +642,10 @@ const moveChannelResult = await user.moveChannel(channelId, payload);
 console.log(`Move channel result: ${ResultCodeMoveChannel[moveChannelResult.errorCode]}`);
 ```
 
-채널 이동이 정상적으로 진행되었는지 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+채널 이동이 정상적으로 진행되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-iF (moveChannelResult.errorCode === ResultcodeMoveChannel.MOVE_CHANNEL_SUCCESS) {
+iF (moveChannelResult.resultCode === ResultcodeMoveChannel.MOVE_CHANNEL_SUCCESS) {
     console.log("Move channel success.");
 } else {
     consoel.log("Move channel fail.");
@@ -669,7 +669,7 @@ iF (moveChannelResult.errorCode === ResultcodeMoveChannel.MOVE_CHANNEL_SUCCESS) 
 채널 이동에 성공했을 경우 결과를 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (moveChannelResult.errorCode === ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS) {
+if (moveChannelResult.resultCode === ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS) {
     console.log(`Move channel forced: ${moveChannelResult.data.force}`);
     consoel.log(`Move channel id: ${moveChannelResult.data.channelId});
 }

@@ -1,5 +1,12 @@
 ## Game > GameAnvil > 릴리스 노트 > Console
 
+## 2025. 06. 30.
+### Change
+* GameAnvil 2.1 이상 지원
+
+### Fix
+* 기타 안정성 개선
+
 ## 2024. 12. 10.
 ### Change
 * GameAnvil 1.x 지원 중단

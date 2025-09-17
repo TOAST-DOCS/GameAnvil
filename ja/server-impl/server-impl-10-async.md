@@ -12,13 +12,6 @@ GameAnvilは、次のような目的のために非同期処理をサポート�
 import com.nhn.gameanvil.async.Async;
 ```
 
-
-> [参考]
-> 
-> すべての非同期サポートAPIについての説明は[GameAnvil API Reference](https://gameplatform.nhncloud.com/docs/api/gameanvil/1.4/com/nhn/gameanvil/async/Async.html)においてJavaDocで作成された文書を確認できます。
-
-
-
 呼び出し用のAPIは大きくcallとrunに分けられ、それぞれ戻り値がある場合とそうではない場合に使用します。その他のスレッドベースのfutureをファイバーベースで使用できるように切り替えます。それぞれの用途に応じた使用方法は、次の部分でさらに詳しく説明します。
 
 ### ブロッキング呼び出し処理
