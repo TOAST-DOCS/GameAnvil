@@ -15,21 +15,21 @@
 |                           | AUTH_FAIL_CONTENT                           |   201 | 認証失敗。コンテンツで拒否された。                                |
 |                           | AUTH_FAIL_MAINTENANCE                       |   202 | 認証失敗。点検中。                                           |
 |                           | AUTH_FAIL_INVALID_ACCOUNT_ID                |   203 | 認証失敗。無効なAccountId。                               |
-| ResultCodeChannelList     | CHANNEL_LIST_SUCCESS                        |     0 | チャンネルリストの取得に成功                                   |
-|                           | CHANNEL_LIST_FAIL_INVALID_SERVICEID         |  1801 | チャンネルリストの取得に失敗。無効なサービスID。               |
-| ResultCodeChannelInfo     | CHANNEL_INFO_SUCCESS                        |     0 | チャンネル情報の取得に成功                                   |
-|                           | CHANNEL_INFO_FAIL_INVALID_SERVICEID         |  1901 | チャンネル情報の取得に失敗。無効なサービスID                |
+| ResultCodeChannelList     | CHANNEL_LIST_SUCCESS                        |     0 | チャネルリストの取得に成功                                   |
+|                           | CHANNEL_LIST_FAIL_INVALID_SERVICEID         |  1801 | チャネルリストの取得に失敗。無効なサービスID。               |
+| ResultCodeChannelInfo     | CHANNEL_INFO_SUCCESS                        |     0 | チャネル情報の取得に成功                                   |
+|                           | CHANNEL_INFO_FAIL_INVALID_SERVICEID         |  1901 | チャネル情報の取得に失敗。無効なサービスID                |
 | ResultCodeLogin           | LOGIN_SUCCESS                               |     0 | ログイン成功。 |
 |                           | LOGIN_FAIL_CONTENT                          |   301 | ログイン失敗。コンテンツで拒否された。                                  |
 |                           | LOGIN_FAIL_NOT_EXIST_NODE                   |   302 | ログイン失敗。ノードが存在しない。                               |
 |                           | LOGIN_FAIL_MAINTENANCE                      |   303 | ログイン失敗。点検中。                                             |
-|                           | LOGIN_FAIL_TIMEOUT_GAME_SERVER              |   304 | ログイン失敗。ゲームサーバーが応答しない。                           |
-|                           | LOGIN_FAIL_INVALID_SERVICEID                |   310 | ログイン失敗。無効なサービスID.                               |
-|                           | LOGIN_FAIL_INVALID_USERTYPE                 |   311 | ログイン失敗。無効なユーザータイプ。                                   |
-|                           | LOGIN_FAIL_INVALID_USERID                   |   312 | ログイン失敗。無効なユーザーID。                                 |
-|                           | LOGIN_FAIL_INVALID_SUB_ID                   |   313 | ログイン失敗。無効なSubId。                                       |
+| | LOGIN_FAIL_TIMEOUT_GAME_SERVER | 303 | 失敗。ゲームサーバーが応答しません。 |
+| | LOGIN_FAIL_INVALID_SERVICE_NAME | 310 | 失敗。不正なサービス名です。 |
+| | LOGIN_FAIL_INVALID_USER_TYPE | 311 | 失敗。不正なユーザータイプです。 |
+| | LOGIN_FAIL_INVALID_USER_ID | 312 | 失敗。不正なユーザーIDです。 |
+| | LOGIN_FAIL_INVALID_SUB_ID | 313 | 失敗。不正なサブIDです。 |
 |                           | LOGIN_FAIL_LOGINED_OTHER_SERVICE            |   320 | ログイン失敗。他のサービスにログインしている。                      |
-|                           | LOGIN_FAIL_LOGINED_OTHER_CHANNEL            |   321 | ログイン失敗。他のチャンネルにログインしている。                        |
+|                           | LOGIN_FAIL_LOGINED_OTHER_CHANNEL            |   321 | ログイン失敗。他のチャネルにログインしている。                        |
 |                           | LOGIN_FAIL_LOGINED_OTHER_USER_TYPE          |   322 | ログイン失敗。同じAccount IDで他のUserTypeがログインしている。 |
 |                           | LOGIN_FAIL_LOGINED_OTHER_DEVICE             |   323 | ログイン失敗。同じAccount IDで他のDeviceIdがログインしている。 |
 | ResultCodeLogout          | LOGOUT_SUCCESS                              |     0 | ログアウト成功。                                                   |
@@ -71,14 +71,14 @@
 | ResultCodeMatchUserDone | MATCH_USER_DONE_SUCCESS                  |     0 | ユーザーマッチ(パーティーマッチ)成功。                                           |
 |                         | MATCH_USER_DONE_FAIL_CONTENT             |  1501 | ユーザーマッチ(パーティーマッチ)失敗。コンテンツで拒否された(照合に適したルームが見つからなかった)。 |
 |                         | MATCH_USER_DONE_FAIL_ROOM_<br/>DOES_NOT_EXIST |  1502 | ユーザーマッチ(パーティーマッチ)失敗。条件に合致するルームを探し、ルームに入る途中で、ルームが消えた。 |
-| ResultCodeMoveChannel | MOVE_CHANNEL_SUCCESS                     |     0 | チャンネル移動成功。                                      |
-|                       | MOVE_CHANNEL_FAIL_CONTENT                |  1601 | チャンネル移動失敗。コンテンツで拒否された。                   |
-|                       | MOVE_CHANNEL_FAIL_NODE_<br/>NOT_FOUND    |  1602 | チャンネル移動失敗。チャンネルノードが見つからない。            |
-|                       | MOVE_CHANNEL_FAIL_ALREADY_<br/>JOINED_CHANNEL |  1603 | チャンネル移動失敗。すでにリクエストしたチャンネルにいる。             |
-|                       | MOVE_CHANNEL_FAIL_ALREADY_<br/>JOINED_ROOM |  1604 | チャンネル移動失敗。すでにルームに入室しており、チャンネル移動できない。 |
+| ResultCodeMoveChannel | MOVE_CHANNEL_SUCCESS                     |     0 | チャネル移動成功。                                      |
+|                       | MOVE_CHANNEL_FAIL_CONTENT                |  1601 | チャネル移動失敗。コンテンツで拒否された。                   |
+|                       | MOVE_CHANNEL_FAIL_NODE_<br/>NOT_FOUND    |  1602 | チャネル移動失敗。チャネルノードが見つからない。            |
+|                       | MOVE_CHANNEL_FAIL_ALREADY_<br/>JOINED_CHANNEL |  1603 | チャネル移動失敗。すでにリクエストしたチャネルにいる。             |
+|                       | MOVE_CHANNEL_FAIL_ALREADY_<br/>JOINED_ROOM |  1604 | チャネル移動失敗。すでにルームに入室しており、チャネル移動できない。 |
 | ResultCodeDisconnect | FORCE_CLOSE_SYSTEM_ERROR            |  2000 | システムエラーによる強制終了。<br />通常、クライアントからこのコードを受け取ることはほとんどないので、このコードを受け取った場合はGameAnvil開発チームにお問い合わせください。 |
-|                      | FORCE_CLOSE_BASE_CONNECTION         |  2010 | サーバーでBaseConnectionのclose()呼び出し                    |
-|                      | FORCE_CLOSE_BASE_USER               |  2011 | サーバーでBaseUserのcloseConnection()呼び出し                |
+|                      | FORCE_CLOSE_CONNECTION         |  2010 | サーバーでBaseConnectionのclose()呼び出し                    |
+|                      | FORCE_CLOSE_USER               |  2011 | サーバーでBaseUserのcloseConnection()呼び出し                |
 |                      | FORCE_CLOSE_ADMIN_KICK              |  2012 | Adminで強制終了。                                         |
 |                      | FORCE_CLOSE_MAINTENANCE             |  2020 | サーバー点検による強制終了。                                |
 |                      | FORCE_CLOSE_INVALID_NODE            |  2021 | GameNodeがinvalid状態に変更された場合。                       |

@@ -1,10 +1,10 @@
-## Game > GameAnvil > サーバー開発ガイド > 始まり
+## Game > GameAnvil > サーバー開発ガイド > 始める
 
 
 
-## 始まりの前に
+## 始める前に
 
-この文書は、GameAnvilを利用してサーバーを実装する際に必要な基本要素と実装方法について説明します。この文書と共に提供されるリファレンスプロジェクト[GameAnvilリファレンスサーバー](../reference/reference-1-server)を参照してください。また、[JavaDoc文書](https://gameplatform.toast.com/docs/api/)でそれぞれのAPIの説明とUMLダイアグラムを参照してください。
+このドキュメントは、GameAnvilを利用してサーバーを実装する際に必要な基本要素と実装方法について説明します。このドキュメントと共に提供されるリファレンスプロジェクト[GameAnvilリファレンスサーバー](../reference/reference-1-server)をご参照ください。また、[JavaDocドキュメント](https://gameplatform.toast.com/docs/api/)を参照することを推奨します。
 
 GameAnvilサーバーは、基本的にノード(Node)単位で構成します。そのうち、ユーザーのコードが動作するノードは、以下の図のように計4つです。ここでは、これら4つのノードの実装方法を中心にサーバーの開発方法を説明します。
 
@@ -25,6 +25,7 @@ GameAnvilサーバーは、基本的にノード(Node)単位で構成します�
 BaseGatewayNodeを含むすべてのBaseNodeは、共通して以下のようなコールバックメソッドを提供します。ユーザーがこのコールバックメソッドを実装すると、エンジンが特定の時点に該当コールバックを呼び出します。これがGameAnvilの最も基本的な使用方法です。このような使用方法は文書全体においてさほど変わらないため、違和感を抱くことなく、各チャプターを理解できるでしょう。
 
 ```java
+@GameAnvilGatewayNode // エンジンにこのクラスをGatewayとして登録
 @GatewayNode
 public class SampleGatewayNode extends BaseGatewayNode {
 
@@ -126,7 +127,7 @@ try {
 
 ## _(underscore)で始まるメソッドと変数
 
-エンジンを使用すると、ユーザーが継承したBaseクラスにおいて _で始まるメソッドや変数を見ることがあります。これはエンジン内部でのみ使用するためのものを意味します。すなわち、ユーザーは _で始まる変数やメソッドにアクセスしてはいけません。これはC++と異なり、Javaのスコープ制御が柔軟ではなく、一部表示を許可した場合であるため注意が必要です。
+エンジンを使用すると、ユーザーが継承したBaseクラスにおいて _で始まるメソッドや変数を見ることがあります。これはエンジン内部でのみ使用するためのものを意味します。すなわち、ユーザーは _で始まる変数やメソッドにアクセスしてはいけません。これはJavaのスコープ制御が柔軟ではなく、一部表示を許可した場合であるため注意が必要です。
 
 
 
@@ -144,7 +145,7 @@ GameAnvilプロジェクトを最初から1つずつ構成するには、いく�
 
 
 
-[GameAnvilテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Template.zip?disposition=attachment)
+[GameAnvilテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 
 

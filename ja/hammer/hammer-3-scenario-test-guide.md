@@ -344,134 +344,25 @@ public String connectListener(ResultConnect resultConnect, TestActor scenarioAct
 
 以下はサポートするリスナーのリストです。下記のシグネチャを持つメソッドをStateに宣言した後、`@Listener` アノテーションを付けてください。
 
-* connect 
-
-```java
-public void listener(ResultConnec result, ScenarioActor actor);
-```
-
-* authentication  
-
-```java
-public void listener(ResultAuthentication result, ScenarioActor actor);
-```
-
-* login  
-
-```java
-public void listener(ResultLogin result, ScenarioActor actor);
-```
-
-* matchUserStart  
-
-```java
-public void listener(ResultMatchUserStart result, ScenarioActor actor);
-```
-
-* logout  
-
-```java
-public void listener(ResultLogout result, ScenarioActor actor);
-```
-
-* logout  
-
-```java
-public void listener(ResultLogout result, ScenarioActor actor);
-```
-
-* leaveRoom  
-
-```java
-public void listener(ResultLeaveRoom result, ScenarioActor actor);
-```
-
-* leaveRoom  
-
-```java
-public void listener(ResultLeaveRoom result, ScenarioActor actor);
-```
-
-* createRoom  
-
-```java
-public void listener(ResultCreateRoom result, ScenarioActor actor);
-```
-
-* namedRoom  
-
-```java
-public void listener(ResultNamedRoom result, ScenarioActor actor);
-```
-
-* joinRoom  
-
-```java
-public void listener(ResultJoinRoom result, ScenarioActor actor);
-```
-
-* matchUserCancel  
-
-```java
-public void listener(ResultMatchUserCancel result, ScenarioActor actor);
-```
-
-* matchPartyStart  
-
-```java
-public void listener(ResultMatchPartyStart result, ScenarioActor actor);
-```
-
-* matchPartyCancel  
-
-```java
-public void listener(ResultMatchPartyCancel result, ScenarioActor actor);
-```
-
-* matchRoom  
-
-```java
-public void listener(ResultMatchRoom result, ScenarioActor actor);
-```
-
-* getChannelInfo  
-
-```java
-public void listener(ResultChannelInfo result, ScenarioActor actor);
-```
-
-* getAllChannelInfo  
-
-```java
-public void listener(ResultAllChannelInfo result, ScenarioActor actor);
-```
-
-* getChannelCountInfo  
-
-```java
-public void listener(ResultChannelCountIn result, ScenarioActor actor);
-```
-
-* getAllChannelCountInfo  
-
-```java
-public void listener(ResultAllChannelCoun result, ScenarioActor actor);
-```
-
-* moveChannel  
-
-```java
-public void listener(ResultMoveChannel result, ScenarioActor actor);
-```
-
-* snapshot  
-
-```java
-public void listener(ResultSnapshot result, ScenarioActor actor);
-```
-
-* request  
-
-```java
-public void listener(PacketResult result, ScenarioActor actor);
-```
+| リスナー名 | シグネチャ |
+| --- | --- |
+| connect | `public void listener(ResultConnect result, ScenarioActor actor);` |
+| authentication | `public void listener(ResultAuthentication result, ScenarioActor actor);` |
+| login | `public void listener(ResultLogin result, ScenarioActor actor);` |
+| logout | `public void listener(ResultLogout result, ScenarioActor actor);` |
+| createRoom | `public void listener(ResultCreateRoom result, ScenarioActor actor);` |
+| joinRoom | `public void listener(ResultJoinRoom result, ScenarioActor actor);` |
+| namedRoom | `public void listener(ResultNamedRoom result, ScenarioActor actor);` |
+| leaveRoom | `public void listener(ResultLeaveRoom result, ScenarioActor actor);` |
+| matchRoom | `public void listener(ResultMatchRoom result, ScenarioActor actor);` |
+| matchUserStart | `public void listener(ResultMatchUserStart result, ScenarioActor actor);` |
+| matchUserCancel | `public void listener(ResultMatchUserCancel result, ScenarioActor actor);` |
+| matchPartyStart | `public void listener(ResultMatchPartyStart result, ScenarioActor actor);` |
+| matchPartyCancel | `public void listener(ResultMatchPartyCancel result, ScenarioActor actor);` |
+| getChannelInfo | `public void listener(ResultChannelInfo result, ScenarioActor actor);` |
+| getAllChannelInfo | `public void listener(ResultAllChannelInfo result, ScenarioActor actor);` |
+| getChannelCountInfo | `public void listener(ResultChannelCountInfo result, ScenarioActor actor);` |
+| getAllChannelCountInfo | `public void listener(ResultAllChannelCountInfo result, ScenarioActor actor);` |
+| moveChannel | `public void listener(ResultMoveChannel result, ScenarioActor actor);` |
+| snapshot | `public void listener(ResultSnapshot result, ScenarioActor actor);` |
+| request | `public void listener(PacketResult result, ScenarioActor actor);` |

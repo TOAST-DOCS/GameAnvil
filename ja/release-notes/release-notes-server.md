@@ -1,4 +1,29 @@
 ## Game > GameAnvil > リリースノート > GameAnvil
+### 2.1.0 (2025.06.30)
+#### New
+##### 依存関係の管理とspring bootの追加
+* GameAnvilの依存関係管理にspring bootを使用し、Beanを追加または注入できます。
+* 従来のインターフェースを使用してエンジンに登録していたコードも、今後はアノテーションを宣言してエンジンに登録します。
+#### Remove
+##### Gateway、Connectionでのメッセージ処理を非推奨化
+* 使用性が低く、直感的でないAPIであるため、今後のリリースで削除される予定です。
+
+##### Gateway、ConnectionからTimer、Topicを削除
+* 使用性が低く、直感的でないAPIを削除しました。
+* Room、Userなど、一般的に使用されるゲームノードでは引き続き使用できます。
+#### FIX
+* ChannelCountInfo APIをリクエストする際、予期せぬエラーメッセージが発生する可能性があった問題を修正しました。
+* サーバー終了までのデフォルト待機時間が減少しました。
+* プロトコルバッファ使用時、フルパスではなくファイル名を使用するようにし、同じファイルであれば競合が発生しないように修正しました。
+* 内部でこれ以上使用しないプロトコルバッファパケットを削除しました。
+* 発生はしないが宣言されていたChecked Exceptionの宣言を削除しました。
+* 全クラスタリングを行っていないにもかかわらず、断続的に「All nodes are Ready」メッセージが出力される問題を修正しました。
+* トピック追加時、内部的にデバッグログを追加しました。
+* 内部で使用していたIpcノードを削除しました。従来のIpcの機能はIpcNetworkで管理します。
+* Node関連APIで時々ConcurrentModificationExceptionが発生する問題を修正しました。
+* サーバーを長時間実行した際に時々overflowが発生する問題を修正しました。
+* 内部ポートに不明なパケットが流入した際にクラッシュする可能性があった問題を修正しました。
+
 ### 1.4.2 (2024.02.26)
 
 #### New
@@ -38,7 +63,7 @@
     * 一部のエンジンのエラーメッセージを分かりやすく改善しました。
 * マネジメントノードは、ロケーションノードが構成されている場合にのみ、一緒に駆動するように改善しました。
     * 管理ノードがロケーションノード構成位置で自動的に駆動されるため、ユーザーが直接設定し、管理する必要がなくなりました。 また、駆動順序も気にする必要がなくなりました。
-* ログインプロセスで誤ったチャンネルIDを入力した場合のレスポンスを改善しました。
+* ログインプロセスで誤ったチャネルIDを入力した場合のレスポンスを改善しました。
     * 漠然としたSystemErrorレスポンスの代わりにログイン失敗レスポンスを送信するように修正し、より明確性が増しました。
 * 登録されていないプロトコルがペイロードに含まれてゲームサーバーに転送される場合、サーバーでエラーを処理し、クライアントにレスポンスを転送するように改善しました。
     * 既存のサーバーにWARNログだけを残す方式の場合、デバッグの過程でログを見逃す問題があり、クライアントにレスポンスを転送するように改善しました。
@@ -55,7 +80,7 @@
     * BaseChannelInfoで正常にシリアル化しない問題を修正しました。 BaseChannelInfoの代わりにGameAnvilServerでsetObjectSerializerを呼び出してシリアル化できます。
 * matchUser、matchParty呼び出し時にPayloadを入れないようにしました。 独自に保管します。
  * すべてのロケーションノード(マスターノード)がクラスタリングが完了した後にのみロケーションノードにリクエストを送信できるように修正しました。 すべてのロケーションノードがクラスタリングが完了したことを確認し、一定時間内に全体クラスタリングが完了しない場合、エラーログを残す機能を追加しました。
- * ユーザーマッチングの際、ランダムチャンネルからマッチングされたルームが作成される従来の方式から、マッチングを要求したチャンネルの中からマッチングされた部屋が作成される方式に変更しました。
+ * ユーザーマッチングの際、ランダムチャネルからマッチングされたルームが作成される従来の方式から、マッチングを要求したチャネルの中からマッチングされた部屋が作成される方式に変更しました。
   
 ------
 
@@ -65,7 +90,7 @@
 
 #### Fix
 
-* 新しく起動したノードのチャンネル情報が更新されない問題を修正
+* 新しく起動したノードのチャネル情報が更新されない問題を修正
 
 #### Change
 
@@ -126,7 +151,7 @@ GameAnvil 1.3は、以前のバージョンに比べてパケット処理性能�
 
   - すべてのユーザーが退場したルームにタイミングイシューにより、新しくユーザーが入場できる問題を修正
     - ユーザーが入場する際に空室かどうかを確認するように修正
-    - 最後のユーザーがルームから退場した直後にチャンネル情報の整理およびMatchRefillキャンセルを実行
+    - 最後のユーザーがルームから退場した直後にチャネル情報の整理およびMatchRefillキャンセルを実行
 
   - クライアントからLeaveRoomを呼び出した際にサーバーエラーが発生する問題を修正
     - UserPostLeaveRoomのパケット転送の主体をゲームユーザーファイバーに変更
@@ -246,11 +271,11 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-* チャンネル情報の管理および同期機能のリファクタリング
-  * チャンネル情報を効率的に管理できるように改善
-  * チャンネル情報をクライアントに送信する機能を改善
-  * チャンネルのルームとユーザー数を取得する機能を追加
-  * チャンネルIDを設定しなければ(すなわち""を使用すると)、それ以降チャンネル機能を使用しないように改善。チャンネルを使用したい場合は、少なくとも1つ以上の有効な文字列をチャンネルIDとして使用しなければならない。
+* チャネル情報の管理および同期機能のリファクタリング
+  * チャネル情報を効率的に管理できるように改善
+  * チャネル情報をクライアントに送信する機能を改善
+  * チャネルのルームとユーザー数を取得する機能を追加
+  * チャネルIDを設定しなければ(すなわち""を使用すると)、それ以降チャネル機能を使用しないように改善。チャネルを使用したい場合は、少なくとも1つ以上の有効な文字列をチャネルIDとして使用しなければならない。
 
 * ルームの作成時にoutPayloadがリリースされないバグを修正
 * 同じアカウントのクライアントから再接続するまで、ルームマッチメイキングが失敗し続けるバグを修正
@@ -258,7 +283,7 @@ public class GameUser extends BaseUser {
 * 発行(publish)APIを修正
   * ユーザビリティを改善
   * ユーザーが意図しないノードにpublishメッセージが送信されるバグを修正しました。また、publish APIのユーザビリティを改善しました。
-  * チャンネルIDでハングルを使用した場合、pushlishメッセージが対象ノードを見つけられないバグを修正しました。
+  * チャネルIDでハングルを使用した場合、pushlishメッセージが対象ノードを見つけられないバグを修正しました。
 
 
 
@@ -719,7 +744,7 @@ public class GameUser extends BaseUser {
 - SpaceNodeで発生するConcurrent Modificationエラーを修正
 - NodeInfoManagerのComparatorエラーを修正
 - ログアウトしたユーザーのセッションオブジェクトが整理されない問題を修正
-- マッチンググループが異なるチャンネルのユーザーに正しく適用されなかった問題を修正
+- マッチンググループが異なるチャネルのユーザーに正しく適用されなかった問題を修正
 - パーティーマッチメイキング時にTimeoutに対するコールバックを正しく得られなかった問題を修正
 
 #### Change
@@ -780,7 +805,7 @@ public class GameUser extends BaseUser {
 
 #### New
 
-- 転送可能な時点をコンテンツで調整できるようにUserとRoomにcanTransfer()インターフェイスを追加
+- 転送可能な時点をコンテンツで調整できるようにUserとRoomにcanTransfer()インターフェースを追加
 
 #### Fix
 
@@ -866,7 +891,7 @@ public class GameUser extends BaseUser {
 
 - AsyncAwait.run() APIで誤った方式で例外が処理されていたコードを修正
 - ManagementNodeが他のNodeより先に初期化されるように修正
-- チャンネルIDを使用しない場合、一部のチャンネル関連publishが抜け落ちる問題を修正
+- チャネルIDを使用しない場合、一部のチャネル関連publishが抜け落ちる問題を修正
 - CreateRoom、JoinRoomにコンテンツが失敗を返した場合、誤ったエラーコードがヘッダに載る問題を修正
 - パケットヘッダを作成すると発生していたメモリリークを修正
 - ルームマッチメイキングで発生していたメモリリークを修正
@@ -902,7 +927,7 @@ public class GameUser extends BaseUser {
 
 #### Change
 
-- 一部のインターフェイスの位置を変更
+- 一部のインターフェースの位置を変更
 - 異なるDeviceIdでログインすると、重複ログイン処理の代わりに再ログイン処理が行われるように変更
 - ルームマッチメイキングのonMatchRoom()コールバックで追加したpayloadがそれ以降のフローに含まれるように修正
 
@@ -914,7 +939,7 @@ public class GameUser extends BaseUser {
 #### New
 
 - ユーザーマッチメイキング機能を追加
-- チャンネル別のユーザーとルームリスト機能を追加
+- チャネル別のユーザーとルームリスト機能を追加
 - Embedded Redisを追加
 - Reconnect機能を追加
 - (旧)Test Agentを追加
@@ -943,8 +968,8 @@ public class GameUser extends BaseUser {
 
 #### Fix
 
-- チャンネルユーザーマネージャーでチャンネルがtopicとして使用されるpublishに対する空文字列例外処理を追加
-- チャンネルがtopicで使用されるpublishに空文字列の例外処理を追加
+- チャネルユーザーマネージャーでチャネルがtopicとして使用されるpublishに対する空文字列例外処理を追加
+- チャネルがtopicで使用されるpublishに空文字列の例外処理を追加
 - AutoJoinRoomを使用しない環境でdelNamedRoomInfo()とdelRoomInfo()を呼び出すと、DefaultRoomFinderによって発生する問題を修正
 - RoomFinderでnullチェックの欠落により発生するNullPointerExceptionを修正
 - ユーザーマッチメイキングでtimeoutされたリクエストが削除されない問題を修正
@@ -1038,17 +1063,17 @@ public class GameUser extends BaseUser {
 
 - RESTハンドリング機能を追加
 - TardisConfig.jsonにpermissionGroupsでRESTハンドリングに対して、Path & IPベースのACL機能を実装
-- Channel List(チャンネル名リスト)、Channel Information(特定チャンネルの詳細情報)
+- Channel List(チャネル名リスト)、Channel Information(特定チャネルの詳細情報)
 - Space LobbySenderにrequestToCustom、sendToCustomメソッドを追加
 - SpaceノードManagement情報に"State"項目を追加
-- Ilobby、ISessionLobby、IServiceインターフェイスに以下のvoid onShutdown() throws SuspendExecutionを追加
-- Nodeがshutdownする際にcontentsでresourceを解除できるようにonShutdown()インターフェイスが追加
+- Ilobby、ISessionLobby、IServiceインターフェースに以下のvoid onShutdown() throws SuspendExecutionを追加
+- Nodeがshutdownする際にcontentsでresourceを解除できるようにonShutdown()インターフェースが追加
 - ServiceNodeSenderにpublishToNode関数を追加
 
 #### Fix
 
 - ManagementのJMX Management APIを修正および追加(SessionGateway、CustomGateway)
-- Channel List(チャンネル名のリスト)、Channel Information(特定チャンネルの詳細情報)機能を追加
+- Channel List(チャネル名のリスト)、Channel Information(特定チャネルの詳細情報)機能を追加
 - Session、CustomノードのRESTハンドリングロジックを修正
 - Gatewayノード(Session、Custom)isConnectableTypeメソッドの戻り値を修正
 - SessionGatewayおよびCustomGatewayのラウンドロビン問題およびJMXリターン情報を修正
@@ -1070,7 +1095,7 @@ public class GameUser extends BaseUser {
 - 各Responseプロトコルのresult_code形式を従来のinteger値からenumに変更し、種類を簡素化。is_payloadフィールドを削除
 - クラス、パッケージ、関数とcfg内容がrename
 - Request、Responseプロトコルで複数のpayloadを処理できるようにclass Payloadデータ型がPacketに変更、class OutPayloadを削除
-- ユーザーTransfer-Inインターフェイスのパラメータタイプをbyte配列に変更
+- ユーザーTransfer-Inインターフェースのパラメータタイプをbyte配列に変更
 
 ---
 
@@ -1091,5 +1116,5 @@ public class GameUser extends BaseUser {
 
 - Customモジュールのネーミングをすべて新しく変更
 - 例) CustomLobby → CustomService
-- Customモジュールインターフェイスの一部を変更
+- Customモジュールインターフェースの一部を変更
 - CustomServiceSenderのsendToUser()とrequestToUser() APIにserviceId引数を追加

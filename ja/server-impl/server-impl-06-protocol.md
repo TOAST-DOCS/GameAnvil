@@ -4,7 +4,7 @@
 
 ## プロトコルの定義とコンパイル
 
-GameAnvilは[Google Protocol Buffers](https://developers.google.com/protocol-buffers)を使用してプロトコルを定義し、ビルドします。次の例では、これらのプロトコルを定義する方法とビルドする方法を説明します。まず、SampleGame.protoファイルをテキストエディタで作成した後、必要なプロトコルを定義します。プロトコルバッファの詳細については[公式Protocol Buffersガイド](https://developers.google.com/protocol-buffers/docs/proto3)を参照してください。
+GameAnvilは[Google Protocol Buffers](https://protobuf.dev/)を使用してプロトコルを定義し、ビルドします。以下の例は、これらのプロトコルを定義する方法とビルドする方法を説明します。まず、SampleGame.protoファイルをテキストエディタで作成した後、希望のプロトコルを定義します。プロトコルバッファの詳細な文法は、[公式Protocol Buffersガイド](https://protobuf.dev/programming-guides/proto3/)を参照できます。
 
 ```protobuf
 package [パッケージ名];

@@ -16,10 +16,9 @@ GatewayNodeはクライアントが接続する入り口(Gateway)です。すな
 
 ### GatewayNodeの実装
 
-このようなGatewayNodeは、BaseGatewayNodeクラスを継承して共通コールバックメソッドを再定義するだけで構いません。このような共通コールバックメソッドは、その名前が用途を明確に説明しています。また、こうして実装したクラスをエンジンに登録するために@GatewayNodeアノテーションを使用します。
-
+このようなGatewayNodeは、@GameAnvilGatewayNodeアノテーションを宣言してエンジンに登録し、IGatewayNodeインターフェースを実装してコールバックメソッドのみをオーバーライドすれば済みます。これらの共通コールバックメソッドは、その名前が用途を明確に説明しています。
 ```java
-@GatewayNode // このGatewayNodeクラスをエンジンに登録
+@GameAnvilGatewayNode // エンジンにこのクラスをGatewayとして登録
 public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
@@ -81,7 +80,6 @@ public class SampleGatewayNode extends BaseGatewayNode {
 ```
 
 
-
 ### Connectionの実装
 
 コネクションは、クライアントの物理的な接続自体を意味します。クライアントは固有のAccountIdを利用して、コネクション上で認証手続きを進行できます。認証が成功した場合、該当AccountIdは作成されたコネクションにマッピングされます。
@@ -89,7 +87,7 @@ public class SampleGatewayNode extends BaseGatewayNode {
 このようなコネクションは、次のようにBaseConnectionを継承した後、コールバックメソッドを再定義します。この時、任意のプラットフォームで認証した後、取得するユーザーのキー値などをAccountIdとして使用できます。例えば、Gamebaseを通じて認証した後、UserIdを取得すると、この値をGameAnvilの認証プロセスでAccountIdとして使用できます。また、GatewayNodeの実装と同様に、実装したクラスをエンジンに登録するために@Connectionアノテーションを使用しています。
 
 ```java
-@Connection // このコネクションクラスをエンジンに登録
+@GameAnvilGatewayConnection // エンジンにこのクラスをConnectionとして登録
 public class SampleConnection extends BaseConnection<SampleGameSession> {
 
     /**
@@ -145,7 +143,7 @@ public class SampleConnection extends BaseConnection<SampleGameSession> {
 この時、SubIdはユーザーが任意で決めたルールに合わせて、該当コネクション内のどの固有値を割り当てても構いません。すなわち、互いに異なるコネクションは、同一のSubIdを持つこともできます。しかし、異なるAccountIdを持つため、区別可能です。また、実装したセッションクラスをエンジンに登録するために@Sessionアノテーションを使用しています。
 
 ```java
-@Session // このセッションクラスをエンジンに登録
+@GameAnvilGatewaySession // エンジンにこのクラスをSessionとして登録
 public class SampleSession extends BaseSession {
 
     private static MessageDispatcher<SampleSession> dispatcher = new MessageDispatcher<>();

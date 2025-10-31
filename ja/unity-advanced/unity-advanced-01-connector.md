@@ -1,4 +1,4 @@
-## Game > GameAnvil > Unity深層開発ガイド > Connector
+## Game > GameAnvil > Unity詳細開発ガイド > Connector
 
 ## Connector
 

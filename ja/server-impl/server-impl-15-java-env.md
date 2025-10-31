@@ -9,7 +9,7 @@ IntelliJでJavaバージョンを8から11に、または11から8に切り替�
 
 ### JDKインストール
 
-GameAnvilはAdoptOpenJDKを使用します。Javaバージョンは8と11をサポートしています。ユーザーは希望するJDKを直接インストールして開発環境を構成できます。特別な理由がなければ、[AdoptOpenJDK](https://adoptopenjdk.net/)を使用することを推奨します。
+GameAnvilはAdoptium Temurinを使用します。Javaバージョンは21をサポートしています。ユーザーは希望するJDKを直接インストールして開発環境を構築できます。特別な理由がなければ、[TemurinJDK](https://adoptium.net/temurin/releases)の使用を推奨します。
 
 
 

@@ -1,5 +1,46 @@
 ## Game > GameAnvil > リリースノート > Unity Connector
 
+### 2.1.0 (2025.06.30)
+
+#### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
+#### GameAnvil 2.1.0以上
+#### New
+###### GameAnvil 2.1.0 Connector
+* GameAnvil 2.1.0サーバーのリリースに合わせて、Connectorも2.1.0バージョンをリリースします。
+  * 2.0.0と比較して機能上の大きな変更点はなく、一部のバグ修正、ResultCodeの名称変更、誤字脱字や不適切な説明などの修正があります。
+
+#### Change
+* GameAnvil 2.1サーバーに合わせてエンジンプロトコルをアップデート
+  * GameAnvil 2.1以前のバージョンのサーバーは今後サポートされません
+* GameAnvilConnectorにPacketサポート機能を追加
+  * Request()のパラメータとしてPacketを受け取れる機能を追加
+  * コールバックパラメータとしてPacketを受け取れるSetPacketCallback()を追加
+    * ユーザー定義パケットをサポート
+* Payloadにユーザー定義パケットのサポート機能を追加
+* GameAnvilConnectorがErrorResultの代わりにResultを返すように修正
+  * 非同期呼び出しの結果を返すために使用していたクラスErrorResultの名前をResultに変更
+* 一部のResultCodeを変更
+
+    | 変更前 | 変更後 |
+    | ---- | ---- |
+    | LOGIN\_FAIL\_INVALID\_SERVICE\_ID<br>失敗。不正なサービスID | LOGIN_FAIL_INVALID_SERVICE_NAME<br>失敗。不正なサービス名 |
+    | LOGIN\_FAIL\_INVALID\_USERTYPE<br>失敗。不正なユーザータイプ | LOGIN_FAIL_INVALID_USER_TYPE<br>失敗。不正なユーザータイプ |
+    | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>失敗。不正なサービスID | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>失敗。不正なサービス名 |
+    | ALL\_CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>失敗。不正なサービスID | ALL\_CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>失敗。不正なサービス名 |
+    | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>失敗。不正なサービスID | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>失敗。不正なサービス名 |
+    | ALL\_CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>失敗。チャネル情報が見つかりません | ALL\_CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>失敗。不正なサービス名 |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>失敗。マッチング申込書がnullの場合 | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>失敗。マッチング申込書がnullの場合 |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br> 失敗。マッチング情報がnullの場合 | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br> 失敗。マッチング情報がnullの場合 |
+    | FORCE\_CLOSE\_BASE\_CONNECTION<br>サーバーでBaseConnectionのclose()を呼び出し | FORCE\_CLOSE\_CONNECTION<br>サーバーでIConnectionのclose()を呼び出し |
+    | FORCE\_CLOSE\_BASE\_USER<br>サーバーでBaseUserのcloseConnection()を呼び出し | FORCE\_CLOSE\_USER<br>サーバーでIUserのcloseConnection()を呼び出し |
+
+#### Fix
+* サーバーで強制終了された場合、onDisconnectコールバックが呼び出された後にUserの状態が変更されていたのを、Userの状態が変更された後にonDisconnectコールバックが呼び出されるように修正
+* サーバーとHammerのプロトコルバッファをそれぞれ異なる環境で生成する際、生成環境によって互換性がなくなる可能性があった問題を修正
+* Request時に内部で使用されるseq値が最大値を超えた場合、レスポンスを受信できない可能性があった問題を修正
+
+---
+
 ### 1.4.0 (2023.12.13)
 
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.4.0.unitypackage)
