@@ -9,7 +9,7 @@ IntelliJ에서 Java 21 버전을 최초 설정하는 과정에서 일부 설정�
 
 ### JDK 설치
 
-GameAnvil은 AdoptOpenJDK를 사용합니다. Java 버전은 21을 지원합니다. 사용자는 원하는 JDK를 직접 설치하여 개발 환경을 구성할 수 있습니다. 특별한 이유가 없다면 [AdoptOpenJDK](https://adoptopenjdk.net/)를 사용할 것을 권장합니다.
+GameAnvil은 Adoptium Temurin을 사용합니다. Java 버전은 21을 지원합니다. 사용자는 원하는 JDK를 직접 설치하여 개발 환경을 구성할 수 있습니다. 특별한 이유가 없다면 [TemurinJDK](https://adoptium.net/temurin/releases)를 사용할 것을 권장합니다.
 
 
 

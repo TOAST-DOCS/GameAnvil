@@ -138,7 +138,7 @@ const echoReq: EchoReq = new EchoReq({message});
 
 const result = await connector.requestMessage(echoReq, EchoRes.descriptor);
 
-if (result.errorCode === ResultCode.Success) {
+if (result.resultCode === ResultCode.Success) {
     const echoRes: EchoRes = result.data;
     consoel.log(echoRes.message); // Hello World! 출력
 }

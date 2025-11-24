@@ -93,10 +93,10 @@ const authResult = await connector.authentication(deviceId, accountId, password)
 console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 ```
 
-인증 성공 여부는 Promise 결과값인 ErrorResult의 errorCode를 통해 아래와 같이 확인할 수 있습니다.
+인증 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-if (authResult.errorCode === ResultCodeAuth.AUTH_SUCCESS) {
+if (authResult.resultCode === ResultCodeAuth.AUTH_SUCCESS) {
     console.log("Authentication success");
 } else {
     console.log("Authentication fail");
@@ -284,7 +284,7 @@ connector.send(new UserInfo({name, age, job}));
 ```typescript
 const result = await connector.requestMessage(new StartReq(), StartRes.descriptor);
 
-if (result.errorCode === ResultCode.Success) {
+if (result.resultCode === ResultCode.Success) {
     const startRes: StartRes = result.data;
 }
 ```
@@ -295,7 +295,7 @@ if (result.errorCode === ResultCode.Success) {
 const packet = PacketFactory.makePacket(new StartReq());
 const result = await connector.requestPacket(packet, StartRes.descriptor);
 
-if (result.errorCode === ResultCode.Success) {
+if (result.resultCode === ResultCode.Success) {
     const startRes: StartRes = result.data;
 }
 ```

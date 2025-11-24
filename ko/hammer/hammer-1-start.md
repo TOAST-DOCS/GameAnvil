@@ -36,7 +36,7 @@ GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.
         <dependency>
 			<groupId>com.nhn.gameanvil</groupId>
 			<artifactId>gamehammer</artifactId>
-			<version>2.0.0-jdk11</version>
+			<version>2.1.0-jdk11</version>
 		</dependency>
 <dependencies>
 ```

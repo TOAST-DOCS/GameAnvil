@@ -47,7 +47,7 @@ public async void ManagerLogin()
     try
     {
         var result = await gameAnvilManager.Login();
-        if (result.loginFailReasonCode == null){
+        if (result.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
             // 성공
         } else {
             // 실패
@@ -73,7 +73,7 @@ public async void ManagerLogin()
         var authenticatePayload = new Payload(new Protocol.AuthenticateData());
         var loginPayload = new Payload(new Protocol.LoginData());
         var result = await gameAnvilManager.Login(authenticatePayload, loginPayload);
-        if (result.loginFailReasonCode == null){
+        if (retult.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
             // 성공
         } else {
             // 실패
@@ -90,7 +90,7 @@ public async void ManagerLogin()
 간편 로그인이 성공하면 LoginResult의 UserController에 로그인 완료된 유저의 GameAnvilUserController 인스턴스가 할당이 됩니다. 이 인스턴스를 이용하여 서버의 유저 객체에 접근할 수 있습니다. 간편 로그인이 실패하면 UserController 에는 null 이 할당됩니다.
 <br>
 
-간편 로그인이 실패했을 때 어떤 이유로 실패했는지는 LoginResult의 loginFailReasonCode를 이용해 LoginFailReason 를 확인할 수 있습니다. LoginFailReason으로 확인할 수 있는 실패 이유는 다음과 같습니다.
+간편 로그인이 실패했을 때 어떤 이유로 실패했는지는 LoginResult의 loginResultCode를 이용해 확인할 수 있습니다. 확인할 수 있는 실패 이유는 다음과 같습니다.
 
 | 이름                                 | 설명                                            |                                                             |
 |------------------------------------|-----------------------------------------------|-------------------------------------------------------------|
@@ -103,26 +103,25 @@ public async void ManagerLogin()
 | AUTH_FAIL_INVALID_ACCOUNT_ID       | 인증 실패. 잘못된 AccountId.                         | 빈 문자열 등                                                     |
 | AUTH_FAIL_SYSTEM_ERROR             | 인증 실패. 서버의 알수 없는 오류로 실패.                      |                                                             |    
 | AUTH_FAIL_TIMEOUT                  | 인증 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.             |                                                             |   
-| AUTH_FAIL_PARSE_ERROR              | 인증 실패. 추가 정보를 위한 메시지 파싱 실패.                   | 서버와 클라이언트의 프로토콜 정의가 다를경우 발생할 수 있다.                          |
+| AUTH_FAIL_PARSE_ERROR              | 인증 실패. 추가 정보를 위한 메시지 파싱 실패.                   | 서버와 클라이언트의 프로토콜 정의가 다를 경우 발생할 수 있다.                          |
 | LOGIN_FAIL_CONTENT                 | 로그인 실패. 사용자 코드에서 로그인 거부.                      |                                                             |
-| LOGIN_FAIL_NOT_EXIST_NODE          | 로그인 실패. 로그인 대상 노드가 존재하지 않음.                   | 서버 구성시 대상 노드를 포함한 서버를 시작하지 경우 발생할 수 있다.                     |
-| LOGIN_FAIL_INVALID_SERVICEID       | 로그인 실패. 로그인 대상 서비스가 존재하지 않음.                  | 요청시 서비스 이름을 잘못 입력하였거나, 서버 설정의 서비스 이름 설정이 잘못된 경우 발생할 수 있다.   |
+| LOGIN_FAIL_NOT_EXIST_NODE          | 로그인 실패. 로그인 대상 노드가 존재하지 않음.                   | 서버 구성 시 대상 노드를 포함한 서버를 시작하지 않는 경우 발생할 수 있다.                     |
 | LOGIN_FAIL_INVALID_SERVICE_NAME    | 로그인 실패. 로그인 대상 서비스가 존재하지 않음.                  | 요청시 서비스 이름을 잘못 입력하였거나, 서버 설정의 서비스 이름 설정이 잘못된 경우 발생할 수 있다.   |
-| LOGIN_FAIL_TIMEOUT_GAME_SERVER     | 로그인 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.            |                                                             |
-| LOGIN_FAIL_INVALID_USERTYPE        | 로그인 실패. 로그인 대상 UserType이 존재하지 않음.             | 요청시 UserType을 잘못 입력하였거나, 서버에 구현되지 않았을 경우 발생할 수 있다.          |
-| LOGIN_FAIL_INVALID_USERID          | 로그인 실패. 서버의 알수없는 이유로 UserId 생성 실패.            |                                                             |
-| LOGIN_FAIL_INVALID_CHANNEL_ID      | 로그인 실패. 로그인 대상 채널이 존재하지 않음.                   | 요청시 ChannelId를 잘못 입력하였거나, 서버 설정에 ChannelId가 없는 경우 발생할 수 있다. |
+| LOGIN_FAIL_TIMEOUT_GAME_SERVER     | 로그인 실패. 요청에 대한 응답이 정해진 시간 내에 오지 않음.            |                                                             |
+| LOGIN_FAIL_INVALID_USER_TYPE       | 로그인 실패. 로그인 대상 UserType이 존재하지 않음.             | 요청 시 UserType을 잘못 입력하였거나, 서버에 구현되지 않았을 경우 발생할 수 있다.          |
+| LOGIN_FAIL_INVALID_USER_ID         | 로그인 실패. 서버의 알 수 없는 이유로 UserId 생성 실패.            |                                                             |
+| LOGIN_FAIL_INVALID_CHANNEL_ID      | 로그인 실패. 로그인 대상 채널이 존재하지 않음.                   | 요청 시 ChannelId를 잘못 입력하였거나, 서버 설정에 ChannelId가 없는 경우 발생할 수 있다. |
 | LOGIN_FAIL_INVALID_SUB_ID          | 로그인 실패. 잘못된 SubId.                            |                                                             |
-| LOGIN_FAIL_LOGINED_OTHER_SERVICE   | 로그인 실패. 같은 AccountId로 이미 다른 서비스에 로그인 되어있음.    | 서버 구성시 중복 로그인을 허용하지 않을 경우 발생.                               |
+| LOGIN_FAIL_LOGINED_OTHER_SERVICE   | 로그인 실패. 같은 AccountId로 이미 다른 서비스에 로그인되어 있음.    | 서버 구성 시 중복 로그인을 허용하지 않을 경우 발생.                               |
 | LOGIN_FAIL_LOGINED_OTHER_CHANNEL   | 로그인 실패. 같은 AccountId로 다른 채널에 로그인 되어있음.        |                                                             |
 | LOGIN_FAIL_LOGINED_OTHER_USER_TYPE | 로그인 실패. 같은 AccountId, 다른 UserType으로 로그인 되어있음. | 서버 구현시 기존 유저와 새로 로그인한 유저 중 선택할 수 있다.                        |
 | LOGIN_FAIL_LOGINED_OTHER_DEVICE    | 로그인 실패. 같은 AccountId로 다른 기기에서 로그인 되어있음.       | 서버 구현시 기존 유저와 새로 로그인한 유저 중 선택할 수 있다.                        |
 | LOGIN_FAIL_SYSTEM_ERROR            | 로그인 실패. 서버의 알수 없는 오류로 실패.                     |                                                             |
 | LOGIN_FAIL_PARSE_ERROR             | 로그인 실패. 추가 정보를 위한 메시지 파싱 실패.                  |                                                             |
-| LOGIN_FAIL_TIMEOUT                 | 로그인 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.            |                                                             |
-| UNKNOWN_ERROR                      | 서버의 알수 없는 오류로 실패.                             |                                                             |
+| LOGIN_FAIL_TIMEOUT                 | 로그인 실패. 요청에 대한 응답이 정해진 시간 내에 오지 않음.            |                                                             |
+| UNKNOWN_ERROR                      | 서버의 알 수 없는 오류로 실패.                             |                                                             |
 
-위의 LoginFailReason 보다 자세한 실패 이유를 확인하고 싶을 때는 LoginResult의 authenticationResult이나 loginResult를 이용해 확인할 수 있습니다.
+보다 자세한 실패 이유는 LoginResult의 authenticationResult나 loginResult를 이용해 확인할 수 있습니다.
 
 ## Disconnect
 

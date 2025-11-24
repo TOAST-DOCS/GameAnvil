@@ -1,5 +1,29 @@
 ## Game > GameAnvil > 릴리스 노트 > GameHammer
 
+### 2.1.0 (2025.06.30)
+
+#### Change
+* GameAnvil 2.1.0 서버 릴리즈에 맞춰 GameHammer도 2.1.0 버전 릴리즈
+* GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
+  * GameAnvil 2.1 이전 버전의 서버는 더 이상 지원하지 않음
+* 일부 ResultCode 변경
+
+    | 변경 전 | 변경 후 |
+    | ---- | ---- |
+    | LOGIN\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | LOGIN_FAIL_INVALID_SERVICE_NAME<br>실패. 잘못된 서비스 이름 | 
+    | LOGIN\_FAIL\_INVALID\_USERTYPE<br>실패. 잘못된 유저 타입 | LOGIN_FAIL_INVALID_USER_TYPE<br>실패. 잘못된 유저 타입 |
+    | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
+    | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>실패. 잘못된 서비스 아이디 | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>실패. 잘못된 서비스 이름 |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 null일 경우 | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>실패. 매칭 신청서가 null일 경우 |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 null일 경우 | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br> 실패. 매칭 정보가 null일 경우 |
+    | FORCE\_CLOSE\_BASE\_CONNECTION<br>서버에서 BaseConnection의 close() 호출 | FORCE\_CLOSE\_CONNECTION<br>서버에서 IConnection의 close() 호출 |
+    | FORCE\_CLOSE\_BASE\_USER<br>서버에서 BaseUser의 closeConnection() 호출 | FORCE\_CLOSE\_USER<br>서버에서 IUser의 closeConnection() 호출 |
+
+#### Fix
+* 서버와 해머의 프로토콜 버퍼를 각각 다른 환경에서 생성할 때 생성 환경에 따라 서로 호환되지 않을 수 있는 문제 수정
+
+---
+
 ### 2.0.0 (2024.12.04)
 
 #### New
@@ -236,7 +260,7 @@
 
 ---
 
-### 1.0.0-EA (2020.08.03)
+### 1.0.0-EA (2020.08.03)
 
 #### New
 * Tester - GameAnvil Connector를 대신하여 서버와의 연동 기능 테스트를 지원
