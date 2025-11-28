@@ -18,7 +18,7 @@ GameAnvilはサーバーエンジンだけでなく、クライアントをサ�
 
 下記の段階を進めて作成される最終サーバーサンプルプロジェクトは下記のリンクからダウンロードできます。初期テンプレートからいくつかの段階を経てサーバー機能を実装したらどんな構造になるのか事前に確認したい場合は、該当プロジェクトをダウンロードして参照することができます。
 
-[サーバーサンプルプロジェクトのダウンロード](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilServerTutorial_1213.zip?disposition=attachment)
+[サーバーサンプルプロジェクトのダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Basic_Server.zip?disposition=attachment)
 
 ### プロジェクト構成
 
@@ -30,25 +30,25 @@ GameAnvilはサーバーエンジンだけでなく、クライアントをサ�
 
 GameAnvilではこのような一連の過程を代行してくれるIntelliJテンプレートを提供し、より簡単に初期作業を完了できます。次のリンクからIntelliJ用プロジェクトファイルテンプレートをダウンロードできます。ダウンロードしたテンプレートは解凍しないようにしてください。
 
-[テンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilTemplate.zip?disposition=attachment)
+[テンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 ダウンロードしたテンプレートを適用するためにIntelliJを実行します。 **Welcome to InteliJ IDEA**画面の左側のメニューから**Customize**を選択し、**Import Settings...**をクリックします。または全体検索窓で**Import Settings...**を検索します。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/import_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/1_import_gameanvil_template.png)
 
 <br>
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/search_import_settings.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/2_search_import_settings.png)
 
 <br>
 
 ファインダーまたはファイルエクスプローラーウィンドウでテンプレートをダウンロードしたパスに移動し、圧縮ファイルを選択します。**Select Components to Import**ウィンドウが開いたら、**File templates**項目と**Project Templates** 項目をすべてチェックして選択します。 **OK**をクリックした後、**Import and Restart**をクリックすると、IntelliJが再起動し、テンプレートの適用が完了します。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/select_import.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/3_select_import.png)
 
 IntelliJ右上のボタングループで**New Project**をクリックした後、左側のリストをスクロールして下部の**Templates**にある**GameAnvil Template**を選択します。プロジェクト名を**SynchronizeTutorial**に設定します。名前に空白があってはいけません。プロジェクトの位置とベースパッケージ名を確認した後、プロジェクトを作成します。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/imported_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/4_imported_gameanvil_template.png)
 
 これでIntelliJにサーバープロジェクトの骨格が構成されました。Projectパネルを見ると、コードと設定ファイルが作成されたことが確認できます。
 
@@ -59,7 +59,7 @@ IntelliJ右上のボタングループで**New Project**をクリックした後
 * GameAnvilConfig.json: GameAnvilの駆動に必要なサーバー設定情報を記録したファイルです。サーバーの実装に合わせて修正できます。
 * logback.xml: Javaプロジェクトでロギングを設定するために使用するファイルです。Logbackフレームワークの設定ファイルで、ロギングシステムの動作方法やログの形式、保存場所などを指定します。このファイルを使用して、ロギングレベル、ログ形式、ログファイルのパスと名前、ログローリングポリシーなどを設定できます。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_project_view_init_1213.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/5_gameanvil_project_view_init.png)
 
 ## GameAnvilサーバー設定ファイルの修正
 
@@ -79,7 +79,7 @@ IntelliJ右上のボタングループで**New Project**をクリックした後
 
 ゲームノードは必要な量に応じて、またはサーバーの性能によって複数のVMで構成して実行できます。ゲームノードを何個実行させるかについての設定をすると、サーバーの実行時に自動的に設定ファイルを読み込んで決められた数のノードを起動するようになっています。テンプレート設定にはゲームノードを1つ起動するように設定されているので、このまま使ってください。追加修正する部分はgame部分のserviceNameとchannelIDsです。
 
-GameAnvilConfig.jsonファイルのgameの最後の部分を見ると、Todoと書かれた部分があります。ここを修正してサービス名とチャンネル情報を設定します。
+GameAnvilConfig.jsonファイルのgameの最後の部分を見ると、Todoと書かれた部分があります。ここを修正してサービス名とチャネル情報を設定します。
 
 ```json
   "game": [
@@ -87,7 +87,7 @@ GameAnvilConfig.jsonファイルのgameの最後の部分を見ると、Todoと�
       "nodeCnt": 1,
       "serviceId": 1,
       "serviceName": "Todo - Input My Service Name",
-      "channelIDs": ["ToDo - Input My ChannelName","ToDo - Input My ChannelName"], // ノードごとに付与するチャンネルID(一意である必要はありません。""はチャンネルを使用しないことを意味)
+      "channelIDs": ["ToDo - Input My ChannelName","ToDo - Input My ChannelName"], // ノードごとに付与するチャネルID(一意である必要はありません。""はチャネルを使用しないことを意味)
       "userTimeout": 5000 // クライアントの接続が切断された後、ユーザーオブジェクトをサーバーから削除せずに管理する時間を設定
     }
   ]
@@ -103,9 +103,9 @@ GameAnvilConfig.jsonファイルのgameの最後の部分を見ると、Todoと�
 "serviceName" : "Sync",
 ```
 
-### チャンネルについて
+### チャネルについて
 
-チャンネルは単一サーバー群を論理的に分ける方法の1つです。例題ではチャンネルを使わないので、この文書では詳しい説明は省略します。チャンネルを使わないので、game部分のchannelIDsに下記のように内容を修正します。
+チャネルは単一サーバー群を論理的に分ける方法の1つです。例題ではチャネルを使わないので、この文書では詳しい説明は省略します。チャネルを使わないので、game部分のchannelIDsに下記のように内容を修正します。
 
 ```
 "channelIDs" : [""],
@@ -119,13 +119,13 @@ GameAnvilConfig.jsonファイルのgameの最後の部分を見ると、Todoと�
       "nodeCnt": 1,
       "serviceId": 1,
       "serviceName": "Sync",
-      "channelIDs": [""], // ノードごとに付与するチャンネルID。(一意である必要はありません。""はチャンネルを使用しないことを意味)
+      "channelIDs": [""], // ノードごとに付与するチャネルID。(一意である必要はありません。""はチャネルを使用しないことを意味)
       "userTimeout": 5000 // クライアントの接続が切れた後、ユーザーオブジェクトをサーバーから削除せずに管理する時間を設定
     }
   ]
 ```
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_config_json_1213.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/6_gameanvil_config_json.png)
 
 参考までにgatewayの設定を見ると、TCP_SOCKETコネクションは18200ポートを使うように設定されていることが確認できます。これはクライアントと接続するポートで、今後クライアントプロジェクトでサーバー接続情報を記入する部分でこのポート番号を使うことになります。
 
@@ -139,25 +139,25 @@ GameAnvilはJava 8バージョンと11バージョンをサポートします。
 
 **Project**タブでSDKの設定を確認します。もし、SDKが設定されていない場合は、**Add SDK > Download JDK**で希望のバージョンのJDKをダウンロードして設定します。**Language level**は**SDK default**に設定します。次に**Modules**タブで**Language level**を**Project default**に設定します。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/project_structure_1213.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/7_project_structure.png)
 
 **設定**メニューで**gradle**で使うJVMを確認します。**プロジェクト**SDK**と同じ**gradle**バージョンに設定します。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gradle_sdk_config_1213.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/9_gradle_config.png)
 
 ### サーバー駆動
 
-実行設定が完了したら、Mainクラスのmain()関数の左側の緑色の三角形アイコンをクリックしてMain.main()実行を選択します。このように一度実行した後は、IntelliJ右上の緑色の三角形のRunアイコンをクリックしてもサーバーが実行されます。
+実行設定が完了したら、右側のgradleメニューからTasks > other > `runMain`をダブルクリックして実行します。一度このように実行すると、その後はIntelliJの右上にある緑色の三角形の実行アイコンをクリックしてもサーバーが起動します。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run1_1213.png)
 
 build.gradleには便利なJVMオプションがあらかじめ設定されています。このような設定を活用してサーバーを実行するには、IntelliJのGradleウィンドウでTask > others > runMainを右クリックした後、GameAnvilTutorial実行をクリックします。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run2_1213.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/10_gameanvil_run.png)
 
 サーバーが正常に駆動されると、サーバー駆動状態に関するログが多数出力されます。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run_log.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/11_gameanvil_run_log.png)
 
 GameAnvilサーバーは複数のノードで構成されています。これらのノードはサーバーが実行する機能を複数の役割で分担します。まだ、サーバーの初期駆動を確認しただけで、ノードや他のサーバーを駆動するためのコードを作成していないため、完全に準備された状態ではありません。
 
@@ -173,13 +173,18 @@ GameAnvilは`Base-`という接頭辞をつけた複数のノードクラスを�
 
 プロジェクトパネルでMainクラスがあるパスを右クリックした後、**New** > Package**を選択して**node**という名前の新しいパッケージを作成します。そして、nodeパッケージをもう一度右クリックした後、**New** > BaseGameNode**を選択します。ファイル作成ダイアログが開いたら、**File name**に**SyncGameNode**、**Service Name**に**Sync**を入力し、**OK**をクリックします。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/create_sync_game_node.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/13_select_game_node_file_template.png)
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/14_create_sync_game_node.png)
 
 この機能は先にテンプレートをインストールする時、File templates(schemes)を一緒に適用したため、使うことができます。**New > BaseGameNode**の項目が見えない場合、**New > Java Class** を選択して空のクラスを作成します。
 
 自動的に作成されたコードは次のとおりです。
 
 ```java
+package com.tutorial.gameanvil.node;
+
+import com.nhn.gameanvil.game.GameAnvilGameNode;
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.node.game.BaseGameNode;
@@ -278,6 +283,7 @@ public final class SyncGameNode extends BaseGameNode {
 
     }
 }
+
 ```
 
 ### ノードについて
@@ -309,12 +315,13 @@ GameAnvilで提供されるルームベースの実装を使用するために�
 
 ユーザータイプは、各ユーザーの実装を区別するサーバーとクライアントの間で約束された文字列であり、以後、クライアントプロジェクトの実装時にユーザータイプを使用しなければならないので、覚えておいてください。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new-game-user-server.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/15_create_sync_game_user.png)
 
 自動的に作成されたコードは次のとおりです。
 
 ```java
 
+import com.nhn.gameanvil.game.GameAnvilUser;
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.annotation.ServiceName;
 import com.nhn.gameanvil.annotation.UserType;
@@ -323,6 +330,12 @@ import com.nhn.gameanvil.node.game.data.RoomMatchResult;
 import com.nhn.gameanvil.packet.Payload;
 import com.nhn.gameanvil.packet.message.MessageDispatcher;
 import com.nhn.gameanvil.serializer.TransferPack;
+
+@GameAnvilUser(
+        gameServiceName = "Sync",
+        gameType = "USER_TYPE_SYNC",
+        useChannelInfo = false
+)
 
 @ServiceName("Sync")
 @UserType("USER_TYPE_SYNC")
@@ -470,12 +483,13 @@ public final class SyncGameUser extends BaseUser {
 
 ルームタイプは、各ルームの実装を区別するサーバーとクライアントの間で約束された文字列で、以後、クライアントプロジェクトの実装時にルームタイプを入力する必要があるので、覚えておいてください。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new_game_room_server.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/16_create_sync_game_room.png)
 
 自動的に作成されたコードは次のとおりです。
 
 ```java
 
+import com.nhn.gameanvil.game.GameAnvilRoom;
 import co.paralleluniverse.fibers.SuspendExecution;
 import com.nhn.gameanvil.annotation.RoomType;
 import com.nhn.gameanvil.annotation.ServiceName;
@@ -720,7 +734,7 @@ void passwordChanged()
 
 ### Login関連フィールドの設定
 
-ログインに必要な情報を入力します。ログインに必要な情報としては、ユーザータイプ、チャンネルID、そしてサービス名があります。サーバーを実装する時に作成したユーザータイプとサービス名を使う必要があります。基本的に実行される時、サーバーで指定した値を適用するように作成します。必要な場合、UnityのInputFieldを使って値を修正できるように設定されています。
+ログインに必要な情報を入力します。ログインに必要な情報としては、ユーザータイプ、チャネルID、そしてサービス名があります。サーバーを実装する時に作成したユーザータイプとサービス名を使う必要があります。基本的に実行される時、サーバーで指定した値を適用するように作成します。必要な場合、UnityのInputFieldを使って値を修正できるように設定されています。
 
 ```c#
 void Start()

@@ -1,5 +1,11 @@
 ## Game > GameAnvil > リリースノート > Console
 
+## 2025. 06. 30.
+### Change
+* GameAnvil 2.1以上をサポート
+
+### Fix
+* その他の安定性を改善
 
 ## 2024. 01. 09.
 ### Fix
