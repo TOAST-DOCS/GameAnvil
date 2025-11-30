@@ -1,13 +1,8 @@
 ## Game > GameAnvil > Server Development Guide > MatchNode Implementation
 
-
-
 ## MatchNode and MatchMaker
 
-
-
 ![MatchNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_matchnode_on_network.png)
-
 
 Users can simply implement matching logic and apply matchmaking by activating MatchNode. Matchmaker allows users to enter any room based on matching logic. GameAnvil offers two matchmakers. UserMatchMaker, which performs user-specific matching, and RoomMatchMaker, which performs room-specific matching.
 
@@ -30,31 +25,25 @@ Let's take a look again at onMatchUser, the user matchmaking callback method des
      * Callback called when client requests userMatch 
      *  
      * @param roomType   Any value that separates the pre-defined room types between client and server  
+     * @param matchingGroup Matching group
      * @param payload    Payload received from clients  
      * @param outPayload Payload to be forwarded to clients
      * @return If the return value is true, the user matchmaking request is successful and false is failed  
-     * @throws SuspendExecution This method means that the fiber can be suspended 
- 
      */  
-    @Override  
-    public final boolean onMatchUser(final String roomType, final String matchingGroup, final Payload payload, Payload outPayload) throws SuspendExecution {  
-  
-        UserMatchInfo userMatchInfo = new UserMatchInfo(getUserId());  
-        userMatchInfo.setRating(rating);  
-  
-        return matchUser(matchingGroup, roomType, userMatchInfo, payload);  
-    } 
+    @Override
+    public boolean onMatchUser(final String roomType, final String matchingGroup, final IPayload payload, IPayload outPayload) {
 
+    SampleUserMatchInfo sampleUserMatchInfo = new SampleUserMatchInfo(getUserId(), rating);
+
+    return matchUser(matchingGroup, roomType, userMatchInfo, payload);
+}
 ```
 
 Matching groups can be defined based on skills, such as “Beginners,” “Medians” and “Masters” or they can be defined by country, such as “Korea,,“Japan” and “the United States.” In other words, any value that the user wants can be a matching group.
 
-
-
 ## Implementing User Match Maker
 
 User matchmaking places game users' matching requests on the queue. It compares and analyzes the content of this request queue at a specific interval and allows arbitrary users to enter a room based on the standard that is desired by the user. Here, engine users can focus on the logic that determines how to compare and analyze the content of the request queue and how to match users. For reference, the most popular user matchmaking game is "League of Legends."
-
 
 ### Implementing User Match Request
 
@@ -62,7 +51,6 @@ The most fundamental element of this user matchmaking is the match request itsel
 
 ```java
 public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Comparable<UserMatchInfo> {  
-  
     private int userId;  
     private int rating;  
   
@@ -75,29 +63,31 @@ public class UserMatchInfo extends BaseUserMatchInfo implements Serializable, Co
         return rating;  
     }  
   
-    /**  
-     * It is used to determine which user match request came from. 
-     *  
-     * @return Returns RoomId for party matching requests and UserId for user matching requests 
-     */  
-    @Override  
-    public int getId() {  
-        return userId;  
-    }  
+        /**
+         * Return the ID of the requesting subject
+         * <p/>
+        * If it is a party matchmaking request, it returns the room ID, and if it is a user matchmaking request, it returns the user ID.
+         *
+        * @return Returns RoomId for party matching requests and UserId for user matching requests 
+        */  
+        @Override  
+        public int getId() {  
+            return userId;  
+        }  
   
-    /**  
-     * Returns the size of the request party. 
-     *  
-     * @return Returns the size of the party (number of people) for a party matching request and 0 for a user matching request 
-     */  
-    @Override  
-    public int getPartySize() {  
-        return 0;  
+        /**  
+        * Returns the size of the request party. 
+        *  
+        * @return Returns the size of the party (number of people) for a party matching request and 0 for a user matching request 
+        */  
+        @Override  
+        public int getPartySize() {  
+         return 0;  
     }  
   
     // Implement the Computable interface if comparison is required between UserMatchInfo objects. 
     @Override  
-    public int compareTo(UserMatchInfo o) {  
+    public int compareTo(SampleUserMatchInfo  o) {  
         if (this.rating < o.getRating())  
             return -1;  
         else if (this.rating > o.getRating())  
@@ -122,116 +112,77 @@ The methods that need to be overridden in a user match request are summarized in
 | getId        | Match requester information    | It is used to determine which user the user match request is from. Therefore, it must be overridden to return the requester's ID.                                           |
 | getPartySize | Match Request Party Size | Returns the size of the request party. This value determines whether a party matchmaking request is made, which overrides to return 0 for user matchmaking requests. For a party match request, return the number of party members. |
 
-
-
 ### User match maker
 
 User matchmaker actually handles user match requests and inherits BaseUserMatchMaker abstract class provided by engine, especially since the onMatch() method is a callback that is called to perform a real match, so please take a look carefully. onRefill() method is a callback that handles fill requests for matchmaking that has already been completed. For example, you can use it to fill one more person when four people are matchmaking and one person exits the game. The example code below shows how to implement these user matchmakers.
 
-
-In particular, classes that implement matchmakers use the @ServiceName annotation to register with engine for specific services. In addition, the type of room created by the matchmaker is pre-defined as the @RoomType annotation. At this time, only one matchmaker class can be registered for one service.
-
 ```java
-@ServiceName("MyGame") // Register a matchmaker for a service called "MyGame" with engine 
-@RoomType("1vs1") // String representing the type of room created by this matchmaker 
-public class UserMatchMaker extends BaseUserMatchMaker<UserMatchInfo> {  
-  
-    private static final Logger logger = getLogger(UserMatchMaker.class);  
-  
-    public UserMatchMaker() {  
-        super(2, 5000); // Set a factor so that if the matchmaking has a capacity of two and if the request does not match within 5 seconds, the timeout is processed    }  
-  
-    private Multiset<UserMatchInfo> ratingSet = TreeMultiset.create();  
-    private final int matchMultiple = 1; // match  How many times the number of people will be gathered and then sorted by rating and matched?     
-    private int currentMultiple = matchMultiple;  
-    private long lastMatchTime = System.currentTimeMillis();  
-    private int totalMatchMakings = 0;  
-  
-    /**  
-     * Processing user matchmaking and party matchmaking requests. Called periodically after the first call. 
-     *   
-     * GetMatchRequests(int) can be used to get a complete list of match requests accumulated to date. 
-     * User uses this list to load the requests that meet the requirements in order in a separate collection, and then can complete matching by using  matchSingles(Collection), or assignRoom(BaseUserMatchInfo) or assignRoom(Collection) API.  
-     * If the minimum number of requests has not been collected, it will be processed on the next call. 
-     */  
-    @Override  
-    public void onMatch() {  
-        List<UserMatchInfo> matchRequests = getMatchRequests(matchSize * currentMultiple);  
-  
-        // Not collected by minimum number (minAmount)  
-        if (matchRequests == null) {  
-            if (System.currentTimeMillis() - lastMatchTime >= 10000)  
-                currentMultiple = Math.max(--currentMultiple, 1);  
-  
-            return;  
-        }  
-  
-        // Items that have not been matched may remain in ratingSet but need not be stored separately.  
-        // These items are delivered again in the following getMatchRequests(). 
-        ratingSet.clear();  
-        ratingSet.addAll(matchRequests);  
-  
-        if (ratingSet.size() >= matchSize) {  
-  
-            // Consume items by matchingAmount * matchSize in the order of ratingSet 
-            int matchingAmount = matchSingles(ratingSet);  
-  
-            if (matchingAmount > 0) {  
-                totalMatchMakings += matchingAmount;  
-                logger.info("{} match(s) made (total: {}) - {}", matchingAmount, totalMatchMakings, this.getMatchingGroup());  
-  
-                lastMatchTime = System.currentTimeMillis();  
-                currentMultiple = matchMultiple;  
-            }  
-        }  
-    }  
-  
-    /**  
-     * Processing to fill new users if any user leaves during user/party matchmaking 
-     *   
-     * Generally, when onLeaveRoom is called for a matchmaking room, you can call matchRefill to sync it. In other words, it is to ask for a refill when someone leaves the matched room. Refill does not use match requests stacked in the queue; it only covers new match requests that come in after refill requests. 
-     *   
-     * Can obtain refill request by using getRefillRequests API. Depending on the game, rather than using refill, it may be better to proceed with the game with any user out, or cancel the matched game and ask for matchmaking again. 
-     *  
-     * @param req New match request information to be used for refills 
-     * @return Returns true if the refill is successful and false if fails.  
-     */  
-    @Override  
-    public boolean onRefill(UserMatchInfo matchReq) {  
-        try {  
-            List<UserMatchInfo> refillRequests = getRefillRequests();  
-  
-            if (refillRequests.isEmpty()) {  
-                return false;  
-            }  
-  
-            for (UserMatchInfo refillInfo : refillRequests) {  
-                // Refill if there's no more than 100 points difference 
-                if (Math.abs(matchReq.getRating() - refillInfo.getRating()) < 100) {  
-                    if (refillRoom(matchReq, refillInfo)) { // Match the matching request to a room that requires refilling 
-                        return true;  
-                    }  
-                }  
-            }  
-        } catch (Exception e) {  
-            logger.error("UserMatchMaker::refill()", e);  
-        }  
-  
-        return false;  
-    }  
+@GameAnvilUserMatchMaker(loadClass = SampleRoom.class) // MatchMaker class registered on SampleRoom
+public class SampleUserMatchMaker extends AbstractUserMatchMaker<SampleUserMatchInfo> {
+
+    public SampleUserMatchMaker() {
+        super(2, 5000);
+    }
+
+    private int matchSize = 2;
+
+    /**
+     * Process user/party matchmaking requests
+     * <p>
+     * Call {@link IUserContext#matchUser(String, String, AbstractUserMatchInfo)} from {@link IUser#onMatchUser(String, String, com.nhn.gameanvil.packet.IPayload, com.nhn.gameanvil.packet.IPayload)}
+     * Or call {@link IRoomContext#matchParty(String, String, AbstractUserMatchInfo)} from {@link IRoom#onMatchParty(String, String, IUser, com.nhn.gameanvil.packet.IPayload, com.nhn.gameanvil.packet.IPayload)} to perform matchmaking.
+     * <p>
+    * Called periodically after the first call.
+    * <p>
+    * Get the UserMatchInfo list of users/parties that requested a match using {@link #getMatchRequests(int)}.
+    * <p>
+    * Collect requests that meet the criteria using this list and place them in the same room using {@link #matchSingles(Collection)}, {@link #assignRoom(AbstractUserMatchInfo)}, and {@link #assignRoom(Collection)}.
+    * <p>
+    * If there are not enough requests that meet the criteria, they will be processed in the next call.
+     */
+    @Override
+    public void onMatch() {
+        List<SampleUserMatchInfo> matchRequests = getMatchRequests(matchSize);
+
+        if (matchRequests == null) {
+            return;
+        }
+
+        int matchingAmount = matchSingles(matchRequests);
+    }
+
+    /**
+     * If a user leaves a room created through user/party matching, a new user is assigned.
+     * <p>
+     * Call {@link IRoomContext#matchRefill(AbstractUserMatchInfo)} from {@link IRoom#canLeaveRoom(IUser, com.nhn.gameanvil.packet.IPayload, com.nhn.gameanvil.packet.IPayload)} to fill in new users.
+    * <p>
+    * When a user/party matchmaking request is made, {@link #onRefill(AbstractUserMatchInfo)} is called first to fill a room that needs to be refilled.
+    * <p>
+    * {@link #onRefill(AbstractUserMatchInfo)} is called only once for each user/party matchmaking request and is not called periodically.
+    * <p>
+    * Unused requests remain in the list of {@link #getMatchRequests(int)} and are continuously used in {@link #onMatch()}.
+    * <p>
+    * Retrieve the UserMatchInfo list of the rooms that requested a refill using {@link #getRefillRequests()}.
+    * <p>
+    * Find requests that match the criteria req in this list and place them in a room using {@link #refillRoom(AbstractUserMatchInfo, AbstractUserMatchInfo)}.
+    *
+    * @param req UserMatchInfo of the user or party that requested the user/party match. * @return If the return value is true, the refill is successful, if false, it is unsuccessful.
+     */
+    @Override
+    public boolean onRefill(SampleUserMatchInfo matchReq) {
+        return false;
+    }
 }
 ```
 
+Specifically, a class implementing a matchmaker registers itself with a specific service in the engine. It also predefines the type of room to be created by the matchmaker. Note that a matchmaker class can only be registered with one service.
 
-
-Callback methods for these user matchmakers are summarized in the table below.
+Callback methods for these user matchmakers are summarized in the table below:
 
 | Callback name | Description                | Description                                                                                                                                                                                                                                                                                                                                                                                        |
 | --------- | ------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | onMatch   | Process match request   | Users can directly process match requests using API provided by BaseUserMatchMaker. In other words, it allows users to implement logic directly as they wish. The processing flow of example code is the most basic method. <br> In other words, the minimum match requests are obtained using getMatchRequests API, the requests are combined according to the number of people the user wants, and then put in order in a random collection. If you pass this collection as a factor to the matchSingles API, it matches the number of people in the group. For an example code, it is two-person user matchmaking, so we move around the collection and extract two people in order to match them to one game. |
 | onRefill  | Process Match refill request  | If any user leaves during the user/party matchmaking process, the process is performed to fill in the new user. In general, you can call matchRefill when onLeaveRoom is called for a match-making room. This means asking for a refill when someone leaves a matched room. Refill does not use match requests stacked in the queue. It only covers new match requests that come in after refill requests.                                                                                                                                                      |
-
-
 
 ### Send requests from GameUser to matchmaker
 
@@ -248,19 +199,15 @@ The example below shows calling the matchUser API by creating a match request th
      * @param payload    Payload delivered from clients  
      * @param outPayload Payload to be forwarded to clients   
      * @return If the return value is true, the user match making request is successful, if false it is failed 
-     * @throws SuspendExecution This method means that the fiber can be suspended 
-     */  
-    public boolean onMatchUser(final String roomType, final String matchingGroup,  
-                               final Payload payload, Payload outPayload) throws SuspendExecution {  
-  
-        UserMatchInfo userMatchInfo = new UserMatchInfo(getUserId()); // create matching request  
-        userMatchInfo.setRating(rating);  
-  
-        return matchUser(matchingGroup, roomType, userMatchInfo, payload);  
-    }
+     */
+    @Override
+    public boolean onMatchUser(final String roomType, final String matchingGroup, final IPayload payload, IPayload outPayload) {
+
+    SampleUserMatchInfo sampleUserMatchInfo = new SampleUserMatchInfo(getUserId(), rating);
+
+    return matchUser(matchingGroup, roomType, userMatchInfo, payload);
+}
 ```
-
-
 
 Finally, client can cancel the previously requested user matchmaking at any time. At this time, if the cancellation process is successful, the engine calls GameUser's onMatchUserCancel callback method as follows. Users can implement the part they want to process at the cancellation timing in this callback.
 
@@ -276,8 +223,6 @@ Finally, client can cancel the previously requested user matchmaking at any time
     }
 ```
 
-
-
 ## Implementing Room Matchmaker
 
 Room matchmaking is a feature that automatically allows users to enter the most suitable room. It is up to the user to implement which room to enter the user who requested room matchmaking. You can make to enter the room with the most users, or the quietest room. Also, you can enter the room with the highest average score. All users need to do is focus on this matching logic. For reference, the most representative room match making games include "Hangame Poker" and "Kartrider."
@@ -289,49 +234,32 @@ Room matchmaking is a feature that automatically allows users to enter the most 
 > 
 > Room matchmakers and user matchmakers operate independently of each other. In other words, if you request user matching and room matching to the same matching group, the two requests will not match together.
 
-
 ### Implement Room matching request
 
 The essence of such room matchmaking is the match request itself. A match request refers to a request sent by a single user and inherits the BaseRoomMatchForm abstract class provided by the engine, as shown below. Requests must be serializable at any time, so you need to implement an additional serializable interface. Here is an example of implementing such a match request.
 
 ```java
-public class GameRoomMatchForm extends BaseRoomMatchForm implements Serializable {  
-	  
-	// Add conditions for users to use in matching 
-	private int money;  
-	private int level;  
-  
-	public GameRoomMatchForm(int money, int level) {  
-        this.money = money;  
-        this.level = level;  
-    }  
-      
-    public GameRoomMatchForm(String matchingUserCategory) {  
-        super(matchingUserCategory);  
-    }  
-      
-    ...  
+public class SampleRoomMatchForm extends AbstractRoomMatchForm {
+    public SampleRoomMatchForm() {
+        super();
+    }
 }
 ```
 
 Room matching requests basically contain information for use in matching logic. This is used by users to implement matchmaking logic themselves. One important piece of information in room matching requests is the matching user category. A matching user category is random string to separate groups of users in a room. For example, if you're playing 2 vs. 2 teams in a four-person room, it can be used to designate which teams each user belongs to. If no value is specified, the default value of the engine is used.
-
-
 
 ### Implement Room matching information
 
 For a room to be matched, match information is managed by a room match maker. In other words, one room matching information may be considered to mean one matchable room information. In this case, various pieces of information and state values of the room may be included. It inherits and implement BaseRoomMatchInfo and must set the ID of the room, the matching user category and maximum number of people for each matching category. And finally, the serializable interface must be implemented to serialize the room matching information. Below shows an example code. 
 
 ```java
-public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable {  
-	private static final int MAX_USER = 3;  
-	  
-	public GameRoomMatchInfo(int roomId) {  
-		// If you do not need a separate matching user category, you can use the default values.    	super(roomId, MAX_USER);  
-	}  
-      
-    ...  
-} 
+public class SampleRoomMatchInfo extends AbstractRoomMatchInfo {
+    private static final int MAX_ENTRY_USER = 4;
+
+    public SampleRoomMatchInfo(int roomId) {
+        super(roomId, MAX_ENTRY_USER);
+    }
+}
 ```
 
 
@@ -363,18 +291,26 @@ public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable
 }
 ```
 
-
-
 ### Register/Refresh Room matching Information
 
 These room matching information can be registered/updated directly by user, which means that a particular room may not be registered as a room matchmaking target if user does not want to. This registration process is typically done in onCreateRoom callback method, where a room is created as follows.
 
 ```java
-@Override  
-public final boolean onCreateRoom(final GameUser user, final Payload payload, Payload outPayload) throws SuspendExecution {  
-      
-    ...  
-          
+/**
+* Call when creating a new room
+* <p/>
+* Determine whether to create a room based on the return value
+*
+* @param user The requested user object
+* @param inPayload The {@link IPayload} passed from the client
+* @param outPayload The {@link IPayload} passed to the client
+* @return If the return value is true, the room creation was successful; if false, it failed.
+*/
+@Override
+public final boolean onCreateRoom(final GameUser user, final IPayload payload, IPayload outPayload) {
+
+...
+
 	// From now on, this room will be used for room match making.  
 	registerRoomMatch(gameRoomMatchInfo, user.getUserId());  
 }
@@ -389,156 +325,65 @@ To verify room matchmaking registration for any room, BaseRoom class provides th
  * @return Returns true if it is a registered room. 
  */ 
 final public boolean isRegisteredRoomMatch() 
-
 ```
 
 This registered room matching information can be updated by user as needed at any time. You can create new room matching information for update and call updateRoomMatch API.
 
 ```java
 GameRoomMatchInfo gameRoomMatchInfo = new
-GameRoomMatchInfo(getId());  
 gameRoomMatchInfo.setMemberMoney(1000);  
   
 updateRoomMatch(gameRoomMatchInfo); // Update this room matching information. 
 ```
 
-
-
 When the room disappears, the room matching information is automatically deleted from the engine, so you don't need to delete it separately.
-
-
 
 ### Room matchmaker
 
 Now it's time to create a room matchmaker. The room matchmaker inherits BaseRoomMatchMaker abstract class provided by engine. Room matchmaking is the process of finding the most suitable room, so special callback methods are provided for before and after the actual match. Users can override these callback methods to perform any match they want. The example code below shows how these room matchmakers can be implemented.  
 
-
-
-In particular, classes that implement matchmakers use the @ServiceName annotation to register with engine for specific services. In addition, the type of room created by the matchmaker is pre-defined as the @RoomType annotation. At this time, only one matchmaker class can be registered for one service.
-
 ```java
-@ServiceName("MyGame") // Register a matchmaker for a service called "MyGame" with the engine  
-@RoomType("REDvsBLUE") // String representing the type of room created by this matchmaker 
-public class GameRoomMatchMaker extends BaseRoomMatchMaker<GameRoomMatchForm, GameRoomMatchInfo> {  
-      
-    /**  
-     * Implement the required preprocessing based on the request information before starting roommatch.     *  
-     * @param baseRoomMatchForm Room matching request received 
-     * @param args  Additional data received 
-     * @return Matching Result Code 
-     */  
-    @Override  
-    public RoomMatchResultCode onPreMatch(GameRoomMatchForm roomMatchForm, Object... args) {  
-        // If the Money in the matching request is less than 100, matching is not started, and the failure result code (1000) is delivered to the client who applied for matching 
-        if (roomMatchForm.getMoney() < 100)  
-            return RoomMatchResultCode.FAIL(1000);  
-  
-        return RoomMatchResultCode.SUCCESS;  
-    }        
-   
-  /**  
-     * Verify that the room matching request and any room matching information are matchable. 
-     * Engine calls this callback method once for the entire room list until the room matchmaking is successful. 
-     *  
-     * @param baseRoomMatchForm Room matching request received 
-     * @param baseRoomMatchInfo Room matching information registered in the matching pool (room information that can be matched) 
-     * @param args  Additional data received 
-     * @return Whether matching is successful or not  
-     */  
-    @Override  
-    public boolean canMatch(GameRoomMatchForm roomMatchForm, GameRoomMatchInfo roomMatchInfo, Object... args) {  
-        if (roomMatchForm.getLevel() > roomMatchInfo.getAvgLevel())  
-            return false;  
-        return true;  
+@GameAnvilUserMatchMaker(loadClass = SampleRoom.class) // MatchMaker class registered on SampleRoom
+public class SampleRoomMatchMaker extends AbstractRoomMatchMaker<SampleRoomMatchForm, SampleRoomMatchInfo> {
+    /**
+    * Called when requesting room matchmaking
+    * <p>
+    * Finds rooms that meet matching conditions among registered rooms and determines whether the match is successful.
+    *
+    * @param baseRoomMatchForm Room matchmaking request conditions {@link AbstractRoomMatchForm}
+    * @param baseRoomMatchInfo Room information in the matching pool {@link AbstractRoomMatchInfo}
+    * @param args Additional parameters passed
+    * @return If the return value is true, room matchmaking is successful; if false, room matchmaking is unsuccessful.
+     */
+    @Override
+    public boolean onMatch(SampleRoomMatchForm roomMatchForm, SampleRoomMatchInfo roomMatchInfo, Object... args) {
+        return false;
     }
- 
-    /**  
-     * Implement the necessary processing after the room matching is successful. 
-     *  
-     * @param baseRoomMatchForm Room matching request  
-     * @param baseRoomMatchInfo Room matching information that has matched  
-     * @param args  Additional data received 
-     */  
-    @Override  
-    public void onPostMatch(GameRoomMatchForm baseRoomMatchForm, GameRoomMatchInfo baseRoomMatchInfo, Object... args) {  
-        // Verify that the matching normally working. 
-        logger.debug("GameRoomMatchMaker::onPostMatch() matching success, roomId({})", baseRoomMatchInfo.getRoomId());  
-    }  
-      
-    /**  
-     * Implement to sort room matching information. 
-     *  
-     * @return return comparison result  
-     */  
-    @Override  
-    public int compare(GameRoomMatchInfo o1, GameRoomMatchInfo o2) {  
-        if (o1.getCreateTime() < o2.getCreateTime()) {  
-            return -1;  
-        } else if (o1.getCreateTime() > o2.getCreateTime()) {  
-            return 1;  
-        } else {  
-            return 0;  
-        }  
-    }  
-    
-    /**  
-     * Called when the number of users increases in the room where the room matching is being made.  
-     *  
-     * @param roomId   ID of Room where the number of users increased      
-     * @param matchingUserCategory Matching user categories for increased users 
-     * @param currentUserCount  Number of users in that matching user category 
-     */  
-    @Override  
-    public void onIncreaseUserCount(int roomId, String matchingUserCategory, int currentUserCount) {  
-        // Because the number of users has changed, it is to rearrange the matching pool so that rooms with fewer users match first 
-        sort();  
-    }  
-      
-    /**  
-     * Called when the number of users decreases in the room where the room matching is being made.  
-     *  
-     * @param roomId  ID of Room where the number of users increased      
-     * @param matchingUserCategory Matching user categories for decreased users 
-     * @param currentUserCount Number of users in that matching user category 
-     */  
-    @Override  
-    public void onDecreaseUserCount(int roomId, String matchingUserCategory, int currentUserCount) {  
-        // Because the number of users has changed, it is to rearrange the matching pool so that rooms with fewer users match first 
-        sort();  
-    }  
-       
-    /**  
-     * Returns a list of random room matching information.   
-     * You can process the current matching pool (the list of all matchable rooms) that you have taken over as a factor to create and return the list you want. 
-     * If you do not override this method, return the full room list.  
-     *  
-     * @return List of processed room matching information 
-     */  
-    @Override  
-    public List<GameRoomMatchInfo> getRooms(List<GameRoomMatchInfo> rooms){  
-        // Get 10 rooms from matching pool. 
-        List<GameRoomMatchInfo> gameRoomMatchInfoList = rooms.stream().limit(10).collect(Collectors.toList());  
-        // Mix the order of the 10 rooms you brought at random. 
-        Collections.shuffle(gameRoomMatchInfo);  
-  
-        return gameRoomMatchInfoList;  
-    }      
+
+    /**
+     * Compare matchmaking information for sorting
+     * <p>
+     * {@link com.nhn.gameanvil.node.game.context.IRoomContext#updateChannelRoomInfo(IChannelRoomInfo)} The matching pool is sorted by the implemented compare when calling methods, registering rooms, deleting rooms, or calling sorting methods.
+    *
+    * @param o1: The first parameter to compare.
+    * @param o2: The second parameter to compare.
+    * @return: The comparison value (-1: ascending, 0: no change, 1: descending).
+     */
+    @Override
+    public int compare(SampleRoomMatchInfo o1, SampleRoomMatchInfo o2) {
+        return 0;
+    }
 }
 ```
 
+Specifically, a class implementing a matchmaker registers itself with a specific service's engine. It also predefines the type of room to be created by the matchmaker. Note that a matchmaker class can only be registered with one service.
 
+The following table summarizes the room matchmaker's callback methods explained earlier:
 
-The following table summarizes the room matchmaker's callback methods explained earlier.
-
-| Callback name           | Description                              | Description                                                                                                                                                    |
+| Callback name           | Meaning                              | Description                                                                                                                                                    |
 | ------------------- | --------------------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onPreMatch          | Processing before starting a room matching              | It is used to check in advance whether you are currently able to perform room match making using various information stored in a room matching request. For example, if you need 100 coins for one room match making, you can check here to see if the user has more than 100 coins. |
-| canMatch            | Verify match                         | It is called to see if a match can be made between the room matching request that was forwarded as a factor and the room matching information. In other words, you can implement logic here to find the best room for that room matching request while circulating the entire room matching pool.                       |
-| onPostMatch         | Process after successful room match              | It is called after a successful room matchmaking. The logic to process after completed room matching can be implemented here.                                                                                           |
-| onIncreaseUserCount | Increasing users in any matching destination room | It is called when there are more users in any room. At this time, the number of matching user categories and the total number of people in that matching user category are also transferred as factors.                                                        |
-| onDecreaseUserCount | Decreasing users in any matching destination room | It is called when users decrease in any room. At this time, which matching user category is the reduced user and how many people are there in total for that matching user category is also transferred as a factor.                                                       |
-| getRooms            | Obtain a list of random rooms             | Default implementation of engine returns a list of rooms with full room where able to do matchmaking. Users can override this and return only a list of specific rooms they want.                                                                       |
-
+| onMatch | Check Match | Called to check if a match is possible between the room match request and the room match information passed as arguments. This function can implement logic here to iterate through the entire room match pool and find the most suitable room for the room match request. |
+| compare | Compare matchmaking information for sorting | Compares matchmaking information for sorting. The result value is -1: ascending, 0: no change, or 1: descending. |
 
 
 ### Send requests from GameUser to matchmaker
@@ -549,20 +394,20 @@ The example below shows a call to matchRoom API by creating a match request that
 
 ```java
     /**  
-     * Callback that generated when a client requests a roomMatch 
+     * Call if you receive a room matchmaking request 
      *  
      * @param roomType Any value that separates the pre-defined room types between client and server 
      * @param matchingGroup Matching group requested by client  
      * @param matchingUserCategory categories within the room to which the user belongs to  
      * @param payload  Payload delivered from clients  
-     * @return   information return that matched with {@link MatchRoomResult}, When null is returned, a new Room is created or a request failure is processed according to the client request option.
-     * @throws SuspendExecution This method means that the fiber can be suspended.  
-     */  
-    public MatchRoomResult onMatchRoom(final String roomType, final String matchingGroup, final String matchingUserCategory, final Payload payload) throws SuspendExecution {  
-          
-        GameRoomMatchForm gameRoomMatchForm = new GameRoomMatchForm(RoomMode.NORMAL, innerPayload.getOption(), 0);  
-          
-        return matchRoom(matchingGroup, roomType, gameRoomMatchForm);  
-    }
+     * @return Return the information of the room matched with the @return {@link RoomMatchResult} type. If you return null, new rooms are created according to the client request option or the request fails
+     */
+    @Override
+    public RoomMatchResult onMatchRoom(final String roomType, final String matchingGroup, final String matchingUserCategory, final IPayload payload) {
+
+    SampleRoomMatchForm sampleRoomMatchForm = new SampleRoomMatchForm(RoomMode.NORMAL, innerPayload.getOption(), 0);
+
+    return userContext.matchRoom(matchingGroup, roomType, sampleRoomMatchForm);
+}
 ```
 
