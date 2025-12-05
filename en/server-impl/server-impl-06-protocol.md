@@ -4,12 +4,12 @@
 
 ##  Protocol Definition and Compile
 
-GameAnvil uses [Google Protocol Buffers](https://developers.google.com/protocol-buffers) to define and build protocols. The examples below describe how to define and build these protocols. Firstly, create SampleGame.proto file as a text editor and define the desired protocol. For more detailed grammar on protocol buffer, refer to [Official Protocol Buffers Guide](https://developers.google.com/protocol-buffers/docs/proto3).
+GameAnvil uses [Google Protocol Buffers](https://protobuf.dev/) to define and build protocols. The examples below describe how to define and build these protocols. Firstly, create SampleGame.proto file as a text editor and define the desired protocol. For more detailed grammar on protocol buffer, refer to [Official Protocol Buffers Guide](https://protobuf.dev/programming-guides/proto3/).
 
 ```protobuf
 package [Package name];  
   
-// If any other proto file to refer to      import  
+// If any other proto file to refer to import  
 import [proto file name]  
   
 enum SampleUserTypeEnum {  
@@ -65,36 +65,31 @@ protoc ./MyGame.proto --java_out=../java --csharp_out=./
 
 GameAnvil servers support most classes of `com.google.protobuf.GeneratedMessageV3` so that proto-buffer objects can be used in any transferable method. In normal situations, there is no problem with using proto buffer object as it is, but in certain situations, such as sending it to multiple clients, you can use `com.nhn.gameanvil.packet.Packet` class to improve performance.
 
-Because the transferred GeneratedMessageV3 class is internally converted into a packet, serialized and transferred, the situation of calling `broadcastMessage` below may cause problems of serializing the same proto buffer multiple times in the process of changing to a packet.
-
-
+When sending a message to multiple clients, you can use it like this:
 ```java
-// In the following situations, performance problems can occur by serializing several times. 
-void broadcastMessage(List<GameUser> users, GeneratedMessageV3 message) {  
-    for (GameUser user : users) {  
-        user.send(message);  
-    }  
+/**
+ * Send a message to the user clients in the list provided.
+ *
+ * @param userList List of users to send the message to.
+ * @param message Message to send.
+ * @param <P> Type of message to send.
+ */
+default <P extends GeneratedMessage.Builder<P>> void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final GeneratedMessage.Builder<P> message) {
 }
-```
 
-To prevent this situation, we will modify it as follows: Packet objects hold internally serialized information, so it works normally after multiple transfers.
-
-```java
-// Fixed performance problems  
-
-void broadcastMessage(List<GameUser> users, GeneratedMessageV3 message) {  
-    Packet p = Packet.makePacket(message);   
-    for (GameUser user : users) {  
-        user.send(p);  
-    }  
-} 
-```
-
-In the following situations, it is recommended to pass over the proto buffer object as it is because there is no significant problem without the use of packets and reduced code readability.
-
-```java
-// GeneratedMessageV3 is convenient to use in the following situations. 
-void sendMessage(GameUser user, GeneratedMessageV3 message) {  
-    user.send(message);  
+/**
+ * Send a message to the user clients in the list provided.
+ *
+ * @param userList List of users to send the message to.
+ * @param message Message to send.
+ */
+default void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final GeneratedMessageV3 message) {
 }
-```
+
+/**
+ * Send a message to the user clients in the list provided.
+ *
+ * @param userList List of users to send the message to.
+ * @param packet   Packet to send
+ */
+void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final Packet packet)

@@ -1,5 +1,127 @@
 ## Game > GameAnvil > Release Notes > Unity Connector
 
+### 2.1.0 (June 30, 2025)
+
+#### [Download](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
+#### GameAnvil 2.1.0 or later
+#### New
+###### GameAnvil 2.1.0 Connector
+* To coincide with the release of GameAnvil 2.1.0 server, Connector version 2.1.0 is also being released.
+  * There are no significant functional changes compared to version 2.0.0, but some bug fixes, ResultCode name changes, typos, and incorrect descriptions have been modified.
+
+#### Change
+* Updated engine protocol for GameAnvil 2.1 servers.
+  * Servers prior to GameAnvil 2.1 are no longer supported.
+* Added Packet support to GameAnvilConnector.
+  * Added ability to receive Packets as a parameter to Request().
+  * Added SetPacketCallback() to receive Packets as a callback parameter.
+    * Support for custom packets.
+* Added support for custom packets in Payload.
+* Modified GameAnvilConnector to return Result instead of ErrorResult.
+  * Modified the name of the class ErrorResult used to return asynchronous call results to Result.
+* Modified some ResultCode.
+
+    | AS-IS | TO-BE |
+    | ---- | ---- |
+    | LOGIN\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | LOGIN_FAIL_INVALID_SERVICE_NAME<br>Failed. Invalid service name |
+    | LOGIN\_FAIL\_INVALID\_USERTYPE<br>Failed. Invalid user type | LOGIN_FAIL_INVALID_USER_TYPE<br>Failed. Invalid user type |
+    | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>Failed. Invalid service name |
+    | ALL\_CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | ALL\_CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>Failed. Invalid service name |
+    | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>Failed. Invalid service name |
+    | ALL\_CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Channel information not found | ALL\_CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>Failed. Invalid service name |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>Failed. If the matching request is null | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>Failed. If the matching request is null |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br>Failed. If the matching information is null | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br>Failed. If the matching information is null |
+    | FORCE\_CLOSE\_BASE\_CONNECTION<br>Calling close() of BaseConnection on the server | FORCE\_CLOSE\_CONNECTION<br>Calling close() of IConnection on the server |
+    | FORCE\_CLOSE\_BASE\_USER<br>Calling closeConnection() of BaseUser on the server | FORCE\_CLOSE\_USER<br>Call closeConnection() on IUser on server |
+
+#### Fix
+* Fixed the issue where the onDisconnect callback would be called after the user's status changed when the server was forcibly terminated
+* Fixed an issue where the server and Hammer protocol buffers could be incompatible depending on the creation environment when created in different environments
+* Fixed an issue where a response could not be received if the internally used seq value exceeded the maximum value during a request
+
+---
+
+
+### 2.0.0 (December 4, 2024)
+
+#### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.0.0.unitypackage)
+#### GameAnvil 2.0.0 or later
+#### <span style="color: #e11d21">New</span>
+###### GameAnvil 2.0 Connector
+* A new connector using async await has been released.
+* Completion is now detected by the return value, rather than registering a function to handle completion.
+* The GameAnvil connection and authentication code is as follows:
+
+```c#
+var (err, res) = await connector.ConnectAndAuthentication(
+                                             /*host*/"127.0.0.1", 
+                                             /*port*/18200, 
+                                             "device_id", 
+                                             "account_id", 
+                                             "password");
+```
+
+#### <span style="color: #e11d21">Remove</span>
+###### Removed ConnectionAgent
+* The distinction between ConnectionAgent and GameAnvilConnector was ambiguous.
+* GameAnvilConnector now includes the behavior of the existing ConnectionAgent.
+* Other classes have been renamed to reflect this change:
+   * UserAgnet has been renamed to GameAnvilUser.
+   * ProtocolManager has been renamed to GameAnvilProtocolManager.
+   * Components provided for Unity's convenience have also been renamed to GameAnvilManager.
+###### Removed Connector.Update
+* Now it works automatically inside the Connector.
+
+###### Removed the delegate for receiving a request response
+* Request responses are now received as return values.
+* Messages received from the server without a request still use the delegate.
+    * SetMessageCallback method
+
+#### <span style="color: #e11d21">Change</span>
+
+###### Use ProtoBuffer 4.28.3
+* Modified the internal protobuf dependency to 4.28.3.
+
+###### Directly manage UserAgent instances
+* Modified to create and use UserAgent instances directly, as shown in the example below.
+* Note that UserAgent.Dispose does not automatically log you out. UserAgent.Dispose only releases objects managed internally.
+```csharp
+using var myUser = new GameAnvilUser(connector, "ServiceName", subId);
+```
+
+###### Modified Packet Class Usability
+* No longer always attempts to convert to byte[].
+* Packet compression can now be added at creation time.
+* Packet decompression now happens automatically.
+
+###### GameAnvilConnector Concurrency
+* Fixed an issue where sending and receiving multiple requests would only send one at a time.
+* Multiple requests can now be sent and received.
+
+###### Removed MultiRequest
+* As the MultiRequest feature was removed from the server, the corresponding features were also removed from GameAnvilConnector.
+    * `public void Request(List<Packet> packetList)`
+    * `public bool Send(List<Packet> packetList)`
+
+###### Messy Overloading Cleanup
+* The excessive overloading has been cleaned up and consolidated into a minimal API for each function.
+
+    ``` c#
+    // Existing API example
+    public void Login(string userType)
+    public void Login(string userType, Interface.DelUserOnLogin onLogin)
+    public void Login(string userType, Interface.DelUserOnLogin onLogin, Interface.DelUserOnError onError)
+    public void Login(string userType, string channelId, Payload payload)
+    public void Login(string userType, string channelId, Payload payload, Interface.DelUserOnLogin onLogin)
+    public void Login(string userType, string channelId, Payload payload, Interface.DelUserOnLogin onLogin, Interface.DelUserOnError onError)
+
+    // Modified API example
+    public async Task<ErrorResult<ResultCodeLogin, LoginResult>> Login(string userType, string channelId, Payload? requestPayload = null)
+    ```
+
+#### <span style="color: #e11d21">Fix</span>
+* Fixed an issue where the connection would sometimes not work properly in fast internet environments.
+
 ### 1.4.0 (2023.12.13)
 
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.4.0.unitypackage)

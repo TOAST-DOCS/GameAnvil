@@ -13,11 +13,18 @@ GameAnvil supports a subscription-publishing model, meaning that any audience th
 Users can subscribe to any topic at any time. GameAnvil also subscribes to a few topics internally by default. These topics are broadly divided into node topics and user topics. These allow messages to be sent on a per-node basis and then delivered to objects within the node. The following is an example of code that uses these node topics and user topics to publish.
 
 ```java
-publishToUser(NodeTopic, Topic, Packet);
+/**
+ * Send packets to all users who have registered for the given node topic and general topic
+ *
+ * @param nodeTopic Topic registered by the target node that will receive the packet
+ * @param topic     Topic registered by the user who will receive the packet
+ * @param packet    {@link Packet} to send
+ */
+void publishToUser(String nodeTopic, String topic, Packet packet);
 ```
 
 
-### GameAnvil 토픽
+### GameAnvil Topic
 
 GameAnvil is internally subscribed to the following topics by default. GameAnvilTopic should never be arbitrarily subscribed to by users.
 
@@ -49,14 +56,14 @@ Below is a complete list of APIs for using Topics.
  * Check if the topic is subscribed
  * 
  * @param topic The topic to check
- * @return true if the topic is subscribed to
+ * @return If the return value is true, the user is subscribed; if false, the user is not subscribed.
  */
 boolean hasTopic(String topic)
 
 /**
- * Returns a list of subscribed topics
+ * Import a list of topics you are subscribed to
  * 
- * @returns a list of topics as a Set of Strings
+ * @returns Return the topic list
  */ 
 Set<String> getTopics()
 
@@ -64,88 +71,303 @@ Set<String> getTopics()
  * Subscribe to a topic
  * 
  * @param topic the topic to subscribe to
- * 
- * @return true on successful subscription
+ * @return If the return value is true, the subscription is successful; if it is false, the subscription is unsuccessful.
  */
 boolean addTopic(String topic)
 
 /**
  * Subscribe to multiple topics.
  * 
- * @param topics list of topics to subscribe to
- * 
- * @return true if subscribed successfully
+ * @param topics Topic to be deleted
  */
-boolean addTopics(List<String> topics)
-
- /**
-  * Unsubscribes topics
-  *
-  * @param topic the topic to unsubscribe from
-  */ 
-void removeTopic(String topic)
-
- /** 
-  * Unsubscribes from multiple topics
-  * 
-  * @param topics list of topics to unsubscribe from
-  */ 
-void removeTopics(List<String> topics)
+void removeTopic(String topic);
 ```
-
-
-
-### Client Topics
-
-A client topic is a topic that is intended to be published to a client rather than an object on the server. This means that users can subscribe to a topic as a client, as shown in the example code below.
-
-```java
-@Override
-public final boolean onLogin(final Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
-
-    ...
-        
-	// Subscribe the topic to the client associated with the user.
-	if (isVIP())
-		addClientTopics(Arrays.asList("VIP"));
-}
-```
-Below is a list of APIs for using these client topics.
-```java
-/**
- * Subscribe to multiple client topic lists.
- *
- * @param topics Pass a list of topics to subscribe to.
- */
-public void addClientTopics(List<String> topics)
-
-/**
- * Subscribes to a list of multiple client topics.
- *
- * @param topics A list of topics to unsubscribe from.
- */
-public void removeClientTopics(List<String> topics)
-
-/**
- * Returns a list of client topics.
- *
- * @returns a Set containing the subscribed client topic strings
- */
-public Set<String> getClientTopics() {
-    return this.gameUserHelper.getClientTopics();
-}
-```
-
-
 
 ### Publish
 
 Users can publish messages to any topic. Anyone who is subscribed to that topic will receive the same message.
 
-```java
-// Node topics and topics should be used separately.
-publishToUser(NodeTopic, Topic, Packet)
 
-// Client topics do not need a node topic.
-publishToClient(Topic, Packet)
-```
+The below is an API list for publishing topic:
+```java
+/**
+ *  * Send packets to all clients
+ *
+ *  * @param packet {@link Packet} to be sent
+ */
+void publishToAllClient(Packet packet);
+
+/**
+ * Send messages to all clients
+ *
+ * @param message Message to be sent
+ */
+void publishToAllClient(GeneratedMessage message);
+
+/**
+ * Send packets to all nodes that have registered a given node topic
+ *
+ * @param serviceName Service name of the target node that will receive the packet
+ * @param packet      {@link Packet} to be sent
+ */
+void publishToNodeWithServiceName(final String serviceName, final Packet packet);
+
+/**
+ * Send a message to all nodes that have registered for a given node topic
+ *
+ * @param serviceName Service name of the target node that will receive the message
+ * @param message     Message to be sent
+ */
+void publishToNodeWithServiceName(final String serviceName, final GeneratedMessage message);
+
+/**
+ * Send packets to all nodes that have registered a given node topic
+ *
+ * @param hostId Host ID of the target node that will receive the packet
+ * @param packet {@link Packet} to be sent
+ */
+void publishToNodeWithHostId(final long hostId, final Packet packet);
+
+/**
+ * Send a message to all nodes that have registered for a given node topic
+ *
+ * @param hostId  Host ID of the target node that will receive the message
+ * @param message Message to be sent
+ */
+void publishToNodeWithHostId(final long hostId, final GeneratedMessage message);
+
+/**
+ * Send packets to all nodes that have registered a given node topic
+ *
+ * @param nodeId Node ID that will receive the packet
+ * @param packet {@link Packet} to be sent
+ */
+void publishToNodeWithNodeId(final long nodeId, final Packet packet);
+
+/**
+ * Send a message to all nodes that have registered for a given node topic
+ *
+ * @param nodeId  The node ID that will receive the message
+ * @param message Message to be sent
+ */
+void publishToNodeWithNodeId(final long nodeId, final GeneratedMessage message);
+
+/**
+ * Send packets to all nodes that have registered a given node topic
+ *
+ * @param serviceName Service name of the target node that will receive the packet
+ * @param channelId   Channel ID of the target node that will receive the packet
+ * @param packet      {@link Packet} to be sent
+ */
+void publishToNodeWithChannelId(final String serviceName, final String channelId, final Packet packet);
+
+/**
+ * Send a message to all nodes that have registered for a given node topic
+ *
+ * @param serviceName Service name of the target node that will receive the message
+ * @param channelId   Channel ID of the target node that will receive the message
+ * @param message     Message to be sent
+ */
+void publishToNodeWithChannelId(final String serviceName, final String channelId, final GeneratedMessage message);
+
+/**
+ * Send packets to all nodes that have registered a given node topic
+ *
+ * @param nodeTopic Topic registered by the target node that will receive the packet
+ * @param packet    {@link Packet} to be sent
+ */
+void publishToNode(final String nodeTopic, final Packet packet);
+
+/**
+ * Send a message to all nodes that have registered for a given node topic
+ *
+ * @param nodeTopic Topic registered by the target node to receive the message
+ * @param message   Message to be sent
+ */
+void publishToNode(final String nodeTopic, final GeneratedMessage message);
+
+/**
+ * Send packets to all users who have registered for the given node topic and general topic
+ *
+ * @param serviceName Service name of the target node that will receive the packet
+ * @param topic       Topic registered by the user who will receive the packet
+ * @param packet      {@link Packet} to be sent
+ */
+void publishToUserWithServiceName(final String serviceName, final String topic, final Packet packet);
+
+/**
+ * Send a message to all users who have registered for the given node topic and general topic
+ *
+ * @param serviceName Service name of the target node that will receive the message
+ * @param topic       Topic registered by the user who will receive the packet
+ * @param message     Message to be sent
+ */
+void publishToUserWithServiceName(final String serviceName, final String topic, final GeneratedMessage message);
+
+/**
+ * Send packets to all users who have registered for the given node topic and general topic
+ *
+ * @param hostId Host ID of the target node that will receive the packet
+ * @param topic  Topic registered by the user who will receive the packet
+ * @param packet {@link Packet} to be sent
+ */
+void publishToUserWithHostId(final long hostId, final String topic, final Packet packet);
+
+/**
+ * Send a message to all users who have registered for the given node topic and general topic
+ *
+ * @param hostId  Host ID of the target node that will receive the message
+ * @param topic   Topic registered by the user who will receive the packet
+ * @param message Message to be sent
+ */
+void publishToUserWithHostId(final long hostId, final String topic, final GeneratedMessage message);
+
+/**
+ * Send packets to all users who have registered for the given node topic and general topic
+ *
+ * @param nodeId Node ID that will receive the packet
+ * @param topic  Topic registered by the user who will receive the packet
+ * @param packet {@link Packet} to be sent
+ */
+void publishToUserWithNodeId(final long nodeId, final String topic, final Packet packet);
+
+
+/**
+ * Send a message to all users who have registered for the given node topic and general topic
+ *
+ * @param nodeId  The node ID that will receive the message
+ * @param topic   Topic registered by the user who will receive the packet
+ * @param message Message to be sent
+ */
+void publishToUserWithNodeId(final long nodeId, final String topic, final GeneratedMessage message);
+
+/**
+ * Send packets to all users who have registered for the given node topic and general topic
+ *
+ * @param serviceName Service name of the target node that will receive the packet
+ * @param channelId   Channel ID of the target node that will receive the packet
+ * @param topic       Topic registered by the user who will receive the packet
+ * @param packet      {@link Packet} to be sent
+ */
+void publishToUserWithChannelId(final String serviceName, final String channelId, final String topic, final Packet packet);
+
+/**
+ * Send a message to all users who have registered for the given node topic and general topic
+ *
+ * @param serviceName Service name of the target node that will receive the message
+ * @param channelId   Channel ID of the target node that will receive the message
+ * @param topic       Topic registered by the user who will receive the packet
+ * @param message     Message to be sent
+ */
+void publishToUserWithChannelId(final String serviceName, final String channelId, final String topic, final GeneratedMessage message);
+
+/**
+ * Send packets to all users who have registered for the given node topic and general topic
+ *
+ * @param nodeTopic Topic registered by the target node that will receive the packet
+ * @param topic     Topic registered by the user who will receive the packet
+ * @param packet    {@link Packet} to be sent
+ */
+void publishToUser(String nodeTopic, String topic, Packet packet);
+
+/**
+ * Send a message to all users who have registered for the given node topic and general topic
+ *
+ * @param nodeTopic Topic registered by the target node to receive the message
+ * @param topic     Topic registered by the user who will receive the packet
+ * @param message   Message to be sent
+ */
+void publishToUser(String nodeTopic, String topic, GeneratedMessage message);
+
+/**
+ * Send packets to all rooms that have registered the given node topic and general topic
+ *
+ * @param serviceName Service name of the target node that will receive the packet
+ * @param topic       Topic registered by the user who will receive the packet
+ * @param packet      {@link Packet} to be sent
+ */
+void publishToRoomWithServiceName(final String serviceName, final String topic, final Packet packet);
+
+/**
+ * Send a message to all rooms that have registered the given node topic and general topic.
+ *
+ * @param serviceName Service name of the target node that will receive the message
+ * @param topic       Topic registered by the user who will receive the packet
+ * @param message     Message to be sent
+ */
+void publishToRoomWithServiceName(final String serviceName, final String topic, final GeneratedMessage message);
+
+/**
+ * Send packets to all rooms that have registered the given node topic and general topic
+ *
+ * @param hostId Host ID of the target node that will receive the packet
+ * @param topic  Topic registered by the user who will receive the packet
+ * @param packet {@link Packet} to be sent
+ */
+void publishToRoomWithHostId(final long hostId, final String topic, final Packet packet);
+
+/**
+ * Send a message to all rooms that have registered the given node topic and general topic.
+ *
+ * @param hostId  Host ID of the target node that will receive the message
+ * @param topic   Topic registered by the user who will receive the packet
+ * @param message Message to be sent
+ */
+void publishToRoomWithHostId(final long hostId, final String topic, final GeneratedMessage message);
+
+/**
+ * Send packets to all rooms that have registered the given node topic and general topic
+ *
+ * @param nodeId Node ID that will receive the packet
+ * @param topic  Topic registered by the user who will receive the packet
+ * @param packet {@link Packet} to be sent
+ */
+void publishToRoomWithNodeId(final long nodeId, final String topic, final Packet packet);
+
+/**
+ * Send a message to all rooms that have registered the given node topic and general topic.
+ *
+ * @param nodeId  The node ID that will receive the message
+ * @param topic   Topic registered by the user who will receive the packet
+ * @param message Message to be sent
+ */
+void publishToRoomWithNodeId(final long nodeId, final String topic, final GeneratedMessage message);
+
+/**
+ * Send packets to all rooms that have registered the given node topic and general topic
+ *
+ * @param serviceName Service name of the target node that will receive the packet
+ * @param channelId   Channel ID of the target node that will receive the packet
+ * @param topic       Topic registered by the user who will receive the packet
+ * @param packet      {@link Packet} to be sent
+ */
+void publishToRoomWithChannelId(final String serviceName, final String channelId, final String topic, final Packet packet);
+
+/**
+ * Send a message to all rooms that have registered the given node topic and general topic.
+ *
+ * @param serviceName Service name of the target node that will receive the message
+ * @param channelId   Channel ID of the target node that will receive the message
+ * @param topic       Topic registered by the user who will receive the packet
+ * @param message     Message to be sent
+ */
+void publishToRoomWithChannelId(final String serviceName, final String channelId, final String topic, final GeneratedMessage message);
+
+/**
+ * Send packets to all rooms that have registered the given node topic and general topic
+ *
+ * @param nodeTopic Topic registered by the target node that will receive the packet
+ * @param topic     Topic registered by the room that will receive the packet
+ * @param packet    {@link Packet} to be sent
+ */
+void publishToRoom(String nodeTopic, String topic, Packet packet);
+
+/**
+ * Send a message to all rooms that have registered the given node topic and general topic.
+ *
+ * @param nodeTopic  * @param nodeTopic Topic registered by the target node to receive the message
+
+ * @param topic     Topic registered by the room that will receive the message
+ * @param message   Message to be sent
+ */
+void publishToRoom(String nodeTopic, String topic, GeneratedMessage message);

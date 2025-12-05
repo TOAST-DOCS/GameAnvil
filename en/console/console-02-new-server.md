@@ -81,11 +81,11 @@ The above image consists of a total of four game nodes as follows.
 
 | Node type   | Service name | Count of running | Description                                                                                                          |
 |---------|--------------|-------|----------------------------------------------------------------------------------------------------------------------|
-| GATEWAY | -            | 1     | 클라이언트 접속과 인증을 처리하는 노드.                                                                                               |
+| GATEWAY | -            | 1     | A node that handles client access and authentication.                                                                                               |
 | GAME    | RPSGame      | 4     | It is a game node where game content is implemented and is responsible for channels from ch 1 to ch 4, respectively. |
-| MATCH   | -            | 2     | 매치 메이킹을 수행                                                                                                           |
-| Support | DB           | 2     | 필요에 따라 독립된 서비스로 구현하도록 지원                                                                                             |
-| Support | WEB          | 2     | 필요에 따라 독립된 서비스로 구현하도록 지원                                                                                             |
+| MATCH   | -            | 2     | Perform matchmaking                                                                                                           |
+| Support | DB           | 2     | Support implementation as a standalone service as needed                                                                                             |
+| Support | WEB          | 2     | Support implementation as a standalone service as needed                                                                                             |
 
 
 At this time, the service name entered in the configuration information (Config) must be the same as the information used in server development. If you enter a value different from the information used in the server implementation, the server will not run normally. The channel value is also exposed as it is in the configuration information (Config).
@@ -101,8 +101,13 @@ When the server runs normally, it changes to **RUNNING** state as shown in the i
 
 You can view server details by clicking on any item in the server list.
 
-![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/server_details.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/server_details.png)
 
+## Dynamic Log Level Setting
+
+You can set dynamic log levels by clicking **Set Log Level** on the details screen of a running server. Changed log levels only apply while the server is running and are not saved to the logback file. If you shut down and restart the server, it will be reset to the logback settings.
+
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/dynamic_log_level.png)
 
 ## Check Created Node Information
 

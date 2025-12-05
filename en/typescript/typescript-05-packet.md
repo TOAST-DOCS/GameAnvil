@@ -1,12 +1,12 @@
-## Game > GameAnvil > CocosCreator 개발 가이드 > 패킷
+## Game > GameAnvil > CocosCreator Development Guide > Packet
 
-### 패킷
+## Packet
 
-서버와 주고 받는 모든 메시지는 패킷에 실려서 처리됩니다.
+All messages sent and received by the server are uploaded and processed in a packet.
 
-#### 생성
+### Create
 
-Protocol Buffer를 이용한 생성 방법은 아래와 같습니다.
+The following are the creation methods using Protocol Buffer:
 
 ```typescript
 const message: IMessage;
@@ -14,24 +14,24 @@ const message: IMessage;
 const packet: Packet = PacketFactory.makePacket(message);
 ```
 
-그 외 Uint8Array 형식의 패킷 생성 방식은 아래와 같습니다.
+Other Uint8Array format packet creation methods are as follows:
 ```typescript
 const data: Unit8Array;
 
 const packet: Packet = PacketFactory.makeCustomPacket(1, data);
 ```
 
-#### 압축
+### Compress
 
-패킷 크기가 클 경우 압축하여 데이터 사용량을 줄일 수 있습니다.
+If the packet size is large, you can compress it to reduce data usage.
 
 ```typescript
 const packet: Packet = PacketFactory.makePacket(message, PacketOption.compress);
 ```
 
-### 패이로드
+### Payload
 
-GameAnvil에서 제공하는 기본 API를 이용할 때 추가적인 데이터가 필요할 수 있습니다. 이를 위해 기본 API들에는 추가 데이터를 넘겨줄 수 있는 payload라는 매개변수가 포함되어 있습니다. 이 payload에 필요한 데이터를 패킷에 담아 list 형식으로 저장할 수 있습니다. 여기에 추가 데이터를 넣어 서버로 보내거나, 서버에서 보낸 메시지를 꺼낼 수 있습니다.
+Additional data may be required when using the default API provided by GameAnvil. To this end, basic APIs include a parameter called payload that can release additional data. You can store the data required for this payload in list format in a packet. You can put additional data here to send to the server or extract messages sent from the server.
 
 ```typescript
 const message: IMessage;

@@ -1,215 +1,239 @@
-## Game > GameAnvil > Server Development Guide > GatewayNode Implementation
-
-
+## Game > GameAnvil > Server Development Guide > Implement Gateway Node
 
 ## Gateway Node
 
 ![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gatewaynode_on_network.png)
 
-Gateway Node is the gateway to which the client accesses. In other words, it manages the client's connections and sessions for game services. At this time, the client must access the Gateway Node and complete authentication in order to proceed with the game. Their relationship is shown in the following image.
+GatewayNode is a gateway accessed by the client. The service manages sessions for client connections and game services. At this time, the client must log in to GatewayNode to proceed with the game and complete the authentication. The relationship between them is as in the following image:
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
-In general, a client has a connection with a Gateway Node. At this time, you can proceed with the authentication process for that connection and create one or more sessions only if it is successful. Each session is a logical unit of connection between the client and the user. The image above shows the client creating a session with Game and Chat services through a single connection. This structure makes it simple to [Session Recovery ](#session-recovery) even if the client is unintentionally disconnected.
+Typically, a client establishes one connection to a GatewayNode. At this time, the service allows you to proceed with the authentication procedure for the connection. If it’s successful, you can create one or more sessions in one year. Each session is the logical unit of connection between the client and the user. The image above shows a session created by the client with the Game service and the Chat service through one connection. This structure allows simple [session recovery](#session-recovery) even if the client's connection is accidentally lost.
 
+### Implement GatewayNode
 
-
-### GatewayNode implementation
-
-These GatewayNodes only need to inherit the BaseGatewayNode class and override the common callback method. These common callback methods clearly state the purpose of their names. They also use the @GatewayNode annotation to register the class they implemented with engine.
-
+For such GatewayNode, @GameAnvilGatewayNode annotation can be declared and registered in the engine, and the IGatewayNode interface can be implemented to redefine only the callback method. These common callback methods are clearly explained with their name.
 ```java
-@GatewayNode // Register this GatewayNode class with the engine
-public class SampleGatewayNode extends BaseGatewayNode {
+@GameAnvilGatewayNode // Register this class as Gateway in the engine
+public class SampleGatewayNode implements IGatewayNode {
+    private IGatewayNodeContext gatewayNodeContext;
 
     /**
-     * Called at initialization time
+     * Call to send gateway node context
+     * <p/>
+     * Call once after the object is created
      *
-     * @throws SuspendExecution This method means that the fiber can be suspended.
+     * @param gatewayNodeContext Gateway Node Context
      */
     @Override
-    public void onInit() throws SuspendExecution { 
+    public void onCreate(IGatewayNodeContext gatewayNodeContext) {
+        this.gatewayNodeContext = gatewayNodeContext;
     }
 
     /**
-     * Called for parts to be processed before they're ready
+     * Call when the node is initialized
+     */
+    @Override
+    public void onInit() {
+
+    }
+
+    /**
+     * Call for what to handle before you get Ready
+     */
+    @Override
+    public void onPrepare() {
+
+    }
+
+    /**
+     * Call when you are Ready
+     */
+    @Override
+    public void onReady() {
+
+    }
+
+    /**
+     * Call when Pause
      *
-     * @throws SuspendExecution This method means we can suspend the fiber
+     * Additional information to send from the @param payload content
      */
     @Override
-    public void onPrepare() throws SuspendExecution {
+    public void onPause(IPayload payload) {
+
     }
 
     /**
-     * Called when ready
+     * Call when you receive the Shutdown command
+     */
+    @Override
+    public void onShuttingdown() {
+
+    }
+
+    /**
+     * Call when Resume
      *
-     * @throws SuspendExecution This method means that the fiber can be suspended.
+     * Additional information to send from the @param payload content
      */
     @Override
-    public void onReady() throws SuspendExecution { 
-    }
+    public void onResume(IPayload payload) {
 
-    /**
-     * Called when paused
-     * 
-     * @param payload contents any additional information you wish to pass
-     * @throws SuspendExecution This method means the fiber can be suspended
-     */
-    @Override
-    public void onPause(Payload payload) throws SuspendExecution { 
-    }
-
-    /** 
-     * Called when resuming
-     * 
-     * @param payload contents any additional information you wish to pass
-     * @throws SuspendExecution This method means that the fiber can be suspended
-     */
-    @Override
-    public void onResume(Payload payload) throws SuspendExecution { 
-    }
-
-    /**
-     * Called when a shutdown command is received
-     *
-     * @throws SuspendExecution This method means that the fiber can be suspended.
-     */
-    @Override
-    public void onShutdown() throws SuspendExecution { 
     }
 }
 ```
-### Connection implementation
 
-Connection means the client's physical connection itself. Clients can use their own AccountId to proceed with the authentication process on the connection. If authentication is successful, the AccountId is mapped to the connection that was created.
 
-These connections override the callback methods after inheriting BaseConnection as follows. At this time, you can use AccountId as a key value for the user that you obtain after authenticating on any platform. For example, if you obtain UserId after authenticating through Gamebase, you can use this value as AccountId during GameAnvil's authentication process. In addition, @Connection Annotation is used to register the class you implemented with engine, just like the GatewayNode implementation.
+### Implement Connection
+
+Connection designates the physical access itself to the client. The client can proceed with the authentication procedure on the connection using its unique AccountId. If authentication succeeds, the accountId is mapped to the created connection.
+
+After implementing IConnection, these connections redefine the callback methods as follows. At this time, you can use the user's key value obtained after authenticating from any platform as AccountId. For example, if you acquire a UserId after authenticating through Gamebase, this value can be used as an AccountId in the GameAnvil authentication process. 
 
 ```java
-@Connection // Register this connection class to the engine 
-public class SampleConnection extends BaseConnection<SampleGameSession> {  
-  
-    /**  
-     * Call when authenticating  
-     *  
-     * @param accountId  Account ID  
-     * @param password   Account password  
-     * @param deviceId   Client’s device ID  
-     * @param payload    Payload delivered from clients 
-     * @param outPayload Payload to be forwarded to clients 
-     * @return Authentication successful or not: If false, the connection to the client is terminated 
-     * @throws SuspendExecution This method means that the fiber can be suspended 
-     */  
-    @Override  
-    public boolean onAuthenticate(final String accountId, final String password, final String deviceId, final Payload payload, final Payload outPayload) throws SuspendExecution {        
-    }  
-  
-    @Override  
-    public void onPause() throws SuspendExecution {  
-    }  
-  
-    @Override  
-    public void onResume() throws SuspendExecution {  
-    }  
-  
-    /**  
-     * Call when disconnected from the client 
-     *  
-     * @throws SuspendExecution This method means that the fiber can be suspended 
-     */  
-    public void onDisconnect() throws SuspendExecution {        
-    }  
+@GameAnvilGatewayConnection // Register this class as a Connection in the engine 
+public class SampleConnection implements IConnection {
+    private IConnectionContext connectionContext;
+    
+    /**
+     * Call to send connection context
+     * <p/>
+     * Call once after the object is created
+     *
+     * @param connectionContext connection context
+     */
+    @Override
+    public void onCreate(IConnectionContext connectionContext) {
+        this.connectionContext = connectionContext;
+    }
+
+    /**
+     * Call for authentication requests
+     *
+     * @param accountId  account ID
+     * @param password  account password
+     * @param deviceId   device ID of client
+     * @param payload    {@link IPayload} sent by client
+     * @param outPayload  {@link IPayload} to be sent to the client
+     * If the @return return value is true, the authentication succeeded, and if false, the connection to the client ended.
+     */
+    @Override
+    public boolean onAuthenticate(String accountId, String password, String deviceId, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    /**
+     * Call when the node belonging to the connection is Pause
+     */
+    @Override
+    public void onPause() {
+
+    }
+
+    /**
+     * Call when the node belonging to the connection is Resume
+     */
+    @Override
+    public void onResume() {
+
+    }
+
+    /**
+     * Call when connection to the client is lost
+     */
+    @Override
+    public void onDisconnect() {
+
+    }
 }
 ```
 
-Refer to the table below for the meaning and purpose of these callbacks.
 
+For the meaning and usage of these callbacks, see the table below:
 
-| Callback name      | Description                | Description                                                                                                                                                                                                                                                    |
-| ---------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| onAuthenticate | Verify                | It is called when the client requests authentication for the connection using the Authentication() API. Here, the user can proceed with the authentication process based on the authentication information sent by client. If the authentication is successful, it must return true, and if fails, it must return false. |
-| onPause        | Pause           | When you pause a Gateway Node through the console, it is called for all connections in that Gateway Node. Users can implement additional code they want to process in the Connection here when the node is paused.                                                             |
-| onResume       | Resume                | When the Gateway Node resumes operation from a pause through console, it is called for all connections in that Gateway Node. Users can implement the code they want to process for the connection here in the resume state.                                              |
-| onDisconnect   |  Disconnect           | It is called when the connection is lost from the client. At this time, the code to be further processed is implemented here.                                                                                                                                                           |
-| getMessageDispatcher | Has hackets to process | Returns a message when the node has a message to process. Users can use the dispatchers they declare. For more information, refer to [Message Processing](./server-impl-07-message-handling#13-getMessageDispatcher). |
+| Callback Name | Meaning | Description |
+|----------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| onCreate | Create object | Called when the object is created. You receive the context where the API available for the created type can be used. If needed in the content, you can save and use it. |
+| onAuthenticate | Authentication | Calls are called when the client requests authentication for the connection using the Authentication() API. The user can proceed with authentication processing based on the credentials sent by the client here. If authentication succeeds, you must return true and false if the authentication fails. |
+| onPause | Pause | Pause of GatewayNode through the console, all connections to the GatewayNode will be called. Here, when the node is temporarily stopped, the user can implement the code he wants to process additionally in the connection. |
+| onResume | Resume | When GatewayNode runs again during a temporary stop, all connections in the GatewayNode are called. Here, the user can implement the code he wants to process for the connection in a restarted state. |
+| onDisconnect | Access Ended | Called when the connection is lost from the client. At this time, the code to be processed is implemented here. |
 
+### Perform Session
 
+Clients who are successfully connected can enter a logical session for GameNode, one per service, between those connections. GameAnvil internally combines the accountId of the connection and the subId of the session to allow unique sessions to be distinguished across the server.
 
-### Session implementation
-
-Clients who successfully establish a connection can have one logical session for GameNode on that connection, one for each service. GameAnvil can internally combine the AccountId of the connection with the SubId of the session to distinguish between unique sessions across the entire server.
-
-At this time, SubId can be assigned to any unique value within that connection according to random rules set by the user. In other words, different connections can have the same SubId. However, since they have different AccountId, they can be distinguished. In addition, @Session annotation is used to register the implemented session class with engine.
+In this case, SubId can be allocated to any unique value within that connection according to random rules the user sets. In other words, different connections may have the same SubId. But it is possible to distinguish because they have different AccountId.
 
 ```java
-@Session // Register this session class to the engine 
-public class SampleSession extends BaseSession {  
-  
-    private static MessageDispatcher<SampleSession> dispatcher = new MessageDispatcher<>();  
-  
-    static {  
-        dispatcher.registerMsg(SampleGame.MsgToSessionReq.class, _MsgToSessionHandler.class);  
-    }  
-  
-    @Override  
-    public MessageDispatcher<SampleSession> getMessageDispatcher() {  
-        return dispatcher;  
-    }  
-  
-    /**  
-     * Call before login call  
-     *  
-     * @param outPayload Payload to be forwarded to clients 
-     * @throws SuspendExecution This method means that the fiber can be suspended  
-     */  
-    @Override  
-    public void onPreLogin(Payload outPayload) throws SuspendExecution {        
-    }  
-  
-    /**  
-     * Call after successful login  
-     *  
-     * @throws SuspendExecution This method means that the fiber can be suspended  
-     */  
-    @Override  
-    public void onPostLogin() throws SuspendExecution {        
-    }  
-  
-    /**  
-     * Call after logout  
-     *  
-     * @throws SuspendExecution This method means that the fiber can be suspended 
-     */  
-    @Override  
-    public void onPostLogout() throws SuspendExecution {  
-    }  
+@GameAnvilGatewaySession  // Register this class as a session 
+public class SampleSession implements ISession {
+    private ISessionContext sessionContext;
+
+    /**
+     * Call to send the session context
+     * <p/>
+     * Call once after the object is created
+     *
+     * @param sessionContext session context
+     */
+    @Override
+    public void onCreate(ISessionContext sessionContext) {
+        this.sessionContext = sessionContext;
+    }
+
+    /**
+     * Call before login calls
+     *
+     * @param outPayload  {@link IPayload} to be sent to the client
+     */
+    @Override
+    public void onBeforeLogin(IPayload payload) {
+
+    }
+
+    /**
+     * Call after login succeeded
+     */
+    @Override
+    public void onAfterLogin(boolean isReLogined) {
+
+    }
+
+    /**
+     * Call after logout
+     */
+    @Override
+    public void onAfterLogout() {
+
+    }
 }
 ```
 
-Refer to the table below for the meaning and purpose of these callbacks.
+For the meaning and usage of these callbacks, see the table below:
 
 
-| Callback name    | Description                | Description                                                                                                                                                                                                                                          |
-| -------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| onPreLogin   | Login pre-process       | It is called just before requesting a login to the GameNode. At this time, the user can put any value in the output payload delivered as a parameter and load it into the login request. This payload is delivered as it is when the game node processes a login callback. |
-| onPostLogin  | Login post-process       | Called after completing login to GameNode. If there is a code to handle in the session after login, you can implement it here.                                                                                                                                   |
-| onPostLogout | Logout post-process     | It is called after the logout processing is complete. If there is a code to be processed in the session after the logout, you can implement it here.                                                                                                                                       |
-| getMessageDispatcher | Has hackets to process | It returns when the node has a message to process. Users can use the dispatchers they declare. For more information, refer to [Message Processing](./server-impl-07-message-handling#13-getMessageDispatcher). |
-
-
+| Callback name | Meaning | Description |
+|----------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| onCreate | Create object | Call when the object is created. You receive the context where the API available for the created type can be used. If needed from the content, you can save and use it. |
+| onBeforeLogin | Pre-Login Process | GameNode will be called just before you request login. At this time, the user can enter a value for the outPayload delivered as a parameter and send it to the login request. This payload is delivered as it is when processing the login callback from the game node. |
+| onAfterLogin | Login After Processing | After logging in to GameNode, the payload is called. If there is any code to be processed by the session after logging in, implement it here. |
+| onAfterLogout | Logout After Processing | You will be called after logout processing is completed. If there is any code to be processed in the session after logout, implement it here. |
 
 ## Connection and Session
 
-Client connects to the gateway node. That is, it creates a connection. This connection allows authentication and login based on account and user information. Once login is completed, a user object is created on any game node. This means that a logical session has been created between the gateway node and its game node. Once the connection and session creation are completed, the user will be able to proceed with the game. We'll revisit this when we explain the game node right behind us.
+The client connects to the gateway node. Create a connection, for example. This connection allows you to authenticate and log in based on your account and user information. Once logged in, the user object is created in the random game node. It means that a logical session has been created between the gateway node and the game node. Once the connection and session creation are complete, the user can proceed with the game. We'll come back to this later when we discuss game nodes.
 
 ### Session Recovery
 
-If a reconnection occurs between the client and the gateway node, session recovery proceeds as shown in the image below. During the reconnection process, the client can also attempt a connection to a different location among multiple gateway nodes than before. In this case, the session is newly restored based on the location information for the game node where the user object exists. Therefore, the user can continue the previous game state even if he reconnects during the game.
+If a re-connection occurs between the client and the gateway node, Session Recovery proceeds as shown in the image below. In the process of reconnecting, the client may try to connect to any of the multiple gateway nodes. In this case, a new session is restored based on the location information of the game node where the user object exists. Therefore, even if the user resumes during the game, the user can continue to play the previous game status.
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionRecovery.png)
 
 ### Location Node
 
-The location node is visible in Connection Recovery image that we explained earlier. A location node is a system node where GameAnvil manages location information internally, such as users and rooms. Users cannot implement or use the location node directly. However, understanding the role of the location node in managing location information can help us understand the flow of the overall GameAnvil system, so I would like to briefly mention it here.
+The location node is shown in the connection recovery image you looked at earlier. A location node is a system node that GameAnvil internally manages location information, such as users and rooms. The user cannot directly implement or use the location node. However, to understand the role of the location node in managing location information, it is easy to understand the flow of the overall GameAnvil system.
 
-Let's take the above connection recovery as an example. As the client first connects and attempts to log in to the game node, all related session information and user location information are stored on the location node. Therefore, you can inquire about this location information that was saved during the previous connection process when reconnecting. This location information is very important for GameAnvil internally inquiring about the location of a user or room and delivering messages based on it.
+Take the connection recovery above as an example. As the client attempts to log in to the game node with its first access, all related sessions and user location information are stored in the location node. Therefore, if you proceed with a re-access, you can view this location information stored during the previous access process. This location information is used internally by GameAnvil for retrieving the location information of the user or room and for delivering messages based on it.

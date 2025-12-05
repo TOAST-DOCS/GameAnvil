@@ -1,5 +1,60 @@
 ## Game > GameAnvil > Release Notes > GameHammer
 
+### 2.1.0 (June 30, 2025)
+
+#### Change
+* GameHammer has also released version 2.1.0 to coincide with the release of GameAnvil 2.1.0. Expand comment. Comment on line R6ResolvedCode has comments. Press enter to view.
+* Engine protocol updated to match GameAnvil 2.1 server.
+  * Servers prior to GameAnvil 2.1 are no longer supported.
+* Some ResultCode changes.
+
+    | AS-IS | TO-BE |
+    | ---- | ---- |
+    | LOGIN\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | LOGIN_FAIL_INVALID_SERVICE_NAME<br>Failed. Invalid service name |
+    | LOGIN\_FAIL\_INVALID\_USERTYPE<br>Failed. Invalid user type | LOGIN_FAIL_INVALID_USER_TYPE<br>Failed. Invalid user type |
+    | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>Failed. Invalid service name |
+    | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>Failed. Invalid service name |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>Failed. If the matching request is null | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>Failed. If the matching request is null |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br>Failed. If the matching information is null | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br>Failed. If the matching information is null |
+    | FORCE\_CLOSE\_BASE\_CONNECTION<br>The server calls close() on BaseConnection | FORCE\_CLOSE\_CONNECTION<br>Calling close() on IConnection on the server |
+    | FORCE\_CLOSE\_BASE\_USER<br>Calling closeConnection() on BaseUser on the server | FORCE\_CLOSE\_USER<br>Calling closeConnection() on IUser on the server |
+
+#### Fix
+* Fixed an issue where protocol buffers for servers and hammers could be incompatible with each other depending on the creation environment when created in different environments.
+
+---
+
+### 2.0.0 (2024.12.04)
+
+#### New
+
+* Added the feature to configure whether to output the ClientStateCheckOK log.
+* Added a simpler way to write scenarios.
+     * Added the feature to register frequently called functions in states with predefined actions and conditions.
+     * Provided non-implementation states. Now, they can be created by state name instead of creating a class. 
+* Added ErrorCode
+    * HANDLER_NOT_EXIST
+    * HANDLER_ERROR
+    * MATCH_PARTY_CANCEL_FAIL_ALREADY_JOINED_ROOM
+    * MATCH_PARTY_CANCEL_FAIL_NOT_IN_PROGRESS
+
+#### Change
+
+* Modified Hammer to more accurately monitor connectivity.
+* Modified user code to use only the service name instead of the service ID.
+* Updated the protobuf dependency to 4.28.3.
+
+#### Fix
+
+* Fixed an issue where the user's status check response settings were not initialized.
+* Fixed an issue where the list of omitted log messages could be overwritten if modified after matching the server and protocol pair.
+* Fixed an issue where a ConcurrentModificationException would occasionally occur while matching the server and protocol pair.
+* Fixed ForceCloseConnectionNoti to be processed before Authentication.
+* Fixed Ping to be performed immediately without delay when resuming.
+* Fixed INVALID_PROTOCOL to be processed and received as a ResultCode.
+
+---
+
 ### 1.4.0 (2023.12.13)
 
 #### New

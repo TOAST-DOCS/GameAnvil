@@ -1,4 +1,305 @@
 ## Game > GameAnvil > Release Notes > GameAnvil
+### 2.1.0 (June 30, 2025)
+#### New
+##### Added Dependency Management and Spring Boot 
+* You can add or inject beans using spring boot to manage GameAnvil dependencies.
+* Codes registered in the engine using an existing interface now declare annotations and register in the engine.
+#### Remove
+##### Message Processing Deprecated from Gateway, Connection 
+* It will be removed from later releases due to its low utilization and non-intuitive API.
+
+##### Delete Timer, Topic from Gateway, Connection
+* Removed APIs that are low in use and non-intuitive.
+* It can be used as it is on generally used game nodes such as Room, User, and more.
+#### FIX
+* Fixed an issue where expected and different error messages could occur when requesting the ChannelCountInfo API.
+* Default wait time to the server shutdown has been reduced.
+* Fixed the protocol buffer to avoid conflicts when using the same file by enabling the use of a file name rather than the full path.
+* Deleted proto buffer packets that are no longer internally used.
+* Removed the Checked Exception declaration declared but not occurred.
+* Fixed an issue in which All nodes are Ready messages were issued intermittently even without having clustered fully.
+* Added debug logs internally when adding topics.
+* Deleted the ipc node being used internally. The features of an existing Ipc are managed by IpcNetwork.
+* Fixed an issue in which sometimes ConcurrentModificateException occurs in the Node-related API.
+* Fixed an issue where overflow occasionally occurs when the server runs for a long time.
+* Fixed an issue that could cause a crash when unknown packets enter the internal port.
+
+
+### 2.0.0 (December 4, 2024)
+
+#### New
+##### Java 21
+* GameAnvil 2.0 runs only in Java 21 or later versions.
+* The engineering team recommends using Java 21, which is currently LTS.
+
+##### Introduce Virtual Thread
+* You can write code without using throws SuspendExecution by removing quasar dependencies.
+* Asynchronous task can be used in all GameAnvil's user call codes according to the Java 21 operation.
+* Be careful not to use **synchronized** code when using Java 21 Pinning issues may occur.
+    * This limit can be turned off in Java 24. [https://openjdk.org/jeps/491](https://openjdk.org/jeps/491)
+* GameAnvil uses customized Virtual Thread to make existing nodes and code easy to write. This threading model is the same as the existing Fiber as the 1 Thread N Virtual Thread. 
+    * Added the following JVM options when running:
+    * `--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.invoke=ALL-UNNAMED`
+* For more information about operating Virtual Thread, see [here](https://openjdk.org/jeps/444).
+
+##### Added an API to Send Messages to Multiple Clients
+* Added Room.sendToClients API.
+
+##### GameAnvilConnector 2.0
+* GameAnvilConnector 2.0 released for GameAnvil 2.0.
+* Please check the new connector.
+
+##### Added the SafePause feature for MatchNode
+* The SafePause feature is available in MatchNode .
+* The MatchNode SafePause feature is only available when the start node (src) and moving node (dest) are 1:1 .
+* The registration and execution method of the SafePause node is the same as the existing GameNode.
+* The following Management HTTP API added related to MatchNode SafePause.
+1. POST /management/matching-group-update
+    *  body: ``` {"nodeId": <Number Node ID>, "matchingGroup": "<String Match Group>" }```
+    *  Let the target MatchNode control the matchingGroup received as an argument.
+2. GET /management/matching-queue-clear?nodeId=<Number Node ID>
+    * Empty all match cues of the target MatchNode. If the node ID is 0, the matching quo of all nodes will be emptied.
+
+##### Output error logs when an error occurs during packet parsing
+
+#### Remove
+##### Remove Quasar Dependencies
+* Removed the related code with Quasar. 
+* Instead of the asynchronous feature provided by GameAnvil 1.4, use the Virtual Thread from Java 21.
+
+##### Removed MySql Dependencies and Related Codes 
+* Removed `com.github.jasync-sql:jasync-mysql` dependencies and asynchronous code related to the engine. 
+* Instead of the feature provided by GameAnvil 1.4 , it works asymmetric even by using the above libraries directly.
+
+##### Removed Redis Dependencies and Related Codes
+* Removed `io.lettuce:lettuce-core` dependencies and asynchronous code related to the engine. 
+* Instead of the feature provided by GameAnvil 1.4 , it works asymmetric even by using the above libraries directly.
+
+##### Removed HttpClient Dependencies and Related Codes
+* Removed `org.asynchttpclient:async-http-client`, `org.apache.httpcomponents.client5:httpclient5` dependence and asynchronous code related to the engine. 
+* Instead of the feature provided by GameAnvil 1.4 , it works asymmetric even by using the above libraries directly.
+
+##### Remove MultiRequest
+* You can use custom proto buffer instead of MultiRequest.
+* You can use a newly added Future method of Request API instead of MultiRequest when requesting multiple targets or packets at the same time.
+
+
+##### Removed the Object argument for TimerHandler
+* Deleted the unused Object argument.
+
+##### Deleted addTopics (List<T>), removeTopics (List<T>)  
+* Instead, use addTopic (String) and removeTopic (String).
+
+
+#### Change
+#####  The return value of the responding API changes to Future 
+* Changed GameAnvil's API to the same way that many other asynchronous APIs return Future. You can now create code flows more freely. 
+* You no longer need to use the Async API provided by GameAnvil. Since GameAnvil officially supports Virtual Thread, even if you call a blocking code, Virtual Thread and not Platform Thread will be blocked for the code that supports Java 21. The Async API is no longer supported.
+```java
+// GameAnvil versions prior to 2.0 
+Packet packetResponse = user.requestToNode(nodeId, myRequest1);
+ListenableFuture<Response> httpFuture =  getHttpClient().executeRequest(myRequest2);
+// Response httpResponse = httpFuture.get(); // !Platform Thread block occurs when Java 11!
+Response httpResponse = Async.awaitFuture(httpFuture.toCompletableFuture());
+```
+```java
+// GameAnvil 2.0 
+Future<Packet> packetFuture = user.requestToNode(nodeId, myRequest1);
+Future<Response> httpFuture = getHttpClient().executeRequest(myRequest2);
+Packet packetResponse = packetFuture.get();  
+Response httpResponse = httpFuture.get();  // Platform Thread block occurs when Java 21
+```
+* You can now improve the following features that were uncomfortable with the existing GameAnvil:
+    * Improved feature to send requests to multiple locations at the same time
+    * Improved the execution of the task required after sending your request until you receive it
+* If it is a code that needs to maintain existing versions and utilization, call get on the returned Future immediately.
+> Platform Thread : Thread used by existing Java. OS thread or Java thread. Virtual thread: This is a new thread added in Java 21 that works similarly to the Fiber of the previous version of GameAnvil. For more information, see [here](https://openjdk.org/jeps/444):
+
+##### Changed Handler Execution to Context 
+* Changed Handler executions to be based on the appropriate `DispatchContext` for each target.
+* DispatchContext is created new for each request.
+* The `reply` function is now provided in DispatchContext.
+* For example, the message handler processing EchoReq in User is as follows:
+
+```java
+public class _EchoReq implements IMessageHandler<IUserDispatchContext, EchoReq> {
+    @Override
+    public void execute(IUserDispatchContext ctx, EchoReq request) {
+        MyUser user = ctx.getUser();
+        ctx.reply(Response_Proto_Buffer);
+    }
+}
+```
+
+* DispatchContext is a value that has the information of the request itself. The existing GameAnvil could only be sent in the current flow when sending a reply from the Handler code.
+    * You could ignore this limit and perform unknown actions when sending a reply in an asynchronous task.
+    * This is because if another request enters the server, the previous request information will be overwritten because the request information is stored in the target (hereinafter User).
+* The simple code that may cause a problem was written in the example below:
+```java 
+// old version of GameAnvil
+
+// Omission of class declaration. Handler
+public void execute(MyUser user, EchoReq request) throws SuspendExecution {
+    user.postJob((obj) -> {
+        // It may not operate normally when a response is sent after performing any asynchronous task.
+        // Because another handler can change the reply information after the handler execute method.
+        user.reply(..response\_packet..);
+    }, null);
+}
+```
+
+```java 
+// New GameAnvil 2.0
+
+// omission of class declaration. Handler
+public void execute(IUserContext ctx, EchoReq request) throws SuspendExecution {
+    IUserContext userContext = ctx.getUserContext();
+    userContext.runOnNextMsgLoop(() -> {
+        // Now works normally.
+        ctx.reply(..response\_packet..);
+    });
+}
+```
+
+##### Changed to Interface Instead of Base Class
+* Changed user implementation Base class to interface.
+* The implementation of the method provided in the existing Base class is provided in the class Context.
+* For example, APIs used by BaseUser can be migrated as follows:
+* Annotation for the existing PacketDispatcher, Base class definition has been deleted.
+```java
+public class MyUser implements IUser {
+    private IUserContext userContext;
+    public void onCreate(IUserContext ctx) {
+        this.userContext = ctx;
+
+        userContext.send(..packet..);  // Use IUserContext as a result 
+                                     // to leverage the features provided by an existing Base class.
+    }
+}
+```
+
+
+| Legacy |Change | Note |
+| --- | --- | --- |
+| BaseConnection | IConnection, IConnectionContext | |
+| BaseSession|  ISession, ISessionContext|  |
+| BaseGatewayNode | IGatewayNode, IGatewayNodeContext |  |
+| BaseGameNode | IGameNode, IGameNodeContext|  |
+| BaseUser | IUser, IUserContext|  |
+| BaseRoom | IRoom, IRoomContext |  |
+| BaseSupportNode | ISupportNode, ISupportNodeContext |  |
+
+##### How to Change Custom Class / Message Processor Registration
+* You changed the custom class and message processor registration methods to register in one place.
+* Here is how to use them:
+
+```java
+var gameAnvilServer = GameAnvilServer.getInstance();
+var builder = gameAnvilServer.getServerTemplateBuilder();
+
+builder.connection(MyConnection::new, config -> {
+     config.protoBufferHandler(MyProto.HelloProto.class, new _HelloMessageHandler());
+});
+
+var gameServiceBuilder = builder.createGameService("MyGame"); // Define game service game
+gameServiceBuilder.user("MyUserType", MyGameUser::new, config -> {
+    config.protoBufferHandler(MyProto.UserHello.class, new _UserHelloMessageHandler());
+});
+```
+
+
+
+##### Use ServiceName instead of ServiceId
+* Changed the API that receives a ServiceId that is difficult for engine users to recognize to receive the ServiceName entered by the user as is.
+
+##### Use ProtoBuffer 4.28.3
+* ProtoBuffer may not operate normally when downgrading to the 3.x version.
+* ProtoBuf dependency, protoc, already built ProtoBuf file needs to be replaced.
+
+
+##### You can run nine GameNodes on 1 Thread, change the ChannelID settings of the game node 
+* The ChannelID setting of the game node has been changed to allow multiple GameNodes to run. 
+```
+ "channelIDs": [
+        ["ch1"]
+        ["ch2"],
+]
+```
+* When written as above, 1 Thread = 1 GameNode as before.
+```
+ "channelIDs": [
+        ["ch1", "ch2"]
+]
+```
+* When writing as above, it is 1 Thread = 2 GameNode.
+
+
+##### Changed the server to force shutdown when AutoIp fails
+* Force stop to make it easy for the user to recognize instead of initially stopping as it is not working properly.
+
+##### Fixed Timer Interface
+* Instead of an existing timer interface that is difficult to understand, we modified the timer interface in a manner similar to the function provided by ScheduledExecutorService in the standard Library.
+
+```
+scheduleTimer - 1
+scheduleTimerWithFixedDelay - N, last run delay
+scheduleTimerAtFixedRate - N, fixed delay
+```
+
+##### Changed the response to be unavailable at least twice
+* The unknown problem that occurred when sending an existing reply more than twice has been resolved.
+
+##### Changed the Method of Accessing Node from User, Room
+* Now return INodeView instead of directly returning Node when calling getGameNode.
+* You can access Node directly from INodeView as ever before, but it is recommended to abandon the method to operate the Node.
+    * Node and User and Room's Platform Thread are the same but each is different for Virtual Thread. Therefore, when the user calls asynchronous tasks in other regions, such as performing asynchronous tasks defined in Node, the problem is not working as intended and caution is required when using. In INodeVIew, this problem is addressed by blocking direct access from Node and giving the method to be executed from Node instead.
+* For advanced users of GameAnvil, these constraints can be inconvenient for INodeView. In simple synchronous calling methods (such as get/set), there are no problems with the synchronization described earlier, so you can use the `INodeVIew.getUnsafeNode` method to directly access the Node. Use with caution to avoid synchronization problems when directly accessing a node via getUnsafeNode.
+
+##### Provide a List of Users in Room
+* You can now receive a list of the users with Room.
+
+##### Fixed the Callback Name to Make the Callback Meaning Clearer
+* The following callbacks have been added/fixed:
+
+| Target |Legacy |Change | Note |
+| --- | --- | --- | -- |
+| Session | onPreLogin |onBeforeLogin |
+| Session | onPostLogin | onAfterLogin |
+| Session | onPostLogout| onAftterLogout |
+| User | onPostLogin | onAfterLogin |
+| User | onPostLeaveRoom | onAfterLeaveRoom |
+| User | canTransfer | canTransferOut |
+| User | onTransferInTimerHandler | onTransferIn | Merged into the legacy onTransferIn |
+| User | onPostTransferIn | onAfterTransferIn |
+| Room | onPostLeaveRoom | onAfterLeaveRoom |
+| Room | onLeaveRoom | canLeaveRoom | LeaveRoom Conditional check|
+| Room | None | onMatchPartyCancel | Called when a match is canceled|
+| RoomMatchMaker | onPreMatch | Deleted | onMatch 로 병합 |
+| RoomMatchMaker | onPostMatch | Deleted | Merged into onMatch |
+
+#### Fix
+
+* Added packet information to error logs when using Request API fails
+* Response to Timeout instead of instant failure when the target cannot be found while using Request API
+* Integrated the Send, Request API for each target node type into a single API that receives the ID of the target node
+* Enhanced data cleanup process when the node or server shuts down
+* Added a markers for logs that are periodically left in the engine
+* Fixed to leave the target logs when the connection between nodes is lost
+* Fixed ConcurrentModificationException Occurrence in Specific Situations
+* Optimized engine internal data size
+* Fixes an issue where error logs inside the engine sometimes do not appear normally 
+* Optimized internal timer
+* Enhanced internal location action
+* Fixed an issue where servers sometimes get zombie status in a Gateway Bind failure situation 
+* Fixed an issue where the timer argument has been changed to long and the argument is equal to or more than the Integer value and is not working properly
+* Fixed alerts to occur when the server starts when the number of CPU cores is greater than the number of nodes
+* Fixed an issue that is sometimes not properly resolved when you leave the room with logout
+* Fixed an issue in which internal communication with the GameAnvil server might not operate normally under certain conditions
+* Optimized internal memory
+
+
+---
+
 ### 1.4.2 (2024.02.26)
 
 #### New
@@ -409,7 +710,7 @@ Source delivery and usage due to spec out](https://nhnent.dooray.com/share/posts
 
 * Deleted GameAnvil DB and Admin feature (excluding GameData, Dynamic Module )
 
-    * GameAnvil engine end no longer uses DB.
+    * GameAnvil no longer uses a DB internally within the engine.
     * Note: [GameAnvil-Guide/76 Admin 1.1.0 -> 1.1.1 Migration document](https://nhnent.dooray.com/share/posts/GIHoRQ8kTjSi7D4wQjUcWw)
     * All the Admin features that previously used DB have been moved to GameAnvil Admin.
 

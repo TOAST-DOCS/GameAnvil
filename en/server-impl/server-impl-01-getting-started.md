@@ -1,194 +1,162 @@
-##  Game > GameAnvil > Server Development Guide > Getting Started
+## Game > GameAnvil > Server Development Guide > Getting Started
 
+## Before Starting
 
+This article discusses the basic elements and implementation methods required to implement a server using GameAnvil. We recommend that you refer to the [GameAnvil tutorial](../tutorial/tutorial-01-basic.md) provided along with this document.
 
-## Before Getting Started
-
-This document describes the basic elements required to implement a server using GameAnvil and how to implement it. It is recommended that you refer to the reference project [GameAnvil Reference Server](../reference/reference-1-server) that comes with this document. Also refer to the description of each API and UML diagram through [JavaDoc document](https://gameplatform.toast.com/docs/api/).
-
-GameAnvil servers are basically configured on a node basis. Among them, there are a total of four nodes where the user's code runs, as shown in the image below. This section describes how to develop a server, focusing on how to implement these four nodes.
+GameAnvil servers are by default configured as nodes. The nodes where the user's code runs are four in total, as shown in the image below. Here we discuss the server development method based on the implementation methods for these four nodes.
 
 ![Nodes on Network.png](https://static.toastoven.net/prod_gameanvil/images/user_nodes_on_network_.png)
 
+## Redefine Callback
 
-
-## Callback Override
-
-By default, most features in GameAnvil come in the form of callbacks. In other words, engine users inherit the Base Classes provided by GameAnvil and then override these callback methods, so most features used as such. This process requires engine users to implement only the callback methods they require, so some callback methods can be ignored. All of these base classes have names that begin with "Base" and are available in the com.n.gameAnvil package or its sub-packages.
+By default, most GameAnvil features are provided in the form of callbacks. Engine users will use most features after implementing the default interface provided by GameAnvil (IGatewayNode, ISupportNode, and IGameNode) in a way that redefines these callback methods. In this process, only the callback methods required by the engine user are implemented, so some callback methods may be ignored. These default interfaces are each name that begins with "I" and are provided as com.nhn.gameanvil packages or subpackets.
 
 ![callback-1.png](https://static.toastoven.net/prod_gameanvil/images/callback-1.png)
 
-## Start of All Implementations, Nodes
+## Start of All Implements, Nodes
 
-For example, all nodes must override the following callback methods in common. And each node may require the implementation of additional callback methods for its role. For example, SampleGatewayNode inherits BaseGatewayNode, the default class of GatewayNode.
+For example, all nodes must redefine the callback methods below in common. And each node may require the implementation of additional callback methods for the role. For example, in the code below, SampleGatewayNode implements IGatewayNode, which is the default interface of GatewayNode.
 
-All BaseNodes, including BaseGatewayNodes, offer the following callback methods in common. When a user implements this callback method, the engine calls the callback at a certain point in time. This is the most basic use of GameAnvil. This usage is similar throughout the document, so you will be able to understand each chapter without much sense of heterogeneity (difficulty).
+All interface nodes, including IGatewayNode, offer the following callback methods in common. The context interface according to the type implemented by the onCreate() method is passed to the parameters. When a user implements these callback methods, the engine calls the callback at a certain point in time. This is the most basic use of GameAnvil. This usage is consistent throughout the document, so you should be able to understand each chapter without much confusion.
 
 ```java
-@GatewayNode  
-public class SampleGatewayNode extends BaseGatewayNode {  
-  
-    /**  
-     * Call at initialization time 
-     *  
-     * @throws SuspendExecution This method means that the fiber can be suspended.  
-     */  
-    @Override  
-    public void onInit() throws SuspendExecution {    
-    }  
-  
-    /**  
-     * Call for what to do before you're ready 
-     *  
-     * @throws SuspendExecution This method means that the fiber can be suspended 
- 
-     */  
-    @Override  
-    public void onPrepare() throws SuspendExecution {  
-    }  
-  
-    /**  
-     * Call when Ready  
-     *  
-     * @throws SuspendExecution This method means that the fiber can be suspended 
- 
-     */  
-    @Override  
-    public void onReady() throws SuspendExecution {    
-    }  
-  
-    /**  
-     * Call when paused  
-     *  
-     * @param payload Additional information that contents want to convey 
-     * @throws SuspendExecution This method means that the fiber can be suspended 
-     */  
-    @Override  
-    public void onPause(Payload payload) throws SuspendExecution {    
-    }  
-  
- 
- 
- 
- 
-    /**  
-     * Call when resuming  
-     *  
-     * @param payload Additional information that contents want to convey 
-     * @throws SuspendExecution This method means that the fiber can be suspended 
- 
-     */  
-    @Override  
-    public void onResume(Payload payload) throws SuspendExecution {    
-    }  
-  
-    /**  
-     * Called when a shutdown command is received 
-     *  
-     * @throws SuspendExecution This method means that the fiber can be suspended 
-     */  
-    @Override  
-    public void onShutdown() throws SuspendExecution {    
-    }  
+@GameAnvilGatewayNode // Register this class as Gateway to the engine
+public class SampleGatewayNode implements IGatewayNode {
+    private IGatewayNodeContext gatewayNodeContext;
+
+    /**
+     * Call to send gateway node context
+     * <p/>
+     * Call once after the object is created
+     *
+     * @param gatewayNodeContext Gateway Node Context
+     */
+    @Override
+    public void onCreate(IGatewayNodeContext gatewayNodeContext) {
+        this.gatewayNodeContext = gatewayNodeContext;
+    }
+
+    /**
+     * Call when the node is initialized
+     */
+    @Override
+    public void onInit() {
+
+    }
+
+    /**
+     * Call for what to handle before you get Ready
+     */
+    @Override
+    public void onPrepare() {
+
+    }
+
+    /**
+     * Call when you are ready
+     */
+    @Override
+    public void onReady() {
+
+    }
+
+    /**
+     * Call when Pause
+     *
+     * Additional information to send from the @param payload content
+     */
+    @Override
+    public void onPause(IPayload payload) {
+
+    }
+
+    /**
+     * Call when you receive the Shutdown command
+     */
+    @Override
+    public void onShuttingdown() {
+
+    }
+
+    /**
+     * Call when Resume
+     *
+     * Additional information to send from the @param payload content
+     */
+    @Override
+    public void onResume(IPayload payload) {
+
+    }
 }
 ```
 
-Please refer to the table below for the meaning and use of these node common callbacks.
+For the meaning and usage of these node common callbacks, see the table below:
 
+| Callback name | Meaning | Description | |---------------- |------- |--------------------------------------------------------------------------------------------- |
+| onCreate | Create object | Calls when the object is created. You receive the context where the API available for the created type can be used. If needed from the content, it can be saved and used. |
+| onInit | Initialize | Calls when the node proceeds with the first initialization. If there is any initialization task required before the node runs, this callback is suitable. At this time, the node is still not being processing the message. |
+| onPrepare | Prepare | The node will be called after the node is initialized. The user can proceed with any task here before the node is ready. At this time, the node can process messages. |
+| onReady | Prepared | After all preparations are completed, the node is running. At this time, the node is in Ready state, so the user will be able to use all features from this time. |
+| onPause | Pause | Pause the node will call the call. Here you can implement the code you want to process additionally when the node is temporarily stopped. |
+| onShuttingdown | Node stopped | Calls are sent when the node receives a Shutdown command. Stopped nodes cannot be Resume. |
+| onResume | Resume | Calls are called when the node restarts the run while it is temporarily stopped. Here, the user can implement the code he wants to process while in a restart. |
 
-| Callback name  | Description               | Description                                                                                                                                          |
-| ------------ | -------------------- |---------------------------------------------------------------------------------------------------------------------------------------------|
-| onInit     | Initialize             | It is called when the node is performing initialization. This callback is appropriate if there is an initialization task required before the node runs. At this time, the node is not processing the message yet.                                                   |
-| onPrepare  | Preparation               | It is called after the node initialization is complete. Users can process any tasks here before the node is ready. At this time, node can process message.                                                  |
-| onReady    | Preparation ready           | After the node is all ready, it is drive completion stage. At this time, the node is in ready state, so the user can use all features from this point on.                                                              |
-| onPause    | Pause          | It is called when a node is paused. Users can implement additional code they want to process here when the node is paused.                                                                        |
-| onResume   | Resume               | It is called when the node resumes running from a pause. Users can implement the code they want to process here in the resume state.                                                                 |
-| onShutdown | Node shutdown          | It is called when the node stops completely. the shutdown node cannot resume.                                                                                            |
-| getMessageDispatcher | Has hackets to process | It returns a message when the node has message to process. Users can use the dispatchers they declare. For more information, refer to [Message Processing](./server-impl-07-message-handling#13-getMessageDispatcher). |
+## Methods and variables beginning with _(underscore)
 
+Using the engine, users can see the method or variable beginning with _ in the implementation interface. It means that it should only be used internally in the engine. The user must not access variables or methods beginning with _. This requires caution if you allow some exposures as Java is not flexible for scope control.
 
+## gameanvil package and gameanvilcore package
 
-## throws SuspendExecution
+Engine consists largely of two top packets, and gameanvil package is for the user. All classes or APIs in this package are free to use. On the other hand, the gameanvilcore package contains engine cores logic, so the user is not allowed to access directly. Nevertheless, the users are exposed to the scope control limitations of the Java version currently supported by GameAnvil. Special care is required to avoid the contents of the gameanvilcore package during the user code creation process.
 
-In the previous example code, we looked at the following exception signatures of all callback methods.
+## Configure Project with IntelliJ Template
 
-```java
-throws SuspendExecution
-```
+Configuring GameAnvil projects one by one from the beginning requires many complex processes. You must write a configuration file along with loading the engine library, and also a script to write protocol specifications and a compiler to compile them. In order to avoid unnecessary waste of development time due to this sequence of processes, GameAnvil offers a template for IntelliJ that includes all of these elements. From the link below, download a template file and follow the steps below:
 
-This is not an actual exception. It is a kind of bypass method used by [Quasar](https://docs.paralleluniverse.co/quasar/) to control the flow of fiber. This exception signature means that the method can suspend the fiber at any time.
+[Download GameAnvil Template](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
-Therefore, this exception should never be handled directly in the following way. Refer to [Suspendable](../server-basic/server-basic-03-suspendable) for more information.
-
-```java
-try {  
-    ...  
-} catch (SuspendExecution e)   
-{  
-    // Never catch SuspendExecution exceptions. 
-}
-```
-
-
-
-## Methods and variables starting with \_(underscore)
-
-While using the engine, you can see methods or variables that begin within the user-inherited Base Class. This means that it is only for use inside the engine. This means that the user should not access variables or methods that begin with \_\_. This is because, unlike C++, Java's scope control is inflexible, allowing some exposure, so you need to be careful.
-
-
-
-## Gameanvil package and gameanvilcore package
-
-The engine is largely composed of two parent packages. One of them, the gameanvil package, is for the user. Any class or API within this package is free to use.
-
-On the other hand, the gamevilcore package contains engine core logic, so we do not allow users to access it directly. Nevertheless, the exposure to users is due to the scope control restrictions of the Java version currently supported by GameAnvil. Special caution should be taken to ensure that the contents of gamevilcore package are not included in the process of writing user code.
-
-
-
-## Configure projects with InteliJ templates
-
-Configuring GameAnvil projects one by one from the scratch requires a number of complex processes. In addition to importing the engine library, you need to create a configuration file, and you need a script to write protocol specifications and a compiler to compile them. To avoid unnecessary waste of development time due to this series of processes, GameAnvil provides a template for InteliJ that includes all of these. Download the template file from the link below and follow these steps.
-
-
-
-[GameAnvil Template download\](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Template.zip?disposition=attachment)
-
-
-
-After running IntelliJ, search for **ImportSettings...** by displaying the entire search window with `ShiftShift` shortcut. Or select File > Manage IDESettings > **ImportSettings...**.
+Run IntelliJ and click `Shift Shift` to view the entire search box and search for **Import Settings...**. Or select File > Manage IDE Settings > **Import Settings...**.
 
 <img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/search_import_settings.png" />
 
-On Finder screen, select the template file you downloaded. When a window appears to select elements to import, as shown in the image below, check both the file template and the project template, and click on OK. When the import is complete
+Select the template file you downloaded from the Finder screen. When a window is displayed that selects the elements you want to import, check both the file template and project template, and click OK. 
 
 <img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/select_import.png" />
 
-When Create a New Project window opens, select GameAnvil Template from User-Defined tab on the left menu.
+When the import is complete, select GameAnvil Template from the User-defined tab of the left menu when the Create New Project window opens.
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/new_project_project_template.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/01-getting-started/new_project_project_template.png" />
 
-Once completed, a template project will be created to start GameAnvil server development immediately, as shown in the following image.
+Once completed, a template project is created that can immediately start developing the GameAnvil server, as shown in the image below:
 
 <img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/project_template_view.png" />
 
-We also provide file templates that allow you to immediately create different classes provided by GameAnvil. Select the package you want in the project and right-click to open the context menu. At this time, file templates for each class are available, as shown in the following image.
+There is also a file template that allows you to immediately create various classes provided by GameAnvil. Select the desired package from the project and right-click to open the context menu. At this time, you can use the file template for each class, as shown in the image below:
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/file_template.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/01-getting-started/file_template.png" />
 
-The following is a list of file templates provided. Each template implements one class template.
+The following is a list provided as a file template. Each file template implements one class template.
 
-| File template     | Description               |
-| -------------- |------------------|
-| GatewayNode    | Basic Implementation of gateway nodes  |
-| GameNode       | Basic implementation of game nodes     |
-| SupportNode    | Basic implementation of support nodes    |
-| Connection     | Basic implementation of connection class   |
-| Session        | Basic implementation of session class    |
-| GameUser       | Basic implementation of game user     |
-| GameRoom       | Basic implementation of game room      |
-| UserMatchMaker | Basic implementation of user match maker |
-| UserMatchInfo  | Basic implementation of user match information  |
-| RoomMatchMaker | Basic implementation of room matching information  |
-| RoomMatchForm  | Basic implementation of room matching application form    |
-| RoomMatchInfo  | Basic implementation of room matching information    |
+| File Template | Description |
+|--------------------------------|-------------------------|
+| Connection | Basic implementation of a connection |
+| GameNode | Basic implementation of a game node |
+| GatewayNode | Basic implementation of a gateway node |
+| MessageHandler for GameNode | Basic implementation of a game node message handler |
+| MessageHandler for GatewayNode | Basic implementation of a gateway node message handler |
+| MessageHandler for Room | Basic implementation of a room message handler |
+| MessageHandler for SupportNode | Basic implementation of a support node message handler |
+| MessageHandler for User | Basic implementation of a user message handler |
+| RestMessageHandler | Basic implementation of a rest message handler |
+| Room | Basic implementation of a room |
+| RoomMatchForm | Basic implementation of a room matching request |
+| RoomMatchInfo | Basic implementation of room matching information |
+| RoomMatchMaker | Basic implementation of a room matchmaker |
+| Session | Basic implementation of a session |
+| SupportNode | Basic implementation of the support node |
+| User | Basic implementation of a game user |
+| UserMatchInfo | Basic implementation of user match information |
+| UserMatchMaker | Basic implementation of the user matchmaker |
 
+ 

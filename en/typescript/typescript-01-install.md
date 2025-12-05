@@ -1,25 +1,25 @@
-## Game > GameAnvil > TypeScript 개발 가이드 > 설치
+## Game > GameAnvil > TypeScript Development Guide > Install
 
-### GameAnvil Connector
+## GameAnvil Connector
 
-커넥터는 GameAnvil 서버에 맞춘 클라이언트를 제작하기 위해 개발된 라이브러리입니다. GameAnvil Connector를 이용하면 GameAnvil에서 기본적으로 제공하는 패킷 전송, 유저 및 룸 기능 등을 간편하게 구현할 수 있습니다.
+The connector is a library developed to create clients suitable for the GameAnvil server. With GameAnvil Connector, you can easily implement the packet transfer, user, and room features provided by GameAnvil.
 
 
-### gameanvil-connector.js 다운로드
+### Download gameanvil-connector.js
 
-커넥터는 아래에서 다운로드 받을 수 있습니다.
+You can download the connector below:
 
-[gameanvil-connector-typescript.zip]()
+[gameanvil-connector-typescript.zip](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector-typescript.zip)
 
-npm을 통한 다운로드나 git을 통한 다운로드는 지원 예정입니다.
+Downloads via npm and via git are expected to be supported.
 
-### gameanvil-connector.js 설치 예시
+### Example of Installation of gameanvil-connector.js
 
-이 섹션에서는 GameAnvil Connector의 TypeScript 버전의 설치와 이용 방법에 대해 다룹니다. 
+This section covers how to install and use the TypeScript version of the GameAnvil Connector. 
 
-이 가이드에서는 node.js를 사용하기 때문에 미리 설치가 완료된 환경이 필요하며, 독자가 기본적인 node.js 지식이 있다고 가정하고 설명합니다. 만약 node.js 설치나 이용에 대해서 잘 모른다면 node.js 공식 자료를 참고하시길 바랍니다. node.js 외에 따로 사용하고 싶은 게임 제작용 라이브러리가 있다면 그것을 사용하실 수 있습니다. 예를 들어 Cocos나 Phaser 등의 html5 기반 게임 라이브러리를 사용하실 수 있습니다.
+This guide requires a pre-installed environment because it uses node.js, and assumes and explains that the reader has the basic knowledge of node.js. If you have no knowledge of how to install or use node.js, please refer to the node.js official materials. If you have a game creation library other than node.js that you want to use separately, you can use it. For example, you can use html5-based game libraries, such as Cocos or Phaser.
 
-명령 프롬프트 또는 터미널을 실행합니다. 그리고 아래 명령어를 입력해 커넥터를 설치할 폴더를 생성합니다.
+Run the command prompt or terminal. And enter the command below to create a folder to install the connector:
 
 ```cli
 $ mkdir my-game
@@ -27,13 +27,13 @@ $ cd my-game
 $ npm init
 ```
 
-다운로드 받은 커넥터 파일을 압축을 풀고, 아까 생성한 my-game폴더 아래로 이동합니다. 그리고 npm을 통해 설치합니다.
+Unzip the downloaded connector file and navigate to the my-game folder you created earlier. And install via npm.
 
 ```cli
 $ npm install ./gameanvil-connector
 ```
 
-이것으로 node.js 프로젝트에 gameanvil-connector 설치가 끝났습니다. 프로젝트 내부에서 아래와 같이 "gameanvil-connector"로 라이브러리를 사용하실 수 있습니다.
+With this, the installation of gameanvil-connector to the node.js project has been completed. You can use the Library as "gameanvil-connector" inside the project as shown below:
 
 ```typescript
 // index.ts
@@ -46,16 +46,16 @@ connector.port = 18300;
 await connector.connect();
 ```
 
-위 코드는 커넥터를 사용하는 제일 간단한 예시 코드입니다. 간단히 동작을 설명하자면 아래와 같습니다.
+The code above is the simplest example code that uses a connector. To simply explain the action, it is as follows:
 
-1. 먼저 GameAnvilConnector 객체를 생성합니다. GameAnvilConnector는 서버와의 통신을 관리하고 서버에게 요청을 보내거나 서버의 응답을 받을 수 있는 객체입니다.
-2. 그 다음 GameAnvilConnector 객체에 연결 정보(host, port)를 입력합니다. 이것은 개발 서버에 따라 내용이 달라질 수 있으므로, 반드시 개발된 서버에 맞게 내용을 수정해주십시오.
-3. 마지막으로 connect() 함수를 호출하여 서버에 연결 요청을 보냅니다.
+1. First, create a GameAnvilConnector object. GameAnvilConnector is an object that can manage communication with the server and send a request to the server or receive a response from the server.
+2. And then, enter the connection information (host, port) for the GameAnvilConnector object. It can vary depending on the development server, so be sure to modify the content to fit the developed server.
+3. Finally, call the connect() function to send the connection request to the server.
 
-### gameanvil-connector.js 실행 예시
+### Example of Running gameanvil-connector.js
 
-예제 코드를 실행하기 위해 Webpack을 설치하고 실행해보겠습니다.
-index.html 파일을 생성합니다.
+To run the example code, we install and run Webpack.
+Create the index.html file.
 
 ```html
 <!DOCTYPE html>
@@ -67,13 +67,13 @@ index.html 파일을 생성합니다.
 </body>
 ```
 
-필요한 라이브러리들을 모두 설치합니다.
+Install all required libraries.
 
 ```cli
 $ npm install webpack webpack-cli webpack-dev-server html-webpack-plugin babel-loader @babel/core  @babel/preset-env @babel/preset-typescript
 ```
 
-webpack 설정파일을 생성하고 아래와 같이 작성합니다.
+Create a webpack setting file and write it as follows:
 
 ```javascript
 // webpack.config.cjs
@@ -125,7 +125,7 @@ module.exports = {
 };
 ```
 
-package.json 파일에 아래 스크립트를 추가합니다.
+Add the following script to the package.json file:
 
 ```json
 "scripts": {
@@ -133,7 +133,7 @@ package.json 파일에 아래 스크립트를 추가합니다.
 },
 ```
 
-작동을 좀 더 자세히 확인하기 위해, 예제 코드를 수정합니다.
+To see the operation in more detail, modify the example code.
 
 ```typescript
 import { GameAnvilConnector } from "gameanvil-connector";
@@ -144,19 +144,19 @@ connector.port = 18300;
 
 connector.connect()
   .then(()=>{
-    // connect에 성공한 경우
+    // if connect is succeeded
     document.body.append("Connect Success");
   })
   .catch(()=>{
-    // connect에 실패한 경우
+    // if connect is failed
     document.body.append("Connect Fail");
   })
 ```
 
-웹팩을 실행시키고 동작을 확인합니다.
+Launch the webpack and check the action.
 
 ```
 $ npm run start
 ```
 
-인터넷 브라우저 창이 뜨면, Connect Success 또는 Connect Fail 문구가 출력됩니다.
+When the internet browser window pops up, a Connect Success or Connect Fail phrase is printed out.

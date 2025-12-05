@@ -1,85 +1,80 @@
 ## Game > GameAnvil > Basic Tutorial
 
-### How to create multiplayer games easily with GameAnvil
+### Create Multiplayer Games Easily with GameAnvil
 
-GameAnvil is a real-time multiplayer game server creation platform. 
-GameAnvil makes it easy to develop and operate game servers and clients. 
+GameAnvil is a real-time multiplayer game server creation platform. It makes it easy to develop and operate your game servers and clients.
 
-This document covers the development of a multiplayer sync game that can be played in real life using GameAnvil's basic features. 
-Instead of simply listing the server's concepts and APIs, we have developed our own multiplayer game servers and sample clients so that you can naturally learn GameAnvil's basic concepts and project configuration and implementation methods.
+This article covers the process of using the basic features of GameAnvil to develop a multiplayer synchronous game that can actually be played. Instead of just listing the concepts and APIs for the server, we developed a direct multiplayer game server and sample client to naturally acquire the basic concepts and project configuration and implementation methods for GameAnvil.
 
-Not only does GameAnvil provide server engines, but it also provides connectors that help connect clients to servers. As you complete a sample that allows to see servers and clients interact, you can get used to the overall flow of developing games using GameAnvil.
+GameAnvil provides not only server engines, but also connectors that help connect clients to the server. Completing a sample to see how the server and client interact, you get familiar with the overall flow of using GameAnvil to develop your game.
 
-## Prepare a hands-on experience environment - Server Project
+## Prepare Practice Environment - Server Project
 
-To create a multiplayer game, you need a server program that corresponds to the client. After building the game server, tutorials are conducted by the way implementing the client. 
+To create multiplayer games, you need a server program that corresponds to the client. After building up a game server, the tutorial proceeds in a way to implement the client.
 
-In this example, we use Unity and GameAnvil connectors to create client programs, and use the server engine GameAnvil that we introduced prior to creating server programs. First, let's create a server program project with GameAnvil.
+This example uses Unity and the GameAnvil connector to create the client program, and the previously introduced server engine GameAnvil to create the server program. First, create a server program project that uses GameAnvil.
 
-Follow these steps to download the final server sample project from the link below. You can download the project and refer to it to see in advance what it will be like to implement the server features in multiple stages from the initial template.
+By performing the steps below, the final server sample project created can be downloaded from the link below. If you implement the server feature through several steps in the initial template, you can download the project to pre-check what structure it will have.
 
-[Download server sample project](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilServerTutorial_1213.zip?disposition=attachment)
+[Download Server Sample Project](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Basic_Server.zip?disposition=attachment)
 
-### Project Configuration
+### Configure Project
 
-In this chapter, we aim to complete the initial setup to begin development. Running the actual process and running the server will be covered in the next chapter.
+This chapter aims to complete the initial configuration to get started with the development. The next chapter covers running the server by actually executing the process.
 
-The example uses the server project IDE as JetBrain's IntelliJ. The version of IntelliJ used in the example is IDEA Ultimate 2023.1.2. If you have not purchased a license, you may use the IntelliJ IDEA Community Edition. It is expected to work fine with other versions of IntelliJ, but we recommend that you proceed with the same view as the sample run version because we have not tested every case.
+In the example, the server project IDE is used as the IntelliJ of JetBrain. The version of the IntelliJ used in the example is IDEA Ultimate 2024.2.1. If you have not purchased a license, you will not be able to use IntelliJ IDEA Community Edition. While using a different version of the IntelliJ, it is expected to operate without any problems. However, since not all cases have been tested, it is recommended to proceed from the same horizon as the sample running version.
 
-To apply GameAnvil to your project, you must download the GameAnvil library to Maven repository and create a setup file that is essential to running GameAnvil. Finally, when you write a little boilerplate code, the initial setup of the development is complete.
+To apply GameAnvil to your project, you must download the GameAnvil Library to the Maven repository and write the setting file required to run GameAnvil. At last, if you enter a little bit of the boiler plate code, the initial development settings will be completed.
 
-GameAnvil offers IntelliJ templates that replace this set of processes, making it easier to complete initial tasks. You can download the project file template for IntelliJ from the following link. Do not decompress the templates you download.
+GameAnvil provides an IntelliJ template to replace such a series of processes, making it easier to complete initial tasks. You can download a project file template for IntelliJ from the following link. The template you downloaded should not be unzipped.
 
-[Template download](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvilTemplate.zip?disposition=attachment)
+[Download Template](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
-Run IntelliJ to apply the downloaded template. Select **Customize** from the left menu on the **Welcome to IntelliJ IDEA** screen and click **Import Settings...**. Or search **Import Settings...** in the search bar.
+Run the IntelliJ to apply the template you downloaded. From the left menu of the **Welcome to InteliJ IDEA**, select **Customize** and click **Import Settings...**. Or from the entire search box, search for **Import Settings...**.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/import_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/1_import_gameanvil_template.png)
 
 <br>
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/search_import_settings.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/2_search_import_settings.png)
 
 <br>
 
-In Finder or File Explorer window, navigate to the path from which you downloaded the template and select the compressed file. When the **Select Components to Import** window opens, check and select both **File templates** and **Project templates**. Click **OK** and **Import and Restart** to restart IntelliJ and complete the template application.
+Select a zipped file by navigating to the path where you downloaded the template from the Finder or File Explorer window. When the **Select Components to Import** window opens, both **File templates** and **Project Templates** are checked and selected. Click **OK** and click **Import and Restart** to restart the IntelliJ, and the template will be applied.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/select_import.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/3_select_import.png)
 
-Click **New Project** in the group of buttons in the upper right corner of IntelliJ, scroll through the list to the left, and select **GameAnvilTemplate** in the bottom under **Templates**. Name the project **SynchronizeTutorial**. The name must not contain spaces. Create the project after checking the project location and base package name.
+In the IntelliJ button group on the top right, click **New Project** and scroll to the left to select the **GameAnvil 2.1.0 Template** in the **Templates** at the bottom. Set the project name. The name must not have space. Check the project location and base package name before creating a project.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/imported_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/4_imported_gameanvil_template.png)
 
-The server project frame is now configured in IntelliJ. You can see that the code and configuration files have been created by looking at the Project panel.
+The server project skeleton has now been configured on IntelliJ. You can check the Project panel to see that the code and settings files are created.
 
-* Main: class that contains the entry point Main function of the program.
-* Protocol package: a package containing a protocol buffer file compiled with java.
-* Proto Package: a protocol file created using the Google Protobuf library.
-* build.sh /build.bat: an executable file that compiles a protocol file into java to create a protocol buffer file.
-* GameAnvilConfig.json: A file that records the server configuration information required to drive GameAnvil. You can modify it to fit your server implementation.
-* logback.xml: A file used to configure logging in Java projects. As a configuration file for the Logback framework, you specify how the logging system works, the format of the log, where it is stored, and so on. You can use this file to set the logging level, log format, path and name of the log file, and log rolling policy.
+- Main: a class that includes the main function of the program's entry point.
+- GameAnvilConfig.json: a file contains the server settings information required to run GameAnvil. It can be modified according to the server implementation.
+- logback.xml: a file used to configure logging in Java projects. As a setting file for the Logback framework, it specifies the operation method of the logging system, the format of the log, the storage location, and more. You can use this file to set logging level, log format, path and name of log file, log rolling policy, and more.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_project_view_init_1213.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/5_gameanvil_project_view_init.png)
 
-## Modify GameAnvil Server Settings Files
+## Modify GameAnvil Server Setting File
 
-You can change the settings of the GameAnvil server through the GameAnvilConfig.json file found under the resources package in the Project panel.
+You can change the GameAnvil server setting through the GameAnvilConfig.json file found in the resources package subpart of the project panel.
 
-* common: part that covers the overall server setup
-* location: part that addresses location node-related settings
-* match: part that deals with match node related settings
-* gateway: part that deals with gateway node related settings
-* game: part that deals with game node related settings
+- common: Sections that cover the server overall settings
+- location: Sections that cover the settings related to location nodes
+- match: Sections that cover the settings related to match nodes
+- gateway: Sections that cover the settings related to gateway nodes
+- game: Sections that cover the settings related to game nodes
 
-Because you have configured the project through the template, you can see that the GameAnvilConfig.json file has the default setting information required for server operation. In this example, there are three main points to watch carefully.
+Since you have configured the project with a template, you can confirm that the GameAnvilConfig.json file has set the default settings required for server operation. There are three main things to note in this example:
 
-1. The nodeCnt value of the game
-2. The serviceName value of the game
-3. The channelIDs value of the game
+1. NodeCnt value for game
+2. serviceName value for game
+3. channelIDs value for game
 
-Game nodes can be run in multiple VMs, depending on the amount you need, or depending on the server's performance. Once you set how many game nodes you want to run, it automatically read the configuration file at the time of the server's execution and display a set number of nodes. The template setting is set to float one game node, and you can use it as it is. In addition, the parts to be modified are the serviceName and channelIDs in the game part.
+Game nodes can be configured and executed with multiple VMs depending on your needs or depending on the server performance. When you set how many game nodes you want to run, the server will automatically read the settings file to enable a certain number of nodes when running. The template settings are set to increase the game node and can be used as you want. Additional modifications are serviceName and channelIDs in the game section.
 
-If you look at the last part of the game side of GameAnvilConfig.json file, there is a part marked as, Todo. Let's modify it and set up the service name and channel information.
+If you look at the last part of the game page of the GameAnvilConfig.json file, there is a part displayed as Todo. Modify this to set the service name and channel information.
 
 ```json
   "game": [ 
@@ -95,23 +90,23 @@ If you look at the last part of the game side of GameAnvilConfig.json file, ther
 
 ### About Service
 
-When a server provides multiple games, a service is a separate name for each game service. A service name is a promised string between the server and the client that represents a specific service. It will be used to enter the service name in the subsequent process, so please remember this.
+A service is a name used to separate each game service when a single server provides multiple games. The service name is an agreed string between the server and the client that denotes a specific service. Don’t forget it as it will be used when entering a service name in a later process.
 
-Here, we use a service named Sync. In the game part, modify the serviceName as follows.
+Here it uses a service with the name of Sync. Modify the contents below in serviceName in the game section:
 
 ```
 "serviceName" : "Sync",
 ```
 
-### About channel
+### About Channel
 
-A channel is one of the ways to logically divide a single server group. We will skip the detailed description in this document because we do not use channels in this example. As we do not use channels, modify the channelIDs in the game as follows.
+Channel is one of the methods to logically split a single server group. As a channel is not used in the example, we will omit the detailed description in this article. The content is modified as follows in the channelIDs in the game section because it does not use a channel:
 
 ```
 "channelIDs" : [""],
 ```
 
-The contents of the GameAnvil server configuration file that you created in this way are as follows.
+The content of the GameAnvil server setting file that has been written thus is as follows:
 
 ```json
 "game": [ 
@@ -125,1004 +120,929 @@ The contents of the GameAnvil server configuration file that you created in this
   ]
 ```
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_config_json_1213.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/6_gameanvil_config_json.png)
 
-For your information, if you look at the gateway setting, you can see that the TCP_SOCKET connection is set to use the 18200 ports. This is the port that connects to the client, which will then be used by the client project to fill in the server connection information.
+With the gateway settings, you can see that the TCP\_SOCKET connection is set to use the 18200 port. This is the port connected to the client, which will be used in future client projects to enter the server access information.
 
 ## Run GameAnvil Server
 
-### Setting the Java Version
+### Java Version Settings
 
-GameAnvil supports Java 8 and 11 versions. Some settings may vary depending on the version and we used Java 11 versions here.
+GameAnvil supports Java 21 version. Some configuration methods may vary depending on the version, and Java 21 version was used here.
 
-First, let's check the jdk settings. Select **File>ProjectStructure** from the top left menu to open the **ProjectStructure** window. For Mac users, the **command+;** shortcuts are available. 
+First, let's check the jdk settings. Select **File > Project Structure** from the left upper menu to open the **Project Structure** window. For a Mac user, you can use **Command + ;** shortcut.
 
-On the **Project** tab, check the SDK settings. If there is no SDK, download and set the desired version of JDK through **Add SDK>Download JDK**. Set **Language level** to **SDK default**. Next, on the **Modules** tab, set **Language level** to **Project default**.
+Check the SDK settings in the **Project** tab. If you don't have the SDK set, download and set the version you want of JDK via **Add SDK > Download JDK**. Set the **Language level** to **SDK default**. Then set the **Language level** to **Project default** in the **Modules** tab.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/project_structure_1213.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/7_project_structure.png)
 
-From the **Settings** menu, check the JVM used by **gradle**. Set it to the same version as **Project****SDK**.
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/8_module_language_level.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gradle_sdk_config_1213.png)
+Check the **gradle** settings in the **Set** menu.
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/9_gradle_config.png)
 
 ### Run Server
 
-When the execution setting is complete, click on the green triangle icon to the left of the main() function of the main class to select Run Main. Main(). Once this has been done, clicking the green triangle Run icon in the upper right corner of the IntelliJ will also launch the server.
+When the execution is set, double-click Tasks > other > `runMain` from the gradle menu on the right. Once executed, the server runs even if you click the green Run triangle icon on the top right of the IntelliJ.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run1_1213.png)
+You must run it with `runMain` to apply the VM option required to run the GameAnvil server. If you are just running the main() function of the Main class, you must add the required VM options below in **Edit Configurations...**.
 
-In build.gradle, JVM options are pre-configured for your convenience. To leverage these settings to run the server, right-click on Task > others > runMain in the Gradle window of IntelliJ and click on Run GameAnvilTutorial.
+```
+"--add-opens", "java.base/java.lang=ALL-UNNAMED", "--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED" "-XX:+UseG1GC"
+```
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run2_1213.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/10_gameanvil_run.png)
 
-If the server is running normally, a number of logs related to the server's driving status will be output. 
+When the server runs normally, a number of logs related to the server running status are output.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run_log.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/11_gameanvil_run_log.png)
 
-GameAnvil servers are made up of multiple nodes. These nodes divide the functions that the server will perform into multiple roles. We've only checked the initial drive of the server, but we're not fully prepared because we haven't written the code for the node or other server to run.
+GameAnvil server consists of multiple nodes. These nodes divide the functions that the server performs into several roles. We have only checked the server's initial run yet. As we have not set up the code for running a node or other server, we are not fully prepared.
 
-Each node needs time to prepare to execute code, and when each node is ready, it outputs an onReady log. The node that the client plays a direct role in connecting to the server is the gateway node. If the gateway node is ready and the onReady log of the gateway node is output, the GameAnvil server is always accessible.
+Each node needs time to prepare to execute the code,. When each node is ready, it will output an onReady log. A gateway node is to perform the direct role for the client to connect to the server. If the gateway node is ready and the onReady logs for GatewayNode are output, the GameAnvil server will be connectable at any time.
 
-In the next chapter, we will implement the BasicGameNode required for sample game behavior among GameAnvil's multiple nodes.
+In the next chapter, we will implement the BasicGameNode required for the sample game operation among the various nodes of GameAnvil.
 
-## Implement GameAnvil Server Features
+## Implement GameAnvil Server Feature
 
-### Implement Game Node
+### Perform Game Node
 
-GameAnvil provides multiple node classes prefixed with `Base-`. Basic node features are already implemented inside the engine, and users can inherit these Base classes and use various callback features. In this example, we are going to create and use a game node class that inherits the BaseGameNode class.
+GameAnvil provides multiple node interfaces with prefix `I-`. The feature of the basic node is already implemented inside the engine, and users can use various callback features by implementing these interfaces. In this example, we try to create a game node class that implements the IGameNode interface.
 
-In the Project panel, right-click on the path where the Main class is located and select **New>Package** to create a new package named **node**. Right-click the node package again and select **New>BaseGameNode**. When the Create File dialog box opens, type **SyncGameNode** in **Filename** and **Sync** in **ServiceName** and click **OK**.
+In the project panel, right-click the path to where the Main class is located, and then select **New > Package** to create a new package named **node**. Then right-click the node package again and select **New > GameAnvil GameNode**. When the File Creation dialog box opens, enter **SyncGameNode** in **File name**, and **Sync** in **Service name**, and click **OK**.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/create_sync_game_node.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/13_select_game_node_file_template.png)
 
-This feature is available because you applied File templates (schemes) together when you installed the template earlier. If **New>BaseGameNode** is not visible, select **New>Java Class** to create an empty class.
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/14_create_sync_game_node.png)
 
-The automatically generated code is as follows.
+This feature is available because you have previously applied File templates (schemes) when installing a template. If the entry **New > GameAnvil GameNode** is not visible, select **New > Java Class** to create an empty class.
+
+The automatically written code is as follows:
 
 ```java
-import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.annotation.ServiceName;
-import com.nhn.gameanvil.node.game.BaseGameNode;
-import com.nhn.gameanvil.node.game.data.BaseChannelRoomInfo;
-import com.nhn.gameanvil.node.game.data.BaseChannelUserInfo;
-import com.nhn.gameanvil.node.game.data.ChannelUpdateType;
-import com.nhn.gameanvil.packet.Payload;
-import com.nhn.gameanvil.packet.message.MessageDispatcher;
+package com.tutorial.gameanvil.node;
 
-@ServiceName("Sync")
-public final class SyncGameNode extends BaseGameNode {
+import com.nhn.gameanvil.game.GameAnvilGameNode;
+import com.nhn.gameanvil.node.game.ChannelUpdateType;
+import com.nhn.gameanvil.node.game.IGameNode;
+import com.nhn.gameanvil.node.game.context.IGameNodeContext;
+import com.nhn.gameanvil.node.game.data.IChannelRoomInfo;
+import com.nhn.gameanvil.node.game.data.IChannelUserInfo;
+import com.nhn.gameanvil.packet.IPayload;
 
-    private static final MessageDispatcher<SyncGameNode> messageDispatcher = new MessageDispatcher<>();
+@GameAnvilGameNode(gameServiceName = "Sync")
+public class SyncGameNode implements IGameNode {
+    private IGameNodeContext gameNodeContext;
 
-    static {
-        // messageDispatcher.registerMsg();
+    @Override
+    public void onCreate(IGameNodeContext gameNodeContext) {
+        this.gameNodeContext = gameNodeContext;
     }
 
     @Override
-    public MessageDispatcher<SyncGameNode> getMessageDispatcher() {
-        return messageDispatcher;
-    }
-
-    @Override
-    public void onInit() throws SuspendExecution {
+    public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, IChannelUserInfo channelUserInfo, int userId, String accountId) {
 
     }
 
     @Override
-    public void onPrepare() throws SuspendExecution {
+    public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, IChannelRoomInfo channelRoomInfo, int userId) {
 
     }
 
     @Override
-    public void onReady() throws SuspendExecution {
+    public void onChannelInfo(IPayload payload) {
 
     }
 
     @Override
-    public void onPause(Payload payload) throws SuspendExecution {
+    public void onInit() {
 
     }
 
     @Override
-    public void onResume(Payload payload) throws SuspendExecution {
+    public void onPrepare() {
 
     }
 
     @Override
-    public void onShutdown() throws SuspendExecution {
+    public void onReady() {
 
     }
 
     @Override
-    public boolean onNonStopPatchSrcStart() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean onNonStopPatchSrcEnd() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean canNonStopPatchSrcEnd() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean onNonStopPatchDstStart() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean onNonStopPatchDstEnd() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean canNonStopPatchDstEnd() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelUserInfo baseChannelUserInfo, int userId, String accountId) throws SuspendExecution {
+    public void onPause(IPayload payload) {
 
     }
 
     @Override
-    public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelRoomInfo baseChannelRoomInfo, int userId) throws SuspendExecution {
+    public void onShuttingdown() {
 
     }
 
     @Override
-    public void onChannelInfo(Payload outPayload) throws SuspendExecution {
+    public void onResume(IPayload payload) {
 
     }
 }
+
 ```
 
-### About node
+### About Node
 
-Every node has a state depending on whether or not a loop has started that allows something to start processing. Below are some of the states that a node can have.
+All nodes have status depending on whether a loop to start processing something has started. The following is some of the states that a node can have:
 
-* INIT
-* PREPARE
-* READY
-* SHUTDOWN
+- INIT
+- PREPARE
+- READY
+- SHUTDOWN
 
-The node reaches the READY state, starting with the INIT state and changing the state in the order described. The READY state indicates that the node is in a state capable of processing and performing a given task.
+The node starts from the INIT state and turns the state to the specified order to reach the READY state. The READY state indicates that the node is in a state where the task can be processed and performed.
 
-The auto-generated code contains a code that overrides a callback hooked to the state of each node. For example, if you write a particular logic to the onInit() method, that callback is inserted and called just before the node starts initializing (Init).
+Auto-generated codes include codes that override the callbacks that are hooked to the state of each node. For example, if you write a specific logic to the onInit() method, the callback is inserted and called just before the node starts initializing (Init).
 
-GameAnvil has most of the code pre-prepared, so there's no more code to write at this stage. Just use the game node as you create it.
+GameAnvil has most code prepared so no more code to write in this step. You can use the game node as it has been created.
 
-### About User Types
+### About User Type
 
-The user participates in the room at each game node and sends and receives packets, which is a promised character string that distinguishes each user implementation.
+The user is the object that receives the packet to join the room from each game node, a promised string that separates each user implementation.
 
-To use the room-based implementation offered by GameAnvil, you need **game users** and **game room** classes in addition to the nodes implemented above. Let us explain how to easily implement it with just class inheritance and annotation attachments.
+In addition to the nodes implemented above, you need a **game user** and **game room** class to use the room-based implementation provided by GameAnvil. I will describe how to easily implement with only interface implementation.
 
 ### Implement Game User
 
-When a client logs in to a server, the server creates the client information as an object called **game user** and stores it in memory and retains it. What information the game user will express can be implemented freely as needed by the user. Game user implementation can also be implemented consistently through class inheritance and callback overriding.
+When a client logs in to the server, the server stores and retains the client information as an object called the **game user**. What kind of information the game user has to express can be implemented freely by the user’s needs. Game user implementation can also be consistently implemented through the inheritance of the class and callback overriding.
 
-In the Project panel, right-click the path where the Main class is located and select **New>Package** to create a new package named **user**. Right-click on the **user** package again and select **New>BaseUser**. When the File Creation dialog box opens, type **SyncGameUser** in **FileName**, **Sync** in **ServiceName**, and **UserType****USER_TYPE_SYNC** and click on **OK**.
+In the project panel, right-click on the path to where the Main class is located and then select **New > Package** to create a new package named **user**. Then right-click the **user** package again and select **New > GameAnvil User**. When the File Creation dialog box opens, enter **SyncGameUser** in **File name**, **Sync** in **Service name**, and **USER_TYPE_SYNC** in **User type**, and click **OK**.
 
-The user type is a promised string between the server and the client that distinguishes each user implementation, and the user type must be used in subsequent client project implementations, so please remember it.
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/15_create_sync_game_user.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new-game-user-server.png)
-
-The automatically generated code is as follows.
+The auto-generated code is as follows:
 
 ```java
+package com.tutorial.gameanvil.user;
 
-import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.annotation.ServiceName;
-import com.nhn.gameanvil.annotation.UserType;
-import com.nhn.gameanvil.node.game.BaseUser;
+import com.nhn.gameanvil.game.GameAnvilUser;
+import com.nhn.gameanvil.node.game.IUser;
+import com.nhn.gameanvil.node.game.context.IUserContext;
+import com.nhn.gameanvil.node.game.data.MatchCancelReason;
+import com.nhn.gameanvil.node.game.data.MatchRoomFailCode;
+import com.nhn.gameanvil.node.game.data.MatchUserFailCode;
 import com.nhn.gameanvil.node.game.data.RoomMatchResult;
-import com.nhn.gameanvil.packet.Payload;
-import com.nhn.gameanvil.packet.message.MessageDispatcher;
-import com.nhn.gameanvil.serializer.TransferPack;
+import com.nhn.gameanvil.packet.IPayload;
+import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
+import com.nhn.gameanvil.serializer.ITransferPack;
 
-@ServiceName("Sync")
-@UserType("USER_TYPE_SYNC")
-public final class SyncGameUser extends BaseUser {
+@GameAnvilUser(
+        gameServiceName = "Sync",
+        gameType = "USER_TYPE_SYNC",
+        useChannelInfo = false
+)
+public class SyncGameUser implements IUser {
+    private IUserContext userContext;
 
-    private static final MessageDispatcher<SyncGameUser> messageDispatcher = new MessageDispatcher<>();
-
-    static {
-        // messageDispatcher.registerMsg();
+    @Override
+    public void onCreate(IUserContext userContext) {
+        this.userContext = userContext;
     }
 
     @Override
-    public MessageDispatcher<SyncGameUser> getMessageDispatcher() {
-        return messageDispatcher;
-    }
-
-    @Override
-    public boolean onLogin(Payload payload, Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
     @Override
-    public void onPostLogin() throws SuspendExecution {
+    public void onAfterLogin(boolean isRelogined) {
 
     }
 
     @Override
-    public boolean onLoginByOtherDevice(String newDeviceId, Payload outPayloadForKickUser) throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public boolean onLoginByOtherUserType(String userType, Payload outPayload) throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public void onLoginByOtherConnection(Payload outPayload) throws SuspendExecution {
-
-    }
-
-    @Override
-    public boolean onReLogin(Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onReLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
     @Override
-    public void onDisconnect() throws SuspendExecution {
-    }
-
-
-    @Override
-    public void onPause() throws SuspendExecution {
+    public void onDisconnect() {
 
     }
 
     @Override
-    public void onResume() throws SuspendExecution {
+    public void onPause() {
 
     }
 
     @Override
-    public void onLogout(Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onResume() {
 
     }
 
     @Override
-    public boolean canLogout() throws SuspendExecution {
-        boolean canLogout = true;
-        return canLogout;
-    }
-
-    @Override
-    public void onPostLeaveRoom() throws SuspendExecution {
+    public void onLogout(IPayload payload, IPayload outPayload) {
 
     }
 
     @Override
-    public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, Payload payload) throws SuspendExecution {
-        return null;
+    public boolean canLogout() {
+        return true;
     }
 
     @Override
-    public boolean onMatchUser(String roomType, String matchingGroup, Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onAfterLeaveRoom() {
+
+    }
+
+    @Override
+    public boolean canTransfer() {
+        return true;
+    }
+
+    @Override
+    public boolean onLoginByOtherDevice(String s, IPayload payload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public boolean onLoginByOtherUserType(String s, IPayload payload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public void onLoginByOtherConnection(IPayload payload) {
+
+    }
+
+    @Override
+    public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, IPayload payload) {
+        return RoomMatchResult.FAILED;
+    }
+
+    @Override
+    public void onMatchRoomFail(MatchRoomFailCode matchRoomFailCode) {
+
+    }
+
+    @Override
+    public void onMatchUserFail(MatchUserFailCode matchUserFailCode) {
+
+    }
+
+    @Override
+    public boolean onMatchUser(String roomType, String matchingGroup, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public void onMatchUserCancel(MatchCancelReason matchCancelReason) {
+
+    }
+
+    @Override
+    public void onTransferOut(ITransferPack transferPack) {
+
+    }
+
+    @Override
+    public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+
+    }
+
+    @Override
+    public void onAfterTransferIn() {
+
+    }
+
+    @Override
+    public void onSnapshot(IPayload payload, IPayload outPayload) {
+
+    }
+
+    @Override
+    public boolean canMoveOutChannel(String channelId, IPayload payload, IPayload outPayload) {
         return false;
     }
 
     @Override
-    public boolean canTransfer() throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
+    public void onMoveOutChannel(String channelId, IPayload payload) {
 
     }
 
     @Override
-    public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
+    public void onAfterMoveOutChannel() {
 
     }
 
     @Override
-    public void onPostTransferIn() throws SuspendExecution {
-
-    }
-
-    @Override
-    public boolean onCheckMoveOutChannel(String destinationChannelId, Payload payload, Payload errorPayload) throws SuspendExecution {
-        boolean canMoveOut = false;
-        return canMoveOut;
-    }
-
-    @Override
-    public void onMoveOutChannel(String destinationChannelId, Payload outPayload) throws SuspendExecution {
-    }
-
-    @Override
-    public void onPostMoveOutChannel() throws SuspendExecution {
-    }
-
-    @Override
-    public void onMoveInChannel(String sourceChannelId, Payload payload, Payload outPayload) throws SuspendExecution {
-    }
-
-    @Override
-    public void onPostMoveInChannel() throws SuspendExecution {
+    public void onMoveInChannel(String channelId, IPayload payload, IPayload outPayload) {
 
     }
 }
 
+
 ```
 
-Game users are created by a client requesting a login to the server. The server can determine whether to allow login or not and export it as a return value through a payload transmitted from the client. Only the engine user creates the main logic and the engine is responsible for the success or failure of login.
+Game users are created by requiring the client to log in to the server. On the server, you can decide whether to allow logging into the payloads sent from the client and exporting them as a return value. The main logic is only written by the engine user, and the engine is responsible for handling login success or failure.
 
-In this tutorial, to allow logins without any special verification process, the onLogin function always returns true. This will always create a user object and give a success response when a client requests login.
+In this tutorial, to allow login without special validation, we have enabled the onLogin function to always return true. It will always create user objects when the client has a login request and responds successfully.
 
 ### Implement Game Room
 
-If you successfully access the game node as a game user, you can now send and receive packets to and from other users through the game room. A game room is a group that logically binds users who send and receive packets. Game room implementations can also be implemented through class inheritance and callback overriding.
+Once you successfully access the game node as a game user, you can now receive packets from other users and through the game room. Game Room is a group that logically binds the users who receive the packet. Game rooms can also be created through interface implementation.
 
-In the Project panel, right-click on the path where the Main class is located and select **New>Package** to create a new package named **room**. Right-click on the **room** package again and select **New>BaseRoom**. When the File Creation dialog box opens, type **SyncGameRoom** in **FileName**, **Sync** in **ServiceName**, **RoomType** in **ROOM_TYPE_SYNC** and **UserClass** in **SyncGameUser** and click on **OK**.
+In the project panel, right-click on the path to where the Main class is located and then select **New > Package** to create a new package named **room**. Then right-click again on the **room** package and select **New > GameAnvil Room**. When the File Creation dialog box opens, enter **SyncGameRoom** in **File name**, **Sync** in **Service name**, **ROOM_TYPE_SYNC** in **Room type**, and **SyncGameUser** in **User**, and click **OK**.
 
-The room type is a promised string between the server and the client that distinguishes each room implementation, and there are parts where the room type must be entered when implementing the client project, so remember to enter it.
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/16_create_sync_game_room.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new_game_room_server.png)
-
-The automatically generated code is as follows.
+The auto-generated code is as follows:
 
 ```java
+package com.tutorial.gameanvil.room;
 
-import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.annotation.RoomType;
-import com.nhn.gameanvil.annotation.ServiceName;
-import com.nhn.gameanvil.node.game.BaseRoom;
-import com.nhn.gameanvil.node.game.RoomMessageDispatcher;
-import com.nhn.gameanvil.packet.Payload;
-import com.nhn.gameanvil.serializer.TransferPack;
+import com.nhn.gameanvil.game.GameAnvilRoom;
+import com.nhn.gameanvil.node.game.IRoom;
+import com.nhn.gameanvil.node.game.context.IRoomContext;
+import com.nhn.gameanvil.node.game.data.MatchCancelReason;
+import com.nhn.gameanvil.packet.IPayload;
+import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
+import com.nhn.gameanvil.serializer.ITransferPack;
+import com.tutorial.gameanvil.user.SyncGameUser;
 
 import java.util.List;
 
-@ServiceName("Sync")
-@RoomType("ROOM_TYPE_SYNC")
-public final class SyncGameRoom extends BaseRoom<SyncGameUser> {
+@GameAnvilRoom(
+        gameServiceName = "Sync",
+        gameType = "ROOM_TYPE_SYNC",
+        useChannelInfo = false
+)
+public class SynGameRoom implements IRoom<SyncGameUser> {
+    private IRoomContext roomContext;
 
-    private static final RoomMessageDispatcher<SyncGameRoom, SyncGameUser> messageDispatcher = new RoomMessageDispatcher<>();
-
-    static {
-        // messageDispatcher.registerMsg();
+    @Override
+    public void onCreate(IRoomContext<SyncGameUser> roomContext) {
+        this.roomContext = roomContext;
     }
 
     @Override
-    public RoomMessageDispatcher<SyncGameRoom, SyncGameUser> getMessageDispatcher() {
-        return messageDispatcher;
+    public void onInit() {
+
     }
 
     @Override
-    public void onInit() throws SuspendExecution {
+    public void onDestroy() {
+
     }
 
     @Override
-    public void onDestroy() throws SuspendExecution {
+    public boolean onCreateRoom(SyncGameUser user, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
     }
 
     @Override
-    public boolean onCreateRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onJoinRoom(SyncGameUser user, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public boolean canLeaveRoom(SyncGameUser user, IPayload payload, IPayload outPayload) {
         return true;
     }
 
     @Override
-    public boolean onJoinRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public void onLeaveRoom(SyncGameUser user) {
+
+    }
+
+    @Override
+    public void onAfterLeaveRoom() {
+
+    }
+
+    @Override
+    public void onRejoinRoom(SyncGameUser user, IPayload payload) {
+
+    }
+
+    @Override
+    public void onTransferOut(ITransferPack transferPack) {
+
+    }
+
+    @Override
+    public void onTransferIn(List<SyncGameUser> list, ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+
+    }
+
+    @Override
+    public void onAfterTransferIn() {
+
+    }
+
+    @Override
+    public void onPause() {
+
+    }
+
+    @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public boolean onMatchParty(String roomType, String matchingGroup, SyncGameUser user, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public void onMatchPartyCancel(MatchCancelReason matchCancelReason) {
+
+    }
+
+    @Override
+    public void onForceMatchRoomUnregistered(MatchCancelReason matchCancelReason) {
+
+    }
+
+    @Override
+    public boolean canTransfer() {
         return true;
-    }
-
-    @Override
-    public boolean onLeaveRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public void onLeaveRoom(SyncGameUser sampleUser) throws SuspendExecution {
-
-    }
-
-    @Override
-    public void onPostLeaveRoom() throws SuspendExecution {
-
-    }
-
-    @Override
-    public void onRejoinRoom(SyncGameUser user, Payload outPayload) throws SuspendExecution {
-
-    }
-
-    @Override
-    public boolean canTransfer() throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
-
-    }
-
-    @Override
-    public void onTransferIn(List<SyncGameUser> userList, TransferPack transferPack) throws SuspendExecution {
-    }
-
-    @Override
-    public void onPause() throws SuspendExecution {
-
-    }
-
-    @Override
-    public void onResume() throws SuspendExecution {
-
     }
 }
+
 ```
 
-Game rooms are created when a game user requests a server to create a room. On the client side, you can simply create a room and enter an existing room with a method call. If you want to insert a custom code at the time the user enters the room or the room is created, you can easily insert the code by overriding the appropriate callback.
+Game rooms are created when the game user requests room creation on the server. On the client side, you can simply call the method to create a room and enter the room that exists. When the user enters the room or when the room is created, you can easily paste the code by overriding appropriate callbacks.
 
-## Wrap up the server implementation
+## Finishing the server implementation
 
-So far, you have completed building the server for running the basic tutorial sample. When you run the server again, you will see the phrase `{"message:" "All nodes are ready!!"}` in the log. This log appears, which means that the GameAnvil server was running successfully.
+At this point, the server setup for running the basic tutorial sample is complete. When the server is restarted, you can see the phrase `All nodes are ready!!` in the log. If this log is opened, the GameAnvil server is running normally.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/all_nodes_are_ready.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/17_all_nodes_are_ready.png)
 
-The server is now ready to accept the client's request. The next step is to implement the client using the GameAnvil connector and the Unity sample project.
+The server to receive the client's request is now ready. In the next step, we will use the GameAnvil connector and the Unity sample project to implement the client.
 
-## Prepare a hands-on experience environment - Client Project
-
-You can download the final client sample project that you'll complete the fix by following the steps below. If you want to take several steps from the initial Unity project you downloaded and configured to implement the client feature you can download it and refer to it if you want to see in advance what it's going to be like.
-
-[Download final client sample project](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/BasicSyncTutorial.zip?disposition=attachment)
+## Prepare Practice Environment - Client Project
 
 ### Download GameAnvilConnector
 
-Download the file below for the use of GameAnvil connector dll.
+Download the file below to use GameAnvil connector dll:
 
-[GameAnvil-Connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)
+[gameanvil\_connector\_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
 
 ### Download Unity Package
 
-Download the Unity package from the link below to practice GameAnvil connector.
+For hands-on use of GameAnvil connector, download the Unity package from the link below:
 
-[GameAnvil-Tutorial-Sample.unitypackage](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvil-Tutorial-Sapmple.unitypackage)
+[gameanvil\_tutorial\_basic.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil_tutorial_basic.unitypackage)
 
 ### Create Unity Project
 
-Run the Unity Hub and click the New Project button at the top right. The version of the Unity Hub is irrelevant.
+After launching the Unity hub, click the New Project button on the top. The version of the Unity hub does not matter.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/unity-hub.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/18_unity_hub.png)
 
-Select **2D** as the template, verify the project name and storage location, and click **Create project**. The Unity version used in this example is 2020.3.37f1, and we recommend that you do it in the same environment as the sample run version because we have not tested every case, although it is acceptable to use a different version during the practice.
+Select **2D** as your template, check the project name and where to save it, and click **Create project**. The Unity version used in this example is 2022.3.21f1, and it is recommended to proceed in the same environment as the sample execution version. It is because it is free to use another version when doing the experiment, but not all cases have been tested.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new-unity-project.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/19_new_unity_project.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new-unity-project-done.png)
+<br>
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/20_new_unity_project_done.png)
 
 ### Import GameAnvilConnector and Unity Package
 
-Right-click the project view, select **Import Package > Custom Package...** and select the Unity package that you downloaded in the previous step when the Finder or File Explorer opens. Run the import in the sequence of GameAnvilConnector and Tutorial-Sample.
+Right-click on the project view and select **Import Package > Custom Package...** and open the Finder or File Explorer to select the Unity package you downloaded from the previous step. Run Import in the order gameanvil\_connector, gameanvil\_tutorial\_basic.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/import-unity-package-connector.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/21_import_unity_package_gameanvil_connector.png)
 
-Open the IntroScene in the Scene folder in the GameAnvilSample folder to see the screen below.
+From the Scene folder in the GameAnvilSample folder, open IntroScene and see the screen below:
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/unity-after-import-package.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/22_unity_after_import_package.png)
 
-In **File>Build Settings**, click **Add OpenScene** to set it to be included when building.
+If the Cinemachine, InputSystem related package error occurs as follows, select **Window > Package Manager** and pop up the Package Manager window, and then select **Packages: Unity Registry**, search for **Cinemachine** and **InputSystem** and install.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/intro_scene_to_build_settings.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/23_package_error.png)
 
-## Add GameAnvilConnector
+<br>
 
-Right-click in the Hierarchy view and click **GameAnvil>GameAnvilConnector**. The GameAnvilConnector game object is created and you can modify the settings on the Inspector of the GameAnvilConnector game object as follows.
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/24_add_cinemachine_package.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/add-gameanvilconnector-done.png)
+<br>
 
-* QuickConnect: displays the quick connection progress.
-* GameAnvil Connector Configuration: a bundle of connector-related settings.
-* Connect Configuration: Can modify quick connection information.
-* Authentication Configuration—can modify quick connection credentials.
-* Login Configuration—can modify the quick connection login information.
-* LogListener: manage log output from inside the GameAnvil connector.
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/25_add_inputsystem_package.png)
 
-For now, it's okay if you don't know the details of the settings. You can check the description of each item as you go through the tutorial.
+You can check the Unity UI components used in the example through the UI Manager added to Canvas.
 
-## Quick Connect
+In **File > Build Settings**, click **Add Open Scene** to set it to be included when building.
 
-The GameAnvil client must go through three steps to connect to the GameAnvil server: Connect, Authentication, and Login.
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/26_intro_scene_to_build_settings.png)
 
-* Connect: create and connect sockets to communicate between the server and the client.
-* Auth: the server determines whether to allow the client to send and receive data through the server.
-* Login: create an object that represents the client's information in the server's memory, i.e. a game user.
+## GameAnvilManager
 
-Each step is sequentially performed, and if the previous step does not complete successfully, the next step cannot proceed. The success of each step can be determined by the parameters passed to the callback.
+In the Hierarchy view, right-click on the mouse button and click **GameAnvil > GameAnvilManager**. GameAnvilManager game objects are created and you can modify the settings as shown below on the inspector of the GameAnvilManager game objects:
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/connect-auth-login.gif)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/27_gameanvil_manager.png)
 
-Here, we open the QuickConnectUIMANAGER script, which is added as a component to the Canvas game object on the Hierarchy view, in the source code editor to add implementations, and practice each course directly.
+- Connect Configuration: You can modify access information.
+- Authentication Configuration: You can modify the credentials.
+- Login Configuration: You can modify the login information.
+- Pause Client Check : You can adjust the time interval to check the client connection status periodically.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/quickconnect_ui_manager.png)
+It is okay that you don't know the details of the settings right now. You can see the description for each item as you proceed with the tutorial.
 
-### Configure Connect-Related Fields
+## Connect Server and Client
 
-Note down the server information to connect to. If you are floating the server directly locally, the ip used is `127.0.1`. The port used is `18200`, which is the default port of the gateway node. You can use the default values of GameAnvilConnector without having to set them separately. You can see that the ip and port information has a code that connects to Unity's InputField so that you can modify it in play mode if necessary.
+To allow the GameAnvil client to connect to the GameAnvil server, the GameAnvil client must pass the three steps of Connect, Authentication, and Login.
+
+- Connect: Create and connect sockets to allow communication between the server and the client.
+- Auth: Determine whether to allow the client to transfer data through the server.
+- Login: Create an object that expresses client information in the server's memory, i.e., a game user.
+
+Each step proceeds sequentially, and if the previous step is not completed normally, you cannot proceed with the next step.
+
+You can use the Login API provided by GameAnvilManager on the connector to integrate the Connect, Authentication, and Login processes at once.
+
+Here, you will add the GameAnvilManagerTester script that is added as a component to the Tester game object in the Hierarchy view to open the source code editor and run each process directly.
+
+### Connect Related Field Settings
+
+Enter the server information to connect to. If the server is pulled directly from a local server, ip will use `127.0.0.1`. The port will use `18200`, which is the default port of the gateway node. IP and port information can be verified that the code to connect to the InputField of the Unity is written so that it can be modified in play mode.
 
 ```c#
-void Start() 
-{ 
-    ipInputField.text = GameAnvilConnector.getInstance().ip; 
-    portInputField.text = GameAnvilConnector.getInstance().port.ToString(); 
- 
-    ...omit... 
- 
-    ipInputField.onValueChanged.AddListener(delegate { ipChanged(); }); 
-    portInputField.onValueChanged.AddListener(delegate { portChanged(); }); 
-} 
- 
-void ipChanged() 
-{ 
-    GameAnvilConnector.getInstance().ip = ipInputField.text; 
-} 
- 
-void portChanged() 
-{ 
-    if (!int.TryParse(portInputField.text, out GameAnvilConnector.getInstance().port)) 
-    { 
-        GameAnvilConnector.getInstance().port = 11200; 
-    } 
+public string managerIp
+{
+    get => UI.managerIpInputField.text;
+    set => UI.managerIpInputField.text = value;
+}
+
+public int managerPort
+{
+    get => int.Parse(UI.managerPortInputField.text);
+    set => UI.managerPortInputField.text = value.ToString();
 }
 ```
 
-### Set up Authentication related Fields
+### Authentication Related Field Settings
 
-Fill in the information required for authentication. There are three types of information required for authentication: accountId, deviceId and password. Currently, the server is implemented to pass the authentication stage unconditionally, so there will be no problem with setting it to any value. You can use the default value of the GameAnvilConnector, `test` and, if necessary, you can see that the code is written so that the value entered through Unity's InputField is available in play mode.
+Enter the information required for authentication. There are three types of authentication required: accountId, deviceId, and password. We are now in a server implementation state to pass the authentication step unconditionally, so no action will be set to any value. You can check that the code is written so you can use the entered values through the InputField of the Unity in play mode.
+
+```c#
+public string managerAccountId
+{
+    get => UI.managerAccountIdInputField.text;
+    set => UI.managerAccountIdInputField.text = value;
+}
+
+public string managerPassword
+{
+    get => UI.managerPasswordInputField.text;
+    set => UI.managerPasswordInputField.text = value;
+}
+
+public string managerDeviceId
+{
+    get => UI.managerDeviceIdInputField.text;
+    set => UI.managerDeviceIdInputField.text = value;
+}
+```
+
+### Login Related Field Settings
+
+List the information required to log in. The information required to log in includes user type, channel ID, and service name. Must use the user type and service name written at the time of server deployment. It is set so that the value can be modified through the InputField of the Unity in play mode.
+
+```c#
+public string managerServiceName
+{
+    get => UI.managerServiceNameInputField.text;
+    set => UI.managerServiceNameInputField.text = value;
+}
+
+public string managerUserType
+{
+    get => UI.managerUserTypeInputField.text;
+    set => UI.managerUserTypeInputField.text = value;
+}
+
+public string managerChannelId
+{
+    get => UI.managerChannelIdInputField.text;
+    set => UI.managerChannelIdInputField.text = string.IsNullOrEmpty(value) ? "" : value;
+}
+```
+
+### Set Field Auto Input
+
+In order to reduce the amount of work you need to enter each input in play mode, ConstantManager can pre-enter the value to use. The input values used in the example are as follows:
+
+```c#
+public class ConstantManager : MonoBehaviour
+{
+    private GameAnvilConnectorTester connectorTester;
+    private GameAnvilManagerTester managerTester;
+
+    public static string ip = "127.0.0.1";
+    public static int port = 18200;
+    [Space]
+    public static string accountId = "test";
+    public static string password = "test";
+    public static string deviceId = "test";
+    [Space]
+    public static string serviceName = "Sync";
+    [Space]
+    public static string userType = "USER_TYPE_SYNC";
+    public static string channelId = "";
+    [Space]
+    public static string roomType = "ROOM_TYPE_SYNC";
+
+    ...(omitted)...
+}
+```
+
+### Unity UI Settings
 
 ```c#
 void Start()
-{ {
-    ...omit...
-    
-    accountIdInputField.text = GameAnvilConnector.getInstance().accountId;
-    deviceIdInputField.text = GameAnvilConnector.getInstance().deviceId;
-    passwordInputField.text = GameAnvilConnector.getInstance().password;
-
-    ...omit...
-
-    accountIdInputField.onValueChanged.AddListener(delegate { accountIdChanged(); });
-    deviceIdInputField.onValueChanged.AddListener(delegate { deviceIdChanged(); });
-    passwordInputField.onValueChanged.AddListener(delegate { passwordChanged(); });
-
-    ...omit...
-}
-
-void accountIdChanged()
 {
-    GameAnvilConnector.getInstance().accountId = accountIdInputField.text;
+    UI = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
+
+    gameAnvilManager = GameAnvilManager.Instance;
+    gameAnvilManager.onStateChange.AddListener(OnManagerStateChanged);
+
+    UI.managerLoginButton.onClick.AddListener(ManagerLogin);
+    UI.managerLogoutButton.onClick.AddListener(ManagerLogout);
+    UI.managerCreateRoomButton.onClick.AddListener(ManagerCreateRoom);
+    UI.managerJoinRoomButton.onClick.AddListener(ManagerJoinRoom);
+    UI.managerLeaveRoomButton.onClick.AddListener(ManagerLeaveRoom);
+
+    ...(omitted)...
 }
 
-} void deviceIdChanged()
-{ GameAnvilConnector.getInstance()
-    GameAnvilConnector.getInstance().deviceId = deviceIdInputField.text;
-}
-
-} void passwordChanged()
-{ GameAnvilConnector.getInstance()
-    GameAnvilConnector.getInstance().password = passwordInputField.text;
-}
-```
-
-### Set up Login related field
-
-Fill in the information you need to log in. The information you need to log in includes user type, channel ID, and service name. You must use the user type and service name that you created when you implemented the server. By default, write to apply the values that you specified on the server when it runs. It is set up to modify the values through Unity's InputField, if necessary.
-
-```c#
-void Start()
-{ {
-    ...omit...
-
-    userTypeInputField.text = GameAnvilConnector.getInstance().userType;
-    channelIdInputField.text = GameAnvilConnector.getInstance().channelId;
-    serviceNameInputField.text = GameAnvilConnector.getInstance().serviceName;
-
-    ...omit...
-
-    userTypeInputField.onValueChanged.AddListener(delegate { userTypeChanged(); });
-    channelIdInputField.onValueChanged.AddListener(delegate { channelIdChanged(); });
-    serviceNameInputField.onValueChanged.AddListener(delegate { serviceNameChanged(); });
-
-    ...omit...
-}
-
-void userTypeChanged()
-{
-    GameAnvilConnector.getInstance().userType = userTypeInputField.text;
-}
-
-} void channelIdChanged()
-{ channelIdChanged
-    GameAnvilConnector.getInstance().channelId = channelIdInputField.text;
-}
-
-void serviceNameChanged()
-{ GameAnvilConnector.getInstance()
-    GameAnvilConnector.getInstance().serviceName = serviceNameInputField.text;
-}
-```
-
-### Quick connection request API call
-
-Quick connection requests can be made through GameAnvilConnector as follows.
-
-```c#
-GameAnvilConnector.getInstance().QuickConnect(DelOnQuickConnect);
-```
-
-After a quick connection, you can find out the results through the agent you delivered upon request.
-
-```c#
-void DelOnQuickConnect(GameAnvilConnector.ResultCodeQuickConnect resultCode, UserAgent userAgent, GameAnvilConnector.QuickConnectResult quickConnectResult)
-{
-    Debug.Log(resultCode);
-}
-```
-
-To make quick connection requests by clicking a button, we implement the QuickConnect method as below. In the example, since the contents are written by default, just disable annotation.
-
-```c#
-public void QuickConnect()
-{
-    GameAnvilConnector.getInstance().QuickConnect(DelOnQuickConnect);
-    state = UIState.QUICK_CONNECTING;
-}
-```
-
-After a quick connection, modify the DelOnQuickConnect method as shown below to switch the UI state. In the example, since the contents are written by default, just disable annotation.
-
-```c#
-void DelOnQuickConnect(GameAnvilConnector.ResultCodeQuickConnect resultCode, UserAgent userAgent, GameAnvilConnector.QuickConnectResult quickConnectResult)
-{
-    if (quickConnectResult.resultCodeQuickConnect.Equals(GameAnvilConnector.ResultCodeQuickConnect.QUICK_CONNECT_SUCCESS))
-    {
-        state = UIState.QUICK_CONNECT_COMPLETE;
-    }
-    else
-    {
-        state = UIState.QUICK_CONNECT_FAIL;
-    }
-}
-```
-
-### Quick Connection Shutdown API call
-
-Quick connection shutdown can also be requested as below, just like the connection request API.
-
-```c#
-GameAnvilConnector.getInstance().QuickDisconnect();
-```
-
-To make quick connection shutdown requests by clicking a button, we implement the QuickDisconnect method as below. In the example, since the contents are written by default, just disable annotation.
-
-```c#
-public void QuickDisconnect()
-{
-    GameAnvilConnector.getInstance().QuickDisconnect();
-    state = UIState.NOT_QUICK_CONNECTED;
-}
-```
-
-### Quick connection progress output
-
-Quick connection progress can be read as follows.
-
-```c#
-GameAnvilConnector.getInstance().GetQuickConnectState().ToString();
-```
-
-The code displayed on the screen is written in the Update function as shown below so that you can always know the progress of the quick connection.
-
-```c#
 void Update()
 {
-    quickConnectResultText.text = GameAnvilConnector.getInstance().GetQuickConnectState().ToString();
+    UI.managerLoginState.Set(gameAnvilManager.State == GameAnvilManager.LoginState.LOGIN_COMPLETE);
+    UI.managerJoinedRoomState.Set(gameAnvilManager.UserController != null && gameAnvilManager.UserController.IsJoinedRoom);
+}
+
+public void OnManagerStateChanged(GameAnvilManager.LoginState oldState, GameAnvilManager.LoginState newState)
+{
+    UI.consoleInputField.text += newState.ToString() + '\n';
 }
 ```
 
-### Enter the value to be used for the quick connection directly into the GameAnvilConnector
+### Call Login API
 
-The same service name or user type string value used in the server implementation phase must be used on the client. 
-In the Inspector window of the GameAnvilConnector, in the Login Configuration, set the User Type and Service Name to the same value as the server, as shown below.
+GameAnvilManager's Login API, which integrates the Connect, Authentication, and Login processes, uses the following. You can check the call results through the result value.
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil-login-configuration.png)
+```c#
+public async void ManagerLogin()
+{
+    gameAnvilManager.ip = managerIp;
+    gameAnvilManager.port = managerPort;
+    gameAnvilManager.accountId = managerAccountId;
+    gameAnvilManager.deviceId = managerDeviceId;
+    gameAnvilManager.password = managerPassword;
+    gameAnvilManager.userType = managerUserType;
+    gameAnvilManager.channelId = managerChannelId;
+    gameAnvilManager.serviceName = managerServiceName;
 
-### Quick Connection Request/Connection Shutdown Test
+    try
+    {
+        var result = await gameAnvilManager.Login(null);
+        UI.managerResultCodeInputField.text = result.loginResultCode.ToString();
+        UI.managerExceptionInputField.text = null;
+        if (result.loginResultCode != GameAnvilManager.LoginResultCode.SUCCESS)
+            UI.consoleInputField.text += result.loginResultCode.ToString() + '\n';
+        UI.consoleInputField.text += result.loginResultCode.ToString() + '\n';
+    }
+    catch (Exception e)
+    {
+        UI.managerResultCodeInputField.text = null;
+        UI.managerExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
+    }
+}
+```
 
-Verify that the server is running and enter play mode in Unity Editor. Click **QuickConnect** to verify that the connection is successful.
+### Call Logout API
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/quick-connect.gif)
+```c#
+public async void ManagerLogout()
+{
+    await gameAnvilManager.Logout();
+}
+```
 
-If you attempt a quick connection, Connect, Authenticate and Login will proceed in the following order in the Quick Connection Status window.
+### Test Server Connection and Login
 
-* NOT_CONNECTED
-* CONNECT_IN_PROGRESS
-* CONNECT_COMPLETE
-* AUTHENTICATE_IN_PROGRESS
-* AUTHENTICATE_COMPLETE
-* LOGIN_IN_PROGRESS
-* LOGIN_COMPLETE
-* READY 
+After confirming that the server is running, the Unity editor enters play mode. Click **Login** to confirm that the server connection and login is working properly.
 
-If the connection is complete, it will be shown as READY. Press the End Connection button in this state to verify that the connection is successfully shutdown.
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/28_login_success.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/quick-disconnect.gif)
+When the login is complete, it will appear in the LOGIN status with a green light display in the status display window at the top. Press the **Logout** button to see if you log out normally with this status.
 
-## Create and enter a game room
+When logout is complete, it will appear in the LOGOUT status with a red light display in the status display window at the top.
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/29_logout_success.png)
+
+## Create and Enter Game Room
+
+### Room Creation and Stage Related Fields Settings
+
+```c#
+public string managerRoomType
+{
+    get => UI.managerRoomTypeInputField.text;
+    set => UI.managerRoomTypeInputField.text = value;
+}
+
+public int managerRoomId
+{
+    get => int.Parse(UI.managerRoomIdInputField.text);
+    set => UI.managerRoomIdInputField.text = value.ToString();
+}
+```
 
 ### Use Game Room Creation Request API
 
-By calling the GameAnvil connector's room creation request API, the client can easily ask the server to create a game room. When calling the game room creation request method, you have to hand over the room type as a parameter, and you have to pass the room time value that was agreed with the server in advance.
+By calling the GameAnvil connector's room creation request API, the client can easily request the server to create a game room. When calling the game room creation request method, you must pass the room type to the parameter and send a previously agreed room time value to the server.
 
 ```c#
-GameAnvilConnector.getInstance().getUserAgent().CreateRoom("ROOM_TYPE_SYNC", DelOnCreateRoom);
-```
-
-You can receive the result of the room creation request through the agent you delivered together. You can also receive the generated game room information (room ID, room name, etc.).
-
-```c#
-public void DelOnCreateRoom(UserAgent userAgent, ResultCodeCreateRoom result, int roomId, string roomName, Payload payload) {
-    Debug.Log(result);
-}
-```
-
-To make room creation requests by clicking a button, we implement the CreateRoom method as below. The selected room type is enabled by drop-down. In the example, since the contents are written by default, just disable annotation.
-
-```c#
-public void CreateRoom()
-{ 
-    GameAnvilConnector.getInstance().getUserAgent().CreateRoom(roomTypeDropdown.options[roomTypeDropdown.value].text, DelOnCreateRoom);
-}
-```
-
-You can also modify the function that receives the result of the room creation request to change the UI status. Set the ID of the created game room to display on the screen. In the example, since the contents are written by default, just disable annotation.
-
-```c#
-public void DelOnCreateRoom(UserAgent userAgent, ResultCodeCreateRoom result, int roomId, string roomName, Payload payload) {
-    Debug.Log(result);
-    if (result.Equals(GameAnvil.Defines.ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)){
-        state = UIState.JOIN_ROOM_COMPLETE;
-        RoomIdText.text =  roomId.ToString();
-    }
-    else
-    {
-        state = UIState.JOIN_ROOM_FAIL;
-    }
-}
-```
-
-The game room creation function is completed. We will postpone the test for a while, and implement the game room entry function first.
-
-### Use the Game Room Entry Request API
-
-Suppose a game room was created on the server. To access the room, you can call the game room entry request method from the GameAnvil connector. At this time, the game room ID delivered at the time of room creation is delivered.
-
-```c#
-GameAnvilConnector.getInstance().getUserAgent().JoinRoom("ROOM_TYPE_SYNC", {Enter room ID});
-```
-
-Check whether the user is currently in the room using the IsJoinedRoom() method as shown below.
-
-```c#
-GameAnvilConnector.getInstance().getUserAgent().IsJoinedRoom()
-```
-
-To make JoinRoom requests by clicking a button, we add the below implementation to the existing JoinRoom method. The room ID was made to use the value entered in the input field. In the example, since the contents are written by default, just disable annotation.
-
-```c#
-public void JoinRoom()
+public async void ManagerCreateRoom()
 {
-    int roomId = 0;
-    int.TryParse(joinRoomIdInputField.text, out roomId);
-    GameAnvilConnector.getInstance().getUserAgent().JoinRoom(roomTypeDropdown.options[roomTypeDropdown.value].text, roomId);
+    try
+    {
+        var result = await gameAnvilManager.UserController.CreateRoom(string.Empty, managerRoomType, ConstantManager.channelId);
+        UI.managerRoomResultInputField.text = result.ErrorCode.ToString();
+        UI.managerRoomIdResultInputField.text = result.Data.RoomId.ToString();
+        UI.managerRoomExceptionInputField.text = null;
+        UI.consoleInputField.text += result.ErrorCode.ToString() + '\n';
+        UI.consoleInputField.text += "Room Id : " + result.Data.RoomId + '\n';
+    }
+    catch(Exception e)
+    {
+        UI.managerRoomResultInputField.text = null;
+        UI.managerRoomIdResultInputField.text = null;
+        UI.managerRoomExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
+    }
 }
 ```
 
-Now, both the game room creation function and the entrance function are complete.
+The game room creation feature has been implemented. The tests are delayed a while and the game room entry feature will be implemented first.
 
-### Game room test
+### Use Game Room Input Request API
 
-In the Unity editor, press the shortcut `CMD + b` or `Ctrl + b` to build. In the window from the build results, click the button to confirm that a game room is created. Once a game room is created, the ID of the game room will be displayed on the screen.
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/create-room.gif)
-
-After that, enter play mode in Unity Editor. Enter the ID of the previously displayed game room in the entry field, and click **Join Room** to see if you are participating in the game room.
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/join-room.gif)
-
-## Introduction to Synchronization Controllers
-
-You can now send and receive packets between game users who are in the same game room. These packets allow you to write code to synchronize the information you need between client processes. In a simpler way, synchronization can be achieved simply by attaching a synchronization component to the game object you want to synchronize.
-
-### Add Synchronization Controllers
-
-Right-click in the Hierarchy view and select **GameAnvil>SyncController**.
-
-As scene is moved in this example, in order to manually create a synchronization object after the scene movement, uncheck Instant Sync Object Immediatly on the inspector of the Sync Controller object.
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/add-syn-controller-done.png)
-
-All of GameAnvil's synchronization features are now available. Here's a look at how to attach and use synchronization components with the simplest example.
-
-### Create synchronization objects
-
-In the Project view, navigate to the inside of the Resources folder and double-click Anvil prefab to switch to the prefab modification screen. In the Inspector window, click the AddComponent button and click `GameAnvil > GameAnvil Sync > TransformSync` so that the prefab is ready to synchronize the Transform information of the game object between the game users.
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/anvil-add-sync-component-done.png)
-
-To use the finished sync game object prefab in Unity Play mode, you can create a game object through the Game Object Creation API provided by Sync Controller and add it to the scene. You must forward the prefab name as the first factor.
-
-Note that synchronization game objects with synchronization components provided by GameAnvil must be synchronized using Sync Controller's Instantiate API provided by GameAnvil rather than the GameObject.Instantate() method provided by Unity.
+Suppose a game room has been created on the server. To access the room, you can call the GameAnvil room entry request method from the GameAnvil connector. At this time, the game room ID received at the time of room creation is forwarded. Enter the room ID to enter through the InputField of your unit in play mode.
 
 ```c#
-SyncController.Instance.Instantiate("Anvil", new Vector3(0, 0, 0), Quaternion.identity);
-```
-
-### Create a Game Scene
-
-For specific usage examples, open the SpawnAnvil scene in the Project **View > GameAnvilSample>Scene** folder. Then, in the **File>Build Settings** menu, click **Add OpenScene** to be included when building.
-
-We will add the implementation by modifying the SpawnAnvilSample script of the component assigned to the SpawnAnvilSample game object. In the example, since the contents are written by default, just disable annotation.
-
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-namespace GameAnvil
+public async void ManagerJoinRoom()
 {
-    public class SpawnAnvilSample : MonoBehaviour
+    try
     {
-        void Start()
-        {
-            SyncController.Instance.InstantiateSyncObject();
-        }
-
-        void Update()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 mousePos = Input.mousePosition;
-                mousePos.z = Camera.main.nearClipPlane;
-                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
-
-                SyncController.Instance.Instantiate("Anvil", worldPosition, Quaternion.identity);
-            }
-
-            if (GameAnvilConnector.getInstance() == null || GameAnvilConnector.getInstance().getUserAgent() == null || !GameAnvilConnector.getInstance().getUserAgent().IsJoinedRoom())
-            {
-                SceneManager.LoadScene("IntroScene");
-            }
-        }
+        var result = await gameAnvilManager.UserController.JoinRoom(managerRoomType, managerRoomId, string.Empty);
+        UI.managerRoomResultInputField.text = result.ErrorCode.ToString();
+        UI.managerRoomIdResultInputField.text = result.Data.RoomId.ToString();
+        UI.managerRoomExceptionInputField.text = null;
+        UI.consoleInputField.text += result.ErrorCode.ToString() + '\n';
+        UI.consoleInputField.text += "Room Id : " + result.Data.RoomId + '\n';
     }
-
+    catch (Exception e)
+    {
+        UI.managerRoomResultInputField.text = null;
+        UI.managerRoomIdResultInputField.text = null;
+        UI.managerRoomExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
+    }
 }
 ```
 
-The Start function runs InstantSyncObject() to start synchronization immediately after scene movement.
+The game room creation and entry feature are now completed.
 
-In the Update function, each click was made to obtain the mouse's coordinates and create a prefab that was modified in the previous step. In order to be able to reconnect in case of disconnection, we moved to the original scene. 
+### Game Room Test
 
-### Synchronization test
+Press `CMD + b` or `Ctrl + b` to build from the Unity editor. Click the buttons in the build result window to confirm that a game room is created. When a game room is created, the ID of the game room is displayed on the screen.
 
-In Unity Editor, press the `CMD + b` or `Ctrl + b` shortcuts to build. Create a game room in the window that results from the build and press the Spawn Anvil button to move the scene from the IntroScene to the SpawnAnvil Scene.
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/30_create_room_success.png)
 
-Afterwards, enter play mode in Unity Editor. After accessing the same game room as the build result, press the Spawn Anvil button to move the scene from the IntroScene to the SpawnAnvil Scene. After that, click anywhere on the screen to create a new sync game object. Once you create a game object on one client, make sure it appears the same on the screen of another client entering the same room.
+Enter play mode from the Unity editor. Set the screen to 1080 X 1920 if needed. Enter the ID of the previously displayed game room in the input field, and click **Join Room** to see if you are involved in the game room.
 
-<video src="https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/synchronize-create-done.mov" controls="controls" autoplay style="max-width: 640px;
-display: block;
-margin: auto;">
-</video>
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/31_join_room_success.png)
 
-## Advanced synchronization controller
+## Introduction to Synchronization Controller
 
-In the previous step, we checked object creation synchronization. Here we deal with a more complex example, Rigidbody synchronization of game objects. Follow the same steps as in the previous example to complete the implementation.
+You can now give and receive packets between game users who have accessed the same game room. This packet allows you to write code to synchronize the required information between client processes. In a simpler way, you can only synchronize by attaching a synchronization component to the game objects you want to synchronize.
 
-### Create synchronization objects
+### Synchronization Controller
 
-In the Project view, navigate to the inside of the Resources folder and double-click Player Prefab to switch to the Prefab modification screen. In the Inspector window, click **AddComponent** and click **GameAnvil > GameAnvil Sync > TransformSync**. You are ready to synchronize Transform information for game objects between game users in that prefab.
+Search the SyncController game object in the Hierarchy view to see if the SyncController is added as a component as follows:
 
-Double-click **Resources> Player** in the Project view to switch to the prefab modification screen. In the Inspector window, click **AddComponent** and click **GameAnvil Sync >GameAnvil Sync > RigidBodySync**. You are ready to synchronize RigidBody information for game objects between game users in that prefab.
+[ 사진 ]
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/add-rigidbody-sync-done.png)
+If the game object does not exist at any time, right-click the mouse button in the Hierarchy view and select **GameAnvil > SyncController** to add it.
 
-### Create a Game Scene
+You now have access to all the synchronization features of GameAnvil. Here is how to attach and use synchronous components through the most simple example.
 
-In the Project view, in the Scene folder inside the GameAnvilSample folder, open the KeyboardToMove scene, and in the **File>Build Settings** menu, click on **Add OpenScene** to set it to be included at the time of building.
+### Synchronization Object
 
-We will add the implementation by modifying the KeyboardToMoveSample script of the component assigned to the KeyboardToMoveSample game object. In the example, since the contents are written by default, just disable annotation.
+Go inside the Resources folder in the project view and double-click the Character Prefab to switch to the Modify Prefab screen. Verify that the Sync, TransformSync, RigidBody2DSync, and AnimatorSync components are added in the inspector window.
+
+These components are for the synchronization feature provided by the GameAnvil connector. By adding only components, the prefab is ready to synchronize the Transform, Rigidbody2D, and Animation information of the game object between the game users.
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/32_character_sync_prefab.png)
+
+To use the completed synchronized game object prefab in Unity Play mode, you can create a game object through the Game Object Creation API provided by SyncController and add it to the tone. You must pass the prefab name as the first argument.
+
+Please note that synchronized game objects with the synchronization component provided by GameAnvil must use the SyncController's Instantiate API provided by GameAnvil instead of the GameObject.Instantiate() method provided by the unit.
+
+When you enter the room, write the code to create a synchronization game object.
 
 ```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Animations;
-using GameAnvil;
-using UnityEngine.SceneManagement;
-
-public class KeyboardToMoveSample : MonoBehaviour
+public async void ManagerCreateRoom()
 {
-    private static KeyboardToMove player;
-    private float moveForce = 10;
-    public Transform playerPointer;
-
-    // Start is called before the first frame update
-    void Start()
+    try
     {
-        SyncController.Instance.InstantiateSyncObject();
-    }
+        var result = await gameAnvilManager.UserController.CreateRoom(string.Empty, managerRoomType, ConstantManager.channelId);
+        UI.managerRoomResultInputField.text = result.ErrorCode.ToString();
+        UI.managerRoomIdResultInputField.text = result.Data.RoomId.ToString();
+        UI.managerRoomExceptionInputField.text = null;
+        UI.consoleInputField.text += result.ErrorCode.ToString() + '\n';
+        UI.consoleInputField.text += "Room Id : " + result.Data.RoomId + '\n';
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (GameAnvilConnector.getInstance() == null || GameAnvilConnector.getInstance().getUserAgent() == null || !GameAnvilConnector.getInstance().getUserAgent().IsJoinedRoom())
+        // Add Code
+        if (result.ErrorCode == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)
         {
-            SceneManager.LoadScene("IntroScene");
-        }
-
-        if (player != null)
-        {
-            playerPointer.position = player.transform.position;
-            player.GetComponent<Rigidbody>().AddForce(Vector3.right * Input.GetAxis("Horizontal") * moveForce, ForceMode.Force);
-            player.GetComponent<Rigidbody>().AddForce(Vector3.up * Input.GetAxis("Vertical") * moveForce, ForceMode.Force);
+            OnEnterRoom();
         }
     }
-
-    public static void SpawnPlayer()
+    catch(Exception e)
     {
-        Vector3 mousePos = Input.mousePosition;
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
-        worldPosition.z = 0;
-
-        player = SyncController.Instance.Instantiate("player", worldPosition, Quaternion.identity).GetComponent<KeyboardToMove>();
-    }
-
-    public static void SetSelected(KeyboardToMove selected)
-    {
-        if ( player == selected)
-        {
-            player = null;
-            GameObject.Destroy(selected.gameObject);
-        }
-        else
-        {
-            player = selected;
-        }
+        UI.managerRoomResultInputField.text = null;
+        UI.managerRoomIdResultInputField.text = null;
+        UI.managerRoomExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
     }
 }
 ```
-The Start function runs InstantSyncObject() to start synchronization immediately after scene movement.
 
-The SpawnPlayer function creates a new Player object at the mouse location each time it is called.
+```c#
+public async void ManagerJoinRoom()
+{
+    try
+    {
+        var result = await gameAnvilManager.UserController.JoinRoom(managerRoomType, managerRoomId, string.Empty);
+        UI.managerRoomResultInputField.text = result.ErrorCode.ToString();
+        UI.managerRoomIdResultInputField.text = result.Data.RoomId.ToString();
+        UI.managerRoomExceptionInputField.text = null;
+        UI.consoleInputField.text += result.ErrorCode.ToString() + '\n';
+        UI.consoleInputField.text += "Room Id : " + result.Data.RoomId + '\n';
 
-The Update function checks that the room entry and login are maintained, and allows you to control the last object that you created with a keyboard. Follow the keystroke by performing the AddForce() function on the rigid body to prompt you to update the location.
+        // Add Code
+        if (result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
+        {
+            OnEnterRoom();
+        }
+    }
+    catch (Exception e)
+    {
+        UI.managerRoomResultInputField.text = null;
+        UI.managerRoomIdResultInputField.text = null;
+        UI.managerRoomExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
+    }
+}
+```
 
-### Synchronization test
+```c#
+private void OnEnterRoom()
+{
+    Debug.Log("User enter the room.");
+    SyncController.Instance.InstantiateSyncObject();
+    SyncController.Instance.Instantiate("Character", Vector3.zero, Quaternion.identity);
+}
+```
 
-In Unity Editor, press the shortcut `CMD + b` or `Ctrl + b` to build. Create a game room in the window from the build results window, and click on **KeyboardToMove** to navigate from the IntroScene to the KeyboardToMoveScene.
+### Synchronization Test
 
-Afterwards, you will enter play mode in Unity Editor. After accessing the same game room as the build result, click **KeyboardToMove** to navigate from the IntroScene to KeyboardToMoveScene. After that, click anywhere on the screen to create a new sync game object and move the game object to the keyboard to see if this is reflected in the other client as well.
+Build by pressing the shortcuts `CMD + b` or `Ctrl + b` in the Unity editor. After logging in from the build result window, create a game room and press the **Toggle Hide** button to display the screen testing the synchronization game objects.
 
-<video src="https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/synchronize-rigidbody-done.mov" controls="controls" autoplay style="max-width: 640px;
-display: block;
-margin: auto;">
-</video>
+Enter play mode from the Unity editor. After entering the same game room as the window that came from the build, press the **Toggle Hide** button to display the test screen of synchronization game object.
 
-## Wrap up tutorial
+In this case, to be identified as a different user, you must use a different accountId than the one already used when logging in.
 
-In this document, we learned about the convenience features of GameAnvil connectors such as simple connection and synchronization. As we introduced at the beginning of the tutorial, GameAnvil has all the features you need to create a game server and the tutorial only briefly covers some of them. You can learn more about it in the following documents.
+When you enter a room and create a game object from one client, make sure the same appears on the screen of another client in the same room.
+
+Enter the W,S,A,D key or the top-added key on the keyboard to move the game object. Verify that the game object moves and the animation changes in the process. Verify that the same appears on the other client screen that is in the same room.
+
+With the synchronization feature provided by GameAnvil, we have experienced synchronization of game object creation and Transform, Rigidbody, and Animation.
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/33_sync_test.gif)
+
+## End Tutorial
+
+In this article, we have learned through practice about the quick login and synchronization features that integrate connection, authentication, and login procedures in GameAnvil connectors. As introduced at the beginning of the tutorial, GameAnvil has all the features required to create a game server, and the tutorial has only covered partly. More details of the use can be learned in the following article.
