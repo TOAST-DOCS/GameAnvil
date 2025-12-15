@@ -188,21 +188,14 @@ GameAnvil은 `I-` 접두사를 붙인 여러 노드 인터페이스를 제공합
 package com.tutorial.gameanvil.node;
 
 import com.nhn.gameanvil.game.GameAnvilGameNode;
+import com.nhn.gameanvil.node.game.BaseGameNode;
 import com.nhn.gameanvil.node.game.ChannelUpdateType;
-import com.nhn.gameanvil.node.game.IGameNode;
-import com.nhn.gameanvil.node.game.context.IGameNodeContext;
 import com.nhn.gameanvil.node.game.data.IChannelRoomInfo;
 import com.nhn.gameanvil.node.game.data.IChannelUserInfo;
 import com.nhn.gameanvil.packet.IPayload;
 
 @GameAnvilGameNode(gameServiceName = "Sync")
-public class SyncGameNode implements IGameNode {
-    private IGameNodeContext gameNodeContext;
-
-    @Override
-    public void onCreate(IGameNodeContext gameNodeContext) {
-        this.gameNodeContext = gameNodeContext;
-    }
+public class SyncGameNode extends BaseGameNode {
 
     @Override
     public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, IChannelUserInfo channelUserInfo, int userId, String accountId) {
@@ -286,29 +279,25 @@ GameAnvil에서 제공되는 방 기반의 구현을 사용하기 위해서는 �
 ```java
 package com.tutorial.gameanvil.user;
 
+
 import com.nhn.gameanvil.game.GameAnvilUser;
-import com.nhn.gameanvil.node.game.IUser;
-import com.nhn.gameanvil.node.game.context.IUserContext;
+import com.nhn.gameanvil.node.game.BaseGameUser;
 import com.nhn.gameanvil.node.game.data.MatchCancelReason;
 import com.nhn.gameanvil.node.game.data.MatchRoomFailCode;
 import com.nhn.gameanvil.node.game.data.MatchUserFailCode;
 import com.nhn.gameanvil.node.game.data.RoomMatchResult;
 import com.nhn.gameanvil.packet.IPayload;
+import com.nhn.gameanvil.serializer.IReadOnlyTransferPack;
 import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
 import com.nhn.gameanvil.serializer.ITransferPack;
 
 @GameAnvilUser(
-        gameServiceName = "Sync",
-        gameType = "USER_TYPE_SYNC",
-        useChannelInfo = false
+    gameServiceName = "Sync",
+    gameType = "USER_TYPE_SYNC",
+    useChannelInfo = false
 )
-public class SyncGameUser implements IUser {
-    private IUserContext userContext;
+public class SyncGameUser extends BaseGameUser {
 
-    @Override
-    public void onCreate(IUserContext userContext) {
-        this.userContext = userContext;
-    }
 
     @Override
     public boolean onLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
@@ -411,7 +400,7 @@ public class SyncGameUser implements IUser {
     }
 
     @Override
-    public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+    public void onTransferIn(IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
 
     }
 
@@ -446,7 +435,6 @@ public class SyncGameUser implements IUser {
     }
 }
 
-
 ```
 
 게임 유저는 클라이언트가 서버에 로그인 요청을 함으로써 생성됩니다. 서버에서는 클라이언트에서 전송된 페이로드 등을 통해서 로그인 허용 여부를 결정해서 반환값으로 내보낼 수 있습니다. 주요 로직만 엔진 사용자가 작성하고, 로그인 성공이나 실패 처리는 엔진에서 담당합니다.
@@ -466,30 +454,24 @@ public class SyncGameUser implements IUser {
 ```java
 package com.tutorial.gameanvil.room;
 
+
+
 import com.nhn.gameanvil.game.GameAnvilRoom;
-import com.nhn.gameanvil.node.game.IRoom;
-import com.nhn.gameanvil.node.game.context.IRoomContext;
+import com.nhn.gameanvil.node.game.BaseGameRoom;
 import com.nhn.gameanvil.node.game.data.MatchCancelReason;
 import com.nhn.gameanvil.packet.IPayload;
+import com.nhn.gameanvil.serializer.IReadOnlyTransferPack;
 import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
 import com.nhn.gameanvil.serializer.ITransferPack;
-import com.tutorial.gameanvil.user.SyncGameUser;
 
 import java.util.List;
 
 @GameAnvilRoom(
-        gameServiceName = "Sync",
-        gameType = "ROOM_TYPE_SYNC",
-        useChannelInfo = false
+    gameServiceName = "Sync",
+    gameType = "ROOM_TYPE_SYNC",
+    useChannelInfo = false
 )
-public class SynGameRoom implements IRoom<SyncGameUser> {
-    private IRoomContext roomContext;
-
-    @Override
-    public void onCreate(IRoomContext<SyncGameUser> roomContext) {
-        this.roomContext = roomContext;
-    }
-
+public class SynGameRoom extends BaseGameRoom<SyncGameUser> {
     @Override
     public void onInit() {
 
@@ -538,7 +520,7 @@ public class SynGameRoom implements IRoom<SyncGameUser> {
     }
 
     @Override
-    public void onTransferIn(List<SyncGameUser> list, ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+    public void onTransferIn(List<SyncGameUser> list, IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
 
     }
 

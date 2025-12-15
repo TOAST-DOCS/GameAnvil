@@ -55,8 +55,8 @@ GameAnvil 에서는 Redis 사용을 위해 [Lettuce](https://github.com/redis/le
 
 
 
-## Pinning 문제
-* Virtual Thread 의 synchronized 블록 안에서 Virtual Thread 를 일시 정지하는 코드를 사용 시 Virtual Thread 가 잠기는 문제가 발생할 수 있습니다. 간단한 재현 방법은 다음과 같습니다.
+## Java 21 Virtual Thread 의 Pinning 문제
+* Java 21 Virtual Thread 의 synchronized 블록 안에서 Virtual Thread 를 일시 정지하는 코드를 사용 시 Virtual Thread 가 잠기는 문제가 발생할 수 있습니다. 간단한 재현 방법은 다음과 같습니다.
 
 ```java
 // Main.java
@@ -122,4 +122,4 @@ public static void main(String[] args) {
 ```
 
 이러한 Pinning 에 대한 자세한 설명은 openJDK 의 [Virtual Threads#Pinning](https://openjdk.org/jeps/444#Pinning) 항목 에서 확인할 수 있습니다.
-Virtual Thread 에서 synchronized 제한은 이후 Java 릴리즈에서 제거될 수 있습니다. 자세한 사항은 [Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491) 에서 확인할 수 있습니다.
+Virtual Thread 에서 synchronized 제한은 Java 25 에서 제거 되었습니다. 그러나 GameAnvil 엔진과 대상 라이브러리의 호환성이 문제될 수 있으므로 Java 25 이상을 사용하더라도 정상적으로 동작이 가능한지 테스트 후 사용하십시오. 자세한 사항은 [Synchronize Virtual Threads without Pinning](https://openjdk.org/jeps/491) 에서 확인할 수 있습니다.

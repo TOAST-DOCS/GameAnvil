@@ -12,14 +12,14 @@ EchoSend res = EchoSend.newBuilder()
 Packet packet = Packet.makePacket(res);
 
 // 클라이언트로 전달
-userContext.send(packet);
+user.send(packet);
 ```
 
 위 코드는 게임 유저에서 클라이언트로 패킷을 전달하는 코드입니다. 먼저 전달할 프로토 버퍼를 정의한 뒤 패킷을 생성하고 클라이언트에게 전달합니다. 
 
 ## 패킷 활용 성능 최적화 
 
-패킷은 내부적으로 프로토 버퍼를 직렬화 한 데이터의 캐싱을 하고 있습니다. 그러므로 여러 유저에게 프로토 버퍼 메세지를 보낼 때는 패킷을 여러 번 만들어서 보내는 대신 한번만 만들어서 보내는게 좋습니다. 아래 예제에서는 2명의 유저에게 패킷의 얕은 복사를 하여 전달하는 방법을 다루고 있습니다. 
+패킷은 내부적으로 프로토 버퍼를 직렬화 한 데이터의 캐싱을 하고 있습니다. 그러므로 여러 유저에게 프로토 버퍼 메세지를 보낼 때는 패킷을 여러 번 만들어서 보내는 대신 한번만 만들어서 보내는게 좋습니다. 아래 예제에서는 여러 유저에게 패킷의 얕은 복사를 하여 전달하는 방법을 다루고 있습니다. 
 ```java
 EchoSend.Builder res = EchoSend.newBuilder()
     .setData("hello");
@@ -29,18 +29,16 @@ List<MyUser> allUsers = roomContext.getAllUsers();
 // 유저가 여러명 있다고 가정하고 
 // 모든 유저에게 메세지를 보냅니다.
 
-// 나쁜 방법
+// 비효율적인 방법
 for (GameUser myUser : allUsers) {
-    IUserContext userContext = user.getUserContext();
-    userContext.send(Packet.makePacket(res)); // 이때 res를 전송 시 유저 수 만큼 직렬화 합니다 주의!
+    myUser.send(Packet.makePacket(res)); // 이때 res를 전송 시 유저 수 만큼 직렬화 합니다 주의!
 }
 
 // 좋은 방법
 Packet packet = Packet.makePacket(res); // 이 패킷은 멤버 변수 등으로 저장 후 여러번 재활용 가능합니다
                                         // 단 패킷을 만든 후 res 의 수정은 반영되지 않습니다
 for (GameUser myUser : allUsers) {
-    IUserContext userContext = user.getUserContext();
-    userContext.send(packet.duplicate()); // 패킷의 얕은 복사를 합니다 직렬화는 1번!
+    myUser.send(packet.duplicate()); // 패킷의 얕은 복사를 합니다 직렬화는 1번!
 }
 ```
 `duplicate` 함수는 얕은 복사를 합니다. GameAnil 엔진은 내부적으로 패킷이 정상적으로 처리되지 않았는지 검사를 하고 있기 때문에 재활용 시 정상적으로 처리되지 않을 수 있습니다. 이때 패킷의 얕은 복사를 하여 새로운 패킷처럼 취급하면 GameAnvil 은 다른 패킷으로 인식하고 다시 카운트 하게 됩니다. 
