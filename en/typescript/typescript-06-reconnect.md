@@ -1,12 +1,12 @@
-## Game > GameAnvil > CocosCreator 개발 가이드 > 재접속
+## Game > GameAnvil > CocosCreator Development Guide > Relogin
 
-### 재접속
+## Relogin
 
-게임 도중, 다양한 이유로 서버와의 접속이 끊어질 수 있습니다. 접속이 끊어졌을 때 기존의 플레이를 이어서 할 수 있도록 재접속 기능을 지원합니다. 사용하는 API는 일반적인 접속 방법과 동일하게 사용하실 수 있습니다. 결과를 통해 재접속에 대한 더 상세한 정보를 받습니다.
+During the game, connection to the server may be lost for various reasons. The relogin feature is supported so you can continue your existing play when your connection is lost. The API you use can be used the same as the normal access method. The result gives you more detailed information about the relogin.
 
-#### 인증
+### Authentication
 
-재접속 후 인증을 진행하게 되면, 결과 값으로 이전에 플레이하던 유저 정보가 포함되어 오게 됩니다.
+When authentication is proceeded after relogin, the result value will contain the previously played user information.
 
 ```typescript
 const deviceId, accountId, password;
@@ -25,9 +25,9 @@ loginedUserInfoList.forEach((userInfo: AlreadyLoginedUserInfo) => {
 });
 ```
 
-#### 로그인
+### Login
 
-인증 결과로 받은 유저 정보를 이용해 로그인을 진행합니다. 이 때, userType이나 channelId 등 이전 유저 정보와 동일한 값을 이용해 로그인을 해야 합니다. 그렇지 않으면 로그인이 실패할 수 있습니다.
+Proceed by logging in using the user information received as a result of authentication. In this case, you must log in using the same value as the previous user information, such as userType or channelId. If not, the login may fail.
 
 ```typescript
 const userType: stirng;
@@ -37,8 +37,8 @@ const payload: Payload;
 const loginResult = await user.login(userType, channelId, payload);
 ```
 
-로그인 성공 시 결과 데이터에서 isRelogined가 true이면 재접속 로그인에 성공한 것입니다. LoginInfo에 포함된 정보들을 바탕으로 재접속합니다. 이때 제일 중요한 것이 재접속 시간동안 서버의 변경된 데이터를 클라이언트에 동기화하는 것입니다. 이 동기화에 필요한 데이터를 LoginInfo의 Payload에 담아 처리할 수 있습니다.  
+If isRelogined is true in the result data when the login succeeds, the relogin is successful. Relogin based on the information in LoginInfo. At this time, it is important to synchronize the changed data on the server with the client during the relogin time. You can process the data required for this synchronization into the Payload of LoginInfo.  
 
-재접속 로그인을 하면. 서버에서는 IUser.onRelogin() 콜백이 호출됩니다. 이때 동기화에 필요한 메시지를 정의하여 outPayload 파라미터에 추가하면 LoginInfo의 Payload로 받아서 처리할 수 있습니다. 
+When re-logging in. The IUser.onRelogin() callback is called on the server. At this time, if you define the message required for synchronization and add it to the outPayload parameter, it can be received and processed with the Payload from LoginInfo. 
 
-만약 isRelogined가 false이면 시간이 지나 이전 유저 정보가 제거된 뒤 로그인된 것입니다. 이 경우에는 처음 로그인하는 절차를 수행하면 됩니다. 
+If isRelogined is false, the previous user information has been removed and logged in over time. In this case, you can perform the procedure to log in first. 
