@@ -18,7 +18,7 @@ GameAnvil 서버 코드는 비동기 처리를 기반으로 합니다. 이를 �
 GameAnvil 엔진은 커스텀한 Virtual Thread Executor 를 구현하였습니다. 이 Executor 는 1개의 Platform Thread로 동작하며 1개의 노드에서 여러 Virtual Thread 를 실행 시킬 수 있습니다. 하나의 Virtual Thread에서 임의의 시간이 소요되는 I/O 호출을 했을 경우에 해당 Virtual Thread는 호출이 완료될 때까지 실행 권한을 다른 Virtual Thread에게 양보하여 동작합니다. 이러한 구현은 멀티 스레드 동기화 문제를 고민하지 않고 서버를 작성할 수 있게 하는 대신 코드를 Virtual Thread상에서 비동기로 처리될 수 있게 코드를 작성해야 합니다. GameAnvil 에서 제공하는 메서드는 기본적으로 이러한 비동기 처리를 사용하여 동작하며 엔진 사용자는 동기화 문제를 신경쓰지 않고 읽기 쉬운 코드를 작성할 수 있습니다. 
 
 
-## Virtual Thread 사용 시 주의 사항
+## Virtual Thread 사용 시 주의 사항 (JDK 21 사용 시)
 스레드 블로킹 호출이 될 수 있는 작업(대표적으로 synchronized 사용)은 사용하지 않도록 해야하며 만일 호출 시 해당 Platform Thread가 블로킹되고 그 결과 모든 Virtual Thread들이 블로킹되어서 노드 전체가 멈추게 되는 결과를 초래하게 됩니다. 
 
 ```java

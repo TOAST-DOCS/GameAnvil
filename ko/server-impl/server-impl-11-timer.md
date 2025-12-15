@@ -86,7 +86,7 @@ userContext.removeTimer("MyTimer");
 
 ```java
 @Override
-public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+public void onTransferIn(IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
     if (timerHandlerTransferPack.containsTimerKey("MyTimer")) {
         timerHandlerTransferPack.reRegister("MyTimer", newMyTimer());
     }

@@ -45,7 +45,7 @@ public void onTransferOut(ITransferPack transferPack) {
 ```java
 
 @Override
-public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+public void onTransferIn(IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
     // 전송 받은 사용자 데이터 다시 저장
     setTestTransferDataTopic(transferPack.getToString("DataTopic"));
     setTotalMoney(transferPack.getToLong("TotalMoney"));
@@ -99,7 +99,7 @@ public void onTransferOut(ITransferPack transferPack) {
 ```java
 
 @Override
-public void onTransferIn(List<GameUser> userList, ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+public void onTransferIn(List<GameUser> userList, IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
     this.users.clear();
     for (GameUser user : userList) {
         this.users.put(user.getUserId(), user);

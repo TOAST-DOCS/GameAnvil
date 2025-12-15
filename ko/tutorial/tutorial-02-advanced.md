@@ -115,7 +115,6 @@ Unity Hub를 실행합니다. 오른쪽 상단의 **NEW**를 클릭해 새로운
 ```
 "--add-opens", "java.base/java.lang=ALL-UNNAMED",
 "--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED" 
-"-XX:+UseG1GC"
 ```
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/13_gameanvil_run.png)

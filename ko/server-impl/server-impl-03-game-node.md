@@ -16,24 +16,11 @@ GameNode는 실제 게임 객체가 생성되고 게임 콘텐츠를 구현하�
 
 ## GameNode 구현
 
-GameNode는 IGameNode 인터페이스를 구현합니다. 아래의 예제 코드는 GameNode에서 기본적으로 재정의할 수 있는 콜백 메서드를 보여줍니다. 노드 공통 콜백과 더불어 채널 관리를 위한 콜백이 존재합니다.
+GameNode는 BaseGameNode 클래스를 구현해야 합니다. 아래의 예제 코드는 GameNode에서 기본적으로 재정의할 수 있는 콜백 메서드를 보여줍니다. 노드 공통 콜백과 더불어 채널 관리를 위한 콜백이 존재합니다.
 
 ```java
 @GameAnvilGameNode(gameServiceName = "MyGame") // (1) "MyGame"이라는 서비스를 위한 GameNode로 엔진에 등록
-public class SampleGameNode implements IGameNode {
-    private IGameNodeContext gameNodeContext;
-
-    /**
-     * 게임 노드 컨텍스트를 전달하기 위해 호출
-     * <p/>
-     * 객체가 생성된후 한번 호출된다
-     *
-     * @param gameNodeContext 게임 노드 컨텍스트
-     */
-    @Override
-    public void onCreate(IGameNodeContext gameNodeContext) {
-        this.gameNodeContext = gameNodeContext;
-    }
+public class SampleGameNode extends BaseGameNode {
 
     /**
      * 같은 채널의 다른 노드에 유저 변화가 있을때 호출
@@ -147,7 +134,6 @@ public class _GameNodeTest {
 
 | 콜백 이름                   | 의미           | 설명                                                                                                                                                              |
 |-------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate                | 객체 생성        | 객체가 생성되었을 때 호출됩니다. 생성된 타입에서 사용 가능한 API를 사용할 수 있는 컨텍스트를 전달받습니다. 컨텐츠에서 필요하다면 저장해서 사용할 수 있습니다.                                                                     |
 | onChannelUserInfoUpdate | 채널의 유저 정보 갱신 | 같은 채널로 묶인 여러 개의 GameNode 중, 하나의 GameNode에서 채널의 유저 정보가 변경되었을 때 같은 채널 내의 나머지 모든 GameNode에서 동기화를 위하여 호출됩니다. 이때, 사용자는 전달받은 정보를 바탕으로 현재 GameNode의 채널 정보를 갱신할 수 있습니다. |
 | onChannelRoomInfoUpdate | 채널의 방 정보 갱신  | 같은 채널로 묶인 여러 개의 GameNode 중, 하나의 GameNode에서 채널의 방 정보가 변경되었을 때 같은 채널 내의 나머지 모든 GameNode에서 동기화를 위하여 호출됩니다. 이때, 사용자는 전달받은 정보를 바탕으로 현재 GameNode의 채널 정보를 갱신할 수 있습니다.  |
 | onChannelInfo           | 채널 정보 요청     | 클라이언트가 채널 정보를 요청할 때 호출됩니다. 사용자는 이 콜백에서 원하는 대로 채널 정보를 구성하여 클라이언트로 전달할 수 있습니다.                                                                                    |
@@ -172,20 +158,7 @@ public class _GameNodeTest {
     gameType = "BasicUser",     // 유저의 고유 타입, "BasicUser"라는 유저 타입의 유저를 엔진에 등록
     useChannelInfo = true       // 채널 간의 정보 동기화 설정
 )
-public class SampleGameUser implements IUser {
-    private IUserContext userContext;
-
-    /**
-     * 유저 컨텍스트를 전달하기 위해 호출
-     * <p/>
-     * 객체가 생성된후 한번 호출된다
-     *
-     * @param userContext 유저 컨텍스트
-     */
-    @Override
-    public void onCreate(IUserContext userContext) {
-        this.userContext = userContext;
-    }
+public class SampleGameUser extends BaseGameUser {
 
     /**
      * 로그인할 때 호출
@@ -197,13 +170,12 @@ public class SampleGameUser implements IUser {
      */
     @Override
     public boolean onLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
-        boolean isSuccess = true;
-        return isSuccess;
+        return false;
     }
 
     /**
      * 로그인 성공 이후에 필요한 후처리를 위해 호출
-     * <p/>
+     * <p></p>
      * (즉, onLogin 혹은 onReLoin이 성공한 후 호출)
      *
      * @param isRelogined 재로그인 여부
@@ -215,7 +187,7 @@ public class SampleGameUser implements IUser {
 
     /**
      * 이미 로그인 된 상태에서, 다시 로그인을 시도할 때 호출
-     * <p/>
+     * <p></p>
      * 로그인 된 상태에서는 접속이 끊어지더라도 사용자의 게임유저 객체가 게임노드에 일정 기간 유효한 상태로 남아있다
      *
      * @param payload        클라이언트에서 전달한 임의의 {@link IPayload}
@@ -225,8 +197,7 @@ public class SampleGameUser implements IUser {
      */
     @Override
     public boolean onReLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
-        boolean isSuccess = true;
-        return isSuccess;
+        return false;
     }
 
     /**
@@ -266,19 +237,19 @@ public class SampleGameUser implements IUser {
 
     /**
      * 해당 유저가 로그아웃 가능한지 확인하기 위해 호출
-     * <p/>
+     * <p></p>
      * 엔진 사용자는 이 콜백에서 현재 게임 유저가 로그아웃을 해도 문제가 없을지 결정할 수 있다
      *
      * @return 반환값이 false 이면 로그아웃 진행이 멈추고, 이 후에 주기적으로 다시 콜백을 호출. 반환값이 true 이면 로그 아웃을 진행
      */
     @Override
     public boolean canLogout() {
-        return true;
+        return false;
     }
 
     /**
      * 룸의 onLeavingRoom 실행되고 룸에서 유저가 완전히 나간 후 호출
-     * <p/>
+     * <p></p>
      * 룸에서 나간 유저가 처리해야 하는 작업을 진행한다
      */
     @Override
@@ -293,7 +264,7 @@ public class SampleGameUser implements IUser {
      */
     @Override
     public boolean canTransfer() {
-        return true;
+        return false;
     }
 
     /**
@@ -304,9 +275,8 @@ public class SampleGameUser implements IUser {
      * @return 반환값이 true 이면 새로 접속한 유저가 로그인 된 후 기존 유저는 강제 로그아웃 처리. false 이면 새로 접속한 유저가 로그인 실패
      */
     @Override
-    public boolean onLoginByOtherDevice(String s, IPayload payload) {
-        boolean isSuccess = true;
-        return isSuccess;
+    public boolean onLoginByOtherDevice(String newDeviceId, IPayload outPayloadForKickUser) {
+        return false;
     }
 
     /**
@@ -317,9 +287,8 @@ public class SampleGameUser implements IUser {
      * @return 반환값이 true 이면 새로운 로그인이 성공, false 이면 실패
      */
     @Override
-    public boolean onLoginByOtherUserType(String s, IPayload payload) {
-        boolean isSuccess = true;
-        return isSuccess;
+    public boolean onLoginByOtherUserType(String userType, IPayload outPayload) {
+        return false;
     }
 
     /**
@@ -328,7 +297,7 @@ public class SampleGameUser implements IUser {
      * @param outPayload 클라이언트로 전달할 {@link IPayload}
      */
     @Override
-    public void onLoginByOtherConnection(IPayload payload) {
+    public void onLoginByOtherConnection(IPayload outPayload) {
 
     }
 
@@ -343,7 +312,7 @@ public class SampleGameUser implements IUser {
      */
     @Override
     public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, IPayload payload) {
-        return RoomMatchResult.FAILED;
+        return null;
     }
 
     /**
@@ -377,8 +346,7 @@ public class SampleGameUser implements IUser {
      */
     @Override
     public boolean onMatchUser(String roomType, String matchingGroup, IPayload payload, IPayload outPayload) {
-        boolean isSuccess = true;
-        return isSuccess;
+        return false;
     }
 
     /**
@@ -387,7 +355,7 @@ public class SampleGameUser implements IUser {
      * @param reason 취소된 이유. 타임아웃(TIMEOUT), 사용자의 요청에 의한 취소(CANCEL), 매치 노드의 종료에 의한 취소(SHUTDOWN)
      */
     @Override
-    public void onMatchUserCancel(MatchCancelReason matchCancelReason) {
+    public void onMatchUserCancel(MatchCancelReason reason) {
 
     }
 
@@ -405,14 +373,14 @@ public class SampleGameUser implements IUser {
      * 유저가 다른 노드로부터 이동(전송)되어 왔을 때 도착지 노드로 데이터, 다시 등록해야할 타이머 키를 전달하기 위해 호출
      * <p>
      * TimerHandlerTransferPack을 통해서 user에 등록되어 있던 timerHandlerKey 목록을 확인한다
-     * <p/>
+     * <p></p>
      * TimerHandlerTransferPack의 reRegister()를 활용해서 사용할 timerHandler를 다시 등록한다
      *
      * @param transferPack             다른 노드에서 가지고 온 데이터를 전달하기 위한 꾸러미
-     * @param timerHandlerTransferPack
+     * @param timerHandlerTransferPack 다른 노드에서 가지고 온 타이머 정보를 전달하기 위한 꾸러미
      */
     @Override
-    public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+    public void onTransferIn(IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
 
     }
 
@@ -441,7 +409,7 @@ public class SampleGameUser implements IUser {
      * 클라이언트에서 다른 채널로 이동 요청을 할 때, 현재 유저가 채널 이동이 가능한 상태인지 확인하기 위해 호출
      * <p>
      * 주의! 만일, 사용자가 명시적으로 moveChannel() API를 호출하여 채널을 이동할 경우에는 canMoveOutChannel()가 호출되지 않는다
-     * <p/>
+     * <p></p>
      * 오직 엔진에 의해 암묵적인 채널 이동이 발생할 때 호출된다
      *
      * @param destinationChannelId 이동 대상 채널의 아이디
@@ -450,7 +418,7 @@ public class SampleGameUser implements IUser {
      * @return 반환값이 false 이면 채널 이동이 불가능하므로 요청은 실패이고 true 이면 성공
      */
     @Override
-    public boolean canMoveOutChannel(String channelId, IPayload payload, IPayload outPayload) {
+    public boolean canMoveOutChannel(String destinationChannelId, IPayload payload, IPayload errorPayload) {
         return false;
     }
 
@@ -461,7 +429,7 @@ public class SampleGameUser implements IUser {
      * @param outPayload           이동할 채널에 전달할 {@link IPayload}
      */
     @Override
-    public void onMoveOutChannel(String channelId, IPayload payload) {
+    public void onMoveOutChannel(String destinationChannelId, IPayload outPayload) {
 
     }
 
@@ -482,7 +450,7 @@ public class SampleGameUser implements IUser {
      * @throws GameAnvilException IOException, ExecutionException, InterruptedException 발생시 GameAnvilException 으로 묶어서 throw
      */
     @Override
-    public void onMoveInChannel(String channelId, IPayload payload, IPayload outPayload) {
+    public void onMoveInChannel(String sourceChannelId, IPayload payload, IPayload outPayload) throws GameAnvilException {
 
     }
 }
@@ -515,7 +483,6 @@ GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저
 
 | 콜백 이름                    | 의미                      | 설명                                                                                                                                                      |
 |--------------------------|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate                 | 객체 생성                   | 객체가 생성되었을 때 호출됩니다. 생성된 타입에서 사용 가능한 API를 사용할 수 있는 컨텍스트를 전달받습니다. 컨텐츠에서 필요하다면 저장해서 사용할 수 있습니다.                                                             |
 | onLogin                  | 로그인                     | 처음 로그인을 할 때 호출됩니다. 일반적으로 사용자는 이 콜백에서 DB 등의 저장소로부터 유저 정보를 가지고 와서 게임 유저 객체를 초기화하는 작업을 수행합니다.                                                              |
 | onAfterLogin             | 로그인 성공 후처리              | onLogin이 성공한 후에 호출됩니다. 로그인에 대한 후처리 작업을 이 콜백에서 할 수 있습니다.                                                                                                 |
 | onReLogin                | 재로그인                    | 이미 로그인이 되어 있는 상태에서 다시 로그인을 할 경우에는 onLogin이 아닌 onReLogin이 호출됩니다. 즉, 재로그인에 대한 작업은 이 콜백에서 처리합니다.                                                           |
@@ -561,20 +528,7 @@ GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저
     gameType = "BasicRoom",     // 방이 고유 타입, "BasicRoom"라는 타입의 방을 엔진에 등록
     useChannelInfo = true       // 채널 간의 정보 동기화 설정
 )
-public class SampleRoom implements IRoom<SampleUser> {
-    private IRoomContext roomContext;
-
-    /**
-     * 룸 컨텍스트를 전달하기 위해 호출
-     * <p/>
-     * 객체가 생성된후 한번 호출된다
-     *
-     * @param roomContext 룸 컨텍스트
-     */
-    @Override
-    public void onCreate(IRoomContext<SampleUser> roomContext) {
-        this.roomContext = roomContext;
-    }
+public class SampleGameRoom extends BaseGameRoom<SampleGameUser> {
 
     /**
      * 룸이 초기화 될때 호출
@@ -603,7 +557,7 @@ public class SampleRoom implements IRoom<SampleUser> {
      * @return 반환값이 true 이면 룸 생성이 성공, false 이면 실패
      */
     @Override
-    public boolean onCreateRoom(SampleUser user, IPayload payload, IPayload outPayload) {
+    public boolean onCreateRoom(SampleGameUser user, IPayload inPayload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
@@ -619,7 +573,7 @@ public class SampleRoom implements IRoom<SampleUser> {
      * @return 반환값이 true 이면 입장 성공, false 이면 실패
      */
     @Override
-    public boolean onJoinRoom(SampleUser user, IPayload payload, IPayload outPayload) {
+    public boolean onJoinRoom(SampleGameUser user, IPayload inPayload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
@@ -635,7 +589,7 @@ public class SampleRoom implements IRoom<SampleUser> {
      * @return 반환값이 true 이면 나가기 성공, false 이면 실패
      */
     @Override
-    public boolean canLeaveRoom(SampleUser user, IPayload payload, IPayload outPayload) {
+    public boolean canLeaveRoom(SampleGameUser user, IPayload inPayload, IPayload outPayload) {
         return true;
     }
 
@@ -647,7 +601,7 @@ public class SampleRoom implements IRoom<SampleUser> {
      * @param user 룸에서 나가는 유저
      */
     @Override
-    public void onLeaveRoom(SampleUser user) {
+    public void onLeaveRoom(SampleGameUser user) {
 
     }
 
@@ -668,7 +622,7 @@ public class SampleRoom implements IRoom<SampleUser> {
      * @param outPayload 클라이언트로 전달할 {@link IPayload}
      */
     @Override
-    public void onRejoinRoom(SampleUser user, IPayload payload) {
+    public void onRejoinRoom(SampleGameUser user, IPayload outPayload) {
 
     }
 
@@ -693,10 +647,10 @@ public class SampleRoom implements IRoom<SampleUser> {
      *
      * @param userList                 이동할 유저 리스트
      * @param transferPack             다른 노드에서 가지고 온 데이터 꾸러미인 {@link ITransferPack}
-     * @param timerHandlerTransferPack
+     * @param timerHandlerTransferPack 타이머 핸들러 재등록을 위한 {@link ITimerHandlerTransferPack}
      */
     @Override
-    public void onTransferIn(List<SampleUser> list, ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+    public void onTransferIn(List<SampleGameUser> userList, IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
 
     }
 
@@ -737,7 +691,7 @@ public class SampleRoom implements IRoom<SampleUser> {
      * @return 반환값이 true 이면 파티 매치메이킹 요청 성공, false 이면 실패
      */
     @Override
-    public boolean onMatchParty(String roomType, String matchingGroup, SampleUser user, IPayload payload, IPayload outPayload) {
+    public boolean onMatchParty(String roomType, String matchingGroup, SampleGameUser user, IPayload payload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
@@ -748,7 +702,7 @@ public class SampleRoom implements IRoom<SampleUser> {
      * @param reason 취소된 이유. 타임아웃(TIMEOUT), 사용자의 요청에 의한 취소(CANCEL), 매치 노드의 종료에 의한 취소(SHUTDOWN)
      */
     @Override
-    public void onMatchPartyCancel(MatchCancelReason matchCancelReason) {
+    public void onMatchPartyCancel(MatchCancelReason reason) {
 
     }
 
@@ -758,7 +712,7 @@ public class SampleRoom implements IRoom<SampleUser> {
      * @param reason 취소된 이유. (SHUTDOWN: 매치 노드의 종료에 의한 취소)
      */
     @Override
-    public void onForceMatchRoomUnregistered(MatchCancelReason matchCancelReason) {
+    public void onForceMatchRoomUnregistered(MatchCancelReason reason) {
 
     }
 
@@ -774,6 +728,7 @@ public class SampleRoom implements IRoom<SampleUser> {
         return true;
     }
 }
+
 ```
 
 ```java
@@ -801,7 +756,6 @@ public class _GameRoomTest {
 
 | 콜백 이름                        | 의미                 | 설명                                                                                                                                                                                              |
 |------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate                     | 객체 생성              | 객체가 생성되었을 때 호출됩니다. 생성된 타입에서 사용 가능한 API를 사용할 수 있는 컨텍스트를 전달받습니다. 컨텐츠에서 필요하다면 저장해서 사용할 수 있습니다.                                                                                                     |
 | onInit                       | 초기화                | 방이 생성될 때 초기화를 위해 호출됩니다. 토픽 등록 등의 해당 방에 대한 초기화 코드를 작성할 수 있습니다.                                                                                                                                   |
 | onDestroy                    | 방 사라짐              | 방에서 마지막 유저가 나가고 더 이상 처리할 메시지가 없으면 해당 방은 사라집니다. 이때 호출되는 콜백입니다.                                                                                                                                   |
 | onCreateRoom                 | 방 생성               | 클라이언트가 방 생성을 요청하면 호출됩니다. 콘텐츠에서 사용할 유저 목록을 위한 자료 구조를 생성하거나 기타 방 생성과 함께 처리되어야 할 코드를 작성합니다.                                                                                                        |

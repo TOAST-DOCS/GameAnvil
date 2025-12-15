@@ -8,11 +8,11 @@ SupportNode는 이름 그대로 보조적인 기능을 수행하기 위한 노�
 
 ## SupportNode 구현
 
-이러한 SupportNode는 기본적으로 ISupportNode 인터페이스를 구현합니다. 노드 공통 콜백 메서드만 가지고 있습니다. SupportNode는 앞서 살펴본 다른 노드들과 다르게  사용자가 정의한 RESTful 처리를 할 수 있다는 것이죠. 다시 말하면, SupportNode는 사용자가 정의한 일반적인 패킷 처리와 더불어 RESTful 메시지를 처리할 수 있는 유일한 사용자 노드입니다.
+이러한 SupportNode는 기본적으로 BaseSupportNode 클래스를 구현합니다. 노드 공통 콜백 메서드만 가지고 있습니다. SupportNode는 앞서 살펴본 다른 노드들과 다르게  사용자가 정의한 RESTful 처리를 할 수 있다는 것이죠. 다시 말하면, SupportNode는 사용자가 정의한 일반적인 패킷 처리와 더불어 RESTful 메시지를 처리할 수 있는 유일한 사용자 노드입니다.
 
 ```java
 @GameAnvilSupportNode(gameServiceName = "MySupport") // (1) "MySupport"이라는 서비스를 위한 SupportNode로 엔진에 등록
-public class SampleSupportNode implements ISupportNode {
+public class SampleSupportNode extends BaseSupportNode {
     private ISupportNodeContext supportNodeContext;
 
     /**

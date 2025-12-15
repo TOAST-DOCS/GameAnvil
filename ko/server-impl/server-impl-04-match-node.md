@@ -353,11 +353,10 @@ public class SampleRoomMatchMaker extends AbstractRoomMatchMaker<SampleRoomMatch
      *
      * @param baseRoomMatchForm 룸 매치메이킹 신청 조건인 {@link AbstractRoomMatchForm}
      * @param baseRoomMatchInfo 매칭풀의 룸 정보인 {@link AbstractRoomMatchInfo}
-     * @param args              추가로 전달 받은 파라미터
      * @return 반환값이 true 이면 룸 매치메이킹 성공, false 이면 룸 매치메이킹 실패
      */
     @Override
-    public boolean onMatch(SampleRoomMatchForm roomMatchForm, SampleRoomMatchInfo roomMatchInfo, Object... args) {
+    public boolean onMatch(SampleRoomMatchForm roomMatchForm, SampleRoomMatchInfo roomMatchInfo) {
         return false;
     }
 
@@ -408,7 +407,7 @@ public RoomMatchResult onMatchRoom(final String roomType, final String matchingG
 
     SampleRoomMatchForm sampleRoomMatchForm = new SampleRoomMatchForm(RoomMode.NORMAL, innerPayload.getOption(), 0);
 
-    return userContext.matchRoom(matchingGroup, roomType, sampleRoomMatchForm);
+    return matchRoom(matchingGroup, roomType, sampleRoomMatchForm);
 }
 ```
 

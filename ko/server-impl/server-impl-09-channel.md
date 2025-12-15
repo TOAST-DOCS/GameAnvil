@@ -95,7 +95,7 @@
     gameType = "BasicUser",     // 유저의 고유 타입, "BasicUser"라는 유저 타입의 유저를 엔진에 등록
     useChannelInfo = true       // 채널 간의 정보 동기화 설정
 )
-public class SampleGameUser implements IUser {
+public class SampleGameUser extends BaseGameUser {
     // ... 
 }
 ```
@@ -158,10 +158,10 @@ public class GameChannelUserInfo implements IChannelUserInfo, Comparable<GameCha
 }
 ```
 
-이렇게 작성한 채널 유저 정보는 다음과 같이 유저 객체에서 추가하거나 갱신할 수 있습니다. 이때, userContext.updateChannelUserInfo() API를 사용합니다. 만일 해당 유저 객체가 서버에서 로그아웃되면 해당 채널 유저 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
+이렇게 작성한 채널 유저 정보는 다음과 같이 유저 객체에서 추가하거나 갱신할 수 있습니다. 이때, updateChannelUserInfo() API를 사용합니다. 만일 해당 유저 객체가 서버에서 로그아웃되면 해당 채널 유저 정보도 자동으로 함께 제거됩니다. 다음은 이에 대한 pseudo 코드입니다.
 
 ```java
-public class SampleGameUser implements IUser {
+public class SampleGameUser extends BaseGameUser {
     GameChannelUserInfo channelUserInfo = new GameChannelUserInfo();
   
 	...
@@ -173,7 +173,7 @@ public class SampleGameUser implements IUser {
         channelUserInfo.setAccountId(getAccountId());
         channelUserInfo.setLevel(getLevel());
 
-        userContext.updateChannelUserInfo(channelUserInfo);
+        updateChannelUserInfo(channelUserInfo);
 		...
     }
 
@@ -184,7 +184,7 @@ public class SampleGameUser implements IUser {
         channelUserInfo.setAccountId(getAccountId());
         channelUserInfo.setLevel(getLeve());
 
-        userContext.updateChannelUserInfo(channelUserInfo);
+        updateChannelUserInfo(channelUserInfo);
 		...
     }
 
@@ -192,7 +192,7 @@ public class SampleGameUser implements IUser {
     updateLevel(int level) {
         channelUserInfo.setLevel(getLevel());
 
-        userContext.updateChannelUserInfo(channelUserInfo);
+        updateChannelUserInfo(channelUserInfo);
     }
 }
 ```
@@ -339,7 +339,7 @@ public void onChannelInfo(IPayload payload) {
 클라이언트는 서버로 언제든 채널 정보를 요청할 수 있습니다. 이때, 앞서 살펴본 게임 노드의 콜백 메서드 중 onChannelInfo가 호출됩니다. 단, 클라이언트의 잘못된 구현 혹은 악의적인 사용을 막고자 이 콜백 메서드 호출은 최소한의 재호출 주기(기본값 1초)를 가집니다. 예를 들어 클라이언트가 1초 동안 10번의 채널 정보 요청을 하더라도 서버는 단 1회의 onChannelInfo 콜백 메서드를 호출합니다. 나머지 9번의 요청은 이전에 캐싱 해 둔 정보를 전달합니다. 다음은 이러한 onChannelInfo를 구현한 pseudo 코드입니다.
 
 ```java
-public void onChannelInfo(Payload outPayload) {
+public void onChannelInfo(IPayload outPayload) {
 
     // 클라이언트에 보낼 사용자 정의 채널 정보 생성
     Game.GameChannelInfo.Builder channelInfoBuilder = Game.GameChannelInfo.newBuilder();

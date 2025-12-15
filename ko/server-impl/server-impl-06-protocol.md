@@ -63,34 +63,13 @@ protoc ./MyGame.proto --java_out=../java --csharp_out=./
 
 ## GeneratedMessage와 패킷
 
-GameAnvil 서버에서는 어떠한 전송이 가능한 메서드에서도 프로토 버퍼 객체를 그대로 사용할 수 있도록 대부분 `com.google.protobuf.GeneratedMessage` 클래스를 지원합니다. 일반적인 상황에서는 프로토 버퍼 객체를 그대로 사용하여도 문제가 없지만 여러 명의 클라이언트에게 전송하는 등 특정 상황에서는 `com.nhn.gameanvil.packet.Packet` 클래스를 사용하여 성능을 향상시킬 수 있습니다.
-
 다수의 클라이언트에게 메시지를 보낼 때는 다음과 같이 사용할 수 있습니다.
 ```java
-/**
- * 입력받은 목록의 유저 클라이언트로 메시지 전송
- *
- * @param userList 메시지를 전송할 유저 목록
- * @param message  전송할 메시지
- * @param <P>      전송할 메시지 타입
- */
-default <P extends GeneratedMessage.Builder<P>> void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final GeneratedMessage.Builder<P> message) {
-}
-
-/**
- * 입력받은 목록의 유저 클라이언트로 메시지 전송
- *
- * @param userList 메시지를 전송할 유저 목록
- * @param message  전송할 메시지
- */
-default void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final GeneratedMessageV3 message) {
-}
-
 /**
  * 입력받은 목록의 유저 클라이언트로 패킷 전송
  *
  * @param userList 메시지를 전송할 유저 목록
  * @param packet   전송할 패킷
  */
-void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final Packet packet)
+void sendToClients(@NotNull final Collection<? extends BaseGameUser> userList, @NotNull final Packet packet)
 ```

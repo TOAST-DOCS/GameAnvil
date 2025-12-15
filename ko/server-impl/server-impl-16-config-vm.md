@@ -11,10 +11,10 @@ GameAnvil은 크게 두 가지 방법으로 서버를 구성할 수 있습니다
 
 ```java
 
-var gameServiceBuilder = gameAnvilServerBuilder.createGameService("MyGame");
-gameServiceBuilder.gameNode(SampleGameNode::new, config -> {
-    // 여기에 핸들러를 추가합니다 
-});
+@GameAnvilGameNode(gameServiceName = "MyGame")
+public class MyGameNode extends BaseGameNode {
+
+}
 
 ```
 
