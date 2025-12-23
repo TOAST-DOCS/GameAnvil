@@ -1,55 +1,108 @@
-## Game > GameAnvil > Unity深層開発ガイド > メッセージハンドリング
+## Game > GameAnvil > Unity 応用開発ガイド > メッセージハンドリング
 
 ## メッセージハンドリング
 
-ConnectionAgent、UserAgentの基本機能の他にRequest()とSend()を利用してメッセージをサーバーに送信できます。
+GameAnvilConnector、GameAnvilUserの基本機能以外にも、ユーザーが定義したメッセージをサーバーへ送信できます。
 
-### メッセージの送信
+### メッセージ作成及び登録
+メッセージを作成して登録する方法は、GameAnvilManagerを使用する場合と同じです。[Unity 基礎開発ガイド > メッセージハンドリング](../unity-basic/unity-basic-06-message-handling.md)で紹介した説明を参照してください。 
 
-Request()でメッセージを送信すると、サーバーのレスポンスを待ちます。サーバーのレスポンスを受け取って処理する方法には、まず、[Unity基礎開発ガイド > メッセージハンドリング](../unity-basic/unity-basic-06-message-handling.md)で紹介したようにコールバックパラメータを渡す方法があります。
+### メッセージ送信
 
-もう1つの方法としては、リスナーを登録する方法があります。どちらの方法も適用しない場合、サーバーのレスポンスを受け取っても、通知なしに次のメッセージを処理することになります。
+#### Request
 
-リスナーを登録してRequest()のレスポンスを受ける例を見てみましょう。
-
-[Unity基礎開発ガイド > メッセージハンドリング](../unity-basic/unity-basic-06-message-handling.md)で説明しなかったConnectionAgentを介したRequest()、Send()の使用例を紹介します。
-
-```c#
-Connector connector = new Connector();
-ConnectionAgent connection = connector.GetConnectionAgent();
-// ConnectionAgentで伝達されるサーバーの通知を受けるリスナーを登録
-connection.AddListener((ConnectionAgent connection, Messages.SampleReceive msg)=> { });
-
-// ConnectionAgent Send
-Messages.SampleSend sampleSend= new Messages.SampleSend(); 
-connection.Send(sampleSend);
-
-// ConnectionAgent Request
-Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
-connection.Request(sampleRequest, (ConnectionAgent connection, Packet packet)=> { });
-```
-
-### カスタムパケット
-
-Packetクラスを利用して、ProtocolBuffer以外の任意のデータをバイトストリームとしてシリアル化して使うことができます。パケットに関する詳細は[Unity詳細開発ガイド > パケット](unity-advanced-05-packet.md)を参照してください。
-
-[Unity基礎開発ガイド > メッセージハンドリング](../unity-basic/unity-basic-06-message-handling.md)で説明しなかったConnectionAgentを介したRequest()、Send()の使用例を紹介します。
+GameAnvilConnectorではRequest()、GameAnvilUserではRequestUser()を呼び出してメッセージを送信し、レスポンスを受け取ることができます。 
 
 ```c#
-Connector connector = new Connector();
-ConnectionAgent connection = connector.GetConnectionAgent();
-int reqMsgId = 1;
-int resMsgId = 2;
-
-connection.AddListener(resMsgId, (ConnectionAgent connection, Packet packet)=> { });
-
-Messages.SampleSend sampleSend= new Messages.SampleSend (); 
-// パケットクラス利用
-Packet sampleSendPacket = new Packet(reqMsgId, sampleSend.ToByteArray())
-connection.Send(sampleSendPacket);
-
-Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
-// パケットクラス利用
-Packet sampleRequestPacket = new Packet(reqMsgId, sampleRequest.ToByteArray())
-connection.Request(sampleRequestPacket, (ConnectionAgent connection, Packet packet)=> { });
+public async void RequestPacket()
+{
+    try
+    {
+        Packet packet = Packet.MakePacket(new Protocol.SampleRequest());
+        ErrorResult<ResultCode, Protocol.SampleResponse> result = await connector.Request<Protocol.SampleResponse>(packet);
+        if (result.ErrorCode == ResultCode.SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
 ```
+
+Request<\TResponse\>(), RequestUser\<TResponse\>()は、次のように1つの型パラメータと1つのパラメータを持っています。
+
+| タイプ     | 名前         | 説明           |
+|----------|--------------|----------------|
+| 型パラメータ  | TResponse | レスポンスとして受け取るメッセージタイプ |
+| IMessage | message   | サーバーへ送るメッセージ     |
+
+レスポンスとしてErrorResult<ResultCode, TResponse>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。RequestUser()が成功すればErrorCodeフィールドの値がResultCode.SUCCESSになり、そうでない場合はメッセージ送信に失敗したことになります。Dataフィールドを通じて応答メッセージを取得できます。
+
+ResultCodeの詳細は次のとおりです。
+
+| 名前              | 値 | 説明                                       |
+|-------------------|----|--------------------------------------------|
+| PARSE_ERROR       | -2 | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT           | -1 | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR      | 1  | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL  | 2  | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| HANDLER_NOT_EXIST | 10 | 失敗。サーバーにハンドラがありません。                          |
+| HANDLER_ERROR     | 11 | 失敗。サーバーのハンドラで例外が発生しました。                       |
+| SUCCESS           | 0  | 成功                                       |
+
+#### SendUser
+
+GameAnvilConnectorではSend()、GameAnvilUserではSendUser()を呼び出してサーバーへメッセージを送信し、別途のレスポンスは待ちません。
+
+```c#
+public async void SendMessage()
+{
+    try
+    {
+        connector.Send(new Protocol.SampleSend());
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+Send()、SendUser()は次のように1つのパラメータを持っています。
+
+| タイプ     | 名前    | 説明       |
+|----------|---------|------------|
+| IMessage | message | サーバーへ送るメッセージ |
+
+#### MessageCallback
+
+Send()、SendUser()で送るメッセージとは関係なく、サーバーから送られるメッセージを受信するためには、SetMessageCallback\<TProtoBuffer\>() を利用してコールバックを登録できます。登録されたコールバックを解除する時は、RemoveMessageCallback\<TProtoBuffer\>()を利用すればよいです。
+
+```c#
+public async void MessageCallback()
+{
+    connector.SetMessageCallback((GameAnvilConnector connector, ResultCode resultCode, Protocol.SampleReceive receive) =>
+    {
+        return Task.CompletedTask;
+    });
+
+    connector.RemoveMessageCallback<Protocol.SampleReceive>();
+}
+```
+
+SetMessageCallback\<TProtoBuffer\>()は次のように1つの型パラメータと1つのパラメータを持っています。
+
+| タイプ                                                          | 名前         | 説明                       |
+|---------------------------------------------------------------|--------------|----------------------------|
+| 型パラメータ                                                         | TProtoBuffer | サーバーから受け取るメッセージタイプ           |
+| Func<GameAnvilUserController, ResultCode, TProtoBuffer, Task> | callback     | サーバーからメッセージが送られた時に呼び出されるコールバックメソッド |
+
+RemoveMessageCallback\<TProtoBuffer\>()は次のように1つの型パラメータを持っています。
+
+| タイプ    | 名前         | 説明              |
+|---------|--------------|-------------------|
+| 型パラメータ | TProtoBuffer | 登録したコールバックが受け取るメッセージタイプ    |

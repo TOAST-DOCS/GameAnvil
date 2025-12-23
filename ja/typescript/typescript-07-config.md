@@ -1,46 +1,46 @@
-## Game > GameAnvil > TypeScript 개발 가이드 > 설정
+## Game > GameAnvil > TypeScript 開発ガイド > 設定
 
-### GameAnvilConfig
+## GameAnvilConfig
 
-커넥터 환경 설정을 할 수 있는 클래스입니다.
+コネクタ環境設定ができるクラスです。
 
-#### defaultRequestTimeoutMillis
+### defaultRequestTimeoutMillis
 
-타임아웃 기본 대기시간을 설정할 수 있습니다.
+タイムアウト基本待機時間を設定できます。
 
 ```typescript
 GameAnvilConfig.defaultRequestTimeoutMillis = 3000;
 ```
 
-#### packetTimeoutMillis
+### packetTimeoutMillis
 
-패킷이 지정된 시간안에 업데이트 되지 않으면, 연결해제 되었다고 판단합니다.
-pingInterval 보다 높게 설정 해야 합니다.
+パケットが指定された時間内に更新されない場合、接続解除されたと判断します。
+pingIntervalより高く設定する必要があります。
 
 ```typescript
 GameAnvilConfig.packetTimeoutMillis = 5000;
 ```
 
-#### pingIntervalMillis
+### pingIntervalMillis
 
-서버와의 연결을 확인하기 위해 Ping 메시지를 보내는 주기를 설정합니다.
-사용하지 않을 경우 0으로 설정합니다.
+サーバーとの接続を確認するためにPingメッセージを送る周期を設定します。
+使用しない場合は0に設定します。
 
 ```typescript
 GameAnvilConfig.pingIntervalMillis = 3000;
 ```
 
-#### useIPv6
+### useIPv6
 
-접속시 IPv6 주소로 변환 여부를 설정합니다.
+接続時にIPv6アドレスへ変換するかどうかを設定します。
 
 ```typescript
 GameAnvilConfig.useIPv6 = false;
 ```
 
-#### useSocketNoDelay
+### useSocketNoDelay
 
-소켓의 Nodelay 사용 여부를 설정합니다.
+ソケットのNodelay使用有無を設定します。
 
 ```typescript
 GameAnvilConfig.useSocketNoDelay = true;

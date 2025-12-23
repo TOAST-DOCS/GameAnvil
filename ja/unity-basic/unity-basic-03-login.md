@@ -1,25 +1,25 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > Simple Login
+## Game > GameAnvil > Unity 基礎開発ガイド > 簡易ログイン
 
-## 간편 로그인
+## 簡単ログイン
 
-GameAnvilManager에서 제공하는 간편 로그인 기능은 GameAnvil 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > ConnectionAgent](../unity-advanced/unity-advanced-02-connection.md) 또는 서버 개발 가이드를 참고하십시오.
+GameAnvilManagerが提供する簡易ログイン機能は、GameAnvilサーバーへの接続、認証、ログインの手続きを一度に処理できるようにします。接続、認証、ログインの手続きに関するより詳細な内容は、[Unity 応用開発ガイド > コネクタ](../unity-advanced/unity-advanced-02-connection.md)またはサーバー開発ガイドを参照してください。
 
-### 간편 로그인 설정
+### 簡単ログインの設定
 
-간편 로그인을 사용하기 위해서는 GameAnvilManager 설정중 Login 동작시 사용되는 값을 미리 설정해 주어야 합니다. 간편 로그인에서 사용되는 설정의 종류는 다음과 같습니다.
+簡単ログインを使用するには、GameAnvilManagerの設定のうち、ログイン動作時に使用される値をあらかじめ設定しておく必要があります。簡単ログインで使用される設定の種類は以下の通りです。
 
-| 구분             | 이름           | 설명                      |    기본값    |
+| 区分            | 名前          | 説明                     |   デフォルト値   |
 |----------------|--------------|-------------------------|:---------:|
-| Connect        | Ip           | 간편 로그인 에서 연결할 서버의 ip    | 127.0.0.1 |
-|                | Port         | 간편 로그인 에서 연결할 서버의 port  |   18200   |
-| Authentication | AccountId    | 간편 로그인 에서 사용할 사용자 식별 ID |   test    |
-|                | DeviceId     | 간편 로그인 에서 사용할 기기 고유값    |   test    |
-|                | Password     | 간편 로그인 에서 사용할 패스워드      |   test    |
-| Login          | User Type    | 간편 로그인 에서 사용할 유저 타입     |           |
-|                | Channel Id   | 간편 로그인 에서 사용할 채널 아이디    |           |
-|                | Service Name | 간편 로그인 에서 사용할 서비스 이름    |           |
+| Connect | IP | 簡単ログインで接続するサーバーのIP | 127.0.0.1 |
+| | Port | 簡単ログインで接続するサーバーのPort | 18200 |
+| Authentication | AccountId | 簡単ログインで使用するユーザー識別ID | test |
+|                | DeviceId     | 簡単ログインで使用するデバイス固有値 | test |
+|                | Password     | 簡単ログインで使用するパスワード | test |
+| Login          | User Type    | 簡単ログインで使用するユーザータイプ | |
+|                | Channel Id   | 簡単ログインで使用するチャネルID | |
+|                | Service Name | 簡単ログインで使用するサービス名 | |
 
-이 설정들은 Unity 에디터에서 GameAnvilManager의 Inspector 창에서 설정하거나 스크립트 코드에서 설정할 수 있습니다.
+これらの設定は、UnityエディタでGameAnvilManagerのInspectorウィンドウから設定するか、スクリプトコードで設定できます。
 
 ```c#
 public void Start()
@@ -36,9 +36,9 @@ public void Start()
 }
 ```
 
-### 간편 로그인 사용
+### 簡単ログインの使用
 
-간편 로그인을 통해 서버에 접속, 인증, 로그인합니다. 리턴값 LoginResult를 이용해 결과를 확인할 수 있습니다. 이때 서버와의 연결에 문제가 발생하는 경우 예외가 발생할 수도 있습니다.
+簡単ログインを通じて、サーバーへの接続、認証、ログインを行います。戻り値のLoginResultを利用して結果を確認できます。このとき、サーバーとの接続に問題が発生した場合は、例外が発生することがあります。
 
 ```c#
 public async void ManagerLogin()
@@ -48,21 +48,21 @@ public async void ManagerLogin()
     {
         var result = await gameAnvilManager.Login();
         if (result.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
-            // 성공
+            // 成功
         } else {
-            // 실패
+            // 失敗
         }
     }
     catch (Exception e)
     {
-        // 서버 연결과 관련된 문제가 발생할 경우 예외 발생
-        // eg.) 연결 실패, 연결 끊김 등
+        // サーバー接続に関連する問題が発生した場合、例外が発生
+        // 例) 接続失敗、接続切断など
     }
 }
 ```
 
 <br>
-서버의 구현에 따라서 서버의 인증 과정이나 로그인 과정에서 추가 정보가 필요할 수 있습니다. 이런 경우에는 authenticatePayload 나 loginPayload 로 추가 정보를 전달할 수 있습니다. 인증 과정에서 필요한 정보는 authenticatePayload, 로그인 과정에서 필요한 정보는 loginPayload로 전달합니다.
+サーバーの実装によっては、サーバーの認証プロセスやログインプロセスで追加情報が必要になる場合があります。そのような場合は、authenticatePayloadやloginPayloadで追加情報を渡すことができます。認証プロセスで必要な情報はauthenticatePayloadで、ログインプロセスで必要な情報はloginPayloadで渡します。
 
 ``` c#
 public async void ManagerLogin()
@@ -73,68 +73,81 @@ public async void ManagerLogin()
         var authenticatePayload = new Payload(new Protocol.AuthenticateData());
         var loginPayload = new Payload(new Protocol.LoginData());
         var result = await gameAnvilManager.Login(authenticatePayload, loginPayload);
-        if (result.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
-            // 성공
+        if (retult.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
+            // 成功
         } else {
-            // 실패
+            // 失敗
         }
     }
     catch (Exception e)
     {
-        // 서버 연결과 관련된 문제가 발생할 경우 예외 발생
-        // eg.) 연결 실패, 연결 끊김 등
+        // サーバー接続に関連する問題が発生した場合、例外が発生
+        // 例) 接続失敗、接続切断など
     }
 }
 ```
 
-간편 로그인이 성공하면 LoginResult의 UserController에 로그인 완료된 유저의 GameAnvilUserController 인스턴스가 할당이 됩니다. 이 인스턴스를 이용하여 서버의 유저 객체에 접근할 수 있습니다. 간편 로그인이 실패하면 UserController 에는 null 이 할당됩니다.
+簡単ログインに成功すると、LoginResultのUserControllerに、ログインが完了したユーザーのGameAnvilUserControllerインスタンスが割り当てられます。このインスタンスを利用して、サーバーのユーザーオブジェクトにアクセスできます。簡単ログインに失敗すると、UserControllerにはnullが割り当てられます。
 <br>
 
-간편 로그인이 실패했을 때 어떤 이유로 실패했는지는 LoginResult의 loginResultCode를 이용해 확인할 수 있습니다. 확인할 수 있는 실패 이유는 다음과 같습니다.
+簡単ログインに失敗した場合、その理由をLoginResultのloginResultCodeで確認できます。確認できる失敗理由は以下の通りです。
 
-| 이름                                 | 설명                                            |                                                             |
+| 名前                                | 説明                                           |                                                             |
 |------------------------------------|-----------------------------------------------|-------------------------------------------------------------|
-| START_FAIL_LOGIN_IN_PROGRESS       | 이미 Login 이 진행중.                               |                                                             | 
-| START_FAIL_ALREADY_LOGGED_IN       | 이미 Login 이 되어있음.                              |                                                             |
-| CONNECT_FAIL                       | 서버 연결 실패.                                     |                                                             |                    
-| CONNECT_FAIL_INVALID_IP            | 서버 연결 실패. 잘못된 IP.                             |                                                             |         
-| CONNECT_FAIL_INVALID_PORT          | 서버 연결 실패. 잘못된 Port.                           |                                                             |     
-| AUTH_FAIL_CONTENT                  | 인증 실패. 사용자 코드에서 인증 거부.                        |                                                             |               
-| AUTH_FAIL_INVALID_ACCOUNT_ID       | 인증 실패. 잘못된 AccountId.                         | 빈 문자열 등                                                     |
-| AUTH_FAIL_SYSTEM_ERROR             | 인증 실패. 서버의 알수 없는 오류로 실패.                      |                                                             |    
-| AUTH_FAIL_TIMEOUT                  | 인증 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.             |                                                             |   
-| AUTH_FAIL_PARSE_ERROR              | 인증 실패. 추가 정보를 위한 메시지 파싱 실패.                   | 서버와 클라이언트의 프로토콜 정의가 다를경우 발생할 수 있다.                          |
-| LOGIN_FAIL_CONTENT                 | 로그인 실패. 사용자 코드에서 로그인 거부.                      |                                                             |
-| LOGIN_FAIL_NOT_EXIST_NODE          | 로그인 실패. 로그인 대상 노드가 존재하지 않음.                   | 서버 구성시 대상 노드를 포함한 서버를 시작하지 경우 발생할 수 있다.                     |
-| LOGIN_FAIL_INVALID_SERVICEID       | 로그인 실패. 로그인 대상 서비스가 존재하지 않음.                  | 요청시 서비스 이름을 잘못 입력하였거나, 서버 설정의 서비스 이름 설정이 잘못된 경우 발생할 수 있다.   |
-| LOGIN_FAIL_INVALID_SERVICE_NAME    | 로그인 실패. 로그인 대상 서비스가 존재하지 않음.                  | 요청시 서비스 이름을 잘못 입력하였거나, 서버 설정의 서비스 이름 설정이 잘못된 경우 발생할 수 있다.   |
-| LOGIN_FAIL_TIMEOUT_GAME_SERVER     | 로그인 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.            |                                                             |
-| LOGIN_FAIL_INVALID_USERTYPE        | 로그인 실패. 로그인 대상 UserType이 존재하지 않음.             | 요청시 UserType을 잘못 입력하였거나, 서버에 구현되지 않았을 경우 발생할 수 있다.          |
-| LOGIN_FAIL_INVALID_USERID          | 로그인 실패. 서버의 알수없는 이유로 UserId 생성 실패.            |                                                             |
-| LOGIN_FAIL_INVALID_CHANNEL_ID      | 로그인 실패. 로그인 대상 채널이 존재하지 않음.                   | 요청시 ChannelId를 잘못 입력하였거나, 서버 설정에 ChannelId가 없는 경우 발생할 수 있다. |
-| LOGIN_FAIL_INVALID_SUB_ID          | 로그인 실패. 잘못된 SubId.                            |                                                             |
-| LOGIN_FAIL_LOGINED_OTHER_SERVICE   | 로그인 실패. 같은 AccountId로 이미 다른 서비스에 로그인 되어있음.    | 서버 구성시 중복 로그인을 허용하지 않을 경우 발생.                               |
-| LOGIN_FAIL_LOGINED_OTHER_CHANNEL   | 로그인 실패. 같은 AccountId로 다른 채널에 로그인 되어있음.        |                                                             |
-| LOGIN_FAIL_LOGINED_OTHER_USER_TYPE | 로그인 실패. 같은 AccountId, 다른 UserType으로 로그인 되어있음. | 서버 구현시 기존 유저와 새로 로그인한 유저 중 선택할 수 있다.                        |
-| LOGIN_FAIL_LOGINED_OTHER_DEVICE    | 로그인 실패. 같은 AccountId로 다른 기기에서 로그인 되어있음.       | 서버 구현시 기존 유저와 새로 로그인한 유저 중 선택할 수 있다.                        |
-| LOGIN_FAIL_SYSTEM_ERROR            | 로그인 실패. 서버의 알수 없는 오류로 실패.                     |                                                             |
-| LOGIN_FAIL_PARSE_ERROR             | 로그인 실패. 추가 정보를 위한 메시지 파싱 실패.                  |                                                             |
-| LOGIN_FAIL_TIMEOUT                 | 로그인 실패. 요청에 대한 응답이 정해진 시간내에 오지 않음.            |                                                             |
-| UNKNOWN_ERROR                      | 서버의 알수 없는 오류로 실패.                             |                                                             |
+| START_FAIL_LOGIN_IN_PROGRESS | 既にログインが進行中です。 | |
+| START_FAIL_ALREADY_LOGGED_IN | 既にログイン済みです。 | |
+| CONNECT_FAIL                       | サーバー接続失敗。                                     |                                                             |                    
+| CONNECT_FAIL_INVALID_IP | サーバー接続失敗。不正なIPです。 | |
+| CONNECT_FAIL_INVALID_PORT | サーバー接続失敗。不正なPortです。 | |
+| AUTH_FAIL_CONTENT | 認証失敗。ユーザーコードで認証が拒否されました。 | |
+| AUTH_FAIL_INVALID_ACCOUNT_ID | 認証失敗。不正なAccountIdです。 | 空文字列など |
+| AUTH_FAIL_SYSTEM_ERROR | 認証失敗。サーバーの不明なエラーにより失敗しました。 | |
+| AUTH_FAIL_TIMEOUT | 認証失敗。リクエストに対するレスポンスが指定時間内にありませんでした。 | |
+| AUTH_FAIL_PARSE_ERROR              | 認証失敗。追加情報のためのメッセージ解析失敗。                    | サーバーとクライアントのプロトコル定義が異なる場合に発生する可能性がある。                           |
+| LOGIN_FAIL_CONTENT | ログイン失敗。ユーザーコードでログインが拒否されました。 | |
+| LOGIN_FAIL_NOT_EXIST_NODE          | ログイン失敗。ログイン対象ノードが存在しない。                    | サーバー構成時に対象ノードを含むサーバーを起動していない場合に発生する可能性がある。                      |
+| LOGIN_FAIL_INVALID_SERVICE_NAME | ログイン失敗。ログイン対象のサービスが存在しません。 | リクエスト時にサービス名を誤って入力したり、サーバー設定のサービス名設定が誤っている場合に発生することがあります。 |
+| LOGIN_FAIL_TIMEOUT_GAME_SERVER     | ログイン失敗。リクエストに対するレスポンスが指定された時間内に来ない。             |                                                              |
+| LOGIN_FAIL_INVALID_USER_TYPE       | ログイン失敗。ログイン対象UserTypeが存在しない。              | リクエスト時にUserTypeを誤って入力したか、サーバーに実装されていない場合に発生する可能性がある。           |
+| LOGIN_FAIL_INVALID_USER_ID         | ログイン失敗。サーバーの不明な理由でUserId生成失敗。             |                                                              |
+| LOGIN_FAIL_INVALID_CHANNEL_ID      | ログイン失敗。ログイン対象チャンネルが存在しない。                    | リクエスト時にChannelIdを誤って入力したか、サーバー設定にChannelIdがない場合に発生する可能性がある。 |
+| LOGIN_FAIL_INVALID_SUB_ID | ログイン失敗。不正なSubIdです。 | |
+| LOGIN_FAIL_LOGINED_OTHER_SERVICE   | ログイン失敗。同じAccountIdですでに他のサービスにログインされている。     | サーバー構成時に重複ログインを許可しない場合に発生。                       |
+| LOGIN_FAIL_LOGINED_OTHER_CHANNEL | ログイン失敗。同じAccountIdで他のチャネルにログインしています。 | |
+| LOGIN_FAIL_LOGINED_OTHER_USER_TYPE | ログイン失敗。同じAccountId、異なるUserTypeでログインしています。 | サーバーの実装時に、既存のユーザーと新しくログインしたユーザーのどちらかを選択できます。 |
+| LOGIN_FAIL_LOGINED_OTHER_DEVICE | ログイン失敗。同じAccountIdで他のデバイスからログインしています。 | サーバーの実装時に、既存のユーザーと新しくログインしたユーザーのどちらかを選択できます。 |
+| LOGIN_FAIL_SYSTEM_ERROR | ログイン失敗。サーバーの不明なエラーにより失敗しました。 | |
+| LOGIN_FAIL_PARSE_ERROR | ログイン失敗。追加情報のためのメッセージパースに失敗しました。 | |
+| LOGIN_FAIL_TIMEOUT               | ログイン失敗。リクエストに対するレスポンスが指定された時間内に来ない。             |                                                              |
+| UNKNOWN_ERROR                    | サーバーの不明なエラーにより失敗。                             |                                                              |
 
-보다 자세한 실패 이유를 확인하고 싶을 때는 LoginResult의 authenticationResult이나 loginResult를 이용해 확인할 수 있습니다.
+より詳細な失敗理由は、LoginResultのauthenticationResultやloginResultを利用して確認できます。
 
 ## Disconnect
 
-GameAnvilManager의 Logout() 함수를 이용해서 서버와의 연결을 해제할 수 있습니다.
+GameAnvilManagerのLogout()メソッドを利用してサーバーとの接続を解除できます。
 
-Logout() 호출 시 로그아웃, 서버 접속 종료, 연결 해제 후 처리할 콜백 호출의 과정을 한 번에 처리할 수 있습니다.
+Logout()呼び出し時、ログアウト、サーバー接続終了、接続解除後に処理するコールバック呼び出しの過程を一度に処理できます。サーバーの実装によっては、ログアウト過程で追加情報が必要になる場合があります。このような場合にはlogoutPayloadで追加情報を伝達できます。
 
 ```c#
 public async void ManagerLogout()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    await gameAnvilManager.Logout();
+    var logoutPayload = new Payload(new Protocol.LogoutData());
+    await gameAnvilManager.Logout(logoutPayload);
 }
 ```
 
+## 状態変更通知
+
+Logout()を呼び出さなくても、ネットワークに問題があったり、サーバーから強制的にログアウトさせられるなど、GameAnvilManagerの状態が変更される可能性があり、これに対する通知を受け取ることができます。 
+```c#
+public void addStateChangeListener()
+{
+    gameAnvilManager.onStateChange.AddListener((GameAnvilManager.LoginState oldState, GameAnvilManager.LoginState newState) =>
+    {
+        // 状態変更通知
+    });
+}
+```
+oldStateで変更前の状態を、newStateで変更後の状態を知ることができます。  

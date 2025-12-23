@@ -1,195 +1,195 @@
-## Game > GameAnvil > 서버 개발 가이드 > 콜백 흐름
+## Game > GameAnvil > サーバー開発ガイド > コールバックフロー
 
-## 콜백 흐름
-GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입니다.
+## コールバックフロー
+GameAnvilで動作に従い内部的に処理されるコールバック順序です。
 
-## 인증
+## 認証
 ![callback-flow-1.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-1.png)
 
-클라이언트가 인증 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントが認証リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체       | 콜백 메서드         | 순서 | 설명         |
+| 呼び出しオブジェクト       | コールバックメソッド         | 順序 | 説明         |
 |-------------|----------------|----|------------|
-| Client      | Authentication | 1  | 클라이언트에서 요청 |
+| Client      | Authentication | 1  | クライアントからリクエスト |
 | IConnection | onAuthenticate | 2  |            |
 
-## 로그인
+## ログイン
 ![callback-flow-2.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-2.png)
 
-클라이언트 로그인 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントログインリクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체    | 콜백 메서드                   | 순서  | 설명                   |
+| 呼び出しオブジェクト    | コールバックメソッド                    | 順序  | 説明                    |
 |----------|--------------------------|-----|----------------------|
-| Client   | Login                    | 1   | 클라이언트에서 요청           |
-| ISession | onBeforeLogin            | 2   | 로그인 처리전 설정 상태 확인     |
-| - IUser  | onLoginByOtherDevice     | 2-1 | 다른 디바이스 로그인시 호출      |
-| - IUser  | onLoginByOtherUserType   | 2-2 | 다른 유저 타입 로그인시 호출     |
-| - IUser  | onLoginByOtherConnection | 2-3 | 새로운 연결로 로그인시 호출      |
-| IUser    | onLogin                  | 3-1 | 로그인 안되어 있다면 로그인 호출   |
-| IUser    | onReLogin                | 3-1 | 로그인 되어 있다면 재로그인 호훙   |
-| - IRoom  | onRejoinRoom             | 3-2 | 리로그인시 방에 들어가 있었다면 호출 |
+| Client   | Login                    | 1   | クライアントからリクエスト            |
+| ISession | onBeforeLogin            | 2   | ログイン処理前の設定状態確認      |
+| - IUser  | onLoginByOtherDevice     | 2-1 | 異なるデバイスログイン時に呼び出し       |
+| - IUser  | onLoginByOtherUserType   | 2-2 | 異なるユーザータイプログイン時に呼び出し      |
+| - IUser  | onLoginByOtherConnection | 2-3 | 新しい接続でログイン時に呼び出し       |
+| IUser    | onLogin                  | 3-1 | ログインしていない場合ログイン呼び出し    |
+| IUser    | onReLogin                | 3-1 | ログインしている場合再ログイン呼び出し    |
+| - IRoom  | onRejoinRoom             | 3-2 | 再ログイン時、ルームに入っていた場合に呼び出し |
 | IUser    | onAfterLogin             | 4   |                      |
 | ISession | onAfterLogin             | 5   |                      |
 
-## 로그아웃
+## ログアウト
 ![callback-flow-3.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-3.png)
 
-클라이언트 로그아웃 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントログアウトリクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체      | 콜백 메서드           | 순서  | 설명                                            |
+| 呼び出しオブジェクト    | コールバックメソッド         | 順序 | 説明                                          |
 |------------|------------------|-----|-----------------------------------------------|
-| Client     | Logout           | 1   | 클라이언트에서 요청                                    |
-| IUser      | canLogout        | 2   | 로그아웃 처리가 가능 한지 확인                             |
+| Client      | Logout           | 1   | クライアントからリクエスト                                                    |
+| IUser       | canLogout        | 2   | ログアウト処理が可能か確認                                             |
 | - IRoom    | onLeaveRoom      | 2-1 |                                               |
-| - IRoom    | onAfterLeaveRoom | 2-2 | 2-2,2.3 번의 동작은 user와 room에서 처리되어서 순서 보작이 되지않음 |
+| - IRoom     | onAfterLeaveRoom | 2-2 | 2-2、2.3番の動作はuserとroomで処理されるため順序保証がされない |
 | - IUser    | onAfterLeaveRoom | 2-3 |                                               |
 | IUser      | onLogout         | 3   |                                               |
 | ISession   | onAfterLogout    | 4   |                                               |
 
-## 방 생성
+## ルーム生成
 ![callback-flow-4.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-4.png)
 
-클라이언트 방 생성 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントルーム生成リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체   | 콜백 메서드                  | 순서  | 설명         |
+| 呼び出しオブジェクト | コールバックメソッド                | 順序 | 説明       |
 |---------|-------------------------|-----|------------|
-| Client  | CreateRoom or NamedRoom | 1   | 클라이언트에서 요청 |
+| Client  | CreateRoom or NamedRoom | 1   | クライアントからリクエスト |
 | IRoom   | onCreateRoom            | 2   |            |
 
-## 방 입장
+## ルーム入室
 ![callback-flow-5.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-5.png)
 
-클라이언트 방 입장 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントルーム入室リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체   | 콜백 메서드                | 순서  | 설명         |
+| 呼び出しオブジェクト | コールバックメソッド              | 順序 | 説明       |
 |---------|-----------------------|-----|------------|
-| Client  | JoinRoom or NamedRoom | 1   | 클라이언트에서 요청 |
+| Client  | JoinRoom or NamedRoom | 1   | クライアントからリクエスト |
 | IRoom   | onJoinRoom            | 2   |            |
 
-## 방 나가기
+## ルーム退出
 ![callback-flow-6.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-6.png)
 
-클라이언트 방 나가기 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントルーム退出リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체   | 콜백 메서드              | 순서 | 설명                                        |
+| 呼び出しオブジェクト | コールバックメソッド            | 順序 | 説明                                      |
 |---------|---------------------|----|-------------------------------------------|
-| Client  | LeaveRoom           | 1  | 클라이언트에서 요청                                |
-| IRoom   | canLeaveRoom        | 2  | 방 나가기 처리가 가능 한지 확인                        |
+| Client  | LeaveRoom           | 1  | クライアントからリクエスト                                                    |
+| IRoom   | canLeaveRoom        | 2  | ルーム退出処理が可能か確認                                            |
 | IRoom   | onLeaveRoom         | 3  |                                           |
 | IRoom   | onAfterLeaveRoom    | 4  |                                           |
-| IUser   | onAfterLeaveRoom    | 5  | 4,5 번의 동작은 user와 room에서 처리되어서 순서 보작이 되지않음 |
+| IUser   | onAfterLeaveRoom    | 5  | 4、5番の動作はuserとroomで処理されるため、順序は保証されない |
 | IRoom   | onDestroy           | 6  |                                           |
 
-## 룸 매치
+## ルームマッチ
 ![callback-flow-7.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-7.png)
 
-클라이언트 룸 매치 요청 시 처리되는 콜백 메서드 순서입니다. 매치전에 방에서 나가는 처리를 먼저 처리
+クライアントルームマッチリクエスト時に処理されるコールバックメソッド順序です。マッチング前にルームから出る処理を先に行う
 
-| 호출 객체                  | 콜백 메서드           | 순서 | 설명                                        |
+| 呼び出しオブジェクト                | コールバックメソッド         | 順序 | 説明                                      |
 |------------------------|------------------|----|-------------------------------------------|
-| Client                 | MatchRoom        | 1  | 클라이언트에서 요청                                |
-| - IRoom                | canLeaveRoom     | 2  | 방 나가기 처리가 가능 한지 확인                        |
+| Client                 | MatchRoom        | 1  | クライアントからリクエスト                                                    |
+| - IRoom                | canLeaveRoom     | 2  | ルーム退出処理が可能か確認                                            |
 | - IRoom                | onLeaveRoom      | 3  |                                           |
 | - IRoom                | onAfterLeaveRoom | 4  |                                           |
-| - IUser                | onAfterLeaveRoom | 5  | 4,5 번의 동작은 user와 room에서 처리되어서 순서 보작이 되지않음 |
+| - IUser                | onAfterLeaveRoom | 5  | 4、5番の動作はuserとroomで処理されるため順序保証がされない |
 | IUser                  | onMatchRoom      | 6  |                                           |
 | AbstractRoomMatchMaker | onMatch          | 7  |                                           |
 | IRoom                  | onCreateRoom     | 8  |                                           |
 | IRoom                  | onJoinRoom       | 8  |                                           |
 | IUser                  | onMatchRoomFail  | 9  |                                           |
 
-## 유저 매치
+## ユーザーマッチ
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-8.png)
 
-클라이언트 유저 매치 시작 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントユーザーマッチ開始リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체                    | 콜백 메서드            | 순서  | 설명         |
+| 呼び出しオブジェクト                  | コールバックメソッド          | 順序 | 説明       |
 |--------------------------|-------------------|-----|------------|
-| Client                   | MatchUserStart    | 1   | 클라이언트에서 요청 |
+| Client                   | MatchUserStart    | 1   | クライアントからリクエスト |
 | IUser                    | onMatchUser       | 2   |            |
-| - AbstractUserMatchMaker | onRefill          | 2-1 | 유저 리필 처리   |
+| - AbstractUserMatchMaker | onRefill          | 2-1 | ユーザーリフィル処理   |
 | AbstractUserMatchMaker   | onMatch           | 3   |            |
 | IRoom                    | onCreateRoom      | 4   |            |
 | IRoom                    | onJoinRoom        | 4   |            |
-| - IUser                  | onMatchUserCancel | 4-1 | 방입장 취소     |
-| IUser                    | onMatchUserFail   | 5   | 매치 실패      |
+| - IUser                  | onMatchUserCancel | 4-1 | ルーム入室キャンセル     |
+| IUser                    | onMatchUserFail   | 5   | マッチ失敗    |
 
-## 유저 매치 취소
+## ユーザーマッチキャンセル
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-9.png)
 
-클라이언트 유저 매치 취소 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントユーザーマッチキャンセルリクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체                    | 콜백 메서드             | 순서  | 설명         |
+| 呼び出しオブジェクト                  | コールバックメソッド           | 順序 | 説明       |
 |--------------------------|--------------------|-----|------------|
-| Client                   | MatchUserCancel    | 1   | 클라이언트에서 요청 |
+| Client                   | MatchUserCancel    | 1   | クライアントからリクエスト |
 | IUser                    | onMatchUserCancel  | 2   |            |
 
-## 파티 매치
+## パーティーマッチ
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-10.png)
 
-클라이언트 유저 매치 시작 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントユーザーマッチ開始リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체                    | 콜백 메서드            | 순서  | 설명         |
+| 呼び出しオブジェクト                  | コールバックメソッド          | 順序 | 説明       |
 |--------------------------|-------------------|-----|------------|
-| Client                   | MatchPartyStart   | 1   | 클라이언트에서 요청 |
+| Client                   | MatchPartyStart   | 1   | クライアントからリクエスト |
 | IRoom                    | onMatchParty      | 2   |            |
-| - AbstractUserMatchMaker | onRefill          | 2-1 | 유저 리필 처리   |
+| - AbstractUserMatchMaker | onRefill          | 2-1 | ユーザーリフィル処理   |
 | AbstractUserMatchMaker   | onMatch           | 3   |            |
 | IRoom                    | onLeaveRoom       | 4   |            |
 | IRoom                    | onAfterLeaveRoom  | 5   |            |
 | IUser                    | onAfterLeaveRoom  | 6   |            |
 | IRoom                    | onCreateRoom      | 7   |            |
 | IRoom                    | onJoinRoom        | 7   |            |
-| IUser                    | onMatchUserFail   | 8   | 매치 실패      |
+| IUser                    | onMatchUserFail   | 8   | マッチ失敗    |
 
-## 파티 매치 취소
+## パーティーマッチキャンセル
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-11.png)
 
-클라이언트 파티 매치 취소 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントパーティーマッチキャンセルリクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체                    | 콜백 메서드             | 순서  | 설명         |
+| 呼び出しオブジェクト                  | コールバックメソッド           | 順序 | 説明       |
 |--------------------------|--------------------|-----|------------|
-| Client                   | MatchPartyCancel    | 1   | 클라이언트에서 요청 |
+| Client                   | MatchPartyCancel    | 1   | クライアントからリクエスト |
 | IRoom                    | onMatchPartyCancel  | 2   |            |
 
-## 유저 트랜스퍼
+## ユーザートランスファー
 ![callback-flow-9.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-12.png)
 
-유저 트랜스퍼 시작 요청 시 처리되는 콜백 메서드 순서입니다.
+ユーザートランスファー開始リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체   | 콜백 메서드              | 순서 | 설명               |
+| 呼び出しオブジェクト | コールバックメソッド            | 順序 | 説明             |
 |---------|---------------------|----|------------------|
-| IUser   | canTransferOut      | 1  | 유저 트랜스퍼 가능 한지 확인 |
+| IUser   | canTransferOut      | 1  | ユーザートランスファーが可能か確認 |
 | IUser   | onTransferOut       | 2  |                  |
 | IUser   | onTransferIn        | 3  |                  |
 | IUser   | onAfterTransferIn   | 4  |                  |
 | - IUser | onPause             | 5  |                  |
 | - IUser | onResume            | 6  |                  |
 
-## 룸 트랜스퍼
+## ルームトランスファー
 ![callback-flow-10.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-13.png)
 
-룸 트랜스퍼 시작 요청 시 처리되는 콜백 메서드 순서입니다.
+ルームトランスファー開始リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체   | 콜백 메서드            | 순서  | 설명                |
+| 呼び出しオブジェクト | コールバックメソッド          | 順序 | 説明              |
 |---------|-------------------|-----|-------------------|
-| IRoom   | canTransferOut    | 1   | 룸 트랜스퍼 가능 한지 확인   |
+| IRoom   | canTransferOut    | 1   | ルームトランスファーが可能か確認   |
 | IRoom   | onTransferOut     | 2   |                   |
-| - IUser | onTransferOut     | 3-1 | 룸 트랜스퍼 후 유저 트랜스퍼  |
+| - IUser | onTransferOut     | 3-1 | ルームトランスファー後ユーザートランスファー  |
 | - IUser | onTransferIn      | 3-2 |                   |
 | IRoom   | onTransferIn      | 4   |                   |
 | IRoom   | onAfterTransferIn | 5   |                   |
 | - IRoom | onPause           | 6   |                   |
 | - IRoom | onResume          | 7   |                   |
 
-## 채널 이동
+## チャンネル移動
 ![callback-flow-11.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-14.png)
 
-클라이언트 채널 이동 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントチャンネル移動リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체    | 콜백 메서드               | 순서 | 설명         |
+| 呼び出しオブジェクト  | コールバックメソッド             | 順序 | 説明       |
 |----------|----------------------|----|------------|
-| Client   | MoveChannel          | 1  | 클라이언트에서 요청 |
+| Client   | MoveChannel          | 1  | クライアントからリクエスト |
 | IUser    | canMoveOutChannel    | 2  |            |
 | IUser    | onMoveOutChannel     | 3  |            |
 | IUser    | onTransferOut        | 4  |            |
@@ -199,43 +199,42 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | - IUser  | onResume             | 8  |            |
 | IUser    | onMoveInChannel      | 9  |            |
 
-## 채널 정보 확인
+## チャンネル情報確認
 ![callback-flow-12.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-15.png)
 
-클라이언트 채널 정보 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントチャンネル情報リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체       | 콜백 메서드           | 순서 | 설명         |
+| 呼び出しオブジェクト     | コールバックメソッド         | 順序 | 説明       |
 |-------------|------------------|----|------------|
-| Client      | GetChannelInfo   | 1  | 클라이언트에서 요청 |
+| Client      | GetChannelInfo   | 1  | クライアントからリクエスト |
 | - IGameNode | onChannelInfo    | 2  |            |
 
-## 채널 사용자 정보 갱신
+## チャンネルユーザー情報更新
 ![callback-flow-13.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-16.png)
 
-클라이언트 채널 정보 갱신 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントチャンネル情報更新リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체       | 콜백 메서드                   | 순서 | 설명 |
+| 呼び出しオブジェクト     | コールバックメソッド                 | 順序 | 説明 |
 |-------------|--------------------------|----|----|
 | IUser       | updateChannelUserInfo    | 1  |    |
 | - IGameNode | onChannelRoomInfoUpdate  | 2  |    |
 
-## 채널 방 정보 갱신
+## チャンネルルーム情報更新
 ![callback-flow-14.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-17.png)
 
-클라이언트 채널 방 정보 갱신 요청 시 처리되는 콜백 메서드 순서입니다.
+クライアントチャンネルルーム情報更新リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체       | 콜백 메서드                   | 순서 | 설명 |
+| 呼び出しオブジェクト     | コールバックメソッド                 | 順序 | 説明 |
 |-------------|--------------------------|----|----|
 | IRoom       | updateChannelRoomInfo    | 1  |    |
 | - IGameNode | onChannelUserInfoUpdate  | 2  |    |
 
-## 게임데이터 갱신
+## ゲームデータ更新
 ![callback-flow-15.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-18.png)
 
-매니지먼트 노드를 통해서 게임 데이터 갱신 요청 시 처리되는 콜백 메서드 순서입니다.
+マネジメントノードを通じてゲームデータ更新リクエスト時に処理されるコールバックメソッド順序です。
 
-| 호출 객체          | 콜백 메서드                           | 순서 | 설명            |
+| 呼び出しオブジェクト        | コールバックメソッド                         | 順序 | 説明          |
 |----------------|----------------------------------|----|---------------|
-| ManagementNode | /game-data/publish-to-management | 1  | 매니지먼트 노드로 요청  |
+| ManagementNode | /game-data/publish-to-management | 1  | マネジメントノードへリクエスト  |
 | - INode        | onUpdateGameData                 | 2  |               |
-

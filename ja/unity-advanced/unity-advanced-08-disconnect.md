@@ -1,16 +1,22 @@
-## Game > GameAnvil > Unity深層開発ガイド > GameAnvilコネクタの終了
+## Game > GameAnvil > Unity 基礎開発ガイド > 接続終了
 
-## GameAnvilコネクタの終了
+## 接続終了
 
-ゲームプレイを終了する前にGameAnvilConnector.Disconnect()関数を呼び出して接続を終了することを推奨します。終了しない場合、サーバーがクライアントの終了を認識しない可能性があり、この場合、不要な動作を継続する可能性があります。
-GameAnvilConnectorのOnDestroy()にその機能が含まれています。
+ゲームプレイ終了前にGameAnvilConnector.Disconnect()関数を呼び出して接続を終了することを推奨します。終了しない場合、サーバーでクライアントの終了を認知できない可能性があり、この場合不必要な動作を継続する可能性があります。
 
 ```c#
-private void OnDestroy()
+public class GameAnvilManager : MonoBehaviour
 {
-    if (connector.IsConnected())
+    ...
+    
+    private void OnDestroy()
     {
-        Disconnect();
+        if (connector.IsConnected())
+        {
+            Disconnect();
+        }
     }
+    
+    ...
 }
 ```
