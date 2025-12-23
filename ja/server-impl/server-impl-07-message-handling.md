@@ -1,13 +1,13 @@
 ## Game > GameAnvil > サーバー開発ガイド > メッセージハンドリング
 
-![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/three_steps_for_message_process_1213.png)
+![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/07-message-handling/three_steps_for_message_process.png)
 
 ## 一般メッセージ処理
 
-* GameAnvilのメッセージ処理は、上図のように大きく3つの部分に分けられます。この3つの部分が互いに相まってメッセージ処理の流れを作ります。
-* このうち、onDispatchコールバックの実装はエンジンが独自に行っており、エンジンユーザーはDispatcherの宣言とメッセージハンドラを実装してパケットを処理します。
+* GameAnvilのメッセージ処理は上の図のように大きく3つの部分に分かれます。この3つの部分が互いにかみ合ってメッセージ処理フローを作ることになります。
+* このうちonDispatchコールバック実装はエンジンで独自に行っており、エンジンユーザーはDispatcherの宣言とメッセージハンドラを実装してパケットを処理します。
 
-### メッセージハンドラの実装及びメッセージとハンドラの接続
+### メッセージハンドラ実装及びメッセージとハンドラの接続
 
 このメッセージハンドラを直接実装します。このとき、GameAnvilはエンジン内部はもちろん、全てのサンプルコードでメッセージハンドラに対して「_」で始まる命名規則を使用します。今後登場する全てのサンプルコードでも、「_」で始まるクラスは全てメッセージハンドラです。最も基本的な形のメッセージハンドラは次のとおりです。CONTEXT_CLASSは該当メッセージの流れを示すクラスを意味し、MAPPING_CLASSは処理するメッセージを登録するクラスを意味します。Contextクラスで対象オブジェクトの取得、メッセージの応答などを行うことができます。
 
@@ -22,7 +22,7 @@ public class _MyEchoHandler {
 }
 ```
 
-例えば、パケット受信者がGameUserの場合、そのメッセージハンドラは次のとおりです。
+例えば、パケット受信者がGameUserなら、そのメッセージハンドラは次のとおりです。
 
 ```java
 @GameAnvilController // このクラスをメッセージハンドラとして使用します。

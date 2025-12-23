@@ -1,10 +1,10 @@
 ## Game > GameAnvil > TypeScript開発ガイド > 接続エージェント
 
-### GameAnvilConnector
+## GameAnvilConnector
 
 GameAnvilConnectorは、サーバーへの接続と通信を担当するクラスで、このオブジェクトを通じてサーバーにリクエストを送信したり、サーバーから受信するメッセージに対するハンドラを登録して管理したりできます。前のインストールチャプターでは、GameAnvilConnectorの作成とconnect機能の使用方法について説明しました。このドキュメントでは、より詳細な使用方法と、GameAnvilConnectorの他の機能について見ていきます。
 
-#### 作成
+### 生成
 
 以下のようにGameAnvilConnectorオブジェクトを作成します。通常は、1つのプロセスで1つのコネクタオブジェクトを使用するのが一般的です。
 
@@ -14,7 +14,7 @@ import { GameAnvilConnector } from "gameanvil-connector";
 const connector = new GameAnvilConnector();
 ```
 
-#### サーバーへの接続
+### サーバー接続
 
 connect()関数を利用してサーバーに接続します。呼び出す前に、hostとportをあらかじめ設定しておく必要があります。
 
@@ -45,14 +45,13 @@ connector.connect()
 
 コネクタのほとんどのAPIは、このように非同期で動作し、Promiseオブジェクトを返すため、上記のように状況に合わせてawaitやthenなどの機能を使用できます。
 
-#### 接続切断の検知
+### 切断検知
 
 サーバーによって接続が強制的に終了されたり、ネットワークの問題などで接続が切れたりした場合に実行する動作を指定できます。
 
 ```typescript
 connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) => {
     console.log("Disconnected.");
-    
 }
 ```
 
@@ -82,9 +81,9 @@ connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) =>
 
 2番目の引数で、サーバーの実装に応じた追加情報を受け取ります。追加情報の処理方法は、後ほど説明します。
 
-#### 認証
+### 認証
 
-サーバーへの接続に成功した後、エンジンの全ての機能を使用するためには、まず認証を行う必要があります。authentication()関数は、サーバーと事前に協議されたaccountId、deviceId、passwordの値を引数として受け取り、認証動作を実行してPromiseを返します。認証動作の完了時点で、Promiseを通じて認証に成功したかどうかや、サーバーから渡された追加データなどを確認できます。
+サーバーへの接続に成功した後、エンジンの全ての機能を使用するためには、まず認証を進める必要があります。authentication()関数は、サーバーとあらかじめ協議されたaccountId、deviceId、password値を引数として受け取り、認証動作を実行してPromiseを返します。認証動作完了時点でPromiseを通じて認証に成功したかどうかと、サーバーから受け取った追加データなどを確認できます。
 
 ```typescript
 const deviceId, accountId, password;
@@ -123,7 +122,7 @@ if (connector.isAuthenticated) {
 }
 ```
 
-#### 接続と認証を両方実行
+### 接続と認証の両方を進行
 
 接続が完了すると認証が必須となるため、この二つを順次実行する便利な関数を呼び出すと便利です。
 
@@ -141,7 +140,7 @@ console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 
 認証結果は、通常、認証のみをリクエストした場合の結果と同じ方法で使用します。
 
-#### pingリクエスト
+### Pingリクエスト
 
 基本的にPingリクエストは定期的に送信されるように設定されていますが、設定を変更して手動にした場合は、手動でメソッドを呼び出してPingリクエストを送信できます。
 
@@ -152,7 +151,7 @@ connector.ping();
 Pingリクエストに対するレスポンスを受け取った場合、設定によってはpongログが出力されることがあります。
 
 
-#### メッセージ受信コールバックの登録
+### メッセージ受信コールバック登録
 
 サーバーからプロトコルバッファメッセージを受信した際に、処理関数を実行するように設定できます。1つのプロトコルバッファに対しては、1つの処理関数のみ登録可能で、既に処理関数が登録されている状態で再度登録すると、既存の処理関数は削除されます。
 
@@ -173,7 +172,7 @@ connector.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userIn
 });
 ```
 
-#### チャネルユーザー及びルーム数の情報リクエスト
+### チャンネルユーザー及びルーム数情報リクエスト
 
 サーバーにある特定のサービスの全てのチャネルの、それぞれのユーザー数とルーム数の情報をリクエストできます。
 
@@ -203,7 +202,7 @@ console.log(`${channelCountInfo.channelId} userCount: ${channlCountInfo.userCoun
 ```
 
 
-#### チャネル情報リクエスト
+### チャンネル情報リクエスト
 
 サーバーにある特定のサービスの全てのチャネルの、それぞれの情報をリクエストできます。
 
@@ -229,7 +228,7 @@ const result = await connector.getChannelInfo(serviceName, channelId);
 const payload = result.data;
 ```
 
-#### チャネル一覧リクエスト
+### チャンネル一覧リクエスト
 
 サーバーにある特定のサービスの全てのチャネル一覧をリクエストできます。
 
@@ -243,7 +242,7 @@ for (let channelId of result) {
 }
 ```
 
-#### ユーザーステータスチェックの一時停止及び再開
+### ユーザー状態チェック一時停止及び再開
 
 アプリがバックグラウンドに移行した場合など、ユーザーステータスチェックに応答できない状況が予想される場合に、アプリを一時停止できます。
 
@@ -263,7 +262,7 @@ connector.pauseClientStateCheck(pauseTime);
 connector.resumeClientStateCheck();
 ```
 
-#### パケット送信
+### パケット送信
 
 ゲートウェイサーバーにプロトコルバッファメッセージを送信できます。
 
@@ -300,7 +299,7 @@ if (result.resultCode === ResultCode.Success) {
 }
 ```
 
-#### 例外処理
+### 例外ハンドリング
 
 サーバー接続中に例外が発生した場合に実行する動作を指定できます。
 
@@ -312,7 +311,7 @@ connector.onException = (exception: Error) => {
 
 登録された関数の最初の引数には、エラーオブジェクトが渡されます。
 
-#### 接続終了
+### 接続終了
 
 サーバーとの接続を明示的に終了するようにリクエストできます。
 

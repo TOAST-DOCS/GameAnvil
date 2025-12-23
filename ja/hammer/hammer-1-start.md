@@ -1,73 +1,57 @@
 ## Game > GameAnvil > テスト開発ガイド > 始める
 
-## GameHammer
+### 概要
 
-GameHammerはGameAnvilエンジンを利用したゲームサーバー開発ツールで、強力で便利なテストツールです。 実際のコネクタで提供するすべての機能を使用することができ、様々なテストケースを作成できるAPIを提供しています。 また、ストレステストのために複数のGameHammerを同時に実行し、その結果を集計してすぐに確認できます。
+GameHammerは、GameAnvilエンジンを利用したゲームサーバー開発後に使用できる性能及び機能テストツールです。実際のコネクタが提供する全ての機能を同様に使用してテストでき、負荷テストのために多数のGameHammerを同時に実行するなどの使い方が可能です。テスト進行中に進行状況を確認したり、テスト最終結果を集計して確認及び保存したりできます。
 
-### システム要件
+* コネクタにある全ての機能を同様にサポート
+* Sync/Async方式を全てサポート
+    * Async方式のAPI提供
+    * Sync方式のためのfuture提供
+* 数千以上のコネクションを同時に使用可能
+* 状態ベースのシナリオ管理機能をサポート
 
-GameHammerを使用するには、以下の事項が必要です。
+このガイドではGameHammerの使用方法を詳細な例とともに提供します。サーバーエンジンと同様にIntelliJを基準に説明します。
 
-- サポートする言語
-    - Java
-- ターゲット開発環境
-    - IntelliJ
-- サポートするネットワークプロトコル
-    - TCP/IP
-    - SSL over TCP/IP
-- 使用可能な応用プロトコル形式
-    - Google Protocol Buffers
-    - Google FlatBuffers(予定)
-    - カスタムバイトストリーム
-    - HTTP/HTTPS(特定の用途に限る)
+### サポート環境及びプロトコル
 
-### 特長
+#### サポートするネットワークプロトコル
 
-GameHammerは以下の機能をサポートします。
+* TCP/IP
+* SSL over TCP/IP
 
-- コネクタと対応するすべての機能をサポート
-- Sync/Async方式をサポート
-    - Async方式のAPIを提供
-    - Sync方式のためのfuture提供
-- 数千個またはそれ以上のコネクションを同時に使用可能
-- 状態ベースのシナリオ管理機能をサポート
+#### 使用可能なアプリケーションプロトコル形式
 
-### リファレンスプロジェクト
+* Google Protocol Buffers
+* カスタムバイトストリーム
+* HTTP/HTTPS(特定の用途に限定)
 
-| サーバー                                                        | テストコード                                                 | 説明                                            |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------ |
-| [sample-game-server](https://github.com/nhn/gameanvil.sample-game-server.git) | [sample-game-test](https://github.com/nhn/gameanvil.sample-game-test.git) | 実際のゲームサーバーとGameHammerを使用したテストコード |
+### プロジェクトにGameHammer依存関係を追加
 
-## プロジェクトにGameHammerを追加する
+GameHammerはGameAnvilと同様にMavenを通じて配布されます。pom.xmlファイルのdependencies要素に次のように追加すると、GameHammerを使用できます。
 
-GameHammerはGameAnvilと同じようにMavenを通じて配布されます。 pom.xmlファイルのdependencies要素に次のように追加するとGameHammerを使用できます。
-
-```
-...
+```pom
 <dependencies>
-        ...
         <!-- GameHammer -->
         <dependency>
 			<groupId>com.nhn.gameanvil</groupId>
 			<artifactId>gamehammer</artifactId>
 			<version>2.1.0-jdk11</version>
 		</dependency>
-        ...
 <dependencies>
-...        
 ```
 
-## MavenでGameHammer jarファイルを作成する
+### MavenでGameHammer jarファイルを生成する
 
-GameHammerを使ってテストシナリオを作成した後、GameAnvilコンソールでテストする目的などでjarファイルを作成できます。ここではMavenを使ってアップロード用jarファイルを作成します。
+GameHammerを利用してテストシナリオを作成した後、GameAnvilコンソールでテストする目的などでjarファイルを生成できます。
 
-GameHammerを追加したプロジェクトのpom.xmlがあるディレクトリで下記のコマンドを実行します。
+GameHammerを追加したプロジェクトのpom.xmlがあるディレクトリで以下のコマンドを実行します。
 
 ```
 mvn package
 ```
 
-コマンド実行後、ビルド過程が出力され、最後にビルドが成功したというメッセージを確認します。下記のように表示されたら成功です。
+コマンド実行後、ビルド過程が出力され、最後にビルドに成功したというメッセージを確認します。以下のように表示されれば成功です。
 
 ```
 [INFO] ------------------------------------------------------------------------
@@ -79,4 +63,14 @@ mvn package
 Process finished with exit code 0
 ```
 
-新しく作成されたターゲットディレクトリ内でビルドされたファイルを確認できます。
+新しく生成されたtargetディレクトリ内でビルドされたファイルを確認できます。
+
+### 不要なdebugログの削除方法
+
+GameHammerを実行した際、内部ライブラリ関連のDEBUGレベルログが発生する場合があります。動作には異常ありませんが、このようなログを削除したい場合はVMOptionに以下の項目を追加してください。
+
+```
+-Dio.netty.tryReflectionSetAccessible=true
+--add-opens java.base/java.lang=ALL-UNNAMED
+--add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+```

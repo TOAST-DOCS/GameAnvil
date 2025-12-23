@@ -1,6 +1,6 @@
 ## Game > GameAnvil > TypeScript開発ガイド > インストール
 
-### GameAnvil Connector
+## GameAnvil Connector
 
 コネクタは、GameAnvilサーバーに合わせたクライアントを制作するために開発されたライブラリです。GameAnvil Connectorを利用すると、GameAnvilが基本的に提供するパケット送信、ユーザー及びルーム機能などを簡単に実装できます。
 
@@ -9,7 +9,7 @@
 
 コネクタは以下からダウンロードできます。
 
-[gameanvil-connector-typescript.zip]()
+[gameanvil-connector-typescript.zip](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector-typescript.zip)
 
 npmを通じたダウンロードやgitを通じたダウンロードは、今後サポートされる予定です。
 

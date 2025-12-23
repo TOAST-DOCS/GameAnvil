@@ -2,37 +2,37 @@
 
 ### GameAnvilでマルチプレイヤーゲームを簡単に作成する
 
-GameAnvilはリアルタイムマルチプレイヤーゲームサーバー構築プラットフォームです。
-GameAnvilを使えば、簡単にゲームサーバーとクライアントを開発・運営できます。
+GameAnvilはリアルタイムマルチプレイヤーゲームサーバー制作プラットフォームです。
+GameAnvilを使用すると、手軽にゲームサーバーとクライアントを開発・運用できます。
 
-この文書はGameAnvilの基本的な機能を利用して、実際のプレイが可能なマルチプレイヤー同期ゲームを開発する過程を説明します。
-サーバーの概念とAPIを単純に列挙するのではなく、直接マルチプレイヤーゲームサーバーとサンプルクライアントを開発することで、GameAnvilの基本概念とプロジェクト構成及び実装方法を自然に習得できるようにしました。
+このドキュメントでは、GameAnvilの基本的な機能を利用して、実際にプレイ可能なマルチプレイヤー同期ゲームを開発する過程を扱います。
+サーバーの概念とAPIを単に羅列するのではなく、直接マルチプレイヤーゲームサーバー及びサンプルクライアントを開発することで、GameAnvilの基本概念とプロジェクト構成、及び実装方法を自然に習得できるようにしました。
 
-GameAnvilはサーバーエンジンだけでなく、クライアントをサーバーに接続するのに役立つコネクタも提供しています。サーバーとクライアントが相互作用する様子を見ることができるサンプルを完成させながら、GameAnvilを使ってゲームを開発する全体的な流れに慣れることができます。
+GameAnvilはサーバーエンジンだけでなく、クライアントをサーバーに接続するのを支援するコネクタも提供します。サーバーとクライアントが相互作用する様子を確認できるサンプルを完成させながら、GameAnvilを使用してゲームを開発する全体的な流れに慣れることができます。
 
 ## 実習環境の準備 - サーバープロジェクト
 
-マルチプレイヤーゲームを作るためには、クライアントと対応するサーバープログラムが必要です。ゲームサーバーを構築した後、続いてクライアントを実装する形でチュートリアルを進めます。
+マルチプレイヤーゲームを作成するには、クライアントと対応するサーバープログラムが必要です。ゲームサーバーを構築した後、続いてクライアントを実装する方式でチュートリアルが進行します。
 
-この例では、クライアントプログラムの作成にはUnityとGameAnvilコネクタを使用し、サーバープログラムの作成には先に紹介したサーバーエンジンGameAnvilを使用します。まず、GameAnvilを利用したサーバープログラムプロジェクトを作成してみましょう。
+この例では、クライアントプログラムの制作にUnityとGameAnvilコネクタを使用し、サーバープログラムの制作に先ほど紹介したサーバーエンジンGameAnvilを使用します。まずGameAnvilを利用したサーバープログラムプロジェクトを作成してみます。
 
-下記の段階を進めて作成される最終サーバーサンプルプロジェクトは下記のリンクからダウンロードできます。初期テンプレートからいくつかの段階を経てサーバー機能を実装したらどんな構造になるのか事前に確認したい場合は、該当プロジェクトをダウンロードして参照することができます。
+以下の手順を進めると作成される最終的なサーバーサンプルプロジェクトは、以下のリンクからダウンロードできます。初期テンプレートからいくつかの段階を経てサーバー機能を実装するとどのような構造になるかあらかじめ確認したい場合は、該当プロジェクトをダウンロードして参考にしてください。
 
 [サーバーサンプルプロジェクトのダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Basic_Server.zip?disposition=attachment)
 
 ### プロジェクト構成
 
-この章では、開発を始めるために初期設定を完了することを目標とします。実際のプロセスを実行してサーバーを駆動するのは次の章で説明します。
+今回のチャプターでは、開発を開始するために初期設定を完了することを目標とします。実際のプロセスを実行してサーバーを起動することは、次のチャプターで扱います。
 
-例では、サーバープロジェクトIDEをJetBrain社のIntelliJを使用しています。例で使ったIntelliJのバージョンはIDEA Ultimate 2023.1.2です。もし、ライセンスを購入していない場合は、IntelliJ IDEA Community Editionを使用しても構いません。他のバージョンのIntelliJを使用しても問題なく動作すると予想されますが、すべてのケースをテストしたわけではないので、サンプル実行バージョンと同じ環境で進めることを推奨します。
+例ではサーバープロジェクトIDEとしてJetBrain社のIntelliJを使用します。例で使用したIntelliJのバージョンはIDEA Ultimate 2024.2.1です。ライセンスを購入していない場合は、IntelliJ IDEA Community Editionを使用しても問題ありません。他のバージョンのIntelliJを使用しても問題なく動作すると予想されますが、全てのケースをテストしたわけではないため、サンプル実行バージョンと同じ環境で進めることを推奨します。
 
-プロジェクトにGameAnvilを適用するには、MavenリポジトリにGameAnvilライブラリをダウンロードし、GameAnvilを駆動するために必要な設定ファイルを作成する必要があります。最後に少しのボイラープレートコードを書けば、開発初期設定が完了します。
+プロジェクトにGameAnvilを適用するには、MavenリポジトリからGameAnvilライブラリをダウンロードし、GameAnvilを駆動するために必須の設定ファイルを作成する必要があります。最後に若干のボイラープレートコードを作成すれば、開発初期設定が完了します。
 
-GameAnvilではこのような一連の過程を代行してくれるIntelliJテンプレートを提供し、より簡単に初期作業を完了できます。次のリンクからIntelliJ用プロジェクトファイルテンプレートをダウンロードできます。ダウンロードしたテンプレートは解凍しないようにしてください。
+GameAnvilでは、このような一連の過程を代わりに行ってくれるIntelliJテンプレートを提供しており、より簡単に初期作業を完了できます。次のリンクからIntelliJ用プロジェクトファイルテンプレートをダウンロードできます。ダウンロードしたテンプレートは解凍しないでください。
 
-[テンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
+[テンプレートのダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
-ダウンロードしたテンプレートを適用するためにIntelliJを実行します。 **Welcome to InteliJ IDEA**画面の左側のメニューから**Customize**を選択し、**Import Settings...**をクリックします。または全体検索窓で**Import Settings...**を検索します。
+ダウンロードしたテンプレートを適用するためにIntelliJを実行します。**Welcome to IntelliJ IDEA**画面の左側メニューで**Customize**を選択した後、**Import Settings...**をクリックします。または全体検索ウィンドウで**Import Settings...**を検索します。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/1_import_gameanvil_template.png)
 
@@ -42,44 +42,41 @@ GameAnvilではこのような一連の過程を代行してくれるIntelliJテ
 
 <br>
 
-ファインダーまたはファイルエクスプローラーウィンドウでテンプレートをダウンロードしたパスに移動し、圧縮ファイルを選択します。**Select Components to Import**ウィンドウが開いたら、**File templates**項目と**Project Templates** 項目をすべてチェックして選択します。 **OK**をクリックした後、**Import and Restart**をクリックすると、IntelliJが再起動し、テンプレートの適用が完了します。
+Finderまたはファイルエクスプローラーウィンドウでテンプレートをダウンロードしたパスへ移動し、圧縮ファイルを選択します。**Select Components to Import**ウィンドウが開いたら、**File templates**項目と**Project Templates**項目の両方をチェックして選択します。**OK**をクリックした後、**Import and Restart**をクリックするとIntelliJが再起動し、テンプレートの適用が完了します。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/3_select_import.png)
 
-IntelliJ右上のボタングループで**New Project**をクリックした後、左側のリストをスクロールして下部の**Templates**にある**GameAnvil Template**を選択します。プロジェクト名を**SynchronizeTutorial**に設定します。名前に空白があってはいけません。プロジェクトの位置とベースパッケージ名を確認した後、プロジェクトを作成します。
+IntelliJ右上のボタングループで**New Project**をクリックした後、左側のリストをスクロールして下段の**Templates**にある**GameAnvil 2.1.0 Template**を選択します。プロジェクト名を設定します。名前にスペースを含めることはできません。プロジェクトの場所とベースパッケージ名を確認した後、プロジェクトを作成します。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/4_imported_gameanvil_template.png)
 
-これでIntelliJにサーバープロジェクトの骨格が構成されました。Projectパネルを見ると、コードと設定ファイルが作成されたことが確認できます。
+これでIntelliJにサーバープロジェクトの骨格が構成されました。Projectパネルを見ると、コードと設定ファイルが生成されたことを確認できます。
 
-* Main:プログラムの入口であるMain関数を含むクラスです。
-* protocolパッケージ: javaでコンパイルされたプロトコルバッファファイルを含むパッケージです。
-* protoパッケージ: Google Protobufライブラリを使って作成されたプロトコルファイルです。
-* build.sh / build.bat:プロトコルファイルをjavaでコンパイルしてプロトコルバッファファイルを作成する実行ファイルです。
-* GameAnvilConfig.json: GameAnvilの駆動に必要なサーバー設定情報を記録したファイルです。サーバーの実装に合わせて修正できます。
-* logback.xml: Javaプロジェクトでロギングを設定するために使用するファイルです。Logbackフレームワークの設定ファイルで、ロギングシステムの動作方法やログの形式、保存場所などを指定します。このファイルを使用して、ロギングレベル、ログ形式、ログファイルのパスと名前、ログローリングポリシーなどを設定できます。
+- Main: プログラムのエントリーポイントであるMain関数を含むクラスです。
+- GameAnvilConfig.json: GameAnvilの駆動に必要なサーバー設定情報を記録したファイルです。サーバーの実装に合わせて修正できます。
+- logback.xml: Javaプロジェクトでロギングを構成するために使用されるファイルです。Logbackフレームワークの設定ファイルとして,ロギングシステムの動作方式とログの形式,保存場所などを指定します。このファイルを使用してロギングレベル,ログ形式,ログファイルのパス及び名前,ログローテーションポリシーなどを設定できます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/5_gameanvil_project_view_init.png)
 
 ## GameAnvilサーバー設定ファイルの修正
 
-プロジェクトパネルのresourcesパッケージの下にあるGameAnvilConfig.jsonファイルを介してGameAnvilサーバーの設定を変更できます。
+プロジェクトパネルのresourcesパッケージ配下にあるGameAnvilConfig.jsonファイルを通じて、GameAnvilサーバー設定を変更できます。
 
-* common:サーバーの全体的な設定を扱う部分
-* location:ロケーションノードに関する設定を扱う部分
-* match:マッチノード関連の設定を扱う部分
-* gateway:ゲートウェイノード関連の設定を扱う部分
-* game:ゲームノード関連の設定を扱う部分
+- common: サーバー全般の設定を扱う部分
+- location: ロケーションノード関連の設定を扱う部分
+- match: マッチノード関連の設定を扱う部分
+- gateway: ゲートウェイノード関連の設定を扱う部分
+- game: ゲームノード関連の設定を扱う部分
 
-テンプレートを使ってプロジェクトを構成したので、GameAnvilConfig.jsonファイルにサーバーの動作に必要な基本設定情報が設定されていることが確認できます。この例題で注意深く見るべき部分は大きく3つです。
+テンプレートを通じてプロジェクトを構成したため、GameAnvilConfig.jsonファイルにサーバー動作に必要な基本設定情報がセットされていることを確認できます。この例で注意深く見るべき部分は大きく3つです。
 
-1. gameのnodeCntの値
-2. gameのserviceNameの値
-3. gameのchannelIDsの値
+1. gameのnodeCnt値
+2. gameのserviceName値
+3. gameのchannelIDs値
 
-ゲームノードは必要な量に応じて、またはサーバーの性能によって複数のVMで構成して実行できます。ゲームノードを何個実行させるかについての設定をすると、サーバーの実行時に自動的に設定ファイルを読み込んで決められた数のノードを起動するようになっています。テンプレート設定にはゲームノードを1つ起動するように設定されているので、このまま使ってください。追加修正する部分はgame部分のserviceNameとchannelIDsです。
+ゲームノードは必要量に応じて、またはサーバーの性能に応じて複数のVMで構成して実行できます。ゲームノードをいくつ実行させるか設定すると、サーバー実行時に自動的に設定ファイルを読み込み、指定された個数のノードを立ち上げるようになっています。テンプレート設定ではゲームノードを1つ立ち上げるようにセットされており、このまま使用すれば問題ありません。追加修正する部分はgame部分のserviceNameとchannelIDsです。
 
-GameAnvilConfig.jsonファイルのgameの最後の部分を見ると、Todoと書かれた部分があります。ここを修正してサービス名とチャネル情報を設定します。
+GameAnvilConfig.jsonファイルのgame側の最後を見ると、Todoと表示された部分があります。ここを修正してサービス名とチャンネル情報を設定してみます。
 
 ```json
   "game": [
@@ -87,31 +84,31 @@ GameAnvilConfig.jsonファイルのgameの最後の部分を見ると、Todoと�
       "nodeCnt": 1,
       "serviceId": 1,
       "serviceName": "Todo - Input My Service Name",
-      "channelIDs": ["ToDo - Input My ChannelName","ToDo - Input My ChannelName"], // ノードごとに付与するチャネルID(一意である必要はありません。""はチャネルを使用しないことを意味)
-      "userTimeout": 5000 // クライアントの接続が切断された後、ユーザーオブジェクトをサーバーから削除せずに管理する時間を設定
+      "channelIDs": [["ToDo - Input My ChannelName"]], // ノードごとに付与するチャンネルID。(一意でなくても良い。""はチャンネルを使用しないことを意味)
+      "userTimeout": 5000 //クライアントの接続断後、ユーザーオブジェクトをサーバーから削除せずに管理する時間を設定
     }
   ]
 ```
 
 ### サービスについて
 
-サービスとは、1つのサーバーが複数のゲームを提供する場合、各ゲームサービスを区別して呼ぶ名前です。サービス名は特定のサービスを表すサーバーとクライアントの間で約束された文字列です。後々の過程でサービス名を入力する時に使うので覚えておく必要があります。
+サービスとは、1つのサーバーが複数のゲームを提供する場合、各ゲームサービスを区別して呼ぶ名前です。サービス名は特定サービスを表すサーバーとクライアント間で約束された文字列です。以降の過程でサービス名を入力する際に使用するため、覚えておく必要があります。
 
-ここではSyncという名前のサービスを使います。 game部分のserviceNameに下記のように内容を修正します。
+ここではSyncという名前を持つサービスを使用します。game部分のserviceNameを以下のように修正します。
 
 ```
 "serviceName" : "Sync",
 ```
 
-### チャネルについて
+### チャンネルについて
 
-チャネルは単一サーバー群を論理的に分ける方法の1つです。例題ではチャネルを使わないので、この文書では詳しい説明は省略します。チャネルを使わないので、game部分のchannelIDsに下記のように内容を修正します。
+チャンネルは単一サーバー群を論理的に分割できる方法の1つです。例ではチャンネルを使用しないため、このドキュメントでは詳細な説明を省略します。チャンネルを使用しないため、game部分のchannelIDsを以下のように修正します。
 
 ```
-"channelIDs" : [""],
+"channelIDs" : [[""]],
 ```
 
-このように作成したGameAnvilサーバー設定ファイルの内容は次のとおりです。
+このように作成完了したGameAnvilサーバー設定ファイルの内容は次のとおりです。
 
 ```json
 "game": [
@@ -119,65 +116,71 @@ GameAnvilConfig.jsonファイルのgameの最後の部分を見ると、Todoと�
       "nodeCnt": 1,
       "serviceId": 1,
       "serviceName": "Sync",
-      "channelIDs": [""], // ノードごとに付与するチャネルID。(一意である必要はありません。""はチャネルを使用しないことを意味)
-      "userTimeout": 5000 // クライアントの接続が切れた後、ユーザーオブジェクトをサーバーから削除せずに管理する時間を設定
+      "channelIDs": [[""]], // ノードごとに付与するチャンネルID。(一意でなくても良い。""はチャンネルを使用しないことを意味)
+      "userTimeout": 5000 //クライアントの接続断後、ユーザーオブジェクトをサーバーから削除せずに管理する時間を設定
     }
   ]
 ```
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/6_gameanvil_config_json.png)
 
-参考までにgatewayの設定を見ると、TCP_SOCKETコネクションは18200ポートを使うように設定されていることが確認できます。これはクライアントと接続するポートで、今後クライアントプロジェクトでサーバー接続情報を記入する部分でこのポート番号を使うことになります。
+参考までに、gateway設定を見るとTCP_SOCKETコネクションは18200ポートを使用するように設定されていることが確認できます。これはクライアントと接続されるポートで、以降クライアントプロジェクトでサーバー接続情報を記入する部分でこのポート番号を使用することになります。
 
-## GameAnvilサーバー駆動
+## GameAnvilサーバー起動
 
 ### Javaバージョン設定
 
-GameAnvilはJava 8バージョンと11バージョンをサポートします。バージョンによって一部設定方法が違う場合があり、ここではJava 11バージョンを使用しました。
+GameAnvilはJava 21バージョンをサポートします。バージョンによって一部の設定方法が異なる場合があり、ここではJava 21バージョンを使用しました。
 
-まず、jdkの設定を確認します。左上のメニューから**File > Project Structure**を選択して**Project Structure**ウィンドウを開きます。Macユーザーの場合、**Command + ;**ショートカットキーを使用できます。
+まずJDK設定を確認します。左上のメニューから**File > Project Structure**を選択して**Project Structure**ウィンドウを開きます。Macユーザーの場合は**Command + ;**ショートカットキーを使用できます。
 
-**Project**タブでSDKの設定を確認します。もし、SDKが設定されていない場合は、**Add SDK > Download JDK**で希望のバージョンのJDKをダウンロードして設定します。**Language level**は**SDK default**に設定します。次に**Modules**タブで**Language level**を**Project default**に設定します。
+**Project**タブでSDK設定を確認します。もしSDKが設定されていない場合は、**Add SDK > Download JDK**を通じて希望するバージョンのJDKをダウンロードして設定します。**Language level**は**SDK default**に設定します。次に**Modules**タブで**Language level**を**Project default**に設定します。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/7_project_structure.png)
 
-**設定**メニューで**gradle**で使うJVMを確認します。**プロジェクト**SDK**と同じ**gradle**バージョンに設定します。
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/8_module_language_level.png)
+
+**設定** メニューで**gradle** 設定を確認します。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/9_gradle_config.png)
 
-### サーバー駆動
+### サーバー起動
 
-実行設定が完了したら、右側のgradleメニューからTasks > other > `runMain`をダブルクリックして実行します。一度このように実行すると、その後はIntelliJの右上にある緑色の三角形の実行アイコンをクリックしてもサーバーが起動します。
+実行設定が完了したら、右側のgradleメニューからTasks > other > `runMain`実行をダブルクリックします。このように一度実行した後は、IntelliJ右上の緑色の三角形のRunアイコンをクリックしてもサーバーが実行されます。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil_run1_1213.png)
+`runMain`で実行することで、GameAnvilサーバーの実行に必要なVMオプションが適用されます。もしMainクラスのmain()関数をそのまま実行する場合は、**Edit Configurations...**で以下の必須VMオプションを追加する必要があります。
 
-build.gradleには便利なJVMオプションがあらかじめ設定されています。このような設定を活用してサーバーを実行するには、IntelliJのGradleウィンドウでTask > others > runMainを右クリックした後、GameAnvilTutorial実行をクリックします。
+```
+"--add-opens", "java.base/java.lang=ALL-UNNAMED",
+"--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED"
+"-XX:+UseG1GC"
+```
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/10_gameanvil_run.png)
 
-サーバーが正常に駆動されると、サーバー駆動状態に関するログが多数出力されます。
+サーバーが正常に起動すると、サーバー起動状態に関するログが多数出力されます。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/11_gameanvil_run_log.png)
 
-GameAnvilサーバーは複数のノードで構成されています。これらのノードはサーバーが実行する機能を複数の役割で分担します。まだ、サーバーの初期駆動を確認しただけで、ノードや他のサーバーを駆動するためのコードを作成していないため、完全に準備された状態ではありません。
+GameAnvilサーバーは複数のノードで構成されています。これらのノードはサーバーが実行する機能を複数の役割で分担します。まだサーバーの初期起動を確認しただけで、ノードや他のサーバー起動のためのコード作成を行っていないため、完全に準備された状態ではありません。
 
-それぞれのノードはコードを実行するために準備する時間が必要で、各ノードが準備完了したらonReadyログを出力します。クライアントがサーバーへ接続するのに直接的な役割をするノードはゲートウェイノードです。ゲートウェイノードが準備されてGatewayNodeのonReadyログが出力されたら、GameAnvilサーバーはいつでも接続可能な状態になったことになります。
+各ノードはコードを実行するための準備に時間を要し、各ノードが準備完了するとonReadyログを出力します。クライアントがサーバーに接続する際に直接的な役割を果たすノードはゲートウェイノードです。ゲートウェイノードが準備されGatewayNodeのonReadyログが出力されれば、GameAnvilサーバーはいつでも接続可能な状態になったということです。
 
-次の章ではGameAnvilの様々なノードのうち、サンプルゲームの動作に必要なBasicGameNodeを実装してみます。
+次のチャプターではGameAnvilの複数のノードのうち、サンプルゲーム動作のために必要なBasicGameNodeを実装してみます。
 
 ## GameAnvilサーバー機能の実装
 
 ### ゲームノードの実装
 
-GameAnvilは`Base-`という接頭辞をつけた複数のノードクラスを提供しています。基本的なノードの機能はエンジン内部にすでに実装されており、ユーザーはこのBaseクラスを継承して様々なコールバック機能を使うことができます。今回の例では、BaseGameNodeクラスを継承したゲームノードクラスを作成して使ってみます。
+GameAnvilは`I-`プレフィックスを付けた複数のノードインターフェースを提供します。基本的なノードの機能はエンジン内部にすでに実装されており、ユーザーはこれらのインターフェースを実装して多様なコールバック機能を使用できます。今回の例ではIGameNodeインターフェースを実装したゲームノードクラスを作成して使用してみます。
 
-プロジェクトパネルでMainクラスがあるパスを右クリックした後、**New** > Package**を選択して**node**という名前の新しいパッケージを作成します。そして、nodeパッケージをもう一度右クリックした後、**New** > BaseGameNode**を選択します。ファイル作成ダイアログが開いたら、**File name**に**SyncGameNode**、**Service Name**に**Sync**を入力し、**OK**をクリックします。
+プロジェクトパネルでMainクラスが位置するパスをマウスの右ボタンでクリックした後、**New > Package**を選択して**node**という名前の新しいパッケージを作成します。そしてnodeパッケージを再度マウスの右ボタンでクリックした後、**New > GameAnvil GameNode**を選択します。ファイル生成ダイアログが開いたら、**File name**に**SyncGameNode**、**Service name**に**Sync**を入力した後、**OK**をクリックします。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/13_select_game_node_file_template.png)
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/14_create_sync_game_node.png)
 
-この機能は先にテンプレートをインストールする時、File templates(schemes)を一緒に適用したため、使うことができます。**New > BaseGameNode**の項目が見えない場合、**New > Java Class** を選択して空のクラスを作成します。
+この機能は、先ほどテンプレートをインストールした際にFile templates(schemes)を一緒に適用したため使用できます。**New > GameAnvil GameNode**項目が見えない場合は、**New > Java Class**を選択して空のクラスを作成します。
 
 自動的に作成されたコードは次のとおりです。
 
@@ -185,101 +188,64 @@ GameAnvilは`Base-`という接頭辞をつけた複数のノードクラスを�
 package com.tutorial.gameanvil.node;
 
 import com.nhn.gameanvil.game.GameAnvilGameNode;
-import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.annotation.ServiceName;
-import com.nhn.gameanvil.node.game.BaseGameNode;
-import com.nhn.gameanvil.node.game.data.BaseChannelRoomInfo;
-import com.nhn.gameanvil.node.game.data.BaseChannelUserInfo;
-import com.nhn.gameanvil.node.game.data.ChannelUpdateType;
-import com.nhn.gameanvil.packet.Payload;
-import com.nhn.gameanvil.packet.message.MessageDispatcher;
+import com.nhn.gameanvil.node.game.ChannelUpdateType;
+import com.nhn.gameanvil.node.game.IGameNode;
+import com.nhn.gameanvil.node.game.context.IGameNodeContext;
+import com.nhn.gameanvil.node.game.data.IChannelRoomInfo;
+import com.nhn.gameanvil.node.game.data.IChannelUserInfo;
+import com.nhn.gameanvil.packet.IPayload;
 
-@ServiceName("Sync")
-public final class SyncGameNode extends BaseGameNode {
+@GameAnvilGameNode(gameServiceName = "Sync")
+public class SyncGameNode implements IGameNode {
+    private IGameNodeContext gameNodeContext;
 
-    private static final MessageDispatcher<SyncGameNode> messageDispatcher = new MessageDispatcher<>();
-
-    static {
-        // messageDispatcher.registerMsg();
+    @Override
+    public void onCreate(IGameNodeContext gameNodeContext) {
+        this.gameNodeContext = gameNodeContext;
     }
 
     @Override
-    public MessageDispatcher<SyncGameNode> getMessageDispatcher() {
-        return messageDispatcher;
-    }
-
-    @Override
-    public void onInit() throws SuspendExecution {
+    public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, IChannelUserInfo channelUserInfo, int userId, String accountId) {
 
     }
 
     @Override
-    public void onPrepare() throws SuspendExecution {
+    public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, IChannelRoomInfo channelRoomInfo, int userId) {
 
     }
 
     @Override
-    public void onReady() throws SuspendExecution {
+    public void onChannelInfo(IPayload payload) {
 
     }
 
     @Override
-    public void onPause(Payload payload) throws SuspendExecution {
+    public void onInit() {
 
     }
 
     @Override
-    public void onResume(Payload payload) throws SuspendExecution {
+    public void onPrepare() {
 
     }
 
     @Override
-    public void onShutdown() throws SuspendExecution {
+    public void onReady() {
 
     }
 
     @Override
-    public boolean onNonStopPatchSrcStart() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean onNonStopPatchSrcEnd() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean canNonStopPatchSrcEnd() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean onNonStopPatchDstStart() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean onNonStopPatchDstEnd() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public boolean canNonStopPatchDstEnd() throws SuspendExecution {
-        return false;
-    }
-
-    @Override
-    public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelUserInfo baseChannelUserInfo, int userId, String accountId) throws SuspendExecution {
+    public void onPause(IPayload payload) {
 
     }
 
     @Override
-    public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, BaseChannelRoomInfo baseChannelRoomInfo, int userId) throws SuspendExecution {
+    public void onShuttingdown() {
 
     }
 
     @Override
-    public void onChannelInfo(Payload outPayload) throws SuspendExecution {
+    public void onResume(IPayload payload) {
 
     }
 }
@@ -288,855 +254,799 @@ public final class SyncGameNode extends BaseGameNode {
 
 ### ノードについて
 
-全てのノードは何かの処理を開始できるループが開始されたかどうかによって状態を持ちます。以下はノードが持つことができる状態の一部です。
+全てのノードは、何か処理を開始できるループが始まったかどうかに応じて状態を持ちます。以下はノードが持ちうる状態の一部です。
 
-* INIT
-* PREPARE
-* READY
-* SHUTDOWN
+- INIT
+- PREPARE
+- READY
+- SHUTDOWN
 
-ノードはINIT状態から始まり、記載されている順に状態を変えながらREADY状態に到達します。READY状態は、ノードが与えられたタスクを処理して実行できる状態であることを示します。
+ノードはINIT状態から始まり、記載された順序で状態を変えながらREADY状態に到達します。READY状態は、ノードが与えられた作業を処理し実行できる状態であることを示します。
 
-自動作成されたコードには、各ノードの状態にフックされたコールバックをオーバーライドするコードが含まれています。例えば、onInit()メソッドに特定のロジックを記述すると、ノードが初期化(Init)を開始する直前の段階でそのコールバックが挿入され、呼び出されます。
+自動生成されたコードには、各ノードの状態にフックされたコールバックをオーバーライドするコードが含まれています。例えば、onInit()メソッドに特定のロジックを作成すると、ノードが初期化(Init)を開始する直前の段階で該当コールバックが挿入され呼び出されます。
 
-GameAnvilはほとんどのコードがあらかじめ用意されているため、この段階で追加で作成するコードはありません。作成したままゲームノードを使うことができます。
+GameAnvilは大部分のコードがあらかじめ用意されているため、この段階でさらに作成するコードはありません。生成されたそのままゲームノードを使用すればよいです。
 
 ### ユーザータイプについて
 
-各ゲームノードでルームに参加してパケットを送受信する主体がユーザーですが、各ユーザー実装を区別する約束された文字列です。
+各ゲームノードでルームに参加してパケットをやり取りする主体がユーザーですが、各ユーザー実装を区別する約束された文字列です。
 
-GameAnvilで提供されるルームベースの実装を使用するためには、上記で実装したノードの他に**ゲームユーザー**と**ゲームルーム**クラスが必要です。クラスの継承とアノテーションを付けるだけで簡単に実装する方法を説明します。
+GameAnvilで提供されるルームベースの実装を使用するには、上記で実装したノード以外に**ゲームユーザー**と**ゲームルーム**クラスが必要です。インターフェースの実装だけで簡単に実装する方法を説明します。
 
 ### ゲームユーザーの実装
 
-クライアントがサーバーにログインすると、サーバーはそのクライアントの情報を**ゲームユーザー**というオブジェクトを作成してメモリに保存します。ゲームユーザーがどのような情報を表現するかは、ユーザーのニーズに応じて自由に実装できます。ゲームユーザーの実装も、クラスの継承とコールバックのオーバーライドを通じて一貫して実装できます。
+クライアントがサーバーにログインすると、サーバーでは該当クライアント情報を**ゲームユーザー**というオブジェクトとして作成し、メモリに保存して維持します。ゲームユーザーがどのような情報を表現するかは、ユーザーが必要に応じて自由に実装可能です。ゲームユーザーの実装も、クラスの継承とコールバックのオーバーライドを通じて一貫性を持って実装できます。
 
-プロジェクトパネルでMainクラスが位置するパスを右クリックした後、**New > Package**を選択して**user**という名前の新しいパッケージを作成します。そして、**user**パッケージをもう一度右クリックした後、**New > BaseUser**を選択します。ファイル作成ダイアログが開いたら、**File name**に**SyncGameUser**、**Service Name**に**Sync**、**UserType**に**USER_TYPE_SYNC**を入力し、**OK**をクリックします。
-
-ユーザータイプは、各ユーザーの実装を区別するサーバーとクライアントの間で約束された文字列であり、以後、クライアントプロジェクトの実装時にユーザータイプを使用しなければならないので、覚えておいてください。
+プロジェクトパネルでMainクラスが位置するパスをマウスの右ボタンでクリックした後、**New > Package**を選択して**user**という名前の新しいパッケージを作成します。そして**user**パッケージを再度マウスの右ボタンでクリックした後、**New > GameAnvil User**を選択します。ファイル生成ダイアログが開いたら、**File name**に**SyncGameUser**、**Service name**に**Sync**、**User type**に**USER_TYPE_SYNC**を入力した後、**OK**をクリックします。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/15_create_sync_game_user.png)
 
-自動的に作成されたコードは次のとおりです。
+自動的に生成されたコードは次のとおりです。
 
 ```java
+package com.tutorial.gameanvil.user;
 
 import com.nhn.gameanvil.game.GameAnvilUser;
-import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.annotation.ServiceName;
-import com.nhn.gameanvil.annotation.UserType;
-import com.nhn.gameanvil.node.game.BaseUser;
+import com.nhn.gameanvil.node.game.IUser;
+import com.nhn.gameanvil.node.game.context.IUserContext;
+import com.nhn.gameanvil.node.game.data.MatchCancelReason;
+import com.nhn.gameanvil.node.game.data.MatchRoomFailCode;
+import com.nhn.gameanvil.node.game.data.MatchUserFailCode;
 import com.nhn.gameanvil.node.game.data.RoomMatchResult;
-import com.nhn.gameanvil.packet.Payload;
-import com.nhn.gameanvil.packet.message.MessageDispatcher;
-import com.nhn.gameanvil.serializer.TransferPack;
+import com.nhn.gameanvil.packet.IPayload;
+import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
+import com.nhn.gameanvil.serializer.ITransferPack;
 
 @GameAnvilUser(
         gameServiceName = "Sync",
         gameType = "USER_TYPE_SYNC",
         useChannelInfo = false
 )
+public class SyncGameUser implements IUser {
+    private IUserContext userContext;
 
-@ServiceName("Sync")
-@UserType("USER_TYPE_SYNC")
-public final class SyncGameUser extends BaseUser {
-
-    private static final MessageDispatcher<SyncGameUser> messageDispatcher = new MessageDispatcher<>();
-
-    static {
-        // messageDispatcher.registerMsg();
+    @Override
+    public void onCreate(IUserContext userContext) {
+        this.userContext = userContext;
     }
 
     @Override
-    public MessageDispatcher<SyncGameUser> getMessageDispatcher() {
-        return messageDispatcher;
-    }
-
-    @Override
-    public boolean onLogin(Payload payload, Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
     @Override
-    public void onPostLogin() throws SuspendExecution {
+    public void onAfterLogin(boolean isRelogined) {
 
     }
 
     @Override
-    public boolean onLoginByOtherDevice(String newDeviceId, Payload outPayloadForKickUser) throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public boolean onLoginByOtherUserType(String userType, Payload outPayload) throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public void onLoginByOtherConnection(Payload outPayload) throws SuspendExecution {
-
-    }
-
-    @Override
-    public boolean onReLogin(Payload payload, final Payload sessionPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onReLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
     @Override
-    public void onDisconnect() throws SuspendExecution {
-    }
-
-
-    @Override
-    public void onPause() throws SuspendExecution {
+    public void onDisconnect() {
 
     }
 
     @Override
-    public void onResume() throws SuspendExecution {
+    public void onPause() {
 
     }
 
     @Override
-    public void onLogout(Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onResume() {
 
     }
 
     @Override
-    public boolean canLogout() throws SuspendExecution {
-        boolean canLogout = true;
-        return canLogout;
-    }
-
-    @Override
-    public void onPostLeaveRoom() throws SuspendExecution {
+    public void onLogout(IPayload payload, IPayload outPayload) {
 
     }
 
     @Override
-    public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, Payload payload) throws SuspendExecution {
-        return null;
+    public boolean canLogout() {
+        return true;
     }
 
     @Override
-    public boolean onMatchUser(String roomType, String matchingGroup, Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onAfterLeaveRoom() {
+
+    }
+
+    @Override
+    public boolean canTransfer() {
+        return true;
+    }
+
+    @Override
+    public boolean onLoginByOtherDevice(String s, IPayload payload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public boolean onLoginByOtherUserType(String s, IPayload payload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public void onLoginByOtherConnection(IPayload payload) {
+
+    }
+
+    @Override
+    public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, IPayload payload) {
+        return RoomMatchResult.FAILED;
+    }
+
+    @Override
+    public void onMatchRoomFail(MatchRoomFailCode matchRoomFailCode) {
+
+    }
+
+    @Override
+    public void onMatchUserFail(MatchUserFailCode matchUserFailCode) {
+
+    }
+
+    @Override
+    public boolean onMatchUser(String roomType, String matchingGroup, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public void onMatchUserCancel(MatchCancelReason matchCancelReason) {
+
+    }
+
+    @Override
+    public void onTransferOut(ITransferPack transferPack) {
+
+    }
+
+    @Override
+    public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+
+    }
+
+    @Override
+    public void onAfterTransferIn() {
+
+    }
+
+    @Override
+    public void onSnapshot(IPayload payload, IPayload outPayload) {
+
+    }
+
+    @Override
+    public boolean canMoveOutChannel(String channelId, IPayload payload, IPayload outPayload) {
         return false;
     }
 
     @Override
-    public boolean canTransfer() throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
+    public void onMoveOutChannel(String channelId, IPayload payload) {
 
     }
 
     @Override
-    public void onTransferIn(TransferPack transferPack) throws SuspendExecution {
+    public void onAfterMoveOutChannel() {
 
     }
 
     @Override
-    public void onPostTransferIn() throws SuspendExecution {
-
-    }
-
-    @Override
-    public boolean onCheckMoveOutChannel(String destinationChannelId, Payload payload, Payload errorPayload) throws SuspendExecution {
-        boolean canMoveOut = false;
-        return canMoveOut;
-    }
-
-    @Override
-    public void onMoveOutChannel(String destinationChannelId, Payload outPayload) throws SuspendExecution {
-    }
-
-    @Override
-    public void onPostMoveOutChannel() throws SuspendExecution {
-    }
-
-    @Override
-    public void onMoveInChannel(String sourceChannelId, Payload payload, Payload outPayload) throws SuspendExecution {
-    }
-
-    @Override
-    public void onPostMoveInChannel() throws SuspendExecution {
+    public void onMoveInChannel(String channelId, IPayload payload, IPayload outPayload) {
 
     }
 }
 
+
 ```
 
-ゲームユーザーはクライアントがサーバーへログインリクエストを行うことで作成されます。サーバーでは、クライアントから送信されたペイロードなどを通じてログインを許可するかどうかを判断し、戻り値としてエクスポートできます。主なロジックのみエンジンユーザーが作成し、ログインの成功や失敗の処理はエンジンが担当します。
+ゲームユーザーはクライアントがサーバーにログインリクエストを行うことで生成されます。サーバーではクライアントから送信されたペイロードなどを通じてログイン許可の可否を決定し、戻り値として返すことができます。主要ロジックのみエンジンユーザーが作成し、ログインの成功や失敗処理はエンジンが担当します。
 
-このチュートリアルでは、特別な検証プロセスなしでログインを許可するために、onLogin関数で常にtrueを返すようにしました。このようにすると、クライアントからログイン要求があった時、常にユーザーオブジェクトを作成して成功レスポンスを与えることになります。
+このチュートリアルでは特別な検証過程なしにログインを許可するため、onLogin関数で常にtrueを返すようにしました。このようにすると、クライアントからログインリクエストがあった際に常にユーザーオブジェクトを生成し、成功レスポンスを返すことになります。
 
 ### ゲームルームの実装
 
-正常にゲームユーザーとしてゲームノードに接続したら、他のユーザーとゲームルームを通じてパケットを送受信できます。ゲームルームとはパケットを送受信するユーザーを論理的に束ねるグループです。ゲームルームの実装もクラス継承とコールバックのオーバーライドで実装できます。
+正常にゲームユーザーとしてゲームノードに接続すると、他のユーザーとゲームルームを通じてパケットをやり取りできるようになります。ゲームルームとは、パケットをやり取りするユーザーを論理的にまとめたグループです。ゲームルームもインターフェースの実装を通じて生成できます。
 
-プロジェクトパネルでMainクラスが位置するパスを右クリックし、**New** > Package**を選択し、**room**という名前の新しいパッケージを作成します。そして、**room**パッケージをもう一度右クリックし、**New** > BaseRoom**を選択します。ファイル作成ダイアログが開いたら、**File name**に**SyncGameRoom**、**Service Name**に**Sync**、**Room Type**に**ROOM_TYPE_SYNC**、**User Class**に**SyncGameUser**を入力し、**OK**をクリックします。
-
-ルームタイプは、各ルームの実装を区別するサーバーとクライアントの間で約束された文字列で、以後、クライアントプロジェクトの実装時にルームタイプを入力する必要があるので、覚えておいてください。
+プロジェクトパネルでMainクラスが位置するパスをマウスの右ボタンでクリックした後、**New > Package**を選択して**room**という名前の新しいパッケージを作成します。そして**room**パッケージを再度マウスの右ボタンでクリックした後、**New > GameAnvil Room**を選択します。ファイル生成ダイアログが開いたら、**File name**に**SyncGameRoom**、**Service name**に**Sync**、**Room type**に**ROOM_TYPE_SYNC**、**User**に**SyncGameUser**を入力した後、**OK**をクリックします。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/16_create_sync_game_room.png)
 
-自動的に作成されたコードは次のとおりです。
+自動的に生成されたコードは次のとおりです。
 
 ```java
+package com.tutorial.gameanvil.room;
 
 import com.nhn.gameanvil.game.GameAnvilRoom;
-import co.paralleluniverse.fibers.SuspendExecution;
-import com.nhn.gameanvil.annotation.RoomType;
-import com.nhn.gameanvil.annotation.ServiceName;
-import com.nhn.gameanvil.node.game.BaseRoom;
-import com.nhn.gameanvil.node.game.RoomMessageDispatcher;
-import com.nhn.gameanvil.packet.Payload;
-import com.nhn.gameanvil.serializer.TransferPack;
+import com.nhn.gameanvil.node.game.IRoom;
+import com.nhn.gameanvil.node.game.context.IRoomContext;
+import com.nhn.gameanvil.node.game.data.MatchCancelReason;
+import com.nhn.gameanvil.packet.IPayload;
+import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
+import com.nhn.gameanvil.serializer.ITransferPack;
+import com.tutorial.gameanvil.user.SyncGameUser;
 
 import java.util.List;
 
-@ServiceName("Sync")
-@RoomType("ROOM_TYPE_SYNC")
-public final class SyncGameRoom extends BaseRoom<SyncGameUser> {
+@GameAnvilRoom(
+        gameServiceName = "Sync",
+        gameType = "ROOM_TYPE_SYNC",
+        useChannelInfo = false
+)
+public class SynGameRoom implements IRoom<SyncGameUser> {
+    private IRoomContext roomContext;
 
-    private static final RoomMessageDispatcher<SyncGameRoom, SyncGameUser> messageDispatcher = new RoomMessageDispatcher<>();
-
-    static {
-        // messageDispatcher.registerMsg();
+    @Override
+    public void onCreate(IRoomContext<SyncGameUser> roomContext) {
+        this.roomContext = roomContext;
     }
 
     @Override
-    public RoomMessageDispatcher<SyncGameRoom, SyncGameUser> getMessageDispatcher() {
-        return messageDispatcher;
+    public void onInit() {
+
     }
 
     @Override
-    public void onInit() throws SuspendExecution {
+    public void onDestroy() {
+
     }
 
     @Override
-    public void onDestroy() throws SuspendExecution {
+    public boolean onCreateRoom(SyncGameUser user, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
     }
 
     @Override
-    public boolean onCreateRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public boolean onJoinRoom(SyncGameUser user, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public boolean canLeaveRoom(SyncGameUser user, IPayload payload, IPayload outPayload) {
         return true;
     }
 
     @Override
-    public boolean onJoinRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
+    public void onLeaveRoom(SyncGameUser user) {
+
+    }
+
+    @Override
+    public void onAfterLeaveRoom() {
+
+    }
+
+    @Override
+    public void onRejoinRoom(SyncGameUser user, IPayload payload) {
+
+    }
+
+    @Override
+    public void onTransferOut(ITransferPack transferPack) {
+
+    }
+
+    @Override
+    public void onTransferIn(List<SyncGameUser> list, ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+
+    }
+
+    @Override
+    public void onAfterTransferIn() {
+
+    }
+
+    @Override
+    public void onPause() {
+
+    }
+
+    @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public boolean onMatchParty(String roomType, String matchingGroup, SyncGameUser user, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    @Override
+    public void onMatchPartyCancel(MatchCancelReason matchCancelReason) {
+
+    }
+
+    @Override
+    public void onForceMatchRoomUnregistered(MatchCancelReason matchCancelReason) {
+
+    }
+
+    @Override
+    public boolean canTransfer() {
         return true;
-    }
-
-    @Override
-    public boolean onLeaveRoom(SyncGameUser user, Payload inPayload, Payload outPayload) throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public void onLeaveRoom(SyncGameUser sampleUser) throws SuspendExecution {
-
-    }
-
-    @Override
-    public void onPostLeaveRoom() throws SuspendExecution {
-
-    }
-
-    @Override
-    public void onRejoinRoom(SyncGameUser user, Payload outPayload) throws SuspendExecution {
-
-    }
-
-    @Override
-    public boolean canTransfer() throws SuspendExecution {
-        return true;
-    }
-
-    @Override
-    public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
-
-    }
-
-    @Override
-    public void onTransferIn(List<SyncGameUser> userList, TransferPack transferPack) throws SuspendExecution {
-    }
-
-    @Override
-    public void onPause() throws SuspendExecution {
-
-    }
-
-    @Override
-    public void onResume() throws SuspendExecution {
-
     }
 }
+
 ```
 
-ゲームルームはゲームユーザーがサーバーにルームの作成をリクエストすると作成されます。クライアント側では単純にメソッドを呼び出すだけでルームを作成し、存在するルームに入室することができます。ユーザーがルームに入室する時点またはルームが作成される時点でカスタムコードを挿入したい場合は、適切なコールバックをオーバーライドして簡単にコードを挿入できます。
+ゲームルームはゲームユーザーがサーバーにルーム生成リクエストを行うと生成されます。クライアント側では簡単にメソッド呼び出しだけでルームを生成し、存在するルームに入室できます。ユーザーがルームに入室する時点、またはルームが生成される時点にカスタムコードを挿入したい場合は、適切なコールバックをオーバーライドして簡単にコードを組み込むことができます。
 
-## サーバーの実装を終えて
+## サーバー実装の仕上げ
 
-ここまでで基礎チュートリアルのサンプル実行のためのサーバー構築が完了しました。再度サーバーを実行してみると、ログの中に`{"message":"All nodes are ready!!"}`という文言が表示されます。このログが出たということは、GameAnvilサーバーが正常に実行されたことを意味します。
+ここまで、基礎チュートリアルサンプル実行のためのサーバー構築が完了しました。再度サーバーを実行してみると、ログの中に`All nodes are ready!!`という文言を確認できます。このログが表示されたということは、GameAnvilサーバーが正常に実行されたことを意味します。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/all_nodes_are_ready.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/17_all_nodes_are_ready.png)
 
-これでクライアントのリクエストを受けるサーバーの準備ができました。次の段階ではGameAnvilコネクタとUnityサンプルプロジェクトを活用してクライアントを実装してみます。
+これでクライアントのリクエストを受け付けるサーバーが準備できました。次の段階ではGameAnvilコネクタとUnityサンプルプロジェクトを活用してクライアントを実装してみます。
 
 ## 実習環境の準備 - クライアントプロジェクト
 
-下記の段階を進めながら修正が完了する最終的なクライアントサンプルプロジェクトは下記のリンクからダウンロードできます。Unityパッケージをダウンロードして構成した初期Unityプロジェクトで様々な段階を経てクライアント機能を実装した後、最終的にどのような構造になるのか事前に確認したい場合は、該当プロジェクトをダウンロードして参考にしてください。
-
-[最終クライアントサンプルプロジェクトのダウンロード](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/BasicSyncTutorial.zip?disposition=attachment)
-
 ### GameAnvilConnectorのダウンロード
 
-GameAnvilコネクタdllを使うため下記のファイルをダウンロードします。
+GameAnvilコネクタdll使用のために以下のファイルをダウンロードします。
 
-[GameAnvil-Connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector.unitypackage)
+[gameanvil_connector_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
 
-### Unity Packageをダウンロード
+### Unity Packageのダウンロード
 
-GameAnvilコネクタの使用実習のため、下記のリンクからUnityパッケージをダウンロードします。
+GameAnvilコネクタ使用実習のために以下のリンクからUnityパッケージをダウンロードします。
 
-[GameAnvil-Tutorial-Sample.unitypackage](https://static.toastoven.net/prod_gameanvil/files/tutorial/basic-tutorial/GameAnvil-Tutorial-Sapmple.unitypackage)
+[gameanvil_tutorial_basic.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil_tutorial_basic.unitypackage)
 
 ### Unityプロジェクトの作成
 
-Unityハブを実行した後、右上のNew Projectボタンをクリックします。Unityハブのバージョンは関係ありません。
+Unity Hubを実行した後、右上のNew Projectボタンをクリックします。Unity Hubのバージョンは問いません。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/unity-hub.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/18_unity_hub.png)
 
-テンプレートとして**2D**を選択し、プロジェクト名と保存場所を確認した後、**Create project**をクリックします。この例で使用したUnityのバージョンは2020.3.37f1であり、他のバージョンを使用しても構いませんが、すべての場合をテストしたわけではないので、サンプル実行バージョンと同じ環境で進めることを推奨します。
+テンプレートとして**2D**を選択し、プロジェクト名と保存場所を確認した後、**Create project**をクリックします。この例で使用したUnityバージョンは2022.3.21f1であり、実習時に他のバージョンを使用しても問題ありませんが、全てのケースをテストしたわけではないため、サンプル実行バージョンと同じ環境で進めることを推奨します。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new-unity-project.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/19_new_unity_project.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/new-unity-project-done.png)
+<br>
 
-### GameAnvilConnector及びUnity Packageインポート
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/20_new_unity_project_done.png)
 
-プロジェクトビューを右クリックし、**Import Package > Custom Package...** を選択し、ファインダーやファイルエクスプローラーが開いたら、前段階でダウンロードしたUnityパッケージを選択します。GameAnvilConnector、Tutorial-Sampleの順にImportを実行します。
+### GameAnvilConnector及びUnity Packageのインポート
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/import-unity-package-connector.png)
+プロジェクトビューをマウスの右ボタンでクリックし、**Import Package > Custom Package...**を選択した後、Finderまたはファイルエクスプローラーが開いたら、前の段階でダウンロードしたUnityパッケージを選択します。gameanvil_connector、gameanvil_tutorial_basicの順にImportを実行します。
 
-GameAnvilSampleフォルダ内のSceneフォルダでIntroSceneを開いて下記のような画面を確認します。
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/21_import_unity_package_gameanvil_connector.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/unity-after-import-package.png)
+GameAnvilSampleフォルダ内のSceneフォルダからIntroSceneを開き、以下のような画面を確認します。
 
-**File > Build Settings**で**Add Open Scene**をクリックしてビルド時に含まれるように設定します。
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/22_unity_after_import_package.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/intro_scene_to_build_settings.png)
+もし次のようにCinemachine、InputSystem関連のパッケージエラーが発生する場合は、**Window > Package Manager**を選択してPackage Managerウィンドウを開いた後、**Packages: Unity Registry**を選択し、**Cinemachine**と**InputSystem**を検索してインストールします。
 
-## GameAnvilConnectorの追加
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/23_package_error.png)
 
-Hierarchyビューで右クリックし、**GameAnvil > GameAnvilConnector**をクリックします。GameAnvilConnectorゲームオブジェクトが作成され、GameAnvilConnectorゲームオブジェクトのインスペクタ上で下記のように設定を修正できます。
+<br>
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/add-gameanvilconnector-done.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/24_add_cinemachine_package.png)
 
-* QuickConnect:クイック接続の進行状況を表示します。
-* GameAnvil Connector Configuration:コネクタ関連の設定郡です。
-* Connect Configuration:クイック接続の接続情報を修正できます。
-* Authentication Configuration:クイック接続の認証情報を修正できます。
-* Login Configuration:クイック接続のログイン情報を修正できます。
-* LogListener: GameAnvilコネクタ内部で発生するログ出力を管理します。
+<br>
 
-今は詳細設定について詳しく知らなくても大丈夫です。チュートリアルを進めながら各項目の説明を確認できます。
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/25_add_inputsystem_package.png)
 
-## クイック接続
+Canvasに追加されたUI Managerを通じて、例で使用されたUnity UIコンポーネントを確認できます。
 
-GameAnvilクライアントがGameAnvilサーバーに接続するためには、Connect、Authentication、Loginの3つのステップを経る必要があります。
+**File > Build Settings**で**Add Open Scene**をクリックし、ビルド時に含まれるように設定します。
 
-* Connect:サーバーとクライアント間で通信できるようにソケットを作成して接続します。
-* Auth:クライアントがサーバーを介してデータを送受信することを許可するかどうかをサーバーで決定します。
-* Login:サーバーのメモリにクライアントの情報を表現するオブジェクト、つまり、ゲームユーザーを作成します。
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/26_intro_scene_to_build_settings.png)
 
-各ステップは順番に行われ、前のステップが正常に完了しないと次のステップを進めることができません。各ステップの処理の成否は、コールバックで渡されたパラメータで値を取得できます。
+## GameAnvilManager
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/connect-auth-login.gif)
+Hierarchyビューでマウスの右ボタンをクリックし、**GameAnvil > GameAnvilManager**をクリックします。GameAnvilManagerゲームオブジェクトが生成され、GameAnvilManagerゲームオブジェクトのインスペクター上で以下のように設定を修正できます。
 
-ここでは、Hierarchyビュー上のCanvasゲームオブジェクトにコンポーネントとして追加されているQuickConnectUIManagerスクリプトをソースコードエディタで開き、実装を追加しながら各過程を直接実習します。
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/27_gameanvil_manager.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/quickconnect_ui_manager.png)
+- Connect Configuration: 接続情報を修正できます。
+- Authentication Configuration: 認証情報を修正できます。
+- Login Configuration: ログイン情報を修正できます。
+- Pause Client Check : クライアントの接続状態を定期的に確認する時間間隔を調整できます。
 
-### Connect関連フィールドの設定
+今は詳細設定について詳しく知らなくても大丈夫です。チュートリアルを進めながら、各項目に関する説明を確認できます。
 
-接続するサーバー情報を記載します。ローカルで直接サーバーを立ち上げる場合なので、ipは`127.0.0.0.1`を使用します。 portはゲートウェイノードのデフォルトポートである`18200`を使用します。特に設定する必要はなく、GameAnvilConnectorのデフォルト値をそのまま使用します。ipとport情報は必要に応じてプレイモードで修正できるようにUnityのInputFieldと接続するコードが作成されていることが確認できます。
+## サーバーとクライアントの接続
+
+GameAnvilクライアントがGameAnvilサーバーに接続するためには、Connect、Authentication、Loginの3段階を経る必要があります。
+
+- Connect: サーバーとクライアント間で通信できるようにソケットを生成して接続します。
+- Auth: クライアントがサーバーを通じてデータを送受信できるように許可するかどうかをサーバーで決定します。
+- Login: サーバーのメモリにクライアントの情報を表現するオブジェクト,すなわちゲームユーザーを生成します。
+
+各段階は順次進行し、前の段階が正常に完了しなければ次の段階へ進むことができません。
+
+コネクタのGameAnvilManagerが提供するLogin APIを使用すると、Connect、Authentication、Loginの過程を一度に統合して処理できます。
+
+ここではHierarchyビュー上のTesterゲームオブジェクトにコンポーネントとして追加されているGameAnvilManagerTesterスクリプトをソースコードエディタで開き、実装を追加しながら各過程を直接実習します。
+
+### Connect関連フィールド設定
+
+接続するサーバー情報を記載します。ローカルでサーバーを直接立ち上げる場合なので、ipは`127.0.0.1`を使用します。portはゲートウェイノードのデフォルトポートである`18200`を使用します。ipとport情報は、プレイモードで修正できるようにUnityのInputFieldと接続するコードが作成されていることを確認できます。
 
 ```c#
-void Start()
+public string managerIp
 {
-    ipInputField.text = GameAnvilConnector.getInstance().ip;
-    portInputField.text = GameAnvilConnector.getInstance().port.ToString();
-
-    ...省略...
-
-    ipInputField.onValueChanged.AddListener(delegate { ipChanged(); });
-    portInputField.onValueChanged.AddListener(delegate { portChanged(); });
+    get => UI.managerIpInputField.text;
+    set => UI.managerIpInputField.text = value;
 }
 
-void ipChanged()
+public int managerPort
 {
-    GameAnvilConnector.getInstance().ip = ipInputField.text;
-}
-
-void portChanged()
-{
-    if (!int.TryParse(portInputField.text, out GameAnvilConnector.getInstance().port))
-    {
-        GameAnvilConnector.getInstance().port = 11200;
-    }
+    get => int.Parse(UI.managerPortInputField.text);
+    set => UI.managerPortInputField.text = value.ToString();
 }
 ```
 
 ### Authentication関連フィールド設定
 
-認証に必要な情報を記載します。認証に必要な情報はaccountId、deviceId、passwordの3つがあります。今は認証段階を無条件に通過するようにサーバーが実装されている状態なので、どの値を設定しても動作に異常がないはずです。 GameAnvilConnectorの基本値である`test`を使うようにし、必要な場合は、プレイモードでUnityのInputFieldを使って入力された値を使えるようにコードが作成されていることが確認できます。
+認証に必要な情報を記載します。認証に必要な情報としては、accountId、deviceId、passwordの3つがあります。今は認証段階を無条件で通過するようにサーバー実装がされている状態なので、どのような値に設定しても動作に異常はないでしょう。プレイモードでUnityのInputFieldを通じて入力された値を使用できるように、コードが作成されていることを確認できます。
+
+```c#
+public string managerAccountId
+{
+    get => UI.managerAccountIdInputField.text;
+    set => UI.managerAccountIdInputField.text = value;
+}
+
+public string managerPassword
+{
+    get => UI.managerPasswordInputField.text;
+    set => UI.managerPasswordInputField.text = value;
+}
+
+public string managerDeviceId
+{
+    get => UI.managerDeviceIdInputField.text;
+    set => UI.managerDeviceIdInputField.text = value;
+}
+```
+
+### Login関連フィールド設定
+
+ログインに必要な情報を記載します。ログインに必要な情報としては、ユーザータイプ、チャンネルID、そしてサービス名があります。サーバー実装時に作成したユーザータイプとサービス名を使用する必要があります。プレイモードでUnityのInputFieldを通じて値を修正できるように設定されています。
+
+```c#
+public string managerServiceName
+{
+    get => UI.managerServiceNameInputField.text;
+    set => UI.managerServiceNameInputField.text = value;
+}
+
+public string managerUserType
+{
+    get => UI.managerUserTypeInputField.text;
+    set => UI.managerUserTypeInputField.text = value;
+}
+
+public string managerChannelId
+{
+    get => UI.managerChannelIdInputField.text;
+    set => UI.managerChannelIdInputField.text = string.IsNullOrEmpty(value) ? "" : value;
+}
+```
+
+### フィールド自動入力設定
+
+プレイモードで毎回入力値を入力する手間を省くために、ConstantManagerで使用する値をあらかじめ入力しておくことができます。例で使用した入力値は以下のとおりです。
+
+```c#
+public class ConstantManager : MonoBehaviour
+{
+    private GameAnvilConnectorTester connectorTester;
+    private GameAnvilManagerTester managerTester;
+
+    public static string ip = "127.0.0.1";
+    public static int port = 18200;
+    [Space]
+    public static string accountId = "test";
+    public static string password = "test";
+    public static string deviceId = "test";
+    [Space]
+    public static string serviceName = "Sync";
+    [Space]
+    public static string userType = "USER_TYPE_SYNC";
+    public static string channelId = "";
+    [Space]
+    public static string roomType = "ROOM_TYPE_SYNC";
+
+    ...(省略)...
+}
+```
+
+### Unity UI設定
 
 ```c#
 void Start()
 {
-    ...省略...
-    
-    accountIdInputField.text = GameAnvilConnector.getInstance().accountId;
-    deviceIdInputField.text = GameAnvilConnector.getInstance().deviceId;
-    passwordInputField.text = GameAnvilConnector.getInstance().password;
+    UI = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
 
-    ...省略...
+    gameAnvilManager = GameAnvilManager.Instance;
+    gameAnvilManager.onStateChange.AddListener(OnManagerStateChanged);
 
-    accountIdInputField.onValueChanged.AddListener(delegate { accountIdChanged(); });
-    deviceIdInputField.onValueChanged.AddListener(delegate { deviceIdChanged(); });
-    passwordInputField.onValueChanged.AddListener(delegate { passwordChanged(); });
+    UI.managerLoginButton.onClick.AddListener(ManagerLogin);
+    UI.managerLogoutButton.onClick.AddListener(ManagerLogout);
+    UI.managerCreateRoomButton.onClick.AddListener(ManagerCreateRoom);
+    UI.managerJoinRoomButton.onClick.AddListener(ManagerJoinRoom);
+    UI.managerLeaveRoomButton.onClick.AddListener(ManagerLeaveRoom);
 
-    ...省略...
+    ...(省略)...
 }
 
-void accountIdChanged()
-{
-    GameAnvilConnector.getInstance().accountId = accountIdInputField.text;
-}
-
-void deviceIdChanged()
-{
-    GameAnvilConnector.getInstance().deviceId = deviceIdInputField.text;
-}
-
-void passwordChanged()
-{
-    GameAnvilConnector.getInstance().password = passwordInputField.text;
-}
-```
-
-### Login関連フィールドの設定
-
-ログインに必要な情報を入力します。ログインに必要な情報としては、ユーザータイプ、チャネルID、そしてサービス名があります。サーバーを実装する時に作成したユーザータイプとサービス名を使う必要があります。基本的に実行される時、サーバーで指定した値を適用するように作成します。必要な場合、UnityのInputFieldを使って値を修正できるように設定されています。
-
-```c#
-void Start()
-{
-    ...省略...
-
-    userTypeInputField.text = GameAnvilConnector.getInstance().userType;
-    channelIdInputField.text = GameAnvilConnector.getInstance().channelId;
-    serviceNameInputField.text = GameAnvilConnector.getInstance().serviceName;
-
-    ...省略...
-
-    userTypeInputField.onValueChanged.AddListener(delegate { userTypeChanged(); });
-    channelIdInputField.onValueChanged.AddListener(delegate { channelIdChanged(); });
-    serviceNameInputField.onValueChanged.AddListener(delegate { serviceNameChanged(); });
-
-    ...省略...
-}
-
-void userTypeChanged()
-{
-    GameAnvilConnector.getInstance().userType = userTypeInputField.text;
-}
-
-void channelIdChanged()
-{
-    GameAnvilConnector.getInstance().channelId = channelIdInputField.text;
-}
-
-void serviceNameChanged()
-{
-    GameAnvilConnector.getInstance().serviceName = serviceNameInputField.text;
-}
-```
-
-### クイック接続リクエストAPI呼び出し
-
-クイック接続リクエストはGameAnvilConnectorを使って下記のようにリクエストできます。
-
-```c#
-GameAnvilConnector.getInstance().QuickConnect(DelOnQuickConnect);
-```
-
-クイック接続が終わったら、リクエスト時に渡したデリゲートを通じて結果を知ることができます。
-
-```c#
-void DelOnQuickConnect(GameAnvilConnector.ResultCodeQuickConnect resultCode, UserAgent userAgent, GameAnvilConnector.QuickConnectResult quickConnectResult)
-{
-    Debug.Log(resultCode);
-}
-```
-
-ボタンをクリックしてクイック接続をリクエストできるように、QuickConnectメソッドを下記のように実装します。例題では基本的に内容が書かれているので、コメント処理だけ解除します。
-
-```c#
-public void QuickConnect()
-{
-    GameAnvilConnector.getInstance().QuickConnect(DelOnQuickConnect);
-    state = UIState.QUICK_CONNECTING;
-}
-```
-
-クイック接続が終わったら、UIの状態を切り替えるため下記のようにDelOnQuickConnectメソッドを修正します。例題では基本的に内容が作成されているので、コメント処理だけ解除します。
-
-```c#
-void DelOnQuickConnect(GameAnvilConnector.ResultCodeQuickConnect resultCode, UserAgent userAgent, GameAnvilConnector.QuickConnectResult quickConnectResult)
-{
-    if (quickConnectResult.resultCodeQuickConnect.Equals(GameAnvilConnector.ResultCodeQuickConnect.QUICK_CONNECT_SUCCESS))
-    {
-        state = UIState.QUICK_CONNECT_COMPLETE;
-    }
-    else
-    {
-        state = UIState.QUICK_CONNECT_FAIL;
-    }
-}
-```
-
-### クイック接続終了APIの呼び出し
-
-クイック接続の終了も接続リクエストAPIと同じように下記のようにリクエストできます。
-
-```c#
-GameAnvilConnector.getInstance().QuickDisconnect();
-```
-
-ボタンを押してクイック接続終了APIを呼び出せるようにQuickDisconnectメソッドを下記のように実装します。例では基本的に内容が書かれているので、コメント処理だけ解除します。
-
-```c#
-public void QuickDisconnect()
-{
-    GameAnvilConnector.getInstance().QuickDisconnect();
-    state = UIState.NOT_QUICK_CONNECTED;
-}
-```
-
-### クイック接続の進行状況を出力
-
-クイック接続の進行状況は下記のように読み込むことができます。
-
-```c#
-GameAnvilConnector.getInstance().GetQuickConnectState().ToString();
-```
-
-クイックコネクトの進行状況が常に分かるように画面に表示するコードが下記のようにUpdate関数に書かれています。
-
-```c#
 void Update()
 {
-    quickConnectResultText.text = GameAnvilConnector.getInstance().GetQuickConnectState().ToString();
+    UI.managerLoginState.Set(gameAnvilManager.State == GameAnvilManager.LoginState.LOGIN_COMPLETE);
+    UI.managerJoinedRoomState.Set(gameAnvilManager.UserController != null && gameAnvilManager.UserController.IsJoinedRoom);
 }
-```
 
-### クイック接続に使用する値をGameAnvilConnectorに直接入力
-
-サーバーの実装段階で使ったサービス名やユーザータイプの文字列値をクライアントでも同じように使う必要があります。
-GameAnvilConnectorのインスペクタウィンドウでLogin Configurationに下記のようにUser TypeとService Nameをサーバーと同じ値に設定します。
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/gameanvil-login-configuration.png)
-
-### クイック接続リクエスト/接続終了テスト
-
-サーバーが実行中であることを確認した後、Unityエディタでプレイモードに入ります。**Quick Connect** をクリックし、正常に接続が行われることを確認します。
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/quick-connect.gif)
-
-クイック接続を試行すると、クイック接続ステータスウィンドウに下記のような順番でConnect, Authenticate, Loginのプロセスが行われます。
-
-* NOT_CONNECTED
-* CONNECT_IN_PROGRESS
-* CONNECT_COMPLETE
-* AUTHENTICATE_IN_PROGRESS
-* AUTHENTICATE_COMPLETE
-* LOGIN_IN_PROGRESS
-* LOGIN_COMPLETE
-* READY 
-
-接続が完了したら、READYの状態となります。この状態で接続終了ボタンを押して、正常に接続が終了することを確認します。
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/quick-disconnect.gif)
-
-## ゲームルームの作成と入室
-
-### ゲームルーム作成リクエストAPIを使用
-
-GameAnvilコネクタのルーム作成要求APIを呼び出すことで、クライアントは簡単にサーバーにゲームルームの作成をリクエストできます。ゲームルーム作成リクエストメソッドを呼び出す時、パラメータでルームタイプを渡さなければなりませんが、サーバーと事前に合意したルームタイム値を渡せばいいです。
-
-```c#
-GameAnvilConnector.getInstance().getUserAgent().CreateRoom("ROOM_TYPE_SYNC", DelOnCreateRoom);
-```
-
-ルーム作成リクエストの結果は、一緒に渡したデリゲートを通じて受け取ることができます。作成されたゲームルーム情報(ルームID、ルーム名など)も一緒に受け取ることができます。
-
-```c#
-public void DelOnCreateRoom(UserAgent userAgent, ResultCodeCreateRoom result, int roomId, string roomName, Payload payload) {
-    Debug.Log(result);
-}
-```
-
-ボタンをクリックしてルームの作成を要求するため、CreateRoomメソッドを下記のように実装します。ドロップダウンで選択したルームタイプを使えるように設定しました。例では基本的に内容が作成されているので、コメント処理だけ解除します。
-
-```c#
-public void CreateRoom()
-{ 
-    GameAnvilConnector.getInstance().getUserAgent().CreateRoom(roomTypeDropdown.options[roomTypeDropdown.value].text, DelOnCreateRoom);
-}
-```
-
-ルーム作成リクエスト結果を受け取る関数も下記のように修正してUIの状態を切り替えることができるようにします。作成されたゲームルームのIDを画面に表示するように設定します。例では基本的に内容が作成されているので、コメント処理だけ解除します。
-
-```c#
-public void DelOnCreateRoom(UserAgent userAgent, ResultCodeCreateRoom result, int roomId, string roomName, Payload payload) {
-    Debug.Log(result);
-    if (result.Equals(GameAnvil.Defines.ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)){
-        state = UIState.JOIN_ROOM_COMPLETE;
-        RoomIdText.text =  roomId.ToString();
-    }
-    else
-    {
-        state = UIState.JOIN_ROOM_FAIL;
-    }
-}
-```
-
-ゲームルーム作成機能の実装が終わりました。テストは少し後回しにして、ゲームルーム入室機能を先に実装します。
-
-### ゲームルーム入室リクエストAPIを使う
-
-サーバーにゲームルームが作成されたとします。そのルームに接続するためには、GameAnvilコネクタでゲームルーム入室リクエストメソッドを呼び出します。この時、ルーム作成時に渡されたゲームルームIDを渡します。
-
-```c#
-GameAnvilConnector.getInstance().getUserAgent().JoinRoom("ROOM_TYPE_SYNC", {ルームID入力});
-```
-
-現在ルームにユーザーが入室しているかどうかは下記のようにIsJoinedRoom()メソッドで確認します。
-
-```c#
-GameAnvilConnector.getInstance().getUserAgent().IsJoinedRoom()
-```
-
-ボタンクリックでJoinRoomリクエストができるように、既存のJoinRoomメソッドに下記のように実装を追加します。ルームIDは入力フィールドに入力された値を使うようにしました。例題では基本的に内容が書かれているので、コメント処理だけ解除します。
-
-```c#
-public void JoinRoom()
+public void OnManagerStateChanged(GameAnvilManager.LoginState oldState, GameAnvilManager.LoginState newState)
 {
-    int roomId = 0;
-    int.TryParse(joinRoomIdInputField.text, out roomId);
-    GameAnvilConnector.getInstance().getUserAgent().JoinRoom(roomTypeDropdown.options[roomTypeDropdown.value].text, roomId);
+    UI.consoleInputField.text += newState.ToString() + '\n';
 }
 ```
 
-これでゲームルームの作成機能と入室機能が全て完成しました。
+### ログインAPI呼び出し
 
-### ゲームルームのテスト
+Connect、Authentication、Loginの過程が統合されたGameAnvilManagerのLogin APIは、次のように使用します。result値を通じて呼び出し結果を確認できます。
 
-Unityエディタでショートカットキー`CMD + b`または`Ctrl + b`を押してビルドします。ビルド結果が表示されたウィンドウでボタンをクリックしてゲームルームが作成されたことを確認します。ゲームルームが作成されると画面にゲームルームのIDが表示されます。
+```c#
+public async void ManagerLogin()
+{
+    gameAnvilManager.ip = managerIp;
+    gameAnvilManager.port = managerPort;
+    gameAnvilManager.accountId = managerAccountId;
+    gameAnvilManager.deviceId = managerDeviceId;
+    gameAnvilManager.password = managerPassword;
+    gameAnvilManager.userType = managerUserType;
+    gameAnvilManager.channelId = managerChannelId;
+    gameAnvilManager.serviceName = managerServiceName;
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/create-room.gif)
+    try
+    {
+        var result = await gameAnvilManager.Login(null);
+        UI.managerResultCodeInputField.text = result.loginResultCode.ToString();
+        UI.managerExceptionInputField.text = null;
+        if (result.loginResultCode != GameAnvilManager.LoginResultCode.SUCCESS)
+            UI.consoleInputField.text += result.loginResultCode.ToString() + '\n';
+        UI.consoleInputField.text += result.loginResultCode.ToString() + '\n';
+    }
+    catch (Exception e)
+    {
+        UI.managerResultCodeInputField.text = null;
+        UI.managerExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
+    }
+}
+```
 
-その後、Unityエディタでプレイモードに入ります。以前に表示されたゲームルームのIDを入力フィールドに入力し、**Join Room**をクリックしてゲームルームに参加するか確認します。
+### ログアウトAPI呼び出し
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/join-room.gif)
+```c#
+public async void ManagerLogout()
+{
+    await gameAnvilManager.Logout();
+}
+```
+
+### サーバー接続及びログインテスト
+
+サーバーが実行中か確認した後、Unityエディタでプレイモードに入ります。**Login**をクリックして、正常にサーバー接続及びログインが進行することを確認します。
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/28_login_success.png)
+
+ログインが完了すると、上部の状態表示ウィンドウに緑色のランプ表示と共にLOGIN状態で表示されます。この状態で**Logout**ボタンを押し、正常にログアウトされるか確認します。
+
+ログアウトが完了すると、上部の状態表示ウィンドウに赤色のランプ表示と共にLOGOUT状態で表示されます。
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/29_logout_success.png)
+
+## ゲームルーム生成及び入室
+
+### ルーム生成及び入室関連フィールド設定
+
+```c#
+public string managerRoomType
+{
+    get => UI.managerRoomTypeInputField.text;
+    set => UI.managerRoomTypeInputField.text = value;
+}
+
+public int managerRoomId
+{
+    get => int.Parse(UI.managerRoomIdInputField.text);
+    set => UI.managerRoomIdInputField.text = value.ToString();
+}
+```
+
+### ゲームルーム生成リクエストAPI使用
+
+GameAnvilコネクタのルーム生成リクエストAPIを呼び出して、クライアントは簡単にサーバーへゲームルーム生成をリクエストできます。ゲームルーム生成リクエストメソッドを呼び出す際、パラメータとしてルームタイプを渡す必要がありますが、サーバーと事前に合意したルームタイプ値を渡せば問題ありません。
+
+```c#
+public async void ManagerCreateRoom()
+{
+    try
+    {
+        var result = await gameAnvilManager.UserController.CreateRoom(string.Empty, managerRoomType, ConstantManager.channelId);
+        UI.managerRoomResultInputField.text = result.ErrorCode.ToString();
+        UI.managerRoomIdResultInputField.text = result.Data.RoomId.ToString();
+        UI.managerRoomExceptionInputField.text = null;
+        UI.consoleInputField.text += result.ErrorCode.ToString() + '\n';
+        UI.consoleInputField.text += "Room Id : " + result.Data.RoomId + '\n';
+    }
+    catch(Exception e)
+    {
+        UI.managerRoomResultInputField.text = null;
+        UI.managerRoomIdResultInputField.text = null;
+        UI.managerRoomExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
+    }
+}
+```
+
+ゲームルーム生成機能の実装が終わりました。テストは少し後回しにして、ゲームルーム入室機能を先に実装します。
+
+### ゲームルーム入室リクエストAPI使用
+
+サーバーにゲームルームが生成されたと仮定しましょう。該当ルームに接続するためには、GameAnvilコネクタでゲームルーム入室リクエストメソッドを呼び出せばよいです。このとき、ルーム生成時に受け取ったゲームルームIDを渡します。プレイモードでUnityのInputFieldを通じて、入室するルームIDを入力します。
+
+```c#
+public async void ManagerJoinRoom()
+{
+    try
+    {
+        var result = await gameAnvilManager.UserController.JoinRoom(managerRoomType, managerRoomId, string.Empty);
+        UI.managerRoomResultInputField.text = result.ErrorCode.ToString();
+        UI.managerRoomIdResultInputField.text = result.Data.RoomId.ToString();
+        UI.managerRoomExceptionInputField.text = null;
+        UI.consoleInputField.text += result.ErrorCode.ToString() + '\n';
+        UI.consoleInputField.text += "Room Id : " + result.Data.RoomId + '\n';
+    }
+    catch (Exception e)
+    {
+        UI.managerRoomResultInputField.text = null;
+        UI.managerRoomIdResultInputField.text = null;
+        UI.managerRoomExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
+    }
+}
+```
+
+これでゲームルーム生成機能と入室機能が全て完成しました。
+
+### ゲームルームテスト
+
+Unityエディタでショートカットキー`CMD + b`または`Ctrl + b`を押してビルドします。ビルド結果として出たウィンドウでボタンをクリックし、ゲームルームが生成されることを確認します。ゲームルームが生成されると、画面にゲームルームのIDが表示されます。
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/30_create_room_success.png)
+
+その後、Unityエディタでプレイモードに入ります。必要な場合、画面を1080 X 1920に設定します。以前に表示されたゲームルームのIDを入力フィールドに入力し、**Join Room**をクリックしてゲームルームに参加できるか確認します。
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/31_join_room_success.png)
 
 ## 同期コントローラー入門
 
-これで、同じゲームルームに接続したゲームユーザー間では、パケットを送受信できます。このパケットを通して必要な情報をクライアントプロセス間で同期するようにコードを書くことができます。もっと簡単な方法としては、同期したいゲームオブジェクトに同期コンポーネントを付けるだけで同期を実装できます。
+これで同じゲームルームに接続したゲームユーザー間では、パケットをやり取りできます。このパケットを通じて、必要な情報をクライアントプロセス間で同期するようにコードを作成できます。より簡単な方法としては、同期したいゲームオブジェクトに同期コンポーネントをアタッチするだけでも同期を実装できます。
 
-### 同期コントローラーの追加
+### 同期コントローラー
 
-Hierarchyビューで右クリックし、**GameAnvil > SyncController**を選択します。
+Hierarchyビュー上でSyncControllerゲームオブジェクトを探し、次のようにSyncControllerがコンポーネントとして追加されていることを確認します。
 
-この例ではシーン移動が行われるため、シーン移動後に手動で同期オブジェクトを作成するため、SyncControllerオブジェクトのインスペクタ上でInstantiate Sync Object Immediatlyのチェックを外します。
+[写真]
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/add-syn-controller-done.png)
+もし該当ゲームオブジェクトが存在しない場合は、Hierarchyビューで右クリックし、**GameAnvil > SyncController**を選択して追加します。
 
-これでGameAnvilの全ての同期機能を使うことができます。次は、一番単純な例題を使って同期コンポーネントの取り付けや使い方を説明します。
+これでGameAnvilの全ての同期機能を利用できます。次は最も単純な例を通じて、同期コンポーネントのアタッチ及び使用方法を確認してみます。
 
-### 同期オブジェクトの作成
+### 同期オブジェクト
 
-プロジェクトビューでResourcesフォルダ内に移動した後、Anvilプレハブをダブルクリックしてプレハブの修正画面に切り替えます。インスペクタウィンドウで、AddComponentボタンをクリックし、`GameAnvil > GameAnvil Sync > TransformSync`をクリックします。これで、このプレハブはゲームユーザー間でゲームオブジェクトのTransform情報を同期する準備が整いました。
+プロジェクトビューでResourcesフォルダ内部へ移動した後、Characterプレハブをダブルクリックしてプレハブ修正画面へ切り替えます。インスペクターウィンドウでSync、TransformSync、RigidBody2DSync、AnimatorSyncコンポーネントが追加されていることを確認します。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/anvil-add-sync-component-done.png)
+該当コンポーネントは、GameAnvilコネクタが提供する同期機能のためのコンポーネントです。コンポーネントの追加だけで、該当プレハブはゲームユーザー間でゲームオブジェクトのTransform、Rigidbody2D、Animation情報を同期する準備が完了したことになります。
 
-完成した同期ゲームオブジェクトプレハブをUnityプレイモードで使用するには、SyncControllerが提供するゲームオブジェクト作成APIを使用してゲームオブジェクトを作成し、シーンに追加します。最初の引数としてプレハブの名前を渡す必要があります。
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/32_character_sync_prefab.png)
 
-注意点は、GameAnvilが提供する同期コンポーネントを付けた同期ゲームオブジェクトは、Unityが基本的に提供するGameObject.Instantiate()メソッドではなく、GameAnvilが提供するSyncControllerのInstantiate APIを使用しなければ、正常な同期ができません。
+完成した同期ゲームオブジェクトプレハブをUnityプレイモードで使用するには、SyncControllerが提供するゲームオブジェクト生成APIを通じてゲームオブジェクトを生成し、シーンに追加すればよいです。第1引数としてプレハブ名を渡す必要があります。
 
-```c#
-SyncController.Instance.Instantiate("Anvil", new Vector3(0, 0, 0), Quaternion.identity);
-```
+注意すべき点は、GameAnvilが提供する同期コンポーネントを付けた同期ゲームオブジェクトは、Unityが基本提供するGameObject.Instantiate()メソッドではなく、GameAnvilが提供するSyncControllerのInstantiate APIを使用しないと、正常な同期が行われないということです。
 
-### ゲームシーンの作成
-
-具体的な使用例を見るために、プロジェクトの**View > GameAnvilSample > Scene**フォルダでSpawnAnvilシーンを開きます。そして、** File > Build Settings**メニューで**Add Open Scene**をクリックして、ビルド時に含まれるように設定します。
-
-SpawnAnvilSampleゲームオブジェクトに割り当てられているコンポーネントのSpawnAnvilSampleスクリプトを修正して実装を追加します。例では基本的に内容が作成されているので、コメント処理だけ解除します。
+ルームに入室した後、同期ゲームオブジェクトを生成するようにコードを作成します。
 
 ```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-namespace GameAnvil
+public async void ManagerCreateRoom()
 {
-    public class SpawnAnvilSample : MonoBehaviour
+    try
     {
-        void Start()
+        var result = await gameAnvilManager.UserController.CreateRoom(string.Empty, managerRoomType, ConstantManager.channelId);
+        UI.managerRoomResultInputField.text = result.ErrorCode.ToString();
+        UI.managerRoomIdResultInputField.text = result.Data.RoomId.ToString();
+        UI.managerRoomExceptionInputField.text = null;
+        UI.consoleInputField.text += result.ErrorCode.ToString() + '\n';
+        UI.consoleInputField.text += "Room Id : " + result.Data.RoomId + '\n';
+
+        // コード追加
+        if (result.ErrorCode == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)
         {
-            SyncController.Instance.InstantiateSyncObject();
-        }
-
-        void Update()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector3 mousePos = Input.mousePosition;
-                mousePos.z = Camera.main.nearClipPlane;
-                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
-
-                SyncController.Instance.Instantiate("Anvil", worldPosition, Quaternion.identity);
-            }
-
-            if (GameAnvilConnector.getInstance() == null || GameAnvilConnector.getInstance().getUserAgent() == null || !GameAnvilConnector.getInstance().getUserAgent().IsJoinedRoom())
-            {
-                SceneManager.LoadScene("IntroScene");
-            }
+            OnEnterRoom();
         }
     }
-
+    catch(Exception e)
+    {
+        UI.managerRoomResultInputField.text = null;
+        UI.managerRoomIdResultInputField.text = null;
+        UI.managerRoomExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
+    }
 }
 ```
 
-Start関数では、シーン移動直後に同期を開始するためにInstantiateSyncObject()を実行します。
-
-Update関数では、クリックするたびにマウスの座標を取得し、前段階で修正したプレハブを作成するようにしました。接続が切れた場合に備えて再接続できるようにするため、元のシーンに移動するようにしました。
-
-### 同期テスト
-
-Unityエディタで`CMD + b`または`Ctrl + b`ショートカットを押してビルドします。ビルド結果ウィンドウでゲームルームを作成し、Spawn Anvilボタンを押してIntroSceneからSpawnAnvil Sceneにシーンを移動します。
-
-その後、Unityエディタでプレイモードに入ります。ビルド結果と同じゲームルームに接続した後、Spawn Anvilボタンを押してIntroSceneからSpawnAnvil Sceneにシーンを移動します。その後、画面の任意の場所をクリックして新しい同期ゲームオブジェクトを作成します。一方のクライアントでゲームオブジェクトを作成すると、同じルームに入った他のクライアントの画面にも同じように表示されることを確認します。
-
-<video src="https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/synchronize-create-done.mov" controls="controls" autoplay style="max-width: 640px;
-  display: block;
-  margin: auto;">
-</video>
-
-## 同期コントローラーの深化
-
-前段階では、オブジェクト作成の同期を確認しました。ここでは、より複雑な例であるゲームオブジェクトのRigidbodyの同期について説明します。前の例を実装したときと同じ手順で実装を完了します。
-
-### 同期オブジェクトの作成
-
-プロジェクトビューでResourcesフォルダ内に移動し、Playerプレハブをダブルクリックしてプレハブの修正画面に切り替えます。インスペクタウィンドウで**AddComponent**をクリックした後、**GameAnvil > GameAnvil Sync > TransformSync**をクリックします。該当プレハブのゲームユーザー間でゲームオブジェクトのTransform情報を同期する準備が完了します。
-
-プロジェクトビューで**Resources > Player**をダブルクリックしてプレハブの修正画面に切り替えます。インスペクタウィンドウで**AddComponent**をクリックし、**GameAnvil > GameAnvil Sync > RigidBodySync**をクリックします。該当プレハブのゲームユーザー間でゲームオブジェクトのRigidbody情報を同期する準備が完了します。
-
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/add-rigidbody-sync-done.png)
-
-### ゲームシーンの作成
-
-プロジェクトビューでGameAnvilSampleフォルダ内のSceneフォルダからKeyboardToMoveシーンを開きます。そして、**File > Build Settings**メニューから**Add Open Scene** をクリックして、ビルド時に含まれるように設定します。
-
-KeyboardToMoveSampleゲームオブジェクトに割り当てられているコンポーネントのKeyboardToMoveSampleスクリプトを修正して実装を追加します。例では基本的に内容が作成されているので、コメント処理だけ解除します。
-
 ```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Animations;
-using GameAnvil;
-using UnityEngine.SceneManagement;
-
-public class KeyboardToMoveSample : MonoBehaviour
+public async void ManagerJoinRoom()
 {
-    private static KeyboardToMove player;
-    private float moveForce = 10;
-    public Transform playerPointer;
-
-    // Start is called before the first frame update
-    void Start()
+    try
     {
-        SyncController.Instance.InstantiateSyncObject();
-    }
+        var result = await gameAnvilManager.UserController.JoinRoom(managerRoomType, managerRoomId, string.Empty);
+        UI.managerRoomResultInputField.text = result.ErrorCode.ToString();
+        UI.managerRoomIdResultInputField.text = result.Data.RoomId.ToString();
+        UI.managerRoomExceptionInputField.text = null;
+        UI.consoleInputField.text += result.ErrorCode.ToString() + '\n';
+        UI.consoleInputField.text += "Room Id : " + result.Data.RoomId + '\n';
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (GameAnvilConnector.getInstance() == null || GameAnvilConnector.getInstance().getUserAgent() == null || !GameAnvilConnector.getInstance().getUserAgent().IsJoinedRoom())
+        // コード追加
+        if (result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
         {
-            SceneManager.LoadScene("IntroScene");
-        }
-
-        if (player != null)
-        {
-            playerPointer.position = player.transform.position;
-            player.GetComponent<Rigidbody>().AddForce(Vector3.right * Input.GetAxis("Horizontal") * moveForce, ForceMode.Force);
-            player.GetComponent<Rigidbody>().AddForce(Vector3.up * Input.GetAxis("Vertical") * moveForce, ForceMode.Force);
+            OnEnterRoom();
         }
     }
-
-    public static void SpawnPlayer()
+    catch (Exception e)
     {
-        Vector3 mousePos = Input.mousePosition;
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
-        worldPosition.z = 0;
-
-        player = SyncController.Instance.Instantiate("player", worldPosition, Quaternion.identity).GetComponent<KeyboardToMove>();
-    }
-
-    public static void SetSelected(KeyboardToMove selected)
-    {
-        if ( player == selected)
-        {
-            player = null;
-            GameObject.Destroy(selected.gameObject);
-        }
-        else
-        {
-            player = selected;
-        }
+        UI.managerRoomResultInputField.text = null;
+        UI.managerRoomIdResultInputField.text = null;
+        UI.managerRoomExceptionInputField.text = e.ToString();
+        UI.consoleInputField.text += e.ToString() + '\n';
     }
 }
 ```
-Start関数では、シーン移動直後に同期を開始するためにInstantiateSyncObject()を実行します。
 
-SpawnPlayer関数は呼び出されるたびにマウスの位置に新しいPlayerオブジェクトを作成します。
-
-Update関数はルームの入室とログインが維持されていることを確認し、最後に作成したオブジェクトをキーボードで操作できるようにします。キー入力によって剛体にAddForce()関数を実行して位置を更新するように誘導します。
+```c#
+private void OnEnterRoom()
+{
+    Debug.Log("User enter the room.");
+    SyncController.Instance.InstantiateSyncObject();
+    SyncController.Instance.Instantiate("Character", Vector3.zero, Quaternion.identity);
+}
+```
 
 ### 同期テスト
 
-Unityエディタでショートカットキー`CMD + b`または`Ctrl + b`を押してビルドします。ビルド結果ウィンドウでゲームルームを作成し、**KeyboardToMove**をクリックしてIntroSceneからKeyboardToMove Sceneに移動します。
+Unityエディタで`CMD + b`または`Ctrl + b`ショートカットキーを押してビルドします。ビルド結果として出たウィンドウでログイン後、ゲームルームを生成し、**Toggle Hide**ボタンを押して同期ゲームオブジェクトをテストする画面が見えるようにします。
 
-その後、Unityエディタでプレイモードに入ります。ビルド結果と同じゲームルームに接続し、**KeyboardToMove**をクリックしてIntroSceneからKeyboardToMove Sceneに移動します。その後、画面の任意の場所をクリックして新しい同期ゲームオブジェクトを作成し、キーボードでゲームオブジェクトの位置を移動すると、他のクライアントでも反映されることを確認します。
+その後、Unityエディタでプレイモードに入ります。ビルド結果として出たウィンドウと同じゲームルームに接続した後、**Toggle Hide**ボタンを押して同期ゲームオブジェクトのテスト画面が見えるようにします。
 
-<video src="https://static.toastoven.net/prod_gameanvil/images/tutorial/basic-tutorial/synchronize-rigidbody-done.mov" controls="controls" autoplay style="max-width: 640px;
-  display: block;
-  margin: auto;">
-</video>
+このとき、別々のユーザーとして識別されるために、ログイン時すでに使用したaccountIdとは異なるaccountIdを使用する必要があります。
 
-## チュートリアルの終わりに
+ルームに入室しつつ、片方のクライアントでゲームオブジェクトを生成すると、同じルームに入室したもう片方のクライアントの画面にも同様に現れることを確認します。
 
-この文書では、GameAnvilコネクタの便利な機能である簡易接続と同期機能について実習を通じて学びました。チュートリアルの冒頭で紹介したように、GameAnvilにはゲームサーバーの構築に必要なすべての機能が用意されており、チュートリアルではその一部だけを軽く取り上げました。次の文書でより詳しい使い方を学ぶことができます。
+キーボードのW、S、A、Dキーまたは上下左右キーを入力してゲームオブジェクトを移動させてみます。ゲームオブジェクトが移動し、その過程でアニメーションが変化することを確認します。同じルームに入室した他のクライアント画面でも同様に現れることを確認します。
+
+これでGameAnvilが提供する同期機能を通じ、ゲームオブジェクト生成の同期及びTransform、Rigidbody、Animationの同期を体験しました。
+
+![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/33_sync_test.gif)
+
+## チュートリアルの仕上げ
+
+このドキュメントでは、GameAnvilコネクタの便利機能である接続、認証、ログイン過程を統合した簡易ログイン機能と同期機能について、実習を通じて学びました。チュートリアルの冒頭で紹介したように、GameAnvilにはゲームサーバー制作に必要な全ての機能が用意されており、チュートリアルではその一部のみ軽く扱いました。続くドキュメントで、より詳細な使用方法を学ぶことができます。

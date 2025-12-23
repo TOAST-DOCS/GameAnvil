@@ -1,8 +1,8 @@
-## Game > GameAnvil > Unity基礎開発ガイド > Simple Login
+## Game > GameAnvil > Unity 基礎開発ガイド > 簡易ログイン
 
 ## 簡単ログイン
 
-GameAnvilManagerで提供される簡単ログイン機能は、GameAnvilサーバーへの接続、認証、ログインの手続きを一度に処理できるようにします。接続、認証、ログインの手続きに関する詳細は、[Unity詳細開発ガイド > ConnectionAgent](../unity-advanced/unity-advanced-02-connection.md)またはサーバー開発ガイドを参照してください。
+GameAnvilManagerが提供する簡易ログイン機能は、GameAnvilサーバーへの接続、認証、ログインの手続きを一度に処理できるようにします。接続、認証、ログインの手続きに関するより詳細な内容は、[Unity 応用開発ガイド > コネクタ](../unity-advanced/unity-advanced-02-connection.md)またはサーバー開発ガイドを参照してください。
 
 ### 簡単ログインの設定
 
@@ -73,7 +73,7 @@ public async void ManagerLogin()
         var authenticatePayload = new Payload(new Protocol.AuthenticateData());
         var loginPayload = new Payload(new Protocol.LoginData());
         var result = await gameAnvilManager.Login(authenticatePayload, loginPayload);
-        if (result.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
+        if (retult.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
             // 成功
         } else {
             // 失敗
@@ -103,37 +103,51 @@ public async void ManagerLogin()
 | AUTH_FAIL_INVALID_ACCOUNT_ID | 認証失敗。不正なAccountIdです。 | 空文字列など |
 | AUTH_FAIL_SYSTEM_ERROR | 認証失敗。サーバーの不明なエラーにより失敗しました。 | |
 | AUTH_FAIL_TIMEOUT | 認証失敗。リクエストに対するレスポンスが指定時間内にありませんでした。 | |
-| AUTH_FAIL_PARSE_ERROR | 認証失敗。追加情報のためのメッセージパースに失敗しました。 | サーバーとクライアントのプロトコル定義が異なる場合に発生することがあります。 |
+| AUTH_FAIL_PARSE_ERROR              | 認証失敗。追加情報のためのメッセージ解析失敗。                    | サーバーとクライアントのプロトコル定義が異なる場合に発生する可能性がある。                           |
 | LOGIN_FAIL_CONTENT | ログイン失敗。ユーザーコードでログインが拒否されました。 | |
-| LOGIN_FAIL_NOT_EXIST_NODE | ログイン失敗。ログイン対象のノードが存在しません。 | サーバー構成時に対象ノードを含むサーバーを起動しない場合に発生することがあります。 |
-| LOGIN_FAIL_INVALID_SERVICEID | ログイン失敗。ログイン対象のサービスが存在しません。 | リクエスト時にサービス名を誤って入力したり、サーバー設定のサービス名設定が誤っている場合に発生することがあります。 |
+| LOGIN_FAIL_NOT_EXIST_NODE          | ログイン失敗。ログイン対象ノードが存在しない。                    | サーバー構成時に対象ノードを含むサーバーを起動していない場合に発生する可能性がある。                      |
 | LOGIN_FAIL_INVALID_SERVICE_NAME | ログイン失敗。ログイン対象のサービスが存在しません。 | リクエスト時にサービス名を誤って入力したり、サーバー設定のサービス名設定が誤っている場合に発生することがあります。 |
-| LOGIN_FAIL_TIMEOUT_GAME_SERVER | ログイン失敗。リクエストに対するレスポンスが指定時間内にありませんでした。 | |
-| LOGIN_FAIL_INVALID_USERTYPE | ログイン失敗。ログイン対象のUserTypeが存在しません。 | リクエスト時にUserTypeを誤って入力したり、サーバーに実装されていない場合に発生することがあります。 |
-| LOGIN_FAIL_INVALID_USERID | ログイン失敗。サーバーの不明な理由によりUserIdの作成に失敗しました。 | |
-| LOGIN_FAIL_INVALID_CHANNEL_ID | ログイン失敗。ログイン対象のチャネルが存在しません。 | リクエスト時にChannelIdを誤って入力したり、サーバー設定にChannelIdがない場合に発生することがあります。 |
+| LOGIN_FAIL_TIMEOUT_GAME_SERVER     | ログイン失敗。リクエストに対するレスポンスが指定された時間内に来ない。             |                                                              |
+| LOGIN_FAIL_INVALID_USER_TYPE       | ログイン失敗。ログイン対象UserTypeが存在しない。              | リクエスト時にUserTypeを誤って入力したか、サーバーに実装されていない場合に発生する可能性がある。           |
+| LOGIN_FAIL_INVALID_USER_ID         | ログイン失敗。サーバーの不明な理由でUserId生成失敗。             |                                                              |
+| LOGIN_FAIL_INVALID_CHANNEL_ID      | ログイン失敗。ログイン対象チャンネルが存在しない。                    | リクエスト時にChannelIdを誤って入力したか、サーバー設定にChannelIdがない場合に発生する可能性がある。 |
 | LOGIN_FAIL_INVALID_SUB_ID | ログイン失敗。不正なSubIdです。 | |
-| LOGIN_FAIL_LOGINED_OTHER_SERVICE | ログイン失敗。同じAccountIdで既に他のサービスにログインしています。 | サーバー構成時に重複ログインを許可しない場合に発生します。 |
+| LOGIN_FAIL_LOGINED_OTHER_SERVICE   | ログイン失敗。同じAccountIdですでに他のサービスにログインされている。     | サーバー構成時に重複ログインを許可しない場合に発生。                       |
 | LOGIN_FAIL_LOGINED_OTHER_CHANNEL | ログイン失敗。同じAccountIdで他のチャネルにログインしています。 | |
 | LOGIN_FAIL_LOGINED_OTHER_USER_TYPE | ログイン失敗。同じAccountId、異なるUserTypeでログインしています。 | サーバーの実装時に、既存のユーザーと新しくログインしたユーザーのどちらかを選択できます。 |
 | LOGIN_FAIL_LOGINED_OTHER_DEVICE | ログイン失敗。同じAccountIdで他のデバイスからログインしています。 | サーバーの実装時に、既存のユーザーと新しくログインしたユーザーのどちらかを選択できます。 |
 | LOGIN_FAIL_SYSTEM_ERROR | ログイン失敗。サーバーの不明なエラーにより失敗しました。 | |
 | LOGIN_FAIL_PARSE_ERROR | ログイン失敗。追加情報のためのメッセージパースに失敗しました。 | |
-| LOGIN_FAIL_TIMEOUT | ログイン失敗。リクエストに対するレスポンスが指定時間内にありませんでした。 | |
-| UNKNOWN_ERROR | サーバーの不明なエラーにより失敗しました。 | |
+| LOGIN_FAIL_TIMEOUT               | ログイン失敗。リクエストに対するレスポンスが指定された時間内に来ない。             |                                                              |
+| UNKNOWN_ERROR                    | サーバーの不明なエラーにより失敗。                             |                                                              |
 
-より詳細な失敗理由を確認したい場合は、LoginResultのauthenticationResultやloginResultを利用して確認できます。
+より詳細な失敗理由は、LoginResultのauthenticationResultやloginResultを利用して確認できます。
 
 ## Disconnect
 
-GameAnvilManagerのLogout()関数を利用して、サーバーとの接続を解除できます。
+GameAnvilManagerのLogout()メソッドを利用してサーバーとの接続を解除できます。
 
-Logout()を呼び出すと、ログアウト、サーバー接続終了、接続解除後の処理コールバック呼び出しまでを一度に処理できます。
+Logout()呼び出し時、ログアウト、サーバー接続終了、接続解除後に処理するコールバック呼び出しの過程を一度に処理できます。サーバーの実装によっては、ログアウト過程で追加情報が必要になる場合があります。このような場合にはlogoutPayloadで追加情報を伝達できます。
 
 ```c#
 public async void ManagerLogout()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    await gameAnvilManager.Logout();
+    var logoutPayload = new Payload(new Protocol.LogoutData());
+    await gameAnvilManager.Logout(logoutPayload);
 }
 ```
+
+## 状態変更通知
+
+Logout()を呼び出さなくても、ネットワークに問題があったり、サーバーから強制的にログアウトさせられるなど、GameAnvilManagerの状態が変更される可能性があり、これに対する通知を受け取ることができます。 
+```c#
+public void addStateChangeListener()
+{
+    gameAnvilManager.onStateChange.AddListener((GameAnvilManager.LoginState oldState, GameAnvilManager.LoginState newState) =>
+    {
+        // 状態変更通知
+    });
+}
+```
+oldStateで変更前の状態を、newStateで変更後の状態を知ることができます。  

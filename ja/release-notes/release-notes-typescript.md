@@ -31,6 +31,71 @@
 
 ---
 
+### 2.0.0 (2024.12.05)
+
+#### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-2.0.0.zip)
+
+#### GameAnvil 2.0.0以上
+
+#### New
+
+* async awaitを使用した新規コネクタがリリースされました。
+* 今後、完了時に処理する関数を登録せず、戻り値で完了を確認します。
+* GameAnvil接続 + 認証コードは次のとおりです。
+
+```typescript
+const deviceId, accountId, password;
+
+connector.host = "127.0.0.1";
+connector.port = 18300;
+
+const authResult = await connector.connectAndAuthenticateion(deviceId, accountId, password);
+console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
+```
+
+#### Remove
+
+###### ConnectionAgent削除
+* ConnectionAgentはGameAnvilConnectorと区分が曖昧でした。
+* 今後、GameAnvilConnectorで既存のConnectionAgentの動作を含みます。
+* この変更に合わせて他のクラスの名前も変更されました。
+    * UserAgentはGameAnvilUserに名前が変更されました。
+    * ProtocolManagerはGameAnvilProtocolManagerに名前が変更されました。
+
+###### Connector.Update削除
+* 今後、Connector内部で自動的に動作します。
+
+###### リクエストのレスポンスを受け取る目的のデリゲート削除
+* 今後、リクエストのレスポンスは戻り値として受け取ります。
+* サーバーからリクエストなしに受信する種類のメッセージは、従来通りデリゲートを使用します。
+    * SetMessageCallbackメソッド
+
+#### Change
+
+###### UserAgentのインスタンス直接管理
+* 以下の例のように、UserAgentのインスタンスを直接生成して使用するように変更されました。
+* UserAgent.Dispose時に自動的にログアウトしないため注意してください。UserAgent.Disposeは内部で管理するオブジェクトのみを解放します。
+
+```typescript
+const myUser = new GameAnvilUser(connector, "ServiceName", subId);
+```
+
+###### Packetクラスのユーザビリティ変更
+* 今後、常にbyte[]への変換を試みることはしません。
+* 今後、パケットの圧縮は生成時に追加できます。
+* 今後、パケットの解凍は自動的に動作します。
+
+###### GameAnvilConnector同時性
+* 複数のリクエストを送受信する際、一度に1つしか送信しなかった問題を修正しました。
+* 今後、複数のリクエストを送受信できます。
+
+###### MultiRequest削除
+* サーバーからMultiRequestの機能が削除されたことに伴い、GameAnvilConnectorからもこれに対応する機能が削除されました。
+    * `public void Request(List<Packet> packetList)`
+    * `public bool Send(List<Packet> packetList)`
+
+------
+
 ### 1.2.1 (2021.11.30)
 
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.1.zip)
@@ -38,7 +103,7 @@
 #### GameAnvil 1.2.0以上
 
 #### Fix
-*ルームに入場した状態でMatchRoomの呼び出しに失敗した場合、IsJoinedRoom()がfalseに変わる問題を修正
+* ルームに入室した状態でMatchRoomを呼び出して失敗した場合、IsJoinedRoom()がfalseに変わる問題を修正
 
 ------
 
@@ -50,82 +115,82 @@
 
 #### Change
 
-* Request()または他のAPIを呼び出す時にCallbackを引数として一緒に渡すと、引数で渡されたcallbackでのみレスポンスするように変更
-  * Config.useArgumentCallbackOnlyを追加(デフォルト値true)
-  * Config.useArgumentCallbackOnlyがfalseの場合、Request()または他のAPIを呼び出す際に、Callbackを引数で一緒に渡しても引数で渡されたcallbackとあらかじめ登録しておいたlistenerが同時に呼び出される。(以前バージョンの動作方式)
+* Request()または他のAPI呼び出し時にCallbackを引数として一緒に渡すと、引数として渡したコールバックにのみレスポンスが届くように変更
+    * Config.useArgumentCallbackOnly追加（デフォルト値true）
+    * Config.useArgumentCallbackOnlyがfalseの場合、Request()または他のAPI呼び出し時にCallbackを引数として一緒に渡しても、引数として渡したコールバックと事前に登録したリスナーが同時に呼び出されます。（旧バージョンの動作方式）
 * ConnectionAgent
-  * サーバーに接続していない状態でリクエストを送信した場合、"Not connected. Connect before call XXX."エラーが発生
-  * Authenticatedされていない状態でリクエストを送信した場合、Not authenticated. Authenticate before call XXX."エラーが発生
-    * PauseClientStateCheck(), ResumeClientStateCheck()は例外。
-  * LoginedUserInfo.payloadを削除
-  * GetAllChannelInfo()を追加
-  * GetChannelCountInfo()を追加
-  * GetAllChannelCountInfo()を追加
+    * サーバーに接続していない状態でリクエストを送信した場合、"Not connected. Connect before call XXX." エラー発生
+    * 認証されていない状態でリクエストを送信した場合、"Not authenticated. Authenticate before call XXX." というエラーが発生します。
+        * PauseClientStateCheck()、ResumeClientStateCheck()は例外。
+    * LoginedUserInfo.payload削除
+    * GetAllChannelInfo()追加
+    * GetChannelCountInfo()追加
+    * GetAllChannelCountInfo()追加
 * UserAgent
-  * Loginしていない状態でリクエストを送信した場合、"Not loggedIn. Login before call XXX()."エラーが発生
-  * LoginInfo.messageを削除
-  * GetChannelInfo()を追加
-  * GetAllChannelInfo()を追加
-  * GetChannelCountInfo()を追加
-  * GetAllChannelCountInfo()を追加
-  * CreateRoom()にmatchingGroupパラメータを追加
-  * JoinRoom()にmatchingUserCategoryパラメータを追加
-  * MatchRoom()にmatchingGroup, matchingUserCategoryパラメータを追加。
-  * MatchUserStart()にmatchingGroupパラメータを追加
-  * MatchPartyStart()にmatchingGroupパラメータを追加
-  * IsUserMatchInProgress()、IsPartyMatchInProgress()、IsMatchInProgress()を追加
-  * UserMatch中にUserMatchCancelを除外したapiを呼び出すと、"MatchUser is in progress. MatchUserCancel before call XXX."エラーが発生
-  * UserMatch中ではない時にUserMatchCancelを呼び出すと、"MatchUser is not in progress."エラーが発生
-  * PartyMatch中にPartyMatchCancelを除外したapiを呼び出すと、"MatchParty is in progress. MatchPartyCancel before call XXX."エラーが発生
-  * PartyMatch中ではない時にUserMatchCancelを呼び出すと、"MatchParty is not in progress."エラーが発生
+    * Loginしていない状態でリクエストを送信した場合、"Not loggedIn. Login before call XXX()." エラー発生
+    * LoginInfo.message削除
+    * GetChannelInfo()追加
+    * GetAllChannelInfo()追加
+    * GetChannelCountInfo()追加
+    * GetAllChannelCountInfo()追加
+    * CreateRoom()にmatchingGroupパラメータ追加
+    * JoinRoom()にmatchingUserCategoryパラメータ追加
+    * MatchRoom()にmatchingGroup、matchingUserCategoryパラメータ追加。
+    * MatchUserStart()にmatchingGroupパラメータ追加
+    * MatchPartyStart()にmatchingGroupパラメータ追加
+    * IsUserMatchInProgress()、IsPartyMatchInProgress()、IsMatchInProgress()追加
+    * UserMatch中にUserMatchCancelを除くAPI呼び出し時、"MatchUser is in progress. MatchUserCancel before call XXX." エラー発生
+    * UserMatch中でない時にUserMatchCancel呼び出し時、"MatchUser is not in progress." エラー発生
+    * PartyMatch中にPartyMatchCancelを除くAPI呼び出し時、"MatchParty is in progress. MatchPartyCancel before call XXX." エラー発生
+    * PartyMatch中でない時にUserMatchCancel呼び出し時、"MatchParty is not in progress."エラー発生
 * ResultCode
-  * ResultCodeAuth
-    * AUTH_FAIL_MAINTENANCEを削除
-  * ResultCodeCreateRoom
-    * CREATE_ROOM_FAIL_CREATE_ROOM_IDを追加
-    * CREATE_ROOM_FAIL_CREATE_ROOMを追加
-  * ResultCodeChannelInfo
-    * CHANNEL_INFO_FAIL_NO_CHANNEL_INFOを追加
-    * CHANNEL_INFO_FAIL_INVALID_SERVICE_IDを追加
-    * CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUNDを追加
-  * ResultCodeAllChannelInfoを追加
-  * ResultCodeChannelCountInfoを追加
-  * ResultCodeAllChannelCountInfoを追加
-  * ResultCodeChannelList
-    * CHANNEL_LIST_FAIL_INVALID_SERVICEIDを削除
-    * CHANNEL_LIST_FAIL_NO_CHANNEL_LISTを追加
-  * ResultCodeJoinRoom
-    * JOIN_ROOM_FAIL_ALREADY_JOINED_ROOMを追加
-    * JOIN_ROOM_FAIL_ALREADY_FULLを追加
-    * JOIN_ROOM_FAIL_ROOM_MATCHを追加
-  * ResultCodeLogin
-    * LOGIN_FAIL_MAINTENANCEを削除
-  * ResultCodeMatchUserCancel
-    * MATCH_USER_CANCEL_FAIL_CONTENT → MATCH_USER_CANCEL_FAILに名前を変更
-    * MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESSを追加
-  * ResultCodeMatchRoom
-    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_IDを追加
-    * MATCH_ROOM_FAIL_CREATE_FAILED_ROOMを追加
-    * MATCH_ROOM_FAIL_INVALID_ROOM_IDを追加
-    * MATCH_ROOM_FAIL_INVALID_NODE_IDを追加
-    * MATCH_ROOM_FAIL_INVALID_USER_IDを追加
-    * MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUNDを追加
-    * MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORYを追加
-    * MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTYを追加
-    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULLを追加
-    * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULLを追加
-  * ResultCodeMatchUserDone
-    * MATCH_USER_DONE_FAIL_TRANSFERを追加
-    * MATCH_USER_DONE_FAIL_CREATE_ROOMを追加
-  * ResultCodeNamedRoom
-    * NAMED_ROOM_FAIL_CREATE_ROOMを追加
-  * ResultCodeDisconnect
-    * FORCE_CLOSE_MAINTENANCEを削除
-    * FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_IDを追加
-    * FORCE_CLOSE_DISCONNECT_ALARMを削除
-    * FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENTを追加
-    * FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSIONを追加
-  * ResultCodeSessionCloseを追加
+    * ResultCodeAuth
+        * AUTH_FAIL_MAINTENANCE削除
+    * ResultCodeCreateRoom
+        * CREATE_ROOM_FAIL_CREATE_ROOM_ID追加
+        * CREATE_ROOM_FAIL_CREATE_ROOM追加
+    * ResultCodeChannelInfo
+        * CHANNEL_INFO_FAIL_NO_CHANNEL_INFO追加
+        * CHANNEL_INFO_FAIL_INVALID_SERVICE_ID追加
+        * CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND追加
+    * ResultCodeAllChannelInfo追加
+    * ResultCodeChannelCountInfo追加
+    * ResultCodeAllChannelCountInfo追加
+    * ResultCodeChannelList
+        * CHANNEL_LIST_FAIL_INVALID_SERVICEID削除
+        * CHANNEL_LIST_FAIL_NO_CHANNEL_LIST追加
+    * ResultCodeJoinRoom
+        * JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM追加
+        * JOIN_ROOM_FAIL_ALREADY_FULL追加
+        * JOIN_ROOM_FAIL_ROOM_MATCH追加
+    * ResultCodeLogin
+        * LOGIN_FAIL_MAINTENANCE削除
+    * ResultCodeMatchUserCancel
+        * MATCH_USER_CANCEL_FAIL_CONTENT -> MATCH_USER_CANCEL_FAIL名前変更
+        * MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS追加
+    * ResultCodeMatchRoom
+        * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_ID追加
+        * MATCH_ROOM_FAIL_CREATE_FAILED_ROOM追加
+        * MATCH_ROOM_FAIL_INVALID_ROOM_ID追加
+        * MATCH_ROOM_FAIL_INVALID_NODE_ID追加
+        * MATCH_ROOM_FAIL_INVALID_USER_ID追加
+        * MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND追加
+        * MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY追加
+        * MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY追加
+        * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL追加
+        * MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL追加
+    * ResultCodeMatchUserDone
+        * MATCH_USER_DONE_FAIL_TRANSFER追加
+        * MATCH_USER_DONE_FAIL_CREATE_ROOM追加
+    * ResultCodeNamedRoom
+        * NAMED_ROOM_FAIL_CREATE_ROOM追加
+    * ResultCodeDisconnect
+        * FORCE_CLOSE_MAINTENANCE削除
+        * FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_ID追加。
+        * FORCE_CLOSE_DISCONNECT_ALARM削除
+        * FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT追加
+        * FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION追加
+    * ResultCodeSessionClose追加
 
 ------
 ### 1.1.4 (2021.11.30)
@@ -135,7 +200,7 @@
 #### GameAnvil 1.1.0以上
 
 #### Fix
-* ルームに入場した状態でMatchRoomの呼び出しに失敗した場合、IsJoinedRoom()がfalseに変わる問題を修正
+* ルームに入室した状態でMatchRoomを呼び出して失敗した場合、IsJoinedRoom()がfalseに変わる問題を修正
 
 ------
 
@@ -145,15 +210,15 @@
 
 #### GameAnvil 1.1.0以上
 #### Change
-* ContainsCallback、ContainsUndefinedProtocolCallback、ContainsListenerを追加。
-* RemoveCallback、RemoveUndefinedProtocolCallbackにcallbackごとに削除可能なcallbackオプショナルパラメータを追加。
+* ContainsCallback、ContainsUndefinedProtocolCallback、ContainsListener追加。
+* RemoveCallback、RemoveUndefinedProtocolCallbackにcallbackを個別に削除できるようにcallbackオプショナルパラメータ追加。
 * RemoveListenerのlistenerをオプショナルパラメータに変更。
-* ContainsOnError、ContainsOnDisconnectを追加。
-* RemoveOnError、RemoveOnDisconnectにcallbackごとに削除可能なcallbackオプショナルパラメータを追加。
+* ContainsOnError、ContainsOnDisconnect追加。
+* RemoveOnError、RemoveOnDisconnectにcallbackを個別に削除できるようにcallbackオプショナルパラメータ追加。
 #### Fix
-* ログアウトやログインに失敗した時にUserAgentの一部情報が初期化されないバグを修正
-* AddOnErrorで登録されたコールバックの引数に誤った値が入るバグを修正
-* RequestPBを呼び出した時にcallbackを入れない場合、例外が発生する問題を修正
+* ログアウト、ログイン失敗などの状況でUserAgentの一部情報が初期化されないバグを修正
+* AddOnErrorで登録されたコールバックの引数に誤った値が渡されるバグを修正
+* RequestPB呼び出し時にcallbackを入れない場合、例外が発生する問題を修正
 
 ------
 
@@ -165,11 +230,11 @@
 
 #### GameAnvil 1.1.0以上
 #### Change
-* Connector.configのdefault値を変更。
-  * PingInterval : 10 → 3
-  * PacketTimeout : 12 → 5
+* Connector.configのdefault値変更。
+    * PingInterval : 10 -> 3
+    * PacketTimeout : 12 -> 5
 #### Fix
-* CodeInserterで.protoのメッセージ内部に重複接続メッセージ宣言がある場合、その次のメッセージからindex値が滞るバグを修正
+* CodeInserterで.protoのメッセージ内部に入れ子メッセージ宣言がある場合、次のメッセージからindex値がずれるバグを修正
 
 ------
 
@@ -182,13 +247,13 @@
 #### GameAnvil 1.1.0以上
 #### Change
 * SingleServer
-  * onMatchRoomを使用している時にpayloadにnullが来る問題を修正
-  * OnLoginにid: stringパラメータをsubId: numberに変更
-  * OnCreateRoom、OnJoinRoom、OnMatchRoom、OnNamedRoomに脱落したroomNameパラメータを追加。
-  * OnMatchRoom、OnNamedRoomに脱落したcreatedパラメータを追加。
-  * OnXXXを登録する時にすでに登録されたコールバックを削除。
-  * OnLogin()レスポンスでloginInfoにnullを渡す場合、serviceIdにリクエストされたserviceIdを入れて、レスポンスするように例外処理を追加。
-  * 登録されたコールバックでエラーが発生した場合、callstack情報がユーザーにアップロードできるように再びthrow
+    * onMatchRoom使用時、payloadにnullが渡される問題を修正
+    * OnLoginのid: stringパラメータをsubId: numberに変更
+    * OnCreateRoom、OnJoinRoom、OnMatchRoom、OnNamedRoomに漏れていたroomNameパラメータ追加。
+    * OnMatchRoom、OnNamedRoomに漏れていたcreatedパラメータ追加。
+    * OnXXX登録時、既存の登録済みコールバックを削除。
+    * OnLogin()のレスポンスとしてloginInfoにnullを渡す場合、serviceIdにリクエストされたserviceIdを入れてレスポンスするよう例外処理を追加。
+    * 登録されたコールバックでエラーが発生した場合、callstack情報がユーザーに伝わるように再throw
 
 ------
 
@@ -200,7 +265,7 @@
 
 #### GameAnvil 1.1.0以上
 #### Change
-* 互換性のあるイシューに修正して、GitEnterprizeに載せて使用していたprotobufjsを問題が修正された公式最新バージョンに交換
+* 互換性の問題で修正してGitEnterprizeにアップロードして使用していたprotobufjsを、問題が修正された公式最新バージョンに交換
 
 ------
 
@@ -213,7 +278,7 @@
 #### GameAnvil 1.0.0以上
 #### FIX
 
-* Requestを同時に何度も呼び出した場合に呼び出し順序の逆にパケットを転送するバグを修正
+* Requestを同時に複数回呼び出す場合、呼び出し順序の逆順でパケットを送信するバグを修正
 
 ------
 
@@ -225,67 +290,67 @@
 
 #### GameAnvil 1.0.0以上
 #### Change
-* MoveServiceを削除
-* Reconnect、Retry機能を削除
-* 各ResultCodeに固有数字を適用
-* ResultCodeを追加および名前を変更
-  * <span style="color:#eb6420">現在、FORCE_CLOSE_DUPLICATE_LOGINケースにFORCE_CLOSE_BY_NEW_CONNECTIONが移行する問題がある。
-    次のリリースで修正予定。</span>
+* MoveService削除
+* Reconnect、Retry機能削除
+* 各ResultCodeに固有の数値を適用
+* ResultCode追加および名前変更
+    * <span style="color:#eb6420">現在FORCE_CLOSE_DUPLICATE_LOGINケースにFORCE_CLOSE_BY_NEW_CONNECTIONが渡される問題があります。
+      次回リリース時に修正される予定です。</span>
 
 
 
-#### ResultCodeの変更事項
+#### ResultCode詳細変更事項
 
 * ResultCodeAuth
-  * 追加
-    * AUTH_FAIL_INVALID_ACCOUNT_ID
+    * 追加
+        * AUTH_FAIL_INVALID_ACCOUNT_ID
 * ResultCodeLogin
-  * 名前を変更
-    * LOGIN_FAIL_EMPTY_SUB_ID → LOGIN_FAIL_INVALID_SUB_ID
-  * 削除
-    * LOGIN_FAIL_LOGINED_SAME_SERVICE
-  * 追加。
-    * LOGIN_FAIL_INVALID_USERID : 誤ったユーザーID
-    * LOGIN_FAIL_LOGINED_OTHER_USER_TYPE : 同じAccount IDで異なるUserTypeがログインしている。
-    * LOGIN_FAIL_LOGINED_OTHER_DEVICE : 同じAccount IDで異なるDeviceIdがログインしている。
+    * 名前変更
+        * LOGIN_FAIL_EMPTY_SUB_ID -> LOGIN_FAIL_INVALID_SUB_ID
+    * 削除
+        * LOGIN_FAIL_LOGINED_SAME_SERVICE
+    * 追加。
+        * LOGIN_FAIL_INVALID_USERID：誤ったユーザーID。
+        * LOGIN_FAIL_LOGINED_OTHER_USER_TYPE：同一Account IDで別のUserTypeがログインしている。
+        * LOGIN_FAIL_LOGINED_OTHER_DEVICE：同一Account IDで別のDeviceIdがログインしている。
 * ResultCodeMatchRoom
-  * 削除
-    * MATCH_ROOM_FAIL_UNKNOWN_ERROR
+    * 削除
+        * MATCH_ROOM_FAIL_UNKNOWN_ERROR
 * ResultCodeMatchUserStart
-  * 削除
-    * MATCH_USER_START_FAIL_MATCH_UNKNOWN_ERROR
+    * 削除
+        * MATCH_USER_START_FAIL_MATCH_UNKNOWN_ERROR
 * ResultCodeMatchUserCancel
-  * 削除
-    * MATCH_USER_CANCEL_FAIL_MATCH_UNKNOWN_ERROR
+    * 削除
+        * MATCH_USER_CANCEL_FAIL_MATCH_UNKNOWN_ERROR
 * ResultCodeMatchPartyStart
-  * 削除
-    * MATCH_PARTY_START_FAIL_MATCH_UNKNOWN_ERROR
+    * 削除
+        * MATCH_PARTY_START_FAIL_MATCH_UNKNOWN_ERROR
 * ResultCodeMatchPartyCancel
-  * 削除
-    * MATCH_PARTY_CANCEL_FAIL_MATCH_UNKNOWN_ERROR
+    * 削除
+        * MATCH_PARTY_CANCEL_FAIL_MATCH_UNKNOWN_ERROR
 * ResultCodeNamedRoom
-  * 追加。
-    * NAMED_ROOM_FAIL_INVALID_ROOM_NAME : 誤ったルームの名前を送信した場合。
+    * 追加。
+        * NAMED_ROOM_FAIL_INVALID_ROOM_NAME：誤ったルーム名を送信した場合。
 * ResultCodeDisconnect
-  * 名前を変更
-    * FORCE_CLOSE_SYSTEM → FORCE_CLOSE_SYSTEM_ERROR
-    * FORCE_CLOSE_CONTENT →
-      FORCE_CLOSE_BASE_CONNECTION :サーバーでBaseConnectionのclose()を呼び出し
-      FORCE_CLOSE_BASE_USER :サーバーでBaseUserのcloseConnection()を呼び出し
-  * 追加。
-    * FORCE_CLOSE_INVALID_NODE : GameNodeがinvalid状態で変更された場合。
-    * FORCE_CLOSE_USER_TRANSFER_FAIL :ユーザートランスファーが失敗した場合。
-    * FORCE_CLOSE_USER_TRANSFER_ERROR :ユーザートランスファー中にシステムエラーが発生した場合。
-  * 追加されたがクライアントから受け取れない場合。
-    サーバーでは、クライアントの接続がすでに切断されたと予想して接続を強制終了し、以下のコードを使用する。
-    クライアントの接続が切断されているため、以下のコードを受け取ってはならない。
-    このコードを受け取った場合、GameAnvil開発チームに情報を提供してください。
-    * FORCE_CLOSE_BY_NEW_CONNECTION : 同じアカウント情報で新たなログインリクエストが入ってきた場合。
-    * <span style="color:#eb6420">現在、FORCE_CLOSE_DUPLICATE_LOGINケースに、このコードが移行する問題がある。
-      次のリリースで修正予定。</span>
-    * FORCE_CLOSE_DISCONNECT_ALARM :クライアントがサーバーの状態チェックにレスポンスしていない場合。
-    * FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL :クライアントがサーバーの状態チェックにレスポンスしていない場合。
-    * FORCE_CLOSE_GHOST_USER : ゴーストユーザーである場合。
+    * 名前変更
+        * FORCE_CLOSE_SYSTEM -> FORCE_CLOSE_SYSTEM_ERROR
+        * FORCE_CLOSE_CONTENT ->
+          FORCE_CLOSE_BASE_CONNECTION：サーバーでBaseConnectionのclose()呼び出し
+          FORCE_CLOSE_BASE_USER：サーバーでBaseUserのcloseConnection()呼び出し
+    * 追加。
+        * FORCE_CLOSE_INVALID_NODE：GameNodeがinvalid状態に変更された場合。
+        * FORCE_CLOSE_USER_TRANSFER_FAIL：ユーザートランスファーが失敗した場合。
+        * FORCE_CLOSE_USER_TRANSFER_ERROR：ユーザートランスファー中にシステムエラーが発生した場合。
+    * 追加されたがクライアントで受け取れない場合。
+      サーバーではクライアントの接続がすでに切れていると予想し、接続を強制終了する際に以下のコードを使用する。
+      クライアントの接続が切れているため、以下のコードは受け取れないはずである。
+      このコードを受け取った場合はGameAnvil開発チームへ報告してほしい。
+        * FORCE_CLOSE_BY_NEW_CONNECTION：同じアカウント情報で新しいログインリクエストが入った場合。
+        * <span style="color:#eb6420">現在FORCE_CLOSE_DUPLICATE_LOGINケースにこのコードが渡される問題がある。
+          次回リリース時に修正される予定です。</span>
+        * FORCE_CLOSE_DISCONNECT_ALARM：クライアントがサーバーの状態チェックに応答しない場合。
+        * FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL：クライアントがサーバーの状態チェックに応答しない場合。
+        * FORCE_CLOSE_GHOST_USER：ゴーストユーザーの場合。
 
 
 -----
@@ -294,11 +359,11 @@
 
 ### 1.0.0-EA3 (2020.07.27)
 #### Change
-* ConnectionAgentにIsReconnecting()を追加。
+* ConnectionAgentにIsReconnecting()追加。
 
 #### FIX
-* UserAgentがログインした後、disconnectされた時にisLogin()がtrueをリターンする問題を修正
-* UserAgentを複数使用した時にrequestへのレスポンスを受け取れず、disconnectされた場合、requestに一緒に渡したcallbackが消えずに残り、次のrequest時にcallbackが2回呼び出される問題を修正
+* UserAgentがログイン後にdisconnectされた際、isLogin()がtrueを返す問題を修正
+* UserAgentを複数使用する際、リクエストに対するレスポンスを受け取れずにdisconnectされた場合、リクエストに一緒に渡したcallbackが削除されずに残り、次のリクエスト時にcallbackが2回呼び出される問題を修正
 
 -----
 
@@ -307,8 +372,8 @@
 ### 1.0.0-EA2 (2020.07.07)
 #### Change
 
-* 名前を変更: Gameflex → GameAnvil
-* RemoveAllCallback()を追加。
+* 名前変更：Gameflex -> GameAnvil
+* RemoveAllCallback ()追加。
 
 -----
 
@@ -317,52 +382,52 @@
 
 ### 1.0.0-EA (2020.06.29)
 #### Change
-* 名前を変更: Tardis → Gameflex
-  * SessionAgent → ConnectionAgent
-* Typeを変更
-  * UserIdのtypeがstringからnumberに変更
-  * SubIdのtypeがstringからnumberに変更
-  * RoomIdのtypeがstringからnumberに変更
-* CreateUserAgent()、GetUserAgent()
-  * パラメータ`SubId: string` → `SubId: number`に変更
-  * SubId > 0でなければならない。
+* 名前変更：Tardis -> Gameflex
+    * SessionAgent -> ConnectionAgent
+* Type変更
+    * UserIdのtypeをstringからnumberに変更
+    * SubIdのtypeをstringからnumberに変更
+    * RoomIdのtypeをstringからnumberに変更
+* CreateUserAgent(), GetUserAgent()
+    * パラメータ `SubId: string` -> `SubId: number` に変更
+    * SubId > 0 でなければならない。
 * LoginedUserInfo
-  * UserId項目を追加。
-  * Payload項目を追加。
+    * UserId項目追加。
+    * Payload項目追加。
 * LoginInfo
-  * userId項目を追加。
-  * userType項目を追加。
-  * roomName項目を追加。
+    * userId 項目追加。
+    * userType項目追加。
+    * roomName項目追加。
 * UserAgent
-  * パラメータ`roomId: string` → `roomId: number`に変更。
-  * MultiSendToSessionActor()→MultiSendToGatewaySession()
-  * SendToSessionActor() → SendToGatewaySession()
-  * SendPbToSessionActor() → SendPbToGatewaySession()
-  * RequestToSessionActor() → RequestToGatewaySession()
-  * MultiRequestToSessionActor() → MultiRequestToGatewaySession()
-  * RequestToSessionActor() → RequestToGatewaySession()
-  * RequestPbToSessionActor() → RequestPbToGatewaySession()
-  * RequestPbAsyncToSesstionActor() → RequestPbAsyncToGatewaySession()
-  * RequestAsyncToSessionActor() → RequestAsyncToGatewaySession()
-  * CreateRoom() - パラメータ`roomName: string`を追加。
-  * onCreateRoom() - パラメータ`roomName: string`を追加。
-  * onJoinRoom() - パラメータ`roomName: string`を追加。
-  * onMatchRoom()
-    * パラメータ`roomName: string`を追加。
-    * パラメータ`created: boolean`を追加。
-  * onNamedRoom()
-    * パラメータ`roomName: string`を追加。
-    * パラメータ`created: boolean`を追加。
+    * パラメータ `roomId: string` -> `roomId: number` に変更。
+    * MultiSendToSessionActor()->MultiSendToGatewaySession()
+    * SendToSessionActor() -> SendToGatewaySession()
+    * SendPbToSessionActor() -> SendPbToGatewaySession()
+    * RequestToSessionActor() -> RequestToGatewaySession()
+    * MultiRequestToSessionActor() -> MultiRequestToGatewaySession()
+    * RequestToSessionActor() -> RequestToGatewaySession()
+    * RequestPbToSessionActor() -> RequestPbToGatewaySession()
+    * RequestPbAsyncToSesstionActor() -> RequestPbAsyncToGatewaySession()
+    * RequestAsyncToSessionActor() -> RequestAsyncToGatewaySession()
+    * CreateRoom() - パラメータ `roomName: string` 追加。
+    * onCreateRoom() - パラメータ `roomName: string` 追加。
+    * onJoinRoom() - パラメータ `roomName: string` 追加。
+    * onMatchRoom()
+        * パラメータ `roomName: string` 追加。
+        * パラメータ `created: boolean` 追加。
+    * onNamedRoom()
+        * パラメータ `roomName: string` 追加。
+        * パラメータ `created: boolean` 追加。
 
 #### New
 * エラーコード
-  * ResultCodeLogin
-    * LOGIN_FAIL_EMPTY_SUB_ID
-    * LOGIN_FAIL_TIMEOUT_GAME_SERVER
-  * ResultCodeMoveChannel
-    * MOVE_CHANNEL_FAIL_NODE_NOT_FOUND
-    * MOVE_CHANNEL_FAIL_ALREADY_JOINED_CHANNEL
-    * MOVE_CHANNEL_FAIL_ALREADY_JOINED_ROOM
+    * ResultCodeLogin
+        * LOGIN_FAIL_EMPTY_SUB_ID
+        * LOGIN_FAIL_TIMEOUT_GAME_SERVER
+    * ResultCodeMoveChannel
+        * MOVE_CHANNEL_FAIL_NODE_NOT_FOUND
+        * MOVE_CHANNEL_FAIL_ALREADY_JOINED_CHANNEL
+        * MOVE_CHANNEL_FAIL_ALREADY_JOINED_ROOM
 
 -----
 
@@ -371,7 +436,7 @@
 ### 0.12.1.1 (2020.06.23)
 #### Change
 
-* onDisconnect()コールバックから直接connect()を呼び出した場合にエラーが発生する問題を修正
+* onDisconnect()コールバックですぐにconnect()を呼び出した場合にエラーが発生する問題を修正
 
 -----
 
@@ -380,14 +445,14 @@
 ### 0.12.1 (2020.04.06)
 #### Change
 
-* JSDocを適用
-* UserAgent.isJoinRoomを追加。
-* IUserListener.OnMatchPartyCancel()からPayloadを削除。
-* IUserListener.OnNamedRoom()からroomName→ RoomIdに名前を変更
-* Payload.createDefault()を削除。 CreateEmpty()に代替
+* JSDoc適用
+* UserAgent.isJoinRoom追加。
+* IUserListener.OnMatchPartyCancel()からPayload削除。
+* IUserListener.OnNamedRoom()でroomName-> RoomIdに名前変更
+* Payload.createDefault()除去。 CreateEmpty()に置換
 * SessionAgent.addOnDisconnect()
-  * AddOnDisconnect(callback: (agent: SessionAgent, message: string) => void): void; =>
-    AddOnDisconnect(callback: (session: SessionAgent, resultCode: ResultCodeDisconnect, reason: string, force: boolean, payload: Payload) => void): void;
+    * AddOnDisconnect(callback: (agent: SessionAgent, message: string) => void): void; =>
+      AddOnDisconnect(callback: (session: SessionAgent, resultCode: ResultCodeDisconnect, reason: string, force: boolean, payload: Payload) => void): void;
 
 -----
 
@@ -397,19 +462,19 @@
 #### Change
 
 * Packet
-  * GetDescId(): number;を削除
-  * GetMsgIndex(): number;を削除
-  * GetTimeOut(): number;を削除
-  * SetTimeOut(timeOut: number): void;を削除
+    * GetDescId(): number;削除
+    * GetMsgIndex(): number;削除
+    * GetTimeOut(): number;削除
+    * SetTimeOut(timeOut: number): void;削除
 
 #### New
 
 * ResultCodeMatchRoom
-  * MATCH\_ROOM\_FAIL\_UNKNOWN\_ERROR = 6,
-  * MATCH\_ROOM\_FAIL\_MATCHED\_ROOM\_DOES\_NOT\_EXIST = 7
+    * MATCH\_ROOM\_FAIL\_UNKNOWN\_ERROR = 6,
+    * MATCH\_ROOM\_FAIL\_MATCHED\_ROOM\_DOES\_NOT\_EXIST = 7
 * Packet
-  * GetMsgId(): number;
+    * GetMsgId(): number;
 * ProtocolManager
-  * static getMsgId(descId: number, msgIndex: number): number;
-  * static getMsgIdFromPb\(msg: IMessage \| \(new \(\) =\> T\)\): any;
-  * static getCustomMsgId(customMsgId: number): number;
+    * static getMsgId(descId: number, msgIndex: number): number;
+    * static getMsgIdFromPb\(msg: IMessage \| \(new \(\) =\> T\)\): any;
+    * static getCustomMsgId(customMsgId: number): number;

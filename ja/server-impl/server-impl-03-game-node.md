@@ -1,121 +1,129 @@
-## Game > GameAnvil > サーバー開発ガイド > ゲームノードの実装
-
-
+## Game > GameAnvil > サーバー開発ガイド > ゲームノード実装
 
 ## Game Node
 
 ![GameNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gamenode_on_network.png)
 
-GameNodeは、実際のゲームオブジェクトが作成され、ゲームコンテンツを実装するノードです。クライアントはGatewayNodeで認証を完了した後、GameNodeにログインして初めてこのようなゲームコンテンツを開始できます。
+GameNodeは実際のゲームオブジェクトが生成され、ゲームコンテンツを実装するノードです。クライアントはGatewayNodeで認証を完了した後、GameNodeにログインを完了して初めてこのようなゲームコンテンツを開始できます。
 
-以下の画像を見て分かるように、クライアントは固有のAccountIdで認証を完了したコネクションをベースに複数の論理セッションを作成できます。この時、セッションはクライアントとユーザーオブジェクト間に作成されます。以下の図では、赤い点線の矢印がこのようなセッションを示しています。
+以下の画像で見られるように、クライアントは固有のAccountIdで認証を完了したコネクションを基盤に複数の論理セッションを生成できます。この時、セッションはクライアントとユーザーオブジェクトの間に作られます。下の図で赤色の点線矢印がこのようなセッションを表します。
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
-それぞれのセッションは、該当コネクション内で固有値で区別でき、この値をSubIdと呼んでいます。すなわち、AccountIdとSubIdの組み合わせにより、ユーザーは好きなだけセッションを作成できます。この時、同じサービスに対するセッションも同様に好きなだけ作成できます。つまり、画像でAccountIdが1であるコネクションは、"Game"サービスまたは、"Chat"サービスのセッションをいくらでも追加で作成できるということです。
+それぞれのセッションは該当コネクション内で固有の値で区分でき、私たちはこの値をSubIdと呼びます。つまり、AccountIdとSubIdの組み合わせでユーザーは望むだけセッションを生成できます。この時、同一サービスに対するセッションも同様に望むだけ生成できます。つまり、画像でAccountIdが1であるコネクションは"Game"サービスあるいは"Chat"サービスに対するセッションをいくらでも追加で生成できるのです。
 
-これらのセッションが向かうのはユーザーオブジェクトです。GameNodeは、これらのユーザーオブジェクトとそれらのグループであるルームオブジェクトを管理します。このチャプターでは、このようなGameNodeとGameUser、そしてGameRoomについて説明します。
+このようなセッションが向かう場所はまさにユーザーオブジェクトです。GameNodeはこのようなユーザーオブジェクトと彼らのグループであるルームオブジェクトを管理します。今回の章はこのようなGameNodeとGameUserそしてGameRoomについて説明します。
 
+## GameNode 実装
 
-## GameNode
-
-GameNodeは、BaseGameNodeクラスを継承して実装します。以下のサンプルコードはGameNodeで基本的に再定義できるコールバックメソッドを示しています。ノード共通のコールバックに加えて、チャネル管理用のコールバックが存在します。
-
-すべてのノードは、ユーザー定義のメッセージを処理するためのディスパッチャーの作成とメッセージハンドラ登録プロセスが必要です。特にGameNodeはゲームコンテンツのために、このようなプロセスが必須です。まず、(1)静的パケットディスパッチャーを1つ作成します。この時、必ずメモリや性能面で利点を得られるように静的(static)で作成します。(2)処理したいメッセージを実装しておいた[ハンドラ](server-impl-07-message-handling.md)と接続します。(3)最後に、MessageDispatcherで(1)で作成したディスパッチャーを利用してパケットを処理します。
-
-これらの一連のプロセスは、以下のサンプルコードで(1)～(3)に該当する注釈のすぐ下にあるコードで調べることができます。
-
-また、こうして実装したクラスを@ServiceNameアノテーションを使用して、特定のサービスに対する用途でエンジンに登録します。1つのGameNodeクラスは、1つのサービスにのみ登録できます。
+GameNodeはIGameNodeインターフェースを実装します。以下のサンプルコードはGameNodeで基本的に再定義できるコールバックメソッドを示しています。ノード共通コールバックに加え、チャンネル管理のためのコールバックが存在します。
 
 ```java
-@ServiceName("MyGame") // "MyGame"というサービス用にGameNodeでエンジンに登録
-public class SampleGameNode extends BaseGameNode {
+@GameAnvilGameNode(gameServiceName = "MyGame") // (1) "MyGame"というサービスのためのGameNodeとしてエンジンに登録
+public class SampleGameNode implements IGameNode {
+    private IGameNodeContext gameNodeContext;
 
-    // (1)パケットディスパッチャーを作成 
-    private static final MessageDispatcher<SampleGameNode> messageDispatcher = new MessageDispatcher<>();
-
-    // (2) SampleGameNodeで処理したいプロトコルとハンドラをマッピング
-    static {
-        messageDispatcher.registerMsg(SampleGame.GameNodeTest.class、_GameNodeTest.class);
-    }
-
+    /**
+     * ゲームノードコンテキストを伝達するために呼び出し
+     * <p/>
+     * オブジェクトが生成された後、一度呼び出される
+     *
+     * @param gameNodeContextゲームノードコンテキスト
+     */
     @Override
-    public MessageDispatcher<SampleGameNode> getMessageDispatcher() {
-        return messageDispatcher;
-    }
-
-    @Override
-    public void onInit() throws SuspendExecution {
-    }
-
-    @Override
-    public void onPrepare() throws SuspendExecution {
+    public void onCreate(IGameNodeContext gameNodeContext) {
+        this.gameNodeContext = gameNodeContext;
     }
 
     /**
-     * pause呼び出し
+     * 同じチャンネルの他のノードでユーザー変化があった時に呼び出し
+     * <p>
+     * updateChannelUser()呼び出し時に発生。
      *
-     * @param payload contentsから送信したい追加情報
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param type            チャンネル情報変更タイプ(更新/削除) である{@link ChannelUpdateType}
+     * @param channelUserInfo変更されるユーザー情報である{@link IChannelUserInfo}
+     * @param userId          変更対象のユーザーID
+     * @param accountId       変更対象のアカウントID
      */
     @Override
-    public void onPause(PauseType type,Payload payload) throws SuspendExecution {
+    public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, IChannelUserInfo channelUserInfo, int userId, String accountId) {
+
     }
 
     /**
-     * resume呼び出し
+     * 同じチャンネルの他のノードでルーム状態変化があった時に呼び出し
+     * <p>
+     * updateChannelRoomInfo()呼び出し時に発生
      *
-     * @param payload contentsから送信したい追加情報
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param type            チャンネル情報変更タイプ(更新/削除) {@link ChannelUpdateType}
+     * @param channelRoomInfo変更されるルーム情報である{@link IChannelRoomInfo}
+     * @param roomId          変更対象のルームID
      */
     @Override
-    public void onResume(Payload payload) throws SuspendExecution {
-    }
-  
-    /**
-     * shutdownコマンドを受け取ると呼び出し
-     *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public void onShutdown() throws SuspendExecution {
+    public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, IChannelRoomInfo channelRoomInfo, int userId) {
+
     }
 
     /**
-     * 同じチャネルの他のノードでユーザーが変化した時に呼び出し
-     * すなわち、updateChannelUser() APIを呼び出した時に発生
+     * クライアントからチャンネル情報をリクエスト時に呼び出し  (Base.GetChannelInfoReq)
      *
-     * @param type            Channel情報変更タイプ(更新/削除)を送信。
-     * @param channelUserInfo変更されるUser情報を送信。
-     * @param userId        変更対象のUser Idを送信。
-     * @param accountId     変更対象のAccount Idを送信。
-     * @throws SuspendExecution、このメソッドはファイバーがsuspendされることがある。
+     * @param outPayloadクライアントへ伝達されるチャンネル情報
      */
     @Override
-    public void onChannelUserInfoUpdate(ChannelUpdateType type, ChannelUserInfo channelUserInfo, final int userId, final String accountId) throws SuspendExecution {  
+    public void onChannelInfo(IPayload payload) {
+
     }
 
     /**
-     * 同じチャネルの他のノードでルームの状態が変化した時に呼び出し
-     * すなわち、updateChannelRoomInfo() APIを呼び出した時に発生
-     *
-     * @param type            Channel情報変更タイプ(更新/削除)を送信。
-     * @param channelRoomInfo変更されるRoom情報を送信。
-     * @param roomId        変更対象のRoom Idを送信。
-     * @throws SuspendExecution、このメソッドはファイバーがsuspendされることがある。
+     * ノードが初期化される時に呼び出し
      */
     @Override
-    public void onChannelRoomInfoUpdate(ChannelUpdateType type, ChannelRoomInfo channelRoomInfo, final int roomId) throws SuspendExecution {  
+    public void onInit() {
+
     }
 
     /**
-     * クライアントからチャネル情報をリクエストした時に呼び出し
-     *
-     * @param outPayload Clientに送信されるChannel情報を送信。
-     * @throws SuspendExecution、このメソッドはファイバーがsuspendされることがある。
+     * Readyになる前に処理する部分のために呼び出し
      */
     @Override
-    public void onChannelInfo(Payload outPayload) throws SuspendExecution {  
+    public void onPrepare() {
+
+    }
+
+    /**
+     * Readyになる時に呼び出し
+     */
+    @Override
+    public void onReady() {
+
+    }
+
+    /**
+     * Pauseになる時に呼び出し
+     *
+     * @param payloadコンテンツから伝達したい追加情報
+     */
+    @Override
+    public void onPause(IPayload payload) {
+
+    }
+
+    /**
+     * Shutdown命令を受け取ると呼び出し
+     */
+    @Override
+    public void onShuttingdown() {
+
+    }
+
+    /**
+     * Resumeになる時に呼び出し
+     *
+     * @param payloadコンテンツから伝達したい追加情報
+     */
+    @Override
+    public void onResume(IPayload payload) {
+
     }
 }
 ```
@@ -130,611 +138,704 @@ public class _GameNodeTest {
         loadClass = SampleGameNode.class   // メッセージを受信する対象(SampleGameNode)
     )
     public void execute(IGameNodeDispatchContext ctx) {
-        // ここで実行するタスクを作成
+        // ここで行う作業を作成
     }
 }
 ```
 
-これらのGameNodeの主な目的は、ノードに接続されたすべてのGameUserとGameRoomオブジェクトに対する処理を実行することです。これについては、次で説明します。
+コールバックの意味と用途は以下の表を参考にしてください。
 
-共通コールバックを除外したコールバックの意味と用途については、次の表を参照してください。
+| コールバック名                    | 意味            | 説明                                                                                                                                                                                                  |
+|-------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| onCreate                  | オブジェクト生成         | オブジェクトが生成された時に呼び出されます。生成されたタイプで使用可能なAPIを使用できるコンテキストを受け取ります。コンテンツで必要であれば保存して使用できます。                                                                                       |
+| onChannelUserInfoUpdate | チャンネルのユーザー情報更新 | 同じチャンネルに属する複数のGameNodeのうち、1つのGameNodeでチャンネルのユーザー情報が変更された時、同じチャンネル内の残りの全てのGameNodeで同期のために呼び出されます。この時、ユーザーは受け取った情報をもとに現在のGameNodeのチャンネル情報を更新できます。                 |
+| onChannelRoomInfoUpdate | チャンネルのルーム情報更新 | 同じチャンネルに属する複数のGameNodeのうち、1つのGameNodeでチャンネルのルーム情報が変更された時、同じチャンネル内の残りの全てのGameNodeで同期のために呼び出されます。この時、ユーザーは受け取った情報をもとに現在のGameNodeのチャンネル情報を更新できます。                  |
+| onChannelInfo           | チャンネル情報リクエスト     | クライアントがチャンネル情報をリクエストする時に呼び出されます。ユーザーはこのコールバックで任意にチャンネル情報を構成してクライアントへ伝達できます。                                                                                                       |
+| onInit                  | 初期化          | ノードが最初の初期化を行う時に呼び出します。ノード駆動前に必要な初期化作業がある場合、このコールバックが適しています。この時、ノードはまだメッセージを処理しません。                                                                                 |
+| onPrepare               | 準備           | ノード初期化が完了した後に呼び出されます。ユーザーはノードが準備完了する前に任意の作業をここで処理できます。この時、ノードはメッセージを処理できます。                                                                                 |
+| onReady                 | 準備完了         | ノードが全ての準備を終えた後、駆動完了段階です。この時、ノードはReady状態なのでユーザーはこの時から全ての機能を使用できます。                                                                                                 |
+| onPause                 | 一時停止         | ノードを一時停止すると呼び出されます。ユーザーはノードが一時停止される時に追加で処理したいコードをここに実装できます。                                                                                                          |
+| onShuttingdown          | ノード停止         | ノードがShutdown命令を受け取る時に呼び出されます。停止したノードは再開(Resume)できません。                                                                                                                         |
+| onResume                | 再開           | ノードが一時停止状態で駆動を再開する時に呼び出されます。ユーザーは再開状態で処理したいコードをここに実装できます。                                                                                                          |
 
+全てのノードはユーザー定義メッセージを処理するためのメッセージハンドラ登録過程が必要です。特にGameNodeはゲームコンテンツのためにこのような過程が必須です。サーバー実行前にメインクラスで設定を行います。(1)GameAnvilConfigに設定されているゲームサービス名を生成します。ゲームサービス名は必ずGameAnvilConfigに定義されている名前を使用する必要があります。(2) そして処理したいメッセージを実装しておいた[ハンドラ](server-impl-07-message-handling.md#_2)と接続します。1つのGameNodeクラスはただ1つのサービスに対してのみ登録できます。
 
-| コールバック名             | 意味                 | 説明                                                                                                                                                             |
-| ------------------------- | ----------------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onChannelUserInfoUpdate | チャネルのユーザー情報更新 | 同じチャネルに結ばれた複数のGameNodeのうち、1つのGameNodeでチャネルのユーザー情報が変更された場合、同じチャネル内の残りの全GameNodeで同期するために呼び出されます。この時、ユーザーは受信した情報に基づいて現在のGameNodeチャネル情報を更新できます。 |
-| onChannelRoomInfoUpdate | チャネルのルーム情報更新 | 同じチャネルに結ばれた複数のGameNodeのうち、1つのGameNodeでチャネルのルーム情報が変更された場合、同じチャネル内の残りの全GameNodeで同期するために呼び出されます。この時、ユーザーは受信した情報に基づいて現在のGameNodeチャネル情報を更新できます。  |
-| onChannelInfo           | チャネル情報リクエスト      | クライアントがチャネル情報をリクエストした場合に呼び出されます。ユーザーは、このコールバックで好きなようにチャネル情報を構成して、クライアントに送信できます。                                                                                     |
-
-
+このようなGameNodeの主目的はノードに接続された全てのGameUserとGameRoomオブジェクトに対する処理を実行することです。これについてはすぐ後で説明します。
 
 ## ユーザー実装
 
-ユーザーオブジェクトはログインプロセスを経て、GameNodeに作成されます。ユーザーベースのコンテンツは、このクラスを中心に実装する必要があります。前述した全ての例と同様に、ユーザーも処理する固有のメッセージとハンドラを接続できます。次のサンプルコードを見ると、ユーザーはかなり多くのコールバックメソッドを提供していることが分かります。これらのうち一部は、基本実装が提供されるため、特別に必要な場合でない限り、再定義する必要はありません。これはユーザーだけでなく、エンジンが提供するほとんどのクラスに該当します。
-
-特に、ユーザーはエンジンに登録するためのアノテーションも他のクラスに比べて多く要求します。まず、どのようなゲームサービスのユーザーなのか登録した後、ユーザータイプを登録します。このユーザータイプは、その名のとおりユーザーの種類を区別するためのもので、クライアントでも同様にAPIを呼び出す時に使用されます。すなわち、該当APIがサーバーのどのユーザータイプに対する呼び出しなのかを明示することです。そのため、必ずサーバーとクライアント間にこれらのユーザータイプを任意の文字列で事前に定義しておく必要があります。このサンプルコードでは、"BasicUser"というユーザータイプを使用します。これに関する詳細は別のチャプターで取り扱います。最後に、このユーザー情報が[チャネル間のユーザー情報同期](server-impl-09-channel.md)に使用するかどうかを決定できます。チャネル間の情報同期が必要でない場合は、@UseChannelInfoアノテーションを省略できます。
+ユーザーオブジェクトはログイン過程を経てGameNodeに生成されます。ユーザーベースのコンテンツはこのクラスを中心に実装する必要があります。先ほど見てきた全ての例と同様に、ユーザーも処理する固有のメッセージとハンドラを接続できます。以下のサンプルコードを見ると、ユーザーはかなり多くのコールバックメソッドを提供していることがわかります。このうち一部は基本実装が提供されるため、特別必要な状況でなければ再定義しなくても構いません。これはユーザーだけでなくエンジンで提供する大部分のクラスに該当します。
 
 ```java
-@ServiceName("MyGame")
-@UserType("BasicUser")
-@UseChannelInfo
-public class SampleGameUser extends BaseUser {
+@GameAnvilUser(
+    gameServiceName = "MyGame", // ユーザーが所属するノード(上記のSampleGameNodeと同じサービス名)
+    gameType = "BasicUser",     // ユーザーの固有タイプ、"BasicUser"というユーザータイプのユーザーをエンジンに登録
+    useChannelInfo = true       // チャネル間の情報同期設定
+)
+public class SampleGameUser implements IUser {
+    private IUserContext userContext;
 
-    private static final MessageDispatcher<SampleGameUser> messageDispatcher = new MessageDispatcher<>();
-
-    static {
-        messageDispatcher.registerMsg(SampleGame.GameUserTest.class, _GameUserTest.class);
-    }
-
+    /**
+     * ユーザーコンテキストを伝達するために呼び出し
+     * <p/>
+     * オブジェクトが生成された後、一度呼び出される
+     *
+     * @param userContextユーザーコンテキスト
+     */
     @Override
-    public MessageDispatcher<SampleGameUser> getMessageDispatcher() {
-        return messageDispatcher;
+    public void onCreate(IUserContext userContext) {
+        this.userContext = userContext;
     }
 
     /**
-     * ログインする時に呼び出し
+     * ログイン時に呼び出し
      *
-     * @param payload      クライアントから送信された情報
-     * @param sessionPayload onPreLoginから送信されたペイロード
-     * @param outPayload   クライアントに送信する情報
-     * @returnログインが成功した場合はtrueを返し、それ以外の場合はfalseを返す 
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param payload        クライアントから受け取った{@link IPayload}
+     * @param sessionPayload onBeforeLoginから伝達された{@link IPayload}
+     * @param outPayload     クライアントへ伝達する{@link IPayload}
+     * @return戻り値がtrueならログイン成功、falseならログイン失敗
      */
     @Override
-    public boolean onLogin(final Payload payload,
-                           final Payload sessionPayload,
-                           Payload outPayload) throws SuspendExecution {    
+    public boolean onLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
     }
 
     /**
-     * ログイン成功後に必要な後処理用の呼び出し(すなわち、onLoginもしくはonReLoinが成功後に呼び出し)
+     * ログイン成功後に必要な後処理のために呼び出し
+     * <p/>
+     * (つまり、onLoginあるいはonReLoinが成功した後に呼び出し)
      *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param isRelogined 再ログインの有無
      */
     @Override
-    public void onPostLogin() throws SuspendExecution {
+    public void onAfterLogin(boolean isRelogined) {
 
     }
 
     /**
-     * すでにログインした状況で異なるデバイスで同じユーザーがログインした場合に呼び出し
+     * すでにログインしている状態で、再度ログインを試みる時に呼び出し
+     * <p/>
+     * ログインしている状態では接続が切れても、ユーザーのゲームユーザーオブジェクトがゲームノードに一定期間有効な状態で残っている
      *
-     * @param newDeviceId          新たに接続したユーザーのdeviceId値
-     * @param outPayloadForKickUserクライアントに送信するペイロード
-     * @return戻り値がtrueの場合は、新たに接続したユーザーがログインした後、既存ユーザーは強制ログアウト処理。Falseの場合は、新たに接続したユーザーがログイン失敗
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param payload        クライアントから伝達した任意の{@link IPayload}
+     * @param sessionPayload onBeforeLoginから伝達された{@link IPayload}
+     * @param outPayload     クライアントへ伝達する任意の{@link IPayload}
+     * @return 戻り値がtrueなら再ログイン成功、falseなら再ログイン失敗
      */
     @Override
-    public boolean onLoginByOtherDevice(final String newDeviceId,
-                                        Payload outPayloadForKickUser) throws SuspendExecution {
+    public boolean onReLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    /**
+     * クライアントとの接続が切れた時に呼び出されるコールバック
+     */
+    @Override
+    public void onDisconnect() {
+
+    }
+
+    /**
+     * ユーザーが属するノードがPauseになる時、該当ユーザーもPauseになり呼び出し
+     */
+    @Override
+    public void onPause() {
+
+    }
+
+    /**
+     * ユーザーが属するノードがResumeになる時、該当ユーザーもResumeになり呼び出し
+     */
+    @Override
+    public void onResume() {
+
+    }
+
+    /**
+     * ユーザーがログアウトする時に呼び出し
+     *
+     * @param payload   クライアントから受け取った{@link IPayload}
+     * @param outPayloadクライアントへ伝達する{@link IPayload}
+     */
+    @Override
+    public void onLogout(IPayload payload, IPayload outPayload) {
+
+    }
+
+    /**
+     * 該当ユーザーがログアウト可能か確認するために呼び出し
+     * <p/>
+     * エンジンユーザーはこのコールバックで現在のゲームユーザーがログアウトしても問題ないか決定できる
+     *
+     * @return 戻り値がfalseならログアウト進行が止まり、以後に定期的に再度コールバックが呼び出される。戻り値がtrueならログアウトを進行する
+     */
+    @Override
+    public boolean canLogout() {
         return true;
     }
 
     /**
-     * 任意のユーザータイプでログインした状態で、異なるユーザータイプでログインを試みた時に呼び出し
-     *
-     * @param userType  新たにログインを試みるユーザーのタイプ
-     * @param outPayloadクライアントに送信するペイロード
-     * @return戻り値がtrueの場合は、新しいログインが成功し、falseの場合は失敗
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * ルームのonLeavingRoomが実行されルームからユーザーが完全に出た後に呼び出し
+     * <p/>
+     * ルームから出たユーザーが処理すべき作業を行う
      */
     @Override
-    public boolean onLoginByOtherUserType(final String userType,
-                                          Payload outPayload) throws SuspendExecution {
+    public void onAfterLeaveRoom() {
+
+    }
+
+    /**
+     * ユーザーが他のノードへ移動(転送)可能な状態か確認するために呼び出し
+     *
+     * @return 戻り値がtrueなら転送可能な状態、falseなら不可能な状態。不可能な状態の場合、もしSafePauseが進行中ならSafePauseが終了するまでは該当ユーザーを転送するために持続的に呼び出される
+     */
+    @Override
+    public boolean canTransfer() {
         return true;
     }
 
     /**
-     * すでにログインした状態で(再接続などの理由により)異なるコネクションを通じて、ログインを試みた場合に呼び出し
+     * すでにログインしている状況で他のデバイスから同じユーザーがログインする時に呼び出し
      *
-     * @param outPayloadクライアントに送信するペイロード
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param newDeviceId              新しく接続したユーザーのデバイスID値
+     * @param outPayloadForKickUserクライアントへ伝達する{@link IPayload}。kickOutあるいはLoginRes情報含む
+     * @return 戻り値がtrueなら新しく接続したユーザーがログインし、既存ユーザーは強制ログアウト処理される。falseなら新しく接続したユーザーがログイン失敗
      */
     @Override
-    public void onLoginByOtherConnection(Payload outPayload) throws SuspendExecution {    
+    public boolean onLoginByOtherDevice(String s, IPayload payload) {
+        boolean isSuccess = true;
+        return isSuccess;
     }
 
     /**
-     * すでにログインした状態で、再ログインを試みた時に呼び出し
-     * (ログインした状態では、ユーザーのGameUserオブジェクトがGameNodeに変わらず有効な状態である)
+     * 任意のユーザータイプですでにログインしている状態で、他のユーザータイプでログインを試みる時に呼び出し
      *
-     * @param payload      クライアントから送信した任意のペイロード
-     * @param sessionPayload onPreLoginから送信されたペイロード
-     * @param outPayload   クライアントに送信する任意のペイロード
-     * @return戻り値がtrueの場合はReLogin成功、falseの場合はReLogin失敗
-     * @throws SuspendExecution:このメソッドはファイバーをsuspendできることを意味する
+     * @param userType   新しくログインを試みるユーザーのタイプ
+     * @param outPayloadクライアントへ伝達する{@link IPayload}
+     * @return 戻り値がtrueなら新しいログイン成功、falseなら失敗
      */
     @Override
-    public boolean onReLogin(final Payload payload,
-                             final Payload sessionPayload,
-                             Payload outPayload) throws SuspendExecution {
+    public boolean onLoginByOtherUserType(String s, IPayload payload) {
+        boolean isSuccess = true;
+        return isSuccess;
     }
 
     /**
-     * クライアントとの接続が切断された時に呼び出されるコールバック
+     * すでにログインしている状態で(再接続などの理由で) 他のコネクションを通じてログインを試みる場合に呼び出し
      *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param outPayloadクライアントへ伝達する{@link IPayload}
      */
     @Override
-    public void onDisconnect() throws SuspendExecution {    
+    public void onLoginByOtherConnection(IPayload payload) {
+
     }
 
     /**
-     * ユーザーが属するノードがpauseされた時、該当ユーザーもpauseされて呼び出し
+     * ルームマッチメイキングリクエストを受け取ると呼び出される
      *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param roomType                クライアントとサーバー間で事前定義したルーム種類を区分する任意の値
+     * @param matchingGroup           マッチングされるルームマッチンググループ伝達
+     * @param matchingUserCategory マッチングされるマッチングユーザーカテゴリーを伝達
+     * @param payload                 クライアントから受け取った{@link IPayload}
+     * @return {@link RoomMatchResult}タイプでマッチングされたルームの情報を返す。nullを返す場合クライアントリクエストオプションに従って新しいルームが生成されるかリクエスト失敗処理
      */
     @Override
-    public void onPause() throws SuspendExecution {    
+    public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, IPayload payload) {
+        return RoomMatchResult.FAILED;
     }
 
     /**
-     * ユーザーが属するノードがresumeされた時、該当ユーザーもresumeされて呼び出し
+     * クライアントのルームマッチメイキングリクエストを処理する際に失敗する場合呼び出し
      *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param matchRoomFailCode ルームマッチメイキングが失敗した理由
      */
     @Override
-    public void onResume() throws SuspendExecution {    
+    public void onMatchRoomFail(MatchRoomFailCode matchRoomFailCode) {
+
     }
 
     /**
-     * ユーザーがlogoutした時に呼び出し
+     * クライアントのユーザーマッチメイキングリクエストを処理する際に失敗する場合呼び出し
      *
-     * @param payload  クライアントから送信されたペイロード
-     * @param outPayloadクライアントに送信するペイロード
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param matchUserFailCodeユーザーマッチメイキングが失敗した理由
      */
     @Override
-    public void onLogout(final Payload payload, Payload outPayload) throws SuspendExecution {
+    public void onMatchUserFail(MatchUserFailCode matchUserFailCode) {
+
     }
 
     /**
-     * 該当ユーザーがログアウト可能かどうかを確認するための呼び出し
-     * エンジンユーザーは、このコールバックで現在のGameUserがログアウトしても問題がないか決定できる
+     * クライアントからユーザーマッチメイキングをリクエストした場合に呼び出されるコールバック
      *
-     * @return戻り値がfalseの場合は、ログアウトの進行が止まり、その後定期的に再度コールバックを呼び出す。戻り値がtrueの場合は、ログアウトを進行
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param roomType         クライアントとサーバー間で事前定義したルーム種類を区分する任意の値
+     * @param matchingGroupマッチンググループ
+     * @param payload          クライアントから受け取った{@link IPayload}
+     * @param outPayload       クライアントへ伝達する{@link IPayload}
+     * @return戻り値がtrueならユーザーマッチメイキングリクエスト成功、falseなら失敗
      */
     @Override
-    public boolean canLogout() throws SuspendExecution {
+    public boolean onMatchUser(String roomType, String matchingGroup, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
     }
 
     /**
-     * ルームマッチメイキングリクエストを受け取ると呼び出し
+     * ユーザーマッチメイキングがキャンセルされる時に呼び出し
      *
-     * @param roomTypeクライアントとサーバー間にあらかじめ定義したルームの種類を区別する任意の値
-     * @param payloadクライアントから送信されたペイロード
-     * @returnマッチングされたルームの情報返還を返す。Nullの場合は、クライアントのリクエストオプションによって新たにルームが作成されることや、失敗処理されることもある
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param reasonキャンセルされた理由。タイムアウト(TIMEOUT)、ユーザーのリクエストによるキャンセル(CANCEL)、マッチノードの終了によるキャンセル(SHUTDOWN)
      */
     @Override
-    public MatchRoomResult onMatchRoom(final String roomType,
-                                       final Payload payload) throws SuspendExecution {
-        return null;
+    public void onMatchUserCancel(MatchCancelReason matchCancelReason) {
+
     }
 
     /**
-     * クライアントでユーザーマッチメイキングリクエストした場合に呼び出されるコールバック
+     * ユーザーが他のノードへ移動(転送)する時、出発ノードから伝達するデータをまとめるために呼び出される
      *
-     * @param roomType クライアントとサーバー間にあらかじめ定義したルームの種類を区別する任意の値
-     * @param payload  クライアントから送信されたペイロード
-     * @param outPayloadクライアントに送信するペイロード
-     * @return戻り値がtrueの場合は、ユーザーマッチメイキングリクエストに成功し、falseの場合は失敗
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param transferPack他のノードへ持っていくデータを保存するためのパッケージ
      */
     @Override
-    public boolean onMatchUser(final String roomType,
-                               final Payload payload,
-                               Payload outPayload) throws SuspendExecution {
+    public void onTransferOut(ITransferPack transferPack) {
+
+    }
+
+    /**
+     * ユーザーが他のノードから移動(転送)されてきた時、到着地ノードへデータ、再登録すべきタイマーキーを伝達するために呼び出される
+     * <p>
+     * TimerHandlerTransferPackを通じてuserに登録されていたtimerHandlerKeyリストを確認する
+     * <p/>
+     * TimerHandlerTransferPackのreRegister()を活用して使用するtimerHandlerを再登録する
+     *
+     * @param transferPack             他のノードから持ってきたデータを伝達するためのパッケージ
+     * @param timerHandlerTransferPack
+     */
+    @Override
+    public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+
+    }
+
+    /**
+     * ユーザーが他のノードから移動(転送)されてきた時、転送が完了した後に呼び出される
+     */
+    @Override
+    public void onAfterTransferIn() {
+
+    }
+
+    /**
+     * クライアントからスナップショットリクエスト時に呼び出される
+     * <p>
+     * 主に接続が切れてサーバー状態が変わる可能性がある場合に呼び出して、クライアントとサーバー状態情報を同期するのに使用される
+     *
+     * @param payload    クライアントからサーバーへ伝達されるDefineがセットされた{@link IPayload}伝達
+     * @param outPayload サーバーからクライアントへ伝達されるDefineがセットされた{@link IPayload}を伝達
+     */
+    @Override
+    public void onSnapshot(IPayload payload, IPayload outPayload) {
+
+    }
+
+    /**
+     * クライアントから他のチャンネルへの移動リクエストをする時、現在ユーザーがチャンネル移動可能な状態か確認するために呼び出される
+     * <p>
+     * 注意！もし、ユーザーが明示的にmoveChannel() APIを呼び出してチャンネルを移動する場合にはcanMoveOutChannel()は呼び出されない
+     * <p/>
+     * エンジンにより暗黙的なチャンネル移動が発生する時のみ呼び出される
+     *
+     * @param destinationChannelId移動対象チャンネルのID
+     * @param payload                 クライアントから受け取った{@link IPayload}
+     * @param errorPayload         チャンネル移動に失敗した場合、サーバーからクライアントへ伝達するエラー{@link IPayload}。成功の場合は伝達されない
+     * @return戻り値がfalseならチャンネル移動が不可能なためリクエストは失敗、trueなら成功
+     */
+    @Override
+    public boolean canMoveOutChannel(String channelId, IPayload payload, IPayload outPayload) {
         return false;
     }
 
     /**
-     * ユーザーマッチングがキャンセルされた時に呼び出し
+     * 他のノードへチャンネル移動をする時、出発ノードで呼び出される
      *
-     * @param reasonキャンセルされた理由。通常、タイムアウト(TIMEOUT)やユーザーのリクエストによるキャンセル(CANCEL)のうちどちらか1つ。
-     * @return戻り値がtrueの場合は、マッチングキャンセル処理に成功し、falseの場合はキャンセルが失敗
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param destinationChannelId移動対象チャンネルのID
+     * @param outPayload            移動するチャンネルへ伝達する{@link IPayload}
      */
     @Override
-    public boolean onMatchUserCancel(final MatchCancelReason reason) throws SuspendExecution {
-        return false;
+    public void onMoveOutChannel(String channelId, IPayload payload) {
+
     }
 
     /**
-     * 処理するタイマーハンドラを登録するためのコールバック
-     * このコールバックが呼び出された場合、ユーザーは処理したいタイマーハンドラを好きなだけ登録
-     * (詳細については"タイマー"チャプターを参照してください。)
+     * 他のノードへチャンネル移動が完了した後、出発ノードで呼び出される
      */
     @Override
-    public void onRegisterTimerHandler() {    
+    public void onAfterMoveOutChannel() {
+
     }
 
     /**
-     * ユーザーが他のノードに移動(転送)可能な状態なのか確認するために呼び出し
+     * 他のノードへチャンネル移動をする時、対象ノードへ進入しながら呼び出される
      *
-     * @returnの戻り値がtrueの場合は、転送可能な状態であり、falseの場合は不可能な状態である。不可能な場合、もしNonStopPatchが進行中であれば、パッチが終了するまでは該当ユーザーを転送するために、継続的に呼び出す
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param sourceChannelId移動する前のチャンネルID
+     * @param payload       クライアントから受け取った{@link IPayload}
+     * @param outPayload    クライアントへ伝達する{@link IPayload}
+     * @throws GameAnvilException IOException, ExecutionException, InterruptedException発生時にGameAnvilExceptionとしてまとめてthrow
      */
     @Override
-    public boolean canTransfer() throws SuspendExecution {
-    }
-    
-    /**
-	 * ユーザーが他のノードに移動(転送)する時に、ソースノードから送信するデータを構築するために呼び出す
-	 * (詳細については"転送可能なオブジェクト"チャプターを参照してください。)
-     *
-     * @param transferPack他のノードに移動させるデータを保存するためのパッケージ
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public void onTransferOut(final TransferPack transferPack) throws SuspendExecution {    
-    }
+    public void onMoveInChannel(String channelId, IPayload payload, IPayload outPayload) {
 
-    /**
-     * ユーザーが他のノードに移動(転送)する時に、対象ノードで新たに作成されたユーザーオブジェクトを本来の状態に復元するために呼び出す
-     * (詳細については"転送可能なオブジェクト"チャプターを参照してください。)
-     * 
-     * この時点ではユーザーが完全に復元していないため、他の場所(ノード、ユーザーなど)へのメッセージリクエストが制限される。
-     *
-     * @param transferPack他のノードから持ってきたデータパッケージ
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public void onTransferIn(final TransferPack transferPack) throws SuspendExecution {    
     }
+}
 
-    /**
-     * ノード間のユーザー移動(転送)が完了した後、呼び出す
-     *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public void onPostTransferIn() throws SuspendExecution {    
-    }
+```
 
-    /**
-     * クライアントから他のチャネルに移動リクエストをした時、現在のユーザーがチャネル移動が可能な状態かどうかを確認するために呼び出す
-	 *
-	 * 注意>万が一、ユーザーが明示的にmoveChannel()APIを呼び出してチャネルを移動する場合、onCheckMoveOutChannel()は呼び出されません。エンジンによって暗黙のチャネル移動が発生した場合にのみ呼び出されます。
-     *
-     * @param destinationChannelId 移動対象チャネルのID
-     * @param payload            クライアントから送信されたペイロード
-     * @param errorPayload       チャネル移動に失敗した場合、サーバーからクライアントに送信するペイロード(成功した場合は送信されない)
-     * @returnの戻り値がfalseの場合、チャネル移動は不可能であるため、リクエストは失敗し、trueの場合は成功
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public boolean onCheckMoveOutChannel(final String destinationChannelId,
-                                         final Payload payload,
-                                         Payload errorPayload) throws SuspendExecution {
-        return false;
-    }
-
-    /**
-     * 他のノードにチャネル移動する時、ソースノードから呼び出す
-     *
-     * @param destinationChannelId移動するchannel ID
-     * @param outPayload         移動するchannelに送信するペイロード
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public void onMoveOutChannel(final String destinationChannelId,
-                                 Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 他のノードにチャネル移動が完了した後、ソースノードから呼び出す
-     *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public void onPostMoveOutChannel() throws SuspendExecution {
-    }
-
-    /**
-     * 他のノードにチャネル移動する時、対象ノードに進入して呼び出す
-     *
-     * @param sourceChannelId移動する前のチャネルID
-     * @param payload       クライアントから送信されたペイロード
-     * @param outPayload    クライアントに送信するペイロード
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public void onMoveInChannel(final String sourceChannelId,
-                                final Payload payload,
-                                Payload outPayload) throws SuspendExecution {
-    }
-
-    /**
-     * 他のノードにチャネル移動が完了した後、対象ノードから呼び出す
-     *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public void onPostMoveInChannel() throws SuspendExecution {
+```java
+@GameAnvilController
+public class _GameUserTest {
+   // SampleGameUserで処理したいプロトコルとハンドラをマッピング
+    @GameUserMapping(
+        value = MyGame.GameUserTest.class, // 処理するプロトコルバッファ
+        loadClass = SampleGameUser.class   // メッセージを受け取る対象(SampleGameUser)
+    )
+    public void execute(IUserDispatchContext ctx) {
+       // ここで行う作業を作成
     }
 }
 ```
 
-上記のサンプルコードでonLoginから始まるコールバックは、すべてログインに関連して呼び出されます。例えば、初回のログインリクエストに対しては、onLoginコールバックが呼び出され、すでにログインしている状態で再ログイン処理する場合は、onReLoginコールバックが呼び出されます。同様にログアウト処理する場合は、onLogoutコールバックが呼び出されます。このように、GameAnvilのコールバックは、その名前とJavaDoc注釈により、その用途が明確になっています。
+特に、ユーザーはエンジンに登録するための設定が他のクラスに比べて多く要求されます。まず、どのゲームサービスのためのユーザーなのか登録した後、ユーザータイプを登録します。このユーザータイプは名前の通りユーザーの種類を区別するための用途として、クライアントでも同様にAPIを呼び出す時に使用されます。つまり、該当APIがサーバーのどのユーザータイプに対する呼び出しかを明示するものです。したがって必ずサーバーとクライアント間にこのようなユーザータイプを任意の文字列で事前定義しておく必要があります。このサンプルコードでは「BasicUser」というユーザータイプを使用します。これについてのより詳細な説明は別の章で改めて扱います。最後にこのユーザー情報が[チャンネル間ユーザー情報同期](server-impl-09-channel.md#_4)に使用されるかどうかを決定できます。もしチャンネル間情報同期が必要なければ省略できます。
 
-ユーザーは、いつでもチャネル間での移動が可能です。このようなチャネルに関する内容は、後で[別途のチャプター](server-impl-09-channel)で説明しますので、ここでは先に進みます。それだけでなく、ユーザーは複数のGameNode間で転送可能なオブジェクトです。これに関連する機能についても[別途のチャプター](server-impl-08-object-transfer)で詳しく説明します。
+上記のサンプルコードでonLoginで始まるコールバックは全てログインに関連して呼び出されます。例えば最初のログインリクエストに対してはonLoginコールバックが呼び出され、すでにログインされている状態で再ログインを処理する場合はonReLoginコールバックが呼び出されます。同様にログアウトを処理する時にはonLogoutコールバックが呼び出されます。このようにGameAnvilのコールバックはその名前とJavaDoc注釈を通じてその用途が大部分明確に説明されます。
 
-GameAnvilは、2種類のマッチメイキング機能、ルームマッチメイキングとユーザーマッチメイキングを提供します。これらのマッチメイキングリクエストがユーザーに到達すると、onMatchRoomまたは、onMatchUserコールバックが呼び出されます。ユーザーは、このコールバックでGameAnvilが提供するマッチメイカーを使用したり、直接実装したり、3rdパーティとして提供された他のマッチメイカーを使用したりすることもできます。これに関する詳細は、[次のチャプター](server-impl-04-match-node)でMatchNodeについて取り扱いながら、もう一度説明します。
+ユーザーはいつでもチャンネル間での移動が可能です。このようなチャンネルに関連した内容は後で[別の章](server-impl-09-channel)で個別に説明するので、ここではひとまず進むことにします。それだけでなくユーザーは複数のGameNode間で転送可能なオブジェクトです。これに関連した機能もまた[別の章](server-impl-08-object-transfer)でより詳しく説明します。 
 
-これらのユーザーのコールバックを整理すると、次の図のようになります。
+GameAnvilは2種類のマッチメイキング機能、ルームマッチメイキングとユーザーマッチメイキングを提供します。このようなマッチメイキングリクエストがユーザーに到達するとonMatchRoomあるいはonMatchUserコールバックが呼び出されます。ユーザーはこのコールバックでGameAnvilが提供するマッチメーカーを使用することもでき、直接実装したりサードパーティーから提供された他のマッチメーカーを使用することもできます。これについてのより詳細な説明はすぐ[次の章](server-impl-04-match-node)でMatchNodeを扱いながら改めて行います。
 
+このようなユーザーのコールバックを整理すると以下の表の通りです。
 
-| コールバック名              | 意味                                   | 説明                                                                                                                                                    |
-| -------------------------- | ----------------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onLogin                  | ログイン                                | 初めてログインする時に呼び出されます。通常、ユーザーはこのコールバックでDBなどのストレージからユーザー情報を取得して、ゲームユーザーオブジェクトを初期化する作業を実行します。                                                              |
-| onPostLogin              | ログイン成功後処理                    | onLoginが成功した後に呼び出されます。ログインの後処理作業をこのコールバックで実行できます。                                                                                                 |
-| onLoginByOtherDevice     | チャネル情報リクエスト                        | すでにログインしている状態で、他のデバイスに追加ログインリクエストが来た時に呼び出されます。ユーザーは、既存のユーザーと新たなユーザーのどちらをログインさせるかを戻り値で決定できます。                                                   |
-| onLoginByOtherUserType   | 他のユーザータイプでログイン試行         | すでにログインしている状態で、他のユーザータイプにログインリクエストが来た時に呼び出されます。新たなユーザータイプに対してログインを進めるかどうかを戻り値で決定できます。                                                         |
-| onLoginByOtherConnection | 他のコネクションでログイン試行            | すでにログインしている状態で、(再接続によって)以前とは異なるコネクションでログインを試みた場合に呼び出されます。もし、再接続に対する追加作業が必要な場合は、このコールバックで行うことができます。                                               |
-| onReLogin                | 再ログイン                              | すでにログインしている状態で再ログインした場合は、onLoginではなくonReLoginが呼び出されます。すなわち、再ログインに対する作業は、このコールバックで処理します。                                                           |
-| onDisconnect             | 接続終了                             | クライアントから接続が切断された時に呼び出されます。この時、追加で処理するコードをここに実装します。                                                                                                   |
-| onPause                  | 一時停止                             | コンソールを介してGameNodeを一時停止すると、該当GameNodeのすべてのユーザーに呼び出されます。ユーザーは、ノードが一時停止した時にユーザーが追加で処理したいコードをここに実装できます。                                           |
-| onResume                 | 再開                                  | コンソールを介してGameNodeが一時停止状態から動作を再開すると、該当GameNodeのすべてのユーザーに呼び出されます。ユーザーは再開状態でユーザーに対して処理したいコードをここに実装できます。                                  |
-| onLogout                 | ログアウト                             | ユーザーがログアウトした時に呼び出されます。これは、ユーザーが明示的にリクエストしたログアウトである可能性もあり、接続が切断された状態で設定された時間を超過した場合、エンジンによって自動的にログアウトすることもあります。                                                 |
-| canLogout                | ログアウト可能性確認                  | 該当ユーザーが現在ログアウトが可能な状態であるかをチェックするために呼び出されます。もしゲームプレイ中や情報を失ってはならない状況である場合は、falseを返してログアウトを延期できます。falseを返した場合、エンジンは任意の時間が経過した後、継続的にコールバックを呼び出します。 |
-| onMatchRoom              | ルームマッチメイキングリクエスト                    | ユーザーがルームマッチメイキングをリクエストすると、呼び出されます。この時、ユーザーはこのコールバックでエンジンが提供するルームマッチメイキングAPIもしくは、第3のマッチメイキングソリューションを任意で使用できます。                                                        |
-| onMatchUser              | ユーザーマッチメイキングリクエスト                  | ユーザーがユーザーマッチメイキングをリクエストすると、呼び出されます。ユーザーは、このコールバックでエンジンが提供するユーザーマッチメイキングAPIもしくは、第3のマッチメイキングソリューションを任意で使用できます。                                                          |
-| onMatchUserCancel        | ユーザーマッチメイキングキャンセル                  | ユーザーが申請したユーザーマッチメイキングをキャンセルすると、呼び出されます。すでにマッチングが完了した場合など、キャンセルできない場合は失敗することもあります。                                                                         |
-| canTransfer              | ユーザー転送が可能な状態であるかを確認       | 該当ユーザーが他のノードに転送可能な状態であるかをチェックするために呼び出されます。もしゲームプレイ中やまだ準備が完了していない場合は、falseを返して転送を延期できます。 falseを返した場合、エンジンが任意の時間が経過した後、継続的にこのコールバックを呼び出します。 |
-| onTransferOut            | 既存ノードから転送される準備       | ユーザーが他のGameNodeに転送される時、ソースノードで転送を開始する時に呼び出されます。ユーザーは、このコールバックでユーザーオブジェクトと共に転送するデータパッケージを構築できます。                                                         |
-| onTransferIn             | 新たなノードに転送完了処理           | ユーザーが他のGameNodeに転送される時に対象ノードからの転送が完了すると、呼び出されます。ユーザーは共にインポートされたデータパッケージを展開して、元のユーザー状態に復元できます。                                                       |
-| onPostTransferIn         | 転送完了の後処理                      | ユーザーの転送に成功した場合、対象ノードで後処理のために呼び出されます。                                                                                                                   |
-| onCheckMoveOutChannel    | チャネル移動が可能な状態であるかを確認       | ユーザーが他のチャネルに移動できる状態かどうかをチェックするために呼び出されます。ユーザーが明示的にmoveChannel()APIを呼び出して、チャネルを移動する場合は呼び出されません。エンジンによって、暗黙のチャネル移動が発生した場合にのみ呼び出されます。             |
-| onMoveOutChannel         | 既存チャネルから他のチャネルへの移動準備    | ユーザーが他のチャネルに移動する時にソースノードから呼び出されます。ユーザーは希望する情報をoutPayloadに入れて、対象チャネルに移動させることができます。                                                                 |
-| onPostMoveOutChannel     | 既存チャネルから他のチャネルへの移動準備完了 | onMoveOutChannelが成功すると、後処理のために呼び出されます。                                                                                                                   |
-| onMoveInChannel          | 新しいチャネルへの移動処理                | ユーザーが他のチャネルに移動する時に対象ノードから呼び出されます。ユーザーは任意の情報をoutPayloadに入れて、クライアントに送信できます。                                                                        |
-| onPostMoveInChannel      | 新しいチャネルへの移動完了                | onMoveInChannelが成功すると、後処理のために呼び出されます。                                                                                                                    |
-| getMessageDispatcher | 処理するパケット有り | 処理するメッセージがある場合に返します。ユーザーは、自分が宣言したディスパッチャーを使用できます。詳細については、[メッセージ処理](./server-impl-07-message-handling#13-getMessageDispatcher)を参照してください。            |
+| コールバック名                   | 意味                     | 説明                                                                                                                                                                                                                                                                |
+|--------------------------|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| onCreate                 | オブジェクト生成                  | オブジェクトが生成された時に呼び出されます。生成されたタイプで使用可能なAPIを使用できるコンテキストを受け取ります。コンテンツで必要であれば保存して使用できます。                                                                                                                                                   |
+| onLogin                  | ログイン                    | 初めてログインをする時に呼び出されます。一般的にユーザーはこのコールバックでDBなどのストレージからユーザー情報を取得し、ゲームユーザーオブジェクトを初期化する作業を行います。                                                                                                                                                     |
+| onAfterLogin             | ログイン成功後処理              | onLoginが成功した後に呼び出されます。ログインに対する後処理作業をこのコールバックで行うことができます。                                                                                                                                                                                            |
+| onReLogin                | 再ログイン                   | すでにログインされている状態で再度ログインをする場合にはonLoginではなくonReLoginが呼び出されます。つまり、再ログインに対する作業はこのコールバックで処理します。                                                                                                                                                  |
+| onDisconnect             | 接続終了                  | クライアントから接続が切れた時に呼び出されます。この時、追加で処理するコードをここに実装します。                                                                                                                                                                                              |
+| onPause                  | 一時停止                  | コンソールを通じてGameNodeを一時停止すると、該当GameNodeの全てのユーザーに対して呼び出されます。ユーザーはノードが一時停止される時にユーザーで追加で処理したいコードをここに実装できます。                                                                                                                                   |
+| onResume                 | 再開                     | コンソールを通じてGameNodeが一時停止状態で駆動を再開すると、該当GameNodeの全てのユーザーに対して呼び出されます。ユーザーは再開状態でユーザーに対して処理したいコードをここに実装できます。                                                                                                                                |
+| onLogout                 | ログアウト                   | ユーザーがログアウトする時に呼び出されます。これはユーザーが明示的にリクエストしたログアウトの場合もあり、接続切れ状態で設定された時間を超過した場合にエンジンにより自動的にログアウトされる場合もあります。                                                                                                                                        |
+| canLogout                | ログアウト可能性確認             | 該当ユーザーが現在ログアウト可能な状態かチェックするために呼び出されます。ゲームプレイ中だったり情報を失ってはいけない状況ではfalseを返してログアウトを遅らせることができます。もしfalseを返すとエンジンは任意の時間以後に持続的にこのコールバックを呼び出します。                                                                                |
+| onAfterLeaveRoom         | ルーム退室後処理                | ルームのonLeavingRoomが実行されルームからユーザーが完全に出た後に呼び出されます。ルームから出たユーザーが処理すべき作業を進めます。                                                                                                                                                                  |
+| canTransfer              | ユーザー転送が可能な状態か確認      | 該当ユーザーが他のノードへ転送されうる状態かチェックするために呼び出されます。ゲームプレイ中だったりまだ準備ができていない場合にはfalseを返して転送を遅らせることができます。falseを返した場合にはエンジンが任意の時間以後に持続的にこのコールバックを呼び出します。                                                                           |
+| onLoginByOtherDevice     | 他のデバイスでのログイン試行     | すでにログインされている状態で他のデバイスから追加ログインリクエストが来た時に呼び出されます。ユーザーは既存のユーザーと新しいユーザーのどちらをログインさせるか戻り値で決定できます。                                                             |
+| onLoginByOtherUserType   | 他のユーザータイプでのログイン試行    | すでにログインされている状態で他のユーザータイプでログインリクエストが来た時に呼び出されます。新しいユーザータイプに対してログインを進めるかどうかを戻り値で決定できます。                                                                   |
+| onLoginByOtherConnection | 他のコネクションでのログイン試行      | すでにログインされている状態で(再接続により) 以前とは異なるコネクションでログイン試行をする場合に呼び出されます。もし、再接続に対する追加作業が必要であればこのコールバックで行うことができます。                                                          |
+| onMatchRoom              | ルームマッチメイキングリクエスト            | ユーザーがルームマッチメイキングをリクエストすると呼び出されます。この時、ユーザーはこのコールバックでエンジンが提供するルームマッチメイキングAPIあるいは第三のマッチメイキングソリューションを任意に使用できます。                                                               |
+| onMatchRoomFail          | ルームマッチメイキングリクエスト失敗         | ユーザーがルームマッチメイキングをリクエストすると呼び出されます。                                                                                                                                                      |
+| onMatchUserFail          | ユーザーマッチメイキングリクエスト失敗        | ユーザーがユーザーマッチメイキングをリクエストすると呼び出されます。ユーザーはこのコールバックでエンジンが提供するユーザーマッチメイキングAPIあるいは第三のマッチメイキングソリューションを任意に使用できます。                                                               |
+| onMatchUser              | ユーザーマッチメイキングリクエスト           | ユーザーがユーザーマッチメイキングをリクエストすると呼び出されます。ユーザーはこのコールバックでエンジンが提供するユーザーマッチメイキングAPIあるいは第三のマッチメイキングソリューションを任意に使用できます。                                                               |
+| onMatchUserCancel        | ユーザーマッチメイキングキャンセル           | ユーザーが以前に申請したユーザーマッチメイキングをキャンセルすると呼び出されます。すでにマッチングが完了した状況のようにキャンセルできない場合には失敗することもあります。                                                                                 |
+| onTransferOut            | 既存ノードから転送されて出ていく準備   | ユーザーが他のGameNodeへ転送される時、ソースノードで転送を開始する時に呼び出されます。ユーザーはこのコールバックでユーザーオブジェクトと共に転送するデータパッケージをまとめることができます。                                                               |
+| onTransferIn             | 新しいノードへの転送完了処理     | ユーザーが他のGameNodeへ転送される時、対象ノードで転送完了しながら呼び出されます。ユーザーは一緒に持ってきたデータパッケージを展開して元のユーザー状態に復旧できます。                                                              |
+| onAfterTransferIn        | 転送完了後処理             | ユーザー転送が成功した場合、対象ノードで後処理のために呼び出されます。                                                                                                                                         |
+| onSnapshot               | クライアントからスナップショットリクエスト        | クライアントからスナップショットリクエスト時に呼び出されます。主に接続が切れてサーバー状態が変わる確率がある場合に呼び出してクライアントとサーバー状態情報を同期するのに使用されます。                                                                    |
+| canMoveOutChannel        | チャンネル移動が可能な状態か確認    | ユーザーが他のチャンネルへ移動できる状態かチェックするために呼び出されます。もし、ユーザーが明示的にmoveChannel() APIを呼び出してチャンネルを移動する場合には呼び出されません。ただエンジンにより暗黙的なチャンネル移動が発生する時のみ呼び出されます。               |
+| onMoveOutChannel         | 既存チャンネルから他のチャンネルへ移動準備   | ユーザーが他のチャンネルへ移動する時、ソースノードで呼び出されます。ユーザーは希望する情報をoutPayloadに入れて対象チャンネルへ持っていくことができます。                                                                           |
+| onAfterMoveOutChannel    | 既存チャンネルから他のチャンネルへ移動準備完了 | onMoveOutChannelが成功すれば後処理のために呼び出されます。                                                                                                                                        |
+| onMoveInChannel          | 新しいチャンネルへの移動処理         | ユーザーが他のチャンネルへ移動する時、対象ノードで呼び出されます。ユーザーは任意の情報をoutPayloadに入れてクライアントへ伝達できます。                                                                            |
 
 ### ログインとは？
 
-前述した内容とサンプルコードでログインに関する内容が頻繁に登場します。また、このようなログインは、クライアントがサーバーに接続した後、GameNodeに自分のユーザーオブジェクトを作る過程だと定義できます。コールバックメソッドの中でonLogin()は、最初にユーザーを作成するためにログインを試みる過程で呼び出されます。この時、ユーザーはユーザーオブジェクトを構成するための情報をDBなどから取得できます。このようなonLogin()コールバックが成功すると、GameNode上に該当ユーザーオブジェクトが作成されます。このようにログインが完了すると、直接定義したプロトコルに基づいてクライアントは自分のユーザーオブジェクトを通じて、他のオブジェクトとメッセージをやり取りすることでさまざまなコンテンツを実装できます。
+先ほど説明した内容とサンプルコードでログインに関する内容が頻繁に登場します。また、このようなログインはクライアントがサーバーに接続した後、GameNodeに自身のユーザーオブジェクトを作る過程だと定義できます。コールバックメソッドのうちonLogin()は最初にユーザーを生成するためにログインを試みる過程で呼び出されます。この時、ユーザーはユーザーオブジェクトを構成するための情報をDBなどから獲得できます。このようなonLogin()コールバックが成功すればGameNode上に該当ユーザーオブジェクトが生成されます。このようにログインが完了すると、直接定義したプロトコルを基盤にクライアントは自身のユーザーオブジェクトを通じて他のオブジェクトとメッセージをやり取りしながら様々なコンテンツを実装できます。
 
 ### ログアウト
-ログアウトはログインの反対概念です。すなわち、GameNode上で自分のユーザーオブジェクトを削除するプロセスです。ログアウトを開始すると、該当ユーザーオブジェクトは、onLogout()コールバックを呼び出して、メモリ上で削除される前にDBなどに自分の最終状態を保管できます。このようなログアウトは、クライアントが明示的にリクエストすることも可能で、クライアントの接続が切断された状態で任意の時間が経過した後、エンジンによって自動的に処理されることもあります。したがって、モバイルゲームのように頻繁な接続の切断が予想される場合は、すぐにログアウトが行われないように適切な[設定](server-impl-16-config-vm.md#game)をしておくことができます。
 
-
+ログアウトはログインの反対概念です。つまり、GameNode上で自身のユーザーオブジェクトを除去する過程です。ログアウトを開始すると該当ユーザーオブジェクトはonLogout()コールバックを呼び出してメモリ上で削除される前にDBなどで自身の最終状態を保管できます。このようなログアウトはクライアントが明示的にリクエストすることもでき、クライアントの接続が切れた状態で任意の時間が経過した後、エンジンにより自動的に処理されたりもします。したがって、もしモバイルゲームのように頻繁な接続切れが予想される場合にはすぐにログアウトが進行されないよう適切な[設定](server-impl-16-config-vm.md#game)をしておくことができます。
 
 ## ルーム実装
 
-2人以上のユーザーは、ルームを通じて同期されたメッセージの流れを作成できます。すなわち、ユーザーのリクエストはルーム内ですべて順番が保証されます。もちろん、1人のユーザーのためのルーム作成もコンテンツによって、意味を持つことができます。ルームをどのように使用するかは、あくまでエンジンユーザー次第です。このようなルームは、ユーザーと同様に基本クラスであるBaseRoomを継承して、さまざまなコールバックメソッドを再定義でき、自らメッセージを処理することもできます。次のサンプルコードは、SampleGameUserのためのSampleGameRoomクラスです。
+2名以上のユーザーはルームを通じて同期されたメッセージフローを作ることができます。つまり、ユーザーのリクエストはルームの中で全て順序が保証されます。もちろん1名のユーザーのためのルーム生成もコンテンツによっては意味を持つこともあります。ルームをどのように使用するかはあくまでエンジンユーザーの役割です。このようなルームはユーザーと同様に基本クラスであるIRoomインターフェースを実装して様々なコールバックメソッドを再定義でき、独自にメッセージを処理することもできます。以下のサンプルコードはSampleUserのためのSampleRoomクラスです。
 
-ルームもエンジンに登録するためには、さまざまなアノテーションが必要です。まず、どのようなゲームサービス用のルームなのかを登録した後、ルームタイプを登録します。このルームタイプは、その名のとおり部屋の種類を区別するためのものであり、クライアントでも同様にAPIを呼び出す時に使用されます。すなわち、該当APIがサーバーのどのルームタイプへの呼び出しであるのかを明示することです。したがって、必ずサーバーとクライアント間にこれらのルームタイプを任意の文字列であらかじめ定義しておく必要があります。このサンプルコードでは、"BasicRoom"というルームタイプを使用します。これについての詳細は、別のチャプターで再度扱います。最後に、このルーム情報が[チャネル間のルーム情報同期](server-impl-09-channel.md)に使用するかどうかを決定できます。チャネル間の情報同期が不要な場合、@UseChannelInfoアノテーションは省略できます。
+ ```java
+ @GameAnvilRoom(
+    gameServiceName = "MyGame", // ルームが所属するノード(上記のSampleGameNodeと同じサービス名)
+    gameType = "BasicRoom",      // ルームの固有タイプ、"BasicRoom"というタイプのルームをエンジンに登録
+    useChannelInfo = true       // チャネル間の情報同期設定
+)
+public class SampleRoom implements IRoom<SampleUser> {
+    private IRoomContext roomContext;
 
-```java
-@ServiceName("MyGame")
-@RoomType("BasicRoom")
-@UseChannelInfo
-public class SampleGameRoom extends BaseRoom<SampleGameUser> {
-
-    private static final RoomMessageDispatcher<SampleGameRoom, SampleGameUser> messageDispatcher = new RoomMessageDispatcher<>();
-
-    static {
-        messageDispatcher.registerMsg(SampleGame.GameRoomTest.class, _GameRoomTest.class);
-    }
-
+    /**
+     * ルームコンテキストを伝達するために呼び出し
+     * <p/>
+     * オブジェクトが生成された後、一度呼び出される
+     *
+     * @param roomContextルームコンテキスト
+     */
     @Override
-    public RoomMessageDispatcher<SampleGameRoom, SampleGameUser> getMessageDispatcher() {
-        return messageDispatcher;
+    public void onCreate(IRoomContext<SampleUser> roomContext) {
+        this.roomContext = roomContext;
     }
 
     /**
      * ルームが初期化される時に呼び出し
-     *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
      */
     @Override
-    public void onInit() throws SuspendExecution {    
+    public void onInit() {
+
     }
 
     /**
-     * ルームがサーバーから消えた時に呼び出し
-     *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * ルームが削除される時に呼び出される
      */
     @Override
-    public void onDestroy() throws SuspendExecution {    
+    public void onDestroy() {
+
     }
 
     /**
-     * 新しいルームを作成する時に呼び出し
+     * 新しいルームを生成する時に呼び出し
+     * <p/>
+     * 戻り値によってルームを生成するかどうかが決定される
      *
-     * @param user     リクエストしたユーザーオブジェクト
-     * @param inPayloadクライアントから送信されたペイロード
-     * @param outPayloadクライアントに送信するペイロード
-     * @returnの戻り値がtrueの場合は、ルームの作成に成功し、falseの場合は失敗
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param user       リクエストしたユーザーオブジェクト
+     * @param inPayload  クライアントから受け取った{@link IPayload}
+     * @param outPayloadクライアントへ伝達する{@link IPayload}
+     * @return戻り値がtrueならルーム生成成功、falseなら失敗
      */
     @Override
-    public boolean onCreateRoom(SampleGameUser user,
-                                final Payload inPayload,
-                                Payload outPayload) throws SuspendExecution {
+    public boolean onCreateRoom(SampleUser user, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
     }
 
     /**
-     * 任意のルームに参加する時に呼び出し
+     * 任意のルームに参加する時に呼び出される
+     * <p/>
+     * 戻り値によってルームに参加するかどうかが決定される
      *
-     * @param user     リクエストしたユーザーオブジェクト
-     * @param inPayloadクライアントから送信されたペイロード
-     * @param outPayloadクライアントに送信するペイロード
-     * @return戻り値がtrueの場合は、入場に成功し、falseの場合は失敗
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param user       リクエストしたユーザーオブジェクト
+     * @param inPayload  クライアントから受け取った{@link IPayload}
+     * @param outPayloadクライアントへ伝達する{@link IPayload}
+     * @return戻り値がtrueなら入室成功、falseなら失敗
      */
     @Override
-    public boolean onJoinRoom(SampleGameUser user,
-                              final Payload inPayload,
-                              Payload outPayload) throws SuspendExecution {
+    public boolean onJoinRoom(SampleUser user, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
     }
 
     /**
-     * ルームから退出する時に呼び出し
+     * ルームから出る時に呼び出される
+     * <p/>
+     * 戻り値によってルームから出るかどうかが決定される
      *
-     * @param user     リクエストしたユーザーオブジェクト
-     * @param inPayloadクライアントから送信されたペイロード
-     * @param outPayloadクライアントに送信するペイロード
-     * @return戻り値がtrueの場合は、退出に成功し、falseの場合は失敗
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param user       リクエストをしたユーザーオブジェクト
+     * @param inPayload  クライアントから受け取った{@link IPayload}
+     * @param outPayloadクライアントへ伝達する{@link IPayload}
+     * @return戻り値がtrueなら退室成功、falseなら失敗
      */
     @Override
-    public boolean onLeaveRoom(SampleGameUser user,
-                               final Payload inPayload,
-                               Payload outPayload) throws SuspendExecution {
+    public boolean canLeaveRoom(SampleUser user, IPayload payload, IPayload outPayload) {
+        return true;
     }
 
     /**
-     * onLeaveRoomコールバックが成功した場合、退出完了後、後処理のために呼び出し
+     * ユーザーがルームから出る時に呼び出し
+     * <p/>
+     * ユーザーがルームから出る前に最後の作業を処理する
      *
-     * @param userルームから退出したユーザーオブジェクト
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param userルームから出るユーザー
      */
     @Override
-    public void onPostLeaveRoom(SampleGameUser user) throws SuspendExecution {
+    public void onLeaveRoom(SampleUser user) {
+
     }
 
     /**
-     * ユーザーがルームに参加した状態で接続切断などによって、再接続および再ログインした場合、該当ルームに自動的に再入場して呼び出し
-     *
-     * @param user      ルームに入場するユーザーオブジェクト
-     * @param outPayloadクライアントに送信するペイロード
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * ユーザーがルームから完全に出た後に呼び出される
+     * <p/>
+     * ルームとルームに残っているユーザーに関する作業を処理する
      */
     @Override
-    public void onRejoinRoom(SampleGameUser user, Payload outPayload) throws SuspendExecution {    
-    }
+    public void onAfterLeaveRoom() {
 
-   /**
-     * 処理するタイマーハンドラを登録するためのコールバック
-     * このコールバックが呼び出された場合、ユーザーは処理したいタイマーハンドラを好きなだけ登録します。
-     * (詳細については"タイマー"チャプターを参照してください。)
-     */
-    @Override
-    public void onRegisterTimerHandler() {
-    }
-
-
-    /**
-     * ルームが他のノードに移動(転送)可能な状態であるかどうかを確認するために呼び出し
-     *
-     * @returnの戻り値がtrueの場合は、転送可能な状態であり、falseの場合は不可能な状態である。不可能な場合、NonStopPatchが進行中であれば、パッチが終了する前に該当ルームを転送するために継続的に呼び出し
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public boolean canTransfer() throws SuspendExecution {    
-    }
-  
-    /**
-	 * 該当ルームが他のノードに移動(転送)する時、ソースノードから送信するデータを構築するために呼び出し
-	 * (詳細については「転送可能なオブジェクト」チャプターを参照してください。)
-     *
-     * @param transferPack他のノードに移動させるデータを保存するためのパッケージ
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */
-    @Override
-    public void onTransferOut(TransferPack transferPack) throws SuspendExecution {
     }
 
     /**
-     * 該当ルームが他のノードに移動(転送)する時、対象ノードで新たに作成されたルームオブジェクトを元の状態に復元するために呼び出し
-     * (詳細については"転送可能なオブジェクト"チャプターを参照してください。)
-     * 
-     * この時点ではルームは完全に復元していないため、他の場所(ノード、ユーザーなど)へのメッセージリクエストが制限される。
+     * 再ログイン時に該当ルームへ自動的に再進入する際に呼び出される
      *
-     * @param transferPack他のノードから取得したデータパッケージ
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param user       ルームへ入るユーザーオブジェクト
+     * @param outPayloadクライアントへ伝達する{@link IPayload}
      */
     @Override
-    public void onTransferIn(List<SampleGameUser> userList,
-                             final TransferPack transferPack) throws SuspendExecution {
+    public void onRejoinRoom(SampleUser user, IPayload payload) {
+
     }
 
     /**
-     * ルームが属するノードがpauseされた時、該当ルームもpauseされて呼び出し
+     * 該当ルームが他のノードへ移動(転送)する時、出発ノードから伝達するデータをまとめるために呼び出される
      *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param transferPack 他のノードへ持っていくデータを保存するためのパッケージである {@link ITransferPack}
      */
     @Override
-    public void onPause() throws SuspendExecution {
+    public void onTransferOut(ITransferPack transferPack) {
+
     }
 
     /**
-     * 部屋が属するノードがresumeされた時、該当ルームもresumeされて呼び出し
+     * 該当ルームが他のノードへ移動(転送)する時、対象ノードで新しく生成されたルームオブジェクトを元の状態に復元、処理するタイマーハンドラを登録するために呼び出される
+     * <p>
+     * TimerHandlerTransferPackを通じてルームに登録されていたtimerKeyリストを確認する
+     * <p/>
+     * TimerHandlerTransferPackのreRegister()を活用して使用するtimerHandlerを再登録する
+     * <p/>
+     * この時点ではルームは完全に復旧されていないため、他の場所(ノード、ユーザーなど)へのメッセージリクエストが制限される
      *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param userList               移動するユーザーリスト
+     * @param transferPack              他のノードから持ってきたデータパッケージである {@link ITransferPack}
+     * @param timerHandlerTransferPack
      */
     @Override
-    public void onResume() throws SuspendExecution {
+    public void onTransferIn(List<SampleUser> list, ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+
     }
 
     /**
-     * クライアントがパーティマッチメイキングをリクエストした場合、呼び出されるコールバック
-     * (パーティマッチメイキングのためには、2人以上のユーザーがNamedRoomに入場していなければならない。この時、該当NamedRoomでこのコールバックが呼び出される。)
-     *
-     * @param roomType クライアントとサーバー間にあらかじめ定義したルームの種類を区別する任意の値
-     * @param user     パーティマッチングをリクエストしたユーザー(ルームリーダー)
-     * @param payload  クライアントから送信されたペイロード
-     * @param outPayloadクライアントに送信するペイロード
-     * @return戻り値がtrueの場合は、パーティマッチメイキングリクエストが成功し、falseの場合は失敗
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
-     */  
+     * 該当ルームが他のノードへ移動(転送)完了した後に呼び出される
+     */
     @Override
-    public boolean onMatchParty(final String roomType,
-                                final SampleGameUser user,
-                                final Payload payload,
-                                Payload outPayload) throws SuspendExecution {
-        return false;
+    public void onAfterTransferIn() {
+
+    }
+
+    /**
+     * ルームが属するノードが Pause になる時、該当ルームも Pause になり呼び出される
+     */
+    @Override
+    public void onPause() {
+
+    }
+
+    /**
+     * ルームが属するノードが Resume になる時、該当ルームも Resume になり呼び出される
+     */
+    @Override
+    public void onResume() {
+
+    }
+
+    /**
+     * クライアントからパーティーマッチメイキングをリクエストした場合に呼び出される
+     * <p/>
+     * パーティーマッチメイキングのためには2名以上のユーザーがパーティータイプのネームドルームに入室しなければならない
+     *
+     * @param roomType         クライアントとサーバー間で事前定義したルーム種類を区分する任意の値
+     * @param matchingGroupマッチンググループ
+     * @param user           パーティーマッチメイキングをリクエストしたユーザー(ルームリーダー)
+     * @param payload          クライアントから受け取った{@link IPayload}
+     * @param outPayload       クライアントへ伝達する{@link IPayload}
+     * @return 戻り値が true ならパーティーマッチメイキングリクエスト成功、false なら失敗
+     */
+    @Override
+    public boolean onMatchParty(String roomType, String matchingGroup, SampleUser user, IPayload payload, IPayload outPayload) {
+        boolean isSuccess = true;
+        return isSuccess;
+    }
+
+    /**
+     * パーティーマッチメイキングがキャンセルされる時に呼び出される
+     *
+     * @param reasonキャンセルされた理由。タイムアウト(TIMEOUT)、ユーザーのリクエストによるキャンセル(CANCEL)、マッチノードの終了によるキャンセル(SHUTDOWN)
+     */
+    @Override
+    public void onMatchPartyCancel(MatchCancelReason matchCancelReason) {
+
+    }
+
+    /**
+     * ルームマッチメイキングがキャンセルされる時に呼び出される
+     *
+     * @param reason キャンセルされた理由。(SHUTDOWN: マッチノードの終了によるキャンセル)
+     */
+    @Override
+    public void onForceMatchRoomUnregistered(MatchCancelReason matchCancelReason) {
+
+    }
+
+    /**
+     * ルームが他のノードへ移動(転送)可能な状態か確認するために呼び出される
+     *
+     * @return 戻り値が true なら転送可能な状態、false なら不可能な状態
+     * <p/>
+     * 不可能な状態の場合、もし SafePause が進行中なら SafePause が終了するまでは該当ルームを転送するために持続的に呼び出される
+     */
+    @Override
+    public boolean canTransfer() {
+        return true;
     }
 }
 ```
 
-ルームは最も基本的な3つのコールバックであるonCreateRoom、onJoinRoom、onLeaveRoomを提供します。それぞれ、ルームの作成、参加、そして退出に対して呼び出されます。ユーザーは該当コールバックで関連する機能を直接実装できます。例えば、ルームを作成してルームリーダーを指定し、基本的なデータ構造を初期化できます。また、任意のルームへの参加リクエストに対しては、ルームのユーザーリスト更新や、各ユーザー間での状態同期を実行できます。
+```java
+// プロトコルバッファ MyGame.GameRoomTest 入力が入ってきた時に動作するメッセージ処理クラス
+@GameAnvilController
+public class _GameRoomTest {
+    // SampleRoomで処理したいプロトコルとハンドラをマッピング
+    @GameRoomMapping(
+        value = MyGame.GameRoomTest.class, // 処理するプロトコルバッファ
+        loadClass = SampleRoom.class   // メッセージを受け取る対象(SampleRoom) 
+    )
+    public void execute(IRoomDispatchContext ctx) {
+        // ここで行う作業を作成
+    }
+}
+```
 
-このようなルームの作成と参加は、クライアントの明示的なリクエストだけでなく、マッチメイキングによってエンジンが自動的に処理することもあります。例えば、定員が2人のゲームでユーザーAとユーザーBがマッチングした場合、1人が自動的にルームを作成し、もう1人はそのルームに参加することになります。このプロセスは、ユーザーAとユーザーBのリクエストではなく、エンジンが自動的に処理するものです。このプロセスでももちろん、onCreateRoomとonJoinRoomコールバックが呼び出されます。
+ルームもやはりエンジンに登録するために様々な設定が必要です。まずどのゲームサービスのためのルームなのか登録した後、ルームタイプを登録します。このルームタイプは名前の通りルームの種類を区別するための用途として、クライアントでも同様にAPIを呼び出す時に使用されます。つまり、該当APIがサーバーのどのルームタイプに対する呼び出しかを明示するものです。したがって必ずサーバーとクライアント間にこのようなルームタイプを任意の文字列で事前に定義しておく必要があります。このサンプルコードでは「BasicRoom」というルームタイプを使用します。これについてのより詳細な説明は別の章で改めて扱います。最後にこのルーム情報が[チャンネル間ルーム情報同期](server-impl-09-channel.md#_4)に使用されるかどうかを決定できます。もしチャンネル間情報同期が必要なければ省略できます。
 
-これらのルームのコールバックを整理すると、次の表のようになります。
+ルームは最も基本的な3つのコールバックであるonCreateRoom、onJoinRoom、onLeaveRoomを提供します。それぞれルームの生成、参加、そして退室について呼び出されます。ユーザーは該当コールバックで関連する機能を直接実装できます。例えば、ルームを生成しながらルームリーダーを指定し基本的なデータ構造を初期化できます。また任意のルーム参加リクエストに対してはルームのユーザーリストを更新したり各ユーザー間の状態同期などを実行できます。
 
+このようなルームの生成と参加はクライアントの明示的リクエストだけでなく、マッチメイキングによりエンジンが自動的に処理することもあります。例えば定員が2名のゲームでユーザーAとユーザーBがマッチングされたなら、一人は自動的にルームを生成し、もう一人は該当ルームに参加することになります。この過程はユーザーAとユーザーBのリクエストではなくエンジンで自動的に処理するものです。この過程でももちろんonCreateRoomとonJoinRoomコールバックが呼び出されます。
 
-| コールバック名            | 意味                            | 説明                                                                                                                                                                                        |
-| ------------------------ | ---------------------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onInit                 | 初期化                         | ルームが作成された時に初期化するために呼び出されます。トピックの登録など、該当ルームの初期化コードを作成できます。                                                                                                                                 |
-| onDestroy              | ルームの消滅                       | ルームから最後のユーザーが退出し、それ以上処理するメッセージが存在しない場合、該当ルームは消滅します。この時に呼び出されるコールバックです。                                                                                                                    |
-| onCreateRoom           | ルーム作成                        | クライアントがルームの作成をリクエストすると呼び出されます。コンテンツで使用するユーザーリスト用のデータ構造の作成や、他のルームの作成と一緒に処理される必要があるコードを作成します。                                                                                               |
-| onJoinRoom             | ルーム参加                       | クライアントがサーバー上に存在する任意のルームに参加をリクエストすると呼び出されます。コンテンツで使用するユーザーリストの更新や、ルーム内のユーザー間に同期する情報を処理できます。                                                                                                |
-| onLeaveRoom            | ルーム退出                         | クライアントがルームからの退出をリクエストすると呼び出されます。コンテンツで使用するユーザーリスト用のデータ構造の更新や、他のルームからの退出と一緒に処理される必要があるコードを作成します。                                                                                           |
-| onPostLeaveRoom        | ルーム退出の後処理                 | onLeaveRoomが成功すると、後処理のために呼び出されます。ルーム退出直後に処理するコードを作成します。                                                                                                                                   |
-| onRejoinRoom           | ルームへの再入場                    | ユーザーがルームに入場している状態で接続切断などにより再ログイン(ReLogin)した場合、エンジンによって自動的に該当ルームに再入場(ReJoin)します。この時、呼び出されるコールバックです。再入場過程で同期に必要な情報などを処理できます。                                                                |
-| canTransfer            | ルームの転送が可能な状態であるかを確認 | 該当ルームが他のノードに転送できる状態であるかどうかをチェックするために呼び出されます。もしルームでゲームプレイ中や、まだ準備が完了していない場合は、falseを返して転送を延期できます。falseを返した場合は、エンジンが任意の時間が経過した後、継続的にこのコールバックを呼び出します。また、ルームの転送は、無点検パッチを行う時にのみ使用されます。           |
-| onTransferOut          | 既存ノードから転送される準備 | ルームが他のGameNodeに転送される時、ソースノードから転送を開始する際に呼び出されます。ユーザーは、このコールバックからルームオブジェクトと共に転送するデータパッケージを構築できます。また、ルームの転送はルーム内の各ユーザーへのユーザー転送が含まれます。                                                        |
-| onTransferIn           | 新しいノードへの転送完了処理   | ルームが他のGameNodeに転送される時、対象ノードからの転送が完了すると呼び出されます。ユーザーは共にインポートされたデータパッケージを展開して、元のルームの状態に復元できます。また、ルームの転送はルーム内の各ユーザーへのユーザー転送が含まれます。                                                            |
-| onPause                | 一時停止                      | コンソールを介してGameNodeを一時停止すると、該当GameNodeのすべてのルームに呼び出されます。ユーザーは、ノードが一時停止した時にルームで追加で処理したいコードをここに実装できます。                                                                                         |
-| onResume               | 再開                           | コンソールを介してGameNodeが一時停止状態から動作を再開すると、該当GameNodeのすべてのルームに呼び出されます。ユーザーは再開状態でルームに対して処理したいコードをここに実装できます。                                                                                        |
-| onMatchParty           | パーティマッチメイキングリクエスト           | ユーザーがパーティマッチメイキングをリクエストすると呼び出されます。パーティマッチメイキングは、任意のNamedRoomをパーティ用途で作成した後、ルーム内のすべてのユーザーが1つのパーティでマッチングをリクエストする機能です。ユーザーは、このコールバックでエンジンが提供するパーティマッチメイキングAPIもしくは、第3のマッチメイキングソリューションを任意で使用できます。 |
-| getMessageDispatcher | 処理するパケット有り | ノードに処理するメッセージがある場合に返します。ユーザーは、自分が宣言したディスパッチャーを使用できます。詳細については[メッセージ処理](server-impl-07-message-handling.md)を参照してください。                                                                       |
+このようなルームのコールバックを整理すると以下の表の通りです。
 
-## ルームの種類
+| コールバック名                        | 意味                | 説明                                                                                                                                                           |
+|------------------------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| onCreate                     | オブジェクト生成             | オブジェクトが生成された時に呼び出されます。生成されたタイプで使用可能なAPIを使用できるコンテキストを受け取ります。コンテンツで必要であれば保存して使用できます。                                                                            |
+| onInit                       | 初期化               | ルームが生成される時に初期化のために呼び出されます。トピック登録などの該当ルームに対する初期化コードを作成できます。                                                                                                  |
+| onDestroy                    | ルーム消滅             | ルームから最後のユーザーが退出し、これ以上処理するメッセージがなければ該当ルームは消滅します。この時呼び出されるコールバックです。                                                                                                  |
+| onCreateRoom                 | ルーム生成              | クライアントがルーム生成をリクエストすると呼び出されます。コンテンツで使用するユーザーリストのためのデータ構造を生成したり、その他ルーム生成と共に処理すべきコードを作成します。                                                                            |
+| onJoinRoom                   | ルーム参加              | クライアントがサーバー上に存在する任意のルームへの参加をリクエストすると呼び出されます。コンテンツで使用するユーザーリストを更新したり、ルーム内のユーザー間で同期する情報を処理できます。                                                                        |
+| canLeaveRoom                 | ルーム退室確認           | ルームから退出する時に呼び出されます。戻り値によってルームから出るかどうかが決定されます。                                                                                                                    |
+| onLeaveRoom                  | ルーム退室              | クライアントがルーム退室リクエストをすると呼び出されます。コンテンツで使用するユーザーリストのためのデータ構造を更新したり、その他ルームから出ながら共に処理すべきコードを作成します。                                                                          |
+| onAfterLeaveRoom             | ルーム退室後処理          | onLeaveRoomが成功すれば後処理のために呼び出されます。ルームを出た直後に処理するコードを作成します。                                                                                                        |
+| onRejoinRoom                 | ルーム再参加           | ユーザーがルームに入っている状態で接続切れなどにより再ログイン(ReLogin)をする場合、エンジンにより自動的に該当ルームへ再進入(ReJoin)します。この時、呼び出されるコールバックです。再進入過程で同期に必要な情報などを処理できます。                      |
+| onTransferOut                | 既存ノードから転送されて出ていく準備 | ルームが他のGameNodeへ転送される時、ソースノードで転送を開始する時に呼び出されます。ユーザーはこのコールバックでルームオブジェクトと共に転送するデータパッケージをまとめることができます。ちなみにルーム転送はルーム内のユーザーそれぞれに対するユーザー転送を含みます。                                     |
+| onTransferIn                 | 新しいノードへの転送完了処理  | ルームが他のGameNodeへ転送される時、対象ノードで転送完了しながら呼び出されます。ユーザーは一緒に持ってきたデータパッケージを展開して元のルーム状態に復旧できます。ちなみにルーム転送はルーム内のユーザーそれぞれに対するユーザー転送を含みます。                                    |
+| onAfterTransferIn            | 新しいノードへの転送完了後処理 | ルームが他のGameNodeへ転送される時、対象ノードで転送完了しながら呼び出されます。ユーザーは一緒に持ってきたデータパッケージを展開して元のルーム状態に復旧できます。ちなみにルーム転送はルーム内のユーザーそれぞれに対するユーザー転送を含みます。                                    |
+| onPause                      | 一時停止             | コンソールを通じてGameNodeを一時停止すると、該当GameNodeの全てのルームに対して呼び出されます。ユーザーはノードが一時停止される時にルームで追加で処理したいコードをここに実装できます。                                                           |
+| onResume                     | 再開                | コンソールを通じてGameNodeが一時停止状態で駆動を再開すると、該当GameNodeの全てのルームに対して呼び出されます。ユーザーは再開状態でルームに対して処理したいコードをここに実装できます。                                                          |
+| onMatchParty                 | パーティーマッチメイキングリクエスト        | ユーザーがパーティーマッチメイキングをリクエストすると呼び出されます。パーティーマッチメイキングは任意のNamedRoomをパーティー用途で生成した後、ルーム内の全てのユーザーが1つのパーティーとしてマッチングをリクエストする機能です。ユーザーはこのコールバックでエンジンが提供するパーティーマッチメイキングAPIあるいは第三のマッチメイキングソリューションを任意に使用できます。 |
+| onMatchPartyCancel           | パーティーマッチメイキングリクエストキャンセル     | ユーザーがパーティーマッチメイキングをリクエストすると呼び出されます。パーティーマッチメイキングは任意のNamedRoomをパーティー用途で生成した後、ルーム内の全てのユーザーが1つのパーティーとしてマッチングをリクエストする機能です。ユーザーはこのコールバックでエンジンが提供するパーティーマッチメイキングAPIあるいは第三のマッチメイキングソリューションを任意に使用できます。 |
+| onForceMatchRoomUnregistered | ルームマッチメイキングキャンセル        | ルームマッチメイキングがキャンセルされる時に呼び出されます。                                                                                                                                                            |
+| canTransfer                  | ルーム転送が可能な状態か確認   | 該当ルームが他のノードへ転送されうる状態かチェックするために呼び出されます。 もしルームでまだゲームがプレイ中だったり準備ができていない場合にはfalseを返して転送を遅らせることができます。falseを返した場合にはエンジンが任意の時間以後に持続的にこのコールバックを呼び出します。ちなみにルーム転送は無停止パッチを進行する時にのみ使用されます。 |
 
-前述したルームの実装方法と別に、エンジンが提供するルームの種類は、大きく分けて2種類あります。この2つのルームを計4つの方法で使用します。
+## ルーム種類
 
-| ルームの種類   | 説明                                                       |
-| ----------- | ------------------------------------------------------------ |
-| Normal Room | クライアントが明示的にCreateRoomをリクエストして作成します。他のクライアントも該当ルームのIDを利用し、明示的にJoinRoomすることで参加できます。したがって、参加するユーザーは、事前に該当ルームIDを共有してもらう必要があります。 |
-| Named Room  | NamedRoomは、その名のとおり唯一のルーム名を中心に命名されたルーム(NamedRoom)に対して動作を実行します。クライアントはサーバー群内で唯一の名を持つルームとしてNamedRoomをリクエストします。この時、もしサーバーに該当ルーム名が存在しない場合、リクエスト者は直接ルームを作成します。一方で、もしサーバーに該当ルーム名がすでに存在する場合は、そのルームに自動的に入場します。例えば、スタークラフトのカスタムゲームリストに表示される"3：3ハンター初心者！"のようなルームタイトルを考えると、理解しやすいです。 |
+先ほど見てきたルームの実装法とは別にエンジンで提供するルームの種類は大きく2つです。この2つのルームを計4つの方法で使用します。
 
-この2つのルームは、計4つの方法で使用されます。
+| ルーム種類       | 説明                                                                                                                                                                                                                                                                                               |
+|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Normal Room | クライアントが明示的にCreateRoomをリクエストして生成します。他のクライアントも該当ルームのIDを利用して明示的にJoinRoomをして参加できます。したがって参加するユーザーはあらかじめ該当ルームのIDを共有してもらわなければなりません。                                                                                                                                                              |
+| Named Room  | NamedRoomはその名前のように唯一のルーム名を中心に命名されたルーム(NamedRoom)に対して動作を実行します。クライアントはサーバー群内で唯一のルーム名でNamedRoomをリクエストします。この時、もしサーバーに該当ルーム名が存在しなければリクエスト者は直接ルームを生成することになります。反対にもしサーバーに該当ルーム名がすでに存在する場合はそのルームに自動進入することになります。例えば、スタークラフトのカスタムゲームリストに現れる「3:3ハンター初心者！」のようなあらゆるルームタイトルを考えれば理解しやすいです。 |
 
-| ルームの種類   | 使用方法                                                     |
-| ----------- | ------------------------------------------------------------ |
-| Normal Room | 1. クライアントはCreateRoom / JoinRoomリクエストによって作成および参加します。<br>2.ルームマッチメイキングによって、NormalRoomを作成し、参加できます。また、CreateRoomで作成したルームもルームマッチメイキングの対象として登録可能です。この時、ルームIDはエンジンによって管理され、マッチングしたルームとユーザー間で自動的に共有されます。 |
-| Named Room  | 3. クライアントはNamedRoomリクエストによって作成および参加します。<br>4.ユーザーマッチメイキングによって、NamedRoomを作成し、参加できます。この時、作成されるNamedRoomのルーム名はエンジンが作成し、管理します。ルームマッチメイキングとは異なり、一般的なNamedRoomとして作成したルームはユーザーマッチメイキングの対象になれません。ただし、パーティマッチメイキングのために、NamedRoomとしてパーティルームを作成した後、複数のユーザーが1つのパーティでマッチメイキングをリクエストできます。 |
+このような2つのルーム種類は計4つの方法で使用されます。
 
+| ルーム種類        | 使用法                                                                                                                                                                                                            |
+|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Normal Room | 1. クライアントはCreateRoom / JoinRoomリクエストを通じて生成及び参加します。<br>2. ルームマッチメイキングを通じてNormalRoomを生成または参加できます。またCreateRoomで作成したルームもルームマッチメイキング対象として登録可能です。この時、ルームIDはエンジンにより管理されマッチングされるルームとユーザー間で自動的に共有されます。                                                                                       |
+| Named Room  | 3. クライアントはNamedRoomリクエストを通じて生成及び参加します。<br>4. ユーザーマッチメイキングを通じてNamedRoomを生成または参加できます。この時、生成されるNamedRoomのルーム名はエンジンで固有に生成して管理します。ルームマッチメイキングと異なり一般的なNamedRoomとして生成したルームはユーザーマッチメイキング対象にはなりません。ただし、パーティーマッチメイキングのためにNamedRoomとしてパーティールームを生成した後、複数名のユーザーが1つのパーティーとしてマッチメイキングをリクエストすることはできます。 |
 
+## チャンネル
 
-## チャネル
-
-GameNodeは、その用途に合わせて論理的にグループ化できます。これらの論理グループを[チャネル](server-impl-09-channel)といいます。例えば、GameNode 1と2を"Beginner"チャネルで結び、GameNode 3と4を"Expert"チャネルで結ぶことができます。これに関する詳細は[別途のチャプター](server-impl-09-channel)で再度扱います。
+GameNodeはその用途に合わせて論理的にグループ化できます。このような論理グループを[チャンネル](server-impl-09-channel)といいます。例えば、GameNode 1と2を「Beginner」チャンネルにまとめ、GameNode 3と4を「Expert」チャンネルにまとめることができます。これについての詳細な説明は[別の章](server-impl-09-channel)でより詳しく扱います。
