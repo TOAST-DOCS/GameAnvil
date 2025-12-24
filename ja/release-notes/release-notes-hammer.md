@@ -1,5 +1,29 @@
 ## Game > GameAnvil > リリースノート > GameHammer
 
+### 2.1.0 (2025.06.30)
+
+#### Change
+* GameAnvil 2.1.0サーバーのリリースに合わせて、GameHammerも2.1.0バージョンをリリース
+* GameAnvil 2.1サーバーに合わせてエンジンプロトコルをアップデート
+  * GameAnvil 2.1以前のバージョンのサーバーは今後サポートされません
+* 一部のResultCodeを変更
+
+    | 変更前 | 変更後 |
+    | ---- | ---- |
+    | LOGIN\_FAIL\_INVALID\_SERVICE\_ID<br>失敗。不正なサービスID | LOGIN_FAIL_INVALID_SERVICE_NAME<br>失敗。不正なサービス名 |
+    | LOGIN\_FAIL\_INVALID\_USERTYPE<br>失敗。不正なユーザータイプ | LOGIN_FAIL_INVALID_USER_TYPE<br>失敗。不正なユーザータイプ |
+    | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>失敗。不正なサービスID | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>失敗。不正なサービス名 |
+    | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>失敗。不正なサービスID | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>失敗。不正なサービス名 |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>失敗。マッチング申込書がnullの場合 | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>失敗。マッチング申込書がnullの場合 |
+    | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br> 失敗。マッチング情報がnullの場合 | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br> 失敗。マッチング情報がnullの場合 |
+    | FORCE\_CLOSE\_BASE\_CONNECTION<br>サーバーでBaseConnectionのclose()を呼び出し | FORCE\_CLOSE\_CONNECTION<br>サーバーでIConnectionのclose()を呼び出し |
+    | FORCE\_CLOSE\_BASE\_USER<br>サーバーでBaseUserのcloseConnection()を呼び出し | FORCE\_CLOSE\_USER<br>サーバーでIUserのcloseConnection()を呼び出し |
+
+#### Fix
+* サーバーとHammerのプロトコルバッファをそれぞれ異なる環境で生成する際、生成環境によって互換性がなくなる可能性があった問題を修正
+
+---
+
 ### 1.4.0 (2023.12.13)
 
 #### New

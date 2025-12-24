@@ -18,17 +18,17 @@ GameAnvilはサーバーエンジンだけでなく、サーバーにクライ�
 
 GameAnvilではこのような一連の過程を代行してくれるIntelliJテンプレートを提供し、より簡単に初期作業を完了できます。次のリンクからIntelliJ用プロジェクトファイルのテンプレートをダウンロードできます。ダウンロードしたテンプレートは解凍しないようにしてください。
 
-[プロジェクトテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/GameAnvil%20Template.zip?disposition=attachment)
+[プロジェクトテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
 ダウンロードしたテンプレートを適用するためにIntelliJを実行します。**Welcome to IntelliJ IDEA]画面の左側のメニューから**Customize**を選択し、**Import Settings...** をクリックします。または検索窓で**Import Settings...**を検索します。
 
-![](https://nhnent.dooray.com/files/3345932278160406768)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/1_import_gameanvil_template.png)
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/search_import_settings.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/2_search_import_settings.png)
 
 ファインダーまたはファイルエクスプローラーでテンプレートをダウンロードしたパスに移動して圧縮ファイルを選択します。**Select Components to Import**ウィンドウが開いたら**File templates**項目と**Project Templates**項目を全てチェックして選択します。**OK**をクリックしてインポートが完了したら、IntelliJを再起動してテンプレートの適用を完了します。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/select_import.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/3_select_import.png)
 
 テンプレートを利用してプロジェクトを構成することもできますが、ここではすでに初期設定が完了しているプロジェクトをダウンロードして使います。下記のリンクをクリックしてチュートリアル用プロジェクトをダウンロードし、解凍してIntelliJで実行します。
 
@@ -36,7 +36,7 @@ GameAnvilではこのような一連の過程を代行してくれるIntelliJテ
 
 初めてプロジェクトを開くと、下記のようにGradleでスクリプトを実行することを許可するかどうか尋ねるプロンプトが表示されることがあります。**Trust Project**を選択して完全なプロジェクトを開きます。
 
-![](https://static.toastoven.net/prod_gameanvil/images/tutorial/trust_project.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/4_imported_gameanvil_template.png)
 
 これでIntelliJにサーバープロジェクトの骨格が構成されました。Projectパネルを見ると、コードと設定ファイルが作成されたことが確認できます。
 - protocolパッケージ: javaでコンパイルされたプロトコルバッファファイルを含むパッケージです。
@@ -661,7 +661,7 @@ public class BasicGameNode extends BaseGameNode {
         "",
         ""
       ],
-      "userTimeout": 5000,                // ノードごとに付与するチャンネルID(ユニークである必要はありません。""文字列でチャンネルを区別せずに重複して使用することも可能)
+      "userTimeout": 5000,                // ノードごとに付与するチャネルID(ユニークである必要はありません。""文字列でチャネルを区別せずに重複して使用することも可能)
       "safeCreateTime": 1000,             //テストのために設定。通常は設定不要。基本60秒。
 
 	  "checkClientStateCycle": 10000, 		// チェックルーチン呼び出し周期
