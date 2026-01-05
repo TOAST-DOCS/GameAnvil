@@ -1,389 +1,459 @@
-## Game > GameAnvil > Unity深層開発ガイド > ConnectionAgent
+## Game > GameAnvil > Unity 応用開発ガイド > コネクタ
 
-## ConnectionAgent
+## コネクタ
 
-ConnectionAgentはGameAnvilサーバーのコネクションノードに関する作業を担当します。接続(Connect())、認証(Authentication())などの基本的なセッション管理機能やチャンネルリストなどを提供し、直接定義したプロトコルに基づいて様々なコンテンツを実装できます。ConnectionAgentはコネクタが初期化される時に自動的に作成され、Connector.GetConnectionAgent()関数を利用して取得できます。
-
-```c#
-ConnectionAgent connectionAgent = connector.GetConnectionAgent();
-```
+GameAnvilConnectorは、GameAnvilサーバーとの接続を管理する作業を担当します。接続(Connect())、認証(Authentication())など、基本的なセッション管理機能及びチャンネルリストなどを提供します。
 
 ### サーバー接続
 
-ConnectionAgentのConnect関数を利用してサーバーに接続します。 
+Connect()を呼び出してサーバーに接続します。
 
 ```c#
-/// <summary>
-/// GameAnvilサーバーに接続試行
-/// </summary>
-/// <param name="ip">対象IPアドレス</param>
-/// <param name="port">対象ポート</param>
-/// <param name="onConnect">接続試行結果を受け取るデリゲート</param>
-connector.GetConnectionAgent().Connect(ip, port, (ConnectionAgent connectionAgent, ResultCodeConnect result) => {
-    /// <param name="connectionAgent">Connect()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">Connect()リクエスト結果コード</param>
-    if (result == ResultCodeConnect.CONNECT_SUCCESS) {
-		// 接続成功
-    } else {
-	    // 接続失敗
+public async void Connect()
+{
+    try
+    {
+        // connectorはGameAnvilConnectorインスタンスを保存した変数です。
+        await connector.Connect(host, port);
+        // 成功
     }
-});
+    catch (Exception e)
+    {
+        // 失敗
+    }
+}
 ```
+
+Connect()は次のような2つのパラメータを持っています。
+
+| タイプ   | 名前 | 説明             |
+|--------|------|------------------|
+| String | host | 接続するサーバーのipまたはアドレス |
+| int    | port | 接続するサーバーのport     |
+
+別途の戻り値はなく、成功した場合は次のコードを実行し、失敗した場合は例外が発生します。
 
 ### 認証
 
-ConnectionAgentのAuthenticate関数を使って認証手続きを行います。パラメータでdeviceId、accountId、password、payload、レスポンスを処理するコールバックを渡します。 deviceIdは重複接続に対する処理に活用され、accountIdとpasswordを活用してサーバーで認証処理を行うことができます。認証のためにdeviceId、accountId、password以外の追加情報が必要な場合、payloadに入れて送ることができ、使わない場合はpayloadパラメータは省略できます。
-Authenticate関数を呼び出すとサーバーではBaseConnectionのonAuthentication()コールバックが呼び出され、このコールバックの処理結果で認証の成功、失敗が決定されます。
+サーバーに接続した後、Authentication()を呼び出して認証手続きを進めます。
+Authentication()メソッドを呼び出すと、サーバーではConnectionオブジェクトのonAuthenticate()コールバックが呼び出され、このコールバックの処理結果で認証の成功、失敗が決定されます。
 
 ```c#
-/// <summary>
-/// GameAnvilサーバーに認証リクエスト<para></para>
-/// 認証成功後、コネクタを使用可能
-/// </summary>
-/// <param name="deviceId">ユーザーのデバイスを識別するための固有のID。サーバーの実装により、使用しない場合は空の文字列を伝達</param>
-/// <param name="accountId">ユーザーアカウントを識別できる固有のID</param>
-/// <param name="passwd">ユーザーアカウントのパスワード。サーバーの実装により、使用しない場合は空の文字列を伝達</param>
-/// <param name="onAuthentication">リクエスト結果を受け取るデリゲート</param>
-connector.GetConnectionAgent().Authenticate(deviceId, accountId, password, payload
-         (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
-    /// <param name="connectionAgent">Authentication()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">Authentication()リクエスト結果</param>
-    /// <param name="loginedUserInfoList">サーバーに残っているログイン情報リスト</param>
-    /// <param name="message">サーバーから受け取ったメッセージ</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    if (result == ResultCodeAuth.AUTH_SUCCESS) {
-		// 認証成功
-    } else {
-		// 認証失敗
+public async void Authenticate()
+{
+    try
+    {
+        Payload authenticationPayload = new Payload(new Protocol.AuthenticationData());
+        ErrorResult<ResultCodeAuth, AuthenticationResult> result = await connector.Authentication("DeviceId", "AccountId", "Password", authenticationPayload);
+        if(result.ErrorCode == ResultCodeAuth.AUTH_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
     }
-});
+    catch (Exception e)
+    {
+        // 例外
+    }
+}
+
 ```
+
+Authentication()は次のような4つのパラメータを持っています。
+
+| タイプ    | 名前      | 説明                                                                                                            |
+|---------|-----------|-----------------------------------------------------------------------------------------------------------------|
+| String  | deviceId  | 認証に使用するデバイスID。<br/>異なるデバイスから認証リクエストを行う場合、この値を利用してデバイスからのリクエストであることを識別できます。使用しない場合はstring.Empty(空文字)を入力 |
+| String  | accountId | 認証に使用するアカウント名。                                                                                                                                                                                                                                                                              |
+| String  | password  | 認証に使用するパスワード。使用しない場合はstring.Empty(空文字)を入力                                                                                                                                                                                                                             |
+| Payload | payload   | 認証リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null)                                                                                                                                                                                                                        |
+
+レスポンスとしてErrorResult<ResultCodeAuth, AuthenticationResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。Authenticationが成功すればErrorCodeフィールドの値がResultCodeAuth.AUTH_SUCCESSになり、そうでない場合は認証に失敗したことになります。Dataフィールドを通じてリクエスト結果AuthenticationResultを取得できます。これを通じて認証結果情報を取得でき、サーバー実装によっては追加情報を取得することも
+できます。
+
+ResultCodeAuthの詳細は次のとおりです。
+
+| 名前                         | 値 | 説明                                       |
+|------------------------------|-----|--------------------------------------------|
+| PARSE_ERROR                  | -2  | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                      | -1  | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                 | 1   | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL             | 2   | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| AUTH_SUCCESS                 | 0   | 成功                                       |
+| AUTH_FAIL_CONTENT            | 201 | 失敗。ユーザーコードで拒否されました                            |
+| AUTH_FAIL_INVALID_ACCOUNT_ID | 602 | 失敗。無効なアカウントID                             |                                |
+
+AuthenticationResultの詳細は次のとおりです。
+
+| タイプ                         | 名前              | 説明                            |
+|------------------------------|-------------------|---------------------------------|
+| List<AlreadyLoginedUserInfo> | LoginUserInfoList | 認証成功時点でサーバーに残っているログイン済みユーザー情報リスト |
+| String                       | Message           | 認証メッセージ                        |
+| Payload                      | payload           | クライアントで必要な追加情報                |
+
+### 接続と認証
+
+接続または認証時に必要な値をGameAnvilConnectorの属性として保存して使用することもできます。
+
+```c#
+public  void initializeConnector()
+{
+    connector.Host = "127.0.0.1";
+    connector.Port = 18200;
+    connector.DeviceId = "DeviceId";
+    connector.AccountId = "AccountId";
+    connector.Password = "Password";
+}
+
+public async void ConnectAndAuthentication1()
+{
+    try
+    {
+        Payload authenticationPayload = new Payload(new Protocol.AuthenticationData());
+        var (resultCode, result) = await connector.ConnectAndAuthentication(authenticationPayload);
+        if (resultCode == ResultCodeAuth.AUTH_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+
+public async void ConnectAndAuthentication2()
+{
+    try
+    {
+        Payload authenticationPayload = new Payload(new Protocol.AuthenticationData());
+        await connector.Connect();
+        var (resultCode, result) = await connector.Authentication(authenticationPayload);
+        if (resultCode == ResultCodeAuth.AUTH_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+### セキュア接続
+GameAnvilサーバーにセキュリティ設定を行った場合は、ConnectSecure()を呼び出してセキュア接続を行う必要があります。 
+```c#
+public async void ConnectSecure()
+{
+    try
+    {
+        await connector.ConnectSecure(host, port);
+        // 成功
+    }
+    catch (Exception e)
+    {
+        // 失敗
+    }
+}
+```
+ConnectSecure()は次のような2つのパラメータを持っています。
+
+| タイプ   | 名前 | 説明             |
+|--------|------|------------------|
+| String | host | 接続するサーバーのipまたはアドレス |
+| int    | port | 接続するサーバーのport     |
+
+別途の戻り値はなく、成功した場合は次のコードを実行し、失敗した場合は例外が発生します。
 
 ### チャンネル情報
 
-GameAnvilは設定で自由にチャンネルを構成できます。このようなチャンネル構成はサーバーとクライアントの間であらかじめ約束して固定された形で使うこともできますが、状況によって多様に変更して使うこともできます。ConnectionAgentでは、このように変更されたチャンネル情報を取得できるようにいくつかの関数を提供しています。
+GameAnvilは設定で自由にチャンネルを構成できます。このようなチャンネル構成は、サーバーとクライアント間であらかじめ約束して固定された形態で使用することもできますが、状況に応じて多様に変更して使用することもできます。GameAnvilConnectorでは、このように変更されたチャンネル情報を取得できるようにいくつかのメソッドを提供します。 
 
-| 関数 | 説明 |
-| --- | --- |
-| GetChannelList() | 特定サービスのチャンネルIDリストをリクエスト | 
-| GetChannelCountInfo() | 特定チャンネルのカウント情報(ユーザーとルーム数)をリクエスト | 
-| GetChannelInfo() | 特定チャンネルの情報(ユーザー定義)をリクエスト |
-| GetAllChannelCountInfo() | 特定サービスの全てのチャンネルのカウント情報(ユーザーとルーム数)をリクエスト |
+| 名前                     | 説明                                  |
+|--------------------------|---------------------------------------|
+| GetChannelList()         | 特定サービスのチャンネルIDリストリクエスト                  | 
+| GetChannelCountInfo()    | 特定チャンネルのカウント情報(ユーザーとルーム数)リクエスト             | 
+| GetChannelInfo()         | 特定チャンネルの情報(ユーザー定義)リクエスト                  |
+| GetAllChannelCountInfo() | 特定サービスの全てのチャンネルに対するカウント情報(ユーザーとルーム数)リクエスト |
+| GetAllChannelInfo()      | 特定サービスの全てのチャンネルに対する情報(ユーザー定義)リクエスト        |
+
+#### GetChannelList
+
+GetChannelList()は、特定サービスのチャンネルIDリストをリクエストして受け取ることができます。
+
+```c#
+public async void ChannelList()
+{
+    try
+    {
+        Payload channelInfoPayload = new Payload(new Protocol.ChannelInfoData());
+        ErrorResult<ResultCodeChannelList, List<string>> result = await connector.GetChannelList("ServiceName");
+        if (result.ErrorCode == ResultCodeChannelList.CHANNEL_LIST_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+GetChannelList()は次のような1つのパラメータを持っています。
+
+| タイプ   | 名前        | 説明           |
+|--------|-------------|----------------|
+| String | ServiceName | チャンネル情報をリクエストするサービス |
+
+レスポンスとしてErrorResult<ResultCodeChannelList, List<string>>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。GetChannelListが成功すればErrorCodeフィールドの値がResultCodeChannelList.CHANNEL_LIST_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。成功時、Dataフィールドを通じてリクエスト結果であるチャンネルIDリストを取得できます。
+
+ResultCodeChannelListの詳細は次のとおりです。
+
+| 名前                              | 値  | 説明                                       |
+|-----------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                       | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                           | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                      | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL                  | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| CHANNEL_LIST_SUCCESS              | 0    | 成功                                       |
+| CHANNEL_LIST_FAIL_NO_CHANNEL_LIST | 1801 | 失敗。チャンネルリストが見つかりません                          |                                |                          
+
+#### GetChannelCountInfo
+
+GetChannelCountInfo()は、特定チャンネルのカウント情報(ユーザーとルーム数)をリクエストして受け取ることができます。
+
+```c#
+public async void ChannelCountInfo()
+{
+    try
+    {
+        ErrorResult<ResultCodeChannelCountInfo, ChannelCountResult> result = await connector.GetChannelCountInfo("ServiceName", "ChannelId");
+        if (result.ErrorCode == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+GetChannelCountInfo()は次のような2つのパラメータを持っています。
+
+| タイプ   | 名前        | 説明               |
+|--------|-------------|--------------------|
+| String | ServiceName | チャンネル情報をリクエストするサービス      |
+| String | channelId   | チャンネル情報をリクエストするチャンネルのID |
+
+レスポンスとしてErrorResult<ResultCodeChannelCountInfo, ChannelCountResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。GetChannelCountInfoが成功すればErrorCodeフィールドの値がResultCodeChannelCountInfo.CHANNEL_LIST_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。Dataフィールドを通じてリクエスト結果であるChannelCountResultを取得できます。
+
+ResultCodeChannelCountInfoの詳細は次のとおりです。
+
+| 名前                                       | 値  | 説明                                       |
+|--------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                                | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                    | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                               | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL                           | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| CHANNEL_COUNT_INFO_SUCCESS                 | 0    | 成功                                       |
+| CHANNEL_COUNT_INFO_FAIL_NO_CHANNEL_INFO    | 1921 | 失敗。チャンネル情報が見つかりません                          |
+| CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1922 | 失敗。無効なサービスID                           |
+| CHANNEL_COUNT_INFO_FAIL_INVALID_CHANNEL_ID | 1923 | 失敗。無効なチャンネルID                            |
+| CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924 | 失敗。チャンネルが見つかりません                            |
+
+ChannelCountResultの詳細は次のとおりです。
+
+| タイプ   | 名前      | 説明         |
+|--------|-----------|--------------|
+| string | ChannelId | チャンネルID返却。    |
+| int    | UserCount | チャンネルのユーザー数返却。 |
+| int    | RoomCount | チャンネルのルーム数返却。  |
 
 <br>
 
-下記のコードでさらに詳しく説明します。
+#### GetChannelInfo
 
-
-GetChannelList()は特定サービスのチャンネルIDリストをリクエストして取得できます。
-
-```c#
-/// <summary>
-/// サービスの使用可能なチャンネルリストをリクエスト 
-/// </summary>
-/// <param name="serviceName">対象サービスの名前</param>
-/// <param name="onChannelList">リクエスト結果を受け取るデリゲート</param>
-connector.GetConnectionAgent().GetChannelList(serviceName, (ConnectionAgent connection, ResultCodeChannelList result, List<string> channelIdList) => {
-    /// <param name="connectionAgent">GetChannelList()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">GetChannelList()リクエスト結果</param>
-    /// <param name="channelIdList">サーバーから取得したチャンネルリスト</param>
-	if(result == ResultCodeChannelList.CHANNEL_LIST_SUCCESS){
-		// チャンネルリストリクエスト成功
-	} else {
-		// チャンネルリストリクエスト失敗
-	}
-});
-```
-<br>
-
-GetChannelCountInfo()は特定チャンネルのカウント情報(ユーザーとルーム数)をリクエストして取得できます。
+GetChannelInfo()は特定チャンネルの情報(ユーザー定義)をリクエストして受け取ることができます。
 
 ```c#
-/// <summary>
-/// チャンネルのユーザーとルーム数リクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="serviceName">対象チャンネルが属するサービスの名前</param>
-/// <param name="channelId">対象チャンネルのID</param>
-/// <param name="onChannelCountInfo">リクエスト結果を受け取るデリゲート</param>
-connector.GetConnectionAgent().GetChannelCountInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) => {
-    /// <param name="connectionAgent">GetChannelCountInfo()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">GetChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから取得したチャンネルのユーザー数とルーム数情報</param>
-	if(result == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS){
-		// チャンネルカウント情報リクエスト成功
-	} else {
-		// チャンネルカウント情報リクエスト失敗
-	}
-});
+public async void ChannelInfo()
+{
+    try
+    {
+        ErrorResult<ResultCodeChannelInfo, Payload> result = await connector.GetChannelInfo("ServiceName", "ChannenId");
+        if (result.ErrorCode == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
 ```
-<br>
 
-GetChannelInfo()は特定チャンネルの情報(ユーザー定義)をリクエストして取得できます。
+GetChannelInfo()は次のような2つのパラメータを持っています。
+
+| タイプ   | 名前        | 説明               |
+|--------|-------------|--------------------|
+| String | ServiceName | チャンネル情報をリクエストするサービス      |
+| String | channelId   | チャンネル情報をリクエストするチャンネルのID |
+
+レスポンスとしてErrorResult<ResultCodeChannelInfo, Payload>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。GetChannelInfo()が成功すればErrorCodeフィールドの値がResultCodeChannelInfo.CHANNEL_LIST_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。成功時、DataフィールドのPayloadでユーザーが定義したチャンネル情報を取得することもできます。
+
+ResultCodeChannelInfoの詳細は次のとおりです。
+
+| 名前                                 | 値  | 説明                                       |
+|--------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                          | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                              | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                         | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL                     | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| CHANNEL_INFO_SUCCESS                 | 0    | 成功                                       |
+| CHANNEL_INFO_FAIL_NO_CHANNEL_INFO    | 1921 | 失敗。チャンネル情報が見つかりません                          |
+| CHANNEL_INFO_FAIL_INVALID_SERVICE_ID | 1922 | 失敗。無効なサービスID                           |
+| CHANNEL_INFO_FAIL_INVALID_CHANNEL_ID | 1923 | 失敗。無効なチャンネルID                            |
+| CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924 | 失敗。チャンネルが見つかりません                            |
+
+#### GetAllChannelCountInfo
+
+GetAllChannelCountInfo()は、特定サービスの全てのチャンネルに対するカウント情報(ユーザーとルーム数)をリクエストして受け取ることができます。
 
 ```c#
-/// <summary>
-/// チャンネル情報リクエスト<para></para>
-/// サーバーがサポートしている場合使用可能
-/// </summary>
-/// <param name="serviceName">対象チャンネルが属するサービスの名前</param>
-/// <param name="channelId">対象チャンネルのID</param>
-/// <param name="onChannelInfo">リクエスト結果を受け取るデリゲート</param>
-connector.GetConnectionAgent().GetChannelInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelInfo result, Payload payload) => {
-    /// <param name="connectionAgent">GetChannelInfo()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">GetChannelInfo()リクエスト結果</param>
-    /// <param name="channelInfo">サーバーから取得したチャンネル情報</param>
-	if(result == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS){
-		// チャンネル情報リクエスト成功
-	} else {
-		// チャンネル情報リクエスト失敗
-	}
-});
+public async void AllChannelCountInfo()
+{
+    try
+    {
+        ErrorResult<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>> result = await connector.GetAllChannelCountInfo("ServiceName");
+        if (result.ErrorCode == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
 ```
-<br>
 
-GetAllChannelCountInfo()は特定サービスの全てのチャンネルのカウント情報(ユーザーとルーム数)をリクエストして取得できます。
+GetAllChannelCountInfo()は次のような1つのパラメータを持っています。
+
+| タイプ   | 名前        | 説明           |
+|--------|-------------|----------------|
+| String | ServiceName | チャンネル情報をリクエストするサービス |
+
+レスポンスとしてErrorResult<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。GetAllChannelCountInfoが成功すればErrorCodeフィールドの値がResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。Dataフィールドを通じてリクエスト結果であるDictionary<
+string, ChannelCountResult>を取得できます。このDictionaryはチャンネルIDをキーに、ChannelCountResultを値として持っています。
+
+ResultCodeAllChannelCountInfoの詳細は次のとおりです。
+
+| 名前                                           | 値  | 説明                                       |
+|------------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                                  | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                      | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                                 | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL                             | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| ALL_CHANNEL_COUNT_INFO_SUCCESS                 | 0    | 成功                                       |
+| ALL_CHANNEL_COUNT_INFO_FAIL_NO_CHANNEL_INFO  | 1931 | 失敗。チャンネル情報が見つかりません                          |
+| ALL_CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1932 | 失敗。無効なサービスID                           |
+| ALL_CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1933 | 失敗。チャンネルが見つかりません                            |
+
+#### GetAllChannelInfo
+
+GetAllChannelInfo()は、特定サービスの全てのチャンネルに対する情報(ユーザー定義)をリクエストして受け取ることができます。
 
 ```c#
-/// <summary>
-/// サービス内の全てのチャンネルのユーザーとルーム数をリクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="serviceName">対象サービスの名前</param>
-/// <param name="onAllChannelCountInfo">リクエスト結果を受け取るデリゲート</param>
-connector.GeConnectionAgent().GetAllChannelCountInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) => {
-    /// <param name="connectionAgent">GetAllChannelCountInfo()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから取得したチャンネルのユーザー数とルーム数情報など</param>
-	if(result == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS){
-		// 全てのチャンネルカウント情報リクエスト成功
-	} else {
-		// 全てのチャンネルカウント情報リクエスト失敗
-	}
-});
+public async void AllChannelInfo()
+{
+    try
+    {
+        ErrorResult<ResultCodeAllChannelInfo, ChannelInfoResult> result = await connector.GetAllChannelInfo("ServiceName");
+        if (result.ErrorCode == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
 ```
-<br>
 
-GetAllChannelInfo()は特定のサービスの全てのチャンネルに関する情報(ユーザー定義)をリクエストして取得できます。
+GetAllChannelInfo()は次のような1つのパラメータを持っています。
 
-```c#
-/// <summary>
-/// サービス内の全てのチャンネルの情報をリクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="serviceName">対象サービスの名前</param>
-/// <param name="onAllChannelInfo">リクエスト結果を受け取るデリゲート</param>
-connector.GetConnectionAgent().GetAllChannelInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelInfo result, Dictionary<string, Payload> payload) => {
-    /// <param name="connectionAgent"> GetAllChannelInfo()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">GetAllChannelInfo()リクエストの結果</param>
-    /// <param name="channelInfo">サーバーから取得したチャンネル情報リスト</param>
-	if(result == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS){
-		// 全てのチャンネル情報リクエスト成功
-	} else {
-		// 全てのチャンネル情報リクエスト失敗
-	}
-});
-```
+| タイプ   | 名前        | 説明           |
+|--------|-------------|----------------|
+| String | ServiceName | チャンネル情報をリクエストするサービス |
+
+レスポンスとしてErrorResult<ResultCodeAllChannelInfo, ChannelInfoResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。GetAllChannelInfoが成功すればErrorCodeフィールドの値がResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。Dataフィールドを通じてリクエスト結果であるChannelInfoResultを取得できます。
+
+ResultCodeAllChannelInfoの詳細は次のとおりです。
+
+| 名前                                     | 値  | 説明                                       |
+|------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                            | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                           | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL                       | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| ALL_CHANNEL_INFO_SUCCESS                 | 0    | 成功                                       |
+| ALL_CHANNEL_INFO_FAIL_NO_CHANNEL_INFO  | 1911 | 失敗。チャンネル情報が見つかりません                          |
+| ALL_CHANNEL_INFO_FAIL_INVALID_SERVICE_ID | 1912 | 失敗。無効なサービスID                           |
+| ALL_CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1913 | 失敗。チャンネルが見つかりません                            |
+
+ChannelInfoResultのchannelInfoフィールドは、チャンネルIDをキーに、ユーザー定義チャンネル情報を含むPayloadを値として持つDictionary<string, Payload>です。これを利用してチャンネルごとのユーザー定義情報を取得できます。
 
 ### 接続終了
 
-ConnectionAgentのDisconnect関数を使ってサーバーとの接続を終了します。
+Disconnect()メソッドを利用してサーバーとの接続を終了します。
 
 ```c#
-/// <summary>
-/// GameAnvilサーバーとの接続解除リクエスト
-/// </summary>
-/// <param name="onDisconnect">リクエスト結果を受け取るデリゲート</param>
-connector.GetConnectionAgent().Disconnect((ConnectionAgent connectionAgent, ResultCodeDisconnect result) => {
-    /// <param name="connectionAgent">Disconnect()発生したコネクションエージェント</param>
-    /// <param name="result">>Disconnect()結果</param>
-    if (result == ResultCodeDisconnect.SOCKET_DISCONNECT) {
-		// 正常終了
-    } else {
-	    // 異常終了
-    }
-});
-```
-
-### Listener
-
-ConnectionAgentで全てのリクエストに対する結果やサーバーからの通知を受け取る方法は大きく2つです。
-1つはConnectionAgentで定義されているdelegateに関数を追加する方法です。もう1つはIConnectionListenerインターフェイスを実装したリスナーを登録する方法です。
-
-まず、最初の方法です。ConnectionAgentは全ての動作の結果や通知を受けることができるようにそれぞれのdelegateをメンバーとして持っています。先に説明したAPIにコールバックパラメータを省略して呼び出したり、サーバーから通知を送った場合、delegateに登録された関数でレスポンスを受けることができます。 
-
-```c#
-/// <summary>
-/// Connect()の結果
-/// </summary>
-/// <param name="connectionAgent">Connect()をリクエストしたコネクションエージェント</param>
-/// <param name="result">Connect()の結果</param>
-public Interface.DelConnectionOnConnect onConnectListeners;
-
-/// <summary>
-/// Authentication()結果
-/// </summary>
-/// <param name="connectionAgent">Authentication()をリクエストしたコネクションエージェント</param>
-/// <param name="result">Authentication()リクエスト結果</param>
-/// <param name="loginedUserInfoList">サーバーに残っているログイン情報リスト</param>
-/// <param name="message">サーバーから受け取ったメッセージ</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelConnectionOnAuthentication onAuthenticationListeners;
-
-/// <summary>
-/// GetChannelList()リクエスト結果
-/// </summary>
-/// <param name="connectionAgent">GetChannelList()をリクエストしたコネクションエージェント</param>
-/// <param name="result">GetChannelList()リクエスト結果</param>
-/// <param name="channelIdList">サーバーから取得したチャンネルリスト</param>
-public Interface.DelConnectionOnChannelList onChannelListListeners;
-
-/// <summary>
-/// GetChannelInfo()リクエスト結果
-/// </summary>
-/// <param name="connectionAgent">GetChannelInfo()をリクエストしたコネクションエージェント</param>
-/// <param name="result">GetChannelInfo()リクエスト結果</param>
-/// <param name="channelInfo">サーバーから取得したチャンネル情報</param>
-public Interface.DelConnectionOnChannelInfo onChannelInfoListeners;
-
-/// <summary>
-/// GetAllChannelInfo()リクエスト結果
-/// </summary>
-/// <param name="connectionAgent"> GetAllChannelInfo()をリクエストしたコネクションエージェント</param>
-/// <param name="result">GetAllChannelInfo()リクエストの結果</param>
-/// <param name="channelInfo">サーバーから取得したチャンネル情報リスト</param>
-public Interface.DelConnectionOnAllChannelInfo onAllChannelInfoListeners;
-
-/// <summary>
-/// GetChannelCountInfo()リクエスト結果
-/// </summary>
-/// <param name="connectionAgent">GetChannelCountInfo()をリクエストしたコネクションエージェント</param>
-/// <param name="result">GetChannelCountInfo()リクエスト結果</param>
-/// <param name="channelCountInfo">サーバーから取得したチャンネルのユーザー数とルーム数情報</param>
-public Interface.DelConnectionOnChannelCountInfo onChannelCountInfoListeners;
-
-/// <summary>
-/// GetAllChannelCountInfo()リクエスト結果
-/// </summary>
-/// <param name="connectionAgent">GetAllChannelCountInfo()をリクエストしたコネクションエージェント</param>
-/// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
-/// <param name="channelCountInfo">サーバーから取得したチャンネルのユーザー数とルーム数情報など</param>
-public Interface.DelConnectionOnAllChannelCountInfo onAllChannelCountInfoListeners;
-
-/// <summary>
-/// Disconnect()通知
-/// </summary>
-/// <param name="connectionAgent">Disconnect()発生したコネクションエージェント</param>
-/// <param name="result">>Disconnect()理由</param>
-/// <param name="force">強制終了するかどうか</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelConnectionOnDisconnect onDisconnectListeners;
-
-/// <summary>
-/// コネクションの基本機能使用中エラー発生
-/// </summary>
-/// <param name="connectionAgent">エラー発生したコネクションエージェント</param>
-/// <param name="errorCode">エラーコード</param>
-/// <param name="commands">エラー発生機能</param>
-public Interface.DelConnectionOnErrorCommand onErrorCommandListeners;
-
-/// <summary>
-/// パケット送信後にエラー発生
-/// </summary>
-/// <param name="connectionAgent">処理をリクエストするコネクションエージェント</param>
-/// <param name="errorCode">エラーコード</param>
-/// <param name="command">パケットのメッセージ名前</param>
-public Interface.DelConnectionOnErrorCustomCommand onErrorCustomCommandListeners;
-```
-<br>
-
-次に、2つ目の方法です。IConnectionListenerはConnectionAgentの全ての動作の結果や通知を定義したインターフェイスです。このインターフェイスを実装したリスナーをConnectionAgent.AddConnectionListener()で登録すると、登録したリスナーでレスポンスを受けることができます。
-
-```c#
-public class ConnectionListener : IConnectionListener
+public async void Disconnect()
 {
-    /// <summary>
-    /// Connect()の結果
-    /// </summary>
-    /// <param name="connectionAgent">Connect()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">Connect()の結果</param>
-    public void OnConnect(ConnectionAgent connectionAgent, ResultCodeConnect result) { }
-    
-    /// <summary>
-    /// Authentication()結果
-    /// </summary>
-    /// <param name="connectionAgent">Authentication()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">Authentication()リクエスト結果</param>
-    /// <param name="loginedUserInfoList">サーバーに残っているログイン情報リスト</param>
-    /// <param name="message">サーバーから受け取ったメッセージ</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    public void OnAuthentication(ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) { }
-
-    /// <summary>
-    /// GetChannelList()リクエスト結果 
-    /// </summary>
-    /// <param name="connectionAgent">GetChannelList()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">GetChannelList()リクエスト結果</param>
-    /// <param name="channelIdList">サーバーから取得したチャンネルリスト</param>
-    public void OnChannelList(ConnectionAgent connectionAgent, ResultCodeChannelList result, List<string> channelIdList) { }
-
-    /// <summary>
-    /// GetChannelInfoの結果
-    /// </summary>
-    /// <param name="connectionAgent">ConnectionAgent</param>
-    /// <param name="result">GetChannelInfoの結果</param>
-    /// <param name="channelInfo">チャンネル情報</param>
-    public void OnChannelInfo(ConnectionAgent connectionAgent, ResultCodeChannelInfo result, Payload channelInfo) { }
-
-    /// <summary>
-    /// 全てのチャンネル情報リクエスト結果
-    /// </summary>
-    /// <param name="connectionAgent">GetAllChannelInfo()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">GetAllChannelInfo()リクエストの結果</param>
-    /// <param name="channelInfo">サーバーから取得したチャンネル情報</param>
-    public void OnAllChannelInfo(ConnectionAgent connectionAgent, ResultCodeAllChannelInfo result, Dictionary<string, Payload> channelInfo) { }
-
-    /// <summary>
-    /// GetChannelCountInfo()リクエスト結果
-    /// </summary>
-    /// <param name="connectionAgent">GetChannelCountInfo()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">GetChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから取得したチャンネルのユーザー数とルーム数情報</param>
-    public void OnChannelCountInfo(ConnectionAgent connectionAgent, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) { }
-
-    /// <summary>
-    /// GetAllChannelCountInfo()情報リクエスト結果
-    /// </summary>
-    /// <param name="connectionAgent">GetAllChannelCountInfo()をリクエストしたコネクションエージェント</param>
-    /// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから取得したチャンネルのユーザー数とルーム数情報など</param>
-    public void OnAllChannelCountInfo(ConnectionAgent connectionAgent, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) { }
-    
-    /// <summary>
-    /// Disconnect()または強制接続終了結果通知
-    /// </summary>
-    /// <param name="connectionAgent">Disconnect()発生したコネクションエージェント</param>
-    /// <param name="result">Disconnect()結果または強制接続終了理由</param>
-    /// <param name="force">終了強制するかどうか</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    public void OnDisconnect(ConnectionAgent connectionAgent, ResultCodeDisconnect result, bool force, Payload payload) { }
-    
-    /// <summary>
-    /// コネクションの基本機能使用中エラー発生
-    /// </summary>
-    /// <param name="connectionAgent">エラー発生したコネクションエージェント</param>
-    /// <param name="errorCode">エラーコード</param>
-    /// <param name="commands">エラー発生機能</param>
-    public void OnError(ConnectionAgent connectionAgent, ErrorCode errorCode, Commands commands) { }
-    
-    /// <summary>
-    /// パケット送信後にエラー発生
-    /// </summary>
-    /// <param name="connectionAgent">処理をリクエストするコネクションエージェント</param>
-    /// <param name="errorCode">エラーコード</param>
-    /// <param name="command">パケットのメッセージ名前</param>
-    public void OnError(ConnectionAgent connectionAgent, ErrorCode errorCode, string command) { }
+    try
+    {
+        await connector.Disconnect();
+        // 成功
+    } catch (Exception e)
+    {
+        // 失敗
+    }
 }
-
-connector.GetConnectionAgent().AddConnectionListener(new ConnectionListener);
 ```
+
+別途の戻り値はなく、成功した場合は次のコードを実行し、失敗した場合は例外が発生します。
+
+#### 接続終了通知
+Disconnect()を呼び出さなくても、サーバーから強制的に接続を終了したり、ネットワークに問題が発生すると接続が切れることがあり、これに対する通知を受け取ることができます。 
+```c#
+private void addOnDisconnect()
+{
+    connector.OnDisconnect += (ResultCodeDisconnect resultCode, Payload payload)=>{
+        // 接続切れ通知
+    };
+}
+```
+
+ResultCodeDisconnectパラメータを通じて接続が切れた原因に関する情報を取得でき、サーバーから強制終了された場合はサーバーの実装によって追加情報を取得することもできます。

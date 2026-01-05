@@ -1,186 +1,163 @@
-## Game > GameAnvil > サーバー開発ガイド > 始まり
+## Game > GameAnvil > サーバー開発ガイド > 始める
 
+## はじめに
 
+このドキュメントは、GameAnvilを利用してサーバーを実装する際に必要な基本要素と実装方法について説明します。このドキュメントと共に提供されるチュートリアルプロジェクト[GameAnvilチュートリアル](../tutorial/tutorial-01-basic.md)を参考にすることを推奨します。
 
-## 始まりの前に
-
-この文書は、GameAnvilを利用してサーバーを実装する際に必要な基本要素と実装方法について説明します。この文書と共に提供されるリファレンスプロジェクト[GameAnvilリファレンスサーバー](../reference/reference-1-server)を参照してください。また、[JavaDoc文書](https://gameplatform.toast.com/docs/api/)でそれぞれのAPIの説明とUMLダイアグラムを参照してください。
-
-GameAnvilサーバーは、基本的にノード(Node)単位で構成します。そのうち、ユーザーのコードが動作するノードは、以下の図のように計4つです。ここでは、これら4つのノードの実装方法を中心にサーバーの開発方法を説明します。
+GameAnvilサーバーは基本的にノード(Node)単位で構成します。そのうちユーザーのコードが駆動するノードは、以下の図のように計4種類です。ここでは、これら4種類のノードの実装方法を中心にサーバー開発方法を説明します。
 
 ![Nodes on Network.png](https://static.toastoven.net/prod_gameanvil/images/user_nodes_on_network_.png)
 
-
-
 ## コールバックの再定義
 
-基本的にGameAnvilの大部分の機能はコールバックの形で提供します。つまり、エンジンユーザーはGameAnvilが提供する基本クラス(Base Classes)を継承した後、このようなコールバックメソッドを再定義する形で大部分の機能を使用することになります。このプロセスで、エンジンユーザーが必要なコールバックメソッドのみを実装すればいいので、一部のコールバックメソッドは無視することもあります。このような基本クラスはすべて"Base"で始まる名前を持ち、com.nhn.gameanvilパッケージもしくは、そのサブパッケージで提供されます。
+基本的にGameAnvilの大部分の機能はコールバック形式で提供されます。つまり、エンジンユーザーはGameAnvilが提供する基本インターフェース(IGatewayNode、ISupportNode、IGameNode)を実装後、このようなコールバックメソッドを再定義する形式で大部分の機能を使用することになります。この過程でエンジンユーザーが必要なコールバックメソッドのみ実装すればよいため、一部のコールバックメソッドは無視することもできます。これらの基本インターフェースは全て「I」で始まる名前を持ち、com.nhn.gameanvilパッケージまたはその下位パッケージとして提供されます。
 
 ![callback-1.png](https://static.toastoven.net/prod_gameanvil/images/callback-1.png)
 
-## すべての実装の始まり、ノード
+## 全ての実装の始まり、ノード
 
-例えば、すべてのノードは共通して以下のコールバックメソッドを再定義する必要があります。そして、それぞれのノードはその役割に合った追加コールバックメソッドの実装を要求できます。以下のコードで例に挙げたSampleGatewayNodeは、GatewayNodeの基本クラスであるBaseGatewayNodeを継承しています。
+例えば、全てのノードは共通して以下のコールバックメソッドを再定義する必要があります。そして、それぞれのノードはその役割に合った追加のコールバックメソッドの実装を要求する場合があります。以下のコードで例に挙げたSampleGatewayNodeは、GatewayNodeの基本インターフェースであるIGatewayNodeを実装しています。
 
-BaseGatewayNodeを含むすべてのBaseNodeは、共通して以下のようなコールバックメソッドを提供します。ユーザーがこのコールバックメソッドを実装すると、エンジンが特定の時点に該当コールバックを呼び出します。これがGameAnvilの最も基本的な使用方法です。このような使用方法は文書全体においてさほど変わらないため、違和感を抱くことなく、各チャプターを理解できるでしょう。
+IGatewayNodeを含む全てのインターフェースノードは、共通して以下のようなコールバックメソッドを提供します。onCreate()メソッドのみ、実装するタイプに応じたコンテキストインターフェースをパラメータとして受け取ります。ユーザーがこれらのコールバックメソッドを実装すると、エンジンが特定の時点で該当コールバックを呼び出します。これこそがGameAnvilの最も基本的な使用法です。このような使用法はドキュメント全体を通して大同小異なので、大きな違和感なく各章を理解できるでしょう。
 
 ```java
-@GatewayNode
-public class SampleGatewayNode extends BaseGatewayNode {
+@GameAnvilGatewayNode // エンジンにこのクラスをGatewayとして登録
+public class SampleGatewayNode implements IGatewayNode {
+    private IGatewayNodeContext gatewayNodeContext;
 
     /**
-     * 初期化する際に呼び出し
+     * ゲートウェイノードコンテキストを伝達するために呼び出し
+     * <p/>
+     * オブジェクトが生成された後、一度呼び出される
      *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param gatewayNodeContextゲートウェイノードコンテキスト
      */
     @Override
-    public void onInit() throws SuspendExecution {  
+    public void onCreate(IGatewayNodeContext gatewayNodeContext) {
+        this.gatewayNodeContext = gatewayNodeContext;
     }
 
     /**
-     * Ready前に処理する部分用に呼び出し
-     *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * ノードが初期化される時に呼び出し
      */
     @Override
-    public void onPrepare() throws SuspendExecution {
+    public void onInit() {
+
     }
 
     /**
-     * Ready呼び出し
-     *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * Readyになる前に処理する部分のために呼び出し
      */
     @Override
-    public void onReady() throws SuspendExecution {  
+    public void onPrepare() {
+
     }
 
     /**
-     * pause呼び出し
-     *
-     * @param payload contentsから送信したい追加情報
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * Readyになる時に呼び出し
      */
     @Override
-    public void onPause(Payload payload) throws SuspendExecution {  
+    public void onReady() {
+
     }
 
     /**
-     * resume呼び出し
+     * Pauseになる時に呼び出し
      *
-     * @param payload contentsから送信したい追加情報
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * @param payloadコンテンツから伝達したい追加情報
      */
     @Override
-    public void onResume(Payload payload) throws SuspendExecution {  
+    public void onPause(IPayload payload) {
+
     }
 
     /**
-     * shutdownコマンドを受け取ると呼び出し
-     *
-     * @throws SuspendExecution このメソッドはファイバーをsuspendできることを意味する
+     * Shutdown命令を受け取ると呼び出し
      */
     @Override
-    public void onShutdown() throws SuspendExecution {  
+    public void onShuttingdown() {
+
+    }
+
+    /**
+     * Resumeになる時に呼び出し
+     *
+     * @param payloadコンテンツから伝達したい追加情報
+     */
+    @Override
+    public void onResume(IPayload payload) {
+
     }
 }
 ```
 
-これらのノード共通コールバックの意味と用途については次の表を参照してください。
+このようなノード共通コールバックの意味と用途は以下の表を参考にしてください。
 
-
-| コールバック名 | 意味              | 説明                                                                                                                                        |
-| ------------ | -------------------- |---------------------------------------------------------------------------------------------------------------------------------------------|
-| onInit     | 初期化           | ノードが最初の初期化を行う時に呼び出します。ノードが動作する前に必要な初期化作業がある場合は、このコールバックが適しています。この時、ノードはまだメッセージを処理しません。                                                   |
-| onPrepare  | 準備             | ノードの初期化が完了した後に呼び出されます。ユーザーはノードが準備完了する前に任意の作業をここで処理できます。この時、ノードはメッセージを処理できます。                                                  |
-| onReady    | 準備完了        | ノードがすべての準備を終えた動作完了段階です。この時、ノードはReady状態であるため、ユーザーはこの時からすべての機能を使用できます。                                                              |
-| onPause    | 一時停止        | ノードを一時停止すると呼び出されます。ユーザーはノードが一時停止された時に追加で処理したいコードをここに実装できます。                                                                        |
-| onResume   | 再開             | ノードが一時停止状態から動作を再開する際に呼び出されます。ユーザーは再開状態で処理したいコードをここに実装できます。                                                                 |
-| onShutdown | ノード停止        | ノードが完全に停止された際に呼び出されます。停止されたノードは再開(Resume)できません。                                                                                            |
-| getMessageDispatcher | 処理するパケット有り | ノードに処理するメッセージがある場合に返します。ユーザーは、自分が宣言したディスパッチャーを使用できます。詳細については[メッセージ処理](./server-impl-07-message-handling#13-getMessageDispatcher)を参照してください。 |
-
-
-
-## throws SuspendExecution
-
-前のサンプルコードですべてのコールバックメソッドの次のような例外シグネチャを見てきました。
-
-```java
-throws SuspendExecution
-```
-
-これは実際の例外ではありません。ファイバーのフローを制御するために[Quasar](https://docs.paralleluniverse.co/quasar/)で使用する一種の迂回法です。この例外シグネチャは該当メソッドがいつでもファイバーを一時停止(Suspend)できることを意味します。
-
-そのため、絶対にこの例外を次のような方法で直接処理してはいけません。詳細については[Suspendable](../server-basic/server-basic-03-suspendable)を参照してください。
-
-```java
-try {
-    ...
-} catch (SuspendExecution e) 
-{
-    // 絶対にSuspendExecution例外はcatchしてはいけません。
-}
-```
-
-
+| コールバック名       | 意味   | 説明                                                                                                                                        |
+|----------------|-------|---------------------------------------------------------------------------------------------|
+| onCreate       | オブジェクト生成 | オブジェクトが生成された時に呼び出されます。生成されたタイプで使用可能なAPIを使用できるコンテキストを受け取ります。コンテンツで必要であれば保存して使用できます。 |
+| onInit         | 初期化  | ノードが最初の初期化を行う時に呼び出します。ノード駆動前に必要な初期化作業がある場合、このコールバックが適しています。この時、ノードはまだメッセージを処理しません。    |
+| onPrepare      | 準備   | ノード初期化が完了した後に呼び出されます。ユーザーはノードの準備が完了する前に任意の作業をここで処理できます。この時、ノードはメッセージを処理できます。  |
+| onReady        | 準備完了 | ノードが全ての準備を終えた後、駆動完了段階です。この時、ノードはReady状態なのでユーザーはこの時から全ての機能を使用できます。                              |
+| onPause        | 一時停止 | ノードを一時停止すると呼び出されます。ユーザーはノードが一時停止される時に追加で処理したいコードをここに実装できます。                                         |
+| onShuttingdown | ノード停止 | ノードがShutdown命令を受け取る時に呼び出されます。停止したノードは再開(Resume)できません。                                                                  |
+| onResume       | 再開   | ノードが一時停止状態で駆動を再開する時に呼び出されます。ユーザーは再開状態で処理したいコードをここに実装できます。                                  |
 
 ## _(underscore)で始まるメソッドと変数
 
-エンジンを使用すると、ユーザーが継承したBaseクラスにおいて _で始まるメソッドや変数を見ることがあります。これはエンジン内部でのみ使用するためのものを意味します。すなわち、ユーザーは _で始まる変数やメソッドにアクセスしてはいけません。これはC++と異なり、Javaのスコープ制御が柔軟ではなく、一部表示を許可した場合であるため注意が必要です。
-
-
+エンジンを使用していると、ユーザーが実装インターフェースで_で始まるメソッドや変数を見かけることがあります。これはエンジン内部でのみ使用することを意味します。つまり、ユーザーは_で始まる変数やメソッドにアクセスしてはいけません。これはJavaのスコープ制御が柔軟でないために一部の公開を許容しているものですので、注意が必要です。
 
 ## gameanvilパッケージとgameanvilcoreパッケージ
 
-エンジンは大きく2つの上位パッケージで構成されます。そのうちの1つであるgameanvilパッケージはユーザー用のものです。このパッケージ内のすべてのクラスやAPIは自由に使用可能です。
+エンジンは大きく2つの上位パッケージで構成されます。そのうちの1つであるgameanvilパッケージはユーザーのためのものです。このパッケージ内の全てのクラスやAPIは自由に使用可能です。反面、gameanvilcoreパッケージはエンジンコアロジックを含んでいるため、ユーザーが直接アクセスすることを許可しません。それにもかかわらずユーザーに公開されているのは、現在GameAnvilがサポートするJavaバージョンのスコープ制御の限界のためです。ユーザーコードを作成する過程でgameanvilcoreパッケージの内容が含まれないよう、格別の注意が必要です。
 
-一方でgameanvilcoreパッケージは、エンジンコアロジックを含んでいるため、ユーザーのアクセスを許可していません。それにもかかわらず、ユーザーに表示されるのは、現在GameAnvilがサポートするJavaバージョンのスコープ制御限界が原因です。ユーザーコードを作成するプロセスでgameanvilcoreパッケージの内容が含まれないように注意が必要です。
+## IntelliJテンプレートでプロジェクト構成
 
+GameAnvilプロジェクトを最初から1つずつ構成することは、様々な複雑な過程を要求します。エンジンライブラリを読み込むことに加え、構成ファイルを作成しなければならず、プロトコル仕様を作成するスクリプトとこれをコンパイルするコンパイラも必要です。このような一連の過程により開発時間を不必要に浪費することを防ぐために、GameAnvilはこれらの内容を全て含んだIntelliJ用テンプレートを提供します。以下のリンクからテンプレートファイルをダウンロードした後、次の手順に従ってください。
 
+[GameAnvilテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
 
-## IntelliJテンプレートでプロジェクトを構成
-
-GameAnvilプロジェクトを最初から1つずつ構成するには、いくつかの複雑なプロセスが必要です。エンジンライブラリを読み込むとともに構成ファイルを作成する必要があり、プロトコルの詳細を作成するスクリプトとこれをコンパイルするコンパイラも必要です。このような一連のプロセスによる開発時間の浪費を防止するために、GameAnvilはこれらの内容をすべて含むIntelliJ用テンプレートを提供します。以下のリンクでテンプレートファイルをダウンロードして、次の手順に従ってください。
-
-
-
-[GameAnvilテンプレートダウンロード](https://static.toastoven.net/prod_gameanvil/files/GameAnvil Template.zip?disposition=attachment)
-
-
-
-IntelliJを実行後、ショートカットキー`Shift Shift`で全体検索ウィンドウを表示して**Import Settings...**を検索します。または、File > Manage IDE Settings > **Import Settings...**を選択します。
+IntelliJを実行した後、ショートカットキー`Shift Shift`で全体検索ウィンドウを表示し、**Import Settings...** を検索します。またはFile > Manage IDE Settings > **Import Settings...** を選択します。
 
 <img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/search_import_settings.png" />
 
-ファインダー画面でダウンロードしたテンプレートファイルを選択します。次の図のようにインポートする要素を選択するウィンドウが表示されたら、ファイルテンプレートとプロジェクトテンプレートをすべてチェックした後、OKをクリックします。インポートが完了したら
+ファインダー画面からダウンロードしたテンプレートファイルを選択します。下の図のようにインポートする要素を選択するウィンドウが表示されたら、ファイルテンプレートとプロジェクトテンプレートを全てチェックした後、OKをクリックします。 
 
 <img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/select_import.png" />
 
-新しいプロジェクト作成ウィンドウが開いたら、左メニューのUser-definedタブでGameAnvil Templateを選択します。
+インポートが完了し新しいプロジェクト作成ウィンドウが開いたら、左側メニューのUser-definedタブからGameAnvil Templateを選択します。
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/new_project_project_template.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/01-getting-started/new_project_project_template.png" />
 
-終了すると、次の図のようにGameAnvilサーバーの開発をすぐに開始できるテンプレートプロジェクトが作成されます。
+完了すると次の図のようにGameAnvilサーバー開発をすぐに開始できるテンプレートプロジェクトが作成されます。
 
 <img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/project_template_view.png" />
 
-GameAnvilが提供するさまざまなクラスをすぐに作成できるファイルテンプレートも提供しています。プロジェクトで希望するパッケージを選択した後、クリックしてコンテキストメニューを開きます。この時、次の図のように各クラス別のファイルテンプレートを利用できます。
+GameAnvilで提供する様々なクラスをすぐに作成できるファイルテンプレートも提供しています。プロジェクトで希望するパッケージを選択した後、右クリックでコンテキストメニューを開きます。この時、次の図のように各クラス別ファイルテンプレートを利用できます。
 
-<img src="https://static.toastoven.net/prod_gameanvil/images/server-impl/file_template.png" />
+<img src="https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/01-getting-started/file_template.png" />
 
-次の図はファイルテンプレートで提供されるリストです。それぞれのファイルテンプレートは1つのクラステンプレートを実装します。
+次はファイルテンプレートとして提供されるリストです。それぞれのファイルテンプレートは1つのクラステンプレートを実装します。
 
-| ファイルテンプレート  | 説明             |
-| -------------- |------------------|
-| GatewayNode    | ゲートウェイノードの基本実装 |
-| GameNode       | ゲームノードの基本実装   |
-| SupportNode    | サポートノードの基本実装  |
-| Connection     | コネクションクラスの基本実装 |
-| Session        | セッションクラスの基本実装  |
-| GameUser       | ゲームユーザーの基本実装   |
-| GameRoom       | ゲームルームの基本実装    |
-| UserMatchMaker | ユーザーマッチメイカーの基本実装 |
-| UserMatchInfo  | ユーザーマッチ情報の基本実装 |
-| RoomMatchMaker | ルームマッチメイカーの基本実装 |
-| RoomMatchForm  | ルームマッチング申請の基本実装  |
-| RoomMatchInfo  | ルームマッチング情報基本の実装  |
+| ファイルテンプレート                       | 説明                    |
+|--------------------------------|-------------------------|
+| Connection                     | コネクション基本実装             |
+| GameNode                       | ゲームノードの基本実装          |
+| GatewayNode                    | ゲートウェイノードの基本実装       |
+| MessageHandler for GameNode    | ゲームノードのメッセージハンドラ基本実装  |
+| MessageHandler for GatewayNode | ゲートウェイノードのメッセージハンドラ基本実装 |
+| MessageHandler for Room        | ルームメッセージハンドラ基本実装        |
+| MessageHandler for SupportNode | サポートノードのメッセージハンドラ基本実装 |
+| MessageHandler for User        | ユーザーメッセージハンドラ基本実装      |
+| RestMessageHandler             | Restメッセージハンドラ基本実装    |
+| Room                           | ルーム基本実装                  |
+| RoomMatchForm                  | ルームマッチング申請基本実装         |
+| RoomMatchInfo                  | ルームマッチング情報基本実装         |
+| RoomMatchMaker                 | ルームマッチメーカーの基本実装        |
+| Session                        | セッション基本実装              |
+| SupportNode                    | サポートノードの基本実装         |
+| User                           | ゲームユーザーの基本実装          |
+| UserMatchInfo                  | ユーザーマッチ情報の基本実装       |
+| UserMatchMaker                 | ユーザーマッチメーカーの基本実装       |
+
+ 

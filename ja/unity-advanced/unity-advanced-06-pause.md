@@ -1,42 +1,39 @@
-## Game > GameAnvil > Unity深層開発ガイド > バックグラウンド接続の切断防止
+## Game > GameAnvil > Unity 応用開発ガイド > バックグラウンド接続切れ防止
 
-[Unity基礎開発ガイド > バックグラウンド接続の切断防止](../unity-basic/unity-basic-08-background-connection.md)文書の内容のように、モバイルデバイスでゲームがバックグラウンドに切り替わる場合、サーバー接続が切断されることがありますが、これを防止するためにサーバーとの接続確認機能を一時停止できます。
+## バックグラウンド接続切れ防止
 
-これを実装したコード例は次のとおりです。
+サーバーとクライアントの接続状態を確認するため、サーバーは定期的にクライアントの状態をチェックするメッセージを送り、クライアントはこれに応答するメッセージを送ります。しかしモバイルデバイスでゲームがバックグラウンドに切り替わるとUnityアプリケーションが停止し、アプリケーションが停止するとゲームサーバーとパケットをやり取りできなくなります。この状態では接続状態を確認するためのメッセージもやり取りできなくなるため、結局サーバーとの接続が切れることになります。
+
+### 接続確認機能の一時停止及び再開
+
+接続状態を確認できずにサーバーとの接続が切れるのを防ぐためには、バックグラウンドに切り替わる前にサーバーへ接続確認のための機能の一時停止をリクエストする必要があります。
+アプリケーションがバックグラウンドやフォアグラウンドに切り替わる時、UnityのMonoBehaviourにあるOnApplicationPause()コールバックが呼び出されます。バックグラウンドに切り替わる時にPauseClientStateCheck()を呼び出して接続確認機能を一時停止し、フォアグラウンドに切り替わる時はResumeClientStateCheck()を呼び出して接続確認機能を再開します。 
 
 ```c#
-public class ConnectHandler : MonoBehaviour
+public class GameAnvilManager : MonoBehaviour
 {
     ...
+    
     private void OnApplicationPause(bool pause)
     {
         if (pause)
         {
-            // アプリがpauseされる前にやるべき作業があればここで処理します。
-
-            // 入力した時間(sec)の間、サーバーのclientStateCheck機能を停止します。
-            // この時間が過ぎるとclientStateCheck機能が動作して接続が切れることがあります。
-            connector.GetConnectionAgent().PauseClientStateCheck(600);
-
-            // アプリがpauseされる直前にconnector.Update()を呼び出して
-            // Connectorに溜まったメッセージを処理して状態をアップデートします。
-            connector.Update();
-        } else
+            connector.PauseClientStateCheck(pauseClientStateCheckTime);
+        }
+        else
         {
-            // アプリがresumeされた直後にconnector.Update()を呼び出して
-            // Connectorに溜まったメッセージを処理して状態をアップデートします。
-            connector.Update();
-
-            // サーバーのclientStateCheck機能を再開します。
-            connector.GetConnectionAgent().ResumeClientStateCheck();
-
-            // 長時間pauseされた後、resumeされた場合、接続が切断される可能性があるので、状態をチェックします。
-            if (connector.IsConnected())
-            {
-                // アプリがresumeされた後、やるべき作業があればここで処理します。
-            }
+            connector.ResumeClientStateCheck();
         }
     }
+    
     ...
 }
 ```
+
+PauseClientStateCheck()は次のような1つのパラメータを持っています。
+
+| タイプ    | 名前           | 説明                                         |
+|---------|----------------|----------------------------------------------|
+| int     | pauseTime      | 一時停止する時間。<br/>最小値 : 10秒、最大値 : 15分、単位ミリ秒 |
+
+最小値より小さい値を入力しても自動的に最小値が適用され、最大値より大きい値を入力しても最大値に該当する時間が経過すれば自動的に接続確認機能が再開されます。
