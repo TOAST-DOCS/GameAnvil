@@ -61,8 +61,8 @@ connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) =>
 | 코드 이름                                         | 값   | 설명 |
 |---------------------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `FORCE_CLOSE_SYSTEM_ERROR`                       | 2000  | 시스템 오류로 인한 강제 종료 상황입니다. 클라이언트에서 이 코드를 받은 경우 GameAnvil 개발팀에 문의하세요. |
-| `FORCE_CLOSE_BASE_CONNECTION`                    | 2010  | 서버에서 BaseConnection의 close() 호출 시 받게 되는 코드입니다. |
-| `FORCE_CLOSE_BASE_USER`                          | 2011  | 서버에서 BaseUser의 closeConnection() 호출 시 받게 되는 코드입니다. |
+| `FORCE_CLOSE_CONNECTION`                    | 2010  | 서버에서 BaseConnection의 close() 호출 시 받게 되는 코드입니다. |
+| `FORCE_CLOSE_USER`                          | 2011  | 서버에서 BaseUser의 closeConnection() 호출 시 받게 되는 코드입니다. |
 | `FORCE_CLOSE_ADMIN_KICK`                         | 2012  | Admin에서 강제 종료 하였을 경우 받게 되는 코드입니다. |
 | `FORCE_CLOSE_INVALID_NODE`                       | 2020  | GameNode가 invalid 상태로 변경 되어 |
 | `FORCE_CLOSE_USER_TRANSFER_FAIL`                 | 2021  | 유저 트렌스퍼가 실패한 경우 |

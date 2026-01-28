@@ -440,8 +440,8 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 | `MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND`     | 912   | 실패: 매칭을 진행했으나 방을 찾지 못함 |
 | `MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY` | 913 | 실패: 잘못된 매칭 유저 카테고리     |
 | `MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY` | 914 | 실패: 매칭 유저 카테고리 사이즈가 0일 경우 |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL`  | 915   | 실패: 매칭 신청서가 없음           |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL`  | 916   | 실패: 매칭 정보가 없음             |
+| `MATCH_ROOM_FAIL_MATCH_FORM_NULL`  | 915   | 실패: 매칭 신청서가 없음           |
+| `MATCH_ROOM_FAIL_MATCH_INFO_NULL`  | 916   | 실패: 매칭 정보가 없음             |
 
 룸 매치메이킹에 성공했을 경우, 응답을 통해 roomId를 포함한 정보를 확인할 수 있습니다.
 
@@ -711,12 +711,12 @@ user.onSessionClose = (user, resultCode, payload) => {
 }
 ```
 
-| 코드 이름                                    | 값   | 설명                                                                                                  |
-|----------------------------------------------|-------|------------------------------------------------------------------------------------------------------|
-| `SESSION_CLOSE_BASE_USER`                    | 2011  | 서버에서 BaseUser의 `closeConnection()` 호출                                                        |
-| `SESSION_CLOSE_ADMIN_KICK`                   | 2012  | 어드민에서 강제 종료                                                                                 |
-| `SESSION_CLOSE_DUPLICATE_LOGIN`              | 2032  | 중복 접속으로 인한 강제 종료                                                                         |
-| `SESSION_CLOSE_BY_NEW_CONNECTION`            | 2040  | 같은 계정 정보로 새로운 로그인 요청 시 이전 접속 종료. 네트워크 순단 등 재접속 시 사용. 문의 필요.     |
+| 코드 이름                                   | 값   | 설명                                                                                                  |
+|-----------------------------------------|-------|------------------------------------------------------------------------------------------------------|
+| `SESSION_CLOSE_USER`                    | 2011  | 서버에서 BaseUser의 `closeConnection()` 호출                                                        |
+| `SESSION_CLOSE_ADMIN_KICK`              | 2012  | 어드민에서 강제 종료                                                                                 |
+| `SESSION_CLOSE_DUPLICATE_LOGIN`         | 2032  | 중복 접속으로 인한 강제 종료                                                                         |
+| `SESSION_CLOSE_BY_NEW_CONNECTION`       | 2040  | 같은 계정 정보로 새로운 로그인 요청 시 이전 접속 종료. 네트워크 순단 등 재접속 시 사용. 문의 필요.     |
 | `SESSION_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041  | 클라이언트와의 연결 끊김 감지. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.       |
 | `SESSION_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | 세션을 찾을 수 없는 경우. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.            |
 

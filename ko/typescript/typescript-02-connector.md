@@ -57,26 +57,26 @@ connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) =>
 
 함수의 첫 번째 인자로는 연결이 끊긴 이유를 알 수 있습니다.
 
-| 코드 이름                                         | 값   | 설명 |
-|---------------------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| `FORCE_CLOSE_SYSTEM_ERROR`                       | 2000  | 시스템 오류로 인한 강제 종료 상황입니다. 클라이언트에서 이 코드를 받은 경우 GameAnvil 개발팀에 문의하세요. |
-| `FORCE_CLOSE_BASE_CONNECTION`                    | 2010  | 서버에서 BaseConnection의 close() 호출 시 받게 되는 코드입니다. |
-| `FORCE_CLOSE_BASE_USER`                          | 2011  | 서버에서 BaseUser의 closeConnection() 호출 시 받게 되는 코드입니다. |
-| `FORCE_CLOSE_ADMIN_KICK`                         | 2012  | Admin에서 강제 종료 하였을 경우 받게 되는 코드입니다. |
-| `FORCE_CLOSE_INVALID_NODE`                       | 2020  | GameNode가 invalid 상태로 변경 되어 |
-| `FORCE_CLOSE_USER_TRANSFER_FAIL`                 | 2021  | 유저 트렌스퍼가 실패한 경우 |
-| `FORCE_CLOSE_USER_TRANSFER_ERROR`                | 2022  | 유저 트렌스퍼 중 시스템 에러가 발생한 경우 |
-| `FORCE_CLOSE_AUTHENTICATION_FAIL`                | 2030  | 인증 실패로 인한 강제 종료|
+| 코드 이름                                  | 값   | 설명 |
+|-----------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| `FORCE_CLOSE_SYSTEM_ERROR`             | 2000  | 시스템 오류로 인한 강제 종료 상황입니다. 클라이언트에서 이 코드를 받은 경우 GameAnvil 개발팀에 문의하세요. |
+| `FORCE_CLOSE_CONNECTION`               | 2010  | 서버에서 BaseConnection의 close() 호출 시 받게 되는 코드입니다. |
+| `FORCE_CLOSE_USER`                     | 2011  | 서버에서 BaseUser의 closeConnection() 호출 시 받게 되는 코드입니다. |
+| `FORCE_CLOSE_ADMIN_KICK`               | 2012  | Admin에서 강제 종료 하였을 경우 받게 되는 코드입니다. |
+| `FORCE_CLOSE_INVALID_NODE`             | 2020  | GameNode가 invalid 상태로 변경 되어 |
+| `FORCE_CLOSE_USER_TRANSFER_FAIL`       | 2021  | 유저 트렌스퍼가 실패한 경우 |
+| `FORCE_CLOSE_USER_TRANSFER_ERROR`      | 2022  | 유저 트렌스퍼 중 시스템 에러가 발생한 경우 |
+| `FORCE_CLOSE_AUTHENTICATION_FAIL`      | 2030  | 인증 실패로 인한 강제 종료|
 | `FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_ID`| 2031  | 인증 실패로 인한 강제 종료 - 어카운트아이디가 없을 경우 |
-| `FORCE_CLOSE_DUPLICATE_LOGIN`                    | 2032  | 중복 접속으로 인한 강제 종료 |
-| `FORCE_CLOSE_BY_NEW_CONNECTION`                  | 2040  | 같은 계정 정보로 새로운 로그인 요청이 들어온 경우. 네트워크 순단 등으로 재접속 시 이전 접속을 종료. 문의 필요. |
-| `FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT`       | 2041  | 클라이언트와의 연결 끊김을 감지. 문의 필요.|
-| `FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION`  | 2042  | 세션 정보를 찾을 수 없는 경우. 문의 필요.|
-| `FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL`            | 2043  | 클라이언트가 서버 상태 체크에 응답하지 않은 경우. 문의 필요. |
-| `FORCE_CLOSE_GHOST_USER`                         | 2044  | 고스트 유저인 경우. 문의 필요. |
-| `SOCKET_DISCONNECT`                              | 2100  | 네트워크 연결이 끊어짐 |
-| `SOCKET_TIME_OUT`                                | 2101  | 타임아웃이 발생, 컨넥터에서 연결을 끊음 |
-| `SOCKET_ERROR`                                   | 2102  | 소켓 에러가 발생하여 연결을 끊음 |
+| `FORCE_CLOSE_DUPLICATE_LOGIN`          | 2032  | 중복 접속으로 인한 강제 종료 |
+| `FORCE_CLOSE_BY_NEW_CONNECTION`        | 2040  | 같은 계정 정보로 새로운 로그인 요청이 들어온 경우. 네트워크 순단 등으로 재접속 시 이전 접속을 종료. 문의 필요. |
+| `FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041  | 클라이언트와의 연결 끊김을 감지. 문의 필요.|
+| `FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042  | 세션 정보를 찾을 수 없는 경우. 문의 필요.|
+| `FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL`  | 2043  | 클라이언트가 서버 상태 체크에 응답하지 않은 경우. 문의 필요. |
+| `FORCE_CLOSE_GHOST_USER`               | 2044  | 고스트 유저인 경우. 문의 필요. |
+| `SOCKET_DISCONNECT`                    | 2100  | 네트워크 연결이 끊어짐 |
+| `SOCKET_TIME_OUT`                      | 2101  | 타임아웃이 발생, 컨넥터에서 연결을 끊음 |
+| `SOCKET_ERROR`                         | 2102  | 소켓 에러가 발생하여 연결을 끊음 |
 
 
 두 번째 인자로는 서버 구현에 따른 추가 정보를 받습니다. 추가 정보 처리 방법은 이후에 추가로 설명합니다.
@@ -132,7 +132,7 @@ const deviceId, accountId, password;
 connector.host = "127.0.0.1";
 connector.port = 18300;
 
-const authResult = await connector.connectAndAuthenticateion(deviceId, accountId, password);
+const authResult = await connector.connectAndAuthentication(deviceId, accountId, password);
 console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 ```
 

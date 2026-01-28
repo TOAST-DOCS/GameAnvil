@@ -1,6 +1,6 @@
 ## Game > GameAnvil > TypeScript 개발 가이드 > 로거
 
-## GameAnvillLogger
+## GameAnvilLogger
 
 커넥터 내부의 동작에 대한 로그를 받아보고 싶을 때 사용합니다.
 

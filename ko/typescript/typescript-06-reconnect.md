@@ -1,4 +1,4 @@
-## Game > GameAnvil > CocosCreator 개발 가이드 > 재접속
+## Game > GameAnvil > TypeScript 개발 가이드 > 재접속
 
 ## 재접속
 
@@ -30,7 +30,7 @@ loginedUserInfoList.forEach((userInfo: AlreadyLoginedUserInfo) => {
 인증 결과로 받은 유저 정보를 이용해 로그인을 진행합니다. 이 때, userType이나 channelId 등 이전 유저 정보와 동일한 값을 이용해 로그인을 해야 합니다. 그렇지 않으면 로그인이 실패할 수 있습니다.
 
 ```typescript
-const userType: stirng;
+const userType: string;
 const channelId: string;
 const payload: Payload;
 
