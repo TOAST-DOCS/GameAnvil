@@ -1,4 +1,4 @@
-## Game > GameAnvil > CocosCreator 개발 가이드 > 메시지 핸들링
+## Game > GameAnvil > TypeScript 개발 가이드 > 메시지 핸들링
 
 ## 메시지
 
@@ -140,7 +140,7 @@ const result = await connector.requestMessage(echoReq, EchoRes.descriptor);
 
 if (result.resultCode === ResultCode.Success) {
     const echoRes: EchoRes = result.data;
-    consoel.log(echoRes.message); // Hello World! 출력
+    console.log(echoRes.message); // Hello World! 출력
 }
 ```
 
