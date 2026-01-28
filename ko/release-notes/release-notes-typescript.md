@@ -1,5 +1,18 @@
 ## Game > GameAnvil > 릴리스 노트 > Typescript Connector
 
+### 2.2.0 (2026.01.28)
+
+#### [다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector-typescript.zip)
+#### GameAnvil 2.2.0 이상
+
+#### Changed
+* GameAnvil 2.2 서버에 맞춰 엔진 프로토콜 업데이트
+
+#### Fix
+* 코드 품질 개선
+
+---
+
 ### 2.1.0 (2025.06.30)
 
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector-typescript.zip)
