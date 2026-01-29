@@ -44,8 +44,8 @@ public async void Authenticate()
     try
     {
         Payload authenticationPayload = new Payload(new Protocol.AuthenticationData());
-        ErrorResult<ResultCodeAuth, AuthenticationResult> result = await connector.Authentication("DeviceId", "AccountId", "Password", authenticationPayload);
-        if(result.ErrorCode == ResultCodeAuth.AUTH_SUCCESS)
+        Result<ResultCodeAuth, AuthenticationResult> result = await connector.Authentication("DeviceId", "AccountId", "Password", authenticationPayload);
+        if(result.ResultCode == ResultCodeAuth.AUTH_SUCCESS)
         {
             // 성공
         } else
@@ -70,7 +70,7 @@ Authentication()은 다음과 같은 4개의 매개변수를 가지고 있습니
 | String  | password  | 인증에 사용할 비밀번호. 사용하지 않는 경우 string.Empty(빈 문자열) 입력                                                                 |
 | Payload | payload   | 인증 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                             |
 
-응답으로 ErrorResult<ResultCodeAuth, AuthenticationResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. Authentication이 성공하면 ErrorCode 필드의 값이 ResultCodeAuth.AUTH_SUCCESS 가 되며, 아닌 경우 인증이 실패한 것입니다. Data 필드를 통해 요청 결과 AuthenticationResult 를 얻을 수 있습니다. 이를 통해 인증 결과 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도
+응답으로 Result<ResultCodeAuth, AuthenticationResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. Authentication이 성공하면 ResultCode 필드의 값이 ResultCodeAuth.AUTH_SUCCESS 가 되며, 아닌 경우 인증이 실패한 것입니다. Data 필드를 통해 요청 결과 AuthenticationResult 를 얻을 수 있습니다. 이를 통해 인증 결과 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도
 있습니다.
 
 ResultCodeAuth의 상세 내용은 다음과 같습니다.
@@ -194,8 +194,8 @@ public async void ChannelList()
     try
     {
         Payload channelInfoPayload = new Payload(new Protocol.ChannelInfoData());
-        ErrorResult<ResultCodeChannelList, List<string>> result = await connector.GetChannelList("ServiceName");
-        if (result.ErrorCode == ResultCodeChannelList.CHANNEL_LIST_SUCCESS)
+        Result<ResultCodeChannelList, List<string>> result = await connector.GetChannelList("ServiceName");
+        if (result.ResultCode == ResultCodeChannelList.CHANNEL_LIST_SUCCESS)
         {
             // 성공
         } else
@@ -215,7 +215,7 @@ GetChannelList()은 다음과 같은 1개의 매개변수를 가지고 있습니
 |--------|-------------|----------------|
 | String | ServiceName | 채널 정보를 요청할 서비스 |
 
-응답으로 ErrorResult<ResultCodeChannelList, List<string>>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelList가 성공하면 ErrorCode 필드의 값이 ResultCodeChannelList.CHANNEL_LIST_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. 성공시 Data 필드를 통해 요청 결과인 채널 아이디 목록을 얻을 수 있습니다.
+응답으로 Result<ResultCodeChannelList, List<string>>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelList가 성공하면 ResultCode 필드의 값이 ResultCodeChannelList.CHANNEL_LIST_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. 성공시 Data 필드를 통해 요청 결과인 채널 아이디 목록을 얻을 수 있습니다.
 
 ResultCodeChannelList의 상세 내용은 다음과 같습니다.
 
@@ -237,8 +237,8 @@ public async void ChannelCountInfo()
 {
     try
     {
-        ErrorResult<ResultCodeChannelCountInfo, ChannelCountResult> result = await connector.GetChannelCountInfo("ServiceName", "ChannelId");
-        if (result.ErrorCode == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS)
+        Result<ResultCodeChannelCountInfo, ChannelCountResult> result = await connector.GetChannelCountInfo("ServiceName", "ChannelId");
+        if (result.ResultCode == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS)
         {
             // 성공
         } else
@@ -259,7 +259,7 @@ GetChannelCountInfo()은 다음과 같은 2개의 매개변수를 가지고 있�
 | String | ServiceName | 채널 정보를 요청할 서비스     |
 | String | channelId   | 채널 정보를 요청할 채널의 아이디 |
 
-응답으로 ErrorResult<ResultCodeChannelCountInfo, ChannelCountResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelCountInfo가 성공하면 ErrorCode 필드의 값이 ResultCodeChannelCountInfo.CHANNEL_LIST_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 ChannelCountResult 를 얻을 수 있습니다.
+응답으로 Result<ResultCodeChannelCountInfo, ChannelCountResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelCountInfo가 성공하면 ResultCode 필드의 값이 ResultCodeChannelCountInfo.CHANNEL_LIST_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 ChannelCountResult 를 얻을 수 있습니다.
 
 ResultCodeChannelCountInfo의 상세 내용은 다음과 같습니다.
 
@@ -294,8 +294,8 @@ public async void ChannelInfo()
 {
     try
     {
-        ErrorResult<ResultCodeChannelInfo, Payload> result = await connector.GetChannelInfo("ServiceName", "ChannenId");
-        if (result.ErrorCode == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS)
+        Result<ResultCodeChannelInfo, Payload> result = await connector.GetChannelInfo("ServiceName", "ChannenId");
+        if (result.ResultCode == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS)
         {
             // 성공
         } else
@@ -316,7 +316,7 @@ GetChannelInfo()은 다음과 같은 2개의 매개변수를 가지고 있습니
 | String | ServiceName | 채널 정보를 요청할 서비스     |
 | String | channelId   | 채널 정보를 요청할 채널의 아이디 |
 
-응답으로 ErrorResult<ResultCodeChannelInfo, Payload>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelInfo() 가 성공하면 ErrorCode 필드의 값이 ResultCodeChannelInfo.CHANNEL_LIST_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. 성공시 Data 필드의 Payload 를 사용자가 정의한 채널 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeChannelInfo, Payload>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelInfo() 가 성공하면 ResultCode 필드의 값이 ResultCodeChannelInfo.CHANNEL_LIST_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. 성공시 Data 필드의 Payload 를 사용자가 정의한 채널 정보를 얻을 수도 있습니다.
 
 ResultCodeChannelInfo 상세 내용은 다음과 같습니다.
 
@@ -341,8 +341,8 @@ public async void AllChannelCountInfo()
 {
     try
     {
-        ErrorResult<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>> result = await connector.GetAllChannelCountInfo("ServiceName");
-        if (result.ErrorCode == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS)
+        Result<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>> result = await connector.GetAllChannelCountInfo("ServiceName");
+        if (result.ResultCode == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS)
         {
             // 성공
         } else
@@ -362,7 +362,7 @@ GetAllChannelCountInfo()은 다음과 같은 1개의 매개변수를 가지고 �
 |--------|-------------|----------------|
 | String | ServiceName | 채널 정보를 요청할 서비스 |
 
-응답으로 ErrorResult<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelCountInfo가 성공하면 ErrorCode 필드의 값이 ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 Dictionary<
+응답으로 Result<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelCountInfo가 성공하면 ResultCode 필드의 값이 ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 Dictionary<
 string, ChannelCountResult> 를 얻을 수 있습니다. 이 Dictionary는 채널 아이디를 키로, ChannelCountResult를 값으로 가지고 있습니다.
 
 ResultCodeAllChannelCountInfo의 상세 내용은 다음과 같습니다.
@@ -387,8 +387,8 @@ public async void AllChannelInfo()
 {
     try
     {
-        ErrorResult<ResultCodeAllChannelInfo, ChannelInfoResult> result = await connector.GetAllChannelInfo("ServiceName");
-        if (result.ErrorCode == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS)
+        Result<ResultCodeAllChannelInfo, ChannelInfoResult> result = await connector.GetAllChannelInfo("ServiceName");
+        if (result.ResultCode == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS)
         {
             // 성공
         } else
@@ -408,7 +408,7 @@ GetAllChannelInfo()은 다음과 같은 1개의 매개변수를 가지고 있습
 |--------|-------------|----------------|
 | String | ServiceName | 채널 정보를 요청할 서비스 |
 
-응답으로 ErrorResult<ResultCodeAllChannelInfo, ChannelInfoResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelInfo가 성공하면 ErrorCode 필드의 값이 ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 ChannelInfoResult 를 얻을 수 있습니다.
+응답으로 Result<ResultCodeAllChannelInfo, ChannelInfoResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelInfo가 성공하면 ResultCode 필드의 값이 ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 ChannelInfoResult 를 얻을 수 있습니다.
 
 ResultCodeAllChannelInfo의 상세 내용은 다음과 같습니다.
 

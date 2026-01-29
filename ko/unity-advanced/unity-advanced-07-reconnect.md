@@ -33,8 +33,8 @@ public async void Authenticate()
     try
     {
         Payload authenticationPayload = new Payload(new Protocol.AuthenticationData());
-        ErrorResult<ResultCodeAuth, AuthenticationResult> result = await connector.Authentication("DeviceId", "AccountId", "Password", );
-        if(result.ErrorCode == ResultCodeAuth.AUTH_SUCCESS)
+        Result<ResultCodeAuth, AuthenticationResult> result = await connector.Authentication("DeviceId", "AccountId", "Password", );
+        if(result.ResultCode == ResultCodeAuth.AUTH_SUCCESS)
         {
             // 성공
             foreach(AlreadyLoginedUserInfo alreadyLoginedUserInfo in result.Data.LoginUserInfoList)
@@ -64,8 +64,8 @@ public async void Login(AlreadyLoginedUserInfo userInfo)
     {
         Payload loginPayload = new Payload(new Protocol.LoginData());
         GameAnvilUser user = new GameAnvilUser(connector, userInfo.ServiceName, userInfo.UserID);
-        ErrorResult<ResultCodeLogin, LoginResult> result = await user.Login(userInfo.UserType, userInfo.ChannelId, loginPayload);
-        if(result.ErrorCode == ResultCodeLogin.LOGIN_SUCCESS)
+        Result<ResultCodeLogin, LoginResult> result = await user.Login(userInfo.UserType, userInfo.ChannelId, loginPayload);
+        if(result.ResultCode == ResultCodeLogin.LOGIN_SUCCESS)
         {
             // 성공
         } else
