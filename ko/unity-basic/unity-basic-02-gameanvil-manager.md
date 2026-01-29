@@ -16,7 +16,7 @@ Unity Hierarchy 창에서 마우스 오른쪽 버튼을 클릭한 뒤 **GameAnvi
 
 GameAnvilManager 에는 여러가지 설정값이 있습니다. GameAnvilManager 생성 시 기본값으로 설정되지만 필요하다면 Inspector 창에서 직접 값을 변경할 수 있습니다.
 
-![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/02-gameanvil-manager/02-gameanvil-manager-inspector.png)
+![](https://static.toastoven.net/prod_gameanvil/files/v2_2/unity-basic/02-gameanvil-manager/02-gameanvil-manager-inspector.png)
 
 설정의 종류는 다음과 같습니다.
 
@@ -31,6 +31,5 @@ GameAnvilManager 에는 여러가지 설정값이 있습니다. GameAnvilManager
 |                | Channel Id                    | 간편 로그인 에서 사용할 채널 아이디                                                                                                    |           |
 |                | Service Name                  | 간편 로그인 에서 사용할 서비스 이름                                                                                                    |           |
 | Client Check   | Pause Client State Check Time | 클라이언트 상태 체크 확인 중지 시간 설정. <br/>백그라운드로 전환시 클라이언트의 연결상태 체크를 일시 중지한다. 이 시간동안은 앱이 백그라운드에 머물다가 포그라운드로 올라와도 서버에서 강제 종료시키지 않는다. |    600    |
-| Log            | Threshold                     | 로그 레벨을 설정합니다.                                                                                                           |   Info    |
 
 이제 GameAnvilManager의 사용 준비가 완료되었습니다.

@@ -73,7 +73,7 @@ public async void ManagerLogin()
         var authenticatePayload = new Payload(new Protocol.AuthenticateData());
         var loginPayload = new Payload(new Protocol.LoginData());
         var result = await gameAnvilManager.Login(authenticatePayload, loginPayload);
-        if (retult.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
+        if (result.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
             // 성공
         } else {
             // 실패
@@ -88,7 +88,6 @@ public async void ManagerLogin()
 ```
 
 간편 로그인이 성공하면 LoginResult의 UserController에 로그인 완료된 유저의 GameAnvilUserController 인스턴스가 할당이 됩니다. 이 인스턴스를 이용하여 서버의 유저 객체에 접근할 수 있습니다. 간편 로그인이 실패하면 UserController 에는 null 이 할당됩니다.
-<br>
 
 간편 로그인이 실패했을 때 어떤 이유로 실패했는지는 LoginResult의 loginResultCode를 이용해 확인할 수 있습니다. 확인할 수 있는 실패 이유는 다음과 같습니다.
 
@@ -140,14 +139,17 @@ public async void ManagerLogout()
 
 ## 상태 변경 알림
 
-Logout()을 호출하지 않더라고 네트워크에 문제가 있거나, 서버에서 강제로 로그아웃을 시키는 등 GameAnvilManager의 상태가 변경될 수 있으며, 이에 대한 알림을 받을 수 있습니다. 
+Logout()을 호출하지 않더라고 네트워크에 문제가 있거나, 서버에서 강제로 로그아웃을 시키는 등 GameAnvilManager의 상태가 변경될 수 있으며, 이에 대한 알림을 받을 수 있습니다.
+
 ```c#
 public void addStateChangeListener()
 {
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
     gameAnvilManager.onStateChange.AddListener((GameAnvilManager.LoginState oldState, GameAnvilManager.LoginState newState) =>
     {
         // 상태 변경 알림
     });
 }
 ```
-oldState로 변경되기전 상태를, newState로 변경된 후의 상태를 알 수 있습니다.  
+
+oldState로 변경되기전 상태를, newState로 변경된 후의 상태를 알 수 있습니다.
