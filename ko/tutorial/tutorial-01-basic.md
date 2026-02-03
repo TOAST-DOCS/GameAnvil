@@ -543,8 +543,11 @@ public class SyncGameRoom extends BaseGameRoom<SyncGameUser> {
 
 ```
 "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-"--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED"
-"-XX:+UseG1GC"
+"--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED",
+"--add-opens", "java.base/jdk.internal.misc=ALL-UNNAMED", 
+"--add-opens", "java.base/java.nio=ALL-UNNAMED",
+"-Dio.netty.tryReflectionSetAccessible=true",
+"-Dio.netty.noUnsafe=false"
 ```
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_2/basic-tutorial/10_gameanvil_run.png)
