@@ -1,130 +1,58 @@
 ## Game > GameAnvil > サーバー開発ガイド > メッセージハンドリング
 
-![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/three_steps_for_message_process_1213.png)
+![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/07-message-handling/three_steps_for_message_process.png)
 
 ## 一般メッセージ処理
 
-* GameAnvilのメッセージ処理は、上図のように大きく3つの部分に分けられます。この3つの部分が互いに相まってメッセージ処理の流れを作ります。
-* このうち、onDispatchコールバックの実装はエンジンが独自に行っており、エンジンユーザーはDispatcherの宣言とメッセージハンドラを実装してパケットを処理します。
+* GameAnvilのメッセージ処理は上の図のように大きく3つの部分に分かれます。この3つの部分が互いにかみ合ってメッセージ処理フローを作ることになります。
+* このうちonDispatchコールバック実装はエンジンで独自に行っており、エンジンユーザーはDispatcherの宣言とメッセージハンドラを実装してパケットを処理します。
 
-### パケットディスパッチャーの作成およびメッセージとハンドラ接続
+### メッセージハンドラ実装及びメッセージとハンドラの接続
 
-まず、メッセージ処理を行うためのパケットディスパッチャーを作成します。このディスパッチャーは該当クラスに対して使用されるため、リソースの浪費を防ぐために必ずstaticで作成します。
-
-```java
-// (パケットディスパッチャー作成  
-private static final MessageDispatcher<MY_USER_CLASS> messageDispatcher = new MessageDispatcher<>();
-```
-
-こうして作成したディスパッチャーに必要なメッセージとハンドラを接続します。
+このメッセージハンドラを直接実装します。このとき、GameAnvilはエンジン内部はもちろん、全てのサンプルコードでメッセージハンドラに対して「_」で始まる命名規則を使用します。今後登場する全てのサンプルコードでも、「_」で始まるクラスは全てメッセージハンドラです。最も基本的な形のメッセージハンドラは次のとおりです。CONTEXT_CLASSは該当メッセージの流れを示すクラスを意味し、MAPPING_CLASSは処理するメッセージを登録するクラスを意味します。Contextクラスで対象オブジェクトの取得、メッセージの応答などを行うことができます。
 
 ```java
-// 処理したいメッセージとハンドラをマッピング
-static {
-    messageDispatcher.registerMsg(MyProto.MyMsg.class, _MyMsgHandler.class);
-}
-```
+@GameAnvilController // このクラスをメッセージハンドラとして使用します。
+public class _MyEchoHandler {
 
-
-### メッセージハンドラの実装
-
-次に該当メッセージハンドラを直接実装します。この時、GameAnvilはエンジン内部はもちろん、すべてのサンプルコードでメッセージハンドラに対して_で始まるネーミングを使用します。これから登場するすべてのサンプルコードでも_で始まるクラスはすべてメッセージハンドラです。最も基本的な形のメッセージハンドラは次のとおりです。RECEIVER_CLASSは該当メッセージを受け取るクラスを意味します。
-
-```java
-public class _MyGameMsg implements MessageHandler<RECEIVER_CLASS, MyProto.MyMsg> {
-
-    private static final Logger logger = getLogger(_MyMsgHandler.class);
-
-    @Override
-    public void execute(RECEIVER_CLASS receiver, MyProto.MyMsg myMsg) throws SuspendExecution {
+    @MAPPING_CLASS // このメソッドがどのメッセージを処理するかを宣言します。
+    public void execute(CONTEXT_CLASS ctx, EchoSend request) {
+        System.out.println("Receive EchoSend Message!");
     }
-
 }
 ```
 
-例えば、パケット受信者がGameUserの場合、そのメッセージハンドラは次のとおりです。
+例えば、パケット受信者がGameUserなら、そのメッセージハンドラは次のとおりです。
 
 ```java
-public class _MyGameMsg implements MessageHandler<GameUser, MyProto.MyMsg> {
+@GameAnvilController // このクラスをメッセージハンドラとして使用します。
+public class _MyEchoHandler {
 
-    private static final Logger logger = getLogger(_MyMsgHandler.class);
-
-    @Override
-    public void execute(GameUser receiver, MyProto.MyMsg myMsg) throws SuspendExecution {
+    @GameUserMapping(
+        value = EchoSend.class,             // 処理するプロトコルバッファ
+        loadClass = SampleGameUser.class    // メッセージを受信する対象
+    )
+    public void execute(IUserDispatchContext ctx, EchoSend request) {
+        System.out.println("Receive EchoSend Message!");
     }
-
 }
 ```
 
+## httpリクエストの処理
 
-### getMessageDispatcherコールバックの実装
+パケットディスパッチャは2種類存在します。1つは前述した一般的なパケットディスパッチャで、もう1つはhttpリクエストを処理するためのディスパッチャです。全体的な使用方法は、この二つでほぼ同じです。ただし、このようなhttpメッセージ処理は、SupportNodeのみがサポートします。
 
-パケットディスパッチャーとメッセージハンドラをすべて実装しました。これでエンジンが処理するパケットがある時に、ディスパッチャーを渡すだけです。
+### httpパケットディスパッチャの作成及びメッセージとハンドラの接続
 
-```java
-public class GameUser {
-    // .. 省略
-    @Override
-    public final MessageDispatcher<GameUser> getMessageDispatcher() {
-        return packetDispatcher;
-    }
-    // .. 省略
-}
-```
+次のサンプルコードは、RESTfulリクエストを処理するために、以前とは異なる@SupportNodeHttpMappingを宣言します。また、メッセージクラスではなくURL形式のAPIをハンドラに接続しています。httpメッセージハンドラは、RestObjectが引数として渡されるという違いがあります。
 
-ここまで一般的なパケット処理の流れを見てきました。それとともに、RESTfulリクエストに対する処理について見てみましょう。
+```java 
+@GameAnvilController
+public class _RestAuthReq {
 
-
-
-## RESTfulリクエスト処理
-
-パケットディスパッチャーは2つ存在します。1つは前述した一般的なパケットディスパッチャーであり、もう1つはRESTfulリクエストを処理するためのディスパッチャーです。全体的な使用方法は両者ともほとんど同じです。ただし、このようなRESTfulメッセージ処理は、SupportNodeだけサポートしています。 
-
-
-
-### RESTパケットディスパッチャーの作成およびメッセージとハンドラ接続
-
-次のサンプルコードは、RESTfulリクエストを処理するために以前とは異なるRestPacketDispatcherを作成しています。また、メッセージクラスではなく、URL形式のAPIをハンドラに接続しています。
-
-```java
-private static final RestMessageDispatcher<RECEIVER_CLASS> restDispatcher = new RestMessageDispatcher<>();
-
-static {
-    // pathとmethod(GET, POST, ...)の組み合わせで登録。
-    restDispatcher.registerMsg("/auth", RestObject.GET, _RestAuthReq.class);
-    restDispatcher.registerMsg("/echo", RestObject.GET, _RestEchoReq.class);
-    restDispatcher.registerMsg("/testGET", RestObject.GET, _RestTestGET.class);
-    restDispatcher.registerMsg("/testPOST", RestObject.POST, _RestTestPOST.class);
-}
-```
-
-サンプルコードのようにRestMessageDispatcherを使用してユーザーが望むRESTful APIとメッセージハンドラを接続しています。
-
-
-
-### ハンドラの実装
-
-RESTfulメッセージハンドラは、Packetの代わりにRestObjectが引数で送信される点を除けば、違いはありません。
-
-```java
-public class _RestAuthReq implements RestMessageHandler<WebSupportNode> {
-    private static final Logger logger = getLogger(_RestAuthReq.class);
-
-    @Override
-    public void execute(WebSupportNode node, RestObject restObject) throws SuspendExecution {
-		...
+    @SupportNodeHttpMapping(path = "/hello", method = "GET", loadClass = WebSupportNode.class)
+    public void execute(WebSupportNode node, RestObject restObject) {
+		// ...
     }  
-}
-```
-
-
-
-### RestMessageDispatcherの実装
-
-RESTfulメッセージ処理用のgetRestMessageDispatcherは、SupportNodeのみをサポートしています。restMessageDispatcherを渡すように簡単に実装できます。
-```java
-@Override
-public final RestMessageDispatcher<WebSupportNode> getRestMessageDispatcher() {
-    return restMessageDispatcher;
 }
 ```

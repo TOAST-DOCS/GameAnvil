@@ -1,802 +1,1040 @@
-## Game > GameAnvil > Unity深層開発ガイド > UserAgent
+## Game > GameAnvil > Unity 応用開発ガイド > ユーザー
 
-## UserAgent
+## ユーザー
 
-UserAgentはGameAnvilサーバーのGameNodeに関する作業を担当します。ログイン(Login())、ログアウト(Logout())、ルーム管理などの基本機能を提供し、直接定義したプロトコルに基づいて、クライアントは自分のユーザーオブジェクトを通じて他のオブジェクトとメッセージをやり取りし、様々なコンテンツを実装できます。
-UserAgentを使うためにはConnector.CreateUserAgent()関数を使って新しいUserAgentを作成する必要があります。ServiceNameとSubIdで区分される複数のUserAgentを作成できます。作成されたUserAgentはConnectorで内部的に管理され、Connector.GetUserAgent()関数を使って再使用できます。
+GameAnvilUserは、GameAnvilサーバーのユーザーに関連する作業を担当します。ログイン(Login())、ログアウト(Logout())及びルーム管理などの基本機能を提供します。
+GameAnvilサーバーは複数のサービスを同時に運営でき、1つのGameAnvilUserは1つのサービスにログインして互いに独立して動作します。つまり、複数のGameAnvilUserを作成してそれぞれ異なるサービスにログインし、同時に使用することが可能です。SubIdを異なるものにすれば、同じサービスに複数のGameAnvilUserを同時にログインさせて使用することも可能です。
+
+### 生成
+
+GameAnvilUserを使用するためには、まずGameAnvilUserオブジェクトを生成する必要があります。
 
 ```c#
-UserAgent userAgent = ConnectHandler.getInstance().GetUserAgent(serviceName, subID);
-if (userAgent == null) {
-    userAgent = ConnectHandler.getInstance().CreateUserAgent(serviceName, subID);
+public void CreateUser()
+{
+    try
+    {
+        user = new GameAnvilUser(connector, serviceName, subId);
+        // 成功
+    }
+    catch(Exception e)
+    {
+        // 失敗
+    }
 }
 ```
 
-GameAnvilサーバーは複数のサービスを同時に運営することができ、1つのUserAgentは1つのサービスにログインして互いに独立して動作することになります。つまり、複数のUserAgentを作成して違うサービスにログインして同時に使用できます。SubIdを変えれば、同じサービスに複数のUserAgentを同時にログインして使うことも可能です。
+ServiceNameとSubIdで区別される複数のGameAnvilUserを生成できます。
+
+```c#
+public void CreateUsers()
+{
+    try
+    {
+        gameUser1 = new GameAnvilUser(connector, "GameService", 1);
+        gameUser2 = new GameAnvilUser(connector, "GameService", 1);
+        chatUser = new GameAnvilUser(connector, "ChatService", 1);
+        // 成功
+    } catch (Exception e)
+    {
+        // 失敗
+    }
+}
+```
+
+### 解除
+
+使用を完了したGameAnvilUserは、Dispose()を呼び出して解除する必要があります。
+
+```c#
+public void DisposeUser()
+{
+    try
+    {
+        user.Dispose();
+    } catch (Exception e)
+    {
+        // 失敗
+    }
+}
+```
 
 ### ログイン/ログアウト
 
-ログインはクライアントがサーバーに接続した後、GameNodeに自分のユーザーオブジェクトを作成するプロセスと定義できます。ログアウトはログインの反対の概念です。つまり、GameNode上で自分のユーザーオブジェクトを削除するプロセスです。
+ログインは、クライアントがサーバーに接続した後、GameNodeに自身のユーザーオブジェクトを作成する過程と定義できます。ログアウトはログインの反対の概念です。つまり、GameNode上で自身のユーザーオブジェクトを削除する過程です。
 
-ログイン時、どのUserTypeでどのチャンネルにログインするかを入力する必要があります。追加情報が必要な場合は、Payloadに含めることができます。
+#### ログイン
+
+Login()を呼び出してサービスにログインします。ログイン時、どのUserTypeでどのチャンネルにログインするかを入力する必要があります。追加情報が必要な場合はPayloadに入れて送ることができます。
 
 ```c#
-/// <summary>
-/// サービスにログイン
-/// </summary>
-/// <param name="userType">ユーザーのタイプ </param>
-/// <param name="payload">サーバーに伝達する追加情報</param>
-/// <param name="channelId">ログインするチャンネルのID</param>
-/// <param name="onLogin">結果を受け取るデリゲート</param>
-userAgent.Login(userType, channelId, payload, (UserAgent user, Defines.ResultCodeLogin result, UserAgent.LoginInfo loginInfo) => {
-    /// <param name="userAgent">Login()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">Login()リクエスト結果</param>
-    /// <param name="loginInfo">ログイン情報</param>
-    if(result == Defines.ResultCodeLogin.LOGIN_SUCCESS){
-        // 成功
-    } else {
-        // 失敗
+public async void Login()
+{
+    try
+    {
+        Payload loginPayload = new Payload(new Protocol.LoginData());
+        ErrorResult<ResultCodeLogin, LoginResult> result = await user.Login("UserType", "ChannelId", loginPayload);
+        if(result.ErrorCode == ResultCodeLogin.LOGIN_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
     }
-});
-
-/// <summary>
-/// 現在のサービスからログアウト 
-/// </summary>
-/// <param name="onLogout">ログアウトデリゲート</param>
-userAgent.Logout((UserAgent user, Defines.ResultCodeLogout result, bool force, Payload payload) => {
-    /// <param name="userAgent">Logout()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">Logout()結果</param>
-    /// <param name="force">サーバーによる強制かどうか</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    if(result == Defines.ResultCodeLogout.LOGOUT_SUCCESS){
-        // 成功
-    } else {
-        // 失敗
+    catch (Exception e)
+    {
+        // 例外
     }
-});
-...
+}
 ```
+
+Login()は次のような4つのパラメータを持っています。
+
+| タイプ    | 名前           | 説明                                                 |
+|---------|----------------|------------------------------------------------------|
+| String  | userType       | ログインして生成するユーザーのタイプ。                                 |
+| String  | channelId      | ログインするチャンネルのID。                                    |
+| Payload | requestPayload | ログインリクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
+
+レスポンスとしてErrorResult<ResultCodeLogin, LoginResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。Loginが成功すればErrorCodeフィールドの値がResultCodeLogin.LOGIN_SUCCESSになり、そうでない場合はログインに失敗したことになります。Dataフィールドを通じてリクエスト結果LoginResultを取得できます。これを通じてログインされたユーザー情報を取得でき、サーバー実装によっては追加情報を取得することもできます。
+
+ResultCodeLoginの詳細は次のとおりです。
+
+| 名前                                | 値  | 説明                                        |
+|------------------------------------|-----|--------------------------------------------|
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR | 1 | サーバーシステムエラー。サーバーの不明なエラーにより失敗しました。 |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| JOIN_ROOM_SUCCESS                  | 0   | 成功。                                        |
+| JOIN_ROOM_FAIL_CONTENT | 701 | 失敗。ユーザーコードで拒否されました。 |
+| JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 失敗。入室をリクエストしたルームが存在しません。 |
+| JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 失敗。既にルームに入室済みです。 |
+| JOIN_ROOM_FAIL_ALREADY_FULL | 704 | 失敗。入室をリクエストしたルームは満員です。 |
+| JOIN_ROOM_FAIL_ROOM_MATCH          | 705 | 失敗。ルームマッチメイキングで問題が発生しました。                          |
+
+LoginResultの詳細は次のとおりです。
+
+| タイプ    | 名前         | 説明            |
+|---------|--------------|-----------------|
+| int     | UserId       | ログインしたユーザーのID    |
+| string  | UserType     | ログインしたユーザーのタイプ     |
+| string  | ServiceName  | ログインしたサービスの名前    |
+| string  | ChannelId    | ログインしたチャンネルのID    |
+| Payload | Payload      | サーバーから受け取った追加情報   |
+| bool    | IsRelogined  | 再ログイン有無         |
+| bool    | IsJoinedRoom | ルームに属しているかどうか     |
+| int     | RoomId       | ユーザーが属するルームのID   |
+| string  | RoomName     | ユーザーが属するルームの名前    |
+| Payload | RoomPayload  | ユーザーが属するルームの追加情報  |
+| bool    | IsMatching   | マッチングをリクエストした状態かどうか |
+
+### ログアウト
+
+Logout()を呼び出してサービスからログアウトします。
+
+```c#
+public async void Logout()
+{
+    try
+    {
+        Payload logoutPayload = new Payload(new Protocol.LogoutData());
+        ErrorResult<ResultCodeLogout, LogoutResult> result = await user.Logout(logoutPayload);
+        if (result.ErrorCode == ResultCodeLogout.LOGOUT_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    }
+    catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+Logout()は次のような1つのパラメータを持っています。
+
+| タイプ     | 名前           | 説明                                                    |
+|----------|----------------|---------------------------------------------------------|
+| Payload? | payload | ログアウトリクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
+
+レスポンスとしてErrorResult<ResultCodeLogout, LogoutResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。Logoutが成功すればErrorCodeフィールドの値がResultCodeLogout.LOGOUT_SUCCESSになり、そうでない場合はログアウトに失敗したことになります。Dataフィールドを通じてリクエスト結果LogoutResultを取得できます。サーバー実装によってはLogoutResultのPayloadフィールドを通じて追加情報を取得することもできます。
+
+ResultCodeLogoutの詳細は次のとおりです。
+
+| 名前                | 値 | 説明                                       |
+|---------------------|-----|--------------------------------------------|
+| PARSE_ERROR         | -2  | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT             | -1  | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR        | 1   | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL    | 2   | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| LOGOUT_SUCCESS      | 0   | 成功。                                        |
+| LOGOUT_FAIL_CONTENT | 401 | 失敗。ユーザーコードで拒否されました。                              |
+
+#### 強制ログアウト通知
+Logout()を呼び出さなくても、サーバーからユーザーを強制的にログアウトさせることができます。この場合、OnForceLogoutを通じてこれに対する通知を受け取ることができます。
+```c#
+public void AddOnLogout()
+{
+    user.OnForceLogout += (GameAnvilUser, Payload) =>
+    {
+        // 強制ログアウト通知
+    };
+}
+```
+サーバーの実装によっては、パラメータPayload payloadを通じて追加情報を取得することもできます。
 
 ### ルームの作成、入室、退室
 
-[Unity基礎開発ガイド > UserAgent](../unity-basic/unity-basic-04-user-agent.md)のルーム作成、入室、退室の内容と同じです。
+ルームを利用することで、複数のユーザーからの操作（メッセージ）を、全員で共有された一つの時系列（同期化された流れ）に沿って処理する仕組みを構築できます。つまり、ルーム内では、全てのユーザーのリクエストが、サーバーによって厳密な順序で処理されることが保証されます。もちろん、1人のユーザーのためのルーム作成も、コンテンツによっては意味を持つ場合があります。ルームをどのように使用するかは、完全にエンジンユーザー次第です。
+
+#### ルーム生成
+
+CreateRoom()を呼び出してルームを作成し、そのルームに入室します。
+
+```c#
+public async void CreateRoom()
+{
+    try
+    {
+        Payload createRoomPayload = new Payload(new Protocol.CreateRoomData());
+        ErrorResult<ResultCodeCreateRoom, CreatedRoomResult> result = await user.CreateRoom("RoomName", "RoomType", "MatchingGroup", createRoomPayload);
+        if (result.ErrorCode == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    }
+    catch(Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+CreateRoom()は、以下の4つのパラメータを持っています。
+
+| タイプ     | 名前           | 説明                                                   |
+|---------|---------------|-------------------------------------------------------|
+| String | roomName | 作成するルームの名前。使用しない場合はstring.Empty(空文字列)を入力 |
+| String | roomType | 作成するルームのタイプ。サーバーに登録されたルームタイプを入力 |
+| String | matchingGroup | マッチング時に使用するマッチンググループ名。使用しない場合はstring.Empty(空文字列)を入力 |
+| Payload | payload | ルーム作成リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
+
+レスポンスとしてErrorResult<ResultCodeCreateRoom, CreatedRoomResult>を返し、ErrorCodeフィールドの値を確認して成功したかどうかを確認できます。CreateRoomが成功すると、ErrorCodeフィールドの値はResultCodeCreateRoom.CREATE_ROOM_SUCCESSとなり、そうでない場合はルームの作成に失敗したことになります。Dataフィールドを通じてリクエスト結果のCreatedRoomResultを取得できます。これにより、作成されたルームの情報を取得でき、サーバーの実装によっては追加の
+情報を得ることもできます。
+
+ResultCodeCreateRoomの詳細は以下の通りです。
+
+| 名前                                  | 値  | 説明                                        |
+|--------------------------------------|-----|--------------------------------------------|
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR | 1 | サーバーシステムエラー。サーバーの不明なエラーにより失敗しました。 |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| CREATE_ROOM_SUCCESS                  | 0   | 成功                                        |
+| CREATE_ROOM_FAIL_CONTENT | 601 | 失敗。ユーザーコードで拒否されました。 |
+| CREATE_ROOM_FAIL_ALREADY_JOINED_ROOM | 602 | 失敗。既にルームに入室済みです。 |
+| CREATE_ROOM_FAIL_CREATE_ROOM_ID | 603 | 失敗。ルームIDの作成に失敗した場合。 |
+| CREATE_ROOM_FAIL_CREATE_ROOM | 604 | 失敗。ルームの作成に失敗しました。 |
+
+CreatedRoomResultの詳細は以下の通りです。
+
+| タイプ     | 名前      | 説明               |
+|---------|----------|-------------------|
+| int | RoomId | 作成したルームのID |
+| String? | RoomName | 作成したルームの名前 |
+| Payload | payload | クライアントで必要な追加情報 |
+
+#### ルーム入室
+
+JoinRoom()を呼び出して、既に作成されているルームに入室します。
+
+``` c#
+public async void JoinRoom()
+{
+    try
+    {
+        Payload joinRoomPayload = new Payload(new Protocol.JoinRoomData());
+        ErrorResult<ResultCodeJoinRoom, JoinRoomResult> result = await user.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload);
+        if(result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    }
+    catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+JoinRoom()は、以下の4つのパラメータを持っています。
+
+| タイプ     | 名前                  | 説明                                                                                                                                                                                          |
+|---------|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| String | roomType | 入室するルームのタイプ。 |
+| int | roomId | 入室するルームのID。 |
+| String | matchingUserCategory | 入室するルームで使用するmatchingUserCategory。使用しない場合はstring.Empty(空文字列)を入力 <br/>各ルームでは、ルームに属するユーザーをカテゴリに分け、カテゴリごとに人数制限を適用できます。指定したmatchingUserCategoryの現在の人数が最大の場合、JoinRoomは失敗することがあります。 |
+| Payload | payload | ルームへの入室リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
+
+レスポンスとしてErrorResult<ResultCodeJoinRoom, JoinRoomResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。JoinRoomが成功すればErrorCodeフィールドの値がResultCodeJoinRoom.JOIN_ROOM_SUCCESSになり、そうでない場合はルーム入室に失敗したことになります。Dataフィールドを通じてリクエスト結果JoinRoomResultを取得できます。これを通じて入室したルームの情報を取得でき、サーバー実装によっては追加情報を取得することもできます。
+
+ResultCodeJoinRoomの詳細は次のとおりです。
+
+| 名前                                | 値  | 説明                                        |
+|------------------------------------|-----|--------------------------------------------|
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR | 1 | サーバーシステムエラー。サーバーの不明なエラーにより失敗しました。 |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| JOIN_ROOM_SUCCESS                  | 0   | 成功。                                        |
+| JOIN_ROOM_FAIL_CONTENT | 701 | 失敗。ユーザーコードで拒否されました。 |
+| JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 失敗。入室をリクエストしたルームが存在しません。 |
+| JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 失敗。既にルームに入室済みです。 |
+| JOIN_ROOM_FAIL_ALREADY_FULL | 704 | 失敗。入室をリクエストしたルームは満員です。 |
+| JOIN_ROOM_FAIL_ROOM_MATCH          | 705 | 失敗。ルームマッチメイキングで問題が発生しました。                          |
+
+JoinRoomResultの詳細は以下の通りです。
+
+| タイプ     | 名前      | 説明                |
+|---------|----------|--------------------|
+| int | RoomId | 入室したルームのID。 |
+| String? | RoomName | 入室したルームの名前。 |
+| Payload | payload | クライアントで必要な追加情報。 |
+
+#### ルーム退場
+
+LeaveRoom()を呼び出して、入室中のルームから退室できます。
+
+``` c#
+public async void LeaveRoom()
+{
+    try
+    {
+        Payload leaveRoomPayload = new Payload(new Protocol.LeaveRoomData());
+        ErrorResult<ResultCodeLeaveRoom, Payload> result = await user.LeaveRoom(leaveRoomPayload);
+        if (result.ErrorCode == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    }
+    catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+LeaveRoom()は、以下の1つのパラメータを持っています。
+
+| タイプ     | 名前     | 説明                                                   |
+|---------|---------|-------------------------------------------------------|
+| Payload | payload | ルーム退室リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
+
+レスポンスとしてErrorResult<ResultCodeLeaveRoom, Payload>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。LeaveRoomが成功すればErrorCodeフィールドの値がResultCodeLeaveRoom.LEAVE_ROOM_SUCCESSになり、そうでない場合はルーム退場に失敗したことになります。サーバー実装によってはDataフィールドのPayloadを通じて追加情報を取得することもできます。
+
+ResultCodeLeaveRoomの詳細は次のとおりです。
+
+| 名前                     | 値  | 説明                                        |
+|-------------------------|-----|--------------------------------------------|
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR | 1 | サーバーシステムエラー。サーバーの不明なエラーにより失敗しました。 |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| LEAVE_ROOM_SUCCESS      | 0   | 成功。                                        |
+| LEAVE_ROOM_FAIL_CONTENT | 801 | 失敗。ユーザーコードで拒否されました。 |
+
+#### ルーム強制退場通知
+LeaveRoom()を呼び出さなくても、サーバーから強制的にルームから退場させることができます。この場合、OnForceLeaveRoomを通じてこれに対する通知を受け取ることができます。
+```c#
+public void AddOnLeaveRoom()
+{
+    user.OnForceLeaveRoom += (GameAnvilUser gameAnvilUser, int roomId, Payload payload) =>
+    {
+        // ルーム強制退場通知
+    };
+}
+```
+パラメータint roomIdを通じてどのルームから強制退場させられたかを知ることができ、サーバーの実装によってはパラメータPayload payloadを通じて追加情報を取得することもできます。 
+
+#### 指定した名前のルームに入室
+
+NamedRoom()を呼び出して、指定した名前のルームに入室できます。指定した名前のルームがない場合は、ルームを作成してからそのルームに入室します。
+
+```c#
+public async void NamedRoom()
+{
+    try
+    {
+        bool isParty = false;
+        Payload namedRoomPayload = new Payload(new Protocol.NamedRoomData());
+        ErrorResult<ResultCodeNamedRoom, NamedRoomResult> result = await user.NamedRoom("RoomName", "RoomType", isParty, namedRoomPayload);
+        if (result.ErrorCode == ResultCodeNamedRoom.NAMED_ROOM_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+NamedRoom()は、以下の4つのパラメータを持っています。
+
+| タイプ     | 名前      | 説明                                                                                      |
+|---------|----------|------------------------------------------------------------------------------------------|
+| String | roomType | 入室または作成するルームのタイプ |
+| String | roomName | 入室または作成するルームの名前 |
+| bool | isParty | パーティマッチメイキング用のルームかどうか。<br/>同じパーティに属するユーザーがパーティマッチメイキングが完了するまで一緒に待機するためのルームを作成する場合、trueと入力します。 |
+| Payload | payload | 入室または作成リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
+
+レスポンスとしてErrorResult<ResultCodeNamedRoom, NamedRoomResult>を返し、ErrorCodeフィールドの値を確認して成功したかどうかを確認できます。NamedRoomが成功すると、ErrorCodeフィールドの値はResultCodeNamedRoom.NAMED_ROOM_SUCCESSとなり、そうでない場合は入室または作成に失敗したことになります。Dataフィールドを通じてリクエスト結果のNamedRoomResultを取得できます。これにより、入室または作成したルームの情報を取得でき、サーバーの実装によっては追加の
+情報を得ることもできます。
+
+ResultCodeNamedRoomの詳細は次のとおりです。
+
+| 名前                                 | 値  | 説明                                                              |
+|-------------------------------------|-----|------------------------------------------------------------------|
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR            | 1   | サーバーシステムエラー。サーバーの不明なエラーにより失敗。                                                    |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| NAMED_ROOM_SUCCESS                  | 0   | 成功。                                                              |
+| NAMED_ROOM_FAIL_CONTENT | 701 | 失敗。ユーザーコードで拒否されました。                                                                |
+| NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 失敗。ルームが存在しません。<br/>ルームへの入室処理中、ルーム内の全てのユーザーが退出した場合に発生することがあります。 |
+| NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 失敗。既にルームに入室済みです。 |
+| NAMED_ROOM_FAIL_INVALID_ROOM_NAME | 704 | 失敗。不正なルーム名をリクエストしました。 |
+| NAMED_ROOM_FAIL_CREATE_ROOM | 705 | 失敗。ルームの作成に失敗しました。 |
+
+NamedRoomResultの詳細は次のとおりです。
+
+| タイプ     | 名前      | 説明                |
+|---------|----------|--------------------|
+| bool | Created | 新しいルームが作成されたかどうか |
+| int | RoomId | 入室したルームのID |
+| String? | RoomName | 入室したルームの名前 |
+| Payload | payload | クライアントで必要な追加情報。 |
 
 ### マッチメイキング
 
-GameAnvilは2種類のマッチメイキングを提供しています。1つはルーム単位のマッチングを行うルームマッチメイキング、もう1つはユーザー単位のマッチングを行うユーザーマッチメイキングです。詳細は[Unity基礎開発ガイド > UserAgent](../unity-basic/unity-basic-04-user-agent.md)のマッチメイキングの部分を参照してください。
+GameAnvilは2種類のマッチメイキングを提供します。1つはルーム単位のマッチングを行うルームマッチメイキングで、もう1つはユーザー単位のマッチングを行うユーザーマッチメイキングです。
+
+#### ルームマッチメイキング
+
+ルームマッチメイキングは、条件に合うルームへユーザーを入室させる方式です。ルームマッチメイキングリクエスト時に条件に合うルームがあれば該当ルームへ即時入室させ、条件に合うルームがなければ新しいルームを生成して入室させます。
+
+MatchRoom()を呼び出してルームマッチメイキングをリクエストできます。
+
+```c#
+public async void MatchRoom()
+{
+    try
+    {
+        var matchRoomPayload = new Payload(new Protocol.MatchRoomData());
+        ErrorResult<ResultCodeMatchRoom, MatchResult> result = await user.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
+        if (result.ErrorCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+MatchRoom()は、以下の7つのパラメータを持っています。
+
+| タイプ    | 名前                      | 説明                                                                                                                            |
+|---------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| bool    | isCreateRoomIfNotJoinRoom | 条件に合うルームが見つからなかった時、ルームを生成して入室するかどうか。<br/>true : ルームがなければ生成する。<br/>false : ルームがなければ失敗処理する。                                                                                                                                                            |
+| bool    | isMoveRoomIfJoinedRoom    | すでにルームに入室している状態の場合、他のルームへ移動するかどうか。<br/>true : ルームに入室している状態であればルームを移動する。<br/>false : ルームに入室している状態でマッチングをリクエストした場合は失敗処理する。                                                                                                                                                 |
+| string  | roomType                  | ルームタイプ。同じタイプのルームを探す。                                                                                                                                                                                                                                                         |
+| string  | matchingGroup             | マッチンググループ。同じグループで生成されたルームを探す。                                                                                                                                                                                                                                                        |
+| string  | matchingUserCategory      | マッチングされたルームで使用するユーザーカテゴリー。<br/>各ルームではルームに属するユーザーをカテゴリーに分け、カテゴリーごとに人数制限を適用できる。<br/>指定したmatchingUserCategoryの現在人数が最大ではないルームを探す。 |
+| Payload | payload                   | マッチメイキングリクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null)                                                                                                                                                                                                                |
+| Payload | leaveRoomPayload          | 他のルームへ移動する場合、ルームを出る時に処理するサーバーのユーザーコードで必要な追加情報。(default = null)                                                                                                                                                                                               |
+
+レスポンスとしてErrorResult<ResultCodeMatchRoom, MatchResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。MatchRoomが成功すればErrorCodeフィールドの値がResultCodeMatchRoom.MATCH_ROOM_SUCCESSになり、そうでない場合はルームマッチメイキングに失敗したことになります。Dataフィールドを通じてリクエスト結果MatchResultを取得できます。これを通じてマッチングされたルームの情報を取得でき、サーバー実装によっては追加情報を取得することも
+できます。
+
+ResultCodeMatchRoomの詳細は次のとおりです。
+
+| 名前                                            | 値  | 説明                                                                                    |
+|------------------------------------------------|-----|----------------------------------------------------------------------------------------|
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR | 1 | サーバーシステムエラー。サーバーの不明なエラーにより失敗しました。 |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| NAMED_ROOM_SUCCESS                             | 0   | 成功                                                                                    |
+| NAMED_ROOM_FAIL_CONTENT | 701 | 失敗。ユーザーコードで拒否されました。 |
+| NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 失敗。ルームへの入室処理中に、ルームが削除されました。 |
+| NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 失敗。既にルームに入室済みです。 |
+| NAMED_ROOM_FAIL_INVALID_ROOM_NAME | 704 | 失敗。不正なルーム名をリクエストしました。 |
+| NAMED_ROOM_FAIL_CREATE_ROOM | 705 | 失敗。ルームの作成に失敗しました。 |
+| MATCH_ROOM_SUCCESS                             | 0   | 成功                                                                                    |
+| MATCH_ROOM_FAIL_CONTENT                        | 901 | 失敗。ユーザーコードで拒否されました。                                                                 |
+| MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 902 | 失敗。ルームが存在しません。 |
+| MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM            | 903 | 失敗。すでにルームに入室しています。                                                                 |
+| MATCH_ROOM_FAIL_LEAVE_ROOM                     | 904 | 失敗。他のルームへ移動する時、既存のルームからの退出に失敗した場合。                                                 |
+| MATCH_ROOM_FAIL_IN_PROGRESS                    | 905 | 失敗。すでにマッチメイキングが進行中の場合。                                                             |
+| MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST | 906 | 失敗。条件に合うルームを見つけ、そのルームに参加する途中で、ルームが削除されました。<br/>ルームへの入室処理中、ルーム内の全てのユーザーが退出した場合に発生することがあります。 |
+| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_ID          | 907 | 失敗。ルームID生成に失敗した場合。                                                             |
+| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM             | 908 | 失敗。ルーム生成に失敗した場合。                                                                |
+| MATCH_ROOM_FAIL_INVALID_ROOM_ID                | 909 | 失敗。無効なルームIDが使用された場合。                                                             |
+| MATCH_ROOM_FAIL_INVALID_NODE_ID                | 910 | 失敗。無効なノードIDが使用された場合。                                                            |
+| MATCH_ROOM_FAIL_INVALID_USER_ID                | 911 | 失敗。無効なユーザーIDが使用された場合。                                                            |
+| MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND         | 912 | 失敗。マッチングを進行したが、ルームが見つからなかった場合。                                                         |
+| MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY | 913 | 失敗。無効なマッチングユーザーカテゴリーを使用した場合。                                                         |
+| MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY   | 914 | 失敗。マッチングエンティティでユーザーカテゴリーサイズが0の場合。                                                         |
+| MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL      | 915 | 失敗。マッチング申請書がNULLの場合。                                                              |
+| MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL      | 916 | 失敗。マッチング情報がNULLの場合。                                                               |
+
+MatchResultの詳細は次のとおりです。
+
+| タイプ      | 名前      | 説明                |
+|----------|----------|--------------------|
+| bool     | IsCancel | リクエストがキャンセルされたかどうか。      |
+| int | RoomId | 入室したルームのID。 |
+| bool | Created | 新しいルームが作成されたかどうか。 |
+| String   | RoomName | 入室したルームの名前。         |
+| Payload? | payload | クライアントで必要な追加情報。 |
+
+#### ユーザーマッチメイキング
+
+ユーザーマッチメイキングは、ユーザープールを作成し、その中で条件に合うユーザーを探して新しく生成したルームへ入室させる方式です。ユーザープールに条件に合うユーザーの数が不足している場合、マッチメイキングが完了するまで時間がかかることがあり、時間内にマッチメイキングが完了しない場合はタイムアウトとなりマッチングが失敗する可能性があります。
+
+MatchUserStart()を呼び出してユーザーマッチメイキングを開始できます。このリクエストの結果が成功であっても、ユーザーマッチメイキングが完了したわけではありません。単に開始リクエストが成功しただけであり、マッチメイキングの結果は別途のコールバックを通じて伝達されます。
+
+```c#
+public async void MatchUserStart()
+{
+    user.OnMatchUserDone +=(GameAnvilUser user, ResultCodeMatchUserDone resultCode, MatchResult matchResult) => {
+        // マッチング成功
+    };
+    user.onMatchUserTimeOut +=(GameAnvilUser user, ResultCodeMatchUserTimeOut resultCode) =>
+    {
+        // マッチング失敗
+    };
+    try
+    {
+        Payload matchUserPayload = new Payload(new Protocol.MatchUserData());
+        ErrorResult<ResultCodeMatchUserStart, Payload> result = await user.MatchUserStart("RoomType", "MatchingGroup", matchUserPayload);
+        if (result.ErrorCode == ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS)
+        {
+            // リクエスト成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+MatchUserStart()は次のような3つのパラメータを持っています。
+
+| タイプ    | 名前          | 説明                                                                   |
+|---------|---------------|------------------------------------------------------------------------|
+| String  | roomType      | 生成するルームのタイプ。                                                               |
+| String  | matchingGroup | マッチンググループ。同じグループのユーザープールから条件に合うユーザーを探す。 |
+| Payload | payload       | ユーザーマッチメイキングリクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null)               |
+
+レスポンスとしてErrorResult<ResultCodeMatchUserStart, Payload>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。MatchUserStartが成功すればErrorCodeフィールドの値がResultCodeMatchUserStart.MATCH_USER_START_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。サーバー実装によってはDataフィールドのPayloadを通じて追加情報を取得することもできます。
+
+ResultCodeMatchUserStartの詳細は次のとおりです。
+
+| 名前                                      | 値  | 説明                                       |
+|-------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                               | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                   | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                              | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL                          | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| MATCH_USER_START_SUCCESS                  | 0    | 成功。                                        |
+| MATCH_USER_START_FAIL_CONTENT             | 1101 | 失敗。ユーザーコードで拒否されました。                           |
+| MATCH_USER_START_FAIL_ALREADY_JOINED_ROOM | 1102 | 失敗。すでにルームに入室しています。                           |
+
+<br>
+
+ユーザーマッチメイキングが成功した場合、onMatchUserDoneを通じて通知を受け取ることができます。パラメータResultCodeMatchUserDone resultCodeを通じて結果コードを知ることができ、パラメータMatchResult matchResultを通じてマッチングされたルームの情報を取得できます。サーバー実装によってはMatchResultのpayloadを通じて追加情報を取得することもできます。
+時間内にマッチングが成功しなかった場合、onMatchUserTimeoutを通じて通知を受け取ることができます。
+
+ResultCodeMatchUserDoneの詳細は次のとおりです。
+
+| 名前                                     | 値  | 説明                                                            |
+|------------------------------------------|------|-----------------------------------------------------------------|
+| PARSE_ERROR                              | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。                                 |
+| TIMEOUT                                  | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。                                         |
+| SYSTEM_ERROR                             | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗。                                             |
+| INVALID_PROTOCOL                         | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。                                   |
+| MATCH_USER_DONE_SUCCESS                  | 0    | 成功。                                                             |
+| MATCH_USER_DONE_FAIL_CONTENT             | 1501 | 失敗。ユーザーコードで拒否されました。                                                            |
+| MATCH_USER_DONE_FAIL_ROOM_DOES_NOT_EXIST | 1502 | 失敗。条件に合うルームを探してルームに参加させる途中、ルームが消滅しました。                                       |
+| MATCH_USER_DONE_FAIL_TRANSFER            | 1503 | 失敗。条件に合うルームを探してルームに参加させる途中、ルームに参加するためのtransfer過程で失敗しました。 |
+| MATCH_USER_DONE_FAIL_CREATE_ROOM         | 1504 | 失敗。ルーム生成に失敗しました。                                                                    |
+
+<br>
+
+MatchUserCancel()を呼び出して進行中のユーザーマッチメイキングをキャンセルできます。
+
+```c#
+public async void MatchUserCancel()
+{
+    try
+    {
+        ResultCodeMatchUserCancel result = await user.MatchUserCancel("RoomType");
+        if (result == ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+レスポンスとしてResultCodeMatchUserCancelを返し、キャンセルが成功すればResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESSになり、そうでない場合はキャンセルが失敗したことになります。ユーザーマッチメイキングが進行中でない場合、すでにユーザーマッチメイキングが成功したか、Timeoutが発生した場合はリクエストが失敗する可能性があります。
+
+ResultCodeMatchUserCancelの詳細は次のとおりです。
+
+| 名前                                       | 値  | 説明                                       |
+|--------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                                | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                    | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                               | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL                           | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| MATCH_USER_CANCEL_SUCCESS                  | 0    | 成功。                                        |
+| MATCH_USER_CANCEL_FAIL                     | 1201 | 失敗。ユーザーコードで拒否されました。                           |
+| MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM | 1202 | 失敗。すでにルームに入室しています。                           |
+| MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS     | 1203 | 失敗。ユーザーマッチメイキングが進行中ではありません。                          |
 
 #### パーティーマッチメイキング
 
-パーティーマッチメイキングは、ユーザーマッチメイキングの特殊な形で、2人以上のユーザーが1つのパーティーとしてユーザープールに登録され、条件に合う他のユーザーを探し、新しく作成したルームに一緒に入室させる方式です。パーティーを組んだユーザーは、常に同じルームに入室します。パーティー以外で一緒にマッチングするユーザーは、サーバーのマッチメーカーの実装により、別のパーティーになることもあれば、個人になることもあります。
+パーティーマッチメイキングはユーザーマッチメイキングの特殊な形態で、2人以上のユーザーが1つのパーティーとしてまとめられてユーザープールに登録され、条件に合う他のユーザーを探して新しく生成したルームへ一緒に入室させる方式です。パーティーとしてまとめられたユーザーは常に同じルームに入室します。パーティー以外に一緒にマッチングされたユーザーは、サーバーのマッチメーカー実装によって別のパーティーの場合もあれば、個人の場合もあります。
 
-パーティーマッチメイキングを行うためには、まずNamedRoom()を呼び出す必要があります。NamedRoom()呼び出し時にisPartyパラメータをtrueで渡すと、そのNamedRoomがパーティーの役割をします。NamedRoomにパーティーユーザーを全て集めた後、パーティーマッチメイキングを始めます。
+パーティーマッチメイキングを行うためには、まずNamedRoom()を呼び出す必要があります。NamedRoom()呼び出し時にisPartyパラメータをtrueとして渡すと、該当NamedRoomがパーティーの役割を果たします。NamedRoomにパーティーユーザーを全て集めてからパーティーマッチメイキングを開始します。
 
 ```c#
-/// <summary>
-/// 指定した名前のルームに入室<para></para>
-/// 指定した名前のルームがない場合、指定した名前のルームを作成し、そのルームに入室
-/// </summary>
-/// <param name="roomType">入室するルームのタイプ</param>
-/// <param name="roomName">入室するルームの名前</param>
-/// <param name="isParty">パーティーかどうか</param>
-/// <param name="payload">サーバーに伝達する追加情報</param>
-/// <param name="onNamedRoom">結果を受け取るデリゲート</param>
-userAgent.NamedRoom(roomType, roomName, isParty, payload, (UserAgent user, Defines.ResultCodeNamedRoom result, int roomId, string roomName, bool created, Payload payload) => {
-    /// <param name="userAgent">NameRoom()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">NameRoom()リクエスト結果</param>
-    /// <param name="roomName">ルーム名</param>
-    /// <param name="roomId">入室したルームのID</param>
-    /// <param name="created">入室したルームの新設の有無</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    if(result == Defines.ResultCodeNamedRoom.NAMED_ROOM_SUCCESS){
-        // 成功
-    } else {
-        // 失敗
+public async void PartyRoom()
+{
+    try
+    {
+        bool isParty = true;
+        Payload partyRoomPayload = new Payload(new Protocol.PartyRoomData());
+        ErrorResult<ResultCodeNamedRoom, NamedRoomResult> result = await user.NamedRoom("RoomName", "RoomType", isParty, partyRoomPayload);
+        if (result.ErrorCode == ResultCodeNamedRoom.NAMED_ROOM_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
     }
-});
+}
 ```
+
 <br>
 
-MatchPartyStart()を呼び出してパーティーマッチメイキングを開始できます。すでにルームに入室している場合など、サーバーの条件によってリクエストが失敗することがあります。
+MatchPartyStart()を呼び出してパーティーマッチメイキングを開始できます。このリクエストの結果が成功であっても、パーティーマッチメイキングが完了したわけではありません。単に開始リクエストが成功しただけであり、マッチメイキングの結果は別途のコールバックを通じて伝達されます。
 
 ```c#
-/// <summary>
-/// パーティーマッチングをリクエスト<para></para>
-/// 既にルームに入室している場合など、サーバーの条件によりリクエストが失敗<para></para>
-/// マッチングが成功した場合、OnMatchUserDone()を通じて通知
-/// </summary>
-/// <param name="roomType">マッチングをリクエストするルームのタイプ</param>
-/// <param name="matchingGroup">ルーム作成時に使用するマッチンググループ</param>
-/// <param name="payload">サーバーに伝達する追加情報</param>
-/// <param name="onMatchPartyStart">結果を受け取るデリゲート</param>
-userAgent.MatchPartyStart(Constants.RoomType, Constants.ChannelId1, customPayload, (UserAgent user, Defines.ResultCodeMatchPartyStart result, Payload payload) => {
-    /// <param name="userAgent">MatchPartyStart()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">MatchPartyStart()リクエスト結果</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    if(result == Defines.ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS){
-        // 成功
-    } else {
-        // 失敗
+public async void MatchPartyStart()
+{
+    try
+    {
+        Payload partyRoomPayload = new Payload(new Protocol.PartyRoomData());
+        ErrorResult<ResultCodeMatchPartyStart, Payload> result = await user.MatchPartyStart("RoomType", "MatchingGroup", partyRoomPayload);
+        if (result.ErrorCode == ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
     }
-});
+}
 ```
+
+MatchPartyStart()は次のような3つのパラメータを持っています。
+
+| タイプ    | 名前          | 説明                                                                   |
+|---------|---------------|------------------------------------------------------------------------|
+| String  | roomType      | 生成するルームのタイプ。                                                               |
+| String  | matchingGroup | マッチンググループ。同じグループのユーザープールから条件に合うユーザーを探す。使用しない場合はstring.Empty(空文字)を入力 |
+| Payload | payload       | パーティーマッチメイキングリクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null)               |
+
+レスポンスとしてErrorResult<ResultCodeMatchPartyStart, Payload>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。MatchPartyStartが成功すればErrorCodeフィールドの値がResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESSになり、そうでない場合はパーティーマッチメイキングが失敗したことになります。サーバー実装によってはDataフィールドのPayloadを通じて追加情報を取得することもできます。
+
+ResultCodeMatchPartyStartの詳細は次のとおりです。
+
+| 名前                                     | 値  | 説明                                       |
+|------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                            | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                             | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL                       | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| MATCH_PARTY_START_SUCCESS                | 0    | 成功。                                        |
+| MATCH_PARTY_START_FAIL_CONTENT           | 1301 | 失敗。ユーザーコードで拒否されました。                           |
+| MATCH_PARTY_START_FAIL_PARTY_MATCH_WEIRD | 1302 | 失敗。パーティーマッチングをリクエストした際、ルームがパーティーマッチング用ルームではない場合           |
+
+<br>
+パーティーマッチングが成功した場合、ユーザーマッチメイキングで使用したonMatchUserDoneを通じて通知を受け取ることができます。そしてMatchResultパラメータを通じてマッチングされたルームの情報を取得でき、サーバー実装によっては追加情報を取得することもできます。
+時間内にマッチングが成功しなかった場合、onMatchUserTimeoutを通じて通知を受け取ることができます。
+
 <br>
 
-パーティーマッチングが成功した場合、ユーザーマッチメイキングで使ったonMatchUserDoneListenersまたはIUserListener.OnMatchUserDoneを通じて通知を受けることができ、時間内にマッチングが成功しなかった場合、onMatchUserTimeoutListenersまたはIUserListener.OnMatchUserTimeoutを通じて通知を受けることができます。
+MatchPartyCancel()を呼び出して進行中のパーティーマッチメイキングをキャンセルできます。
 
 ```c#
-/// <summary>
-/// ユーザーマッチング結果を受け取るデリゲート
-/// </summary>
-userAgent.onMatchUserDoneListeners += (UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserDone result, bool created, int roomId, Payload payload) => {
-    /// <param name="userAgent">MatchUserStart()またMatchPartyStart()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">MatchUserStart()またはMatchPartyStart()のリクエスト結果</param>
-    /// <param name="created">ルームの新設の有無</param>
-    /// <param name="roomId">マッチングされたルームのID</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-};
-
-/// <summary>
-/// ユーザーマッチングタイムアウト通知デリゲート
-/// </summary>
-userAgent.onMatchUserTimeoutListeners  += (UserAgent userAgent) => {
-    /// <param name="userAgent">MatchUserStart()またMatchPartyStart()をリクエストしたユーザーエージェント</param>
-};
-```
-<br>
-
-MatchPartyCancel()を呼び出すことで、パーティーマッチメイキングをキャンセルできます。パーティーマッチリクエスト中でない場合や、すでにパーティーマッチメイキングが成功している場合、またはタイムアウトが発生した場合、キャンセルリクエストは失敗する可能性があります。
-
-```c#
-/// <summary>
-/// パーティーマッチングリクエストをキャンセル<para></para>
-/// マッチリクエスト中でない場合や、すでにマッチングが成功した場合、またはタイムアウトが発生した場合は失敗します。
-/// </summary>
-/// <param name="roomType">マッチングをリクエストしたルームのタイプ</param>
-/// <param name="onMatchPartyCancel">結果を受け取るデリゲート</param>
-userAgent.MatchPartyCancel(Constants.RoomType, (UserAgent user, Defines.ResultCodeMatchPartyCancel result) => {
-    /// <param name="userAgent">MatchPartyCancel()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">MatchPartyCancel()リクエスト結果</param>
-    if(result == Defines.ResultCodeMatchPartyCancel.MATCH_PARTY_CANCEL_SUCCESS){
-        // 成功
-    } else {
-        // 失敗
+public async void MatchPartyCancel()
+{
+    try
+    {
+        ResultCodeMatchPartyCancel result = await user.MatchPartyCancel("RoomType");
+        if (result == ResultCodeMatchPartyCancel.MATCH_PARTY_CANCEL_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
     }
-});
+}
 ```
 
-#### チャンネル移動
+MatchPartyCancel()は次のような1つのパラメータを持っています。
 
-場合によっては、マッチメイキングの結果、チャンネル移動が発生することがあります。チャンネル移動が行われた場合、onMoveChannelListenersまたはIUserListener.OnMoveChannelを通じて通知を受けることができます。
+| タイプ   | 名前     | 説明             |
+|--------|----------|------------------|
+| String | roomType | キャンセルするマッチメイキングのルームタイプ |
+
+レスポンスとしてResultCodeMatchPartyCancelを返します。MatchPartyCancelが成功すればResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESSが返され、そうでない場合はキャンセルリクエストが失敗したことになります。
+
+ResultCodeMatchPartyStartの詳細は次のとおりです。
+
+| 名前                                        | 値  | 説明                                       |
+|---------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                               | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                   | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                              | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL                          | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| MATCH_PARTY_CANCEL_SUCCESS                  | 0    | 成功。                                        |
+| MATCH_PARTY_CANCEL_FAIL_CONTENT           | 1401 | 失敗。ユーザーコードで拒否されました。                           |
+| MATCH_PARTY_CANCEL_FAIL_PARTY_MATCH_WEIRD | 1402 | 失敗。パーティーマッチングをキャンセルする際、ルームがパーティーマッチング用ルームではない場合           |
+| MATCH_PARTY_CANCEL_FAIL_ALREADY_JOINED_ROOM | 1403 | 失敗。パーティーマッチングをキャンセルする際、すでにルームに入室している場合            |
+| MATCH_PARTY_CANCEL_FAIL_NOT_IN_PROGRESS     | 1404 | 失敗。パーティーマッチング進行中ではないのにキャンセルしようとした場合                 | 
+
+### チャンネル
+
+#### チャンネル移動通知
+
+場合によっては、マッチメイキングの結果としてチャンネル移動が発生することがあります。チャンネル移動が行われた場合、OnMoveChannelを通じて通知を受け取ることができます。そしてMoveChannelResultパラメータから移動したチャンネルの情報を取得でき、サーバー実装によっては追加情報を取得することもできます。
 
 ```c#
-/// <summary>
-/// チャネル移動リクエストの結果、またはサーバーが強制的に実行したチャンネル移動の通知を受けるデリゲート
-/// </summary>
-userAgent.onMoveChannelListeners  += (UserAgent userAgent, GameAnvil.Defines.ResultCodeMoveChannel result, bool force, string channelId, Payload payload) => {
-    /// <param name="userAgent">MoveChannel()したユーザーエージェント</param>
-    /// <param name="result">MoveChannel()結果コード</param>
-    /// <param name="force">サーバーが強制的にチャンネルを移動したかどうか</param>
-    /// <param name="channelId">移動したチャンネルのID</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-};
+public void AddOnMoveChannel()
+{
+    user.OnMoveChannel += (GameAnvilUser user, MoveChannelResult result) =>
+    {
+        // チャンネル移動時に呼び出し 
+    };
+}
 ```
-<br>
 
-MoveChannel()を呼び出してサービス内の他のチャンネルに移動できます。
+#### チャネル移動
+
+MoveChannel()を呼び出してサービス内の他のチャンネルへ移動できます。
 
 ```c#
-/// <summary>
-/// 指定したチャンネルに移動
-/// </summary>
-/// <param name="channelId">移動するチャンネルのID</param>
-/// <param name="payload">サーバーに伝達する追加情報</param>
-/// <param name="onMoveChannel">結果を受け取るデリゲート</param>
-userAgent.MoveChannel(channelId, usePayload ? customPayload : null, (UserAgent user, Defines.ResultCodeMoveChannel result, bool force, string channelID, Payload payload) => {
-    /// <param name="userAgent">MoveChannel()したユーザーエージェント</param>
-    /// <param name="result">MoveChannel()結果コード</param>
-    /// <param name="force">サーバーが強制的にチャンネルを移動したかどうか</param>
-    /// <param name="channelId">移動したチャンネルのID</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-	if(result == ResultCodeMoveChannel.ALL_CHANNEL_INFO_SUCCESS){
-		// 全てのチャンネル情報リクエスト成功
-	} else {
-		// 全てのチャンネル情報リクエスト失敗
-	}
-});
+public async void MoveChannel()
+{
+    try
+    {
+        Payload moveChannelPayload = new Payload(new Protocol.MoveChannelData());
+        ErrorResult<ResultCodeMoveChannel, MoveChannelResult> result = await user.MoveChannel("ChannelId", moveChannelPayload);
+        if (result.ErrorCode == ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
 ```
+
+MoveChannel()は次のような2つのパラメータを持っています。
+
+| タイプ    | 名前      | 説明                                                   |
+|---------|-----------|--------------------------------------------------------|
+| string  | channelId | 移動するチャンネルのID                                       |
+| Payload | payload   | チャンネル移動リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
+
+レスポンスとしてErrorResult<ResultCodeMoveChannel, MoveChannelResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。MoveChannelが成功すればErrorCodeフィールドの値がResultCodeMoveChannel.MOVE_CHANNEL_SUCCESSになり、そうでない場合はチャンネル移動に失敗したことになります。Dataフィールドを通じてリクエスト結果MoveChannelResultを取得できます。これを通じて移動したチャンネルの情報を取得でき、サーバー実装に
+よっては追加情報を取得できます。
+できます。
+
+ResultCodeMoveChannelの詳細は次のとおりです。
+
+| 名前                                     | 値  | 説明                                       |
+|------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                            | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                             | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL                       | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| MOVE_CHANNEL_SUCCESS                     | 0    | 成功。                                        |
+| MOVE_CHANNEL_FAIL_CONTENT                 | 1601 | 失敗。ユーザーコードで拒否されました。                           |
+| MOVE_CHANNEL_FAIL_NODE_NOT_FOUND          | 1602 | 失敗。チャンネルノードが見つかりません。                         |
+| MOVE_CHANNEL_FAIL_ALREADY_JOINED_CHANNEL  | 1603 | 失敗。すでにリクエストしたチャンネルにいます。                          |
+| MOVE_CHANNEL_FAIL_ALREADY_JOINED_ROOM     | 1604 | 失敗。すでにルームに入室しているためチャンネル移動ができません。               |
+
+MoveChannelResultの詳細は次のとおりです。
+
+| タイプ     | 名前      | 説明                                                                                |
+|----------|-----------|-------------------------------------------------------------------------------------|
+| bool     | Force     | サーバーによる強制チャンネル移動かどうか。<br/>値がtrue : サーバーでチャンネルを移動。<br/>false : クライアントのリクエストによりチャンネルを移動。 |
+| string   | ChannelId | 入室したルームのID。                                                                    |
+| Payload? | payload   | クライアントで必要な追加情報。                                                             |
 
 ### チャンネル情報
 
-GameAnvilは設定で自由にチャンネル構成を変更できます。このようなチャンネル構成はサーバーとクライアントの間であらかじめ約束して固定された形で使うこともできますが、状況によって柔軟に変更して使うこともできます。UserAgentでは、このように変更されたチャンネル情報を取得したり、チャンネルを移動できるようにいくつかの関数を提供しています。
+GameAnvilは設定で自由にチャンネルを構成できます。このようなチャンネル構成は、サーバーとクライアント間であらかじめ約束して固定された形態で使用することもできますが、状況に応じて多様に変更して使用することもできます。GameAnvilUserでは、このように変更されたチャンネル情報を取得できるようにいくつかのメソッドを提供します。
 
-| 関数 | 説明 |
-| --- | --- |
-| GetChannelCountInfo() | 特定チャンネルのカウント情報(ユーザーとルーム数)リクエスト | 
-| GetChannelInfo() | 特定チャンネルの情報(ユーザー定義)リクエスト |
-| GetAllChannelCountInfo() | 特定サービスの全てのチャンネルのカウント情報(ユーザーとルーム数)リクエスト |
-| GetAllChannelInfo() | 特定サービスの全てのチャンネルの情報(ユーザー定義)リクエスト |
+| 名前                     | 説明                                  |
+|--------------------------|---------------------------------------|
+| GetChannelCountInfo()    | 特定チャンネルのカウント情報(ユーザーとルーム数)リクエスト             | 
+| GetChannelInfo()         | 特定チャンネルの情報(ユーザー定義)リクエスト                  |
+| GetAllChannelCountInfo() | 特定サービスの全てのチャンネルに対するカウント情報(ユーザーとルーム数)リクエスト |
+| GetAllChannelInfo()      | 特定サービスの全てのチャンネルに対する情報(ユーザー定義)リクエスト        |
 
-下記のコードでさらに詳しく説明します。
+#### GetChannelCountInfo
 
-GetChannelCountInfo()は特定チャンネルのカウント情報(ユーザーとルーム数)をリクエストして取得できます。
-
-```c#
-/// <summary>
-/// 接続中のチャンネルのユーザーとルームの数をリクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="onChannelCountInfo">結果を受け取るデリゲート</param>
-userAgent.GetChannelCountInfo((ConnectionAgent connection, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) => {
-    /// <param name="userAgent">GetChannelCountInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GetChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報</param>
-	if(result == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS){
-		// チャンネルカウント情報リクエスト成功
-	} else {
-		// チャンネルカウント情報リクエスト失敗
-	}
-});
-
-/// <summary>
-/// 特定チャンネルのユーザーとルームの数をリクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
-/// <param name="channelId">チャンネル情報をリクエストするチャンネルのID</param>
-/// <param name="onChannelCountInfo">結果を受け取るデリゲート</param>
-userAgent.GetChannelCountInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) => {
-    /// <param name="userAgent">GetChannelCountInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GetChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報</param>
-	if(result == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS){
-		// チャンネルカウント情報リクエスト成功
-	} else {
-		// チャンネルカウント情報リクエスト失敗
-	}
-});
-```
-<br>
-
-GetChannelInfo()はチャンネルの情報(ユーザー定義)をリクエストして取得できます。
+GetChannelCountInfo()は、特定チャンネルのカウント情報(ユーザーとルーム数)をリクエストして受け取ることができます。
 
 ```c#
-/// <summary>
-/// 接続中のチャンネル情報をリクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="onChannelInfo">結果を受け取るデリゲート</param>
-userAgent.GetChannelInfo((ConnectionAgent connection, ResultCodeChannelInfo result, Payload payload) => {
-    /// <param name="userAgent">GetChannelInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GetChannelInfo()リクエスト結果</param>
-    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報</param>
-	if(result == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS){
-		// チャンネル情報リクエスト成功
-	} else {
-		// チャンネル情報リクエスト失敗
-	}
-});
-
-/// <summary>
-/// 特定チャンネルの情報をリクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
-/// <param name="channelId">チャンネル情報をリクエストするチャンネルのID</param>
-/// <param name="onChannelInfo">結果を受け取るデリゲート</param>
-userAgent.GetChannelInfo(serviceName, channelId, (ConnectionAgent connection, ResultCodeChannelInfo result, Payload payload) => {
-    /// <param name="userAgent">GetChannelInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GetChannelInfo()リクエスト結果</param>
-    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報</param>
-	if(result == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS){
-		// チャンネル情報リクエスト成功
-	} else {
-		// チャンネル情報リクエスト失敗
-	}
-});
-```
-<br>
-
-GetAllChannelCountInfo()はサービスの全てのチャンネルのカウント情報(ユーザーとルーム数)をリクエストして取得できます。パラメータでサービス名とレスポンスを処理するコールバックを渡します。
-
-```c#
-/// <summary>
-/// 接続しているサービスの全てのチャンネルのユーザーとルームの数をリクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="onAllChannelCountInfo">結果を受け取るデリゲート</param>
-userAgent.GetAllChannelCountInfo((ConnectionAgent connection, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) => {
-    /// <param name="userAgent">GetAllChannelCountInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報リスト</param>
-	if(result == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS){
-		// 全てのチャンネルカウント情報リクエスト成功
-	} else {
-		// 全てのチャンネルカウント情報リクエスト失敗
-	}
-});
-
-/// <summary>
-/// 特定サービスに存在する全てのチャンネルのユーザーとルームの数をリクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
-/// <param name="onAllChannelCountInfo">結果を受け取るデリゲート</param>
-userAgent.GetAllChannelCountInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) => {
-    /// <param name="userAgent">GetAllChannelCountInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報リスト</param>
-	if(result == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS){
-		// 全てのチャンネルカウント情報リクエスト成功
-	} else {
-		// 全てのチャンネルカウント情報リクエスト失敗
-	}
-});
-```
-<br>
-
-GetAllChannelInfo()はサービスの全てのチャンネルの情報(ユーザー定義)をリクエストして取得できます。パラメータでサービス名とレスポンスを処理するコールバックを渡します。
-
-```c#
-/// <summary>
-/// 特定サービスの全てのチャンネル情報リクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
-/// <param name="onAllChannelInfo">結果を受け取るデリゲート</param>
-userAgent.GetAllChannelInfo((ConnectionAgent connection, ResultCodeAllChannelInfo result, Dictionary<string, Payload> payload) => {
-    /// <param name="userAgent">GeAllChannelInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GeAllChannelInfo()情報リクエスト結果</param>
-    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報リスト</param>
-	if(result == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS){
-		// 全てのチャンネル情報リクエスト成功
-	} else {
-		// 全てのチャンネル情報リクエスト失敗
-	}
-});
-
-/// <summary>
-/// 特定サービスの全てのチャンネル情報リクエスト<para></para>
-/// サーバーがサポートしている場合、使用可能
-/// </summary>
-/// <param name="serviceName">チャンネル情報をリクエストするサービスの名前</param>
-/// <param name="onAllChannelInfo">結果を受け取るデリゲート</param>
-userAgent.GetAllChannelInfo(serviceName, (ConnectionAgent connection, ResultCodeAllChannelInfo result, Dictionary<string, Payload> payload) => {
-    /// <param name="userAgent">GeAllChannelInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GeAllChannelInfo()情報リクエスト結果</param>
-    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報リスト</param>
-	if(result == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS){
-		// 全てのチャンネル情報リクエスト成功
-	} else {
-		// 全てのチャンネル情報リクエスト失敗
-	}
-});
-```
-
-### Listener
-
-UserAgentで全てのリクエストに対する結果やサーバーからの通知を受け取る方法は大きく2つです。
-1つはUserAgentで定義されているdelegateに関数を追加する方法です。もう1つはIUserListenerインターフェイスを実装したリスナーを登録する方法です。
-
-UserAgentは全ての動作の結果や通知を受けることができるようにそれぞれのdelegateをメンバーとして持っています。このdelegateに関数を登録すると、先に説明したAPIにコールバックパラメータを省略して呼び出した場合、またはサーバーから通知を送った場合、登録した関数でレスポンスを受けることができます。
-
-```c#
-/// <summary>
-/// ログイン結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">Login()をリクエストしたユーザーエージェント</param>
-/// <param name="result">Login()リクエスト結果</param>
-/// <param name="loginInfo">ログイン情報</param>
-public Interface.DelUserOnLogin onLoginListeners;
-
-/// <summary>
-/// ルームマッチリクエストの結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">MatchRoom()をリクエストしたユーザーエージェント</param>
-/// <param name="result">MatchRoom()リクエスト結果</param>
-/// <param name="resultCode">ユーザー結果コード</param>
-/// <param name="roomId">マッチしたルームのID</param>
-/// <param name="roomName">マッチしたルームの名前</param>
-/// <param name="created">マッチしたルームの新設有無</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnMatchRoom onMatchRoomListeners;
-
-/// <summary>
-/// ルーム作成リクエスト結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">CreateRoom()をリクエストしたユーザーエージェント</param>
-/// <param name="result"> CreateRoom()リクエスト結果</param>
-/// <param name="roomName">作成されたルームの名前</param>
-/// <param name="roomId">作成されたルームのID</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnCreateRoom onCreateRoomListeners;
-
-/// <summary>
-/// ルーム入室リクエスト結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">JoinRoom()をリクエストしたユーザーエージェント</param>
-/// <param name="result">JoinRoom()リクエスト結果</param>
-/// <param name="roomId">入室したルームのID</param>
-/// <param name="roomName">入室したルームの名前</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnJoinRoom onJoinRoomListeners;
-
-/// <summary>
-/// 名前のあるルームリクエスト結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">NameRoom()をリクエストしたユーザーエージェント</param>
-/// <param name="result">NameRoom()リクエスト結果</param>
-/// <param name="roomName">ルームの名前</param>
-/// <param name="roomId">入室したルームのID</param>
-/// <param name="created">入室したルームの新設の有無</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnNamedRoom onNamedRoomListeners;
-
-/// <summary>
-/// パーティーマッチングリクエスト結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">MatchPartyStart()をリクエストしたユーザーエージェント</param>
-/// <param name="result">MatchPartyStart()リクエスト結果</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnMatchPartyStart onMatchPartyStartListeners;
-
-/// <summary>
-/// パーティーマッチングリクエストキャンセル結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">MatchPartyCancel()をリクエストしたユーザーエージェント</param>
-/// <param name="result">MatchPartyCancel()リクエスト結果</param>
-public Interface.DelUserOnMatchPartyCancel onMatchPartyCancelListeners;
-
-/// <summary>
-/// ユーザーマッチングリクエスト結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">MatchUserStart()をリクエストしたユーザーエージェント</param>
-/// <param name="result">MatchUserStart()リクエスト結果</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnMatchUserStart onMatchUserStartListeners;
-
-/// <summary>
-/// ユーザーマッチングリクエスト結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">MatchUserStart()またはMatchPartyStart()をリクエストしたユーザーエージェント</param>
-/// <param name="result">MatchUserStart()またはMatchPartyStart()リクエストの結果</param>
-/// <param name="created">ルームの新設の有無</param>
-/// <param name="roomId">マッチングされたルームのID</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnMatchUserDone onMatchUserDoneListeners;
-
-/// <summary>
-/// ユーザーマッチングタイムアウト通知デリゲート
-/// </summary>
-/// <param name="userAgent">MatchUserStart()またはMatchPartyStart()をリクエストしたユーザーエージェント</param>
-public Interface.DelUserOnMatchUserTimeout onMatchUserTimeoutListeners;
-
-/// <summary>
-/// ユーザーマッチングリクエストのキャンセル結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">MatchUserCancel()をリクエストしたユーザーエージェント</param>
-/// <param name="result">MatchUserCancel()リクエスト結果</param>
-public Interface.DelUserOnMatchUserCancel onMatchUserCancelListeners;
-
-/// <summary>
-/// ルーム退室または強制退室通知を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">LeaveRoom()をリクエストしたユーザーエージェント</param>
-/// <param name="result">LeaveRoom()リクエスト結果</param>
-/// <param name="force">強制退室かどうか</param>
-/// <param name="roomId">退室したルームのID</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnLeaveRoom onLeaveRoomListeners;
-
-/// <summary>
-/// チャネル情報リクエストの結果、またはサーバーが強制的に行ったチャネルの移動について通知を受けるデリゲート
-/// </summary>
-/// <param name="userAgent">GetChannelInfo()をリクエストしたユーザーエージェント</param>
-/// <param name="result">GetChannelInfo()リクエスト結果</param>
-/// <param name="channelInfo">サーバーから受け取ったチャンネル情報</param>
-public Interface.DelUserOnChannelInfo onChannelInfoListeners;
-
-/// <summary>
-/// 全てのチャンネル情報リストのリクエスト結果や、サーバーで強制的に行ったチャンネル移動の通知を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">GeAllChannelInfo()をリクエストしたユーザーエージェント</param>
-/// <param name="result">GeAllChannelInfo()情報リクエスト結果</param>
-/// <param name="channelInfo">サーバーから受け取ったチャンネル情報リスト</param>
-public Interface.DelUserOnAllChannelInfo onAllChannelInfoListeners;
-
-/// <summary>
-/// チャネル情報リクエストの結果、またはサーバーが強制的に行ったチャネルの移動について通知を受けるデリゲート
-/// </summary>
-/// <param name="userAgent">GetChannelCountInfo()をリクエストしたユーザーエージェント</param>
-/// <param name="result">GetChannelCountInfo()リクエスト結果</param>
-/// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報</param>
-public Interface.DelUserOnChannelCountInfo onChannelCountInfoListeners;
-
-/// <summary>
-/// 全てのチャンネル情報要求の結果、またはサーバーで強制的に行ったチャンネル移動の通知を受けるデリゲート
-/// </summary>
-/// <param name="userAgent">GetAllChannelCountInfo()をリクエストしたユーザーエージェント</param>
-/// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
-/// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報リスト</param>
-public Interface.DelUserOnAllChannelCountInfo onAllChannelCountInfoListeners;
-
-/// <summary>
-/// チャネル移動リクエストの結果、またはサーバーが強制的に実行したチャンネル移動の通知を受けるデリゲート
-/// </summary>
-/// <param name="userAgent">MoveChannel()したユーザーエージェント</param>
-/// <param name="result">MoveChannel()結果コード</param>
-/// <param name="force">サーバーで強制的にチャンネルを移動したかどうか</param>
-/// <param name="channelId">移動したチャンネルのID</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnMoveChannel onMoveChannelListeners;
-
-/// <summary>
-/// スナップショットリクエスト結果を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">Snapshot()したユーザーエージェント</param>
-/// <param name="result">Snapshot()リクエスト結果</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnSnapshot onSnapshotListeners;
-
-/// <summary>
-/// 基本機能使用中にエラーが発生した時、通知を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">エラーが発生したユーザーエージェント</param>
-/// <param name="errorCode">エラーコード</param>
-/// <param name="command">エラー発生機能</param>
-public Interface.DelUserOnErrorCommand onErrorCommandListeners;
-
-/// <summary>
-/// パケット送信エラーが発生した時に通知を受けるデリゲート
-/// </summary>
-/// <param name="userAgent">エラーが発生したユーザーエージェント</param>
-/// <param name="errorCode">エラーコード</param>
-/// <param name="command">エラーが発生したメッセージ</param>
-public Interface.DelUserOnErrorCustomCommand onErrorCustomCommandListeners;
-
-/// <summary>
-/// ログアウト要求の結果または強制ログアウトの通知を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">Logout()をリクエストしたユーザーエージェント</param>
-/// <param name="result">Logout()結果</param>
-/// <param name="force">サーバーによる強制かどうか</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnLogout onLogoutListeners;
-
-/// <summary>
-/// 告知通知を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">Notice()を受け取ったユーザーエージェント</param>
-/// <param name="message">告知メッセージ</param>
-public Interface.DelUserOnNotice onNoticeListeners;
-
-/// <summary>
-/// キックアウト通知を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">キックアウトされたユーザーエージェント</param>
-/// <param name="message">Adminから受け取ったメッセージ</param>
-public Interface.DelUserOnAdminKickout onAdminKickoutListeners;
-
-/// <summary>
-/// サーバーのセッションが閉じられた場合、通知を受け取るデリゲート
-/// </summary>
-/// <param name="userAgent">セッションが閉じられたユーザーエージェント</param>
-/// <param name="result">セッションが閉じられた理由</param>
-/// <param name="payload">サーバーから受け取った追加情報</param>
-public Interface.DelUserOnSessionClose onSessionCloseListeners;
-```
-<br>
-
-IUserListenerはUserAgentの全ての動作の結果や通知を定義したインターフェイスです。このインターフェイスを実装したリスナーをUserAgent.AddUserListener()で登録すると、登録したリスナーでレスポンスを受けることができます。
-
-```c#
-class UserListener : IUserListener{
-    /// <summary>
-    /// Login()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">Login()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">Login()リクエスト結果</param>
-    /// <param name="loginInfo">ログイン情報</param>
-    void OnLogin(UserAgent userAgent, GameAnvil.Defines.ResultCodeLogin result, UserAgent.LoginInfo loginInfo);
-    
-    /// <summary>
-    /// MatchRoom()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">MatchRoom()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">MatchRoom()リクエスト結果</param>
-    /// <param name="resultCode">ユーザー結果コード</param>
-    /// <param name="roomId">マッチしたルームのID</param>
-    /// <param name="roomName">マッチしたルームの名前</param>
-    /// <param name="created">マッチしたルームの新設有無</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnMatchRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchRoom result, int resultCode, int roomId, string roomName, bool created, Payload payload);
-    
-    /// <summary>
-    /// CreateRoom()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">CreateRoom()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">CreateRoom()リクエスト結果</param>
-    /// <param name="roomId">作成されたルームのID</param>
-    /// <param name="roomName">作成されたルームの名前</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnCreateRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeCreateRoom result, int roomId, string roomName, Payload payload);
-    
-    /// <summary>
-    /// JoinRoom()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">JoinRoom()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">JoinRoom()リクエスト結果</param>
-    /// <param name="roomId">入室したルームのID</param>
-    /// <param name="roomName">入室したルームの名前</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnJoinRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeJoinRoom result, int roomId, string roomName, Payload payload);
-    
-    /// <summary>
-    /// NameRoom()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">NameRoom()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">NameRoom()リクエスト結果</param>
-    /// <param name="roomName">ルーム名</param>
-    /// <param name="roomId">入室したルームのID</param>
-    /// <param name="created">入室したルームの新設の有無</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnNamedRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeNamedRoom result, int roomId, string roomName, bool created, Payload payload);
-    
-    /// <summary>
-    /// MatchUserStart()結果
-    /// </summary>
-    /// <param name="userAgent">MatchUserStart()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">MatchUserStart()リクエスト結果</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnMatchUserStart(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserStart result, Payload payload);
-    
-    /// <summary>
-    /// MatchUserStart()またはMatchPartyStart()リクエストの結果
-    /// </summary>
-    /// <param name="userAgent">MatchUserStart()またMatchPartyStart()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">MatchUserStart()またはMatchPartyStart()のリクエスト結果</param>
-    /// <param name="created">ルームの新設の有無</param>
-    /// <param name="roomId">マッチングされたルームのID</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnMatchUserDone(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserDone result, bool created, int roomId, Payload payload);
-    
-    /// <summary>
-    /// MatchUserStart()またはMatchPartyStart()のタイムアウト
-    /// </summary>
-    /// <param name="userAgent">MatchUserStart()またMatchPartyStart()をリクエストしたユーザーエージェント</param>
-    void OnMatchUserTimeout(UserAgent userAgent);
-    
-    /// <summary>
-    /// MatchUserCancel()の結果
-    /// </summary>
-    /// <param name="userAgent">MatchUserCancel()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">MatchUserCancel()リクエスト結果</param>
-    void OnMatchUserCancel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserCancel result);
-    
-    /// <summary>
-    /// MatchPartyStart()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">MatchPartyStart()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">MatchPartyStart()リクエスト結果</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnMatchPartyStart(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchPartyStart result, Payload payload);
-    
-    /// <summary>
-    /// MatchPartyCancel()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">MatchPartyCancel()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">MatchPartyCancel()リクエスト結果</param>
-    void OnMatchPartyCancel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchPartyCancel result);
-    
-    /// <summary>
-    /// LeaveRoom()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">LeaveRoom()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">LeaveRoom()リクエスト結果</param>
-    /// <param name="force">強制退室するかどうか</param>
-    /// <param name="roomId">退室したルームのID</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnLeaveRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeLeaveRoom result, bool force, int roomId, Payload payload);
-    
-    /// <summary>
-    /// GetChannelInfo()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">GetChannelInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GetChannelInfo()リクエスト結果</param>
-    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報</param>
-    void OnChannelInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeChannelInfo result, Payload channelInfo);
-    
-    /// <summary>
-    /// GeAllChannelInfo()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">GeAllChannelInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GeAllChannelInfo()情報リクエスト結果</param>
-    /// <param name="channelInfo">サーバーから受け取ったチャンネル情報リスト</param>
-    void OnAllChannelInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeAllChannelInfo result, Dictionary<string, Payload> channelInfo);
-    
-    /// <summary>
-    /// GetChannelCountInfo()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">GetChannelCountInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GetChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報</param>
-    void OnChannelCountInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo);
-    
-    /// <summary>
-    /// GetAllChannelCountInfo()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">GetAllChannelCountInfo()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">GetAllChannelCountInfo()リクエスト結果</param>
-    /// <param name="channelCountInfo">サーバーから受け取ったチャンネルのユーザー数とルーム数情報リスト</param>
-    void OnAllChannelCountInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo);
-    
-    /// <summary>
-    /// MoveChannel()結果
-    /// </summary>
-    /// <param name="userAgent">MoveChannel()したユーザーエージェント</param>
-    /// <param name="result">MoveChannel()結果コード</param>
-    /// <param name="force">サーバーが強制的にチャンネルを移動したかどうか</param>
-    /// <param name="channelId">移動したチャンネルのID</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnMoveChannel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMoveChannel result, bool force, string channelId, Payload payload);
-    
-    /// <summary>
-    /// Snapshot()リクエスト結果
-    /// </summary>
-    /// <param name="userAgent">Snapshot()リクエストしたユーザーエージェント</param>
-    /// <param name="result">Snapshot()リクエスト結果</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnSnapshot(UserAgent userAgent, GameAnvil.Defines.ResultCodeSnapshot result, Payload payload);
-    
-    /// <summary>
-    /// 基本機能エラー発生
-    /// </summary>
-    /// <param name="userAgent">エラーが発生したユーザーエージェント</param>
-    /// <param name="errorCode">エラーコード</param>
-    /// <param name="command">エラー発生機能</param>
-    void OnError(UserAgent userAgent, GameAnvil.Defines.ErrorCode errorCode, User.Defines.Commands command);
-    
-    /// <summary>
-    /// パケット送信エラー発生
-    /// </summary>
-    /// <param name="userAgent">エラーが発生したユーザーエージェント</param>
-    /// <param name="errorCode">エラーコード</param>
-    /// <param name="command">エラーが発生したメッセージ</param>
-    void OnError(UserAgent userAgent, GameAnvil.Defines.ErrorCode errorCode, string command);
-    
-    /// <summary>
-    /// Logout()結果
-    /// </summary>
-    /// <param name="userAgent">Logout()をリクエストしたユーザーエージェント</param>
-    /// <param name="result">Logout()結果</param>
-    /// <param name="force">サーバーによる強制かどうか</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnLogout(UserAgent userAgent, GameAnvil.Defines.ResultCodeLogout result, bool force, Payload payload);
-    
-    /// <summary>
-    /// Notice()通知
-    /// </summary>
-    /// <param name="userAgent">Notice()を受け取ったユーザーエージェント</param>
-    /// <param name="message">告知メッセージ</param>
-    void OnNotice(UserAgent userAgent, string message);
-    
-    /// <summary>
-    /// キックアウトされた場合の通知
-    /// </summary>
-    /// <param name="userAgent">キックアウトされたユーザーエージェント</param>
-    /// <param name="message">Adminから受け取ったメッセージ</param>
-    void OnAdminKickout(UserAgent userAgent, string message);
-    
-    /// <summary>
-    /// ユーザーリスナーでサーバーのセッションが閉じられた場合の通知<para></para>
-    /// この通知を受け取った場合、再ログインして再起動します。
-    /// </summary>
-    /// <param name="userAgent">セッションが閉じられたユーザーエージェント</param>
-    /// <param name="result">セッションが閉じられた理由</param>
-    /// <param name="payload">サーバーから受け取った追加情報</param>
-    void OnSessionClose(UserAgent userAgent, GameAnvil.Defines.ResultCodeSessionClose result, Payload payload);
+public async void ChannelCountInfo()
+{
+    try
+    {
+        ErrorResult<ResultCodeChannelCountInfo, ChannelCountResult> result = await user.GetChannelCountInfo("ServiceName", "ChannelId");
+        if (result.ErrorCode == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
 }
-
-UserAgent userAgent = connector.GetUserAgent(serviceId, subId);
-userAgent.AddUserListener(new UserListener());
 ```
+
+GetChannelCountInfo()は次のような2つのパラメータを持っています。
+
+| タイプ   | 名前        | 説明               |
+|--------|-------------|--------------------|
+| String | ServiceName | チャンネル情報をリクエストするサービス      |
+| String | channelId   | チャンネル情報をリクエストするチャンネルのID |
+
+レスポンスとしてErrorResult<ResultCodeChannelCountInfo, ChannelCountResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。GetChannelCountInfoが成功すればErrorCodeフィールドの値がResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。Dataフィールドを通じてリクエスト結果であるChannelCountResultを取得できます。
+
+ResultCodeChannelCountInfoの詳細は次のとおりです。
+
+| 名前                                       | 値  | 説明                                       |
+|--------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                                | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                    | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                               | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL                           | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| CHANNEL_COUNT_INFO_SUCCESS                 | 0    | 成功                                       |
+| CHANNEL_COUNT_INFO_FAIL_NO_CHANNEL_INFO    | 1921 | 失敗。チャンネル情報が見つかりません                          |
+| CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1922 | 失敗。無効なサービスID                           |
+| CHANNEL_COUNT_INFO_FAIL_INVALID_CHANNEL_ID | 1923 | 失敗。無効なチャンネルID                            |
+| CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924 | 失敗。チャンネルが見つかりません                            |
+
+ChannelCountResultの詳細は次のとおりです。
+
+| タイプ   | 名前      | 説明         |
+|--------|-----------|--------------|
+| string | ChannelId | チャンネルID返却。    |
+| int    | UserCount | チャンネルのユーザー数返却。 |
+| int    | RoomCount | チャンネルのルーム数返却。  |
+
+<br>
+
+#### GetChannelInfo
+
+GetChannelInfo()は特定チャンネルの情報(ユーザー定義)をリクエストして受け取ることができます。
+
+```c#
+public async void ChannelInfo()
+{
+    try
+    {
+        ErrorResult<ResultCodeChannelInfo, Payload> result = await user.GetChannelInfo("ServiceName", "ChannenId");
+        if (result.ErrorCode == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+GetChannelInfo()は次のような2つのパラメータを持っています。
+
+| タイプ   | 名前        | 説明               |
+|--------|-------------|--------------------|
+| String | ServiceName | チャンネル情報をリクエストするサービス      |
+| String | channelId   | チャンネル情報をリクエストするチャンネルのID |
+
+レスポンスとしてErrorResult<ResultCodeChannelInfo, Payload>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。GetChannelInfo()が成功すればErrorCodeフィールドの値がResultCodeChannelInfo.CHANNEL_INFO_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。成功時、DataフィールドのPayloadからユーザーが定義したチャンネル情報を取得することもできます。
+
+ResultCodeChannelInfoの詳細は次のとおりです。
+
+| 名前                                 | 値  | 説明                                       |
+|--------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                          | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                              | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                         | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL                     | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| CHANNEL_INFO_SUCCESS                 | 0    | 成功                                       |
+| CHANNEL_INFO_FAIL_NO_CHANNEL_INFO    | 1921 | 失敗。チャンネル情報が見つかりません                          |
+| CHANNEL_INFO_FAIL_INVALID_SERVICE_ID | 1922 | 失敗。無効なサービスID                           |
+| CHANNEL_INFO_FAIL_INVALID_CHANNEL_ID | 1923 | 失敗。無効なチャンネルID                            |
+| CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924 | 失敗。チャンネルが見つかりません                            |
+
+#### GetAllChannelCountInfo
+
+GetAllChannelCountInfo()は、特定サービスの全てのチャンネルに対するカウント情報(ユーザーとルーム数)をリクエストして受け取ることができます。
+
+```c#
+public async void AllChannelCountInfo()
+{
+    try
+    {
+        ErrorResult<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>> result = await user.GetAllChannelCountInfo("ServiceName");
+        if (result.ErrorCode == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+GetAllChannelCountInfo()は次のような1つのパラメータを持っています。
+
+| タイプ   | 名前        | 説明           |
+|--------|-------------|----------------|
+| String | ServiceName | チャンネル情報をリクエストするサービス |
+
+レスポンスとしてErrorResult<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。GetAllChannelCountInfoが成功すればErrorCodeフィールドの値がResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。Dataフィールドを通じてリクエスト結果であるDictionary<string, ChannelCountResult>を取得できます。このDictionaryはチャンネルIDをキーに、ChannelCountResultを値として持っています。
+
+ResultCodeAllChannelCountInfoの詳細は次のとおりです。
+
+| 名前                                           | 値  | 説明                                       |
+|------------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                                  | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                      | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                                 | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL                             | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| ALL_CHANNEL_COUNT_INFO_SUCCESS                 | 0    | 成功                                       |
+| ALL_CHANNEL_COUNT_INFO_FAIL_NO_CHANNEL_INFO  | 1931 | 失敗。チャンネル情報が見つかりません                          |
+| ALL_CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1932 | 失敗。無効なサービスID                           |
+| ALL_CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1933 | 失敗。チャンネルが見つかりません                            |
+
+#### GetAllChannelInfo
+
+GetAllChannelInfo()は、特定サービスの全てのチャンネルに対する情報(ユーザー定義)をリクエストして受け取ることができます。
+
+```c#
+public async void AllChannelInfo()
+{
+    try
+    {
+        ErrorResult<ResultCodeAllChannelInfo, ChannelInfoResult> result = await user.GetAllChannelInfo("ServiceName");
+        if (result.ErrorCode == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
+```
+
+GetAllChannelInfo()は次のような1つのパラメータを持っています。
+
+| タイプ   | 名前        | 説明           |
+|--------|-------------|----------------|
+| String | ServiceName | チャンネル情報をリクエストするサービス |
+
+レスポンスとしてErrorResult<ResultCodeAllChannelInfo, ChannelInfoResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。GetAllChannelInfoが成功すればErrorCodeフィールドの値がResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESSになり、そうでない場合はリクエストが失敗したことになります。Dataフィールドを通じてリクエスト結果であるChannelInfoResultを取得できます。
+
+ResultCodeAllChannelInfoの詳細は次のとおりです。
+
+| 名前                                     | 値  | 説明                                       |
+|------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                            | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                           | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗                |
+| INVALID_PROTOCOL                       | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| ALL_CHANNEL_INFO_SUCCESS                 | 0    | 成功                                       |
+| ALL_CHANNEL_INFO_FAIL_NO_CHANNEL_INFO  | 1911 | 失敗。チャンネル情報が見つかりません                          |
+| ALL_CHANNEL_INFO_FAIL_INVALID_SERVICE_ID | 1912 | 失敗。無効なサービスID                           |
+| ALL_CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1913 | 失敗。チャンネルが見つかりません                            |
+
+ChannelInfoResultのchannelInfoフィールドは、チャンネルIDをキーに、ユーザー定義チャンネル情報を含むPayloadを値として持つDictionary<string, Payload>です。これを利用してチャンネルごとのユーザー定義情報を取得できます。

@@ -1,18 +1,18 @@
-## Game > GameAnvil > TypeScript 개발 가이드 > 로거
+## Game > GameAnvil > TypeScript 開発ガイド > ロガー
 
-### GameAnvillLogger
+## GameAnvillLogger
 
-커넥터 내부의 동작에 대한 로그를 받아보고 싶을 때 사용합니다.
+コネクタ内部の動作に関するログを受け取りたい時に使用します。
 
-#### 리스너 설정
+### リスナー設定
 
-아래와 같이 설정하면 커넥터 내부 동작 로그가 콘솔에 표시됩니다.
+以下のように設定すると、コネクタ内部の動作ログがコンソールに表示されます。
 
 ```typescript
 GameAnvilLogger.logListener = console.log;
 ```
 
-필요에 따라 별도의 출력 함수를 정의할 수도 있습니다.
+必要に応じて別途の出力関数を定義することもできます。
 
 ```typescript
 GameAnvilLogger.logListener = (message) => {

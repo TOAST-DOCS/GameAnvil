@@ -1,12 +1,12 @@
-## Game > GameAnvil > Typescript 개발 가이드 > User
+## Game > GameAnvil > Typescript開発ガイド > User
 
-### GameAnvilUser
+## GameAnvilUser
 
-GameAnvilUser는 서버의 GameNode상에 존재하는 유저와 대응하는 클라이언트측의 객체입니다. 서버의 유저 객체에 명령을 내리거나 유저의 정보를 받아와서 서버와 클라이언트를 동기화할 수 있습니다. 엔진에 미리 정의된 방 기능, 매치메이킹 기능 등을 사용할 수도 있지만 직접 프로토콜을 구현하여 새로운 기능을 추가할 수도 있습니다.
+GameAnvilUserは、サーバーのGameNode上に存在するユーザーに対応するクライアント側のオブジェクトです。サーバーのユーザーオブジェクトに命令を下したり、ユーザーの情報を受け取ってサーバーとクライアントを同期させたりできます。エンジンに事前に定義されたルーム機能やマッチメイキング機能なども利用できますが、直接プロトコルを実装して新しい機能を追加することも可能です。
 
-#### 생성
+### 生成
 
-GameAnvilUser를 사용하기 위해서는 먼저 새로운 GameAnvilUser객체를 생성하고, 생성된 유저를 통해 서버에 로그인해야합니다.
+GameAnvilUserを使用するには、まず新しいGameAnvilUserオブジェクトを作成し、作成されたユーザーを通じてサーバーにログインする必要があります。
 
 ```typescript
 const connector: GameAnvilConnector;
@@ -15,9 +15,9 @@ const serviceName: string;
 const user = new GameAnvilUser(connector, serviceName, 1);
 ```
 
-#### 다수의 GameUserAgnet 생성
+### 多数のGameUserAgent生成
 
-GameAnvilConnector객체는 프로세스내에서 하나만 사용하는 것이 일반적인 반면에 GameAnvilUser는 여러개를 동시에 생성해서 운용하는 것이 지원됩니다. 여러개가 각각 다른 서비스로 로그인 하는 것이 가능하며, 만일 하나의 서비스에 여러개의 GameAnvilUser를 사용하고 싶다면 subId를 이용해 구분해서 생성할 수 있습니다.
+GameAnvilConnectorオブジェクトはプロセス内で1つだけ使用するのが一般的ですが、GameAnvilUserは複数同時に作成して運用することがサポートされています。それぞれが異なるサービスにログインすることが可能で、もし1つのサービスで複数のGameAnvilUserを使用したい場合は、subIdを利用して区別して作成できます。
 
 ```typescript
 const connector: GameAnvilConnector;
@@ -29,11 +29,11 @@ const user2 = new GameAnvilUser(connector, serviceName, 2);
 const user3 = new GameAnvilUser(connector, otherServiceName, 1);
 ```
 
-#### 로그인
+### ログイン
 
-GameNode 안에 클라이언트와 대응하는 서버 유저 객체 생성을 요청합니다. GameNode에 로그인을 완료해야만 유저의 여러 다른 기능들을 사용할 수 있습니다.
+GameNode内に、クライアントに対応するサーバーユーザーオブジェクトの作成をリクエストします。GameNodeへのログインが完了しないと、ユーザーの様々な機能は使用できません。
 
-로그인 할 유저 타입과 채널 아이디를 필수 인자로 받으며 세번째 인자로 추가 정보를 보낼 수 있습니다. 로그인 동작 완료 시점에 Promise를 통해 로그인에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
+ログインするユーザータイプとチャネルIDを必須の引数として受け取り、3番目の引数で追加情報を送信できます。ログイン動作の完了時点で、Promiseを通じてログインに成功したかどうかや、サーバーから渡された追加データなどを確認できます。
 
 ```typescript
 const userType: stirng;
@@ -44,7 +44,7 @@ const loginResult = await user.login(userType, channelId, payload);
 console.log(`Login Result : ${ResultCodeLogin[loginResult.errorCode]}`);
 ```
 
-로그인 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+ログインの成否は、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (loginResult.resultCode === ResultCodeLogin.LOGIN_SUCCESS) {
@@ -54,29 +54,29 @@ if (loginResult.resultCode === ResultCodeLogin.LOGIN_SUCCESS) {
 }
 ```
 
-로그인에 실패했을 경우 errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+ログインに失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                                   | 값   | 설명                                                                      |
+| コード名                                  | 値  | 説明                                                                     |
 |---------------------------------------------|-------|---------------------------------------------------------------------------|
-| `PARSE_ERROR`                               | -2    | 패킷 파싱 에러                                                           |
-| `TIMEOUT`                                   | -1    | 타임 아웃                                                                |
-| `SYSTEM_ERROR`                              | 1     | 서버 시스템 에러                                                         |
-| `INVALID_PROTOCOL`                          | 2     | 서버에 등록되지 않은 프로토콜                                            |
-| `LOGIN_SUCCESS`                             | 0     | 성공                                                                     |
-| `LOGIN_FAIL_CONTENT`                        | 301   | 실패: 컨텐츠에서 거부됨                                                  |
-| `LOGIN_FAIL_NOT_EXIST_NODE`                 | 302   | 실패: 노드가 존재하지 않음                                               |
-| `LOGIN_FAIL_TIMEOUT_GAME_SERVER`            | 303   | 실패: 게임서버가 응답하지 않음                                           |
-| `LOGIN_FAIL_INVALID_SERVICEID`              | 310   | 실패: 잘못된 서비스 아이디                                               |
-| `LOGIN_FAIL_INVALID_USERTYPE`               | 311   | 실패: 잘못된 유저 타입                                                   |
-| `LOGIN_FAIL_INVALID_USERID`                 | 312   | 실패: 잘못된 유저 아이디                                                 |
-| `LOGIN_FAIL_INVALID_SUB_ID`                 | 313   | 실패: 잘못된 SubId                                                       |
-| `LOGIN_FAIL_INVALID_CHANNEL_ID`             | 314   | 실패: 잘못된 채널 아이디                                                 |
-| `LOGIN_FAIL_LOGINED_OTHER_SERVICE`          | 320   | 실패: 다른 서비스에 로그인 되어있음                                      |
-| `LOGIN_FAIL_LOGINED_OTHER_CHANNEL`          | 321   | 실패: 다른 채널에 로그인 되어있음                                        |
-| `LOGIN_FAIL_LOGINED_OTHER_USER_TYPE`        | 322   | 실패: 동일 어카운트 아이디로 다른 유저 타입이 로그인 되어있음             |
-| `LOGIN_FAIL_LOGINED_OTHER_DEVICE`           | 323   | 실패: 동일 어카운트 아이디로 다른 디바이스 아이디가 로그인 되어있음       |
+| `PARSE_ERROR`                               | -2    | パケットパースエラー                                                          |
+| `TIMEOUT`                                   | -1    | タイムアウト                                                               |
+| `SYSTEM_ERROR`                              | 1     | サーバーシステムエラー                                                        |
+| `INVALID_PROTOCOL`                          | 2     | サーバーに登録されていないプロトコル                                           |
+| `LOGIN_SUCCESS`                             | 0     | 成功                                                                    |
+| `LOGIN_FAIL_CONTENT` | 301 | 失敗: コンテンツにより拒否されました |
+| `LOGIN_FAIL_NOT_EXIST_NODE` | 302 | 失敗: ノードが存在しません |
+| `LOGIN_FAIL_TIMEOUT_GAME_SERVER` | 303 | 失敗: ゲームサーバーが応答しません |
+| `LOGIN_FAIL_INVALID_SERVICEID` | 310 | 失敗: 不正なサービスIDです |
+| `LOGIN_FAIL_INVALID_USERTYPE` | 311 | 失敗: 不正なユーザータイプです |
+| `LOGIN_FAIL_INVALID_USERID` | 312 | 失敗: 不正なユーザーIDです |
+| `LOGIN_FAIL_INVALID_SUB_ID` | 313 | 失敗: 不正なSubIdです |
+| `LOGIN_FAIL_INVALID_CHANNEL_ID` | 314 | 失敗: 不正なチャネルIDです |
+| `LOGIN_FAIL_LOGINED_OTHER_SERVICE` | 320 | 失敗: 他のサービスにログインしています |
+| `LOGIN_FAIL_LOGINED_OTHER_CHANNEL` | 321 | 失敗: 他のチャネルにログインしています |
+| `LOGIN_FAIL_LOGINED_OTHER_USER_TYPE` | 322 | 失敗: 同じアカウントIDで別のユーザータイプがログインしています |
+| `LOGIN_FAIL_LOGINED_OTHER_DEVICE` | 323 | 失敗: 同じアカウントIDで別のデバイスIDがログインしています |
 
-로그인 전/후 공통으로 유저가 로그인 된 상태인지 확인하기 위해서, isLoggedIn 속성을 확인할 수 있습니다.
+ログインの前後に関わらず、ユーザーがログイン状態であるかを確認するために、isLoggedInプロパティを確認できます。
 
 ```typescript
 if (user.isLoggedIn) {
@@ -84,17 +84,17 @@ if (user.isLoggedIn) {
 }
 ```
 
-#### 로그아웃
+### ログアウト
 
-서버에서 명시적으로 유저를 삭제하도록 요청할 수 있습니다. 로그아웃 동작 완료 시점에 Promise를 통해 로그아웃에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
+サーバーに明示的にユーザーを削除するようにリクエストできます。ログアウト動作の完了時点で、Promiseを通じてログアウトに成功したかどうかや、サーバーから渡された追加データなどを確認できます。
 
 ```typescript
 const logoutResult = await user.logout();
 ```
 
-유저가 로그인 상태가 아닌데 로그아웃을 시도한 경우 서버에는 아무런 요청을 하지 않고 성공으로 응답합니다.
+ユーザーがログイン状態でないのにログアウトを試みた場合、サーバーには何もリクエストせず、成功として応答します。
 
-로그아웃 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+ログアウトの成否は、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (logoutResult.resultCode === ResultCodeLogout.LOGOUT_SUCCESS) {
@@ -104,18 +104,18 @@ if (logoutResult.resultCode === ResultCodeLogout.LOGOUT_SUCCESS) {
 }
 ```
 
-로그아웃에 실패했을 경우 errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+ログアウトに失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름              | 값   | 설명                              |
+| コード名             | 値  | 説明                             |
 |------------------------|-------|-----------------------------------|
-| `PARSE_ERROR`          | -2    | 패킷 파싱 에러                   |
-| `TIMEOUT`              | -1    | 타임 아웃                        |
-| `SYSTEM_ERROR`         | 1     | 서버 시스템 에러                 |
-| `INVALID_PROTOCOL`     | 2     | 서버에 등록되지 않은 프로토콜    |
-| `LOGOUT_SUCCESS`       | 0     | 성공                             |
-| `LOGOUT_FAIL_CONTENT`  | 401   | 실패: 컨텐츠에서 거부됨          |
+| `PARSE_ERROR` | -2 | パケットパースエラー |
+| `TIMEOUT`              | -1    | タイムアウト                       |
+| `SYSTEM_ERROR`         | 1     | サーバーシステムエラー                |
+| `INVALID_PROTOCOL`     | 2     | サーバーに登録されていない プロトコル   |
+| `LOGOUT_SUCCESS`       | 0     | 成功                            |
+| `LOGOUT_FAIL_CONTENT` | 401 | 失敗: コンテンツにより拒否されました |
 
-서버 설정이나 상황에 따라서 서버에서 유저를 강제로 로그아웃 시킬 수도 있습니다. 이 경우에 대비해 아래와 같이 처리 함수를 등록할 수 있습니다.
+サーバーの設定や状況によっては、サーバー側でユーザーを強制的にログアウトさせることがあります。この場合に備え、以下のように処理関数を登録できます。
 
 ```typescript
 user.onForceLogout = (user, payload) => {
@@ -123,13 +123,13 @@ user.onForceLogout = (user, payload) => {
 }
 ```
 
-#### 메시지 수신 콜백 등록
+### メッセージ受信コールバック登録
 
-서버로부터 프로토버퍼 메시지를 수신 받았을 때, 처리 함수를 실행하도록 설정할 수 있습니다. 하나의 프로토버퍼에 대해서 하나의 처리 함수만 등록이 가능하며, 이미 처리 함수를 등록한 상태에서 다시 등록한다면 기존 처리 함수는 지워집니다.
+サーバーからプロトコルバッファメッセージを受信した際に、処理関数を実行するように設定できます。1つのプロトコルバッファに対しては、1つの処理関数のみ登録可能で、既に処理関数が登録されている状態で再度登録すると、既存の処理関数は削除されます。
 
-처리 함수는 비동기로 동작하므로 의도한 타이밍에 정확히 호출 되지 않을 수 있음에 주의하싶시오.
+処理関数は非同期で動作するため、意図したタイミングで正確に呼び出されない可能性がある点にご注意ください。
 
-첫 번째 인자로 들어가는 프로토버퍼 메시지를 트랜스파일 하는 방법은 이후 챕터에서 설명합니다.
+最初の引数となるプロトコルバッファメッセージをトランスパイルする方法は、後の章で説明します。
 
 ```typescript
 user.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userInfo) => {
@@ -144,13 +144,13 @@ user.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userInfo) =
 });
 ```
 
-#### 방 새로 생성 후 입장
+### ルーム新規生成後に入室
 
-서버에 방 생성 후 바로 입장할 수 있습니다. 방 이름은 필요하지 않은 경우 빈 문자열을 전달하면 됩니다. 방 타입은 서버와 미리 협의된 값을 사용하여야 합니다.
+サーバーにルームを作成した後、すぐに入室できます。ルーム名が不要な場合は、空の文字列を渡します。ルームタイプは、サーバーと事前に協議した値を使用する必要があります。
 
-매칭 그룹은 매치메이킹시 사용할 정보입니다. 사용하지 않는 경우에는 빈 문자열로 비워 놓으세요.
+マッチンググループは、マッチメイキング時に使用する情報です。使用しない場合は、空の文字列にしておいてください。
 
-방 생성 및 입장 동작 완료 시점에 Promise를 통해 성공 여부와 새로 생성된 방의 아이디, 사용자 커스텀 추가 정보 등을 확인할 수 있습니다.
+ルームの作成と入室が完了した時点で、Promiseを通じて成功したかどうかや、新しく作成されたルームのID、ユーザーカスタム追加情報などを確認できます。
 
 ```typescript
 const roomType: string;
@@ -160,7 +160,7 @@ const payload: Payload;
 const resultCreateRoom = await user.createRoom("", roomType, matchingGroup, payload);
 ```
 
-동작 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+動作の成否は、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (resultCreateRoom.resultCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
@@ -170,21 +170,21 @@ if (resultCreateRoom.resultCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
 }
 ```
 
-방 생성이나 방 입장에 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+ルームの作成または入室に失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                                | 값   | 설명                                |
+| コード名                               | 値  | 説明                               |
 |------------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                            | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                                | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                           | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`                       | 2     | 서버에 등록되지 않은 프로토콜      |
-| `CREATE_ROOM_SUCCESS`                    | 0     | 성공                               |
-| `CREATE_ROOM_FAIL_CONTENT`               | 601   | 실패: 컨텐츠에서 거부됨            |
-| `CREATE_ROOM_FAIL_ALREADY_JOINED_ROOM`   | 602   | 실패: 이미 방에 들어가 있음        |
-| `CREATE_ROOM_FAIL_CREATE_ROOM_ID`        | 603   | 실패: 방 아이디 발급 실패          |
-| `CREATE_ROOM_FAIL_CREATE_ROOM`           | 604   | 실패: 방 생성 실패                 |
+| `PARSE_ERROR` | -2 | パケットパースエラー |
+| `TIMEOUT`                                | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`                           | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL`                       | 2     | サーバーに登録されていない プロトコル     |
+| `CREATE_ROOM_SUCCESS`                    | 0     | 成功                              |
+| `CREATE_ROOM_FAIL_CONTENT` | 601 | 失敗: コンテンツにより拒否されました |
+| `CREATE_ROOM_FAIL_ALREADY_JOINED_ROOM` | 602 | 失敗: 既にルームに入室しています |
+| `CREATE_ROOM_FAIL_CREATE_ROOM_ID` | 603 | 失敗: ルームIDの発行に失敗しました |
+| `CREATE_ROOM_FAIL_CREATE_ROOM` | 604 | 失敗: ルームの作成に失敗しました |
 
-방 생성과 방 입장에 성공했을 경우, 응답을 통해 roomId를 포함한 정보를 확인할 수 있습니다.
+ルームの作成と入室に成功した場合、レスポンスを通じてroomIdを含む情報を確認できます。
 
 ```typescript
 if (resultCreateRoom.resultCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
@@ -193,7 +193,7 @@ if (resultCreateRoom.resultCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
 }
 ```
 
-방에 입장된 상태인지 확인하기 위해서, isJoinedRoom 속성을 확인할 수 있습니다.
+ルームに入室している状態かを確認するために、isJoinedRoomプロパティを確認できます。
 
 ```typescript
 if (user.isJoinedRoom) {
@@ -201,19 +201,19 @@ if (user.isJoinedRoom) {
 }
 ```
 
-방에 입장된 상태일 경우, 입장된 방의 아이디 정보를 roomId 속성을 통해 확인할 수 있습니다.
+ルームに入室している状態の場合、入室しているルームのID情報をroomIdプロパティで確認できます。
 
 ```typescript
 console.log(`Current joined room id: ${user.roomId}`);
 ```
 
-#### 기존 방에 입장
+### 既存ルームに入室
 
-서버에 생성된 룸 아이디를 알고 있는 경우 해당 룸에 입장을 요청할 수 있습니다.
+サーバーで作成されたルームIDが分かっている場合、そのルームへの入室をリクエストできます。
 
-매칭 유저 카테고리는 매치메이킹시 사용할 정보입니다. 사용하지 않을 경우 빈 문자열로 비워 두세요.
+マッチングユーザーカテゴリは、マッチメイキング時に使用する情報です。使用しない場合は、空の文字列にしておいてください。
 
-방 입장 동작 완료 시점에 Promise를 통해 성공 여부와 추가 정보 등을 알 수 있습니다.
+ルームへの入室が完了した時点で、Promiseを通じて成功したかどうかや追加情報などを知ることができます。
 
 ```typescript
 const roomType: string;
@@ -223,7 +223,7 @@ const payload: Payload;
 
 const resultJoinRoom = user.joinRoom(roomType, roomId, matchingUserCategory, payload);
 ```
-방 입장 성공 여부는 Promise 결과같인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+ルーム入室成否は、Promise結果値であるResultのresultCodeを通じて以下のように確認できます。
 
 ```typescript
 if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
@@ -234,22 +234,22 @@ if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
 }
 ```
 
-방 입장에 실패했을 경우 errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+ルームへの入室に失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                               | 값   | 설명                                |
+| コード名                              | 値  | 説明                               |
 |-----------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                           | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                               | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                          | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`                      | 2     | 서버에 등록되지 않은 프로토콜      |
-| `JOIN_ROOM_SUCCESS`                     | 0     | 성공                               |
-| `JOIN_ROOM_FAIL_CONTENT`                | 701   | 실패: 컨텐츠에서 거부됨            |
-| `JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST`    | 702   | 실패: 방이 존재하지 않음           |
-| `JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM`    | 703   | 실패: 이미 방에 들어가 있음        |
-| `JOIN_ROOM_FAIL_ALREADY_FULL`           | 704   | 실패: 이미 룸의 인원수가 차있을 경우|
-| `JOIN_ROOM_FAIL_ROOM_MATCH`             | 705   | 실패: 룸매치에서 문제가 발생할 경우 |
+| `PARSE_ERROR` | -2 | パケットパースエラー |
+| `TIMEOUT`                               | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`                          | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL`                      | 2     | サーバーに登録されていない プロトコル     |
+| `JOIN_ROOM_SUCCESS`                     | 0     | 成功                              |
+| `JOIN_ROOM_FAIL_CONTENT` | 701 | 失敗: コンテンツで拒否されました |
+| `JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST` | 702 | 失敗: ルームが存在しません |
+| `JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM` | 703 | 失敗: 既にルームに入室済みです |
+| `JOIN_ROOM_FAIL_ALREADY_FULL` | 704 | 失敗: 既にルームが満員の場合 |
+| `JOIN_ROOM_FAIL_ROOM_MATCH`             | 705   | 失敗: ルームマッチメイキングで問題が発生した場合 |
 
-방 입장에 성공했을 경우, 아래와 같이 세부 정보를 확인할 수 있습니다.
+ルームへの入室に成功した場合、以下のように詳細情報を確認できます。
 ```typescript
 if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
     console.log(`Joined room id: ${resultJoinRoom.roomId}`);
@@ -257,11 +257,11 @@ if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
 }
 ```
 
-#### 입장 중인 방에서 퇴장
+### 入室中のルームから退場
 
-입장 중인 방에서 퇴장하도록 서버에 요청할 수 있습니다.
+入室中のルームから退室するよう、サーバーにリクエストできます。
 
-퇴장 완료 시점에 Promise를 통해 성공 여부와 추가 정보 등을 확인할 수 있습니다.
+退室完了時点で、Promiseを通じて成功したかどうかや追加情報などを確認できます。
 
 ```typescript
 const payload: Payload;
@@ -269,7 +269,7 @@ const payload: Payload;
 const leaveRoomResult = await user.leaveRoom(payload);
 ```
 
-퇴장 완료 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+退室が完了したかどうかは、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (leaveRoomResult.resultCode === ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS) {
@@ -279,18 +279,18 @@ if (leaveRoomResult.resultCode === ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS) {
 }
 ```
 
-방 퇴장에 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+ルームからの退室に失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름              | 값   | 설명                                |
+| コード名             | 値  | 説明                               |
 |------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`          | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`              | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`         | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`     | 2     | 서버에 등록되지 않은 프로토콜      |
-| `LEAVE_ROOM_SUCCESS`   | 0     | 성공                               |
-| `LEAVE_ROOM_FAIL_CONTENT` | 801 | 실패: 컨텐츠에서 거부됨            |
+| `PARSE_ERROR`          | -2    | パケットパースエラー                    |
+| `TIMEOUT`              | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`         | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL`     | 2     | サーバーに登録されていない プロトコル     |
+| `LEAVE_ROOM_SUCCESS`   | 0     | 成功                              |
+| `LEAVE_ROOM_FAIL_CONTENT` | 801 | 失敗: コンテンツで拒否されました |
 
-서버에 의해 강제로 방에서 쫒겨났을 경우 실행할 처리 함수를 등록할 수 있습니다.
+サーバーによって強制的にルームから退出させられた場合に実行する処理関数を登録できます。
 
 ```typescript
 user.onForceLeaveRoom = (user, roomId, payload) => {
@@ -298,11 +298,11 @@ user.onForceLeaveRoom = (user, roomId, payload) => {
 }
 ```
 
-#### 유저 매치메이킹 풀에 등록
+### ユーザーマッチメイキングプールに登録
 
-유저 매치메이킹은 유저 풀을 만들고 그 안에서 조건에 맞는 유저들을 묶어서 새로 생성한 방으로 입장 시켜 주는 방식입니다. 유저 풀에 조건에 맞는 유저의 수가 모자랄 경우, 매치메이킹이 완료될 때 까지 시간이 걸릴 수 있습니다. 제한 시간내에 매치메이킹이 완료되지 않으면 매칭이 취소됩니다.
+ユーザーマッチメイキングは、ユーザープールを作成し、その中から条件に合うユーザーをまとめて新しく作成したルームに入室させる方式です。ユーザープールに条件に合うユーザーの数が足りない場合、マッチメイキングが完了するまでに時間がかかることがあります。制限時間内にマッチメイキングが完了しないと、マッチングはキャンセルされます。
 
-아래와 같이 서버에 유저 매치메이킹을 요청할 수 있습니다.
+以下のように、サーバーにユーザーマッチメイキングをリクエストできます。
 
 ```typescript
 const roomType: string;
@@ -312,7 +312,7 @@ const payload: Payload;
 const matchUserStartResult = await matchUserStart(roomType, matchingGroup, payload);
 ```
 
-풀에 정상적으로 등록되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+プールに正常に登録されたかどうかは、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (matchUserStartResult.resultCode === ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS) {
@@ -321,19 +321,19 @@ if (matchUserStartResult.resultCode === ResultCodeMatchUserStart.MATCH_USER_STAR
     console.log("Match user start fail.");
 }
 ```
-풀에 등록 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+プールへの登録に失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                                    | 값   | 설명                                |
+| コード名                                   | 値  | 説明                               |
 |----------------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                                | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                                    | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                               | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`                           | 2     | 서버에 등록되지 않은 프로토콜      |
-| `MATCH_USER_START_SUCCESS`                   | 0     | 성공                               |
-| `MATCH_USER_START_FAIL_CONTENT`              | 1101  | 실패: 컨텐츠에서 거부됨            |
-| `MATCH_USER_START_FAIL_ALREADY_JOINED_ROOM`  | 1102  | 실패: 이미 방에 들어가 있음        |
+| `PARSE_ERROR`                                | -2    | パケットパースエラー                    |
+| `TIMEOUT`                                    | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`                               | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL`                           | 2     | サーバーに登録されていない プロトコル     |
+| `MATCH_USER_START_SUCCESS`                   | 0     | 成功                              |
+| `MATCH_USER_START_FAIL_CONTENT` | 1101 | 失敗: コンテンツで拒否されました |
+| `MATCH_USER_START_FAIL_ALREADY_JOINED_ROOM` | 1102 | 失敗: 既にルームに入室済みです |
 
-풀에 정상적으로 등록이 되었다면 서버에서 유저 매칭이 진행되고, 매칭에 성공을 하면 유저에 미리 등록된 콜백이 호출됩니다. 유저 매칭 풀 등록 요청 전에 아래와 같이 콜백을 등록하면 됩니다.
+プールへの登録が正常に完了すると、サーバーでユーザーマッチングが進行し、マッチングに成功すると、ユーザーに事前に登録されたコールバックが呼び出されます。ユーザーマッチングプールへの登録をリクエストする前に、以下のようにコールバックを登録します。
 
 ```typescript
 user.onMatchUserDone = (user, resultCode, matchResult) => {
@@ -346,15 +346,15 @@ user.onMatchUserDone = (user, resultCode, matchResult) => {
 };
 ```
 
-풀에 등록 전/후로, 풀에 등록 요청이 전송되고 처리되고 있는 상태인지 확인할 수 있습니다.
+プールへの登録前後で、プールへの登録リクエストが送信され、処理されている状態かを確認できます。
 
 ```typescript
 console.log(`Is in progress of match making?`, user.isUserMatchInPrgress);
 ```
 
-#### 유저 매치메이킹 풀에서 제거
+### ユーザーマッチメイキングプールから削除
 
-유저 매치메이킹을 요청했지만 매치메이킹이 아직 진행 중인 상태에서, 요청을 취소할 수 있습니다.
+ユーザーマッチメイキングをリクエストしたものの、マッチメイキングがまだ進行中の状態で、リクエストをキャンセルできます。
 
 ```typescript
 const roomType: string;
@@ -363,7 +363,7 @@ const resultCode = await user.matchUserCancel(roomType);
 console.log(`Match user cancel result: `, ResultCodeMatchUserCancel[resultCode]);
 ```
 
-풀에서 제거 요청 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+プールからの削除リクエストが成功したかどうかは、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (resultCode === ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS) {
@@ -373,26 +373,26 @@ if (resultCode === ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS) {
 }
 ```
 
-요청에 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+リクエストに失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                                    | 값   | 설명                                |
+| コード名                                   | 値  | 説明                               |
 |----------------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                                | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                                    | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                               | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`                           | 2     | 서버에 등록되지 않은 프로토콜      |
-| `MATCH_USER_CANCEL_SUCCESS`                  | 0     | 성공                               |
-| `MATCH_USER_CANCEL_FAIL`                     | 1201  | 실패: 컨텐츠에서 거부됨            |
-| `MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM` | 1202  | 실패: 이미 매칭이 이루어짐         |
-| `MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS`     | 1203  | 실패: 매칭이 진행 중이지 않은 경우 |
+| `PARSE_ERROR`                                | -2    | パケットパースエラー                    |
+| `TIMEOUT`                                    | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`                               | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL`                           | 2     | サーバーに登録されていない プロトコル     |
+| `MATCH_USER_CANCEL_SUCCESS`                  | 0     | 成功                              |
+| `MATCH_USER_CANCEL_FAIL` | 1201 | 失敗: コンテンツで拒否されました |
+| `MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM` | 1202 | 失敗: 既にマッチングが成立しています |
+| `MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS` | 1203 | 失敗: マッチングが進行中でない場合 |
 
-#### 룸 매치메이킹
+### ルームマッチメイキング
 
-룸 매치메이킹은 조건에 맞는 방 으로 유저를 입장시켜 주는 방식입니다. 룸 매치메이킹 요청 시 조건에 맞는 방이 있으면 해당 방으로 바로 입장시켜 주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장시켜주거나 요청을 실패 처리 합니다.
+ルームマッチメイキングは、条件に合うルームにユーザーを入室させる方式です。ルームマッチメイキングをリクエストした際に、条件に合うルームがあればそのルームにすぐに入室させ、条件に合うルームがなければ新しいルームを作成して入室させるか、リクエストを失敗として処理します。
 
-입장할 방의 타입과 매칭을 위한 추가 정보인 매칭 그룹과 매칭 유저 카테고리, 그리고 기타 옵션과 추가 전달 정보를 인자로 넘길 수 있습니다.
+入室するルームのタイプ、マッチングのための追加情報であるマッチンググループとマッチングユーザーカテゴリ、そしてその他のオプションと追加の伝達情報を引数として渡すことができます。
 
-룸 매치메이킹 동작 완료 시점에 Promise를 통해 성공 여부와 입장한 방의 아이디, 사용자 커스텀 추가 정보 등을 확인할 수 있습니다.
+ルームマッチメイキングの動作完了時点で、Promiseを通じて成功したかどうかや、入室したルームのID、ユーザーカスタムの追加情報などを確認できます。
 
 ```typescript
 const isCreateRoomIfNotJoinRoom: boolean;
@@ -407,7 +407,7 @@ const matchRoomResult = await user.matchRoom(isCreateRoomIfNotJoinRoom, isMoveRo
 console.log(`Match room result: ${ResultCodeMatchRoom[matchRoomResult.errorCode]}`);
 ```
 
-동작 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+動作の成否は、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
@@ -417,33 +417,33 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 }
 ```
 
-매치메이킹에 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+マッチメイキングに失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                                    | 값   | 설명                                |
+| コード名                                   | 値  | 説明                               |
 |----------------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                                | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                                    | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                               | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`                           | 2     | 서버에 등록되지 않은 프로토콜      |
-| `MATCH_ROOM_SUCCESS`                         | 0     | 성공                               |
-| `MATCH_ROOM_FAIL_CONTENT`                    | 901   | 실패: 컨텐츠에서 거부됨            |
-| `MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST`        | 902   | 실패: 방이 존재하지 않음           |
-| `MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM`        | 903   | 실패: 이미 방에 들어가 있음        |
-| `MATCH_ROOM_FAIL_LEAVE_ROOM`                 | 904   | 실패: 기존 방에서 나가기가 실패한 경우 |
-| `MATCH_ROOM_FAIL_IN_PROGRESS`                | 905   | 실패: 이미 매치 메이킹이 진행 중인 경우 |
-| `MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST`| 906   | 실패: 조건에 맞는 방을 찾던 중 방이 사라짐 |
-| `MATCH_ROOM_FAIL_CREATE_ROOM_ID`             | 907   | 실패: 방 아이디 발급 실패          |
-| `MATCH_ROOM_FAIL_CREATE_ROOM`                | 908   | 실패: 방 생성 실패                 |
-| `MATCH_ROOM_FAIL_INVALID_ROOM_ID`            | 909   | 실패: 잘못된 룸아이디              |
-| `MATCH_ROOM_FAIL_INVALID_NODE_ID`            | 910   | 실패: 잘못된 노드아이디            |
-| `MATCH_ROOM_FAIL_INVALID_USER_ID`            | 911   | 실패: 잘못된 유저아이디            |
-| `MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND`     | 912   | 실패: 매칭을 진행했으나 방을 찾지 못함 |
-| `MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY` | 913 | 실패: 잘못된 매칭 유저 카테고리     |
-| `MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY` | 914 | 실패: 매칭 유저 카테고리 사이즈가 0일 경우 |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL`  | 915   | 실패: 매칭 신청서가 없음           |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL`  | 916   | 실패: 매칭 정보가 없음             |
+| `PARSE_ERROR`                                | -2    | パケットパースエラー                    |
+| `TIMEOUT`                                    | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`                               | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL`                           | 2     | サーバーに登録されていない プロトコル     |
+| `MATCH_ROOM_SUCCESS`                         | 0     | 成功                              |
+| `MATCH_ROOM_FAIL_CONTENT` | 901 | 失敗: コンテンツで拒否されました |
+| `MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST` | 902 | 失敗: ルームが存在しません |
+| `MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM` | 903 | 失敗: 既にルームに入室済みです |
+| `MATCH_ROOM_FAIL_LEAVE_ROOM` | 904 | 失敗: 既存のルームからの退室に失敗した場合 |
+| `MATCH_ROOM_FAIL_IN_PROGRESS`               | 905   | 失敗: すでにマッチメイキングが進行中の場合 |
+| `MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST` | 906 | 失敗: 条件に合うルームを探している途中でルームが削除されました |
+| `MATCH_ROOM_FAIL_CREATE_ROOM_ID` | 907 | 失敗: ルームIDの発行に失敗しました |
+| `MATCH_ROOM_FAIL_CREATE_ROOM` | 908 | 失敗: ルームの作成に失敗しました |
+| `MATCH_ROOM_FAIL_INVALID_ROOM_ID` | 909 | 失敗: 不正なルームIDです |
+| `MATCH_ROOM_FAIL_INVALID_NODE_ID` | 910 | 失敗: 不正なノードIDです |
+| `MATCH_ROOM_FAIL_INVALID_USER_ID` | 911 | 失敗: 不正なユーザーIDです |
+| `MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND` | 912 | 失敗: マッチングを行いましたが、ルームが見つかりませんでした |
+| `MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY` | 913 | 失敗: 不正なマッチングユーザーカテゴリです |
+| `MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY` | 914 | 失敗: マッチングユーザーカテゴリのサイズが0の場合 |
+| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL` | 915 | 失敗: マッチング申込書がありません |
+| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL` | 916 | 失敗: マッチング情報がありません |
 
-룸 매치메이킹에 성공했을 경우, 응답을 통해 roomId를 포함한 정보를 확인할 수 있습니다.
+ルームマッチメイキングに成功した場合、レスポンスを通じてroomIdを含む情報を確認できます。
 
 ```typescript
 if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
@@ -454,9 +454,9 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 }
 ```
 
-#### 지정한 이름의 방
+### 指定した名前のルーム
 
-지정한 이름의 방에 입장하거나, 파티 매칭을 위한 방에 입장할 수 있습니다. 지정한 이름의 방이 없을 경우 새롭게 생성하여 입장합니다.
+指定した名前のルームに入室したり、パーティマッチング用のルームに入室したりできます。指定した名前のルームがない場合は、新しく作成して入室します。
 
 ```typescript
 const roomType: stirng;
@@ -469,7 +469,7 @@ const namedRoomResult = await user.namedDroom(roomType, roomName, isParty, paylo
 console.log(`Named room result: ${ResultCodeNamedRoom[namedRoomResult.errorCode]}`);
 ```
 
-동작 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+動作の成否は、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
@@ -479,22 +479,22 @@ if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
 }
 ```
 
-동작에 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+動作に失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                                    | 값   | 설명                                |
+| コード名                                   | 値  | 説明                               |
 |----------------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                                | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                                    | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                               | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`                           | 2     | 서버에 등록되지 않은 프로토콜      |
-| `NAMED_ROOM_SUCCESS`                         | 0     | 성공                               |
-| `NAMED_ROOM_FAIL_CONTENT`                    | 1001  | 실패: 컨텐츠에서 거부됨            |
-| `NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST`        | 1002  | 실패: 방 생성이 실패하여 방을 찾을 수 없음 |
-| `NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM`        | 1003  | 실패: 이미 방에 들어가 있음        |
-| `NAMED_ROOM_FAIL_INVALID_ROOM_NAME`          | 1004  | 실패: 잘못된 방 이름 입력          |
-| `NAMED_ROOM_FAIL_CREATE_ROOM`                | 1005  | 실패: 방 생성 실패                 |
+| `PARSE_ERROR`                                | -2    | パケットパースエラー                    |
+| `TIMEOUT`                                    | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`                               | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL`                           | 2     | サーバーに登録されていない プロトコル     |
+| `NAMED_ROOM_SUCCESS`                         | 0     | 成功                              |
+| `NAMED_ROOM_FAIL_CONTENT` | 1001 | 失敗: コンテンツで拒否されました |
+| `NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST` | 1002 | 失敗: ルームの作成に失敗したため、ルームが見つかりません |
+| `NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM` | 1003 | 失敗: 既にルームに入室済みです |
+| `NAMED_ROOM_FAIL_INVALID_ROOM_NAME` | 1004 | 失敗: 不正なルーム名が入力されました |
+| `NAMED_ROOM_FAIL_CREATE_ROOM` | 1005 | 失敗: ルームの作成に失敗しました |
 
-요청에 성공했을 경우, 응답을 통해 정보를 확인할 수 있습니다.
+リクエストに成功した場合、レスポンスを通じて情報を確認できます。
 
 ```typescript
 if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
@@ -504,11 +504,11 @@ if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
 }
 ```
 
-#### 파티 매칭
+### パーティーマッチング
 
-파티 매치메이킹은 유저 매치메이킹의 특수한 형태로, 2명 이상의 유저가 한 파티로 묶여 유저 풀에 등록되고, 조건이 맞는 다른 유저들을 찾아 새로 생성한 방으로 함께 입장하는 것입니다. 파티로 묶인 유저들은 항상 같은 방으로 입장하게 됩니다. 파티와 같이 매칭되는 유저들은 서버의 매치메이커 구현에 따라 또 다른 파티거나 개인일 수도 있습니다.
+パーティマッチメイキングは、ユーザーマッチメイキングの特殊な形態で、2人以上のユーザーが1つのパーティとしてユーザープールに登録され、条件に合う他のユーザーを探して新しく作成したルームに一緒に入室するものです。パーティとしてまとまったユーザーは、常に同じルームに入室します。パーティと一緒にマッチングされるユーザーは、サーバーのマッチメーカーの実装によって、別のパーティであったり、個人であったりします。
 
-파티 매치메이킹을 하기 위해서는 먼저 네임드 룸에 입장한 상태여야 합니다. 네임드 룸 요청시 isParty를 true로 설정하면, 해당 NamedRoom이 파티의 역할을 합니다. NamedRoom에 파티 유저를 모두 모으고 나서 파티 매치메이킹을 시작할 수 있습니다.
+パーティマッチメイキングを行うには、まずネームドルームに入室している必要があります。ネームドルームをリクエストする際にisPartyをtrueに設定すると、そのNamedRoomがパーティの役割を果たします。NamedRoomにパーティのユーザーをすべて集めてから、パーティマッチメイキングを開始できます。
 
 ```typescript
 const roomType: string;
@@ -520,7 +520,7 @@ const matchStartResult = await matchPartyStart(roomType, mathchingGroup, payload
 console.log(`Party match start result: ${ResultCodeMatchPartyStart[matchStartResult.errorCode]}`);
 ```
 
-정상적으로 파티 매치 메이킹이 시작되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+正常にパーティーマッチメイキングが開始されたかどうかは、Promise結果値であるResultのresultCodeを通じて以下のように確認できます。
 
 ```typescript
 if (matchStartResult.resultCode === ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS) {
@@ -530,19 +530,19 @@ if (matchStartResult.resultCode === ResultCodeMatchPartyStart.MATCH_PARTY_START_
 }
 ```
 
-파티 매치 시작에 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+パーティマッチの開始に失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                                    | 값   | 설명                                |
+| コード名                                   | 値  | 説明                               |
 |----------------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                                | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                                    | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                               | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`                           | 2     | 서버에 등록되지 않은 프로토콜      |
-| `MATCH_PARTY_START_SUCCESS`                  | 0     | 성공                               |
-| `MATCH_PARTY_START_FAIL_CONTENT`             | 1301  | 실패: 컨텐츠에서 거부됨            |
-| `MATCH_PARTY_START_FAIL_PARTY_MATCH_WEIRD`   | 1302  | 실패: 파티 매칭 요청 시, 방이 파티 매칭용 방이 아닌 경우 |
+| `PARSE_ERROR`                                | -2    | パケットパースエラー                    |
+| `TIMEOUT`                                    | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`                               | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL`                           | 2     | サーバーに登録されていない プロトコル     |
+| `MATCH_PARTY_START_SUCCESS`                  | 0     | 成功                              |
+| `MATCH_PARTY_START_FAIL_CONTENT` | 1301 | 失敗: コンテンツで拒否されました |
+| `MATCH_PARTY_START_FAIL_PARTY_MATCH_WEIRD` | 1302 | 失敗: パーティマッチングをリクエストした際、ルームがパーティマッチング用のルームでない場合 |
 
-파티 매치 시작이 정상적으로 되었다면 서버에서 파티 매칭이 시작됩니다. 이 때 같은 파티에 있는 유저가 시작시에 알림을 받으려면 아래와 같이 처리 함수를 등록할 수 있습니다.
+パーティマッチが正常に開始されると、サーバーでパーティマッチングが開始されます。このとき、同じパーティにいるユーザーが開始時に通知を受け取るには、以下のように処理関数を登録できます。
 
 ```typescript
 user.onMatchPartyStart = (user, resultCode, payload) => {
@@ -550,7 +550,7 @@ user.onMatchPartyStart = (user, resultCode, payload) => {
 }
 ```
 
-파티 매칭에 성공을 하면 파티 내의 유저에 미리 등록된 처리 함수가 호출됩니다. 파티 매치 시작 전에 아래와 같이 콜백을 등록하면 됩니다.
+パーティマッチングに成功すると、パーティ内のユーザーに事前に登録された処理関数が呼び出されます。パーティマッチを開始する前に、以下のようにコールバックを登録します。
 
 ```typescript
 user.onMatchUserDone = (user, resultCode, matchResult) => {
@@ -563,15 +563,15 @@ user.onMatchUserDone = (user, resultCode, matchResult) => {
 };
 ```
 
-파티 매칭 전/후로, 아래와 같이 상태를 확인할 수 있습니다.
+パーティマッチングの前後で、以下のように状態を確認できます。
 
 ```typescript
 console.log(`Is in progress of match making? ${user.isPartyMatchInProgress}`);
 ```
 
-#### 파티 매칭 취소
+### パーティーマッチングキャンセル
 
-파티 매치메이킹이 아직 진행 중인 상태라면 요청을 취소할 수 있습니다.
+パーティマッチメイキングがまだ進行中の状態であれば、リクエストをキャンセルできます。
 
 ```typescript
 const roomType: string;
@@ -581,7 +581,7 @@ const matchCancelResult = await matchPartyCancel(roomType);
 console.log(`Match party cancel result: ${ResultCodeMatchPartyCancel[matchCancelResult.errorCode]}`);
 ```
 
-정상적으로 취소되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+正常にキャンセルされたかどうかは、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (matchCancelResult.resultCode === ResultCodeMatchPartyCancel.MATCH_PARTY_CANCEL_SUCCESS) {
@@ -591,22 +591,22 @@ if (matchCancelResult.resultCode === ResultCodeMatchPartyCancel.MATCH_PARTY_CANC
 }
 ```
 
-취소하는데 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+キャンセルに失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                                    | 값   | 설명                                |
+| コード名                                   | 値  | 説明                               |
 |----------------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                                | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                                    | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                               | 1     | 서버 시스템 에러                   |
-| `MATCH_PARTY_CANCEL_SUCCESS`                 | 0     | 성공                               |
-| `MATCH_PARTY_CANCEL_FAIL_CONTENT`            | 1401  | 실패: 컨텐츠에서 거부됨            |
-| `MATCH_PARTY_CANCEL_FAIL_PARTY_MATCH_WEIRD`  | 1402  | 실패: 파티 매칭 취소 시, 방이 파티 매칭용 방이 아닌 경우 |
+| `PARSE_ERROR`                                | -2    | パケットパースエラー                    |
+| `TIMEOUT`                                    | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`                               | 1     | サーバーシステムエラー                  |
+| `MATCH_PARTY_CANCEL_SUCCESS`                 | 0     | 成功                              |
+| `MATCH_PARTY_CANCEL_FAIL_CONTENT` | 1401 | 失敗: コンテンツで拒否されました |
+| `MATCH_PARTY_CANCEL_FAIL_PARTY_MATCH_WEIRD` | 1402 | 失敗: パーティマッチングをキャンセルした際、ルームがパーティマッチング用のルームでない場合 |
 
-#### 패킷 전송
+### パケット送信
 
-게임 서버로 유저의 패킷을 전송할 수 있습니다. 사전에 등록된 프로토콜만 보낼 수 있는 것에 주의하세요.
+ゲームサーバーにユーザーのパケットを送信できます。事前に登録されたプロトコルのみ送信可能である点にご注意ください。
 
-프로토콜 등록이나 메시지 생성에 대해서는 이어지는 가이드를 참고하세요.
+プロトコルの登録やメッセージの作成については、ガイドを参照してください。
 
 ```typescript
 const name = "John Doe";
@@ -617,11 +617,11 @@ const message = new UserInfo({name, age, job});
 user.sendUser(message);
 ```
 
-#### 패킷 전송 후 응답 패킷 대기
+### パケット送信後に応答パケット待機
 
-게임 서버로 유저의 패킷을 전송한 후, 서버에서 응답을 보낸다면 받아서 처리할 수 있습니다. 사전에 등록된 프로토콜만 보낼 수 있는 것에 주의하세요.
+ゲームサーバーにユーザーのパケットを送信した後、サーバーから応答があれば、それを受け取って処理できます。事前に登録されたプロトコルのみ送信可能である点にご注意ください。
 
-프로토콜 등록이나 메시지 생성에 대해서는 이어지는 가이드를 참고하세요.
+プロトコルの登録やメッセージの作成については、ガイドを参照してください。
 
 ```typescript
 const echoResult = await user.requestUser<EchoRes>(new EchoReq({ message: "Hello World!"}), EchoRes);
@@ -629,9 +629,9 @@ const echoResult = await user.requestUser<EchoRes>(new EchoReq({ message: "Hello
 console.log(echoResult.message); // Hello World!
 ```
 
-#### 채널 이동
+### チャンネル移動
 
-유저가 속한 채널에서 나와서 지정한 채널로 이동시킬 수 있습니다. 
+ユーザーが属するチャネルから退出させ、指定したチャネルに移動させることができます。
 
 ```typescript
 const channelId: string;
@@ -642,7 +642,7 @@ const moveChannelResult = await user.moveChannel(channelId, payload);
 console.log(`Move channel result: ${ResultCodeMoveChannel[moveChannelResult.errorCode]}`);
 ```
 
-채널 이동이 정상적으로 진행되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+チャネル移動が正常に行われたかどうかは、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 iF (moveChannelResult.resultCode === ResultcodeMoveChannel.MOVE_CHANNEL_SUCCESS) {
@@ -652,21 +652,21 @@ iF (moveChannelResult.resultCode === ResultcodeMoveChannel.MOVE_CHANNEL_SUCCESS)
 }
 ```
 
-채널 이동에 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+チャネル移動に失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                                    | 값   | 설명                                |
+| コード名                                   | 値  | 説明                               |
 |----------------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                                | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                                    | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                               | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`                           | 2     | 서버에 등록되지 않은 프로토콜      |
-| `MOVE_CHANNEL_SUCCESS`                       | 0     | 성공                               |
-| `MOVE_CHANNEL_FAIL_CONTENT`                  | 1601  | 실패: 컨텐츠에서 거부됨            |
-| `MOVE_CHANNEL_FAIL_NODE_NOT_FOUND`           | 1602  | 실패: 채널 노드를 찾을 수 없음     |
-| `MOVE_CHANNEL_FAIL_ALREADY_JOINED_CHANNEL`   | 1603  | 실패: 이미 요청한 채널에 있음      |
-| `MOVE_CHANNEL_FAIL_ALREADY_JOINED_ROOM`      | 1604  | 실패: 이미 방에 입장하여 채널 이동을 할 수 없음 |
+| `PARSE_ERROR`                                | -2    | パケットパースエラー                    |
+| `TIMEOUT`                                    | -1    | タイムアウト                         |
+| `SYSTEM_ERROR`                               | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL`                           | 2     | サーバーに登録されていない プロトコル     |
+| `MOVE_CHANNEL_SUCCESS`                       | 0     | 成功                              |
+| `MOVE_CHANNEL_FAIL_CONTENT` | 1601 | 失敗: コンテンツで拒否されました |
+| `MOVE_CHANNEL_FAIL_NODE_NOT_FOUND` | 1602 | 失敗: チャネルノードが見つかりません |
+| `MOVE_CHANNEL_FAIL_ALREADY_JOINED_CHANNEL` | 1603 | 失敗: 既にリクエストしたチャネルにいます |
+| `MOVE_CHANNEL_FAIL_ALREADY_JOINED_ROOM` | 1604 | 失敗: 既にルームに入室しているため、チャネル移動はできません |
 
-채널 이동에 성공했을 경우 결과를 아래와 같이 확인할 수 있습니다.
+チャネル移動に成功した場合、結果を以下のように確認できます。
 
 ```typescript
 if (moveChannelResult.resultCode === ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS) {
@@ -675,7 +675,7 @@ if (moveChannelResult.resultCode === ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS)
 }
 ```
 
-채널 이동은 서버에 의해 강제로 일어날 수도 있습니다. 그 경우 아래와 같이 콜백을 등록해서 처리합니다.
+チャネル移動は、サーバーによって強制的に行われることもあります。その場合は、以下のようにコールバックを登録して処理します。
 
 ```typescript
 user.onMoveChannel = (user, result) => {
@@ -685,15 +685,15 @@ user.onMoveChannel = (user, result) => {
 }
 ```
 
-현재 유저의 채널 아이디 정보를 알고 싶다면 channelId 프로퍼티를 참조하세요.
+現在のユーザーのチャネルID情報を知りたい場合は、channelIdプロパティを参照してください。
 
 ```typescript
 console.log(`Current channel id: ${user.channelId}`);
 ```
 
-#### 서버로부터의 알림
+### サーバーからの通知
 
-서버로부터 알림이 오는 것에 대해서 미리 처리 함수를 등록할 수 있습니다. 좀 더 복잡한 형태의 데이터 전달을 원하는 경우에는 커스텀 프로토콜 등록을 고려해보십시오.
+サーバーからの通知に対して、事前に処理関数を登録できます。より複雑な形式のデータ伝達を希望する場合は、カスタムプロトコルの登録を検討してみてください。
 
 ```typescript 
 user.onNotice = (user, message) => {
@@ -701,9 +701,9 @@ user.onNotice = (user, message) => {
 }
 ```
 
-#### 연결 해제
+### 接続解除
 
-서버에 의해 연결 해제되거나 기타 이유로 연결이 끊어졌을 때의 처리 함수를 미리 등록할 수 있습니다.
+サーバーによって接続が解除されたり、その他の理由で接続が切れたりした場合の処理関数を事前に登録できます。
 
 ```typescript
 user.onSessionClose = (user, resultCode, payload) => {
@@ -711,18 +711,18 @@ user.onSessionClose = (user, resultCode, payload) => {
 }
 ```
 
-| 코드 이름                                    | 값   | 설명                                                                                                  |
+| コード名                                   | 値  | 説明                                                                                                 |
 |----------------------------------------------|-------|------------------------------------------------------------------------------------------------------|
-| `SESSION_CLOSE_BASE_USER`                    | 2011  | 서버에서 BaseUser의 `closeConnection()` 호출                                                        |
-| `SESSION_CLOSE_ADMIN_KICK`                   | 2012  | 어드민에서 강제 종료                                                                                 |
-| `SESSION_CLOSE_DUPLICATE_LOGIN`              | 2032  | 중복 접속으로 인한 강제 종료                                                                         |
-| `SESSION_CLOSE_BY_NEW_CONNECTION`            | 2040  | 같은 계정 정보로 새로운 로그인 요청 시 이전 접속 종료. 네트워크 순단 등 재접속 시 사용. 문의 필요.     |
-| `SESSION_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041  | 클라이언트와의 연결 끊김 감지. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.       |
-| `SESSION_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | 세션을 찾을 수 없는 경우. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.            |
+| `SESSION_CLOSE_BASE_USER` | 2011 | サーバーでBaseUserの`closeConnection()`を呼び出し |
+| `SESSION_CLOSE_ADMIN_KICK` | 2012 | 管理画面からの強制終了 |
+| `SESSION_CLOSE_DUPLICATE_LOGIN` | 2032 | 重複接続による強制終了 |
+| `SESSION_CLOSE_BY_NEW_CONNECTION` | 2040 | 同じアカウント情報で新しいログインリクエストがあった場合に、以前の接続を終了。ネットワークの瞬断など、再接続時に使用。問い合わせが必要です。 |
+| `SESSION_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041 | クライアントとの接続切断を検知。通常は発生せず、発生した場合はGameAnvil開発チームへの問い合わせが必要です。 |
+| `SESSION_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | セッションが見つからない場合。通常は発生せず、発生した場合はGameAnvil開発チームへの問い合わせが必要です。 |
 
-#### 어드민에 의해 강제 퇴장
+### 管理者による強制退場
 
-서버의 어드민 툴에 의해 서버에서 쫒겨났을 때의 처리 함수를 미리 등록할 수 있습니다.
+サーバーの管理ツールによってサーバーから強制退出させられた場合に、実行する処理関数を事前に登録できます。
 
 ```typescript
 user.onAdminKickout = (user, message) => {

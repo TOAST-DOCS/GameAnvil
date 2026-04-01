@@ -1,246 +1,78 @@
-## Game > GameAnvil > Unity Advanced Development Guide > Getting Started
+## Game > GameAnvil > In-depth Development Guide to Unity > Get Started
 
-## Connector
+## Get Started
+GameAnvilConnector makes it easy to use the various features provided by GameAnvil.
 
-The connector is responsible for basic setup and agent management, and you can set options or register callbacks to view logs related to its internal behavior.
+## Install GameAnvilConnector
 
-In the [Unity Basic Development Guide > GameAnvilConnector](../unity-basic/unity-basic-02-connector.md) documentation, we covered the GameAnvilConnector, which provides easy access to the connector's main features.
+You can include GameAnvilConnector in your project using gameanvil-connector.unitypackage. First download the gameanvil-connector.unitypackage [here](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage). And in the menu, select \*\*Assets > Import Package > Custom Package...\*\*.
 
-This article describes Connectors, which allow you to use Connectors more extensively.
-Before you can use Connectors, you need to create them.
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/01-install/01-import.png)
 
-### Create
+<br>
 
-You can create a Connector as follows
+And select the downloaded package file to install the package.
+
+![img.png](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/01-install/02-select-package.png)
+![img.png](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/01-install/03-files.png)
+<br>
+
+When you install the package, the GameAnvilConnector DLL files are installed as follows in the GameAnvil folder:
+
+
+![img.png](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/01-install/04-gameanvil.png)
+<br>
+
+DLL files are made in C# and can be used on platforms such as Android, iOS, and PC.
+
+
+## Create GameAnvilConnector
+You must use GameAnvilConnector to connect to the GameAnvil server. You can simply create and use GameAnvilConnector as follows:
+The content of GameAnvilManager covered in the [Basic Development Guide to Unity > Manager](../unity-basic/unity-basic-02-gameanvil-manager.md) also uses GameAnvilConnector internally.  
+```c#
+using GameAnvil;
+
+GameAnvilConnector connector = new GameAnvilConnector();
+```
+
+## GameAnvilConfig
+GameAnvilConfig defines several settings to be used when running GameAnvilConnector. These settings are defined and set to the default value defined in GameAnvilConfig, but if needed, you can directly change the value of GameAnvilConfig to use.
 
 ```c#
 using GameAnvil;
-Connector connector = new Connector();
+
+GameAnvilConfig.DefaultRequestTimeoutMillis = 3000;
+GameAnvilConfig.PacketTimeoutMillis = 5000;
+GameAnvilConfig.PingIntervalMillis  = 3000;
+GameAnvilConfig.UseIPv6 = false;
+GameAnvilConfig.UseSocketNoDelay = true;
 ```
 
-### Settings
+The following are the types of settings:
 
-There are settings that the Connector uses for its behavior. These settings are set to the default values when the Connector is created, but you can change them yourself if you need to 
+| Type | Name | Description |
+|------|-----------------------------|-----------------------------------------------------------------------------------------------------|
+| int | DefaultRequestTimeoutMillis | Set the default timeout waiting time (unit : milliseconds, default: 3,000) |
+| int | PacketTimeoutMillis | If the packet is not updated within the specified time, it is judged that the connection is lost<br/>Must be set higher than the pingInterval value<br/>(Unit: milliseconds, default: 5,000) |
+| int | PingIntervalMillis | Set the interval of sending Ping messages to confirm the connection to the server (unit: milliseconds, default: Not used for 3,000, 0 days |
+| bool | UseIPv6 | Convert to IPv6 address when connecting (default: false) |
+| bool | UseSocketNoDelay | Use Nodelay for socket (default: true) |
+## GameAnvilLogger
+
+GameAnvilConnector does not log directly but passes logs through callbacks. You must register a callback to GameAnvilLogger to receive logs that occur from GameAnvilConnector as follows:
 
 ```c#
 using GameAnvil;
-Connector connector = new Connector();
-connector.config.packetTimeout = 10;
-```
 
-You can also create a Connector by pre-creating `Connector.Config` and taking it as a parameter, and if you make `Connector.Config` a member of the MonoBehavior, you can change its settings in Unity's Inspector window. 
-
-```c#
-using GameAnvil;
-var config = new Connector.Config();
-config.packetTimeout = 10;
-Connector connector = new Connector(config);
-```
-
-![](https://static.toastoven.net/prod_gameanvil/images/unity-advanced/01-connector/01-config.png)
-
-There are the following types of settings
-
-| Name                         | Description                                                           | Default value |
-| --------------------------- | ------------------------------------------------------------- | :----: |
-| defaultReqestTimeout        | TimeOut default wait time                                           | 3(sec) |
-| packetTimeout               | If the packet is not updated within the specified time, it is assumed to be disconnected. Must be set to a value greater than pingInterval. | 5(sec) |
-| pingInterval                | Ping frequency to check connectivity with the server. Set to 0 if not used.      | 3(sec) |
-| useIPv6                     | Whether to translate IPv4 addresses to IPv6 addresses when connecting to servers using IPv4 addresses in an IPv6 environment.  | false  |
-| useSocketNoDelay            | Whether the socket uses Nodelay                                          | true   |
-| useArgumentDelegateOnly     | Option to ensure that only the callbacks passed as parameters are called, not the callbacks registered to the listener.           | true   |
-| Request Direct              | If the request is not waiting for a response when it is called, it is sent directly to the server without queuing it.  | true   |
-
-
-### Log
-
-The Connector does not log directly, but rather passes logs through callbacks. To receive the logs generated by the Connector, you need to register the callback as follows 
-
-| Connector log-related functions | Description |
-| --------------------- | --- |
-| AddLogListener | Register a callback to handle logging messages |
-| RemoveLogListener | Removing a specific callback from the list of callbacks to handle logging messages |
-| ContainsLogListener | Check if the list of callbacks to process logging messages includes specific callbacks |
-| EnablePingPongLogs | Enable or disable log output generated by PingPong |
-| GetEnablePingPongLogs | Query whether PingPong is generating log output |
-| SetLogLevel | Set up Log Level |
-| GetLogLevel | Log Level Lookup |
-
-Let's take a closer look at the code below.
-
-You can register a callback to handle logging messages with Connector.AddLogListener().
-
-```c#
-/// <summary>
-/// Registers a callback to handle logging messages.
-/// </summary>
-/// <param name="logger">Callback to handle logging messages</param>
-public void AddLogListener(Action<string> logListener);
-```
-
-You can delete the logging message handling callback that you registered with Connector.RemoveLogListener().
-
-```c#
-/// <summary>
-/// Removes a specific callback from the list of callbacks that will handle logging messages.
-/// </summary>
-/// <param name="logListener">The callback to remove</param>
-public void RemoveLogListener(Action<string> logListener);
-```
-
-Connector.ContainsLogListener() to determine if a particular callback is included in the list of callbacks that will handle logging messages.
-
-```c#
-/// <summary>
-/// Checks if the list of callbacks to handle logging messages includes a specific callback.
-/// </summary>
-/// <returns></returns>
-public bool ContainsLogListener(Action<string> logListener);
-```
-
-Connector.EnablePingPongLogs() lets you set whether or not to output logs generated by PingPong. PingPong is the process of sending packets back and forth to verify that you have a good connection to a server.
-
-```c#
-/// <summary>
-/// Sets whether to print the logs generated by PingPong. If true, print the logs; if false, do not print the logs.
-/// </summary>
-/// <param name="enable">Whether to print PingPong logs</param>
-public void EnablePingPongLogs(bool enable);
-```
-
-You can use Connector.GetEnablePingPongLogs() to query whether logs are being output by PingPong.
-
-```c#
-/// <summary>
-/// Queries whether logs generated by PingPong should be printed. If true, logs are printed; if false, related logs are not printed.
-/// </summary>
-/// <returns>Whether or not to print pingPong logs</returns>
-public bool GetEnablePingPongLogs();
-```
-
-You can set the log level with Connector.SetLogLevel(). The log level can affect what kind of logs you see.
-
-| Log Level | Description |
-| :------: | --- |
-| Debug | Detailed logs of all packets sent to and from the server and client (for development)|
-| Info | A brief log of all packets sent to and from the server and client. |
-| Warn | Logs of connecting to the server with packetTimeout set to 0, receiving a packet from the server and no listener registered to handle it, receiving a ClientStateCheck from the server, and receiving a ClientStateCheck from the server. |
-| Error | Logs of socket errors, errors received from the server, unknown errors, and more. |
-
-```c#
-/// <summary>
-/// Sets the log level.
-/// </summary>
-/// <param name="level">The log level to set</param>
-public void SetLogLevel(LogLevel level);
-```
-
-You can query the log level set with Connector.GetLogLevel().
-
-```c#
-/// <summary>
-/// Gets the set log level.
-/// </summary>
-/// <returns>Log level</returns>
-public Loglevel GetLogLevel();
-```
-
-Example of using Connector internal logs.
-
-```c#
-connector = new GameAnvil.Connector();
-
-// Register a LogListener so that Unity can see the logs inside the connector.
-connector.AddLogListener(message =>{
-    OnLogMessage?.Invoke(message);
-    Debug.Log(message);
-});
-
-connector.SetLogLevel(GameAnvil.Internal.LogLevel.Info);
-connector.EnablePingPongLogs(true);
-```
-
-
-### Update
-
-The Update() function needs to be called periodically to process messages to and from the server. The easiest way to do this is to call it from MonoBehaviour's Update(), but you can call it in other ways as needed. However, it is not thread safe and should not be called in a separate thread.
-You are free to set how often you want the Update() function to be called, but if you don't call it, you won't be notified when you receive a message from the server.
-
-```c#
-connector.Update();
-```
-
-### ConnectorHandler
-
-This is an example ConnectorHandler script that inherits from MonoBehavior to manage a connector. You can create your own or make appropriate changes to suit your needs.
-You can use the ConnectorHandler by adding it as a component to the GameObject in your scene.
-
-```c#
-using GameAnvil.Connection;
-using UnityEngine;
-
-namespace GameAnvil
-{ { {
-    public class ConnectorHandler : MonoBehaviour
-    { }
-
-        private static ConnectorHandler instance;
-        public static Connector connector = null;
-        public ConnectionAgent connectionAgent;
-
-        [Header("Configuration")]
-        public Connector.Config config;
-        public int PauseClientStateCheckMiliSecond = 10 * 60;
-
-        private void Awake()
-        { if (instance == null)
-            if (instance == null)
-            { return
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-                connector = new Connector(config);
-                connectionAgent = connector.GetConnectionAgent();
-            } 
-            else
-            { }
-                Debug.Log("ConnectorHandler instance already exist. Destroy new one.");
-                Destroy(gameObject);
-            }
-        }
-
-        private void Update()
-        { gameObject
-            connector.Update();
-        }
-
-        void OnDisable()
-        { {
-            if (connector.IsConnected())
-            { }
-                connectionAgent.Disconnect();
-            }
-        }
-
-        private void OnApplicationPause(bool pause)
-        { }
-            if (pause)
-            }
-                connector.GetConnectionAgent().PauseClientStateCheck(PauseClientStateCheckMiliSecond);
-                connector.Update();
-            } 
-            }
-            }
-                connector.Update();
-                connector.GetConnectionAgent().ResumeClientStateCheck();
-            }
-
-            if (connector.IsConnected())
-            { }
-                // If there's any work to be done after the app resumes, it's handled here.
-            }
-        }
-    }
+GameAnvilLogger.LogListener += Debug.Log; // register Unity Debug.Log
+GameAnvilLogger.LogListener += (logMessage)=>{
+    // process log messages
 }
 ```
 
-The GameAnvil connector is now ready to use.
+GameAnvilLogger has the following attributes that allow you to set the type of logs to be exported:
+
+| Type | Name | Description |
+|----------|--------------------|------------------------------------------------|
+| LogLevel | Threshold | Set the level of the log to be output (default: Info) |
+| bool | EnablePingPongLogs | Set whether to output logs derived from PingPong (default: false) |

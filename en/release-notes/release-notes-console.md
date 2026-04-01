@@ -1,5 +1,48 @@
 ## Game > GameAnvil > Release Notes > Console
 
+## 2025. 06. 30.
+### Change
+* Support GameAnvil 2.1 or later
+
+### Fix
+* Improved stability
+
+## 2024. 12. 10.
+### Change
+* GameAnvil 1.x support discontinued
+* GameAnvil 2.0 support
+* Updated SafePause screen
+  * Added feature to retain selected nodes even after leaving the page.
+  * Updated SafePause target node list screen.
+  * Updated SafePause progress confirmation screen with added detailed node information.
+  * Updated SafePause history screen with added detailed node information.
+  * Match node SafePause support.
+    * Multiple SafePauses can be performed simultaneously.
+* Dashboard > Server Status
+  * Added the graph for the number of rooms
+* Multi-node support in GameAnvil 2.0
+  * Changed the `channeldIDs` field in Config to a double array <br/>
+    An array containing channels represents a single thread. If the array contains two or more channels, two or more game nodes can run on a single thread <br/>
+```
+{
+  "game": [
+    {
+      "serviceId": 1,
+      "serviceName": "RPSGame",
+      "nodeCnt": 3,
+      "channelIDs": [
+        ["ch1"], 
+        ["ch2"],
+        ["ch3", "ch4"]
+      ]
+    }
+  ]
+}
+```
+
+### Fix
+* Improved stability
+
 ## April 9, 2024
 ### Change
 * Improved SafePause

@@ -1,73 +1,99 @@
 ## Game > GameAnvil > サーバー開発ガイド > サポートノード実装
 
-
-
 ## Support Node
 
 ![SupportNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_supportnode_on_network.png)
 
-SupportNodeは、その名のとおり補助的な機能を行うためのノードです。ゲームユーザーやルームオブジェクトに関係なく、任意の機能を実装できます。また、SupportNodeはGatewayNodeによる接続を必要としないため、別途のコネクションやセッション管理が必要ありません。このような特徴を基に、SupportNodeは主に独自の機能を担当しています。例えば、ログをまとめて送信したり、ビリングサーバーと通信を専任したりなどの役割で使用できます。また、エンジンのRESTful機能を使用して、簡単なWebサーバーの代わりに使用することもできます。この時、SupportNodeは上図のように内部ネットワークだけでなく、外部ネットワーク(Public)に表示させることもできるため、GatewayNodeに接続する前/後に必要な機能を担当することもできます。このように任意の補助的な機能を柔軟に実装、バッチできるのがSupportNodeの長所です。
+SupportNodeは名前の通り補助的な機能を実行するためのノードです。ゲームユーザーやルームオブジェクトに関係なく任意の機能を実装できます。また、SupportNodeはGatewayNodeを通じた接続を要求しないため、別途のコネクションやセッション管理が必要ありません。このような特徴を基に、SupportNodeは主に独自の機能を担当します。例えば、ログを集約して送信したり、課金サーバーとの通信を専任するなどの役割として使用できます。また、エンジンのRESTful機能を使用して簡単なWebサーバーの代用として使用することも可能です。このとき、SupportNodeは上の図のように内部ネットワークだけでなく**外部ネットワーク(Public)**に公開することもできるため、GatewayNodeへ接続する前/後に必要な機能を担当することもできます。このように任意の補助的な機能を柔軟に実装して配置できることがSupportNodeの長所です。
 
+## SupportNode実装
 
-
-## SupportNodeの実装
-
-SupportNodeは基本的にBaseSupportNode抽象クラスを継承実装します。ノード共通コールバックメソッドを除くと、追加でRESTful処理のためのgetRestMessageDispatcherメソッドでは唯一です。つまり、SupportNodeは前述した他のノードとまさにこの部分で差別化されています。ユーザーが定義したRESTful処理ができます。SupportNodeは、ユーザーが定義した一般的なパケット処理に加えて、RESTfulメッセージを処理できる唯一のユーザーノードです。
-
-すべてのノードは、ユーザー定義メッセージを処理するためのディスパッチャー作成とメッセージハンドラ登録プロセスで必要です。SupportNodeはGameNodeと同様にユーザーが任意のコンテンツを実装できるノードの1つです。まず、(1)静的パケットディスパッチャーを1つ作成します。この時、必ずメモリや性能面で利点を得られるように静的(static)で作成します。(2)処理したいメッセージを実装しておいた[ハンドラ](server-impl-07-message-handling.md)と接続します。(3)最後に、RestMessageDispatcherで、(1)で作成したディスパッチャーを利用してパケットを処理します。この時、サンプルコードで使用したパケットディスパッチャーはRestMessageDispatcherであることに注意します。もちろん、一般パケットディスパッチャーを使用することも可能ですが、この例ではRESTfulリクエストを処理するためにRestMessageDispatcherを選択しました。両者の使用方法はほとんど同じです。
-
-これらの一連のプロセスは、以下のサンプルコードで(1)～(3)に該当する注釈のすぐ下にあるコードで調べることができます。
+このようなSupportNodeは基本的にISupportNodeインターフェースを実装します。ノード共通コールバックメソッドのみを持っています。SupportNodeは先に確認した他のノードとは異なり、ユーザーが定義したRESTful処理ができるということです。言い換えると、SupportNodeはユーザーが定義した一般的なパケット処理に加えてRESTfulメッセージを処理できる唯一のユーザーノードです。
 
 ```java
-public class SampleSupportNode extends BaseSupportNode {
+@GameAnvilSupportNode(gameServiceName = "MySupport") // (1) "MySupport"というサービスのためのSupportNodeとしてエンジンに登録
+public class SampleSupportNode implements ISupportNode {
+    private ISupportNodeContext supportNodeContext;
 
-    // 1.RESTディスパッチャー作成
-    private static RestMessageDispatcher<SampleSupportNode> restMessageDispatcher = new RestMessageDispatcher<>();
-
-    // 2.SampleSupportNodeで処理したいURLとハンドラをマッピング
-    static {
-        // pathとmethod(GET, POST, ...)の組み合わせで登録。
-        restMessageDispatcher.registerMsg("/auth", RestObject.GET, _RestAuthReq.class);
-        restMessageDispatcher.registerMsg("/echo", RestObject.GET, _RestEchoReq.class);
-    }
-    
+    /**
+     * サポートノードコンテキストを伝達するために呼び出し
+     * <p/>
+     * オブジェクトが生成された後、一度呼び出される
+     *
+     * @param supportNodeContextサポートノードコンテキスト
+     */
     @Override
-    public MessageDispatcher<PublicSupportNode> getMessageDispatcher() {
-        return null;
-    }
-
-
-    @Override
-    public RestMessageDispatcher<PublicSupportNode> getRestMessageDispatcher() {
-        return restMessageDispatcher;
+    public void onCreate(ISupportNodeContext supportNodeContext) {
+        this.supportNodeContext = supportNodeContext;
     }
 
+    /**
+     * ノードが初期化される時に呼び出し
+     */
     @Override
-    public void onInit() throws SuspendExecution {
+    public void onInit() {
+
     }
 
+    /**
+     * Readyになる前に処理する部分のために呼び出し
+     */
     @Override
-    public void onPrepare() throws SuspendExecution {
+    public void onPrepare() {
+
     }
 
+    /**
+     * Readyになる時に呼び出し
+     */
     @Override
-    public void onReady() throws SuspendExecution {
+    public void onReady() {
+
     }
 
+    /**
+     * Pauseになる時に呼び出し
+     *
+     * @param payloadコンテンツから伝達したい追加情報
+     */
     @Override
-    public void onPause(PauseType type, Payload payload) throws SuspendExecution {}
+    public void onPause(IPayload payload) {
 
-    @Override
-    public void onResume(Payload outPayload) throws SuspendExecution {}
+    }
 
+    /**
+     * Shutdown命令を受け取ると呼び出し
+     */
     @Override
-    public void onShutdown() throws SuspendExecution {}
+    public void onShuttingdown() {
+
+    }
+
+    /**
+     * Resumeになる時に呼び出し
+     *
+     * @param payloadコンテンツから伝達したい追加情報
+     */
+    @Override
+    public void onResume(IPayload payload) {
+
+    }
+}
+```
+```java
+// プロトコルバッファ MyGame.GameNodeTest の入力があった場合に動作するメッセージ処理クラス
+@GameAnvilController
+public class _SupportNodeTest {
+    // (2) SampleSupportNodeで処理したいプロトコルとハンドラをマッピング
+    @GameNodeMapping(
+        value = MyGame.SupportNodeTest.class,   // 処理するプロトバッファ
+        loadClass = SampleSupportNode.class     // メッセージを受け取る対象(SampleSupportNode)
+    )
+    public void runGameNodeTest(IGameNodeDispatchContext ctx) {
+        // ここで行う作業を作成
+    }
 }
 ```
 
-SupportNode固有のコールバックは次のとおりです。
 
-
-| コールバック名 | 意味                      | 説明                                                                                                                                                                                                           |
-| ------------ | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| getRestMessageDispatcher | 処理するRESTfulリクエスト有り | ノードに処理するメッセージがある場合に返します。ユーザーは自分が宣言したディスパッチャーを使用できます。詳細については[メッセージ処理](./server-impl-07-message-handling#13-getMessageDispatcher)を参照してください。 |
+全てのノードはユーザー定義メッセージを処理するためのメッセージハンドラ登録過程が必要です。特にGameNodeはゲームコンテンツのためにこのような過程が必須です。サーバー実行前にメインクラスで設定を行います。(1)GameAnvilConfigに設定されているゲームサービス名を生成します。ゲームサービス名は必ずGameAnvilConfigに定義されている名前を使用する必要があります。(2) そして処理したいメッセージを実装しておいた[ハンドラ](server-impl-07-message-handling.md#_2)と接続します。1つのGameNodeクラスはただ1つのサービスに対してのみ登録できます。

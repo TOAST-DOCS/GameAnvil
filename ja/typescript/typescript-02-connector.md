@@ -1,12 +1,12 @@
-## Game > GameAnvil > TypeScript 개발 가이드 > 연결 에이전트
+## Game > GameAnvil > TypeScript開発ガイド > 接続エージェント
 
-### GameAnvilConnector
+## GameAnvilConnector
 
-GameAnvilConnector는 서버 연결과 통신을 담당하는 클래스로, 이 객체를 통해 서버에 요청하거나 서버로부터 오는 메시지에 대한 핸들러를 등록하여 관리할 수 있습니다. 이전 설치 챕터에서 GameAnvilConnector의 생성과 connect 기능 사용에 대해서 다루었습니다. 이번 문서에서는 더 자세한 사용법과, GameAnvilConnector의 다른 기능들을 알아보겠습니다.
+GameAnvilConnectorは、サーバーへの接続と通信を担当するクラスで、このオブジェクトを通じてサーバーにリクエストを送信したり、サーバーから受信するメッセージに対するハンドラを登録して管理したりできます。前のインストールチャプターでは、GameAnvilConnectorの作成とconnect機能の使用方法について説明しました。このドキュメントでは、より詳細な使用方法と、GameAnvilConnectorの他の機能について見ていきます。
 
-#### 생성
+### 生成
 
-아래와 같이 GameAnvilConnector 객체를 생성합니다. 보통은 하나의 프로세스에서 하나의 커넥터 객체를 사용하는 것이 일반적입니다.
+以下のようにGameAnvilConnectorオブジェクトを作成します。通常は、1つのプロセスで1つのコネクタオブジェクトを使用するのが一般的です。
 
 ```typescript
 import { GameAnvilConnector } from "gameanvil-connector";
@@ -14,9 +14,9 @@ import { GameAnvilConnector } from "gameanvil-connector";
 const connector = new GameAnvilConnector();
 ```
 
-#### 서버 접속
+### サーバー接続
 
-connect() 함수를 이용해 서버에 접속합니다. 호출 전에 host와 port를 미리 설정 해야 합니다.
+connect()関数を利用してサーバーに接続します。呼び出す前に、hostとportをあらかじめ設定しておく必要があります。
 
 ```typescript
 connector.host = "127.0.0.1";
@@ -28,7 +28,7 @@ console.log("Connect Success");
 
 ```
 
-connect() 함수는 서버 접속 완료 또는 실패 이후에 완료되는 Promise 객체를 반환합니다. 따라서 아래와 같이 사용할 수도 있습니다.
+connect()関数は、サーバーへの接続完了または失敗後に完了するPromiseオブジェクトを返します。そのため、以下のように使用することもできます。
 
 ```typescript
 connector.host = "127.0.0.1";
@@ -43,48 +43,47 @@ connector.connect()
     })
 ```
 
-커넥터의 대부분의 API가 이처럼 비동기적으로 작동하며 Promise 객체를 반환하므로 위와 같이 상황에 맞게 await, then등의 기능을 사용할 수 있습니다.
+コネクタのほとんどのAPIは、このように非同期で動作し、Promiseオブジェクトを返すため、上記のように状況に合わせてawaitやthenなどの機能を使用できます。
 
-#### 연결 끊김 감지
+### 切断検知
 
-서버에 의해 연결을 강제적으로 종료되거나, 네트워크 문제 등으로 연결이 끊겼을 때 수행할 동작을 지정할 수 있습니다.
+サーバーによって接続が強制的に終了されたり、ネットワークの問題などで接続が切れたりした場合に実行する動作を指定できます。
 
 ```typescript
 connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) => {
     console.log("Disconnected.");
-    
 }
 ```
 
-함수의 첫 번째 인자로는 연결이 끊긴 이유를 알 수 있습니다.
+関数の最初の引数で、接続が切れた理由を知ることができます。
 
-| 코드 이름                                         | 값   | 설명 |
+| コード名                                        | 値  | 説明 |
 |---------------------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| `FORCE_CLOSE_SYSTEM_ERROR`                       | 2000  | 시스템 오류로 인한 강제 종료 상황입니다. 클라이언트에서 이 코드를 받은 경우 GameAnvil 개발팀에 문의하세요. |
-| `FORCE_CLOSE_BASE_CONNECTION`                    | 2010  | 서버에서 BaseConnection의 close() 호출 시 받게 되는 코드입니다. |
-| `FORCE_CLOSE_BASE_USER`                          | 2011  | 서버에서 BaseUser의 closeConnection() 호출 시 받게 되는 코드입니다. |
-| `FORCE_CLOSE_ADMIN_KICK`                         | 2012  | Admin에서 강제 종료 하였을 경우 받게 되는 코드입니다. |
-| `FORCE_CLOSE_INVALID_NODE`                       | 2020  | GameNode가 invalid 상태로 변경 되어 |
-| `FORCE_CLOSE_USER_TRANSFER_FAIL`                 | 2021  | 유저 트렌스퍼가 실패한 경우 |
-| `FORCE_CLOSE_USER_TRANSFER_ERROR`                | 2022  | 유저 트렌스퍼 중 시스템 에러가 발생한 경우 |
-| `FORCE_CLOSE_AUTHENTICATION_FAIL`                | 2030  | 인증 실패로 인한 강제 종료|
-| `FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_ID`| 2031  | 인증 실패로 인한 강제 종료 - 어카운트아이디가 없을 경우 |
-| `FORCE_CLOSE_DUPLICATE_LOGIN`                    | 2032  | 중복 접속으로 인한 강제 종료 |
-| `FORCE_CLOSE_BY_NEW_CONNECTION`                  | 2040  | 같은 계정 정보로 새로운 로그인 요청이 들어온 경우. 네트워크 순단 등으로 재접속 시 이전 접속을 종료. 문의 필요. |
-| `FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT`       | 2041  | 클라이언트와의 연결 끊김을 감지. 문의 필요.|
-| `FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION`  | 2042  | 세션 정보를 찾을 수 없는 경우. 문의 필요.|
-| `FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL`            | 2043  | 클라이언트가 서버 상태 체크에 응답하지 않은 경우. 문의 필요. |
-| `FORCE_CLOSE_GHOST_USER`                         | 2044  | 고스트 유저인 경우. 문의 필요. |
-| `SOCKET_DISCONNECT`                              | 2100  | 네트워크 연결이 끊어짐 |
-| `SOCKET_TIME_OUT`                                | 2101  | 타임아웃이 발생, 컨넥터에서 연결을 끊음 |
-| `SOCKET_ERROR`                                   | 2102  | 소켓 에러가 발생하여 연결을 끊음 |
+| `FORCE_CLOSE_SYSTEM_ERROR` | 2000 | システムエラーによる強制終了の状況です。クライアントでこのコードを受け取った場合は、GameAnvil開発チームにお問い合わせください。 |
+| `FORCE_CLOSE_BASE_CONNECTION` | 2010 | サーバーでBaseConnectionのclose()を呼び出した際に受け取るコードです。 |
+| `FORCE_CLOSE_BASE_USER` | 2011 | サーバーでBaseUserのcloseConnection()を呼び出した際に受け取るコードです。 |
+| `FORCE_CLOSE_ADMIN_KICK` | 2012 | Adminで強制終了された場合に受け取るコードです。 |
+| `FORCE_CLOSE_INVALID_NODE` | 2020 | GameNodeがinvalid状態に変更されたため |
+| `FORCE_CLOSE_USER_TRANSFER_FAIL` | 2021 | ユーザー転送に失敗した場合 |
+| `FORCE_CLOSE_USER_TRANSFER_ERROR` | 2022 | ユーザー転送中にシステムエラーが発生した場合 |
+| `FORCE_CLOSE_AUTHENTICATION_FAIL` | 2030 | 認証失敗による強制終了|
+| `FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_ID`| 2031 | 認証失敗による強制終了 - アカウントIDがない場合 |
+| `FORCE_CLOSE_DUPLICATE_LOGIN` | 2032 | 重複接続による強制終了 |
+| `FORCE_CLOSE_BY_NEW_CONNECTION` | 2040 | 同じアカウント情報で新しいログインリクエストがあった場合。ネットワークの瞬断などによる再接続時に、以前の接続を終了。問い合わせが必要です。 |
+| `FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041 | クライアントとの接続切断を検知。問い合わせが必要です。|
+| `FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | セッション情報が見つからない場合。問い合わせが必要です。|
+| `FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL` | 2043 | クライアントがサーバーのステータスチェックに応答しなかった場合。問い合わせが必要です。 |
+| `FORCE_CLOSE_GHOST_USER` | 2044 | ゴーストユーザーの場合。問い合わせが必要です。 |
+| `SOCKET_DISCONNECT` | 2100 | ネットワーク接続が切断されました |
+| `SOCKET_TIME_OUT` | 2101 | タイムアウトが発生し、コネクタが接続を切断しました |
+| `SOCKET_ERROR` | 2102 | ソケットエラーが発生したため、接続を切断しました |
 
 
-두 번째 인자로는 서버 구현에 따른 추가 정보를 받습니다. 추가 정보 처리 방법은 이후에 추가로 설명합니다.
+2番目の引数で、サーバーの実装に応じた追加情報を受け取ります。追加情報の処理方法は、後ほど説明します。
 
-#### 인증
+### 認証
 
-서버에 접속 성공한 이후, 엔진의 모든 기능을 사용하기 위해서는 먼저 인증을 진행 해야 합니다. authenticaion() 함수는 서버와 미리 협의된 accountId, deviceId, password 값을 인자로 받아 인증 동작을 수행하고 Promise를 반환합니다. 인증 동작 완료 시점에 Promise를 통해 인증에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
+サーバーへの接続に成功した後、エンジンの全ての機能を使用するためには、まず認証を進める必要があります。authentication()関数は、サーバーとあらかじめ協議されたaccountId、deviceId、password値を引数として受け取り、認証動作を実行してPromiseを返します。認証動作完了時点でPromiseを通じて認証に成功したかどうかと、サーバーから受け取った追加データなどを確認できます。
 
 ```typescript
 const deviceId, accountId, password;
@@ -93,7 +92,7 @@ const authResult = await connector.authentication(deviceId, accountId, password)
 console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 ```
 
-인증 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
+認証の成否は、Promiseの結果値であるResultのresultCodeを通じて、以下のように確認できます。
 
 ```typescript
 if (authResult.resultCode === ResultCodeAuth.AUTH_SUCCESS) {
@@ -103,19 +102,19 @@ if (authResult.resultCode === ResultCodeAuth.AUTH_SUCCESS) {
 }
 ```
 
-인증에 실패했을 경우 errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
+認証に失敗した場合、errorCodeを通じてその原因を知ることができます。以下は、サーバーから受け取る可能性のあるerrorCodeの種類です。
 
-| 코드 이름                        | 값   | 설명                                |
+| コード名                       | 値  | 説明                               |
 |----------------------------------|-------|------------------------------------|
-| `PARSE_ERROR`                   | -2    | 추가 정보를 전달했을 때, 추가 정보를 파싱하는데 실패하면 발생할 수 있는 에러입니다. |
-| `TIMEOUT`                       | -1    | 서버에서 제한 시간 내에 응답하지 않았을 때 전달 되는 에러입니다. |
-| `SYSTEM_ERROR`                  | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`              | 2     | 서버에 등록되지 않은 프로토콜을 이용한 추가 정보를 보냈을 때 발생하는 에러입니다. |
-| `AUTH_SUCCESS`                  | 0     | 성공                               |
-| `AUTH_FAIL_CONTENT`             | 201   | 서버 개발자가 작성한 인증 관련 코드에서 거부로 실패하였을 때 전달 되는 에러입니다. |
-| `AUTH_FAIL_INVALID_ACCOUNT_ID`  | 202   | 빈 문자열 등, 서버에서 처리 불가능한 잘못된 계정 아이디를 전송했을 때 발생하는 에러입니다. |
+| `PARSE_ERROR` | -2 | 追加情報を渡した際に、その情報のパースに失敗した場合に発生する可能性のあるエラーです。 |
+| `TIMEOUT` | -1 | サーバーが制限時間内に応答しなかった場合に返されるエラーです。 |
+| `SYSTEM_ERROR`                  | 1     | サーバーシステムエラー                  |
+| `INVALID_PROTOCOL` | 2 | サーバーに登録されていないプロトコルを使用して追加情報を送信した場合に発生するエラーです。 |
+| `AUTH_SUCCESS`                  | 0     | 成功                              |
+| `AUTH_FAIL_CONTENT` | 201 | サーバー開発者が作成した認証関連のコードで拒否され、失敗した場合に返されるエラーです。 |
+| `AUTH_FAIL_INVALID_ACCOUNT_ID` | 202 | 空の文字列など、サーバーで処理できない不正なアカウントIDを送信した場合に発生するエラーです。 |
 
-인증 전/후 공통으로 커넥터가 인증 된 상태인지 확인하기 위해서, isAuthenticated 속성을 확인할 수 있습니다.
+認証の前後に関わらず、コネクタが認証された状態であるかを確認するために、isAuthenticatedプロパティを確認できます。
 
 ```typescript
 if (connector.isAuthenticated) {
@@ -123,9 +122,9 @@ if (connector.isAuthenticated) {
 }
 ```
 
-#### 연결과 인증을 모두 진행
+### 接続と認証の両方を進行
 
-연결을 하고 나면 인증을 필수로 진행해야하므로 이 둘을 순차적으로 실행 시켜주는 편의 함수를 호출하면 편리합니다.
+接続が完了すると認証が必須となるため、この二つを順次実行する便利な関数を呼び出すと便利です。
 
 ```typescript
 const deviceId, accountId, password;
@@ -137,28 +136,28 @@ const authResult = await connector.connectAndAuthenticateion(deviceId, accountId
 console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 ```
 
-연결 되지 않은 커넥터에 대해서 연결과 인증을 차례대로 수행하고, 인증 결과를 반환합니다.
+接続されていないコネクタに対して、接続と認証を順に実行し、認証結果を返します。
 
-인증 결과는 일반적으로 인증만 요청했을 때의 결과와 같은 방법으로 사용하면 됩니다.
+認証結果は、通常、認証のみをリクエストした場合の結果と同じ方法で使用します。
 
-#### 핑 요청
+### Pingリクエスト
 
-기본적으로 핑 요청은 주기적으로 보내지도록 되어 있지만, 설정을 수정하여 수동으로 바꾸었을 경우 수동으로 메서드를 호출하여 핑 요청을 할 수 있습니다.
+基本的にPingリクエストは定期的に送信されるように設定されていますが、設定を変更して手動にした場合は、手動でメソッドを呼び出してPingリクエストを送信できます。
 
 ```typescript
 connector.ping();
 ```
 
-핑 요청에 대한 응답을 받았을 경우 설정에 따라 pong 로그가 출력될 수 있습니다.
+Pingリクエストに対するレスポンスを受け取った場合、設定によってはpongログが出力されることがあります。
 
 
-#### 메시지 수신 콜백 등록
+### メッセージ受信コールバック登録
 
-서버로부터 프로토버퍼 메시지를 수신 받았을 때, 처리 함수를 실행하도록 설정할 수 있습니다. 하나의 프로토버퍼에 대해서 하나의 처리 함수만 등록이 가능하며, 이미 처리함수를 등록한 상태에서 다시 등록한다면 기존 처리 함수는 지워집니다.
+サーバーからプロトコルバッファメッセージを受信した際に、処理関数を実行するように設定できます。1つのプロトコルバッファに対しては、1つの処理関数のみ登録可能で、既に処理関数が登録されている状態で再度登録すると、既存の処理関数は削除されます。
 
-처리 함수는 비동기로 동작하므로 의도한 타이밍에 정확히 호출 되지 않을 수 있음에 주의하십시오.
+処理関数は非同期で動作するため、意図したタイミングで正確に呼び出されない可能性がある点にご注意ください。
 
-첫 번째 인자로 들어가는 프로토버퍼 메시지를 트랜스파일 하는 방법은 이후 챕터에서 설명합니다.
+最初の引数となるプロトコルバッファメッセージをトランスパイルする方法は、後の章で説明します。
 
 ```typescript
 connector.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userInfo) => {
@@ -173,9 +172,9 @@ connector.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userIn
 });
 ```
 
-#### 채널 유저 및 방 수 정보 요청
+### チャンネルユーザー及びルーム数情報リクエスト
 
-서버에 있는 특정 서비스의 모든 채널 각각의 유저와 방 수 정보를 요청할 수 있습니다.
+サーバーにある特定のサービスの全てのチャネルの、それぞれのユーザー数とルーム数の情報をリクエストできます。
 
 ```typescript
 const serviceName: string;
@@ -190,7 +189,7 @@ for (let [key, value] of allChannelCountInfo) {
 }
 ```
 
-특정 서비스의 특정 채널로 한정지어서 요청할 수도 있습니다. 이 경우 서비스명과 함께 채널 아이디를 인자로 합니다.
+特定のサービスの特定のチャネルに限定してリクエストすることもできます。この場合、サービス名と共にチャネルIDを引数として渡します。
 
 ```typescript
 const serviceName: string;
@@ -203,9 +202,9 @@ console.log(`${channelCountInfo.channelId} userCount: ${channlCountInfo.userCoun
 ```
 
 
-#### 채널 정보 요청
+### チャンネル情報リクエスト
 
-서버에 있는 특정 서비스의 모든 채널 각각의 정보를 요청할 수 있습니다.
+サーバーにある特定のサービスの全てのチャネルの、それぞれの情報をリクエストできます。
 
 ```typescript
 const serviceName: string;
@@ -219,7 +218,7 @@ for (let [key, value] of channelInfo) {
 }
 ```
 
-특정 서비스의 특정 채널로 한정지어서 요청할 수도 있습니다. 이 경우 서비스명과 함께 채널 아이디를 인자로 합니다.
+特定のサービスの特定のチャネルに限定してリクエストすることもできます。この場合、サービス名と共にチャネルIDを引数として渡します。
 
 ```typescript
 const serviceName: string;
@@ -229,9 +228,9 @@ const result = await connector.getChannelInfo(serviceName, channelId);
 const payload = result.data;
 ```
 
-#### 채널 목록 요청
+### チャンネル一覧リクエスト
 
-서버에 있는 특정 서비스의 모든 채널 목록을 요청할 수 있습니다.
+サーバーにある特定のサービスの全てのチャネル一覧をリクエストできます。
 
 ```typescript
 const serviceName: string;
@@ -243,13 +242,13 @@ for (let channelId of result) {
 }
 ```
 
-#### 유저 상태 체크 일시 정지 및 재개
+### ユーザー状態チェック一時停止及び再開
 
-앱이 백그라운드로 내려간 경우 등 유저 상태 체크에 응답할 수 없는 상황이 예상되는 경우 앱을 일시 정지 시킬 수 있습니다.
+アプリがバックグラウンドに移行した場合など、ユーザーステータスチェックに応答できない状況が予想される場合に、アプリを一時停止できます。
 
-지정한 시간 동안 서버에서 클라이언트 접속 상태 정보를 갱신하지 않게 됩니다.
+指定した時間、サーバーはクライアントの接続状態情報を更新しなくなります。
 
-이 메서드로 앱을 일시 정지 시키지 않고 응답할 수 없게 된다면, 서버에서 주기적으로 클라이언트 접속을 종료시킵니다.
+このメソッドで一時停止を通知しない場合、サーバーからの生存確認に応答できなくなり、接続が強制的に切断されます。
 
 ```typescript
 const pauseTime: number = 10 * 1000;
@@ -257,17 +256,17 @@ const pauseTime: number = 10 * 1000;
 connector.pauseClientStateCheck(pauseTime);
 ```
 
-앱을 백그라운드에서 다시 실행한 경우 등 이제 유저 상태 체크에 응답할 수 있게 된다면, 앱을 재개합니다.
+アプリをバックグラウンドから再開した場合など、ユーザーステータスチェックに応答できるようになったら、アプリを再開します。
 
 ```typescript
 connector.resumeClientStateCheck();
 ```
 
-#### 패킷 전송
+### パケット送信
 
-게이트웨이 서버로 프로토버퍼 메시지를 전송할 수 있습니다.
+ゲートウェイサーバーにプロトコルバッファメッセージを送信できます。
 
-메시지 객체의 제작은 이어지는 문서를 참고하세요.
+メッセージオブジェクトの作成については、続くドキュメントを参照してください。
 
 ```typescript
 const name: string;
@@ -277,9 +276,9 @@ const job: string;
 connector.send(new UserInfo({name, age, job}));
 ```
 
-만약 서버에서 해당 메시지에 대한 응답을 대기하고 싶다면 아래와 같이 작성할 수 있습니다.
+もしサーバーで該当メッセージに対する応答を待機したい場合は、以下のように記述できます。
 
-이 경우 서버에 미리 등록된 리스너를 통해서 응답을 보내야 합니다.
+この場合、サーバーに事前に登録されたリスナーを通じてレスポンスを送信する必要があります。
 
 ```typescript
 const result = await connector.requestMessage(new StartReq(), StartRes.descriptor);
@@ -289,7 +288,7 @@ if (result.resultCode === ResultCode.Success) {
 }
 ```
 
-이미 메시지가 패킷의 형태라면 그대로 보낼 수도 있습니다.
+既にメッセージがパケットの形式であれば、そのまま送信することもできます。
 
 ```typescript
 const packet = PacketFactory.makePacket(new StartReq());
@@ -300,9 +299,9 @@ if (result.resultCode === ResultCode.Success) {
 }
 ```
 
-#### 예외 핸들링
+### 例外ハンドリング
 
-서버 접속 중에 예외가 발생할 경우 수행할 동작을 지정할 수 있습니다.
+サーバー接続中に例外が発生した場合に実行する動作を指定できます。
 
 ```typescript
 connector.onException = (exception: Error) => {
@@ -310,16 +309,16 @@ connector.onException = (exception: Error) => {
 }
 ```
 
-등록된 함수의 첫 번째 인자로는 에러 객체를 전달합니다.
+登録された関数の最初の引数には、エラーオブジェクトが渡されます。
 
-#### 연결 종료
+### 接続終了
 
-서버와 명시적으로 연결을 종료하도록 요청할 수 있습니다.
+サーバーとの接続を明示的に終了するようにリクエストできます。
 
 ```typescript
 connector.disconnect();
 ```
 
-서버와 연결 중이 아닌데 연결 종료 요청을 한 경우 에러가 발생합니다.
+サーバーと接続中でないのに接続終了をリクエストした場合、エラーが発生します。
 
-게임 플레이 종료 전 connector.disconnect() 함수를 호출해 연결을 종료하는 것이 좋습니다. 종료하지 않으면 서버에서 클라이언트의 종료를 인지하지 못할 수 있으며, 그럴 경우 불필요한 동작을 계속할 수 있습니다. connector를 관리하는 컴포넌트를 게임 종료시에만 파괴 되도록 만들고 OnDestroy()에서 connector.disconnect()를 호출하도록 만들어 놓는것도 좋은 방법입니다. 
+ゲームプレイを終了する前に、connector.disconnect()関数を呼び出して接続を終了することを推奨します。終了しない場合、サーバーがクライアントの終了を認識できず、不要な動作を続ける可能性があります。connectorを管理するコンポーネントを、ゲーム終了時にのみ破棄されるように作成し、OnDestroy()でconnector.disconnect()を呼び出すように設定するのも良い方法です。

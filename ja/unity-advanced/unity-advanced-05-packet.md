@@ -1,59 +1,63 @@
-## Game > GameAnvil > Unity深層開発ガイド > パケット
+## Game > GameAnvil > Unity 応用開発ガイド > パケット
 
 ## パケット
 
-サーバーと送受信する全てのメッセージはパケットモジュールで処理され、パケットモジュールが提供するインターフェイスを利用します。
+GameAnvilは基本メッセージプロトコルとしてProtocolBufferメッセージを使用します。そしてこれらのメッセージはパケットに込められて処理されます。ほとんどの場合、GameAnvilConnectorを利用する時はProtocolBufferメッセージのみを使用しても問題ありませんが、状況によってはPacketを利用しなければならない場合もあります。 
 
-### 作成
-
-コネクタはGoogle Protocol Buffersを基本プロトコルとして使用します。Google Protocol Buffersを利用するパケットの作成は次のとおりです。
-
+### 生成
+次のようにProtocolBufferメッセージを利用してパケットを生成できます。 
 ```c#
-Messages.SampleRequest requestMsg = new Messages.SampleRequest();
-Packet packet = new Packet(requestMsg);
+Packet packet = Packet.MakePacket(new Protocol.SampleRequest());
 ```
 
-    Google Protocol Buffersを使わなくてもパケットを作成できます。
-
+ProtocolBufferメッセージを利用しなくてもパケットを生成できます。
 ```c#
 byte[] requestMsg = Encoding.UTF8.GetBytes(JsonString);
-Packet packet = Pcket.CreateWithCustomMsg(customMsgId, requestMsg);
+Packet packet = Packet.MakeCustomPacket(customMsgId, requestMsg);
 
-byte[] bytes =  packet.GetBytes();
-string JsonString = Encoding.UTF8.GetString(bytes);
+ByteString bytes = packet.ToByteString();
+string JsonString = bytes.ToStringUtf8();
 ```
-
-パケットの最大サイズは64Kbytesに制限されています。パケットサイズが64Kbytesを超える場合、圧縮によってサイズ制限を回避できます。
-ペイロードも内部的にはパケットとして処理されるため、同様に64Kbytesを超えることはできません。
-
 ### 圧縮
 
-パケットサイズが大きい場合、圧縮してデータ使用量を減らすことができます。 
+サーバーへ送信できるパケットの最大サイズは64Kbytesに制限されています。パケットサイズが64Kbytesを超える場合、圧縮を通じてサイズ制限を回避できます。
+ペイロードも内部的にはパケットとして処理されるため、同様に64Kbytesを超えることはできません。
 
 ```c#
-Messages.SampleRequest requestMsg = new Messages.SampleRequest();
-Packet packet = new Packet(requestMsg);
-packet.compress();
+Packet packet = Packet.MakePacket(new Protocol.SampleRequest(), PacketOption.Compress);
+```
 
-if (packet.isCompress())
-    packet.decompress();
-
-CustomMessage.SampleResponse responseMsg = packet.GetMessage<CustomMessage.SampleResponse>();
+### 送信
+このように生成したパケットは、ProtocolBufferメッセージを送信するのと同じ方法でサーバーへ送信できます。 
+```c#
+public async void RequestPacket()
+{
+    try
+    {
+        Packet packet = Packet.MakePacket(new Protocol.SampleRequest());
+        ErrorResult<ResultCode, Protocol.SampleResponse> result = await connector.Request<Protocol.SampleResponse>(packet);
+        if (result.ErrorCode == ResultCode.SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
 ```
 
 ### Payload
 
-GameAnvilが提供する基本APIを利用する時、追加的なデータが必要な場合があります。このため、基本APIには追加データを渡すことができるペイロードというパラメータが含まれています。このペイロードに必要なデータをパケットに入れてリスト形式で保存できます。ここに追加データを入れてサーバーに送ったり、サーバーから送ったメッセージを取り出すことができます。
+GameAnvilが提供する基本APIを利用する際、追加のデータが必要になる場合があります。このために基本APIには、追加データを渡すことができるペイロードというパラメータが含まれています。このペイロードに追加で必要なデータを追加でき、このように追加したデータをサーバーへ送ったり、サーバーから受け取り利用できます。 
 
 ```c#
-using GameAnvil;
-Messages.UserInfo userInfo = new Messages.UserInfo();
-Messages.RoomInfo roomInfo = new Messages.RoomInfo();
+Payload payload = new Payload(new Protocol.SampleRequest());
+payload.Add(new Protocol.SampleSend());
 
-Payload payload = new Payload();
-payload.add(new Packet(userInfo));
-payload.add(new Packet(roomInfo));
-
-Packet packet = payload.getPacket<Messages.UserInfo>();
-Messages.RoomInfo roomInfo = payload.GetMessage<Messages.RoomInfo>()
+Packet packet = payload.GetPacket(Protocol.SampleReceive.Descriptor);
+Protocol.EchoRecv echoRecv = payload.GetProtoBuffer<Protocol.SampleReceive>();
 ```

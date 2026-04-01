@@ -1,4 +1,101 @@
 ## Game > GameAnvil > Release Notes > Typescript Connector
+
+### 2.1.0 (June 30, 2025)
+
+#### [Download](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector-typescript.zip)
+#### GameAnvil 2.0.0 or later
+
+
+#### New
+* To coincide with the release of GameAnvil 2.1.0 server, the connector version 2.1.0 has also been released.
+* There are no major functional modifications compared to 2.0.0, but some bug fixes, ResultCode name changes, typos, and incorrect descriptions have been modified.
+
+#### Changed
+* Updated engine protocol to match GameAnvil 2.1 server
+    * Servers older than GameAnvil 2.1 are no longer supported
+* Changed some ResultCodes
+
+  | AS-IS                                                                        | TO-BE                                                                      |
+  |-----------------------------------------------------------------------------|---------------------------------------------------------------------------|
+  | LOGIN\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | LOGIN_FAIL_INVALID_SERVICE_NAME<br>Failed. Invalid service name |
+  | LOGIN\_FAIL\_INVALID\_USERTYPE<br>Failed. Invalid user type | LOGIN_FAIL_INVALID_USER_TYPE<br>Failed. Invalid user type |
+  | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | CHANNEL\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>Failed. Invalid service name |
+  | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_ID<br>Failed. Invalid service ID | CHANNEL\_COUNT\_INFO\_FAIL\_INVALID\_SERVICE\_NAME<br>Failed. Invalid service name |
+  | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_FORM\_NULL<br>Failed. If the matching request is null | MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL<br>Failed. If the matching request is null |
+  | MATCH\_ROOM\_FAIL\_BASE\_ROOM\_MATCH\_INFO\_NULL<br>Failed. If the matching information is null | MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL<br>Failed. If the matching information is null |
+  | FORCE\_CLOSE\_BASE\_CONNECTION<br>The server calls close() on BaseConnection | FORCE\_CLOSE\_CONNECTION<br>Calling close() on IConnection on the server |
+  | FORCE\_CLOSE\_BASE\_USER<br>Calling closeConnection() on BaseUser on the server | FORCE\_CLOSE\_USER<br>Calling closeConnection() on IUser on the server                  |
+
+#### Fix
+* Fixed an issue where a response might not be received if the internally used seq value exceeds the maximum when making a request
+
+---
+
+### 2.0.0 (December 5, 2024)
+
+#### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-2.0.0.zip)
+
+#### GameAnvil 2.0.0 or later
+
+#### New
+
+* A new connector using async await has been released.
+* Completion is now detected by the return value, rather than registering a function to handle completion.
+* The GameAnvil connection and authentication code is as follows:
+
+```typescript
+const deviceId, accountId, password;
+
+connector.host = "127.0.0.1";
+connector.port = 18300;
+
+const authResult = await connector.connectAndAuthenticateion(deviceId, accountId, password);
+console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
+```
+
+#### Remove
+
+###### Removed ConnectionAgent
+* The distinction between ConnectionAgent and GameAnvilConnector was ambiguous.
+* GameAnvilConnector now incorporates the behavior of the existing ConnectionAgent.
+* Other classes have been renamed to reflect this change.
+    * UserAgnet has been renamed to GameAnvilUser.
+    * ProtocolManager has been renamed to GameAnvilProtocolManager.
+
+###### Removed Connector.Update
+* Now automatically implemented within Connector.
+
+###### Removed delegate for receiving request responses
+* Request responses are now returned as return values.
+* Messages received from the server without a request still use delegates.
+    * SetMessageCallback method
+
+#### Change
+
+###### Directly manage UserAgent instances
+* Modified to create and use UserAgent instances directly, as shown in the example below.
+* Note that UserAgent.Dispose does not automatically log you out. UserAgent.Dispose only releases objects managed internally.
+
+```typescript
+const myUser = new GameAnvilUser(connector, "ServiceName", subId);
+```
+
+###### Packet Class Usability Changes
+* No longer always attempts to convert to byte[].
+* Packet zip can now be added at creation time.
+* Packet unzip now happens automatically.
+
+###### GameAnvilConnector Concurrency
+* Fixed an issue where sending and receiving multiple requests would only send one at a time.
+* Multiple requests can now be sent and received.
+
+###### Removed MultiRequest
+* As the MultiRequest feature was removed from the server, the corresponding features were also removed from GameAnvilConnector.
+    * `public void Request(List<Packet> packetList)`
+    * `public bool Send(List<Packet> packetList)`
+
+------
+
 ### 1.2.1 (2021.11.30)
 
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.1.zip)

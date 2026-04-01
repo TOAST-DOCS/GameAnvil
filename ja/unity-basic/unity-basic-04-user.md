@@ -1,34 +1,34 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > User Controller
+## Game > GameAnvil > Unity 基礎開発ガイド > ユーザーコントローラー
 
 ## GameAnvilUser
 
-는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고 받으며 여러 가지 콘텐츠를 구현할 수 있습니다.
+は、GameAnvilサーバーのGameNodeに関連するタスクを担当します。ログイン(Login())、ログアウト(Logout())、ルーム管理などの基本機能を提供し、直接定義したプロトコルに基づいて、クライアントは自身のユーザーオブジェクトを通じて他のオブジェクトとメッセージをやり取りし、様々なコンテンツを実装できます。
 
-GameAnvilManager는 기본적으로 간편 로그인 과정에서 생성된 하나의 GameAnvilUser를 관리하는 GameAnvilUserController를 제공합니다. LoginResult의 UserController를 통해서 얻을 수 있습니다.
+GameAnvilManagerは、基本的に簡単ログインの過程で作成された一つのGameAnvilUserを管理するGameAnvilUserControllerを提供します。LoginResultのUserControllerを通じて取得できます。
 
-### 로그인
+### ログイン
 
-로그인은 클라언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다.
+ログインは、クライアントがサーバーに接続した後、GameNodeに自身のユーザーオブジェクトを作成するプロセスと定義できます。
 
-로그인은 간편 로그인에서 한 번에 처리되기 때문에 설명을 생략합니다. 자세한 내용은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user.md)를 참고하십시오.
+ログインは簡易ログインで一度に処理されるため、説明を省略します。詳細は[Unity 応用開発ガイド > ユーザー](../unity-advanced/unity-advanced-03-user.md)を参照してください。
 
-### 로그아웃
+### ログアウト
 
-GameAnvilManager에서는 게임 서버에서 로그아웃하고, 자동으로 접속 종료까지 처리됩니다. 로그아웃에 대한 더 자세한 설명은 [Unity 심화 개발 가이드 > UserAgent](../unity-advanced/unity-advanced-03-user.md)를 참고하십시오.
+GameAnvilManagerではゲームサーバーからログアウトし、自動的に接続終了まで処理されます。ログアウトに関するより詳細な説明は[Unity 応用開発ガイド > ユーザー](../unity-advanced/unity-advanced-03-user.md)を参照してください。
 
-### 방 생성, 입장, 퇴장
+### ルームの作成、入室、退室
 
-2명 이상의 유저는 방을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 유저들의 요청은 방 안에서 모두 순서가 보장됩니다. 물론 1명의 유저를 위한 방 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. 방을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다.
+ルームを利用することで、複数のユーザーからの操作（メッセージ）を、全員で共有された一つの時系列（同期化された流れ）に沿って処理する仕組みを構築できます。つまり、ルーム内では、全てのユーザーのリクエストが、サーバーによって厳密な順序で処理されることが保証されます。もちろん、1人のユーザーのためのルーム作成も、コンテンツによっては意味を持つ場合があります。ルームをどのように使用するかは、完全にエンジンユーザー次第です。
 
 #### CreateRoom
 
-CreateRoom()을 호출하여 방을 생성하고 그 방으로 입장합니다.
+CreateRoom()を呼び出してルームを作成し、そのルームに入室します。
 
 ```c#
 public async void ManagerCreateRoom()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userControll = gameAnvilManager.UserController;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
     
     try
     {
@@ -36,168 +36,170 @@ public async void ManagerCreateRoom()
         ErrorResult<ResultCodeCreateRoom, CreatedRoomResult> result = await userControll.CreateRoom("RoomName", "RoomType", "MatchingGroup", createRoomPayload);
         if (result.ErrorCode == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)
         {
-            // 성공
+            // 成功
         } else
         {
-            // 실패
+            // 失敗
         }
     }
     catch(Exception e)
     {
-        // 예외
+        // 例外
     }
 }
 ```
 
-CreateRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
+CreateRoom()は、以下の4つのパラメータを持っています。
 
-| 타입      | 이름            | 설명                                                    |
+| タイプ     | 名前           | 説明                                                   |
 |---------|---------------|-------------------------------------------------------|
-| String  | roomName      | 생성할 방의 이름. 사용하지 않는 경우 string.Empty(빈 문자열) 입력          |
-| String  | roomType      | 생성할 방의 타입. 서버에 등록된 방 타입 입력                            |
-| String  | matchingGroup | 매칭 시 사용할 매칭 그룹 이름. 사용하지 않는 경우 string.Empty(빈 문자열) 입력  |
-| Payload | payload       | 방 생성 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
+| String | roomName | 作成するルームの名前。使用しない場合はstring.Empty(空文字列)を入力 |
+| String | roomType | 作成するルームのタイプ。サーバーに登録されたルームタイプを入力 |
+| String | matchingGroup | マッチング時に使用するマッチンググループ名。使用しない場合はstring.Empty(空文字列)を入力 |
+| Payload | payload | ルーム作成リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
 
-응답으로 ErrorResult<ResultCodeCreateRoom, CreatedRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. CreateRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeCreateRoom.CREATE_ROOM_SUCCESS 가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 CreatedRoomResult 를 얻을 수 있습니다. 이를 통해 생성된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가
-정보를 얻을 수도 있습니다.
+レスポンスとしてErrorResult<ResultCodeCreateRoom, CreatedRoomResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。CreateRoomが成功すればErrorCodeフィールドの値がResultCodeCreateRoom.CREATE_ROOM_SUCCESSになり、そうでない場合はルーム生成に失敗したことになります。Dataフィールドを通じてリクエスト結果CreatedRoomResultを取得できます。これを通じて生成されたルームの情報を取得でき、サーバー実装によっては追加情報を取得することもできます。
 
-ResultCodeCreateRoom의 상세 내용은 다음과 같습니다.
+ResultCodeCreateRoomの詳細は以下の通りです。
 
-| 이름                                   | 값   | 설명                                         |
+| 名前                                  | 値  | 説明                                        |
 |--------------------------------------|-----|--------------------------------------------|
-| PARSE_ERROR                          | -2  | 패킷 파싱 에러. 서버와 클라이언트의 버전이 다를 경우 발생할 수 있음.   |
-| TIMEOUT                              | -1  | 타임 아웃. 요청에 대한 응답이 정해진 시간내에 오지 않음.          |
-| SYSTEM_ERROR                         | 1   | 서버 시스템 에러.  서버의 알수 없는 오류로 실패               |
-| INVALID_PROTOCOL                     | 2   | 서버에 등록되지 않은 프로토콜. 추가정보에 등록되지 않은 프로토콜이 사용됨. |
-| CREATE_ROOM_SUCCESS                  | 0   | 성공                                         |
-| CREATE_ROOM_FAIL_CONTENT             | 601 | 실패. 사용자 코드에서 거부됨                           |
-| CREATE_ROOM_FAIL_ALREADY_JOINED_ROOM | 602 | 실패. 이미 방에 들어가 있음                           |
-| CREATE_ROOM_FAIL_CREATE_ROOM_ID      | 603 | 실패. 방 아이디 생성이 실패하였을 경우                     |
-| CREATE_ROOM_FAIL_CREATE_ROOM         | 604 | 실패. 방 생성 실패                                |
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR | 1 | サーバーシステムエラー。サーバーの不明なエラーにより失敗しました。 |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| CREATE_ROOM_SUCCESS                  | 0   | 成功                                        |
+| CREATE_ROOM_FAIL_CONTENT | 601 | 失敗。ユーザーコードで拒否されました。 |
+| CREATE_ROOM_FAIL_ALREADY_JOINED_ROOM | 602 | 失敗。既にルームに入室済みです。 |
+| CREATE_ROOM_FAIL_CREATE_ROOM_ID | 603 | 失敗。ルームIDの作成に失敗した場合。 |
+| CREATE_ROOM_FAIL_CREATE_ROOM | 604 | 失敗。ルームの作成に失敗しました。 |
 
-CreatedRoomResult의 상세 내용은 다음과 같습니다.
+CreatedRoomResultの詳細は以下の通りです。
 
-| 타입      | 이름       | 설명                |
+| タイプ     | 名前      | 説明               |
 |---------|----------|-------------------|
-| int     | RoomId   | 생성한 방의 아이디        |
-| String? | RoomName | 생성한 방의 이름         |
-| Payload | payload  | 클라이언트에서 필요한 추가 정보 |
+| int | RoomId | 作成したルームのID |
+| String? | RoomName | 作成したルームの名前 |
+| Payload | payload | クライアントで必要な追加情報 |
 
 #### JoinRoom
 
-JoinRoom()을 호출하여 이미 생성된 방에 입장합니다.
+JoinRoom()を呼び出して、既に作成されているルームに入室します。
 
 ``` c#
-GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-GameAnvilUserController userControll = gameAnvilManager.UserController;
-try
+public async void ManagerJoinRoom()
 {
-    Payload joinRoomPayload = new Payload(new Protocol.CreateRoomData());
-    ErrorResult<ResultCodeJoinRoom, JoinRoomResult> result = await userControll.JoinRoom(managerRoomType, managerRoomId, string.Empty, joinRoomPayload);
-    if(result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    try
     {
-        // 성공
-    } else
-    {
-        // 실패
+        Payload joinRoomPayload = new Payload(new Protocol.JoinRoomData());
+        ErrorResult<ResultCodeJoinRoom, JoinRoomResult> result = await userController.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload);
+        if(result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
     }
-}
-catch (Exception e)
-{
-    // 예외
+    catch (Exception e)
+    {
+        // 例外
+    }
 }
 ```
 
-JoinRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
+JoinRoom()は、以下の4つのパラメータを持っています。
 
-| 타입      | 이름                   | 설명                                                                                                                                                                                           |
+| タイプ     | 名前                  | 説明                                                                                                                                                                                          |
 |---------|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| String  | roomType             | 입장할 방의 타입.                                                                                                                                                                                   |
-| int     | roomId               | 입장할 방의 아이디.                                                                                                                                                                                  |
-| String  | matchingUserCategory | 입장할 방에서 사용할 matchingUserCategory. 사용하지 않는 경우 string.Empty(빈 문자열) 입력 <br/>각 방에서는 방에 속한 유저를 카테고리로 나누고, 각 카테고리별로 인원수 제한을 적용할 수 있다. 지정한 matchingUserCategory의 현재 인원이 최대인 경우 JoinRoom 이 실패할 수 있다. |
-| Payload | payload              | 방 입장 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                                                                                        |
+| String | roomType | 入室するルームのタイプ。 |
+| int | roomId | 入室するルームのID。 |
+| String | matchingUserCategory | 入室するルームで使用するmatchingUserCategory。使用しない場合はstring.Empty(空文字列)を入力 <br/>各ルームでは、ルームに属するユーザーをカテゴリに分け、カテゴリごとに人数制限を適用できます。指定したmatchingUserCategoryの現在の人数が最大の場合、JoinRoomは失敗することがあります。 |
+| Payload | payload | ルームへの入室リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
 
-응답으로 ErrorResult<ResultCodeJoinRoom, JoinRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. JoinRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeJoinRoom.JOIN_ROOM_SUCCESS 가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 JoinRoomResult 를 얻을 수 있습니다. 이를 통해 입장한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
+レスポンスとしてErrorResult<ResultCodeJoinRoom, JoinRoomResult>を返し、ErrorCodeフィールドの値を確認して成功したかどうかを確認できます。JoinRoomが成功すると、ErrorCodeフィールドの値はResultCodeJoinRoom.JOIN_ROOM_SUCCESSとなり、そうでない場合はルームの作成に失敗したことになります。Dataフィールドを通じてリクエスト結果のJoinRoomResultを取得できます。これにより、入室したルームの情報を取得でき、サーバーの実装によっては追加情報を得ることもできます。
 
-ResultCodeJoinRoom 상세 내용은 다음과 같습니다.
+ResultCodeJoinRoomの詳細は以下の通りです。
 
-| 이름                                 | 값   | 설명                                         |
+| 名前                                | 値  | 説明                                        |
 |------------------------------------|-----|--------------------------------------------|
-| PARSE_ERROR                        | -2  | 패킷 파싱 에러. 서버와 클라이언트의 버전이 다를 경우 발생할 수 있음.   |
-| TIMEOUT                            | -1  | 타임 아웃. 요청에 대한 응답이 정해진 시간내에 오지 않음.          |
-| SYSTEM_ERROR                       | 1   | 서버 시스템 에러.  서버의 알수 없는 오류로 실패.              |
-| INVALID_PROTOCOL                   | 2   | 서버에 등록되지 않은 프로토콜. 추가정보에 등록되지 않은 프로토콜이 사용됨. |
-| JOIN_ROOM_SUCCESS                  | 0   | 성공.                                        |
-| JOIN_ROOM_FAIL_CONTENT             | 701 | 실패. 사용자 코드에서 거부됨.                          |
-| JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 실패. 입장 요청한 방이 존재하지 않음.                     |
-| JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 실패. 이미 방에 들어가 있음.                          |
-| JOIN_ROOM_FAIL_ALREADY_FULL        | 704 | 실패. 입장 요청한 방이 꽉 차있음.                       |
-| JOIN_ROOM_FAIL_ROOM_MATCH          | 705 | 실패. 룸매치 메이킹에서 문제가 발생함.                     |
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR | 1 | サーバーシステムエラー。サーバーの不明なエラーにより失敗しました。 |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| JOIN_ROOM_SUCCESS                  | 0   | 成功。                                        |
+| JOIN_ROOM_FAIL_CONTENT | 701 | 失敗。ユーザーコードで拒否されました。 |
+| JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 失敗。入室をリクエストしたルームが存在しません。 |
+| JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 失敗。既にルームに入室済みです。 |
+| JOIN_ROOM_FAIL_ALREADY_FULL | 704 | 失敗。入室をリクエストしたルームは満員です。 |
+| JOIN_ROOM_FAIL_ROOM_MATCH          | 705 | 失敗。ルームマッチメイキングで問題が発生しました。                          |
 
-JoinRoomResult의 상세 내용은 다음과 같습니다.
+JoinRoomResultの詳細は以下の通りです。
 
-| 타입      | 이름       | 설명                 |
+| タイプ     | 名前      | 説明                |
 |---------|----------|--------------------|
-| int     | RoomId   | 입장한 방의 아이디.        |
-| String? | RoomName | 입장한 방의 이름.         |
-| Payload | payload  | 클라이언트에서 필요한 추가 정보. |
+| int | RoomId | 入室したルームのID。 |
+| String? | RoomName | 入室したルームの名前。 |
+| Payload | payload | クライアントで必要な追加情報。 |
 
 #### LeaveRoom
 
-LeaveRoom()을 호출하여 입장한 방에서 퇴장할 수 있습니다.
+LeaveRoom()を呼び出して、入室中のルームから退室できます。
 
 ``` c#
 public async void ManagerLeaveRoom()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userControll = gameAnvilManager.UserController;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
     try
     {
         Payload leaveRoomPayload = new Payload(new Protocol.LeaveRoomData());
         ErrorResult<ResultCodeLeaveRoom, Payload> result = await userControll.LeaveRoom(leaveRoomPayload);
         if (result.ErrorCode == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS)
         {
-            // 성공
+            // 成功
         } else
         {
-            // 실패
+            // 失敗
         }
     }
     catch (Exception e)
     {
-        // 예외
+        // 例外
     }
 }
 ```
 
-LeaveRoom()은 다음과 같은 1개의 매개변수를 가지고 있습니다.
+LeaveRoom()は、以下の1つのパラメータを持っています。
 
-| 타입      | 이름      | 설명                                                    |
+| タイプ     | 名前     | 説明                                                   |
 |---------|---------|-------------------------------------------------------|
-| Payload | payload | 방 퇴장 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
+| Payload | payload | ルーム退室リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
 
-응답으로 ErrorResult<ResultCodeLeaveRoom, Payload>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. JoinRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS 가 되며, 아닌 경우 방 생성이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload 를 통해 추가 정보를 얻을 수도 있습니다.
+レスポンスとしてErrorResult<ResultCodeLeaveRoom, Payload>を返し、ErrorCodeフィールドの値を確認して成功したかどうかを確認できます。JoinRoomが成功すると、ErrorCodeフィールドの値はResultCodeLeaveRoom.LEAVE_ROOM_SUCCESSとなり、そうでない場合はルームの作成に失敗したことになります。サーバーの実装によっては、DataフィールドのPayloadを通じて追加情報を得ることもできます。
 
-ResultCodeLeaveRoom 상세 내용은 다음과 같습니다.
+ResultCodeLeaveRoomの詳細は以下の通りです。
 
-| 이름                      | 값   | 설명                                         |
+| 名前                     | 値  | 説明                                        |
 |-------------------------|-----|--------------------------------------------|
-| PARSE_ERROR             | -2  | 패킷 파싱 에러. 서버와 클라이언트의 버전이 다를 경우 발생할 수 있음.   |
-| TIMEOUT                 | -1  | 타임 아웃. 요청에 대한 응답이 정해진 시간내에 오지 않음.          |
-| SYSTEM_ERROR            | 1   | 서버 시스템 에러.  서버의 알수 없는 오류로 실패.              |
-| INVALID_PROTOCOL        | 2   | 서버에 등록되지 않은 프로토콜. 추가정보에 등록되지 않은 프로토콜이 사용됨. |
-| LEAVE_ROOM_SUCCESS      | 0   | 성공.                                        |
-| LEAVE_ROOM_FAIL_CONTENT | 801 | 실패. 사용자 코드에서 거부됨.                          |
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR | 1 | サーバーシステムエラー。サーバーの不明なエラーにより失敗しました。 |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| LEAVE_ROOM_SUCCESS      | 0   | 成功。                                        |
+| LEAVE_ROOM_FAIL_CONTENT | 801 | 失敗。ユーザーコードで拒否されました。 |
 
 #### NamedRoom
 
-NamedRoom()을 호출하여 지정한 이름의 방에 입장할 수 있습니다. 지정한 이름의 방이 없을 경우에는 방을 생성한 후 그 방으로 입장합니다.
+NamedRoom()を呼び出して、指定した名前のルームに入室できます。指定した名前のルームがない場合は、ルームを作成してからそのルームに入室します。
 
 ```c#
 public async void ManagerNamedRoom()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userControll = gameAnvilManager.UserController;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
 
     try
     {
@@ -206,225 +208,261 @@ public async void ManagerNamedRoom()
         ErrorResult<ResultCodeNamedRoom, NamedRoomResult> result = await userControll.NamedRoom("RoomName", "RoomType", isParty, namedRoomPayload);
         if (result.ErrorCode == ResultCodeNamedRoom.NAMED_ROOM_SUCCESS)
         {
-            // 성공
+            // 成功
         } else
         {
-            // 실패
+            // 失敗
         }
     } catch (Exception e)
     {
-        // 예외
+        // 例外
     }
 }
 ```
 
-NamedRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
+NamedRoom()は、以下の4つのパラメータを持っています。
 
-| 타입      | 이름       | 설명                                                                                       |
+| タイプ     | 名前      | 説明                                                                                      |
 |---------|----------|------------------------------------------------------------------------------------------|
-| String  | roomType | 입장 또는 생성 할 방의 타입                                                                         |
-| String  | roomName | 입장 또는 생성 할 방의 이름                                                                         |
-| bool    | isParty  | 파티 매치메이킹을 위한 방 여부.<br/>같은 파티로 묶인 유저들이 파티 매치메치킹이 완료될 때 까지 함께 대기하기 위한 방을 만들 경우 true로 입력한다. |
-| Payload | payload  | 입장 또는 생성 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                |
+| String | roomType | 入室または作成するルームのタイプ |
+| String | roomName | 入室または作成するルームの名前 |
+| bool | isParty | パーティマッチメイキング用のルームかどうか。<br/>同じパーティに属するユーザーがパーティマッチメイキングが完了するまで一緒に待機するためのルームを作成する場合、trueと入力します。 |
+| Payload | payload | 入室または作成リクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
 
-응답으로 ErrorResult<ResultCodeNamedRoom, NamedRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. NamedRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeNamedRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 NamedRoomResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가
-정보를 얻을 수도 있습니다.
+レスポンスとしてErrorResult<ResultCodeNamedRoom, NamedRoomResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。NamedRoomが成功すればErrorCodeフィールドの値がResultCodeNamedRoom.NAMED_ROOM_SUCCESSになり、そうでない場合は入室または生成に失敗したことになります。Dataフィールドを通じてリクエスト結果NamedRoomResultを取得できます。これを通じて入室または生成したルームの情報を取得でき、サーバー実装によっては追加情報を取得することもできます。
 
-ResultCodeNamedRoom 상세 내용은 다음과 같습니다.
+ResultCodeNamedRoomの詳細は以下の通りです。
 
-| 이름                                  | 값   | 설명                                                               |
+| 名前                                 | 値  | 説明                                                              |
 |-------------------------------------|-----|------------------------------------------------------------------|
-| PARSE_ERROR                         | -2  | 패킷 파싱 에러. 서버와 클라이언트의 버전이 다를 경우 발생할 수 있음.                         |
-| TIMEOUT                             | -1  | 타임 아웃. 요청에 대한 응답이 정해진 시간내에 오지 않음.                                |
-| SYSTEM_ERROR                        | 1   | 서버 시스템 에러.  서버의 알수 없는 오류로 실패                                     |
-| INVALID_PROTOCOL                    | 2   | 서버에 등록되지 않은 프로토콜. 추가정보에 등록되지 않은 프로토콜이 사용됨.                       |
-| NAMED_ROOM_SUCCESS                  | 0   | 성공                                                               |
-| NAMED_ROOM_FAIL_CONTENT             | 701 | 실패. 사용자 코드에서 거부됨                                                 |
-| NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 실패. 방이 존재하지 않음.<br/>방 입장 처리 중, 방에 있는 모든 유저가 방에서 나가는 경우 발생할 수 있다. |
-| NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 실패. 이미 방에 들어가 있음                                                 |
-| NAMED_ROOM_FAIL_INVALID_ROOM_NAME   | 704 | 실패. 잘못된 방 이름을 요청함.                                               |
-| NAMED_ROOM_FAIL_CREATE_ROOM         | 705 | 실패. 방 생성에 실패함.                                                   |
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR            | 1   | サーバーシステムエラー。サーバーの不明なエラーにより失敗。                                                    |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| NAMED_ROOM_SUCCESS                  | 0   | 成功。                                                              |
+| NAMED_ROOM_FAIL_CONTENT | 701 | 失敗。ユーザーコードで拒否されました。                                                                |
+| NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 失敗。ルームが存在しません。<br/>ルームへの入室処理中、ルーム内の全てのユーザーが退出した場合に発生することがあります。 |
+| NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 失敗。既にルームに入室済みです。 |
+| NAMED_ROOM_FAIL_INVALID_ROOM_NAME | 704 | 失敗。不正なルーム名をリクエストしました。 |
+| NAMED_ROOM_FAIL_CREATE_ROOM | 705 | 失敗。ルームの作成に失敗しました。 |
 
-NamedRoomResult 의 상세 내용은 다음과 같습니다.
+NamedRoomResultの詳細は以下の通りです。
 
-| 타입      | 이름       | 설명                 |
+| タイプ     | 名前      | 説明                |
 |---------|----------|--------------------|
-| bool    | Created  | 새로운 방이 생성되었는지 여부   |
-| int     | RoomId   | 입장한 방의 아이디         |
-| String? | RoomName | 입장한 방의 이름          |
-| Payload | payload  | 클라이언트에서 필요한 추가 정보. |
+| bool | Created | 新しいルームが作成されたかどうか |
+| int | RoomId | 入室したルームのID |
+| String? | RoomName | 入室したルームの名前 |
+| Payload | payload | クライアントで必要な追加情報。 |
 
-### 매치 메이킹
+### マッチメイキング
 
-GameAnvil은 크게 두 가지 매치 메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치 메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치 메이킹입니다.
+GameAnvilは大きく2種類のマッチメイキングを提供します。1つはルーム単位のマッチングを行うルームマッチメイキングで、もう1つはユーザー単位のマッチングを行うユーザーマッチメイキングです。
 
-#### 룸 매치 메이킹
+#### ルームマッチメイキング
 
-룸 매치 메이킹은 조건에 맞는 방으로 유저를 입장시켜 주는 방식입니다. 룸 매치 메이킹 요청 시 조건에 맞는 방이 있으면 해당 방으로 바로 입장시켜 주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장시켜 줍니다.
+ルームマッチメイキングは、条件に合うルームへユーザーを入室させる方式です。ルームマッチメイキングリクエスト時に条件に合うルームがあれば該当ルームへ即時入室させ、条件に合うルームがなければ新しいルームを生成して入室させます。
 
-MatchRoom()을 호출하여 룸 매치 메이킹을 요청할 수 있습니다.
+MatchRoom()を呼び出してルームマッチメイキングをリクエストできます。
 
 ```c#
 public async void ManagerMatchRoom()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userControll = gameAnvilManager.UserController;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
     try
     {
         var matchRoomPayload = new Payload(new Protocol.MatchRoomData());
-        ErrorResult<ResultCodeMatchRoom, MatchResult> result = await userControll.MatchRoom(false, false, managerRoomType, ConstantManager.channelId, string.Empty, matchRoomPayload);
+        ErrorResult<ResultCodeMatchRoom, MatchResult> result = await userController.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
         if (result.ErrorCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
         {
-            // 성공
+            // 成功
         } else
         {
-            // 실패
+            // 失敗
         }
     }
     catch (Exception e)
     {
-        // 예외
+        // 例外
     }
 }
 ```
 
-MatchRoom()은 다음과 같은 7개의 매개변수를 가지고 있습니다.
+MatchRoom()は、以下の7つのパラメータを持っています。
 
-| 타입      | 이름                        | 설명                                                                                                                               |
+| タイプ     | 名前                       | 説明                                                                                                                              |
 |---------|---------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| bool    | isCreateRoomIfNotJoinRoom | 조건에 맞는 방을 찾지 못했을 때, 방을 생성하여 입장할지 여부. <br/>true : 방이 없으면 생성한다. <br/>false : 방이 없으면 실패 처리한다.                                       | 
-| bool    | isMoveRoomIfJoinedRoom    | 이미 방에 입장한 상태인 경우, 다른 방으로 이동할지 여부. <br/>true : 방에 입장된 상태이면 방을 옮긴다. <br/>false : 방에 입장된 상태로 매칭을 요청한다면 실패 처리한다.                     |
-| string  | roomType                  | 방 타입. 같은 타입의 방을 찾는다.                                                                                                             |
-| string  | matchingGroup             | 매칭 그룹. 같은 그룹으로 생성된 방을 찾는다.                                                                                                       |
-| string  | matchingUserCategory      | 매칭 된 방에서 사용항 유저 카테고리.<br/>각 방에서는 방에 속한 유저를 카테고리로 나누고, 각 카테고리별로 인원수 제한을 적용할 수 있다. 지정한 matchingUserCategory의 현재 인원이 최대가 아닌 방을 찾는다. |
-| Payload | payload                   | 매치 메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                          |
-| Payload | leaveRoomPayload          | 다른 방으로 이동하는 경우, 방을 나갈때 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                              |
+| bool | isCreateRoomIfNotJoinRoom | 条件に合うルームが見つからなかった場合に、ルームを作成して入室するかどうか。<br/>true : ルームがなければ作成する。<br/>false : ルームがなければ失敗として処理する。 |
+| bool | isMoveRoomIfJoinedRoom | 既にルームに入室している場合に、別のルームに移動するかどうか。<br/>true : ルームに入室している状態であればルームを移動する。<br/>false : ルームに入室している状態でマッチングをリクエストした場合は失敗として処理する。 |
+| string | roomType | ルームタイプ。同じタイプのルームを探します。 |
+| string | matchingGroup | マッチンググループ。同じグループで作成されたルームを探します。 |
+| string | matchingUserCategory | マッチングされたルームで使用するユーザーカテゴリ。<br/>各ルームでは、ルームに属するユーザーをカテゴリに分け、カテゴリごとに人数制限を適用できます。指定したmatchingUserCategoryの現在の人数が最大でないルームを探します。 |
+| Payload | payload                   | マッチメイキングリクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null)                                                                                                                                                                                                                |
+| Payload | leaveRoomPayload | 他のルームに移動する場合、ルームから退出する際に処理するサーバーのユーザーコードで必要な追加情報。(default = null) |
 
-응답으로 ErrorResult<ResultCodeMatchRoom, MatchResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeMatchRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 MatchResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가
-정보를 얻을 수도 있습니다.
+レスポンスとしてErrorResult<ResultCodeMatchRoom, MatchResult>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。MatchRoomが成功すればErrorCodeフィールドの値がResultCodeMatchRoom.NAMED_ROOM_SUCCESSになり、そうでない場合は入室または生成に失敗したことになります。Dataフィールドを通じてリクエスト結果MatchResultを取得できます。これを通じて入室または生成したルームの情報を取得でき、サーバー実装によっては追加情報を取得することもできます。
 
-ResultCodeMatchRoom 상세 내용은 다음과 같습니다.
+ResultCodeMatchRoomの詳細は以下の通りです。
 
-| 이름                                             | 값   | 설명                                                                                     |
+| 名前                                            | 値  | 説明                                                                                    |
 |------------------------------------------------|-----|----------------------------------------------------------------------------------------|
-| PARSE_ERROR                                    | -2  | 패킷 파싱 에러. 서버와 클라이언트의 버전이 다를 경우 발생할 수 있음.                                               |
-| TIMEOUT                                        | -1  | 타임 아웃. 요청에 대한 응답이 정해진 시간내에 오지 않음.                                                      |
-| SYSTEM_ERROR                                   | 1   | 서버 시스템 에러.  서버의 알수 없는 오류로 실패                                                           |
-| INVALID_PROTOCOL                               | 2   | 서버에 등록되지 않은 프로토콜. 추가정보에 등록되지 않은 프로토콜이 사용됨.                                             |
-| NAMED_ROOM_SUCCESS                             | 0   | 성공                                                                                     |
-| NAMED_ROOM_FAIL_CONTENT                        | 701 | 실패. 사용자 코드에서 거부됨                                                                       |
-| NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST            | 702 | 실패. 방 입장 처리 중, 방이 사라짐.                                                                 |
-| NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM            | 703 | 실패. 이미 방에 들어가 있음                                                                       |
-| NAMED_ROOM_FAIL_INVALID_ROOM_NAME              | 704 | 실패. 잘못된 방 이름을 요청함.                                                                     |
-| NAMED_ROOM_FAIL_CREATE_ROOM                    | 705 | 실패. 방 생성에 실패함.                                                                         |
-| MATCH_ROOM_SUCCESS                             | 0   | 성공                                                                                     |
-| MATCH_ROOM_FAIL_CONTENT                        | 901 | 실패. 사용자 코드에서 거부됨                                                                       |
-| MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST            | 902 | 실패. 방이 존재하지 않음.                                                                        |
-| MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM            | 903 | 실패. 이미 방에 들어가 있음                                                                       |
-| MATCH_ROOM_FAIL_LEAVE_ROOM                     | 904 | 실패. 다른 방으로 이동할 때, 기존방에서 나가기가 실패한 경우                                                    |
-| MATCH_ROOM_FAIL_IN_PROGRESS                    | 905 | 실패. 이미 매치 매이킹이 진행중인 경우                                                                 |
-| MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST    | 906 | 실패. 조건에 맞는 방을 찾아 방에 참가 시키는 도중, 방이 사라짐<br/>방 입장 처리 중, 방에 있는 모든 유저가 방에서 나가는 경우 발생할 수 있다. |
-| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_ID          | 907 | 실패. 방 아이디 생성이 실패하였을 경우                                                                 |
-| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM             | 908 | 실패. 방 생성이 실패하였을 경우                                                                     |
-| MATCH_ROOM_FAIL_INVALID_ROOM_ID                | 909 | 실패. 잘못된 룸아이디가 사용되었을 경우                                                                 |
-| MATCH_ROOM_FAIL_INVALID_NODE_ID                | 910 | 실패. 잘못된 노드아이디가 사용되었을 경우                                                                |
-| MATCH_ROOM_FAIL_INVALID_USER_ID                | 911 | 실패. 잘못된 유저아이디가 사용되었을 경우                                                                |
-| MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND         | 912 | 실패. 매칭을 진행하였으나, 방을 찾지 못한 경우                                                            |
-| MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY | 913 | 실패. 잘못된 매칭 유저 카테고리를 사용하였을 경우                                                           |
-| MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY   | 914 | 실패. 매칭룸에서 유저 카테고리 사이즈가 0일 경우                                                           |
-| MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL      | 915 | 실패. 매칭 신청서가 NULL 일 경우                                                                  |
-| MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL      | 916 | 실패. 매칭 정보가 NULL 일 경우                                                                   |
+| PARSE_ERROR | -2 | パケットパースエラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。 |
+| TIMEOUT | -1 | タイムアウト。リクエストに対するレスポンスが指定時間内にありませんでした。 |
+| SYSTEM_ERROR | 1 | サーバーシステムエラー。サーバーの不明なエラーにより失敗しました。 |
+| INVALID_PROTOCOL | 2 | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| NAMED_ROOM_SUCCESS                             | 0   | 成功                                                                                    |
+| NAMED_ROOM_FAIL_CONTENT | 701 | 失敗。ユーザーコードで拒否されました。 |
+| NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702 | 失敗。ルームへの入室処理中に、ルームが削除されました。 |
+| NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM | 703 | 失敗。既にルームに入室済みです。 |
+| NAMED_ROOM_FAIL_INVALID_ROOM_NAME | 704 | 失敗。不正なルーム名をリクエストしました。 |
+| NAMED_ROOM_FAIL_CREATE_ROOM | 705 | 失敗。ルームの作成に失敗しました。 |
+| MATCH_ROOM_SUCCESS                             | 0   | 成功                                                                                    |
+| MATCH_ROOM_FAIL_CONTENT                        | 901 | 失敗。ユーザーコードで拒否されました。                                                                 |
+| MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 902 | 失敗。ルームが存在しません。 |
+| MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM            | 903 | 失敗。すでにルームに入室しています。                                                                 |
+| MATCH_ROOM_FAIL_LEAVE_ROOM                     | 904 | 失敗。他のルームへ移動する時、既存のルームからの退出に失敗した場合。                                                 |
+| MATCH_ROOM_FAIL_IN_PROGRESS                    | 905 | 失敗。すでにマッチメイキングが進行中の場合。                                                             |
+| MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST | 906 | 失敗。条件に合うルームを見つけ、そのルームに参加する途中で、ルームが削除されました。<br/>ルームへの入室処理中、ルーム内の全てのユーザーが退出した場合に発生することがあります。 |
+| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_ID          | 907 | 失敗。ルームID生成に失敗した場合。                                                             |
+| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM             | 908 | 失敗。ルーム生成に失敗した場合。                                                                |
+| MATCH_ROOM_FAIL_INVALID_ROOM_ID                | 909 | 失敗。無効なルームIDが使用された場合。                                                             |
+| MATCH_ROOM_FAIL_INVALID_NODE_ID                | 910 | 失敗。無効なノードIDが使用された場合。                                                            |
+| MATCH_ROOM_FAIL_INVALID_USER_ID                | 911 | 失敗。無効なユーザーIDが使用された場合。                                                            |
+| MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND         | 912 | 失敗。マッチングを進行したが、ルームが見つからなかった場合。                                                         |
+| MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY | 913 | 失敗。無効なマッチングユーザーカテゴリーを使用した場合。                                                         |
+| MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY   | 914 | 失敗。マッチングエンティティでユーザーカテゴリーサイズが0の場合。                                                         |
+| MATCH_ROOM_FAIL_MATCH_FORM_NULL                | 915 | 失敗。マッチング申請書がNULLの場合。                                                              |
+| MATCH_ROOM_FAIL_MATCH_INFO_NULL                | 916 | 失敗。マッチング情報がNULLの場合。                                                               |
 
-MatchResult 의 상세 내용은 다음과 같습니다.
+MatchResultの詳細は次のとおりです。
 
-| 타입       | 이름       | 설명                 |
+| タイプ      | 名前      | 説明                |
 |----------|----------|--------------------|
-| bool     | IsCancel  | 요청이 취소되었는지 여부.     |
-| int      | RoomId   | 입장한 방의 아이디.        |
-| bool     | Created  | 새로운 방이 생성되었는지 여부.  |
-| String   | RoomName | 입장한 방의 이름.         |
-| Payload? | payload  | 클라이언트에서 필요한 추가 정보. |
+| bool     | IsCancel | リクエストがキャンセルされたかどうか。      |
+| int | RoomId | 入室したルームのID。 |
+| bool | Created | 新しいルームが作成されたかどうか。 |
+| String   | RoomName | 入室したルームの名前。         |
+| Payload? | payload | クライアントで必要な追加情報。 |
 
-#### 유저 매치 메이킹
+#### ユーザーマッチメイキング
 
-유저 매치 메이킹은 유저 풀을 만들고 그 안에서 조건에 맞는 유저들을 찾아 새로 생성한 방으로 입장시켜 주는 방식입니다. 유저 풀에 조건에 맞는 유저의 수가 모자랄 경우 매치 메이킹이 완료될 때까지 시간이 걸릴 수 있고, 시간 내에 매치 메이킹이 완료되지 않으면 시간 초과되어 매칭이 실패 할 수 있습니다.
+ユーザーマッチメイキングは、ユーザープールを作成し、その中で条件に合うユーザーを探して新しく生成したルームへ入室させる方式です。ユーザープールに条件に合うユーザーの数が不足している場合、マッチメイキングが完了するまで時間がかかることがあり、時間内にマッチメイキングが完了しない場合はタイムアウトとなりマッチングが失敗する可能性があります。
 
-MatchUserStart()를 호출하여 유저 매치 메이킹을 시작할 수 있습니다. 이미 방에 입장한 경우 등 서버의 조건에 따라 요청이 실패할 수 있습니다.
+MatchUserStart()を呼び出してユーザーマッチメイキングを開始できます。このリクエストの結果が成功であっても、ユーザーマッチメイキングが完了したわけではありません。単に開始リクエストが成功しただけであり、マッチメイキングの結果は別途のコールバックを通じて伝達されます。
 
 ```c#
 public async void ManagerMatchUserStart()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
-    GameAnvilUserController userControll = gameAnvilManager.UserController;
-    userControll.onMatchUserDoneSuccess.AddListener((MatchResult matchResult) => {
-        // 매칭 성공
-    });
-    userControll.onMatchUserTimeOut.AddListener((MatchResult matchResult) =>
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    userController.OnMatchUserDone += (GameAnvilUserController userController, ResultCodeMatchUserDone resultCode, MatchResult matchResult) => {
+        // マッチング成功
+    };
+    userController.OnMatchUserTimeout += (GameAnvilUserController userController) =>
     {
-        // 매칭 실패
-    });
+        // マッチング失敗
+    };
     try
     {
-        ErrorResult<ResultCodeMatchUserStart, Payload> result = await gameAnvilManager.UserController.MatchUserStart(managerRoomType, "", new Payload(roomOption));
+        Payload matchUserPayload = new Payload(new Protocol.MatchUserData());
+        ErrorResult<ResultCodeMatchUserStart, Payload> result = await gameAnvilManager.UserController.MatchUserStart("RoomType", "MatchingGroup", matchUserPayload);
         if(result.ErrorCode == ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS)
         {  
-            // 요청 성공
+            // リクエスト成功
         } else
         {
-            // 실패
+            // 失敗
         }
     }
     catch (Exception e)
     {
-        // 예외
+        // 例外
     }
 }
 ```
 
+MatchUserStart()は次のような3つのパラメータを持っています。
+
+| タイプ    | 名前          | 説明                                                                   |
+|---------|---------------|------------------------------------------------------------------------|
+| String  | roomType      | 生成するルームのタイプ。                                                               |
+| String  | matchingGroup | マッチンググループ。同じグループのユーザープールから条件に合うユーザーを探す。使用しない場合はstring.Empty(空文字)を入力 |
+| Payload | payload       | ユーザーマッチメイキングリクエストを処理するサーバーのユーザーコードで必要な追加情報。(default = null)               |
+
+レスポンスとしてErrorResult<ResultCodeMatchUserStart, Payload>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。MatchUserStartが成功すればErrorCodeフィールドの値がResultCodeMatchUserStart.MATCH_USER_START_SUCCESSになり、そうでない場合はユーザーマッチメイキングに失敗したことになります。サーバー実装によってはDataフィールドのPayloadを通じて追加情報を取得することもできます。
+
+ResultCodeMatchUserStartの詳細は次のとおりです。
+
+| 名前                                      | 値  | 説明                                       |
+|-------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                               | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                   | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                              | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL                          | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| MATCH_USER_START_SUCCESS                  | 0    | 成功。                                        |
+| MATCH_USER_START_FAIL_CONTENT             | 1101 | 失敗。ユーザーコードで拒否されました。                           |
+| MATCH_USER_START_FAIL_ALREADY_JOINED_ROOM | 1102 | 失敗。すでにルームに入室しています。                           |
+
 <br>
 
+ユーザーマッチメイキングが成功した場合、onMatchUserDoneを通じて通知を受け取ることができます。パラメータResultCodeMatchUserDone resultCodeを通じて結果コードを知ることができ、パラメータMatchResult matchResultを通じてマッチングされたルームの情報を取得できます。サーバー実装によってはMatchResultのpayloadを通じて追加情報を取得することもできます。
+時間内にマッチングが成功しなかった場合、onMatchUserTimeoutを通じて通知を受け取ることができます。
 
-You can be notified via onMatchUserDoneListeners or IUserListener.OnMatchUserDone if the match was successful, or via onMatchUserTimeoutListeners or IUserListener.OnMatchUserTimeout if the match was not successful in time.
+ResultCodeMatchUserDoneの詳細は次のとおりです。
 
-```c#
-/// <summary>
-/// Representative to receive user matching results
-/// </summary>
-userAgent.onMatchUserDoneListeners += (UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserDone result, bool created, int roomId, Payload payload) => {
-    /// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
-    /// <param name="result">Result of the MatchUserStart() or MatchPartyStart() request</param>
-    /// <param name="created">Whether a room was created</param>
-    /// <param name="roomId">Id of the matched room</param>
-    /// <param name="payload">Additional information received from the server</param>
-};
+| 名前                                     | 値  | 説明                                                            |
+|------------------------------------------|------|-----------------------------------------------------------------|
+| PARSE_ERROR                              | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。                                 |
+| TIMEOUT                                  | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。                                         |
+| SYSTEM_ERROR                             | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗。                                             |
+| INVALID_PROTOCOL                         | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。                                   |
+| MATCH_USER_DONE_SUCCESS                  | 0    | 成功。                                                             |
+| MATCH_USER_DONE_FAIL_CONTENT             | 1501 | 失敗。ユーザーコードで拒否されました。                                                            |
+| MATCH_USER_DONE_FAIL_ROOM_DOES_NOT_EXIST | 1502 | 失敗。条件に合うルームを探してルームに参加させる途中、ルームが消滅しました。                                       |
+| MATCH_USER_DONE_FAIL_TRANSFER            | 1503 | 失敗。条件に合うルームを探してルームに参加させる途中、ルームに参加するためのtransfer過程で失敗しました。 |
+| MATCH_USER_DONE_FAIL_CREATE_ROOM         | 1504 | 失敗。ルーム生成に失敗しました。                                                                    |
 
-/// <summary>
-/// User matching timeout notification proxy
-/// </summary>
-userAgent.onMatchUserTimeoutListeners += (UserAgent userAgent) => {
-    /// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
-};
-```
 <br>
 
-You can cancel user matchmaking by calling MatchUserCancel(). If you are not in the middle of requesting a user match, the cancel request might fail if user matching has already succeeded or a timeout has occurred.
+MatchUserCancel()を呼び出して進行中のユーザーマッチメイキングをキャンセルできます。
 
 ```c#
-/// <summary>
-/// Cancel a user match request<para></para>
-/// If not in the middle of a match request, fails if a match has already succeeded or a timeout has occurred<para></para>
-/// </summary>
-/// <param name="roomType">The type of bar requested to be matched</param>
-/// <param name="onMatchUserCancel">The agent to cancel the result</param>.
-userAgent.MatchUserCancel(Constants.RoomType, (UserAgent user, Defines.ResultCodeMatchUserCancel result) => {
-    /// <param name="userAgent">The user agent that requested MatchUserCancel()</param>
-    /// <param name="result">Result of the MatchUserCancel() request</param>
-	if(result == Defines.ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS){
-        // Matchmaking cancel success
-    } else {
-        // Failed to cancel matchmaking
+public async void ManagerMatchUserCancel()
+{
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    try
+    {
+        ResultCodeMatchUserCancel result = await userController.MatchUserCancel("RoomType");
+        if (result == ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
     }
-});
+    catch (Exception e)
+    {
+        // 例外
+    }
+}
 ```
 
-Other features of the User Agent, such as party matchmaking, channels, listeners, and more, are described in the [Unity Advanced Development Guide > UserAgent](../unity-advanced/unity-advanced-03-user-agent.md).
+レスポンスとしてResultCodeMatchUserCancelを返し、キャンセルが成功すればResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESSになり、そうでない場合はキャンセルが失敗したことになります。ユーザーマッチメイキングが進行中でない場合、すでにユーザーマッチメイキングが成功したか、Timeoutが発生した場合はリクエストが失敗する可能性があります。
+
+ResultCodeMatchUserCancelの詳細は次のとおりです。
+
+| 名前                                       | 値  | 説明                                       |
+|--------------------------------------------|------|--------------------------------------------|
+| PARSE_ERROR                                | -2   | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT                                    | -1   | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR                               | 1    | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL                           | 2    | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| MATCH_USER_CANCEL_SUCCESS                  | 0    | 成功。                                        |
+| MATCH_USER_CANCEL_FAIL                     | 1201 | 失敗。ユーザーコードで拒否されました。                           |
+| MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM | 1202 | 失敗。すでにルームに入室しています。                           |
+| MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS     | 1203 | 失敗。ユーザーマッチメイキングが進行中ではありません。                          |
+
+その他、パーティーマッチメイキング、チャンネル、リスナーなどユーザーエージェントの多様な機能に関する詳細は[Unity 応用開発ガイド > ユーザー](../unity-advanced/unity-advanced-03-user.md)を参照してください。

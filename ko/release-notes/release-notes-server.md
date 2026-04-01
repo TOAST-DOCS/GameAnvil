@@ -710,7 +710,7 @@ public class GameUser extends BaseUser {
 
 * GameAnvil DB & Admin 기능(GameData, Dynamic Module 제외) 삭제
 
-    * GameAnvil 엔진단에서 더이상 DB를 사용하지 않습니다.
+    * GameAnvil 엔진 내부에서 더이상 DB를 사용하지 않습니다.
     * 참고: [GameAnvil-Guide/76 Admin 1.1.0 -&gt; 1.1.1 마이그레이션 문서](https://nhnent.dooray.com/share/posts/GIHoRQ8kTjSi7D4wQjUcWw)
     * 기존에 DB를 사용하던 Admin 기능들은 모두 GameAnvil Admin으로 이동되었습니다.
 

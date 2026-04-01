@@ -1,14 +1,14 @@
-## Game > GameAnvil > Unity基本開発ガイド > メッセージハンドリング
+## Game > GameAnvil > Unity 基礎開発ガイド > メッセージハンドリング
 
 ## メッセージハンドリング
 
-UserAgentの基本機能以外にRequest()とSend()を利用してメッセージをサーバーに送信できます。メッセージを送信するためにはメッセージを作成して登録する過程が必要です。
+GameAnvilUserControllerのRequestUser()とSendUser()メソッドを利用して、ユーザーが定義したメッセージをサーバーへ送信できます。メッセージを送信するためには、メッセージを生成して登録する過程が必要です。
 
-### メッセージの作成
+### メッセージ生成
 
-GameAnvilは基本メッセージプロトコルとして[ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/proto3)を使います。.protoファイルにメッセージを定義し、protocコンパイラで実際のクラスのソースコードを作成します。作成されたソースコードをプロジェクトに追加して使うことができます。 protocコンパイラはGameAnvil/protocフォルダで見つけることができます。 protocの詳しい説明は[こちら](https://developers.google.com/protocol-buffers/docs/proto3#generating)を参照してください。
+GameAnvilは基本メッセージプロトコルとして[ProtocolBuffers](https://developers.google.com/protocol-buffers/docs/proto3)を使用します。.protoファイルにメッセージを定義し、protocコンパイラで実際のクラスソースコードを生成することになります。生成されたソースコードをプロジェクトに追加して使用できます。protocに関する詳細な説明は[こちら](https://developers.google.com/protocol-buffers/docs/proto3#generating)を参照してください。
 
-メッセージを作るため、Assetsフォルダの下にprotocolsフォルダを作成し、次のようにmessages.protoファイルを作成します。
+次にメッセージを作成するために、Assetsフォルダの下にprotocolsフォルダを作成し、次のようにmessages.protoファイルを作成します。
 
 ```protobuf
 // messages.proto
@@ -37,85 +37,121 @@ message SampleReceive
 }
 ```
 
-そして、Windowsコマンドプロンプト(cmd)を実行してprotocolsフォルダに移動して下記のように入力します。
+そしてWindowsコマンドプロンプト(cmd)でprotocを利用してメッセージを生成します。
 
 ```
-../GameAnvil/protoc/protoc --csharp_out=./ messages.proto
+/protoc --csharp_out=./ messages.proto
 ```
 
-すると、protocolsフォルダにMessages.csファイルが作成されたことを確認できます。
+### メッセージ登録
 
-### メッセージの登録
-
-新しく作成したメッセージを使うためには、使うメッセージをProtocolManagerに事前に登録する必要があります。事前に登録しないと、動作しないか、誤動作したり、例外が発生する可能性があります。
+新しく生成したメッセージを使用するには、使用するメッセージをProtocolManagerにあらかじめ登録する必要があります。あらかじめ登録しないと、動作しなかったり誤作動したり、例外が発生する可能性があります。
 
 ```c#
-ProtocolManager.getInstance().RegisterProtocol(Messages.MessagesReflection.Descriptor);
+GameAnvilProtocolManager.RegisterProtocol(Messages.MessagesReflection.Descriptor);
 ```
 
-### メッセージの送信
+### メッセージ送信
 
-Request()でメッセージを送信すると、サーバーのレスポンスを待ちます。サーバーのレスポンスを待っている間、追加のRequest()はキューに保存され、サーバーのレスポンスを処理した後、順次処理することになります。サーバーのレスポンスを受け取って処理するため、コールバック引数を渡す必要があります。
+#### RequestUser
+
+RequestUser()でメッセージを送信し、レスポンスを受け取ることができます。
 
 ```c#
-/// <summary>
-/// ユーザーエージェントを使ってプロトバフメッセージを送信
-/// </summary>
-/// <typeparam name="T">プロトバフタイプのメッセージ</typeparam>
-/// <param name="agent">送信するユーザーエージェント</param>
-/// <param name="message">送信するプロトバフメッセージ</param>
-/// <param name="action">レスポンス処理する動作</param>
-static public void Request<T>(User.UserAgent agent, IMessage message, Action<User.UserAgent, T> action) where T : IMessage;
-
-/// <summary>
-/// ユーザーエージェントを使ってパケットを送信
-/// </summary>
-/// <param name="agent">送信するユーザーエージェント</param>
-/// <param name="packet">送信するパケット</param>
-/// <param name="action">レスポンス処理する動作</param>
-static public void Request(User.UserAgent agent, Packet packet, Action<User.UserAgent, Packet> action);
+public async void ManagerRequest()
+{
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    try
+    {
+        var (resultCode, response) = await userController.RequestUser<Protocol.SampleResponse>(new Protocol.SampleRequest());
+        if (resultCode == ResultCode.SUCCESS)
+        {
+            // 成功
+        } else
+        {
+            // 失敗
+        }
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
 ```
 
-Requestレスポンスを受けるためにリスナーを登録する方法もありますが、これは[Unity深層開発ガイド > メッセージハンドリング](../unity-advanced/unity-advanced-04-message-handling.md)で確認できます。
+RequestUser\<TProtoBuffer\>()は次のように1つの型パラメータと1つのパラメータを持っています。
 
-指定された時間内にレスポンスが来ない場合、タイムアウトを発生させて次のメッセージを処理します。タイムアウトはUserAgent.OnErrorCommandListenersリスナーとUserAgent.OnErrorCustomCommandListenersリスナーにErrorCode.TIMEOUTとして渡されます。
+| タイプ     | 名前         | 説明           |
+|----------|--------------|----------------|
+| 型パラメータ | TProtoBuffer | レスポンスとして受け取るメッセージタイプ |
+| IMessage | message   | サーバーへ送るメッセージ     |
 
-Send()でメッセージを送信すると、Send()の呼び出しと同時にサーバーに送信され、レスポンスを待たずに送信されます。 Request()のレスポンスを待っている間もSend()を使ったメッセージはすぐにサーバーに送信されます。
+レスポンスとしてErrorResult<ResultCode, TProtoBuffer>を返し、ErrorCodeフィールドの値を確認して成否を確認できます。RequestUser()が成功すればErrorCodeフィールドの値がResultCode.SUCCESSになり、そうでない場合はメッセージ送信に失敗したことになります。Dataフィールドを通じて応答メッセージを取得できます。
+
+ResultCodeの詳細は次のとおりです。
+
+| 名前              | 値 | 説明                                       |
+|-------------------|----|--------------------------------------------|
+| PARSE_ERROR       | -2 | パケット解析エラー。サーバーとクライアントのバージョンが異なる場合に発生する可能性があります。   |
+| TIMEOUT           | -1 | タイムアウト。リクエストに対するレスポンスが指定された時間内に来ません。           |
+| SYSTEM_ERROR      | 1  | サーバーシステムエラー。サーバーの不明なエラーにより失敗。               |
+| INVALID_PROTOCOL  | 2  | サーバーに登録されていないプロトコル。追加情報に登録されていないプロトコルが使用されました。 |
+| HANDLER_NOT_EXIST | 10 | 失敗。サーバーにハンドラがありません。                          |
+| HANDLER_ERROR     | 11 | 失敗。サーバーのハンドラで例外が発生しました。                       |
+| SUCCESS           | 0  | 成功                                       |
+
+#### SendUser
+
+SendUser()でメッセージを送信すると、SendUser()の呼び出し直後にサーバーへ送信され、別途のレスポンスは待ちません。
 
 ```c#
-Connector connector = new Connector();
-UserAgent user = GameAnvilConnector.getUserAgent();
-// UserAgentに伝達されるサーバーの通知を受けるリスナーを登録
-user.AddListener((UserAgent user, Messages.SampleReceive msg)=> { }); 
-
-// UserAgent Send
-Messages.SampleSend sampleSend = new Messages.SampleSend(); 
-user.Send(sampleSend);
-
-// UserAgent Request
-Messages.SampleRequest SampleRequest = new Messages.SampleRequest();
-user.Request(SampleRequest, (UserAgent user, Messages.SampleResponse res) => { }); // コールバック引数の伝達
+public async void ManagerSend()
+{
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    try
+    {
+        userController.SendUser(new Protocol.SampleSend());
+    } catch (Exception e)
+    {
+        // 例外
+    }
+}
 ```
 
-### カスタムパケット
+SendUser()は次のように1つのパラメータを持っています。
 
-パケットクラスを利用してProtocolBuffer以外の任意のデータをバイトストリームでシリアル化して使用できます。パケットの詳細は[Unity深層開発ガイド > パケット](../unity-advanced/unity-advanced-05-packet.md)を参照してください。
+| タイプ     | 名前    | 説明       |
+|----------|---------|------------|
+| IMessage | message | サーバーへ送るメッセージ |
+
+#### MessageCallback
+
+SendUser()で送るメッセージとは関係なく、サーバーから送られるメッセージを受信するためには、SetMessageCallback<TProtoBuffer>()を利用してコールバックを登録できます。登録されたコールバックを解除する時は、RemoveMessageCallback<TProtoBuffer>()を利用すればよいです。
 
 ```c#
-Connector connector = new Connector();
-UserAgent user = GameAnvilConnector.getUserAgent();
-int reqMsgId = 1;
-int resMsgId = 2;
-
-user.AddListener(resMsgId, (UserAgent user, Packet packet)=> { });
-
-Messages.SampleSend sampleSend = new Messages.SampleSend (); 
-// パケットクラス利用
-Packet sampleSendPacket = new Packet(reqMsgIndex, sampleSend.ToByteArray())
-user.Send(sampleSendPacket);
-
-Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
-// パケットクラス利用
-Packet sampleRequestPacket = new Packet(reqMsgIndex, sampleRequestPacket.ToByteArray())
-user.Request(sampleRequestPacket, (UserAgent user, Packet packet)=> { });
+public async void ManagerMessageCallback()
+{
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    userController.SetMessageCallback((GameAnvilUserController user, ResultCode resultCode, Protocol.SampleReceive receive) =>
+    {
+        return Task.CompletedTask;
+    });
+    
+    userController.RemoveMessageCallback<Protocol.SampleReceive>();
+}
 ```
+
+SetMessageCallback\<TProtoBuffer\>()は次のように1つの型パラメータと1つのパラメータを持っています。
+
+| タイプ                                                          | 名前         | 説明                       |
+|---------------------------------------------------------------|--------------|----------------------------|
+| 型パラメータ                                                         | TProtoBuffer | サーバーから受け取るメッセージタイプ           |
+| Func<GameAnvilUserController, ResultCode, TProtoBuffer, Task> | callback     | サーバーからメッセージが送られた時に呼び出されるコールバックメソッド |
+
+RemoveMessageCallback\<TProtoBuffer\>()は次のように1つの型パラメータを持っています。
+
+| タイプ    | 名前         | 説明              |
+|---------|--------------|-------------------|
+| 型パラメータ | TProtoBuffer | 登録したコールバックが受け取るメッセージタイプ    |

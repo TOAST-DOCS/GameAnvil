@@ -2,7 +2,7 @@
 
 ## GameAnvilUser
 
-는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고 받으며 여러 가지 콘텐츠를 구현할 수 있습니다.
+GameAnvilUser는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고 받으며 여러 가지 콘텐츠를 구현할 수 있습니다.
 
 GameAnvilManager는 기본적으로 간편 로그인 과정에서 생성된 하나의 GameAnvilUser를 관리하는 GameAnvilUserController를 제공합니다. LoginResult의 UserController를 통해서 얻을 수 있습니다.
 

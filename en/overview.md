@@ -1,94 +1,117 @@
 ## Game > GameAnvil > Overview
 
-GameAnvil is a high-performing, real-time game server engine based on Java. It aims to shorten the development time of game servers and increase their performance and reliability. With GameAnvil, you can quickly and easily develop real-time game servers while benefiting from the rich Java ecosystem. Even novice developers can easily pick up and start developing real-time game servers and link them with clients developed in Unity or CocosCreator. The GameAnvil system also comes with a full suite of tools to help you not only develop game servers, but also to test their functionality and performance, as well as operate and monitor them in the cloud.
+GameAnvil is a high-performing real-time game server engine based on Java. The goal is to reduce the game server's development time and increase performance and reliability.
+Build your real-time game servers easily and quickly while taking advantage of the rich Java ecosystem with GameAnvil. Even beginner developers can easily learn to develop a real-time game server to immediately integrate developing clients with Unity or Type Script, etc.
+In addition, the GameAnvil system not only provides development of game servers, but also feature/performance tests and even operations and monitoring in the cloud.
 
-## Major References
+## Official Reference Game
 
-Major games developed and serviced using GameAnvil are as follows.
+The following are the main games being developed and serviced using GameAnvil:
 
 ![gameanvil-references.png](https://static.toastoven.net/prod_gameanvil/images/gameanvil-references.png)
-## Characteristics
-GameAnvil's ultimate goal is to help even less experienced developers easily develop and service real-time content. In this respect, we want to improve code productivity and ease of use, and ease technical entry barriers for possible users. We also aim to maximize the advantages of cloud products for easy service operation.
 
-![gameanvil-references.png](https://static.toastoven.net/prod_gameanvil/images/overview-features.png)
+## Character
 
-## Recommended Games for Use
+GameAnvil's final goal is to make it super easy for even inexperienced developers to develop and service real-time content. In that sense, we want to increase code productivity and ease of use, and lower technical entry barriers for possible users.
+We also want to maximize the benefits of our cloud products to make it easier to operate our services.
 
-Currently GameAnvil is pretty much perfect for the following kinds of games.
+#### Increase Code Productivity
+
+* When you write simple and easy sequential codes, your engine takes it to perform high-performing asynchronous processing based on Virtual Thread.
+
+#### Reliable Performance
+
+* Provide optimal asynchronous processing and reliable performance based on a high-performance library.
+
+#### Easy to Use
+
+* We also support server management and monitoring on the cloud and even tests.
+
+#### Flexible Server Configuration
+
+* From small-scale games to large-scale games, the optimal configuration is possible according to the scale and characteristics of the service.
+
+## Recommended Games
+
+Currently, GameAnvil is almost perfect for the following types of games:
 
 * Casual game
-* Turn-based strategy game
+* Turn-based game
 * Board game
-* Indie games that require real-time content or DB storage
-* Other games that you want to easily create and service real-time content
+* Indie games that require real-time content or DB repository, etc.
+* Other games that want to easily write and serve real-time content
 
+## Integrate an Easy to Use Unit Development Environment
 
-## Integration of Easy Unity Development Environments
+Provide a package of **GameAnvil connectors** that can be easily integrated with the GameAnvil server. This package lets you connect an existing unit development environment directly to the GameAnvil server.
 
-Provides a **GameAnvil Connector** Unity package that can easily link with GameAnvil servers. This package allows you to link directly with GameAnvil servers in your existing Unity development environment.
+#### Fast Connection and Authentication
 
-#### Fast connectivity and authentication
-* Connecting and authenticating to servers can be handled quickly and easily through a dedicated API.
+* Connect and authenticate to the server easily and quickly via a dedicated API.
 
-#### Rich multiplayer API
-* All the features necessary to implement multi-play games such as room creation, room entry, and matchmaking are available as an API.
+#### Rich Multiplayer API
 
-#### Synchronization component support
-* Just by registering components, synchronization between users is possible without a separate server implementation.
-* Supports user-defined value synchronization in addition to coordinate synchronization, forced synchronization, and enumerator synchronization.
+* With API, you get all the features you need to implement multiplayer games, such as room creation, room input, and matchmaking.
 
-## Recommended Target Developers
+#### Support Synchronization Component
 
-![overview-target-developer.png](https://static.toastoven.net/prod_gameanvil/images/overview-target-developer.png)
+* Only registering components allows synchronization between users without a separate server implementation.
+* Support user-defined value synchronization in addition to coordinate synchronization, force synchronization, and animator synchronization.
 
+## Recommended Developers
 
-#### 1. developers who know **Java**
+Comfort and flexibility allowing easy development for even **less experienced developers** to provide reliable service.
 
-* It's the best choice for developers who can handle Java. You can focus solely on your content on the processing flow that the engine provides.
-* GameAnvil provides all APIs necessary for game server development, such as DB, Redis, and HTTP.
+| Easy Development | Reliability | Comfort | Flexibility |
+|-------------------------------------------------------------------------- |-------------------------------------------------------------------------------------------------------- |-------------------------------------------------------------------- |------------------------------------------------------------------ |
+| Java<br/>Virtual Thread<br/>Continuation<br/>Single Thread<br/>Lock Free | No SPOF<br/>Monitoring<br/>Load Balance<br/>Non-Stop Patchable<br/>Connection Recovery | PaaS<br/>Test Support<br/>Connectors<br/>Documentation<br/>Samples | Node<br/>Runtime Scalable<br/>TCP / IP<br/>WebSocket<br/>HTTP(S) | 
 
-#### 2. Developers who have developed game servers in other languages, such as **C++, C#**
+#### 1. Developers who know how to handle **Java**
 
-* Developers who have developed game servers in other languages can start developing content as soon as they learn the basic grammar of Java.
-* There are no problems other than the differences between Java and other languages. Try to develop content while learning Java. GameAnvil developers also switched from C++ to Java without much difficulty.
+* This is the best choice for developers familiar with Java. You can only focus on the content over the processing flow provided by the engine.
+* GameAnvil offers all the APIs required to develop a game server, such as DB, Redis, and HTTP.
 
-#### 3. **Junior or new developer who has never developed a game server**
+#### 2. Developer who has developed a game server in other languages, such as **C++, C#** and more.
 
-* Even if you've never developed a game server, you can easily and comfortably develop real-time content based on the guide documents and references provided.
-* The engine takes care of most of the features that the real game server needs to handle, so you can only focus on the content.
+* Developers that have developed a game server in a different language can immediately start developing content only when they learn the basic syntax of Java.
+* Besides the difference that comes from Java and other languages, there is no problem. Learn Java and continue with content development. GameAnvil has been transitioning from C++ to Java without much difficulty.
 
+#### 3. **A junior or beginner developer who has never developed a game server**
 
-## Games Not Yet Supported
+* Even if you have never developed a game server, you can easily and conveniently develop real-time content based on the guidelines and references provided.
+* Most functions that need to be handled on a real-world game server are led by the engine, so you can focus on content only.
 
-GameAnvil is still in the evolving phase, so we don't support the following styles of games yet, but all our developers are doing our best to support them as soon as possible.
+## Unsupported Games
 
-* MMO(RPG) game
+GameAnvil is still in the evolutionary phase. However, the following games are not supported yet. But now all developers are doing their best to get support within a quick time.
+
+* MMO (RPG) games
 * P2P-based games such as FPS or AOS
 
-## Server Configuration
+## Configure Reference Server
 
-| Game style | Maximum number of concurrent users | Whether Real-time Content Present or not | Use Matchmaking | \** Minimum VM Count | Rough configuration                                |
-| ----------- | ------------------- | ------------------ | --------------- | --------------- | ------------------------------------------- |
-| Casual      | 10000               | O                  | O               | 5               | Gateway x 2, Game x 2, and other x 1            |
-| Casual      | 10000               | X                  | X               | 3               | Gateway x 1, Game x 1, and other x 1            |
-| Indi        | 3000                | O                  | X               | 1               | All in One x 1                              |
-| Turn-based strategy game   | 200000              | O                  | O               | 49              | Gateway x 20, Game x 25, Loc x 3, and other x 1 |
+| Game Style | Max Concurrent Players | Live Content | Matchmaking | \** Minimum Number of VMs | Approximate Configuration |
+|--------|-------------|-------------|-------------|--------------|-------------------------------|
+| Casual | 10000 | Yes | Yes | 5 | 2 Gateways, 2 Game, 1 Other |
+| Casual | 10000 | X | X | 3 | 1 Gateway, 1 Game, 1 Other |
+| Indie | 3000 | Yes | X | 1 | All in One |
+| Turn-Based | 200000 | Yes | Yes | 49 | 20 Gateways, 25 Game, 3 Loc, 1 Other |
 
-** At any case, it's a rough estimate, depending on the volume of the actual content or the style of the game.
+** This is only an approximate figure. It may vary depending on the actual content volume or game style.
 
-** Depending on the specifications of the VM, the number may also vary. 
+** The number may also vary depending on the specifications of the VM.
 
-** Storage such as DB or Redis is excluded from the count.
+** Storages such as DB or Redis are excluded from the number.
 
-## Reference videos
+## Additional Videos
 
-* Can NDC 2021 [ Java develop real-time game server engine? Yes, it is possible ](https://youtu.be/kQyu5pAChcA)
-* NHN Cloud On 2022 Webinar [On.5 Online game development is easy and fast ](https://www.youtube.com/watch?v=Uv2a6fAU1xM)
+* NDC 2021 [Is it possible to develop a real-time game server engine using Java? Yes, it is possible.](https://youtu.be/kQyu5pAChcA)
+* NHN Cloud On 2022 Webinar [On.5 Easy and Fast Online Game Development](https://www.youtube.com/watch?v=Uv2a6fAU1xM)
 
-## Information on Processing of Personal Information
+## Information on Personal Information Processing
 
-In the process of using GameAnvil service, customer can collect/use the user's personal information, and in this case, the customer is obligated to comply with relevant laws and regulations such as the Personal Information Protection Act.
-In addition, in this process, there may be a consignment relationship between the customer and NHN Cloud regarding the processing of personal information. Customers in the position of a consignor may enter into a separate contract in writing with NHN Cloud, the consignee company, and may be notified by referring to the following information in the personal information processing policy operated by the customer.
+In the process of using GameAnvil services, customers may collect and use customers’ personal information, in which case the customer is bound by applicable law, such as the privacy law.
+In addition, a business trust relationship regarding the processing of personal information between the customers and NHN Cloud may occur during this process.
+Customers who are at the point of contact can enter a separate written consignment agreement with NHN Cloud, a consignment company, which is operated by customers, with reference to the privacy policy provided below:
 
-* Consignee: NHN Cloud Corp.
-* Consignment work: Provision of GameAnvil service
+* Subcontractor: NHN Cloud Co., Ltd.

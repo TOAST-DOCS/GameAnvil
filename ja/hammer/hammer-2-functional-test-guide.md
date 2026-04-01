@@ -1,486 +1,453 @@
 ## Game > GameAnvil > テスト開発ガイド > 機能テスト開発ガイド
 
-## Tester
+### Tester
 
-GameHammerを使うための基本モジュールです。基本設定とConnectionオブジェクトの管理を担当します。Testerオブジェクトを生成するには、まず、Builderを作成し、テストに必要なオプションを設定した後、`build()`を呼び出します。
+GameHammerを使用するための基本モジュールです。機能テストや性能テストを行うには、必須で1つのTesterオブジェクトを生成する必要があります。基本設定とConnectionオブジェクトの管理を担当します。
 
+#### オブジェクト生成
+
+Testerオブジェクトの生成は、以下のようにビルダーを通じて行えます。
+
+```java
+Tester tester = Tester.newBuilder().build();
 ```
+
+#### オプション追加
+
+オブジェクト生成時にビルダーを通じて詳細オプションを追加できます。
+
+```java
 Tester tester = Tester.newBuilder()
+                    .setDefaultPacketTimeoutSeconds(10)
+                    .setEnableTimeoutCallback(false)
+                    .setPingIntervalSeconds(3)
                     .addProtoBufClass(RPSGame.getDescriptor())
                     .build();
 ```
 
-オプション設定を外部から読み込むこともできます。 vmoption `config.file=PATH` でパスを指定するか、resourceフォルダの下にGameHammerConfg.jsonファイルを作成しておくと、TesterConfigLoaderで自動的に読み込みます。下記のような方法で、読み込んだオプション設定が適用されたTesterを作成できます。
+オプション設定を外部ファイルで作成し、ランタイムに読み込むこともできます。vmoption `config.file=PATH`でパスを指定するか、resourceフォルダ配下にGameHammerConfg.jsonファイルを作成しておくと、TesterConfigLoaderで自動的に読み込まれます。以下の方法で、読み込んだオプション設定が適用されたTesterを生成できます。
 
+```json
+{
+  "requestTimeoutSeconds": 10,
+  "isTimeoutCallbackEnabled": false,
+  "pingIntervalSeconds": 3
+}
 ```
+
+```java
 Tester tester = Tester.newBuilderWithConfig()
                     .addProtoBufClass(RPSGame.getDescriptor())
                     .build();
 ```
 
-## Connection
+### Connection
 
-ゲームサーバーとの接続、認証などの機能を処理して、ユーザーの管理を担当します。下記のようにTesterを使って作成します。
+Connectionはゲームサーバーとの接続、認証などの機能を処理し、ユーザーの管理を担当します。
 
+#### オブジェクト生成
+
+以下のようにTesterを通じて生成します。
+
+```java
+private static int uuid = 0;
+Connection connection = tester.createConnection(uuid++);
 ```
-Connection connection = tester.createConnection(uuid);
-```
 
-作成されたConnectionオブジェクトはTesterで管理され、UUIDで区分されます。すでに作成されているオブジェクトのUUIDが入力された場合は、そのオブジェクトを返します。
+生成されたConnectionオブジェクトはTesterでまとめて管理され、UUIDで区分されます。すでに生成されたオブジェクトのUUIDが入力されると、該当オブジェクトを返します。
 
-Connectionは次のような機能を提供します。
-
-### Connect
+#### Connect
 
 GameAnvilサーバーに接続します。
 
-```
+```java
 Future<ResultConnect> future = connection.connect(new RemoteInfo("127.0.0.1", 18200));
 ResultConnect resultConnect = futre.get(); // blocked
-if(resultConnect.isSuccess()){
+if (resultConnect.isSuccess()) {
     // connect success
 }
 ```
 
-`connect()`から返されたFutureの`get()`を呼び出すと、接続が成功するか失敗するまで待ってからResultConnectオブジェクトを返します。返されたResultConnectオブジェクトで結果を知ることができます。`connect()`の第二引数としてコールバックを渡して結果を受け取ることもできます。`connect()`以外の他のAPIもFutureを返して結果を待ったり、コールバックを渡して結果を受け取ることができます。
+`connect()`から返されたFutureの`get()`を呼び出すと、接続が成功するか失敗するまで待機した後、ResultConnectオブジェクトを返します。返されたResultConnectオブジェクトを通じて結果を知ることができます。
 
-### Authentication
+`connect()`の2番目の引数にコールバックを渡して結果を受け取ることもできます。
 
-GameAnvilサーバーに認証をリクエストします。認証に成功すると、GameAnvilコネクタの他の機能を使用できます。
+```java
+connection.connect(this::connectResponseListener, new RemoteInfo("127.0.0.1", 18200));
 
+public void connectResponseListener(ResultConnect resultConnect, ConsoleTestActor scenarioActor) {
+    if (resultConnect.isSuccess()) {
+        // connect success
+    }
+}
 ```
+
+`connect()`以外に他のAPIもFutureを返して結果を待つか、コールバックを渡して結果を受け取ることができます。このガイドではFuture方式を代表として説明します。
+
+#### Authentication
+
+GameAnvilサーバーに認証をリクエストします。認証に成功して初めてGameAnvilコネクタの他の機能を使用できます。
+
+```java
 Future<ResultAuthentication> future = connection.authentication(accountId, password, deviceId, payload);
 ResultAuthentication resultAuthentication = future.get(); // blocked
-if(resultAuthentication.isSuccess){
+if (resultAuthentication.isSuccess) {
     // authentication success
 }
 ```
 
-### GetChannelList
+#### GetChannelList
 
 指定したサービスで使用可能なチャンネルリストをリクエストします。
 
-```
+```java
 Future<ResultChannelList> future = connection.getChannelList(serviceName);
 ResultChannelList resultChannelList = future.get(); // blocked
-if(resultChannelList.isSuccess){
-    // authentication success
+if (resultChannelList.isSuccess) {
+    // get channel list success
 }
 ```
 
-### GetChannelInfo
+#### GetChannelInfo
 
 指定したチャンネルの情報をリクエストします。
 
-```
-Future<ResultChannelList> future = connection.getChannelList(serviceName, String channelId);
-ResultChannelList resultChannelList = future.get(); // blocked
-if(resultChannelList.isSuccess){
-    // authentication success
+```java
+Future<ResultChannelInfo> future = connection.getChannelInfo(serviceName, String channelId);
+ResultChannelInfo resultChannelInfo = future.get(); // blocked
+if (resultChannelInfo.isSuccess) {
+    // get channel info success
 }
 ```
 
-### Request
+#### Request
 
-サーバーにメッセージを送って、レスポンスを待ちます。
+サーバーへメッセージを送信し、レスポンスを待ちます。
 
-```
+```java
+GeneratedMessageV3 message;
+
 Future<PacketResult> future = connection.request(message);
 PacketResult packetResult = future.get(); // blocked
-if(packetResult.isSuccess()){
+if (packetResult.isSuccess()) {
     // request success
 }
 ```
 
-### Send
+#### Send
 
-サーバーにメッセージを送ります。
+サーバーへメッセージを送信します。
 
-```
+```java
+GeneratedMessageV3 message;
+
 connection.send(message);
 ```
 
-### Close
+#### Close
 
-接続を切ります。 接続終了時に作成したユーザーを全てログアウトするには、引数にtrueを入力します。
+接続を切断します。接続終了時に生成したユーザーを全てログアウト処理するには、引数にtrueを入力します。
 
-```
+```java
 connection.close(true);
 ```
 
-### WaitForAdminKickoutNoti
+#### WaitForAdminKickoutNoti
 
-管理者の強制終了通知が来るまで待ちます。管理者が強制終了する場合、通知されます。
+Admin強制終了通知を受け取るまで待ちます。Adminから強制終了する場合、通知が送信されます。
 
-```
-Future<ResultAdminKickoutNoti> future = connection.waitForAdminKickoutNoti()
+```java
+Future<ResultAdminKickoutNoti> future = connection.waitForAdminKickoutNoti();
 ResultAdminKickoutNoti resultAdminKickoutNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultAdminKickoutNoti 
 ```
 
-### WaitForForceCloseNoti
+#### WaitForDisconnect
 
-強制終了通知が来るまで待ちます。サーバーから`BaseUser.closeConnection()`を呼び出したり、Authenticationが失敗したり、同じアカウントで重複ログインをしたり、UserTrasnferの途中で例外が発生した場合などに渡されます。
+ネットワーク接続切断通知を受け取るまで待ちます。サーバーで`IConnection::close()`を呼び出すか、ソケットエラーが発生するか、`Connection::close()`, `Tester::Close()`を呼び出す場合に送信されます。
 
-```
-Future<ResultForceCloseNoti> future = connection.waitForForceCloseNoti();
-ResultForceCloseNoti resultForceCloseNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultForceCloseNoti 
-```
-
-### WaitForDisconnect
-
-ネットワーク切断通知を受け取るまで待ちます。サーバーから`BaseConnection.close()`を呼び出したり、ソケットエラーが発生したり、`Connection.close()`, `Tester.Close()` を呼び出した場合に渡されます。
-
-```
+```java
 Future<ResultDisconnect> future = connection.waitForDisconnect();
 ResultDisconnect resultDisconnect = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultDisconnect 
 ```
 
-## User
+### User
 
-ログインをはじめルームの作成、入場、マッチングなどゲームに必要な主要機能を担当します。次のようにUserを作成できます。
+ログインをはじめ、ルーム生成、入室、マッチングなどゲームに必要な主要機能を担当します。次のようにUserを生成できます。
 
-```
+```java
 User user = connection.getUserAgent(serviceName, subId);
-if(user == null){
+if (user == null) {
     user = connection.createUser(serviceName, subId);
 }
 ```
 
-`Connection.getUserAgent()`でServiceNameとSubIdでマッチングするUserがいるか確認し、いない場合は`Connection.createUser()`で新しいUserを作成します。 
+`Connection::getUserAgent()`でServiceNameとSubIdでマッチングするUserがいるか確認し、いない場合は`Connection::createUser()`で新しいUserを生成します。
 
 Userは次のような機能を提供します。
 
-### Login
+#### Login
 
-指定したユーザータイプで指定したチャンネルにログインします。ユーザータイプとチャンネルはサーバーで設定した文字列を使います。
+指定したユーザータイプで指定したチャンネルにログインします。ユーザータイプとチャンネルはサーバーで設定した文字列を使用します。
 
-```
-Future<ResultLogin> future = user.login(resultLogin -> {
-    if(resultLogin.isSuccess()){
-        // login success
-    }
-}, userType, channelId, payload);
-
+```java
+Future<ResultLogin> future = user.login(userType, channelId, payload);
 ResultLogin resultLogin = future.get(); // blocked
-if(resultLogin.isSuccess()){
+if (resultLogin.isSuccess()) {
     // login success
 }
 ```
 
-### Logout
+#### Logout
 
 ログインしたチャンネルからログアウトします。
 
-```
-Future<ResultLogout> future = user.logout(resultLogout -> {
-    if(resultLogout.isSuccess()){
-        // logout success
-    }
-}, userType, channelId, payload);
-
+```java
+Future<ResultLogout> future = user.logout(userType, channelId, payload);
 ResultLogout resultLogout = future.get(); // blocked
-if(resultLogout.isSuccess()){
+if (resultLogout.isSuccess()) {
     // logout success
 }
 ```
 
-### WaitForForceLogoutNoti
+#### WaitForForceLogoutNoti
 
-強制ログアウト通知を受け取るまで待ちます。サーバーで`BaseUser.kickout()` を呼び出す場合に渡されます。
+強制ログアウト通知を受け取るまで待ちます。サーバーで`IUser::kickout()`を呼び出す場合に送信されます。
 
-```
+```java
 Future<ResultForceLogoutNoti> future = connection.waitForForceLogoutNoti();
 ResultForceLogoutNoti resultForceLogoutNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultForceLogoutNoti 
 ```
 
-### CreateRoom
+#### CreateRoom
 
-指定したルームタイプで指定した名前のルームを作成し、そのルームに入場します。ルームタイプはサーバーで設定した文字列を使います。
+指定したルームタイプで指定した名前のルームを生成し、そのルームに入室します。ルームタイプはサーバーで設定した文字列を使用します。
 
-```
-Future<ResultCreateRoom> future = user.createRoom(resultCreateRoom -> {
-    if(resultCreateRoom.isSuccess()){
-        // createRoom success
-    }
-}, roomType, roomName, payload);
-
+```java
+Future<ResultCreateRoom> future = user.createRoom(roomType, roomName, payload);
 ResultCreateRoom resultCreateRoom = future.get(); // blocked
-if(resultCreateRoom.isSuccess()){
+if (resultCreateRoom.isSuccess()) {
     // createRoom success
 }
 ```
 
-### JoinRoom
+#### JoinRoom
 
 指定したIDのルームに入室します。指定したIDのルームがない場合は失敗します。
 
-```
-Future<ResultJoinRoom> future = user.joinRoom(resultJoinRoom -> {
-    if(resultJoinRoom.isSuccess()){
-        // joinRoom success
-    }
-}, roomType, roomId, payload);
+```java
+Future<ResultJoinRoom> future = user.joinRoom(roomType, roomId, payload);
 
 ResultJoinRoom resultJoinRoom = future.get(); // blocked
-if(resultJoinRoom.isSuccess()){
+if (resultJoinRoom.isSuccess()) {
     // joinRoom success
 }
 ```
 
-### NamedRoom
+#### NamedRoom
 
-指定した名前のルームに入場します。指定した名前のルームがない場合、ルームを作成してそのルームに入場します。パーティーマッチングのためのルームの場合はusePartyをtrueにします。
+指定した名前のルームに入室します。指定した名前のルームがない場合はルームを生成し、そのルームに入室します。パーティーマッチングのためのルームである場合はusePartyにtrueを入力します。
 
-```
-Future<ResultNamedRoom> future = user.namedRoom(resultNamedRoom -> {
-    if(resultNamedRoom.isSuccess()){
-        // namedRoom success
-    }
-}, roomType, roomName, useParty, payload);
-
+```java
+Future<ResultNamedRoom> future = user.namedRoom(roomType, roomName, useParty, payload);
 ResultNamedRoom resultNamedRoom = future.get(); // blocked
-if(resultNamedRoom.isSuccess()){
+if (resultNamedRoom.isSuccess()) {
     // namedRoom success
 }
 ```
 
-### LeaveRoom
+#### LeaveRoom
 
-現在のルームから退室します。
+現在のルームから退場します。
 
-```
-Future<ResultLeaveRoom> future = user.leaveRoom(resultLeaveRoom -> {
-    if(resultLeaveRoom.isSuccess()){
-        // leaveRoom success
-    }
-}, payload);
-
+```java
+Future<ResultLeaveRoom> future = user.leaveRoom(payload);
 ResultLeaveRoom resultLeaveRoom = future.get(); // blocked
-if(resultLeaveRoom.isSuccess()){
+if (resultLeaveRoom.isSuccess()) {
     // leaveRoom success
 }
 ```
 
-### WaitForForceLeaveRoomNoti
+#### WaitForForceLeaveRoomNoti
 
-強制退室通知が来るまで待ちます。サーバーでBaseUser.kickoutRoom()を呼び出す場合に渡されます。
+ルーム強制退場通知を受け取るまで待ちます。サーバーでBaseUser.kickoutRoom()を呼び出す場合に送信されます。
 
-```
+```java
 Future<ResultForceLeaveRoomNoti> future = connection.waitForForceLeaveRoomNoti();
 ResultForceLeaveRoomNoti resultForceLeaveRoomNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultForceLeaveRoomNoti 
 ```
 
-### MatchUserStart
+#### MatchUserStart
 
-ユーザーのマッチメイキングをリクエストします。すでにルームに入場している場合など、サーバーの条件によってリクエストが失敗する場合があります。 WaitForMatchUserDoneNotiでマッチ成功通知、WaitForMatchUserTimeoutNotiでマッチタイムアウト通知を受け取ることができます。
+ユーザーマッチメイキングをリクエストします。すでにルームに入室している場合など、サーバーの条件によってリクエストが失敗することがあります。WaitForMatchUserDoneNotiを通じてマッチ成功通知、WaitForMatchUserTimeoutNotiを通じてマッチタイムアウト通知を受け取ることができます。
 
-```
-Future<ResultMatchUserStart> future = user.matchUserStart(resultMatchUserStart -> {
-    if(resultMatchUserStart.isSuccess()){
-        // matchUserStart success
-    }
-}, roomType, payload);
-
+```java
+Future<ResultMatchUserStart> future = user.matchUserStart(roomType, payload);
 ResultMatchUserStart resultMatchUserStart = future.get(); // blocked
-if(resultMatchUserStart.isSuccess()){
+if (resultMatchUserStart.isSuccess()) {
     // matchUserStart success
 }
 ```
 
-### MatchUserCancel
+#### MatchUserCancel
 
-ユーザーのマッチメイキングリクエストをキャンセルします。マッチリクエスト中でない場合や、すでにマッチングが成功した場合、タイムアウトが発生した場合は、失敗することがあります。
+ユーザーマッチメイキングリクエストをキャンセルします。マッチリクエスト中でない場合、すでにマッチングが成功しているかタイムアウトが発生している場合は失敗することがあります。
 
-```
-Future<ResultMatchUserCancel> future = user.matchUserCancel(resultMatchUserCancel -> {
-    if(resultMatchUserCancel.isSuccess()){
-        // matchUserCancel success
-    }
-}, roomType);
-
+```java
+Future<ResultMatchUserCancel> future = user.matchUserCancel(roomType);
 ResultMatchUserCancel resultMatchUserCancel = future.get(); // blocked
-if(resultMatchUserCancel.isSuccess()){
+if (resultMatchUserCancel.isSuccess()) {
     // matchUserCancel success
 }
 ```
 
-### WaitForMatchUserDoneNoti
+#### WaitForMatchUserDoneNoti
 
-ユーザーマッチメイキングまたはパーティーマッチメイキング完了通知を受け取るまで待ちます。 
+ユーザーマッチメイキングまたはパーティーマッチメイキング完了通知を受け取るまで待ちます。
 
-```
+```java
 Future<ResultMatchUserDone> future = connection.waitForMatchUserDoneNoti();
 ResultMatchUserDone resultMatchUserDone = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultMatchUserDone 
 ```
 
-### WaitForMatchUserTimeoutNoti
+#### WaitForMatchUserTimeoutNoti
 
-ユーザーマッチメイキングまたはパーティーマッチメイキングのタイムアウト通知を受け取るまで待ちます。 
+ユーザーマッチメイキングまたはパーティーマッチメイキングに対するタイムアウト通知を受け取るまで待ちます。
 
-```
+```java
 Future<ResultMatchUserTimeout> future = connection.waitForMatchUserTimeoutNoti();
 ResultMatchUserTimeout resultMatchUserTimeout = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultMatchUserTimeout 
 ```
 
-### MatchPartyStart
+#### MatchPartyStart
 
-パーティーマッチメイキングをリクエストします。パーティーマッチメイキングのためのルームに入場した状態でリクエストできます。WaitForMatchUserDoneNotiでマッチ成功通知、WaitForMatchUserTimeoutNotiでマッチタイムアウト通知を受け取ることができます。
+パーティーマッチメイキングをリクエストします。パーティーマッチメイキングのためのルームに入室した状態でリクエストできます。WaitForMatchUserDoneNotiを通じてマッチ成功通知、WaitForMatchUserTimeoutNotiを通じてマッチタイムアウト通知を受け取ることができます。
 
-```
-Future<ResultMatchPartyStart> future = user.matchPartyStart(resultMatchPartyStart -> {
-    if(resultMatchPartyStart.isSuccess()){
-        // matchPartyStart success
-    }
-}, roomType, payload);
-
+```java
+Future<ResultMatchPartyStart> future = user.matchPartyStart(roomType, payload);
 ResultMatchPartyStart resultMatchPartyStart = future.get(); // blocked
-if(resultMatchPartyStart.isSuccess()){
+if (resultMatchPartyStart.isSuccess()) {
     // matchPartyStart success
 }
 ```
 
-### WaitForMatchPartyStartNoti
+#### WaitForMatchPartyStartNoti
 
-パーティーマッチメイキング開始通知を受け取るまで待ちます。パーティーマッチメイキングのためのルームで他の人がパーティーマッチメイキングを開始した場合、通知されます。
+パーティーマッチメイキング開始通知を受け取るまで待ちます。パーティーマッチメイキングのためのルームで他の人がパーティーマッチメイキングを開始した場合に送信されます。
 
-```
+```java
 Future<ResultMatchPartyStart> future = connection.waitForMatchPartyStartNoti();
 ResultMatchPartyStart resultMatchPartyStart = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultMatchPartyStart 
 ```
 
-### MatchPartyCancel
+#### MatchPartyCancel
 
-パーティーマッチメイキングのリクエストをキャンセルします。パーティーマッチメイキング中でない場合や、すでにパーティーマッチメイキングに成功した場合、またはタイムアウトが発生した場合は失敗することがあります。
+パーティーマッチメイキングリクエストをキャンセルします。パーティーマッチメイキング中でない場合、すでにパーティーマッチメイキングに成功しているかタイムアウトが発生した場合は失敗することがあります。
 
-```
-Future<ResultMatchPartyCancel> future = user.matchPartyCancel(resultMatchPartyCancel -> {
-    if(resultMatchPartyCancel.isSuccess()){
-        // matchPartyCancel success
-    }
-}, roomType);
-
+```java
+Future<ResultMatchPartyCancel> future = user.matchPartyCancel(roomType);
 ResultMatchPartyCancel resultMatchPartyCancel = future.get(); // blocked
-if(resultMatchPartyCancel.isSuccess()){
+if (resultMatchPartyCancel.isSuccess()) {
     // matchPartyCancel success
 }
 ```
 
-### WaitForMatchPartyCancelNoti
+#### WaitForMatchPartyCancelNoti
 
-パーティーマッチメイキングのキャンセル通知を受け取るまで待ちます。パーティーマッチメイキング中に他の人がパーティーマッチメイキングをキャンセルした場合、通知されます。
+パーティーマッチメイキングキャンセル通知を受け取るまで待ちます。パーティーマッチメイキング中に他の人がパーティーマッチメイキングをキャンセルした場合に送信されます。
 
-```
+```java
 Future<ResultMatchPartyCancel> future = connection.waitForMatchPartyCancelNoti();
 ResultMatchPartyCancel resultMatchPartyCancel = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultMatchPartyCancel 
 ```
 
-### MatchRoom
+#### MatchRoom
 
-ルームのマッチメイキングをリクエストします。ルームがない場合、任意のルームを作成してそのルームに入場することもできます。
+ルームマッチメイキングをリクエストします。ルームがない場合は任意のルームを生成し、そのルームに入室することもできます。
 
-```
-Future<ResultMatchRoom> future = user.matchRoom(resultMatchRoom -> {
-    if(resultMatchRoom.isSuccess()){
-        // matchRoom success
-    }
-}, roomType);
-
+```java
+Future<ResultMatchRoom> future = user.matchRoom(roomType);
 ResultMatchRoom resultMatchRoom = future.get(); // blocked
-if(resultMatchRoom.isSuccess()){
+if (resultMatchRoom.isSuccess()) {
     // matchRoom success
 }
 ```
 
-### MoveChannel
+#### MoveChannel
 
 指定したチャンネルに移動します。
 
-```
-Future<ResultMoveChannel> future = user.moveChannel(resultMoveChannel -> {
-    if(resultMoveChannel.isSuccess()){
-        // moveChannel success
-    }
-}, roomType);
-
+```java
+Future<ResultMoveChannel> future = user.moveChannel(roomType);
 ResultMoveChannel resultMoveChannel = future.get(); // blocked
-if(resultMoveChannel.isSuccess()){
+if (resultMoveChannel.isSuccess()) {
     // moveChannel success
 }
 ```
 
-### WaitForMoveChannelNoti
+#### WaitForMoveChannelNoti
 
-チャンネル移動通知を受け取るまで待ちます。ルーム入場、マッチメイキングなどの理由でチャンネルを移動すると通知されます。
+チャンネル移動通知を受け取るまで待ちます。ルーム入室、マッチメイキングなどの理由でチャンネルを移動することになると送信されます。
 
-```
+```java
 Future<ResultMoveChannelNoti> future = connection.waitForMoveChannelNoti();
 ResultMoveChannelNoti resultMoveChannelNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultMoveChannelNoti 
 ```
 
-### Request
+#### Request
 
-サーバーにメッセージを送って、レスポンスを待ちます。
+サーバーへメッセージを送信し、レスポンスを待ちます。
 
-```
-Future<PacketResult> future = user.request(packetResult -> {
-    if(packetResult.isSuccess()){
-        // request success
-    }
-}, message);
-
+```java
+Future<PacketResult> future = user.request(message);
 PacketResult packetResult = future.get(); // blocked
 if(packetResult.isSuccess()){
     // request success
 }
 ```
 
-### Send
+#### Send
 
-サーバーにメッセージを送ります。
+サーバーへメッセージを送信します。
 
-```
+```java
 user.send(message);
 ```
 
-### WaitForNotice
+#### WaitForNotice
 
-告知の通知を受け取るまで待ちます。管理者から告知を送ったり、REST APIを使って告知を送った場合に伝達されます。
+お知らせ通知を受け取るまで待ちます。Adminからお知らせを送信するか、REST APIを利用してお知らせを送信する場合に送信されます。
 
-```
+```java
 Future<ResultNotice> future = connection.waitForMoveChannelNoti();
 ResultNotice resultNotice = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
-// resultNotice 
 ```
 
-## テストコードの作成
+### ユニットテストコード作成
 
-### 基本設定
+JUnitを利用してテストコードを作成する方法を代表として説明します。
 
-JUnitを使ってテストコードを作成する時、次のようにBeforeClass、AfterClass、Afterコードを作成します。
+#### 基本設定
 
-```
+次のようにBeforeClass、AfterClass、Afterコードを作成します。
+
+beforeClass、afterClassはテストの開始時点と終了時点に一度だけ呼び出されます。テストを進めるために必須となるTesterオブジェクトをこの時に生成して整理します。
+
+各テストケース終了時に呼び出されるafterで`Tester::closeAllConnections()`を実行し、先行テストで使用したユーザーが残って次のテストに影響を与えるのを防ぐことができます。
+
+```java
 public class TestWithGameHammer {
     static Tester tester;
 
     @BeforeClass
     public static void beforeClass() {
         tester = Tester.newBuilder()
-                    .addProtoBufClass(0, RPSGame.getDescriptor())
+                    .addProtoBufClass(RPSGame.getDescriptor())
                     .build();
     }
 
     @Before
     public void before() {
+
     }
 
     @After
@@ -496,7 +463,8 @@ public class TestWithGameHammer {
 
     @Test
     public void connectTest() {
-        ResultConnect resultConnect = connect(connection);
+        Connection connection = tester.createConnection(0);
+        ResultConnect resultConnect = connection.connect(connection.getConfig().getNextTargetServer()).get(1000, TimeUnit.MILLISECONDS);
         assertEquals(ResultCodeConnect.CONNECT_SUCCESS, resultConnect.getResultCode());
     }
 
@@ -506,15 +474,13 @@ public class TestWithGameHammer {
     }
 ```
 
-このように書くと、先行テストで使ったユーザーが残って次のテストに影響を与えるのを防ぐことができます。
+#### Request/Responseテスト
 
-### Request/Responseテスト
+クライアントからRequestを送信する場合、サーバーでは必ずResponseを送信する必要があります。レスポンスを送信しないとtimeoutが発生します。GameAnvilコネクタが提供するAPIの大部分がこのようなRequest/Response方式であり、GameHammerでもこのようなRequest/Response方式のテストをサポートしています。
 
-GameHammerを使ったテストコードは大きく2つのタイプに分けられます。一つ目はRequest/Response形式のテストコードです。クライアントでRequestを送る場合、サーバーは必ずResponseを送る必要があります。レスポンスを送らない場合、timeoutが発生します。GameAnvilコネクタが提供するAPIのほとんどがこのようなRequest/Response方式であり、GameHammerでもこのようなRequest/Response方式のテストをサポートします。
+例えばConnectionのconnectに対するテストコードは、次のように作成できます。
 
-例えば、Connectionのconnectに対するテストコードは次のように書くことができます。
-
-```
+```java
 @Test
 public void Connect() {
     Connection connection = tester.createConnection(uuid);
@@ -527,37 +493,39 @@ public void Connect() {
 }
 ```
 
-`connection.connect()` を呼び出してサーバーに接続します。この時、返された `Future` の `get()` を呼び出すと `connection.connect()` が完了するまで待って、完了したらその結果である `ResultConnect` を返します。 ここで返された `ResultConnect` を利用して成功したかどうかを判断できます。
+`Connection::connect()`を呼び出してサーバーに接続します。この時返された`Future::get()`を呼び出すとコネクトが完了するまで待機し、完了するとその結果である`ResultConnect`オブジェクトを返します。ここで返された`ResultConnect`オブジェクトを利用して成否を判断できます。
 
-もう一つの例としてゲームで使うメッセージに対するRequest/Response方式のテストコードは次のように書くことができます。
+もう1つの例として、ゲームで使用するメッセージに対するRequest/Response方式のテストコードは、次のように作成できます。
 
-```
+```java
 @Test
 public void RequestTest() {
     Connection connection = tester.createConnection(uuid);
     // assume aleady connected.
 
     Messages.Request request = Messages.Request.newBuilder().build();
+
     Future<PacketResult> future = connection.request(request);
     PacketResult packetResult = future.get(); // blocked
     Assert.assertTrue("Response fail", packetResult.isSuccess());
+
     Messages.Response response = Messages.Response.parseFrom(packetResult.getStream());
 
     // more test code
 }
 ```
 
-まずメッセージを作成し、これを `connection.request()` の引数としてサーバーに送信します。この時、返された `Future` の `get()` を呼び出すと、サーバーからレスポンスが来るかタイムアウトが発生するまで待ち、レスポンスが来るかタイムアウトが発生したら `PacketResult` を返します。ここで返された `PacketResult` を使って成功したかどうかを判断できます。成功したら `PacketResult.getStream()` を使ってメッセージを解析して内容を確認できます。
+まずメッセージを作成し、これを`Connection::request()`の引数に入れてサーバーへ送信します。この時返された`Future`の`Future::get()`を呼び出すと、サーバーから応答があるかタイムアウトが発生するまで待機し、終了すると`PacketResult`を返します。ここで返された`PacketResult`を利用して成否を判断できます。成功した場合、`PacketResult::getStream()`を利用してメッセージをパースし、内容を確認できます。
 
-Connection、UserのAPIのうち、Futureを返すAPIは全てこの方法でテストできます。
+`Connection`、`User`のAPIのうち、`Future`を返すAPIは全てこの方式を使用してテストできます。
 
-### Send/Receive
+#### Send/Receiveテスト
 
-クライアントはSendを送ってレスポンスを待たないです。 そして、サーバーでもクライアントの動作と関係なくSendを送ることができます。テストは次のように書くことができます。
+Request/Responseとは異なり、Sendは送信後にレスポンスを待ちません。そしてサーバーでもクライアントの動作に関係なくSendを送信できます。テストは次のように作成できます。
 
-```
+```java
 @Test
-public void RequestTest() {
+public void SendTest() {
     Connection connection = tester.createConnection(uuid);
     // assume aleady connected.
 
@@ -566,7 +534,8 @@ public void RequestTest() {
 
     Future<PacketResult> future = connection.waitFor(Messages.SendToClient.getDescription());
     PacketResult packetResult = future.get(3000, TimeUnit.MILLISECONDS); // blocked
-    Assert.assertTrue("receive fail", packetResult.isSuccess());
+    Assert.assertTrue("Receive fail", packetResult.isSuccess());
+
     Messages.SendToClient sendToClient = Messages.SendToClient.parseFrom(packetResult.getStream());
 
     // more test code
