@@ -3,7 +3,7 @@
 #### Change
 ##### Java 25 실행 지원
 * JDK 25에서 기존 사용했던 직렬화 라이브러리의 오류로 자동 직렬화 기능이 제거되었습니다.
-* Protobuffer 를 활용한 직렬화 기능을 추가하여 IChannelUserInfo, IChannelRoomInfo 인터페이스에 serialize, copy 메서드가 추가되었습니다.
+* Protobuffer를 활용한 직렬화 기능을 추가하여 IChannelUserInfo, IChannelRoomInfo 인터페이스에 serialize, copy 메서드가 추가되었습니다.
 * 직접 Protobuffer 를 활용하는 것이 효율적이지만 간단한 코드의 직렬화에 도움을 줄 수 있는 com.nhn.gameanvil.serializer.ProtoSerializer 패키지를 추가했습니다. 
   * ProtoSerializer.ObjectListCodec.writer()
   * ProtoSerializer.ObjectListCodec.reader(byteString); 
