@@ -59,7 +59,7 @@ public void Instanticate()
 
 ### 게임 중 방에 새 유저가 입장한 경우 게임 오브젝트 생성 동기화
 
-플레이중인 방에 새 유저가 입장한 경우 입장과 동시에 방에서 플레이 중이던 다른 유저들의 동기화 데이터를 전송받게 됩니다. 이렇게 전송된 동기화 데이터를 이용해 다른 유저들의 게임 오브젝트를 자동으로 생성하고 동기화합니다.
+플레이 중인 방에 새 유저가 입장한 경우 입장과 동시에 방에서 플레이 중이던 다른 유저들의 동기화 데이터를 전송 받게 됩니다. 이렇게 전송된 동기화 데이터를 이용해 다른 유저들의 게임 오브젝트를 자동으로 생성하고 동기화합니다.
 
 하지만 방에 입장한 직후 바로 게임 오브젝트를 생성하고 싶지 않을 수 있습니다. 이런 경우에는 SyncController의 Lazy Loading 옵션을 false로 설정하고, 원하는 시점에 SyncController.InstantiateSyncObject()를 호출하여 다른 유저들의 게임 오브젝트를 생성할 수 있습니다.
 ![](https://static.toastoven.net/prod_gameanvil/files/v2_2/unity-basic/05-sync/03-lazy-loading.png)

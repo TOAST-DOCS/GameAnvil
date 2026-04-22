@@ -477,7 +477,7 @@ public class BasicUser extends BaseGameUser {
 
 ### Room
 
-로그인 가능한 유저 구현을 완료했습니다. 이제 게임 룸을 구현합니다. 유저 생성 방법과 마찬가지로 **GameAnvil Room** 파일 템플릿을 이용해 BaseGameRoom 를 상속하여 클래스를 생성합니다. **File name**에는 **BasicRoom**을, **Service name**에는 **BASIC_SERVICE**를, **Room type**에는 **ROOM_TYPE_BASIC**을, **User**에는 이전 단계에서 생성한 BaseGameUser를 상속한 클래스의 클래스명 **BasicUser**를 입력합니다.
+로그인 가능한 유저 구현을 완료했습니다. 이제 게임 룸을 구현합니다. 유저 생성 방법과 마찬가지로 **GameAnvil Room** 파일 템플릿을 이용해 BaseGameRoom를 상속하여 클래스를 생성합니다. **File name**에는 **BasicRoom**을, **Service name**에는 **BASIC_SERVICE**를, **Room type**에는 **ROOM_TYPE_BASIC**을, **User**에는 이전 단계에서 생성한 BaseGameUser를 상속한 클래스의 클래스명 **BasicUser**를 입력합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_2/tutorial/advanced-tutorial/17_create_room.png)
 
@@ -487,7 +487,7 @@ public class BasicUser extends BaseGameUser {
 - onJoinRoom: 다른 유저가 생성한 방에 입장을 요청할 때 실행됩니다. 다른 콜백들과 마찬가지로 방 입장을 요청한 유저 정보와 함께 방 입장 시 클라이언트에서 전달한 추가 정보를 제공하므로 이 정보를 토대로 방 입장을 허용할 것인지 여부를 결정해 반환해서 구현합니다.
 - onLeaveRoom: 유저가 방에서 퇴장을 요청할 때 실행됩니다. 다른 콜백들과 마찬가지로 방 퇴장으로 요청한 유저 정보와 함께 방 퇴장 요청 시에 같이 전달한 추가 정보를 제공하므로 이 정보를 토대로 방 퇴장을 허용할 것인지 여부를 결정해 반환해서 구현합니다.
 
-방에 속해있는 유저에 대한 정보는 **getAllUsers()** 함수를 통해 얻을 수 있습니다. 이를 활용하여 방에 속해있는 모든 유저에게 동일한 패킷을 전달하는 **broadcast()** 함수를 추가합니다. 또한 방 매칭 정보를 저장할 필드와, 퍼즐 위치 동기화를 위한 자료구조를 추가합니다.
+방에 속해 있는 유저에 대한 정보는 **getAllUsers()** 함수를 통해 얻을 수 있습니다. 이를 활용하여 방에 속해 있는 모든 유저에게 동일한 패킷을 전달하는 **broadcast()** 함수를 추가합니다. 또한 방 매칭 정보를 저장할 필드와, 퍼즐 위치 동기화를 위한 자료 구조를 추가합니다.
 
 그리고 **onInit** 콜백에서 방 매칭 정보 객체를 생성하고, **onCreateRoom/onJoinRoom** 콜백에서 각각 방 매칭 정보를 등록하고 업데이트하는 코드를 추가합니다. 이를 통해 해당 방이 매칭 목록에 추가되도록 하여, 다른 유저가 해당 방으로 매칭될 수 있도록 합니다.
 

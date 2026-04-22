@@ -4,7 +4,7 @@
 ##### Java 25 실행 지원
 * JDK 25에서 기존 사용했던 직렬화 라이브러리의 오류로 자동 직렬화 기능이 제거되었습니다.
 * Protobuffer를 활용한 직렬화 기능을 추가하여 IChannelUserInfo, IChannelRoomInfo 인터페이스에 serialize, copy 메서드가 추가되었습니다.
-* 직접 Protobuffer 를 활용하는 것이 효율적이지만 간단한 코드의 직렬화에 도움을 줄 수 있는 com.nhn.gameanvil.serializer.ProtoSerializer 패키지를 추가했습니다. 
+* 직접 Protobuffer를 활용하는 것이 효율적이지만 간단한 코드의 직렬화에 도움을 줄 수 있는 com.nhn.gameanvil.serializer.ProtoSerializer 패키지를 추가했습니다. 
   * ProtoSerializer.ObjectListCodec.writer()
   * ProtoSerializer.ObjectListCodec.reader(byteString); 
 ```java
@@ -20,8 +20,8 @@ var roomMode = RoomMode.getById(reader.getInt32(1));
 ```
 ##### 인터페이스에서 Base 클래스로 변경
 * 사용자 구현 인터페이스가 스프링 서비스 기능을 추가할 수 있도록 Base 클래스로 다시 변경되었습니다.
-* 클래스 Context에서 제공하건 메서드 구현체는 Base 클래스에서 제공합니다.
-* 기존 Context 에서 사용하던 API 는 다음과 같이 마이그레이션 할 수 있습니다.
+* 클래스 Context에서 제공하던 메서드 구현체는 Base 클래스에서 제공합니다.
+* 기존 Context에서 사용하던 API는 다음과 같이 마이그레이션할 수 있습니다.
 ```java
 @GameAnvilUser(
     gameServiceName = "서비스_이름", 
@@ -30,32 +30,32 @@ var roomMode = RoomMode.getById(reader.getInt32(1));
 public class MyUser extends BaseGameUser {
     public void work() {
         
-        send(..패킷..);  // 이렇게 BaseGameUser 를 활용하여 
-                        // 기존 Context 에서 제공하던 기능을 그대로 활용할 수 있습니다.
+        send(..패킷..);  // 이렇게 BaseGameUser를 활용하여 
+                        // 기존 Context에서 제공하던 기능을 그대로 활용할 수 있습니다.
     }
 }
 ```
 ##### NodeView 사용 방법 변경
-* 인터페이스에서 Base 클래스로 변경 으로 NodeView 또한 바로 클래스를 획득할 수 있습니다.
+* 인터페이스에서 Base 클래스로 변경하여 NodeView 또한 바로 클래스를 획득할 수 있습니다.
 * 노드 타입을 확실히 알고 있다면 다운 캐스팅으로 즉시 획득 가능합니다.
 * 이 작업은 파이버 안전하지 않으므로 비동기 작업이 없는 메서드에서만 호출하십시오.
 
-#### FIX
-* 가끔 파티 매치에서 Matchmaking 상태가 정상적이지 않은 부분을 수정했습니다.
-* 가끔 roomId 관련 예외가 발생하는 문제를 수정했습니다.
-* 가끔 클라이언트 상태 관련 예외가 발생하는 문제를 수정했습니다.
-* 내부 통신 패킷을 최적화 했습니다.
-* 가끔 사용자 구현 메서드에서 Error를 throw시 엔진이 정상적으로 돌아가지 않는 코드를 수정했습니다.
-* shutdown시 timeout 이 정상적으로 적용되지 않는 문제를 수정했습니다.
-* publish와 send 를 같은 socket 으로 하여 publish 와 send 를 같이 사용 시 순서가 꼬이지 않습니다.
-* 자신 객체에 요청을 보낼 시 예외를 발생시키는 대신 정상적으로 처리합니다.
-* 가끔 room transfer 가 정상적으로 동작하지 않는 문제를 수정했습니다.
+#### Fix
+* 파티 매치에서 Matchmaking 상태가 간헐적으로 정상적이지 않은 부분을 수정했습니다.
+* roomId 관련 예외가 발생하는 문제를 수정했습니다.
+* 클라이언트 상태 관련 예외가 발생하는 문제를 수정했습니다.
+* 내부 통신 패킷을 최적화했습니다.
+* 사용자 구현 메서드에서 Error가 throw되는 경우 엔진이 정상적으로 동작하지 않는 문제를 수정했습니다.
+* shutdown 시 timeout이 정상적으로 적용되지 않는 문제를 수정했습니다.
+* publish와 send를 동일한 소켓으로 처리하여 두 기능을 함께 사용 시 순서가 뒤바뀌지 않도록 수정했습니다.
+* 자신을 대상으로 요청을 전송하는 경우 예외가 발생하는 문제를 수정하여 정상적으로 처리되도록 수정했습니다.
+* 가끔 room transfer가 정상적으로 동작하지 않는 문제를 수정했습니다.
 * 내부 위치 정보 동작을 개선했습니다.
-* SafePause를 구현하지 않았는데 SafePause를 호출 시 가끔 정상적이지 않은 동작을 하는 문제를 수정했습니다.
-* 가끔씩 shutdown 이 정상적으로 동작하지 않는 문제를 수정했습니다.
+* SafePause를 구현하지 않은 상태에서 SafePause를 호출하면 간헐적으로 비정상 동작이 발생하는 문제를 수정했습니다.
+* shutdown이 간헐적으로 정상 동작하지 않는 문제를 수정했습니다.
 * NamedRoom에서 퇴장 후 바로 같은 이름으로 입장 시 정상적으로 동작하지 않는 문제를 수정했습니다.
-* 서버 시작 시 가끔씩 정상적으로 실행되지 않는 부분을 수정했습니다.
-* Node Pause 중 특정 동작이 정상적으로 처리되지 않는 부분을 수정했습니다.
+* 서버 시작 시 간헐적으로 정상 실행되지 않는 문제를 수정했습니다.
+* Node Pause 중 특정 동작이 정상적으로 처리되지 않는 문제를 수정했습니다.
 
 ### 2.1.0 (2025.06.30)
 #### New

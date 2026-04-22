@@ -97,7 +97,7 @@ Login()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
 | String  | channelId      | 로그인 할 채널의 아이디.                                       |
 | Payload | requestPayload | 로그인 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
 
-응답으로 Result<ResultCodeLogin, LoginResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. Login이 성공하면 ResultCode 필드의 값이 ResultCodeLogin.LOGIN_SUCCESS 가 되며, 아닌 경우 로그인이 실패한 것입니다. Data 필드를 통해 요청 결과 LoginResult 를 얻을 수 있습니다. 이를 통해 로그인된 유저 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeLogin, LoginResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. Login이 성공하면 ResultCode 필드의 값이 ResultCodeLogin.LOGIN_SUCCESS가 되며, 아닌 경우 로그인이 실패한 것입니다. Data 필드를 통해 요청 결과 LoginResult를 얻을 수 있습니다. 이를 통해 로그인된 유저 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeLogin의 상세 내용은 다음과 같습니다.
 
@@ -161,7 +161,7 @@ Logout()은 다음과 같은 1개의 매개변수를 가지고 있습니다.
 |----------|----------------|---------------------------------------------------------|
 | Payload? | payload | 로그아웃 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
 
-응답으로 Result<ResultCodeLogout, LogoutResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. Logout이 성공하면 ResultCode 필드의 값이 ResultCodeLogout.LOGOUT_SUCCESS 가 되며, 아닌 경우 로그아웃이 실패한 것입니다. Data 필드를 통해 요청 결과 LogoutResult 를 얻을 수 있습니다. 서버 구현에 따라서 LogoutResult의 Payload 필드를 통해 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeLogout, LogoutResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. Logout이 성공하면 ResultCode 필드의 값이 ResultCodeLogout.LOGOUT_SUCCESS가 되며, 아닌 경우 로그아웃이 실패한 것입니다. Data 필드를 통해 요청 결과 LogoutResult를 얻을 수 있습니다. 서버 구현에 따라서 LogoutResult의 Payload 필드를 통해 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeLogout의 상세 내용은 다음과 같습니다.
 
@@ -226,8 +226,7 @@ CreateRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
 | String  | matchingGroup | 매칭 시 사용할 매칭 그룹 이름. 사용하지 않는 경우 string.Empty(빈 문자열) 입력  |
 | Payload | payload       | 방 생성 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
 
-응답으로 Result<ResultCodeCreateRoom, CreatedRoomResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. CreateRoom이 성공하면 ResultCode 필드의 값이 ResultCodeCreateRoom.CREATE_ROOM_SUCCESS 가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 CreatedRoomResult 를 얻을 수 있습니다. 이를 통해 생성된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가
-정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeCreateRoom, CreatedRoomResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. CreateRoom이 성공하면 ResultCode 필드의 값이 ResultCodeCreateRoom.CREATE_ROOM_SUCCESS가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 CreatedRoomResult를 얻을 수 있습니다. 이를 통해 생성된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeCreateRoom의 상세 내용은 다음과 같습니다.
 
@@ -286,7 +285,7 @@ JoinRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
 | String  | matchingUserCategory | 입장할 방에서 사용할 matchingUserCategory. 사용하지 않는 경우 string.Empty(빈 문자열) 입력 <br/>각 방에서는 방에 속한 유저를 카테고리로 나누고, 각 카테고리별로 인원수 제한을 적용할 수 있다. 지정한 matchingUserCategory의 현재 인원이 최대인 경우 JoinRoom 이 실패할 수 있다. |
 | Payload | payload              | 방 입장 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                                                                                        |
 
-응답으로 Result<ResultCodeJoinRoom, JoinRoomResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. JoinRoom이 성공하면 ResultCode 필드의 값이 ResultCodeJoinRoom.JOIN_ROOM_SUCCESS 가 되며, 아닌 경우 방 입장이 실패한 것입니다. Data 필드를 통해 요청 결과 JoinRoomResult 를 얻을 수 있습니다. 이를 통해 입장한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeJoinRoom, JoinRoomResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. JoinRoom이 성공하면 ResultCode 필드의 값이 ResultCodeJoinRoom.JOIN_ROOM_SUCCESS가 되며, 아닌 경우 방 입장이 실패한 것입니다. Data 필드를 통해 요청 결과 JoinRoomResult를 얻을 수 있습니다. 이를 통해 입장한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeJoinRoom의 상세 내용은 다음과 같습니다.
 
@@ -343,7 +342,7 @@ LeaveRoom()은 다음과 같은 1개의 매개변수를 가지고 있습니다.
 |---------|---------|-------------------------------------------------------|
 | Payload | payload | 방 퇴장 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
 
-응답으로 Result<ResultCodeLeaveRoom, Payload>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. LeaveRoom이 성공하면 ResultCode 필드의 값이 ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS 가 되며, 아닌 경우 방 퇴장이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload 를 통해 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeLeaveRoom, Payload>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. LeaveRoom이 성공하면 ResultCode 필드의 값이 ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS가 되며, 아닌 경우 방 퇴장이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload를 통해 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeLeaveRoom의 상세 내용은 다음과 같습니다.
 
@@ -401,11 +400,10 @@ NamedRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
 |---------|----------|------------------------------------------------------------------------------------------|
 | String  | roomType | 입장 또는 생성 할 방의 타입                                                                         |
 | String  | roomName | 입장 또는 생성 할 방의 이름                                                                         |
-| bool    | isParty  | 파티 매치메이킹을 위한 방 여부.<br/>같은 파티로 묶인 유저들이 파티 매치메치킹이 완료될 때 까지 함께 대기하기 위한 방을 만들 경우 true로 입력한다. |
+| bool    | isParty  | 파티 매치메이킹을 위한 방 여부.<br/>같은 파티로 묶인 유저들이 파티 매치메치킹이 완료될 때까지 함께 대기하기 위한 방을 만들 경우 true로 입력. |
 | Payload | payload  | 입장 또는 생성 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                |
 
-응답으로 Result<ResultCodeNamedRoom, NamedRoomResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. NamedRoom이 성공하면 ResultCode 필드의 값이 ResultCodeNamedRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 NamedRoomResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가
-정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeNamedRoom, NamedRoomResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. NamedRoom이 성공하면 ResultCode 필드의 값이 ResultCodeNamedRoom.NAMED_ROOM_SUCCESS가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 NamedRoomResult를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeNamedRoom의 상세 내용은 다음과 같습니다.
 
@@ -474,8 +472,7 @@ MatchRoom()은 다음과 같은 7개의 매개변수를 가지고 있습니다.
 | Payload | payload                   | 매치메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                          |
 | Payload | leaveRoomPayload          | 다른 방으로 이동하는 경우, 방을 나갈때 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                             |
 
-응답으로 Result<ResultCodeMatchRoom, MatchResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchRoom이 성공하면 ResultCode 필드의 값이 ResultCodeMatchRoom.MATCH_ROOM_SUCCESS 가 되며, 아닌 경우 룸 매치메이킹이 실패한 것입니다. Data 필드를 통해 요청 결과 MatchResult 를 얻을 수 있습니다. 이를 통해 매칭된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가정보를 얻을
-수도 있습니다.
+응답으로 Result<ResultCodeMatchRoom, MatchResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchRoom이 성공하면 ResultCode 필드의 값이 ResultCodeMatchRoom.MATCH_ROOM_SUCCESS가 되며, 아닌 경우 룸 매치메이킹이 실패한 것입니다. Data 필드를 통해 요청 결과 MatchResult를 얻을 수 있습니다. 이를 통해 매칭된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeMatchRoom의 상세 내용은 다음과 같습니다.
 
@@ -561,7 +558,7 @@ MatchUserStart()는 다음과 같은 3개의 매개변수를 가지고 있습니
 | String  | matchingGroup | 매칭 그룹. 같은 그룹의 유저 풀에서 조건에 맞는 유저를 찾는다.  |
 | Payload | payload       | 유저 매치메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)              |
 
-응답으로 Result<ResultCodeMatchUserStart, Payload>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchUserStart이 성공하면 ResultCode 필드의 값이 ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload 를 통해 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeMatchUserStart, Payload>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchUserStart이 성공하면 ResultCode 필드의 값이 ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS가 되며, 아닌 경우 요청이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload를 통해 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeMatchUserStart의 상세 내용은 다음과 같습니다.
 
@@ -694,7 +691,7 @@ MatchPartyStart()은 다음과 같은 3개의 매개변수를 가지고 있습�
 | String  | matchingGroup | 매칭 그룹. 같은 그룹의 유저 풀에서 조건에 맞는 유저를 찾는다. 사용하지 않는 경우 string.Empty(빈 문자열) 입력 |
 | Payload | payload       | 파티 매치메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)              |
 
-응답으로 Result<ResultCodeMatchPartyStart, Payload>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchPartyStart이 성공하면 ResultCode 필드의 값이 ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS 가 되며, 아닌 경우 파티 매치메이킹이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload 를 통해 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeMatchPartyStart, Payload>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchPartyStart가 성공하면 ResultCode 필드의 값이 ResultCodeMatchPartyStart.MATCH_PARTY_START_SUCCESS가 되며, 아닌 경우 파티 매치메이킹이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload를 통해 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeMatchPartyStart의 상세 내용은 다음과 같습니다.
 
@@ -806,7 +803,7 @@ MoveChannel()은 다음과 같은 2개의 매개변수를 가지고 있습니다
 | string  | channelId | 이동할 채널의 아이디                                            |
 | Payload | payload   | 채널 이동 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
 
-응답으로 Result<ResultCodeMoveChannel, MoveChannelResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MoveChannel이 성공하면 ResultCode 필드의 값이 ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS 가 되며, 아닌 경우 채널 이동이 실패한 것입니다. Data 필드를 통해 요청 결과 MoveChannelResult 를 얻을 수 있습니다. 이를 통해 이동한 채널의 정보를 얻을 수 있으며, 서버 구현에
+응답으로 Result<ResultCodeMoveChannel, MoveChannelResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. MoveChannel이 성공하면 ResultCode 필드의 값이 ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS가 되며, 아닌 경우 채널 이동이 실패한 것입니다. Data 필드를 통해 요청 결과 MoveChannelResult를 얻을 수 있습니다. 이를 통해 이동한 채널의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 따라서 추가정보를 얻을
 수도 있습니다.
 
@@ -874,7 +871,7 @@ GetChannelCountInfo()은 다음과 같은 2개의 매개변수를 가지고 있�
 | String | ServiceName | 채널 정보를 요청할 서비스     |
 | String | channelId   | 채널 정보를 요청할 채널의 아이디 |
 
-응답으로 Result<ResultCodeChannelCountInfo, ChannelCountResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelCountInfo가 성공하면 ResultCode 필드의 값이 ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 ChannelCountResult 를 얻을 수 있습니다.
+응답으로 Result<ResultCodeChannelCountInfo, ChannelCountResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelCountInfo가 성공하면 ResultCode 필드의 값이 ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 ChannelCountResult를 얻을 수 있습니다.
 
 ResultCodeChannelCountInfo의 상세 내용은 다음과 같습니다.
 
@@ -931,7 +928,7 @@ GetChannelInfo()은 다음과 같은 2개의 매개변수를 가지고 있습니
 | String | ServiceName | 채널 정보를 요청할 서비스     |
 | String | channelId   | 채널 정보를 요청할 채널의 아이디 |
 
-응답으로 Result<ResultCodeChannelInfo, Payload>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelInfo() 가 성공하면 ResultCode 필드의 값이 ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS가 되며, 아닌 경우 요청이 실패한 것입니다. 성공시 Data 필드의 Payload 를 사용자가 정의한 채널 정보를 얻을 수도 있습니다. 
+응답으로 Result<ResultCodeChannelInfo, Payload>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. GetChannelInfo() 가 성공하면 ResultCode 필드의 값이 ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS가 되며, 아닌 경우 요청이 실패한 것입니다. 성공 시 Data 필드의 Payload를 사용자가 정의한 채널 정보를 얻을 수도 있습니다.
 
 ResultCodeChannelInfo의 상세 내용은 다음과 같습니다.
 
@@ -977,7 +974,7 @@ GetAllChannelCountInfo()은 다음과 같은 1개의 매개변수를 가지고 �
 |--------|-------------|----------------|
 | String | ServiceName | 채널 정보를 요청할 서비스 |
 
-응답으로 Result<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelCountInfo가 성공하면 ResultCode 필드의 값이 ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 Dictionary<string, ChannelCountResult> 를 얻을 수 있습니다. 이 Dictionary는 채널 아이디를 키로, ChannelCountResult를 값으로 가지고 있습니다.
+응답으로 Result<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelCountInfo가 성공하면 ResultCode 필드의 값이 ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 Dictionary<string, ChannelCountResult>를 얻을 수 있습니다. 이 Dictionary는 채널 아이디를 키로, ChannelCountResult를 값으로 가지고 있습니다.
 
 ResultCodeAllChannelCountInfo의 상세 내용은 다음과 같습니다.
 
@@ -1022,7 +1019,7 @@ GetAllChannelInfo()은 다음과 같은 1개의 매개변수를 가지고 있습
 |--------|-------------|----------------|
 | String | ServiceName | 채널 정보를 요청할 서비스 |
 
-응답으로 Result<ResultCodeAllChannelInfo, ChannelInfoResult>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelInfo가 성공하면 ResultCode 필드의 값이 ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS 가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 ChannelInfoResult 를 얻을 수 있습니다.
+응답으로 Result<ResultCodeAllChannelInfo, ChannelInfoResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. GetAllChannelInfo가 성공하면 ResultCode 필드의 값이 ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS가 되며, 아닌 경우 요청이 실패한 것입니다. Data 필드를 통해 요청 결과인 ChannelInfoResult를 얻을 수 있습니다.
 
 ResultCodeAllChannelInfo의 상세 내용은 다음과 같습니다.
 

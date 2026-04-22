@@ -4,7 +4,7 @@
 
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector.unitypackage)
 #### GameAnvil 2.2.0 이상
-* GameAnvil 2.2.0 서버 릴리즈에 맞춰 Connector도 2.2.0 버전을 릴리즈합니다.
+* GameAnvil 2.2.0 서버 출시에 맞춰 Connector도 2.2.0 버전을 출시합니다.
 
 #### Change
 * 엔진 버전에 맞게 프로토콜 버전 업데이트

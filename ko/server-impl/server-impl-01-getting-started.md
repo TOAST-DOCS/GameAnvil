@@ -16,16 +16,16 @@ GameAnvil 서버는 기본적으로 노드(Node) 단위로 구성합니다. 그�
 
 ## 모든 구현의 시작, 노드
 
-예를 들어, 모든 노드는 공통적으로 아래의 콜백 메서드들을 재정의해야 합니다. 그리고 각각의 노드는 그 역할에 맞는 추가 콜백 메서드의 구현을 요구할 수 있습니다. 아래의 코드에서 예를 든, SampleGatewayNode는 GatewayNode의 기본 클래스인 BaseGatewayNode 구현하고 있습니다.
+예를 들어, 모든 노드는 공통적으로 아래의 콜백 메서드들을 재정의해야 합니다. 그리고 각각의 노드는 그 역할에 맞는 추가 콜백 메서드의 구현을 요구할 수 있습니다. 아래의 코드에서 예를 든, SampleGatewayNode는 GatewayNode의 기본 클래스인 BaseGatewayNode를 구현하고 있습니다.
 
-BaseGatewayNode를 포함한 모든 인터페이스 노드들은 공통적으로 아래와 같은 콜백 메서드들을 제공합니다 사용자가 이 클래스를 구현하면 엔진이 특정 시점에 해당 콜백을 호출합니다. 이것이 바로 GameAnvil의 가장 기본적인 사용법입니다. 이러한 사용법은 문서 전체에 걸쳐 대동소이하므로, 큰 이질감 없이 각 챕터를 이해할 수 있을 것입니다.
+BaseGatewayNode를 포함한 모든 인터페이스 노드들은 공통적으로 아래와 같은 콜백 메서드들을 제공합니다. 사용자가 이 클래스를 구현하면 엔진이 특정 시점에 해당 콜백을 호출합니다. 이것이 바로 GameAnvil의 가장 기본적인 사용법입니다. 이러한 사용법은 문서 전체에 걸쳐 대동소이하므로, 큰 이질감 없이 각 챕터를 이해할 수 있을 것입니다.
 
 ```java
 @GameAnvilGatewayNode // 엔진에 이 클래스를 Gateway로 등록
 public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
-     * 노드가 초기화 될때 호출
+     * 노드가 초기화될 때 호출
      */
     @Override
     public void onInit() {
@@ -65,7 +65,7 @@ public class SampleGatewayNode extends BaseGatewayNode {
 | onInit         | 초기화   | 노드가 최초 초기화를 진행할 때 호출합니다. 노드 구동 전에 필요한 초기화 작업이 있다면 이 콜백이 적합합니다. 이때, 노드는 아직 메시지를 처리하지 않습니다.   |
 | onPrepare      | 준비    | 노드 초기화가 완료된 후 호출됩니다. 사용자는 노드가 준비 완료되기 전에 임의의 작업을 이곳에서 처리할 수 있습니다. 이때, 노드는 메시지를 처리할 수 있습니다.  |
 | onReady        | 준비 완료 | 노드가 모든 준비를 마친 후, 구동 완료 단계입니다. 이때, 노드는 Ready 상태이므로 사용자는 이때부터 모든 기능을 사용할 수 있습니다.              |
-| onShuttingdown | 노드 정지 | 노드가 Shutdown 명령을 받을 때 호출됩니다. 중지된 노드는 재개(Resume) 할 수 없습니다.                                   | |
+| onShuttingdown | 노드 정지 | 노드가 Shutdown 명령을 받을 때 호출됩니다. 중지된 노드는 재개(Resume)할 수 없습니다.                                   | |
 
 ## _(underscore)로 시작하는 메서드와 변수
 

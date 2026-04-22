@@ -32,7 +32,7 @@ GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ �
 
 [템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_2/GameAnvil%20Template.zip?disposition=attachment)
 
-다운로드한 템플릿을 적용하기 위해 IntelliJ를 실행합니다. **Welcome to InteliJ IDEA** 화면 좌측 메뉴에서 **Customize**를 선택한 뒤 **Import Settings...** 를 클릭합니다. 또는 전체 검색창에서 **Import Settings...** 를 검색합니다.
+다운로드한 템플릿을 적용하기 위해 IntelliJ를 실행합니다. **Welcome to InteliJ IDEA** 화면 좌측 메뉴에서 **Customize**를 선택한 뒤 **Import Settings...**를 클릭합니다. 또는 전체 검색창에서 **Import Settings...**를 검색합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/1_import_gameanvil_template.png)
 
@@ -62,7 +62,7 @@ IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 �
 
 GameAnvil은 Java 21과 25 버전을 지원합니다. 버전에 따라 일부 설정 방법이 다를 수 있으며, 여기에서는 Java 21 버전을 사용하였습니다.
 
-먼저 jdk 설정을 확인하겠습니다. 좌상단 메뉴에서 **File > Project Structure**를 선택하여 **Project Structure** 창을 엽니다. 맥 사용자의 경우 **Command + ;** 단축키를 사용할 수 있습니다.
+먼저 jdk 설정을 확인합니다. 좌상단 메뉴에서 **File > Project Structure**를 선택하여 **Project Structure** 창을 엽니다. Mac 사용자의 경우 **Command + ;** 단축키를 사용할 수 있습니다.
 
 **Project** 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다면 **Add SDK > Download JDK**를 통해서 원하는 버전의 JDK를 다운로드해 설정합니다. **Language level**은 **SDK default**로 설정합니다. 다음으로 **Modules** 탭에서 **Language level**을 **Project default**로 설정합니다.
 
@@ -418,7 +418,7 @@ public class SyncGameUser extends BaseGameUser {
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_2/basic-tutorial/16_create_sync_game_room.png)
 
-자동으로 생성된 코드는 아래와 같습니다. 자동 생성된 코드에는 SyncGameUser 가 import되지 있지 않아 컴파일 오류가 발생하는데, 직접 import를 추가하여 수정하면 됩니다. 
+자동으로 생성된 코드는 아래와 같습니다. 자동 생성된 코드에는 SyncGameUser가 import되지 있지 않아 컴파일 오류가 발생하는데, 직접 import를 추가하여 수정할 수 있습니다.
 
 ```java
 package com.tutorial.gameanvil.room;
@@ -552,8 +552,8 @@ public class SyncGameRoom extends BaseGameRoom<SyncGameUser> {
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_2/basic-tutorial/10_gameanvil_run.png)
 
-서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다. 각각의 노드는 코드를 실행하기 위해 준비하는데 시간이 필요하며, 각 노드가 준비 완료되면 onReady 로그를 출력합니다. 클라이언트가 서버로 접속하는데 직접적인 역할을 수행하는 노드는 게이트웨이 노드입니다. 게이트웨이 노드가 준비되어 GatewayNode의 onReady 로그가 출력 되었다면 GameAnvil 서버는 언제든 접속이 가능한 상태가 된 것입니다.
-서버를 실행해 보면, 로그 중에서 `All nodes are ready!!`라는 문구를 확인할 수 있습니다. 이 로그가 떴다는 것은 GameAnvil 서버가 정상적으로 실행되었음을 의미합니다.
+서버가 정상적으로 구동되면 서버 구동 상태 관련 로그들이 다수 출력됩니다. 각각의 노드는 코드를 실행하기 위해 준비하는 데 시간이 필요하며, 각 노드가 준비 완료되면 onReady 로그를 출력합니다. 클라이언트가 서버로 접속하는 데 직접적인 역할을 수행하는 노드는 게이트웨이 노드입니다. 게이트웨이 노드가 준비되어 GatewayNode의 onReady 로그가 출력되었다면 GameAnvil 서버는 언제든 접속이 가능한 상태가 된 것입니다.
+서버를 실행하면 로그 중에서 `All nodes are ready!!`라는 문구를 확인할 수 있습니다. 이는 GameAnvil 서버가 정상적으로 실행되었음을 의미합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_2/basic-tutorial/17_all_nodes_are_ready.png)
 
@@ -575,7 +575,7 @@ GameAnvil 커넥터 사용 실습을 위해 아래 링크에서 Unity 패키지�
 
 ### Unity 프로젝트 생성
 
-유니티 허브를 실행한 후 우상단의 New Project 버튼을 클릭합니다. 유니티 허브의 버전은 무관합니다.
+Unity Hub를 실행한 후 우상단의 **New Project** 버튼을 클릭합니다. Unity Hub의 버전은 무관합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_2/basic-tutorial/18_unity_hub.png)
 
@@ -613,7 +613,7 @@ Hierarchy 뷰에서 마우스 오른쪽 버튼을 클릭하고 **GameAnvil > Gam
 - Connect Configuration: 접속 정보를 수정할 수 있습니다.
 - Authentication Configuration: 인증 정보를 수정할 수 있습니다.
 - Login Configuration: 로그인 정보를 수정할 수 있습니다.
-- Pause Client Check : 클라이언트가 백그라운드에서 머무는 동안 연결 상태 자동 확인 기능을 잠시 멈추는 시간을 조정할 수 있습니다. 앱이 이 시간 동안 백그라운드로 전환되었다가 다시 게임으로 복귀했을 때 접속이 끊기는 것을 방지합니다.  
+- Pause Client Check: 클라이언트가 백그라운드에서 머무는 동안 연결 상태 자동 확인 기능을 잠시 멈추는 시간을 조정할 수 있습니다. 앱이 이 시간 동안 백그라운드로 전환되었다가 다시 게임으로 복귀했을 때 접속이 끊기는 것을 방지합니다.  
 
 지금은 세부 설정에 대해서 자세히 알고 있지 않아도 괜찮습니다. 튜토리얼을 진행하면서 각 항목에 대한 설명을 확인할 수 있습니다.
 
@@ -902,7 +902,7 @@ Unity 에디터에서 단축키 `CMD + b` 또는 `Ctrl + b`를 눌러 빌드합�
 
 ### 동기화 컨트롤러
 
-Hierarchy 뷰 상에서 SyncController 게임 오브젝트 찾아 SyncController가 컴포넌트로 추가되어있는 것을 확인합니다.
+Hierarchy 뷰상에서 SyncController 게임 오브젝트를 찾아 SyncController가 컴포넌트로 추가되어 있는 것을 확인합니다.
 
 혹시 해당 게임 오브젝트가 존재하지 않는 경우에는 Hierarchy 뷰에서 마우스 오른쪽 버튼을 클릭한 뒤 **GameAnvil > SyncController**를 선택하여 추가합니다.
 
@@ -916,7 +916,7 @@ Hierarchy 뷰 상에서 SyncController 게임 오브젝트 찾아 SyncController
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_2/basic-tutorial/32_character_sync_prefab.png)
 
-완성한 동기화 게임오브젝트 프리팹을 유니티 플레이 모드에서 사용하려면 SyncController에서 제공하는 게임오브젝트 생성 API를 통해 게임 오브젝트를 생성하여 씬에 추가하면 됩니다. 첫 번째 인자로 프리팹 이름을 전달해야 합니다.
+완성한 동기화 게임오브젝트 프리팹을 유니티 플레이 모드에서 사용하려면 SyncController에서 제공하는 게임 오브젝트 생성 API를 통해 게임 오브젝트를 생성하여 씬에 추가하면 됩니다. 첫 번째 인자로 프리팹 이름을 전달해야 합니다.
 
 주의할 점은, GameAnvil에서 제공하는 동기화 컴포넌트를 붙인 동기화 게임오브젝트는 유니티에서 기본 제공하는 GameObject.Instantiate() 메서드가 아니라 GameAnvil에서 제공하는 SyncController의 Instantiate API를 사용해야 정상적인 동기화가 이루어질 수 있습니다.
 

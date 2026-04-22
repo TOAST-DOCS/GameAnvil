@@ -59,13 +59,13 @@ connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) =>
 
 | 코드 이름                                  | 값   | 설명 |
 |-----------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| `FORCE_CLOSE_SYSTEM_ERROR`             | 2000  | 시스템 오류로 인한 강제 종료 상황입니다. 클라이언트에서 이 코드를 받은 경우 GameAnvil 개발팀에 문의하세요. |
-| `FORCE_CLOSE_CONNECTION`               | 2010  | 서버에서 BaseConnection의 close() 호출 시 받게 되는 코드입니다. |
-| `FORCE_CLOSE_USER`                     | 2011  | 서버에서 BaseUser의 closeConnection() 호출 시 받게 되는 코드입니다. |
-| `FORCE_CLOSE_ADMIN_KICK`               | 2012  | Admin에서 강제 종료 하였을 경우 받게 되는 코드입니다. |
-| `FORCE_CLOSE_INVALID_NODE`             | 2020  | GameNode가 invalid 상태로 변경 되어 |
-| `FORCE_CLOSE_USER_TRANSFER_FAIL`       | 2021  | 유저 트렌스퍼가 실패한 경우 |
-| `FORCE_CLOSE_USER_TRANSFER_ERROR`      | 2022  | 유저 트렌스퍼 중 시스템 에러가 발생한 경우 |
+| `FORCE_CLOSE_SYSTEM_ERROR`             | 2000  | 시스템 오류로 인한 강제 종료 상황. 클라이언트에서 이 코드를 받은 경우 GameAnvil 개발팀에 문의 |
+| `FORCE_CLOSE_CONNECTION`               | 2010  | 서버에서 BaseConnection의 close() 호출 시 |
+| `FORCE_CLOSE_USER`                     | 2011  | 서버에서 BaseUser의 closeConnection() 호출 시 |
+| `FORCE_CLOSE_ADMIN_KICK`               | 2012  | Admin에서 강제 종료한 경우 |
+| `FORCE_CLOSE_INVALID_NODE`             | 2020  | GameNode가 invalid 상태로 변경된 경우 |
+| `FORCE_CLOSE_USER_TRANSFER_FAIL`       | 2021  | 유저 트랜스퍼가 실패한 경우 |
+| `FORCE_CLOSE_USER_TRANSFER_ERROR`      | 2022  | 유저 트랜스퍼 중 시스템 오류가 발생한 경우 |
 | `FORCE_CLOSE_AUTHENTICATION_FAIL`      | 2030  | 인증 실패로 인한 강제 종료|
 | `FORCE_CLOSE_AUTHENTICATION_FAIL_EMPTY_ACCOUNT_ID`| 2031  | 인증 실패로 인한 강제 종료 - 어카운트아이디가 없을 경우 |
 | `FORCE_CLOSE_DUPLICATE_LOGIN`          | 2032  | 중복 접속으로 인한 강제 종료 |
@@ -75,7 +75,7 @@ connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) =>
 | `FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL`  | 2043  | 클라이언트가 서버 상태 체크에 응답하지 않은 경우. 문의 필요. |
 | `FORCE_CLOSE_GHOST_USER`               | 2044  | 고스트 유저인 경우. 문의 필요. |
 | `SOCKET_DISCONNECT`                    | 2100  | 네트워크 연결이 끊어짐 |
-| `SOCKET_TIME_OUT`                      | 2101  | 타임아웃이 발생, 컨넥터에서 연결을 끊음 |
+| `SOCKET_TIME_OUT`                      | 2101  | 타임아웃이 발생, 커넥터에서 연결을 끊음 |
 | `SOCKET_ERROR`                         | 2102  | 소켓 에러가 발생하여 연결을 끊음 |
 
 

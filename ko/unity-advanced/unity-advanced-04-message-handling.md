@@ -41,7 +41,7 @@ Request<\TResponse\>(), RequestUser\<TResponse\>()은 다음과 같이 1개의 �
 | 타입 매개변수  | TResponse | 응답으로 받을 메시지 타입 |
 | IMessage | message      | 서버로 보낼 메시지     |
 
-응답으로 Result<ResultCode, TResponse>를 리턴하며, ResultCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. RequestUser() 가 성공하면 ResultCode 필드의 값이 ResultCode.SUCCESS 가 되며, 아닌 경우 메시지 전송이 실패한 것입니다. Data 필드를 통해 응답 메시지를 얻을 수 있습니다.
+응답으로 Result<ResultCode, TResponse>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. RequestUser() 가 성공하면 ResultCode 필드의 값이 ResultCode.SUCCESS가 되며, 아닌 경우 메시지 전송이 실패한 것입니다. Data 필드를 통해 응답 메시지를 얻을 수 있습니다.
 
 ResultCode의 상세 내용은 다음과 같습니다.
 

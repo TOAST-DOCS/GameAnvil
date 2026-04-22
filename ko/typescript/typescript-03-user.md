@@ -17,7 +17,7 @@ const user = new GameAnvilUser(connector, serviceName, 1);
 
 ### 다수의 GameAnvilUser 생성
 
-GameAnvilConnector객체는 프로세스내에서 하나만 사용하는 것이 일반적인 반면에 GameAnvilUser는 여러개를 동시에 생성해서 운용하는 것이 지원됩니다. 여러개가 각각 다른 서비스로 로그인 하는 것이 가능하며, 만일 하나의 서비스에 여러개의 GameAnvilUser를 사용하고 싶다면 subId를 이용해 구분해서 생성할 수 있습니다.
+GameAnvilConnector 객체는 프로세스 내에서 하나만 사용하는 것이 일반적인 반면에 GameAnvilUser는 여러 개를 동시에 생성해서 운용하는 것이 지원됩니다. 여러 개가 각각 다른 서비스로 로그인 하는 것이 가능하며, 만일 하나의 서비스에 여러 개의 GameAnvilUser를 사용하고 싶다면 subId를 이용해 구분해서 생성할 수 있습니다.
 
 ```typescript
 const connector: GameAnvilConnector;
@@ -33,7 +33,7 @@ const user3 = new GameAnvilUser(connector, otherServiceName, 1);
 
 GameNode 안에 클라이언트와 대응하는 서버 유저 객체 생성을 요청합니다. GameNode에 로그인을 완료해야만 유저의 여러 다른 기능들을 사용할 수 있습니다.
 
-로그인 할 유저 타입과 채널 아이디를 필수 인자로 받으며 세번째 인자로 추가 정보를 보낼 수 있습니다. 로그인 동작 완료 시점에 Promise를 통해 로그인에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
+로그인할 유저 타입과 채널 아이디를 필수 인자로 받으며 세 번째 인자로 추가 정보를 보낼 수 있습니다. 로그인 동작 완료 시점에 Promise를 통해 로그인에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
 
 ```typescript
 const userType: string;
@@ -422,11 +422,11 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 | 코드 이름                                   | 값   | 설명                                |
 |-----------------------------------------|-------|-------------------------------------|
 | `PARSE_ERROR`                           | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                               | -1    | 타임 아웃                          |
+| `TIMEOUT`                               | -1    | 타임아웃                          |
 | `SYSTEM_ERROR`                          | 1     | 서버 시스템 에러                   |
 | `INVALID_PROTOCOL`                      | 2     | 서버에 등록되지 않은 프로토콜      |
 | `MATCH_ROOM_SUCCESS`                    | 0     | 성공                               |
-| `MATCH_ROOM_FAIL_CONTENT`               | 901   | 실패: 컨텐츠에서 거부됨            |
+| `MATCH_ROOM_FAIL_CONTENT`               | 901   | 실패: 콘텐츠에서 거부됨            |
 | `MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST`   | 902   | 실패: 방이 존재하지 않음           |
 | `MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM`   | 903   | 실패: 이미 방에 들어가 있음        |
 | `MATCH_ROOM_FAIL_LEAVE_ROOM`            | 904   | 실패: 기존 방에서 나가기가 실패한 경우 |
