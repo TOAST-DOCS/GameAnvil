@@ -12,24 +12,11 @@ GatewayNode는 클라이언트가 접속하는 관문(Gateway)입니다. 즉, �
 
 ### GatewayNode 구현
 
-이러한 GatewayNode는 @GameAnvilGatewayNode 어노테이션을 선언하여 엔진에 등록하고 IGatewayNode 인터페이스를 구현하여 콜백 메서드만 재정의하면 됩니다. 이러한 공통 콜백 메서드는 그 이름이 용도를 명확하게 설명하고 있습니다. 
+이러한 GatewayNode는 @GameAnvilGatewayNode 어노테이션을 선언하여 엔진에 등록하고 BaseGatewayNode 클래스를 구현하여 콜백 메서드만 재정의하면 됩니다. 이러한 공통 콜백 메서드는 그 이름이 용도를 명확하게 설명하고 있습니다. 
 ```java
 @GameAnvilGatewayNode // 엔진에 이 클래스를 Gateway로 등록
-public class SampleGatewayNode implements IGatewayNode {
-    private IGatewayNodeContext gatewayNodeContext;
-
-    /**
-     * 게이트웨이 노드 컨텍스트를 전달하기 위해 호출
-     * <p/>
-     * 객체가 생성된후 한번 호출된다
-     *
-     * @param gatewayNodeContext 게이트웨이 노드 컨텍스트
-     */
-    @Override
-    public void onCreate(IGatewayNodeContext gatewayNodeContext) {
-        this.gatewayNodeContext = gatewayNodeContext;
-    }
-
+public class SampleGatewayNode extends BaseGatewayNode {
+ 
     /**
      * 노드가 초기화 될때 호출
      */
@@ -55,30 +42,10 @@ public class SampleGatewayNode implements IGatewayNode {
     }
 
     /**
-     * Pause 될 때 호출
-     *
-     * @param payload 컨텐츠에서 전달하고자 하는 추가 정보
-     */
-    @Override
-    public void onPause(IPayload payload) {
-
-    }
-
-    /**
      * Shutdown 명령을 받으면 호출
      */
     @Override
     public void onShuttingdown() {
-
-    }
-
-    /**
-     * Resume 될 때 호출
-     *
-     * @param payload 컨텐츠에서 전달하고자 하는 추가 정보
-     */
-    @Override
-    public void onResume(IPayload payload) {
 
     }
 }
@@ -89,24 +56,11 @@ public class SampleGatewayNode implements IGatewayNode {
 
 커넥션은 클라이언트의 물리적 접속 자체를 의미합니다. 클라이언트는 고유한 AccountId를 이용하여 커넥션 상에서 인증 절차를 진행할 수 있습니다. 인증이 성공할 경우 해당 AccountId는 생성된 커넥션에 매핑됩니다.
 
-이러한 커넥션은 다음과 같이 IConnection을 구현한 후 콜백 메서드들을 재정의합니다. 이때, 임의의 플랫폼에서 인증한 후 획득하는 유저의 키값 등을 AccountId로 사용할 수 있습니다. 예를 들어 Gamebase를 통해 인증한 후 UserId를 획득하면 이 값을 GameAnvil의 인증 과정에서 AccountId로 사용할 수 있습니다. 
+이러한 커넥션은 다음과 같이 BaseConnection을 구현한 후 콜백 메서드들을 재정의합니다. 이때, 임의의 플랫폼에서 인증한 후 획득하는 유저의 키값 등을 AccountId로 사용할 수 있습니다. 예를 들어 Gamebase를 통해 인증한 후 UserId를 획득하면 이 값을 GameAnvil의 인증 과정에서 AccountId로 사용할 수 있습니다. 
 
 ```java
 @GameAnvilGatewayConnection // 엔진에 이 클래스를 Connection으로 등록 
-public class SampleConnection implements IConnection {
-    private IConnectionContext connectionContext;
-    
-    /**
-     * 커넥션 컨텍스트를 전달하기 위해 호출
-     * <p/>
-     * 객체가 생성된후 한번 호출된다
-     *
-     * @param connectionContext 커넥션 컨텍스트
-     */
-    @Override
-    public void onCreate(IConnectionContext connectionContext) {
-        this.connectionContext = connectionContext;
-    }
+public class SampleConnection extends BaseConnection {
 
     /**
      * 인증 요청시 호출
@@ -123,30 +77,6 @@ public class SampleConnection implements IConnection {
         boolean isSuccess = true;
         return isSuccess;
     }
-
-    /**
-     * 커넥션이 속한 노드가 Pause 될 때 호출
-     */
-    @Override
-    public void onPause() {
-
-    }
-
-    /**
-     * 커넥션이 속한 노드가 Resume 될 때 호출
-     */
-    @Override
-    public void onResume() {
-
-    }
-
-    /**
-     * 클라이언트와 연결이 끊어졌을 때 호출
-     */
-    @Override
-    public void onDisconnect() {
-
-    }
 }
 ```
 
@@ -155,11 +85,7 @@ public class SampleConnection implements IConnection {
 
 | 콜백 이름          | 의미      | 설명                                                                                                                                                         |
 |----------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate       | 객체 생성   | 객체가 생성 되었을 때 호출됩니다. 생성된 타입에서 사용 가능한 API를 사용 할 수 있는 컨텍스트를 전달 받습니다. 컨텐츠에서 필요 하다면 저장 해서 사용 할 수 있습니다.                                                          |
-| onAuthenticate | 인증      | 클라이언트가 Authentication() API를 사용하여 커넥션에 대한 인증을 요청할 때 호출됩니다. 사용자는 여기에서 클라이언트가 보낸 인증 정보를 바탕으로 인증 처리를 진행할 수 있습니다. 만일 인증이 성공하면 true를 반환하고 실패하면 false를 반환해야 합니다. |
-| onPause        | 일시 정지   | 콘솔을 통해 GatewayNode를 일시 정지하면 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 노드가 일시 정지될 때 커넥션에서 추가로 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                                      |
-| onResume       | 재개      | 콘솔을 통해 GatewayNode가 일시 정지 상태에서 다시 구동을 재개하면, 해당 GatewayNode의 모든 커넥션에 대해 호출됩니다. 사용자는 재개 상태에서 커넥션에 대해 처리하고 싶은 코드를 이곳에 구현할 수 있습니다.                             |
-| onDisconnect   | 접속 종료   | 클라이언트로부터 접속이 끊겼을 때 호출됩니다. 이때, 추가로 처리할 코드를 이곳에 구현합니다.                                                                                                       |
+| onAuthenticate | 인증      | 클라이언트가 Authentication() API를 사용하여 커넥션에 대한 인증을 요청할 때 호출됩니다. 사용자는 여기에서 클라이언트가 보낸 인증 정보를 바탕으로 인증 처리를 진행할 수 있습니다. 만일 인증이 성공하면 true를 반환하고 실패하면 false를 반환해야 합니다. |                                                                                                |
 
 ### Session 구현
 
@@ -169,20 +95,7 @@ public class SampleConnection implements IConnection {
 
 ```java
 @GameAnvilGatewaySession  // 엔진에 이 클래스를 Session으로 등록 
-public class SampleSession implements ISession {
-    private ISessionContext sessionContext;
-
-    /**
-     * 세션 컨텍스트를 전달하기 위해 호출
-     * <p/>
-     * 객체가 생성된후 한번 호출된다
-     *
-     * @param sessionContext 세션 컨텍스트
-     */
-    @Override
-    public void onCreate(ISessionContext sessionContext) {
-        this.sessionContext = sessionContext;
-    }
+public class SampleSession extends BaseSession {
 
     /**
      * 로그인 호출 이전에 호출
@@ -217,7 +130,6 @@ public class SampleSession implements ISession {
 
 | 콜백 이름          | 의미       | 설명                                                                                                                                                |
 |----------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate       | 객체 생성    | 객체가 생성되었을 때 호출됩니다. 생성된 타입에서 사용 가능한 API를 사용할 수 있는 컨텍스트를 전달받습니다. 컨텐츠에서 필요하다면 저장해서 사용할 수 있습니다.                                                       |
 | onBeforeLogin  | 로그인 전처리  | GameNode에 로그인을 요청하기 직전에 호출됩니다. 이때, 사용자는 매개변수로 전달된 출력용 페이로드(outPayload)에 임의의 값을 넣어서 로그인 요청에 실어 보낼 수 있습니다. 이 페이로드는 게임 노드에서 로그인 콜백을 처리할 때 그대로 전달됩니다. |
 | onAfterLogin   | 로그인 후처리  | GameNode에 로그인을 완료한 후 호출됩니다. 로그인 완료 후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                 |
 | onAfterLogout  | 로그아웃 후처리 | 로그아웃 처리가 완료된 후 호출됩니다. 로그아웃 이후에 세션에서 처리할 코드가 있다면 여기에 구현합니다.                                                                                        |

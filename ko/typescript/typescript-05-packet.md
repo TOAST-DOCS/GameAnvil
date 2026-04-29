@@ -1,4 +1,4 @@
-## Game > GameAnvil > CocosCreator 개발 가이드 > 패킷
+## Game > GameAnvil > TypeScript 개발 가이드 > 패킷
 
 ## 패킷
 
@@ -16,7 +16,7 @@ const packet: Packet = PacketFactory.makePacket(message);
 
 그 외 Uint8Array 형식의 패킷 생성 방식은 아래와 같습니다.
 ```typescript
-const data: Unit8Array;
+const data: Uint8Array;
 
 const packet: Packet = PacketFactory.makeCustomPacket(1, data);
 ```

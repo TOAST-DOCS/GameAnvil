@@ -13,7 +13,7 @@ public class GameAnvilManager : MonoBehaviour
     {
         if (connector.IsConnected())
         {
-            Disconnect();
+            connector.Disconnect();
         }
     }
     

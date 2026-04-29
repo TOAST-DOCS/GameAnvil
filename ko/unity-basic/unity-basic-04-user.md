@@ -29,12 +29,12 @@ public async void ManagerCreateRoom()
 {
     GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
     GameAnvilUserController userController = gameAnvilManager.UserController;
-    
+
     try
     {
         Payload createRoomPayload = new Payload(new Protocol.CreateRoomData());
-        ErrorResult<ResultCodeCreateRoom, CreatedRoomResult> result = await userControll.CreateRoom("RoomName", "RoomType", "MatchingGroup", createRoomPayload);
-        if (result.ErrorCode == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)
+        Result<ResultCodeCreateRoom, CreatedRoomResult> result = await userController.CreateRoom("RoomName", "RoomType", "MatchingGroup", createRoomPayload);
+        if (result.ResultCode == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)
         {
             // 성공
         } else
@@ -58,7 +58,7 @@ CreateRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
 | String  | matchingGroup | 매칭 시 사용할 매칭 그룹 이름. 사용하지 않는 경우 string.Empty(빈 문자열) 입력  |
 | Payload | payload       | 방 생성 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
 
-응답으로 ErrorResult<ResultCodeCreateRoom, CreatedRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. CreateRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeCreateRoom.CREATE_ROOM_SUCCESS 가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 CreatedRoomResult 를 얻을 수 있습니다. 이를 통해 생성된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeCreateRoom, CreatedRoomResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. CreateRoom이 성공하면 ResultCode 필드의 값이 ResultCodeCreateRoom.CREATE_ROOM_SUCCESS가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 CreatedRoomResult를 얻을 수 있습니다. 이를 통해 생성된 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeCreateRoom의 상세 내용은 다음과 같습니다.
 
@@ -94,8 +94,8 @@ public async void ManagerJoinRoom()
     try
     {
         Payload joinRoomPayload = new Payload(new Protocol.JoinRoomData());
-        ErrorResult<ResultCodeJoinRoom, JoinRoomResult> result = await userController.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload);
-        if(result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
+        Result<ResultCodeJoinRoom, JoinRoomResult> result = await userController.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload);
+        if(result.ResultCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
         {
             // 성공
         } else
@@ -119,7 +119,7 @@ JoinRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
 | String  | matchingUserCategory | 입장할 방에서 사용할 matchingUserCategory. 사용하지 않는 경우 string.Empty(빈 문자열) 입력 <br/>각 방에서는 방에 속한 유저를 카테고리로 나누고, 각 카테고리별로 인원수 제한을 적용할 수 있다. 지정한 matchingUserCategory의 현재 인원이 최대인 경우 JoinRoom 이 실패할 수 있다. |
 | Payload | payload              | 방 입장 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                                                                                        |
 
-응답으로 ErrorResult<ResultCodeJoinRoom, JoinRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. JoinRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeJoinRoom.JOIN_ROOM_SUCCESS 가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 JoinRoomResult 를 얻을 수 있습니다. 이를 통해 입장한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeJoinRoom, JoinRoomResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. JoinRoom이 성공하면 ResultCode 필드의 값이 ResultCodeJoinRoom.JOIN_ROOM_SUCCESS가 되며, 아닌 경우 방 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 JoinRoomResult를 얻을 수 있습니다. 이를 통해 입장한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeJoinRoom 상세 내용은 다음과 같습니다.
 
@@ -156,8 +156,8 @@ public async void ManagerLeaveRoom()
     try
     {
         Payload leaveRoomPayload = new Payload(new Protocol.LeaveRoomData());
-        ErrorResult<ResultCodeLeaveRoom, Payload> result = await userControll.LeaveRoom(leaveRoomPayload);
-        if (result.ErrorCode == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS)
+        Result<ResultCodeLeaveRoom, Payload> result = await userController.LeaveRoom(leaveRoomPayload);
+        if (result.ResultCode == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS)
         {
             // 성공
         } else
@@ -178,7 +178,7 @@ LeaveRoom()은 다음과 같은 1개의 매개변수를 가지고 있습니다.
 |---------|---------|-------------------------------------------------------|
 | Payload | payload | 방 퇴장 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null) |
 
-응답으로 ErrorResult<ResultCodeLeaveRoom, Payload>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. JoinRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS 가 되며, 아닌 경우 방 생성이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload 를 통해 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeLeaveRoom, Payload>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. JoinRoom이 성공하면 ResultCode 필드의 값이 ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS가 되며, 아닌 경우 방 생성이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload를 통해 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeLeaveRoom 상세 내용은 다음과 같습니다.
 
@@ -205,8 +205,8 @@ public async void ManagerNamedRoom()
     {
         bool isParty = false;
         Payload namedRoomPayload = new Payload(new Protocol.NamedRoomData());
-        ErrorResult<ResultCodeNamedRoom, NamedRoomResult> result = await userControll.NamedRoom("RoomName", "RoomType", isParty, namedRoomPayload);
-        if (result.ErrorCode == ResultCodeNamedRoom.NAMED_ROOM_SUCCESS)
+        Result<ResultCodeNamedRoom, NamedRoomResult> result = await userController.NamedRoom("RoomName", "RoomType", isParty, namedRoomPayload);
+        if (result.ResultCode == ResultCodeNamedRoom.NAMED_ROOM_SUCCESS)
         {
             // 성공
         } else
@@ -229,7 +229,7 @@ NamedRoom()은 다음과 같은 4개의 매개변수를 가지고 있습니다.
 | bool    | isParty  | 파티 매치메이킹을 위한 방 여부.<br/>같은 파티로 묶인 유저들이 파티 매치메치킹이 완료될 때 까지 함께 대기하기 위한 방을 만들 경우 true로 입력한다. |
 | Payload | payload  | 입장 또는 생성 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                |
 
-응답으로 ErrorResult<ResultCodeNamedRoom, NamedRoomResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. NamedRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeNamedRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 NamedRoomResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeNamedRoom, NamedRoomResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. NamedRoom이 성공하면 ResultCode 필드의 값이 ResultCodeNamedRoom.NAMED_ROOM_SUCCESS가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 NamedRoomResult를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeNamedRoom 상세 내용은 다음과 같습니다.
 
@@ -273,8 +273,8 @@ public async void ManagerMatchRoom()
     try
     {
         var matchRoomPayload = new Payload(new Protocol.MatchRoomData());
-        ErrorResult<ResultCodeMatchRoom, MatchResult> result = await userController.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
-        if (result.ErrorCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
+        Result<ResultCodeMatchRoom, MatchResult> result = await userController.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
+        if (result.ResultCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
         {
             // 성공
         } else
@@ -301,7 +301,7 @@ MatchRoom()은 다음과 같은 7개의 매개변수를 가지고 있습니다.
 | Payload | payload                   | 매치메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                                           |
 | Payload | leaveRoomPayload          | 다른 방으로 이동하는 경우, 방을 나갈때 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)                                                              |
 
-응답으로 ErrorResult<ResultCodeMatchRoom, MatchResult>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchRoom이 성공하면 ErrorCode 필드의 값이 ResultCodeMatchRoom.NAMED_ROOM_SUCCESS 가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 MatchResult 를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeMatchRoom, MatchResult>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchRoom이 성공하면 ResultCode 필드의 값이 ResultCodeMatchRoom.NAMED_ROOM_SUCCESS가 되며, 아닌 경우 입장 또는 생성이 실패한 것입니다. Data 필드를 통해 요청 결과 MatchResult를 얻을 수 있습니다. 이를 통해 입장 또는 생성한 방의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeMatchRoom 상세 내용은 다음과 같습니다.
 
@@ -366,8 +366,8 @@ public async void ManagerMatchUserStart()
     try
     {
         Payload matchUserPayload = new Payload(new Protocol.MatchUserData());
-        ErrorResult<ResultCodeMatchUserStart, Payload> result = await gameAnvilManager.UserController.MatchUserStart("RoomType", "MatchingGroup", matchUserPayload);
-        if(result.ErrorCode == ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS)
+        Result<ResultCodeMatchUserStart, Payload> result = await userController.MatchUserStart("RoomType", "MatchingGroup", matchUserPayload);
+        if(result.ResultCode == ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS)
         {  
             // 요청 성공
         } else
@@ -390,7 +390,7 @@ MatchUserStart()은 다음과 같은 3개의 매개변수를 가지고 있습니
 | String  | matchingGroup | 매칭 그룹. 같은 그룹의 유저 풀에서 조건에 맞는 유저를 찾는다. 사용하지 않는 경우 string.Empty(빈 문자열) 입력 |
 | Payload | payload       | 유저 매치메이킹 요청을 처리할 서버의 사용자 코드에서 필요한 추가 정보. (default = null)              |
 
-응답으로 ErrorResult<ResultCodeMatchUserStart, Payload>를 리턴하며, ErrorCode 필드를 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchUserStart이 성공하면 ErrorCode 필드의 값이 ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS 가 되며, 아닌 경우 유저 매치메이킹이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload 를 통해 추가 정보를 얻을 수도 있습니다.
+응답으로 Result<ResultCodeMatchUserStart, Payload>를 리턴하며, ResultCode 필드의 값을 확인하여 성공 여부를 확인할 수 있습니다. MatchUserStart이 성공하면 ResultCode 필드의 값이 ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS가 되며, 아닌 경우 유저 매치메이킹이 실패한 것입니다. 서버 구현에 따라서 Data 필드의 Payload를 통해 추가 정보를 얻을 수도 있습니다.
 
 ResultCodeMatchUserStart 상세 내용은 다음과 같습니다.
 

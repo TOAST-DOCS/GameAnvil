@@ -18,7 +18,7 @@ GameAnvilManager에서는 게임 오브젝트의 생성/파괴, Transform, Anima
 
 ### SyncController 생성
 
-Unity Hierarchy 창에서 마우스 오른쪽 버튼을 클릭한 뒤 **GameAnvil > SyncController**를 선택해 바로 생성할 수 있습니다.
+Unity Hierarchy 창에서 마우스 오른쪽 버튼을 클릭한 뒤 **GameAnvil > SyncController** 를 선택해 바로 생성할 수 있습니다.
 
 ![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/02-add-sync-controller.png)
 
@@ -27,7 +27,6 @@ SyncController에는 다음과 같은 옵션이 있습니다.
 
 | 옵션                  | 설명                                                                                                                                                      |
 |---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Use Synchronize Log | 동기화 관련 로그 출력 여부                                                                                                                                         |
 | Lazy Loading        | 방에 입장한 직후 자동으로 바로 기존 데이터를 동기화할지 여부 <br/>만약 이 옵션을 false로 설정할 경우, 기존 데이터를 동기화하고 싶은 시점에 직접 SyncController::InstantiateSyncObject()를 호출한다. <br/>(기본값: true) |
 
 ## 게임 오브젝트 생성/파괴 동기화, Sync
@@ -60,11 +59,10 @@ public void Instanticate()
 
 ### 게임 중 방에 새 유저가 입장한 경우 게임 오브젝트 생성 동기화
 
-플레이중인 방에 새 유저가 입장한 경우 입장과 동시에 방에서 플레이 중이던 다른 유저들의 동기화 데이터를 전송받게 됩니다. 이렇게 전송된 동기화 데이터를 이용해 다른 유저들의 게임 오브젝트를 자동으로 생성하고 동기화합니다.
+플레이 중인 방에 새 유저가 입장한 경우 입장과 동시에 방에서 플레이 중이던 다른 유저들의 동기화 데이터를 전송 받게 됩니다. 이렇게 전송된 동기화 데이터를 이용해 다른 유저들의 게임 오브젝트를 자동으로 생성하고 동기화합니다.
 
 하지만 방에 입장한 직후 바로 게임 오브젝트를 생성하고 싶지 않을 수 있습니다. 이런 경우에는 SyncController의 Lazy Loading 옵션을 false로 설정하고, 원하는 시점에 SyncController.InstantiateSyncObject()를 호출하여 다른 유저들의 게임 오브젝트를 생성할 수 있습니다.
-![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/03-lazy-loading.png)
-
+![](https://static.toastoven.net/prod_gameanvil/files/v2_2/unity-basic/05-sync/03-lazy-loading.png)
 
 ```c#
 public void InstantiateSyncObject()

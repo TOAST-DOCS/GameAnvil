@@ -15,9 +15,9 @@ const serviceName: string;
 const user = new GameAnvilUser(connector, serviceName, 1);
 ```
 
-### 다수의 GameUserAgnet 생성
+### 다수의 GameAnvilUser 생성
 
-GameAnvilConnector객체는 프로세스내에서 하나만 사용하는 것이 일반적인 반면에 GameAnvilUser는 여러개를 동시에 생성해서 운용하는 것이 지원됩니다. 여러개가 각각 다른 서비스로 로그인 하는 것이 가능하며, 만일 하나의 서비스에 여러개의 GameAnvilUser를 사용하고 싶다면 subId를 이용해 구분해서 생성할 수 있습니다.
+GameAnvilConnector 객체는 프로세스 내에서 하나만 사용하는 것이 일반적인 반면에 GameAnvilUser는 여러 개를 동시에 생성해서 운용하는 것이 지원됩니다. 여러 개가 각각 다른 서비스로 로그인 하는 것이 가능하며, 만일 하나의 서비스에 여러 개의 GameAnvilUser를 사용하고 싶다면 subId를 이용해 구분해서 생성할 수 있습니다.
 
 ```typescript
 const connector: GameAnvilConnector;
@@ -33,15 +33,15 @@ const user3 = new GameAnvilUser(connector, otherServiceName, 1);
 
 GameNode 안에 클라이언트와 대응하는 서버 유저 객체 생성을 요청합니다. GameNode에 로그인을 완료해야만 유저의 여러 다른 기능들을 사용할 수 있습니다.
 
-로그인 할 유저 타입과 채널 아이디를 필수 인자로 받으며 세번째 인자로 추가 정보를 보낼 수 있습니다. 로그인 동작 완료 시점에 Promise를 통해 로그인에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
+로그인할 유저 타입과 채널 아이디를 필수 인자로 받으며 세 번째 인자로 추가 정보를 보낼 수 있습니다. 로그인 동작 완료 시점에 Promise를 통해 로그인에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
 
 ```typescript
-const userType: stirng;
+const userType: string;
 const channelId: string;
 const payload: Payload;
 
 const loginResult = await user.login(userType, channelId, payload);
-console.log(`Login Result : ${ResultCodeLogin[loginResult.errorCode]}`);
+console.log(`Login Result : ${ResultCodeLogin[loginResult.resultCode]}`);
 ```
 
 로그인 성공 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
@@ -413,35 +413,35 @@ console.log(`Match room result: ${ResultCodeMatchRoom[matchRoomResult.errorCode]
 if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
     console.log("Match room success");
 } else {
-    consoel.log("Match room fail");
+    console.log("Match room fail");
 }
 ```
 
 매치메이킹에 실패했을 경우, errorCode를 통해 그 원인을 알 수 있습니다. 다음은 서버로부터 받을 수 있는 errorCode 종류입니다.
 
-| 코드 이름                                    | 값   | 설명                                |
-|----------------------------------------------|-------|-------------------------------------|
-| `PARSE_ERROR`                                | -2    | 패킷 파싱 에러                     |
-| `TIMEOUT`                                    | -1    | 타임 아웃                          |
-| `SYSTEM_ERROR`                               | 1     | 서버 시스템 에러                   |
-| `INVALID_PROTOCOL`                           | 2     | 서버에 등록되지 않은 프로토콜      |
-| `MATCH_ROOM_SUCCESS`                         | 0     | 성공                               |
-| `MATCH_ROOM_FAIL_CONTENT`                    | 901   | 실패: 컨텐츠에서 거부됨            |
-| `MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST`        | 902   | 실패: 방이 존재하지 않음           |
-| `MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM`        | 903   | 실패: 이미 방에 들어가 있음        |
-| `MATCH_ROOM_FAIL_LEAVE_ROOM`                 | 904   | 실패: 기존 방에서 나가기가 실패한 경우 |
-| `MATCH_ROOM_FAIL_IN_PROGRESS`                | 905   | 실패: 이미 매치메이킹이 진행 중인 경우 |
+| 코드 이름                                   | 값   | 설명                                |
+|-----------------------------------------|-------|-------------------------------------|
+| `PARSE_ERROR`                           | -2    | 패킷 파싱 에러                     |
+| `TIMEOUT`                               | -1    | 타임아웃                          |
+| `SYSTEM_ERROR`                          | 1     | 서버 시스템 에러                   |
+| `INVALID_PROTOCOL`                      | 2     | 서버에 등록되지 않은 프로토콜      |
+| `MATCH_ROOM_SUCCESS`                    | 0     | 성공                               |
+| `MATCH_ROOM_FAIL_CONTENT`               | 901   | 실패: 콘텐츠에서 거부됨            |
+| `MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST`   | 902   | 실패: 방이 존재하지 않음           |
+| `MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM`   | 903   | 실패: 이미 방에 들어가 있음        |
+| `MATCH_ROOM_FAIL_LEAVE_ROOM`            | 904   | 실패: 기존 방에서 나가기가 실패한 경우 |
+| `MATCH_ROOM_FAIL_IN_PROGRESS`           | 905   | 실패: 이미 매치 메이킹이 진행 중인 경우 |
 | `MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST`| 906   | 실패: 조건에 맞는 방을 찾던 중 방이 사라짐 |
-| `MATCH_ROOM_FAIL_CREATE_ROOM_ID`             | 907   | 실패: 방 아이디 발급 실패          |
-| `MATCH_ROOM_FAIL_CREATE_ROOM`                | 908   | 실패: 방 생성 실패                 |
-| `MATCH_ROOM_FAIL_INVALID_ROOM_ID`            | 909   | 실패: 잘못된 룸아이디              |
-| `MATCH_ROOM_FAIL_INVALID_NODE_ID`            | 910   | 실패: 잘못된 노드아이디            |
-| `MATCH_ROOM_FAIL_INVALID_USER_ID`            | 911   | 실패: 잘못된 유저아이디            |
-| `MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND`     | 912   | 실패: 매칭을 진행했으나 방을 찾지 못함 |
+| `MATCH_ROOM_FAIL_CREATE_ROOM_ID`        | 907   | 실패: 방 아이디 발급 실패          |
+| `MATCH_ROOM_FAIL_CREATE_ROOM`           | 908   | 실패: 방 생성 실패                 |
+| `MATCH_ROOM_FAIL_INVALID_ROOM_ID`       | 909   | 실패: 잘못된 룸아이디              |
+| `MATCH_ROOM_FAIL_INVALID_NODE_ID`       | 910   | 실패: 잘못된 노드아이디            |
+| `MATCH_ROOM_FAIL_INVALID_USER_ID`       | 911   | 실패: 잘못된 유저아이디            |
+| `MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND` | 912   | 실패: 매칭을 진행했으나 방을 찾지 못함 |
 | `MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY` | 913 | 실패: 잘못된 매칭 유저 카테고리     |
 | `MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY` | 914 | 실패: 매칭 유저 카테고리 사이즈가 0일 경우 |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL`  | 915   | 실패: 매칭 신청서가 없음           |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL`  | 916   | 실패: 매칭 정보가 없음             |
+| `MATCH_ROOM_FAIL_MATCH_FORM_NULL`  | 915   | 실패: 매칭 신청서가 없음           |
+| `MATCH_ROOM_FAIL_MATCH_INFO_NULL` | 916   | 실패: 매칭 정보가 없음             |
 
 룸 매치메이킹에 성공했을 경우, 응답을 통해 roomId를 포함한 정보를 확인할 수 있습니다.
 
@@ -450,7 +450,7 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
     console.log(`Match room is cancel: ${matchRoomResult.isCancel}`);
     console.log(`Matched room id: ${matchRoomResult.roomId}`);
     console.log(`Matched room name: ${matchRoomResult.roomName}`);
-    consoel.log(`Is matched room created? : ${matchRoomResult.created}`);
+    console.log(`Is matched room created? : ${matchRoomResult.created}`);
 }
 ```
 
@@ -459,12 +459,12 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 지정한 이름의 방에 입장하거나, 파티 매칭을 위한 방에 입장할 수 있습니다. 지정한 이름의 방이 없을 경우 새롭게 생성하여 입장합니다.
 
 ```typescript
-const roomType: stirng;
+const roomType: string;
 const roomName: string;
 const isParty: boolean;
 const payload: Payload;
 
-const namedRoomResult = await user.namedDroom(roomType, roomName, isParty, payload);
+const namedRoomResult = await user.namedRoom(roomType, roomName, isParty, payload);
 
 console.log(`Named room result: ${ResultCodeNamedRoom[namedRoomResult.errorCode]}`);
 ```
@@ -475,7 +475,7 @@ console.log(`Named room result: ${ResultCodeNamedRoom[namedRoomResult.errorCode]
 if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
     console.log("Named room success");
 } else {
-    console.log("Named room success");
+    console.log("Named room fail");
 }
 ```
 
@@ -587,7 +587,7 @@ console.log(`Match party cancel result: ${ResultCodeMatchPartyCancel[matchCancel
 if (matchCancelResult.resultCode === ResultCodeMatchPartyCancel.MATCH_PARTY_CANCEL_SUCCESS) {
     console.log("Match party cancel success.");
 } else {
-    consoel.log("Match party cancel fail.");
+    console.log("Match party cancel fail.");
 }
 ```
 
@@ -645,10 +645,10 @@ console.log(`Move channel result: ${ResultCodeMoveChannel[moveChannelResult.erro
 채널 이동이 정상적으로 진행되었는지 여부는 Promise 결과값인 Result의 resultCode를 통해 아래와 같이 확인할 수 있습니다.
 
 ```typescript
-iF (moveChannelResult.resultCode === ResultcodeMoveChannel.MOVE_CHANNEL_SUCCESS) {
+if (moveChannelResult.resultCode === ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS) {
     console.log("Move channel success.");
 } else {
-    consoel.log("Move channel fail.");
+    console.log("Move channel fail.");
 }
 ```
 
@@ -671,7 +671,7 @@ iF (moveChannelResult.resultCode === ResultcodeMoveChannel.MOVE_CHANNEL_SUCCESS)
 ```typescript
 if (moveChannelResult.resultCode === ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS) {
     console.log(`Move channel forced: ${moveChannelResult.data.force}`);
-    consoel.log(`Move channel id: ${moveChannelResult.data.channelId});
+    console.log(`Move channel id: ${moveChannelResult.data.channelId}`);
 }
 ```
 
@@ -680,8 +680,7 @@ if (moveChannelResult.resultCode === ResultCodeMoveChannel.MOVE_CHANNEL_SUCCESS)
 ```typescript
 user.onMoveChannel = (user, result) => {
     console.log(`Move channel forced: ${result.force}`);
-    consoel.log(`Move channel id: ${result.channelId});
-
+    console.log(`Move channel id: ${result.channelId}`);
 }
 ```
 
@@ -711,14 +710,15 @@ user.onSessionClose = (user, resultCode, payload) => {
 }
 ```
 
-| 코드 이름                                    | 값   | 설명                                                                                                  |
-|----------------------------------------------|-------|------------------------------------------------------------------------------------------------------|
-| `SESSION_CLOSE_BASE_USER`                    | 2011  | 서버에서 BaseUser의 `closeConnection()` 호출                                                        |
-| `SESSION_CLOSE_ADMIN_KICK`                   | 2012  | 어드민에서 강제 종료                                                                                 |
-| `SESSION_CLOSE_DUPLICATE_LOGIN`              | 2032  | 중복 접속으로 인한 강제 종료                                                                         |
-| `SESSION_CLOSE_BY_NEW_CONNECTION`            | 2040  | 같은 계정 정보로 새로운 로그인 요청 시 이전 접속 종료. 네트워크 순단 등 재접속 시 사용. 문의 필요.     |
-| `SESSION_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041  | 클라이언트와의 연결 끊김 감지. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.       |
-| `SESSION_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | 세션을 찾을 수 없는 경우. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.            |
+| 코드 이름                                             | 값   | 설명                                                                                                  |
+|---------------------------------------------------|-------|------------------------------------------------------------------------------------------------------|
+| `FORCE_CLOSE_USER`                              | 2011  | 서버에서 BaseUser의 `closeConnection()` 호출                                                        |
+| `FORCE_CLOSE_ADMIN_KICK`                        | 2012  | 어드민에서 강제 종료                                                                                      |
+| `FORCE_CLOSE_INVALID_PROTOCOL`                  | 2013  | 잘못된 프로토콜                                                                                      |
+| `FORCE_CLOSE_DUPLICATE_LOGIN`                   | 2032  | 중복 접속으로 인한 강제 종료                                                                         |
+| `FORCE_CLOSE_BY_NEW_CONNECTION`                 | 2040  | 같은 계정 정보로 새로운 로그인 요청 시 이전 접속 종료. 네트워크 순단 등 재접속 시 사용. 문의 필요.     |
+| `FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT`      | 2041  | 클라이언트와의 연결 끊김 감지. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.       |
+| `FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | 세션을 찾을 수 없는 경우. 일반적으로 발생하지 않으며, 발생 시 GameAnvil 개발팀에 문의 필요.            |
 
 ### 어드민에 의해 강제 퇴장
 

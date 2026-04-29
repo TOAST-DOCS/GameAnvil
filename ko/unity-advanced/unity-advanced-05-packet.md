@@ -35,8 +35,8 @@ public async void RequestPacket()
     try
     {
         Packet packet = Packet.MakePacket(new Protocol.SampleRequest());
-        ErrorResult<ResultCode, Protocol.SampleResponse> result = await connector.Request<Protocol.SampleResponse>(packet);
-        if (result.ErrorCode == ResultCode.SUCCESS)
+        Result<ResultCode, Protocol.SampleResponse> result = await connector.Request<Protocol.SampleResponse>(packet);
+        if (result.ResultCode == ResultCode.SUCCESS)
         {
             // 성공
         } else

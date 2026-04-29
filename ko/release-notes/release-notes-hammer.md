@@ -1,5 +1,15 @@
 ## Game > GameAnvil > 릴리스 노트 > GameHammer
 
+### 2.2.0 (2026.01.29)
+
+#### New
+* Java 21에서 실행할 수 있도록 업데이트
+
+#### Change
+* Authentication 응답에서 기존 빈 문자열을 전달하고 있던 message 필드 제거
+
+---
+
 ### 2.1.0 (2025.06.30)
 
 #### Change

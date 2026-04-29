@@ -20,7 +20,7 @@ GameAnvil을 사용하면 손쉽게 게임 서버와 클라이언트를 개발�
 
 아래 단계를 진행하면 만들어지는 최종 서버 샘플 프로젝트는 아래 링크에서 다운로드할 수 있습니다. 초기 템플릿에서 여러 단계를 거쳐 서버 기능을 구현하면 어떤 구조가 되는지 미리 확인하려면 해당 프로젝트를 내려받아 참고할 수 있습니다.
 
-[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Advanced_Server.zip?disposition=attachment)
+[서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil_tutorial_advanced.zip?disposition=attachment)
 
 ### GameAnvil 프로젝트 구성
 
@@ -28,7 +28,7 @@ GameAnvil을 사용하면 손쉽게 게임 서버와 클라이언트를 개발�
 
 GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ 템플릿을 제공하여 보다 간단하게 초기 작업을 완료할 수 있습니다. 다음 링크에서 IntelliJ용 프로젝트 파일 템플릿을 다운로드할 수 있습니다. 다운로드한 템플릿은 압축을 풀지 않도록 합니다.
 
-[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil%20Template.zip?disposition=attachment)
+[템플릿 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_2/GameAnvil%20Template.zip?disposition=attachment)
 
 다운로드한 템플릿을 적용하기 위해 IntelliJ를 실행합니다. **Welcome to IntelliJ IDEA** 화면 좌측 메뉴에서 **Customize**를 선택한 뒤 **Import Settings...** 를 클릭합니다. 또는 전체 검색창에서 **Import Settings...** 를 검색합니다.
 
@@ -44,9 +44,9 @@ GameAnvil에서는 이와 같은 일련의 과정을 대신해 주는 IntelliJ �
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/3_select_import.png)
 
-IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 뒤 왼쪽 목록을 스크롤하여 하단의 **Templates**에 있는 `GameAnvil 2.1.0 Template`을 선택합니다. 프로젝트 이름을 설정합니다. 이름에 공백이 있어서는 안 됩니다. 프로젝트 위치를 확인한 뒤 프로젝트를 생성합니다.
+IntelliJ 오른쪽 상단의 버튼 그룹에서 **New Project**를 클릭한 뒤 왼쪽 목록을 스크롤하여 하단의 **Templates**에 있는 `GameAnvil 2.2.0 Template`을 선택합니다. 프로젝트 이름을 설정합니다. 이름에 공백이 있어서는 안 됩니다. 프로젝트 위치를 확인한 뒤 프로젝트를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/4_imported_gameanvil_template.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_2/tutorial/advanced-tutorial/4_imported_gameanvil_template.png)
 
 이제 IntelliJ에 서버 프로젝트 골격이 구성되었습니다. Project 패널을 보면 코드와 설정 파일들이 생성된 것을 확인할 수 있습니다.
 
@@ -88,11 +88,11 @@ Unity Hub를 실행합니다. 오른쪽 상단의 **NEW**를 클릭해 새로운
 
 다음 링크에서 GameAnvil 커넥터를 내려받으십시오. 커넥터는 GameAnvil 서버와의 통신에 필요한 클라이언트 API를 제공하여 간단한 코드만으로 클라이언트를 구현할 수 있도록 도와주는 패키지입니다.
 
-[gameanvil-connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
+[gameanvil-connector.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector.unitypackage)
 
 실습에 필요한 클라이언트 프로젝트 생성을 위해 아래 링크에서 튜토리얼용 코드와 이미지 소스 등이 포함된 Unity 패키지를 다운로드합니다.
 
-[gameanvil_tutorial_advanced.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil_tutorial_advanced.unitypackage)
+[gameanvil_tutorial_advanced.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil_tutorial_advanced.unitypackage)
 
 다운로드한 패키지 파일을 Unity 프로젝트로 드래그해 가져옵니다. 또는 **Asset > Import Package > Custom Package...** 메뉴를 열어 파인더 또는 파일 탐색기에서 패키지 파일을 선택합니다. Import Unity Package 대화 상자에서 목록의 모든 체크 박스를 선택한 뒤 **Import**를 클릭합니다.
 
@@ -115,7 +115,6 @@ Unity Hub를 실행합니다. 오른쪽 상단의 **NEW**를 클릭해 새로운
 ```
 "--add-opens", "java.base/java.lang=ALL-UNNAMED",
 "--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED" 
-"-XX:+UseG1GC"
 ```
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/13_gameanvil_run.png)
@@ -301,9 +300,9 @@ GameAnvil에서는 게임 유저와 게임 룸의 기본 구현을 미리 준비
 
 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **game**이라는 이름의 새로운 패키지를 생성합니다. 그리고 **game** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil User**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicUser**를, **Service name**에 **User type**에 **USER_TYPE_BASIC**을 입력한 뒤 **OK**를 클릭합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/16_create_user.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_2/tutorial/advanced-tutorial/16_create_user.png)
 
-GameAnvil에서 제공하는 IUser 인터페이스를 구현하여 게임 유저를 구현하는 기본 코드가 작성된 파일이 생성됩니다. GameAnvil에서 원하는 기능의 게임 유저를 구현하려면, IUser 인터페이스를 구현한 후 상황에 맞게 호출되는 여러 콜백 함수들을 오버라이딩하여 원하는 코드를 실행하도록 설정하면 됩니다. 다음은 지원하는 콜백 함수 목록의 일부입니다.
+GameAnvil에서 제공하는 BaseGameUser 추상 클래스를 상속 구현하여 게임 유저를 구현하는 기본 코드가 작성된 파일이 생성됩니다. GameAnvil에서 원하는 기능의 게임 유저를 구현하려면, BaseGameUser 추상 클래스를 상속 구현한 후 상황에 맞게 호출되는 여러 콜백 함수들을 오버라이딩하여 원하는 코드를 실행하도록 설정하면 됩니다. 다음은 지원하는 콜백 함수 목록의 일부입니다.
 
 - onLogin: 로그인 요청 시에 실행되는 콜백입니다. 반환값으로 로그인 요청 허용 여부를 전달해야 합니다. false를 반환하면 클라이언트는 로그인에 실패할 것입니다. 파라미터를 통해 클라이언트로부터 받은 페이로드를 참조할 수 있으며, 클라이언트로 되돌려줄 페이로드에 대한 참조를 통해 로그인 허용 정보 외에 추가 정보를 클라이언트에 전달할 수 있습니다.
 - onPostLogin: 로그인 이후에 실행되는 콜백입니다.
@@ -312,28 +311,16 @@ GameAnvil에서 제공하는 IUser 인터페이스를 구현하여 게임 유저
 
 이외의 콜백 함수들은 로그인 과정에 관여하지 않으므로 당장 모든 콜백이 무슨 의미인지 완벽하게 알아야 할 필요는 없습니다.
 
-onLogin 콜백 메서드에서는 로그인 과정에 실행되어야 하는 동작을 구현합니다. 이 예제에서는 별다른 로그인 구현 없이, 무조건 로그인에 성공하도록 true를 반환하도록 합니다. 그리고 userContext의 getter를 생성합니다.
+onLogin 콜백 메서드에서는 로그인 과정에 실행되어야 하는 동작을 구현합니다. 이 예제에서는 별다른 로그인 구현 없이, 무조건 로그인에 성공하도록 true를 반환하도록 합니다.
 
 ```java
 @GameAnvilUser(
-        gameServiceName = "BASIC_SERVICE",
-        gameType = "USER_TYPE_BASIC",
-        useChannelInfo = true
-)
-public class BasicUser implements IUser {
+    gameServiceName = "BASIC_SERVICE",
+    gameType = "USER_TYPE_BASIC",
+    useChannelInfo = true)
+public class BasicUser extends BaseGameUser {
 
     private static final Logger logger = getLogger(BasicUser.class);
-
-    private IUserContext userContext;
-
-    public IUserContext getUserContext() {
-        return userContext;
-    }
-
-    @Override
-    public void onCreate(IUserContext userContext) {
-        this.userContext = userContext;
-    }
 
     @Override
     public boolean onLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
@@ -408,7 +395,7 @@ public class BasicUser implements IUser {
     public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, IPayload payload) {
         BasicRoomMatchForm gameRoomMatchForm = new BasicRoomMatchForm();
         try {
-            return userContext.matchRoom(matchingGroup, roomType, gameRoomMatchForm);
+            return matchRoom(matchingGroup, roomType, gameRoomMatchForm);
         } catch (NodeNotFoundException | TimeoutException | GameAnvilException e) {
             logger.error("BasicUser::onMatchRoom", e);
             return RoomMatchResult.FAILED;
@@ -430,8 +417,8 @@ public class BasicUser implements IUser {
         boolean isSuccess = true;
 
         try {
-            BasicUserMatchInfo term = new BasicUserMatchInfo(userContext.getUserId());
-            return userContext.matchUser(matchingGroup, roomType, term);
+            BasicUserMatchInfo term = new BasicUserMatchInfo(getUserId());
+            return matchUser(matchingGroup, roomType, term);
         } catch (TimeoutException | NodeNotFoundException | GameAnvilException e) {
             logger.error("BasicUser::onMatchUser", e);
         }
@@ -450,7 +437,7 @@ public class BasicUser implements IUser {
     }
 
     @Override
-    public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+    public void onTransferIn(IReadOnlyTransferPack iReadOnlyTransferPack, ITimerHandlerTransferPack iTimerHandlerTransferPack) {
 
     }
 
@@ -490,9 +477,9 @@ public class BasicUser implements IUser {
 
 ### Room
 
-로그인 가능한 유저 구현을 완료했습니다. 이제 게임 룸을 구현합니다. 유저 생성 방법과 마찬가지로 **GameAnvil Room** 파일 템플릿을 이용해 IRoom 인터페이스를 구현한 클래스를 생성합니다. **File name**에는 **BasicRoom**을, **Service name**에는 **BASIC_SERVICE**를, **Room type**에는 **ROOM_TYPE_BASIC**을, **User**에는 이전 단계에서 생성한 IUser 구현 클래스의 클래스명 **BasicUser**를 입력합니다.
+로그인 가능한 유저 구현을 완료했습니다. 이제 게임 룸을 구현합니다. 유저 생성 방법과 마찬가지로 **GameAnvil Room** 파일 템플릿을 이용해 BaseGameRoom를 상속하여 클래스를 생성합니다. **File name**에는 **BasicRoom**을, **Service name**에는 **BASIC_SERVICE**를, **Room type**에는 **ROOM_TYPE_BASIC**을, **User**에는 이전 단계에서 생성한 BaseGameUser를 상속한 클래스의 클래스명 **BasicUser**를 입력합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/17_create_room.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_2/tutorial/advanced-tutorial/17_create_room.png)
 
 **OK**를 클릭하면 지원하는 콜백 메서드가 자동으로 작성됩니다. GameAnvil에서 지원하는 콜백을 설명하기 위해 잠시 클라이언트의 API를 간단하게 설명하겠습니다. 클라이언트에서는 커넥터로 로그인 후에 다른 유저들과 통신하기 위해 방 관련 API를 호출할 수 있습니다. 방을 만들거나, 다른 유저가 만든 방에 참여하거나, 방에서 나가는 등의 동작을 지원합니다.
 
@@ -500,67 +487,56 @@ public class BasicUser implements IUser {
 - onJoinRoom: 다른 유저가 생성한 방에 입장을 요청할 때 실행됩니다. 다른 콜백들과 마찬가지로 방 입장을 요청한 유저 정보와 함께 방 입장 시 클라이언트에서 전달한 추가 정보를 제공하므로 이 정보를 토대로 방 입장을 허용할 것인지 여부를 결정해 반환해서 구현합니다.
 - onLeaveRoom: 유저가 방에서 퇴장을 요청할 때 실행됩니다. 다른 콜백들과 마찬가지로 방 퇴장으로 요청한 유저 정보와 함께 방 퇴장 요청 시에 같이 전달한 추가 정보를 제공하므로 이 정보를 토대로 방 퇴장을 허용할 것인지 여부를 결정해 반환해서 구현합니다.
 
-방에 속해있는 유저에 대한 정보는 **roomContext.getAllUsers()** 함수를 통해 얻을 수 있습니다. 이를 활용하여 방에 속해있는 모든 유저에게 동일한 패킷을 전달하는 **broadcast()** 함수를 추가합니다. 또한 방 매칭 정보를 저장할 필드와, 퍼즐 위치 동기화를 위한 자료구조를 추가합니다.
+방에 속해 있는 유저에 대한 정보는 **getAllUsers()** 함수를 통해 얻을 수 있습니다. 이를 활용하여 방에 속해 있는 모든 유저에게 동일한 패킷을 전달하는 **broadcast()** 함수를 추가합니다. 또한 방 매칭 정보를 저장할 필드와, 퍼즐 위치 동기화를 위한 자료 구조를 추가합니다.
 
 그리고 **onInit** 콜백에서 방 매칭 정보 객체를 생성하고, **onCreateRoom/onJoinRoom** 콜백에서 각각 방 매칭 정보를 등록하고 업데이트하는 코드를 추가합니다. 이를 통해 해당 방이 매칭 목록에 추가되도록 하여, 다른 유저가 해당 방으로 매칭될 수 있도록 합니다.
 
 ```java
 package org.example.game;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.nhn.gameanvil.exceptions.GameAnvilException;
 import com.nhn.gameanvil.exceptions.NodeNotFoundException;
 import com.nhn.gameanvil.game.GameAnvilRoom;
-import com.nhn.gameanvil.node.game.IRoom;
-import com.nhn.gameanvil.node.game.context.IRoomContext;
+import com.nhn.gameanvil.node.game.BaseGameRoom;
 import com.nhn.gameanvil.node.game.data.MatchCancelReason;
 import com.nhn.gameanvil.packet.IPayload;
 import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.serializer.IReadOnlyTransferPack;
 import com.nhn.gameanvil.serializer.ITimerHandlerTransferPack;
 import com.nhn.gameanvil.serializer.ITransferPack;
-import org.example.StringValues;
-import org.example.match.BasicRoomMatchInfo;
-import protocol.Puzzle;
-import org.slf4j.Logger;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
-
-import static org.slf4j.LoggerFactory.getLogger;
+import org.example.match.BasicRoomMatchInfo;
+import org.slf4j.Logger;
+import protocol.Puzzle;
 
 @GameAnvilRoom(
-        gameServiceName = "BASIC_SERVICE",
-        gameType = "ROOM_TYPE_BASIC",
-        useChannelInfo = true
+    gameServiceName = "BASIC_SERVICE",
+    gameType = "USER_TYPE_BASIC",
+    useChannelInfo = true
 )
-public class BasicRoom implements IRoom<BasicUser> {
+public class BasicRoom extends BaseGameRoom<BasicUser> {
 
     private static final Logger logger = getLogger(BasicRoom.class);
 
-    private IRoomContext roomContext;
-
-    // 코드 추가
     private BasicRoomMatchInfo gameRoomMatchInfo;
     public Map<Integer, Puzzle.PuzzlePosition> puzzlePositions = new HashMap<>();
 
     public void broadcast(Packet packet) {
-        final var allUsers = roomContext.getAllUsers();
+        final var allUsers = getAllUsers();
 
         for (final var user : allUsers) {
-            final var userContext = ((BasicUser)user).getUserContext();
-            userContext.send(packet);
+            user.send(packet);
         }
     }
 
     @Override
-    public void onCreate(IRoomContext<BasicUser> roomContext) {
-        this.roomContext = roomContext;
-    }
-
-    @Override
     public void onInit() {
-        gameRoomMatchInfo = new BasicRoomMatchInfo(roomContext.getId());
+        gameRoomMatchInfo = new BasicRoomMatchInfo(getId());
     }
 
     @Override
@@ -606,7 +582,7 @@ public class BasicRoom implements IRoom<BasicUser> {
     }
 
     @Override
-    public void onTransferIn(List<BasicUser> list, ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+    public void onTransferIn(List<BasicUser> list, IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
 
     }
 
@@ -652,10 +628,10 @@ public class BasicRoom implements IRoom<BasicUser> {
 
 ### GameNode
 
-이제 게임 유저와 게임 방이 준비되었습니다. 하지만 아직 게임 유저/게임 룸의 생성과 삭제 요청을 처리하는 노드가 없습니다. 게임 유저와 게임 룸을 관리하는 역할을 하는 노드는 GameNode입니다. 이 노드는 일반적으로 게임 서버가 하기를 기대하는 대부분의 게임 로직 처리 역할을 수행하는 노드입니다. GameAnvil에 노드를 추가하는 방법은 자연스럽고 간단합니다. 게임 유저와 게임 룸을 정의했던 것과 마찬가지로, 미리 정의된 인터페이스를 구현하여 클래스를 만든 뒤 원하는 기능을 추가 구현하면 됩니다.
+이제 게임 유저와 게임 방이 준비되었습니다. 하지만 아직 게임 유저/게임 룸의 생성과 삭제 요청을 처리하는 노드가 없습니다. 게임 유저와 게임 룸을 관리하는 역할을 하는 노드는 GameNode입니다. 이 노드는 일반적으로 게임 서버가 하기를 기대하는 대부분의 게임 로직 처리 역할을 수행하는 노드입니다. GameAnvil에 노드를 추가하는 방법은 자연스럽고 간단합니다. 게임 유저와 게임 룸을 정의했던 것과 마찬가지로, 미리 정의된 추상 클래스를 상속 구현하여 클래스를 만든 뒤 원하는 기능을 추가 구현하면 됩니다.
 **GameAnvil GameNode** 템플릿 선택 후 파일명을 **BasicGameNode**로, 서비스 이름을 **BASIC_SERVICE**로 설정하고 **OK** 버튼을 눌러 게임 노드 클래스를 생성합니다.
 
-![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/advanced-tutorial/18_create_game_node.png)
+![](https://static.toastoven.net/prod_gameanvil/images/v2_2/tutorial/advanced-tutorial/18_create_game_node.png)
 
 노드가 역할을 수행하기 위해서는 우선 노드가 루프를 실행해야 합니다. 노드가 실행될 때는 일련의 과정을 거치게 되므로 약간의 시간이 필요합니다. 노드의 실행 여부나 실행 과정 중 어느 단계에 있느냐를 나타내는 지표를 노드의 상태라고 부릅니다. 노드의 상태는 보통 아래 순서에 따라서 순차적으로 변경되면서 READY 상태에 도달합니다.
 
@@ -666,27 +642,17 @@ public class BasicRoom implements IRoom<BasicUser> {
 READY 상태에 도달한 노드는 이제 미리 사용자가 작성한 로직들을 실행할 준비가 된 상태입니다. 각 준비 단계에 도달했을 때 특정한 코드를 실행하고 싶다면, 콜백 메서드를 구현하여 엔진에서 콜백 메서드를 호출했을 때 해당 코드가 실행되도록 설정할 수 있습니다. 지금은 특별하게 실행해야 할 코드가 없으므로 생성된 코드를 그대로 사용합니다.
 
 ```java
+package org.example.game;
+
 import com.nhn.gameanvil.game.GameAnvilGameNode;
+import com.nhn.gameanvil.node.game.BaseGameNode;
 import com.nhn.gameanvil.node.game.ChannelUpdateType;
-import com.nhn.gameanvil.node.game.IGameNode;
-import com.nhn.gameanvil.node.game.context.IGameNodeContext;
 import com.nhn.gameanvil.node.game.data.IChannelRoomInfo;
 import com.nhn.gameanvil.node.game.data.IChannelUserInfo;
 import com.nhn.gameanvil.packet.IPayload;
 
 @GameAnvilGameNode(gameServiceName = "BASIC_SERVICE")
-public class BasicGameNode implements IGameNode {
-    private IGameNodeContext gameNodeContext;
-
-    public IGameNodeContext getContext() {
-        return gameNodeContext;
-    }
-
-    @Override
-    public void onCreate(IGameNodeContext gameNodeContext) {
-        this.gameNodeContext = gameNodeContext;
-    }
-
+public class BasicGameNode extends BaseGameNode {
     @Override
     public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, IChannelUserInfo channelUserInfo, int userId, String accountId) {
 
@@ -756,25 +722,25 @@ public class BasicGameNode implements IGameNode {
  마우스 오른쪽 버튼으로 클릭한 뒤 **New > Java Class**를 선택해 직접 클래스를 생성할 수도 있습니다. 
 
 ```java
-@GameAnvilGameNode(gameServiceName = StringValues.serviceName)
-public class BasicGameNode implements IGameNode {
+@GameAnvilGameNode(gameServiceName = "BASIC_SERVICE")
+public class BasicGameNode extends BaseGameNode {
     // ...
 }
 
 @GameAnvilRoom(
-    gameServiceName = StringValues.serviceName,
-    gameType = StringValues.roomType,
-    useChannelInfo = false
+    gameServiceName = "BASIC_SERVICE",
+    gameType = "USER_TYPE_BASIC",
+    useChannelInfo = true
 )
-public class BasicRoom implements IRoom<BasicUser> {
+public class BasicRoom extends BaseGameRoom<BasicUser> {
     // ...
 }
 
 @GameAnvilUser(
-    gameServiceName = StringValues.serviceName,
-    gameType = StringValues.userType,
-    useChannelInfo = false)
-public class BasicUser implements IUser {
+    gameServiceName = "BASIC_SERVICE",
+    gameType = "USER_TYPE_BASIC",
+    useChannelInfo = true)
+public class BasicUser extends BaseGameUser {
     // ...
 }
 ```
@@ -785,13 +751,12 @@ public class BasicUser implements IUser {
 
 이후 클라이언트 프로젝트 구현 시 해당 타입을 사용해야 하므로 기억해 둡니다. 예제에서 사용한 유저와 룸 타입은 다음과 같습니다.
 
-```java
-public class StringValues {
-    public static final String serviceName = "BASIC_SERVICE";
-    public static final String userType = "USER_TYPE_BASIC";
-    public static final String roomType = "ROOM_TYPE_BASIC";
-}
-```
+| Type           | value            |
+|----------------|------------------|
+| Severvice Name | BASIC_SERVICE    |
+| User Type      | USER_TYPE_BASIC  |
+| Room Type      | ROOM_TYPE_BASIC  |
+ 
 
 예제에서 사용할 BasicGameNode, BasicUser, BasicRoom 생성자를 각각 파라미터로 입력합니다.
 
@@ -1082,7 +1047,7 @@ public class Main {
 
 여기에서는 게임 유저가 전송한 메시지를 서버가 받아 방 안의 유저들에게 전송해 주는 기능을 작성합니다. 클라이언트가 전송한 메시지를 서버의 게임 룸에서 처리하기 위해서는 핸들러를 사용합니다. 핸들러란, 특정 프로토콜을 처리하기 위한 코드 묶음을 의미합니다. 핸들러는 프로토콜 종류에 따라서 여러 개가 될 수 있고, 방에 핸들러를 여러 개 등록할 수 있습니다. 따라서 방은 복수의 프로토콜을 처리 가능합니다.
 
-핸들러도 인터페이스 구현을 통해 생성됩니다. 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **handler**라는 이름의 새로운 패키지를 생성합니다. 그리고 **handler** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil RoomMessageHandler**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicHandler**, **Message**에 **BasicProtocol.MessageRequest**를, **Room**에 앞서 생성한 IRoom 구현 클래스의 클래스명 **BasicRoom**을 입력한 뒤 **OK**를 클릭합니다.
+핸들러도 템플릿을 이용해 생성할 수 있습니다. 프로젝트 패널에서 Main 클래스가 위치한 경로를 마우스 오른쪽 버튼으로 클릭한 뒤 **New > Package**를 선택해 **handler**라는 이름의 새로운 패키지를 생성합니다. 그리고 **handler** 패키지를 다시 마우스 오른쪽 버튼으로 클릭한 뒤 **New > GameAnvil RoomMessageHandler**를 선택합니다. 파일 생성 대화 상자가 열리면 **File name**에 **BasicHandler**, **Message**에 **BasicProtocol.MessageRequest**를, **Room**에 앞서 생성한 BaseGameRoom 상속 클래스의 클래스명 **BasicRoom**을 입력한 뒤 **OK**를 클릭합니다.
 
 이렇게 하면 BasicHandler 클래스가 생성되고 @GameAnvilController 어노테이션과 @GameRoomMapping 어노테이션으로 BasicRoom에서 사용하는 핸들러로 등록되어 별도의 등록 절차 없이 사용할 수 있습니다. 이제 BasicRoom은 BasicProtocol의 MessageRequest 메시지를 BasicHandler를 통해서 처리할 수 있게 되었습니다.
 
@@ -1095,20 +1060,22 @@ import com.nhn.gameanvil.common.GameAnvilController;
 import com.nhn.gameanvil.game.GameRoomMapping;
 import com.nhn.gameanvil.game.IRoomDispatchContext;
 import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.packet.message.IMessageHandler;
 import org.example.game.BasicRoom;
 import protocol.BasicProtocol;
+import protocol.BasicProtocol.MessageRequest;
 
 @GameAnvilController
-public class BasicHandler {
+public class BasicHandler implements IMessageHandler<IRoomDispatchContext, MessageRequest> {
 
-    @GameRoomMapping(value = BasicProtocol.MessageRequest.class, loadClass =  BasicRoom.class)
+    @GameRoomMapping(value = BasicProtocol.MessageRequest.class, loadClass = BasicRoom.class)
+    @Override
     public void execute(IRoomDispatchContext ctx, BasicProtocol.MessageRequest request) {
         BasicProtocol.MessageResponse response = BasicProtocol.MessageResponse.newBuilder().setMessage(request.getMessage()).build();
         BasicProtocol.MessageBroadcast broadcast = BasicProtocol.MessageBroadcast.newBuilder().setMessage(request.getMessage()).build();
 
         BasicRoom room = ctx.getRoom();
         room.broadcast(Packet.makePacket(broadcast));
-        ctx.reply(response);
     }
 }
 ```
@@ -1317,16 +1284,20 @@ import com.nhn.gameanvil.common.GameAnvilController;
 import com.nhn.gameanvil.game.GameRoomMapping;
 import com.nhn.gameanvil.game.IRoomDispatchContext;
 import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.packet.message.IMessageHandler;
 import org.example.game.BasicRoom;
+import protocol.BasicProtocol.MessageRequest;
 import protocol.Puzzle;
 
 @GameAnvilController
-public class PuzzlePositionHandler {
+public class PuzzlePositionHandler implements IMessageHandler<IRoomDispatchContext, Puzzle.PuzzlePosition> {
 
     @GameRoomMapping(value = Puzzle.PuzzlePosition.class, loadClass =  BasicRoom.class)
+    @Override
     public void execute(IRoomDispatchContext ctx, Puzzle.PuzzlePosition request) {
         BasicRoom room = ctx.getRoom();
-        room.broadcast(Packet.makePacket(request)); // 방 전체 유저에게 메시지를 전송
+        room.puzzlePositions.put(request.getIndex(), request);
+        room.broadcast(Packet.makePacket(request));
     }
 }
 
@@ -1391,7 +1362,7 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 빌드된 
 BasicRoom에 puzzlePositions 맵을 추가합니다. 이 맵은 각 퍼즐 조각별 위치 정보를 관리합니다.
 
 ```java
-public class BasicRoom implements IRoom<BasicUser> {
+public class BasicRoom extends BaseGameRoom<BasicUser> {
 
     private static final Logger logger = getLogger(BasicRoom.class);
 
@@ -1434,7 +1405,7 @@ public class PuzzlePositionHandler {
 새로운 유저가 방에 들어올 때 저장해 둔 퍼즐 위치 정보를 받을 수 있도록 BasicRoom의 onJoinRoom을 수정해 서버에 저장해 둔 퍼즐의 위치 정보를 전송하도록 합니다.
 
 ```java
-public class BasicRoom implements IRoom<BasicUser> {
+public class BasicRoom extends BaseGameRoom<BasicUser> {
 
     ...(생략)...
 
@@ -1526,18 +1497,18 @@ import com.nhn.gameanvil.common.GameAnvilController;
 import com.nhn.gameanvil.game.GameRoomMapping;
 import com.nhn.gameanvil.game.IRoomDispatchContext;
 import com.nhn.gameanvil.packet.Packet;
-import org.example.game.BasicRoom;
-import protocol.Puzzle;
-
+import com.nhn.gameanvil.packet.message.IMessageHandler;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.example.game.BasicRoom;
+import protocol.Puzzle;
 
 @GameAnvilController
-public class ScatterPuzzleHandler {
+public class ScatterPuzzleHandler implements IMessageHandler<IRoomDispatchContext, Puzzle.ScatterPuzzle> {
     private static final int mapSize = 400;
 
     private static class Point {
@@ -1550,13 +1521,14 @@ public class ScatterPuzzleHandler {
         }
     }
 
-    @GameRoomMapping(value = Puzzle.ScatterPuzzle.class, loadClass =  BasicRoom.class)
+    @GameRoomMapping(value = Puzzle.ScatterPuzzle.class, loadClass = BasicRoom.class)
+    @Override
     public void execute(IRoomDispatchContext ctx, Puzzle.ScatterPuzzle request) {
         BasicRoom room = ctx.getRoom();
         room.puzzlePositions = new HashMap<>();
         List<ScatterPuzzleHandler.Point> random = IntStream.rangeClosed(-4, 4).boxed()
-                .map(i -> new Point(i * mapSize / 4, i % 2 == 0 ? mapSize : -mapSize))
-                .collect(Collectors.toList());
+            .map(i -> new Point(i * mapSize / 4, i % 2 == 0 ? mapSize : -mapSize))
+            .collect(Collectors.toList());
         random = Stream.concat(random.stream(), random.stream().map(p -> new Point(p.y, p.x))).collect(Collectors.toList());
         Collections.shuffle(random);
 
@@ -1663,12 +1635,14 @@ import com.nhn.gameanvil.common.GameAnvilController;
 import com.nhn.gameanvil.game.GameRoomMapping;
 import com.nhn.gameanvil.game.IRoomDispatchContext;
 import com.nhn.gameanvil.packet.Packet;
+import com.nhn.gameanvil.packet.message.IMessageHandler;
 import org.example.game.BasicRoom;
 import protocol.Puzzle;
 
 @GameAnvilController
-public class PuzzlePositionReqHandler {
+public class PuzzlePositionReqHandler implements IMessageHandler<IRoomDispatchContext, Puzzle.PuzzlePositionReq> {
     @GameRoomMapping(value = Puzzle.PuzzlePositionReq.class, loadClass =  BasicRoom.class)
+    @Override
     public void execute(IRoomDispatchContext ctx, Puzzle.PuzzlePositionReq request) {
         BasicRoom room = ctx.getRoom();
         room.puzzlePositions.values().stream().forEach(puzzlePosition -> { room.broadcast(Packet.makePacket(puzzlePosition)); });
@@ -1709,6 +1683,13 @@ public class BasicUserMatchInfo extends AbstractUserMatchInfo implements Compara
     }
 
     @Override
+    public ByteString serialize() {
+        return ProtoSerializer.ObjectListCodec.writer()
+            .addInt32(userId)
+            .buildByteString();
+    }
+    
+    @Override
     public int getId() {
         return userId;
     }
@@ -1720,7 +1701,7 @@ public class BasicUserMatchInfo extends AbstractUserMatchInfo implements Compara
 
     @Override
     public int compareTo(BasicUserMatchInfo o) {
-        return 0;
+        return userId - o.userId;
     }
 }
 
@@ -1729,7 +1710,7 @@ public class BasicUserMatchInfo extends AbstractUserMatchInfo implements Compara
 이러한 UserMatchInfo는 클라이언트가 유저 매치메이킹을 요청할 때 서버의 게임 유저에서 onMatchUser 콜백을 구현하는 과정에서 생성한 후 사용합니다. GameAnvil은 기본적인 유저 매치 메이커를 제공합니다. 아래의 onMatchUser는 이러한 엔진의 기본 유저 매치메이킹을 matchUser API를 통해 사용하고 있습니다.
 
 ```java
-public class BasicUser implements IUser {
+public class BasicUser extends BaseGameUser {
 
     ...(생략)...
 
@@ -1738,8 +1719,8 @@ public class BasicUser implements IUser {
         boolean isSuccess = true;
 
         try {
-            BasicUserMatchInfo term = new BasicUserMatchInfo(userContext.getUserId());
-            return userContext.matchUser(matchingGroup, roomType, term);
+            BasicUserMatchInfo term = new BasicUserMatchInfo(getUserId());
+            return matchUser(matchingGroup, roomType, term);
         } catch (TimeoutException | NodeNotFoundException | GameAnvilException e) {
             logger.error("BasicUser::onMatchUser", e);
         }
@@ -1780,6 +1761,13 @@ public class BasicUserMatchMaker extends AbstractUserMatchMaker<BasicUserMatchIn
     }
 
     private int matchSize = 2;
+
+    @Override
+    public BasicUserMatchInfo deserialize(ByteString byteString) {
+        var reader = ProtoSerializer.ObjectListCodec.reader(byteString);
+        int userId = reader.getInt32(0);
+        return new BasicUserMatchInfo(userId);
+    }
 
     @Override
     public void onMatch() {
@@ -1872,6 +1860,11 @@ public class BasicRoomMatchForm extends AbstractRoomMatchForm {
     public BasicRoomMatchForm() {
         super();
     }
+
+    @Override
+    public ByteString serialize() {
+        return ByteString.empty();
+    }
 }
 ```
 
@@ -1891,6 +1884,13 @@ public class BasicRoomMatchInfo extends AbstractRoomMatchInfo {
 
     public BasicRoomMatchInfo(int roomId) {
         super(roomId, MAX_ENTRY_USER);
+    }
+
+    @Override
+    public ByteString serialize() {
+        return ProtoSerializer.ObjectListCodec.writer()
+            .addInt32(getRoomId())
+            .buildByteString();
     }
 }
 ```
@@ -1913,12 +1913,25 @@ public class BasicRoomMatchMaker extends AbstractRoomMatchMaker<BasicRoomMatchFo
 
     @Override
     public boolean onMatch(BasicRoomMatchForm roomMatchForm, BasicRoomMatchInfo roomMatchInfo, Object... args) {
-        return false;
+        return true;
     }
 
     @Override
     public int compare(BasicRoomMatchInfo o1, BasicRoomMatchInfo o2) {
         return 0;
+    }
+
+
+    @Override
+    public BasicRoomMatchInfo deserializeRoomMatchInfo(ByteString byteString) {
+        var reader = ProtoSerializer.ObjectListCodec.reader(byteString);
+        int roomId = reader.getInt32(0);
+        return new BasicRoomMatchInfo(roomId);
+    }
+
+    @Override
+    public BasicRoomMatchForm deserializeRoomMatchForm(ByteString byteString) {
+        return new BasicRoomMatchForm();
     }
 }
 ```
@@ -1928,7 +1941,7 @@ compare 메서드는 매칭 풀에 들어 있는 방을 정렬하는 조건을 �
 이제 룸 매치메이킹을 위한 준비가 거의 끝났습니다. 클라이언트가 룸 매치 요청을 보내면 서버의 BasicUser는 onMatchRoom 콜백이 호출됩니다. 이 콜백에서 앞서 살펴본 BasicRoomMatchForm 객체를 생성한 뒤 matchRoom API에 인자로 전달하여 호출합니다. 즉, 클라이언트가 보낸 룸 매칭 요청을 여기에서 매치 메이커로 전달했습니다.
 
 ```java
-public class BasicUser implements IUser {
+public class BasicUser extends BaseGameUser {
 
     ...(생략)...
 
@@ -1936,7 +1949,7 @@ public class BasicUser implements IUser {
     public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, IPayload payload) {
         BasicRoomMatchForm gameRoomMatchForm = new BasicRoomMatchForm();
         try {
-            return userContext.matchRoom(matchingGroup, roomType, gameRoomMatchForm);
+            return matchRoom(matchingGroup, roomType, gameRoomMatchForm);
         } catch (NodeNotFoundException | TimeoutException | GameAnvilException e) {
             logger.error("BasicUser::onMatchRoom", e);
             return RoomMatchResult.FAILED;
@@ -1958,7 +1971,9 @@ public class BasicRoom extends BaseRoom<BasicUser> {
     public boolean onCreateRoom(BasicUser user, IPayload payload, IPayload outPayload) {
         boolean isSuccess = true;
         try {
-            roomContext.registerRoomMatch(gameRoomMatchInfo, user.getUserContext().getUserId());
+            if (!isNamedRoom()) {
+                getMatchApi().registerRoomMatch(gameRoomMatchInfo, user.getUserId());
+            }
         } catch (NodeNotFoundException | TimeoutException | GameAnvilException e) {
             logger.error("BasicRoom::onCreateRoom()", e);
         }
@@ -1982,7 +1997,9 @@ public class BasicRoom extends BaseRoom<BasicUser> {
     public boolean onJoinRoom(BasicUser user, IPayload payload, IPayload outPayload) {
         boolean isSuccess = true;
         try {
-            roomContext.updateRoomMatch(gameRoomMatchInfo);
+            if (!isNamedRoom()) {
+                getMatchApi().updateRoomMatch(gameRoomMatchInfo);
+            }
         } catch (NodeNotFoundException | TimeoutException | GameAnvilException e) {
             logger.error("BasicRoom::onJoinRoom()", e);
         }
@@ -2008,7 +2025,7 @@ public class ConnectHandler : MonoBehaviour {
     {
         try
         {
-            var result = await user.MatchRoom(true, true, "ROOM_TYPE_BASIC", "", "");
+            var result = await user.MatchRoom(true, true, "ROOM_TYPE_BASIC", "MATCHING_GROUP", "");
             if (result.ErrorCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
             {
                 Debug.Log("Room Id : " + result.Data.RoomId);
