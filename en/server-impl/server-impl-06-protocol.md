@@ -66,6 +66,7 @@ protoc ./MyGame.proto --java_out=../java --csharp_out=./
 GameAnvil servers support most classes of `com.google.protobuf.GeneratedMessageV3` so that proto-buffer objects can be used in any transferable method. In normal situations, there is no problem with using proto buffer object as it is, but in certain situations, such as sending it to multiple clients, you can use `com.nhn.gameanvil.packet.Packet` class to improve performance.
 
 When sending a message to multiple clients, you can use it like this:
+<!-- fence-lint: F1 L69 — 리뷰 후 이 라인 삭제 (suggestion accept 시 자동 제거) -->
 ```java
 /**
  * Send a message to the user clients in the list provided.

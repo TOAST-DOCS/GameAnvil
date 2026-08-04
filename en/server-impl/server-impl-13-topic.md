@@ -89,6 +89,7 @@ Users can publish messages to any topic. Anyone who is subscribed to that topic 
 
 
 The below is an API list for publishing topic:
+<!-- fence-lint: F1 L92 — 리뷰 후 이 라인 삭제 (suggestion accept 시 자동 제거) -->
 ```java
 /**
  *  * Send packets to all clients
