@@ -73,3 +73,4 @@ When GameHammer is executed, DEBUG level logs related to the internal Library ma
 -Dio.netty.tryReflectionSetAccessible=true
 --add-opens java.base/java.lang=ALL-UNNAMED
 --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+```

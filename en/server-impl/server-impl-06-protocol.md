@@ -93,3 +93,4 @@ default void sendToClients(@NotNull final Collection<IUserContext> userList, @No
  * @param packet   Packet to send
  */
 void sendToClients(@NotNull final Collection<IUserContext> userList, @NotNull final Packet packet)
+```

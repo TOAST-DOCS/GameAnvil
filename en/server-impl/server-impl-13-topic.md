@@ -371,3 +371,4 @@ void publishToRoom(String nodeTopic, String topic, Packet packet);
  * @param message   Message to be sent
  */
 void publishToRoom(String nodeTopic, String topic, GeneratedMessage message);
+```
