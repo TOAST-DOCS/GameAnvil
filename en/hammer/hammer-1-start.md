@@ -69,6 +69,8 @@ You can see the built files in the newly created target directory.
 
 When GameHammer is executed, DEBUG level logs related to the internal Library may occur. There is no exception to the action, but if you want to remove these logs, add the following to the VMOption.
 
+```
 -Dio.netty.tryReflectionSetAccessible=true
 --add-opens java.base/java.lang=ALL-UNNAMED
 --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
+```

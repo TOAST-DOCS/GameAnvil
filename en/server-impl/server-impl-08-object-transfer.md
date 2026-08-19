@@ -96,7 +96,6 @@ public void onTransferOut(ITransferPack transferPack) {
 
 Let's take a look at the callback methods that need to be processed by the target game node after the transfer. Users can access the desired object before it is transferred using the specified key. Restore the data of the room object that is transferred in this way. Especially, users can see that the list of the user objects in the room transferred is passed as a parameter. Except this, the overall flow is very similar to that of user transfer.
 
-<!-- fence-lint: F1 L99 — 리뷰 후 이 라인 삭제 (suggestion accept 시 자동 제거) -->
 ```java
 
 @Override
@@ -115,3 +114,4 @@ public void onTransferIn(List<GameUser> userList, ITransferPack transferPack, IT
         timerHandlerTransferPack.reRegister(StringValues.TEST_TIMER_HANDLER, testTimerHandler());
     }
 }
+```
