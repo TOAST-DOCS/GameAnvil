@@ -1,5 +1,7 @@
 <!-- machine_translated: true -->
 
+<!-- pre-align:aligned sig=a0b0bd0e481a -->
+
 <a id="game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection"></a>
 ## Game > GameAnvil > Unity 応用開発ガイド > バックグラウンド接続切れ防止 { #game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection }
 
