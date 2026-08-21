@@ -1,5 +1,7 @@
 <!-- machine_translated: true -->
 
+<!-- pre-align:aligned sig=941b0b4cb0e6 -->
+
 <a id="game-gameanvil-basic-tutorial"></a>
 ## Game > GameAnvil > Basic Tutorial { #game-gameanvil-basic-tutorial }
 
