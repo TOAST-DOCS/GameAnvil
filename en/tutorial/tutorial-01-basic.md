@@ -1,7 +1,6 @@
 <!-- machine_translated: true -->
 
 <a id="game-gameanvil-basic-tutorial"></a>
-
 ## Game > GameAnvil > Basic Tutorial { #game-gameanvil-basic-tutorial }
 
 <a id="create-multiplayer-games-easily-with-gameanvil"></a>
@@ -14,7 +13,6 @@ This article covers the process of using the basic features of GameAnvil to deve
 GameAnvil provides not only server engines, but also connectors that help connect clients to the server. Completing a sample to see how the server and client interact, you get familiar with the overall flow of using GameAnvil to develop your game.
 
 <a id="prepare-practice-environment---server-project"></a>
-
 ## Prepare Practice Environment - Server Project { #prepare-practice-environment---server-project }
 
 To create multiplayer games, you need a server program that corresponds to the client. After building up a game server, the tutorial proceeds in a way to implement the client.
@@ -82,7 +80,6 @@ Check the **gradle** settings in the **Set** menu.
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/9_gradle_config.png)
 
 <a id="modify-gameanvil-server-setting-file"></a>
-
 ## Modify GameAnvil Server Setting File { #modify-gameanvil-server-setting-file }
 
 You can change the GameAnvil server setting through the GameAnvilConfig.json file found in the resources package subpart of the project panel.
@@ -154,11 +151,9 @@ The content of the GameAnvil server setting file that has been written thus is a
 With the gateway settings, you can see that the TCP_SOCKET connection is set to use the 18200 port. This is the port connected to the client, which will be used in future client projects to enter the server access information.
 
 <a id="implement-gameanvil-server-feature"></a>
-
 ## Implement GameAnvil Server Feature { #implement-gameanvil-server-feature }
 
 <a id="perform-game-node"></a>
-
 ### Implement Game Node { #perform-game-node }
 In this chapter, we will implement the BasicGameNode required for the sample game operation among the various nodes of GameAnvil. GameAnvil provides multiple base classes with the prefix `Base`. The feature of the basic node is already implemented inside the base class, and users can use various callback features by inheriting from them. In this example, we try to create a game node class that inherits from the BaseGameNode base class.
 
@@ -233,7 +228,6 @@ public class SyncGameNode extends BaseGameNode {
 ```
 
 <a id="about-node"></a>
-
 ### About Node { #about-node }
 
 All nodes have status depending on whether a loop to start processing something has started. The following is some of the states that a node can have:
@@ -250,7 +244,6 @@ Auto-generated codes include codes that override the callbacks that are hooked t
 GameAnvil has most code prepared so no more code to write in this step. You can use the game node as it has been created.
 
 <a id="about-user-type"></a>
-
 ### About User Type { #about-user-type }
 
 The user is the object that receives the packet to join the room from each game node, a promised string that separates each user implementation.
@@ -258,7 +251,6 @@ The user is the object that receives the packet to join the room from each game 
 In addition to the nodes implemented above, you need a **game user** and **game room** class to use the room-based implementation provided by GameAnvil. I will describe how to easily implement with only interface implementation.
 
 <a id="implement-game-user"></a>
-
 ### Implement Game User { #implement-game-user }
 
 When a client logs in to the server, the server stores and retains the client information as an object called the **game user**. What kind of information the game user has to express can be implemented freely by the user's needs. Game user implementation can also be consistently implemented through the inheritance of the class and callback overriding.
@@ -432,7 +424,6 @@ Game users are created by requiring the client to log in to the server. On the s
 In this tutorial, to allow login without special validation, we have enabled the onLogin function to always return true. It will always create user objects when the client has a login request and responds successfully.
 
 <a id="implement-game-room"></a>
-
 ### Implement Game Room { #implement-game-room }
 
 Once you successfully access the game node as a game user, you can now receive packets from other users and through the game room. Game Room is a group that logically binds the users who receive the packet. Game rooms can also be created through interface implementation.
@@ -555,7 +546,6 @@ public class SyncGameRoom extends BaseGameRoom<SyncGameUser> {
 Game rooms are created when the game user requests room creation on the server. On the client side, you can simply call the method to create a room and enter the room that exists. When the user enters the room or when the room is created, you can easily paste the code by overriding appropriate callbacks.
 
 <a id="run-gameanvil-server"></a>
-
 ## Run GameAnvil Server { #run-gameanvil-server }
 
 The server setup required to run the basic tutorial sample is now complete. Let's go ahead and start the server.
@@ -586,7 +576,6 @@ When you start the server, you can see the message `All nodes are ready!!` among
 The server is now ready to receive client requests. In the next step, we will implement the client by using the GameAnvil connector and the Unity sample project.
 
 <a id="prepare-practice-environment---client-project"></a>
-
 ## Prepare Practice Environment - Client Project { #prepare-practice-environment---client-project }
 
 <a id="download-gameanvilconnector"></a>
@@ -637,7 +626,6 @@ In **File > Build Profiles**, add IntroScene to the **Scene List** to set it to 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_2/basic-tutorial/26_intro_scene_to_build_settings.png)
 
 <a id="gameanvilmanager"></a>
-
 ## GameAnvilManager { #gameanvilmanager }
 
 In the Hierarchy view, right-click on the mouse button and click **GameAnvil > GameAnvilManager**. GameAnvilManager game objects are created and you can modify the settings as shown below on the inspector of the GameAnvilManager game objects:
@@ -652,7 +640,6 @@ In the Hierarchy view, right-click on the mouse button and click **GameAnvil > G
 It is okay that you don't know the details of the settings right now. You can see the description for each item as you proceed with the tutorial.
 
 <a id="connect-server-and-client"></a>
-
 ## Connect Server and Client { #connect-server-and-client }
 
 To allow the GameAnvil client to connect to the GameAnvil server, the GameAnvil client must pass the three steps of Connect, Authentication, and Login.
@@ -857,7 +844,6 @@ When logout is complete, it will appear in the LOGOUT status with a red light di
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/29_logout_success.png)
 
 <a id="create-and-enter-game-room"></a>
-
 ## Create and Enter Game Room { #create-and-enter-game-room }
 
 <a id="room-creation-and-stage-related-fields-settings"></a>
@@ -947,7 +933,6 @@ Enter play mode from the Unity editor. Set the screen to 1080 X 1920 if needed. 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/31_join_room_success.png)
 
 <a id="introduction-to-synchronization-controller"></a>
-
 ## Introduction to Synchronization Controller { #introduction-to-synchronization-controller }
 
 You can now give and receive packets between game users who have accessed the same game room. This packet allows you to write code to synchronize the required information between client processes. In a simpler way, you can only synchronize by attaching a synchronization component to the game objects you want to synchronize.
@@ -1059,7 +1044,6 @@ With the synchronization feature provided by GameAnvil, we have experienced sync
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/33_sync_test.gif)
 
 <a id="end-tutorial"></a>
-
 ## End Tutorial { #end-tutorial }
 
 In this article, we have learned through practice about the quick login and synchronization features that integrate connection, authentication, and login procedures in GameAnvil connectors. As introduced at the beginning of the tutorial, GameAnvil has all the features required to create a game server, and the tutorial has only covered partly. More details of the use can be learned in the following article.
