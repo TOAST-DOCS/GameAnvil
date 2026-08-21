@@ -1,6 +1,10 @@
-## Game > GameAnvil > コンソール利用ガイド > サーバー作成
+<!-- pre-align:aligned sig=5ec537c402aa -->
 
-## GameAnvilのメニューとタブ
+<a id="game-gameanvil-console-user-guide-creating-a-server"></a>
+## Game > GameAnvil > コンソール利用ガイド > サーバー作成 { #game-gameanvil-console-user-guide-creating-a-server }
+
+<a id="gameanvil-menu-and-tab"></a>
+## GameAnvilのメニューとタブ { #gameanvil-menu-and-tab }
 
 GameAnvilコンソールは、上位のメニューで大きな機能が分かれており、各メニューは下位のタブで構成されています。例えば、**モニタリング**、**サーバー**、**Safe Pause**はメニューです。そしてモニタリングメニューは、**ダッシュボード**、**サーバー状況**、**ユーザー分布**、**オートスケールグループ**タブで構成されています。
 
@@ -17,7 +21,8 @@ GameAnvilコンソールは、上位のメニューで大きな機能が分か�
 このドキュメントは、このようなメニューとタブの機能を中心に説明します。
 
 
-## サーバー作成のための準備
+<a id="prepare-to-create-server"></a>
+## サーバー作成のための準備 { #prepare-to-create-server }
 
 サーバーを作成するには、少なくともサーバーバイナリと関連設定及びデータなどが必要です。コンソールでは、このためにサーバーメニューの配布ファイルとConfigタブを提供します。 
 
@@ -39,7 +44,8 @@ GameAnvilコンソールは、上位のメニューで大きな機能が分か�
 登録した配布ファイルと構成ファイルは、リストだけでなく履歴タブでこれまでの全ての履歴を照会することもできます。
 
 
-## サーバー作成
+<a id="create-server"></a>
+## サーバー作成 { #create-server }
 
 先の手順で配布ファイルとConfigファイルが正常に登録されていれば、サーバーを作成できます。サーバーは実際のサービスだけでなく、テストや開発など希望する用途で使用できます。
 
@@ -53,7 +59,8 @@ GameAnvilコンソールは、上位のメニューで大きな機能が分か�
 ![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/new_server_2.png)
 
 
-## サーバー基本情報
+<a id="server-basic-information"></a>
+## サーバー基本情報 { #server-basic-information }
 
 ![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/create-03.png)
 
@@ -69,7 +76,8 @@ GameAnvilコンソールは、上位のメニューで大きな機能が分か�
 
 * メモ: 該当サーバーに対する簡単なメモを作成できます。このメモはサーバー構成や運営に影響を与える値ではありません。
 
-## ノード構成
+<a id="node-configuration"></a>
+## ノード構成 { #node-configuration }
 
 GameAnvilのノードはゲームサーバーの機能単位です。開発が完了したサーバーバイナリは、ゲームで使用する全ての種類のノード実装を含んでいます。このようなバイナリで駆動されるサーバープロセスは設定により任意の選択されたノードのみで構成することができ、サーバー作成前に登録しておいた構成情報(Config)に基づいて設定します。つまり、構成情報(Config)にはノード構成情報が含まれています。複数の構成情報(Config)が登録されている場合、適用する構成をリストから選択できます。また、構成情報に含まれるノード設定をノードの種類ごとに有効化または無効化できます。
 
@@ -91,7 +99,8 @@ GameAnvilのノードはゲームサーバーの機能単位です。開発が�
 
 サーバー作成と同時に自動的にサーバーを起動するには、チェックボックスをクリックしてチェックを入れます。デフォルト値(作成即時起動)を使用することを推奨します。
 
-## 作成されたサーバーの確認
+<a id="check-created-server"></a>
+## 作成されたサーバーの確認 { #check-created-server }
 サーバーを構成した後に実行すると、設定した数量だけサーバーが作成されます。作成されたサーバーは**TRANSIT**状態で開始され、黄色で表示されます。サーバーが**RUNNING**状態になるまで、NHN Cloudインフラの状態により数分(1～60分以上)かかる場合があります。特にGameAnvilサービスが最初のサーバーを駆動する際には、基本インフラ設定を同時に行うため、少し長い時間がかかる場合があります。ユーザーはこの時間の間、他の種類のサーバーを追加で構成したり、他のメニューを使用したりできます。
 
 サーバーが正常に駆動すると、画像のように**RUNNING**状態に変わります。このように作成されたサーバーをクリックすると、次のようにサーバー情報を確認できます。このとき、ユーザーはサーバー制御コマンドで該当サーバーを終了させて削除したり、再起動などができます。あるいは多重選択ボタンを通じて一度に複数のサーバーを同時に選択してコマンドを実行することもできます。
@@ -102,20 +111,23 @@ GameAnvilのノードはゲームサーバーの機能単位です。開発が�
 
 ![図](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/server_details.png)
 
-## 動的ログレベル設定
+<a id="dynamic-log-level-setting"></a>
+## 動的ログレベル設定 { #dynamic-log-level-setting }
 
 起動中のサーバーの詳細画面で**ログレベル設定**をクリックし、動的ログレベルを設定できます。変更されたログレベルは、サーバーが起動している間のみ適用され、logbackファイルには保存されません。サーバーを終了してから起動すると、logbackの設定に初期化されます。
 
 ![図](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/dynamic_log_level.png)
 
-## 作成されたノード情報の確認
+<a id="check-created-node-information"></a>
+## 作成されたノード情報の確認 { #check-created-node-information }
 
 作成されたサーバーを構成する全てのノード情報は、ノードタブで確認できます。
 
 **状態**、**ノードタイプ**、**サーバータイプ**だけでなく、**ノードID**など、より詳細で明確な情報に基づいて任意のノード情報のみフィルタリングすることもできます。 
 ![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/node_list.png)
 
-## ロードバランサー
+<a id="load-balancer"></a>
+## ロードバランサー { #load-balancer }
 
 GameAnvilサービスは、クライアントの接続を効率的に処理するためにロードバランサーを連動させます。GameAnvilのノードのうち、クライアントが接続できるポイントはゲートウェイノードとサポートノードです。そしてこれらは全て複数のインスタンスで構成される可能性があります。このとき、複数の接続ポイントは適切な負荷分散のためにロードバランサーと連動する必要があります。また、該当ロードバランサーは外部から接続可能なフローティングIPに接続する必要があります。
 

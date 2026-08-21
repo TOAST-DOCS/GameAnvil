@@ -1,11 +1,16 @@
-## Game > GameAnvil > コンソール利用ガイド > はじめに
+<!-- pre-align:aligned sig=ca4d70bcf944 -->
 
-## はじめに
+<a id="game-gameanvil-console-user-guide-getting-started"></a>
+## Game > GameAnvil > コンソール利用ガイド > はじめに { #game-gameanvil-console-user-guide-getting-started }
+
+<a id="before-starting"></a>
+## はじめに { #before-starting }
 
 ゲームサーバーの運用は、開発が完了したサーバーバイナリを希望する規模の物理マシンに配布し、希望する論理構成で駆動することから始まります。また、モニタリングやバイナリ管理、そしてパッチサポートなどが必要です。GameAnvilコンソールは、このような要件を全て満たしています。このドキュメントでは、GameAnvilを利用して実装したゲームサーバーをコンソール上で配布し、運用する方法について説明します。
 
 
-## 用語の整理
+<a id="glossary"></a>
+## 用語の整理 { #glossary }
 
 このドキュメントでは、次の用語を頻繁に使用します。大部分の用語は一般的な意味と異なりませんが、「ゲームサーバー」のような一部の用語は、GameAnvilで特殊に定義された意味で使用されるため、用語を全て熟知してからドキュメントを利用することを推奨します。
 
@@ -23,7 +28,8 @@
 | 構成 | サーバーを好きな形で構成(Config)することを意味します。サーバー設定も同じ意味を持ちます。 |
 
 
-## GameAnvilサービスの有効化
+<a id="enable-gameanvil"></a>
+## GameAnvilサービスの有効化 { #enable-gameanvil }
 
 GameAnvilを使用するには、NHN CloudコンソールでGameAnvilサービスを有効化する必要があります。**サービス選択**または**サービス追加**をクリックします。
 
@@ -45,7 +51,8 @@ GameAnvilを使用するには、NHN CloudコンソールでGameAnvilサービ�
 
 
 
-## GameAnvilライセンスへの同意
+<a id="gameanvil"></a>
+## GameAnvilライセンスへの同意 { #gameanvil }
 
 まずライセンスのスクロールを一番下まで下げた後、約款に同意するにチェックを入れることができます。
 
@@ -53,7 +60,8 @@ GameAnvilを使用するには、NHN CloudコンソールでGameAnvilサービ�
 
 
 
-## GameAnvil商品の選択
+<a id="select-gameanvil-product"></a>
+## GameAnvil商品の選択 { #select-gameanvil-product }
 
 サービスを有効化すると、GameAnvil商品選択画面が表示されます。GameAnvilコンソールを使用する前に商品を選択する必要があります。
 
@@ -62,7 +70,8 @@ GameAnvilを使用するには、NHN CloudコンソールでGameAnvilサービ�
 GameAnvilは、ゲームサーバーのシステムノード規模と技術サポート範囲が異なる2種類の商品を提供します。システムノードは、GameAnvil内部でインスタンスとノード、そしてユーザー情報などを管理するために使用されるリソースであり、ユーザーには公開されません。
 Standard商品は中・小規模のゲームに適した商品で、冗長化されたシステムノードと豊富な技術サポートを提供します。Premium商品は大規模なゲームのために最適化されたシステムノードと、より広範囲な技術サポートを提供します。サービスするゲームの特性と規模に合わせて商品を選択してください。
 
-## GameAnvilサービスダッシュボードの確認
+<a id="check-gameanvil-service-dashboard"></a>
+## GameAnvilサービスダッシュボードの確認 { #check-gameanvil-service-dashboard }
 
 上記の手順を完了すると、GameAnvilサービスを使用する全ての準備が整います。コンソールでGameAnvilダッシュボードを確認できます。
 

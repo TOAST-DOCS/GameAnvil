@@ -1,10 +1,13 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > 백그라운드 접속 끊김 방지
+<a id="game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection"></a>
+## Game > GameAnvil > Unity 심화 개발 가이드 > 백그라운드 접속 끊김 방지 { #game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection }
 
-## 백그라운드 접속 끊김 방지
+<a id="prevent-background-connection-drop"></a>
+## 백그라운드 접속 끊김 방지 { #prevent-background-connection-drop }
 
 서버와 클라이언트의 연결 상태를 확인하기 위해 서버에서는 주기적으로 클라이언트의 상태를 체크하는 메시지를 보내고, 클라이언트에서는 이에 응답하는 메시지를 보냅니다. 그런데 모바일 기기에서 게임이 백그라운드로 전환될 경우 Unity 애플리케이션이 멈추게 되며, 애플리케이션이 멈추면 게임 서버와 패킷을 주고받지 못하게 됩니다. 이 상태가 에서는 연결 상태를 확인을 위한 메시지도 주고받지 못하게 되므로 결국 서버와의 연결이 끊기게 됩니다.
 
-### 연결 확인 기능 일시정지 및 재개
+<a id="pause-and-resume-connection-confirmation-feature"></a>
+### 연결 확인 기능 일시정지 및 재개 { #pause-and-resume-connection-confirmation-feature }
 
 연결 상태를 확인하지 못해 서버와의 연결이 끊어지는것을 방지하기 위해서는 백그라운드로 전환되기 전에 서버로 연결 확인을 위한 기능의 일시 정지를 요청해야 합니다.
 애플리케이션이 백그라운드나 포그라운드로 전환될 때 Unity의 MonoBehaviour 에있는 OnApplicationPause() 콜백이 호출됩니다. 백그라운드로 전환 될 때 PauseClientStateCheck()를 호출하여 연결 확인 기능을 일시 정지하고, 포그라운드로 전환 될 때는 ResumeClientStateCheck()를 호출하여 연결 확인 기능을 재개 합니다. 

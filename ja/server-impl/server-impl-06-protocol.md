@@ -1,8 +1,12 @@
-## Game > GameAnvil > サーバー開発ガイド > プロトコル定義
+<!-- pre-align:aligned sig=55d81451968d -->
+
+<a id="game-gameanvil-server-development-guide-protocol-definition"></a>
+## Game > GameAnvil > サーバー開発ガイド > プロトコル定義 { #game-gameanvil-server-development-guide-protocol-definition }
 
 
 
-## プロトコル定義とコンパイル
+<a id="protocol-definition-and-compile"></a>
+## プロトコル定義とコンパイル { #protocol-definition-and-compile }
 
 GameAnvilは[Google Protocol Buffers](https://protobuf.dev/)を使用してプロトコルを定義し、ビルドします。以下の例は、これらのプロトコルを定義する方法とビルドする方法を説明します。まず、SampleGame.protoファイルをテキストエディタで作成した後、希望のプロトコルを定義します。プロトコルバッファの詳細な文法は、[公式Protocol Buffersガイド](https://protobuf.dev/programming-guides/proto3/)を参照できます。
 
@@ -61,7 +65,8 @@ protoc ./MyGame.proto --java_out=../java --csharp_out=./
 ```
 
 
-## GeneratedMessageとパケット
+<a id="generatedmessagev3-and-packet"></a>
+## GeneratedMessageとパケット { #generatedmessagev3-and-packet }
 
 GameAnvilサーバーでは、いかなる送信可能なメソッドでもプロトバッファオブジェクトをそのまま使用できるように、大部分`com.google.protobuf.GeneratedMessage`クラスをサポートします。一般的な状況ではプロトバッファオブジェクトをそのまま使用しても問題ありませんが、多数のクライアントへ送信するなど特定の状況では`com.nhn.gameanvil.packet.Packet`クラスを使用して性能を向上させることができます。
 

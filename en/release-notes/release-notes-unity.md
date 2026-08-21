@@ -1,14 +1,47 @@
-## Game > GameAnvil > Release Notes > Unity Connector
+<!-- pre-align:aligned sig=b62d92d16bcd -->
 
-### 2.1.0 (June 30, 2025)
+<a id="game-gameanvil-release-notes-unity-connector"></a>
+## Game > GameAnvil > Release Notes > Unity Connector { #game-gameanvil-release-notes-unity-connector }
 
+<a id="20-january-29-2026"></a>
+### 2.2.0 (January 29, 2026) { #20-january-29-2026 }
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-download"></a>
+#### [Download](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector.unitypackage)
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-gameanvil-220-or-later"></a>
+#### GameAnvil 2.2.0 or later
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-change"></a>
+#### Change
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-fix"></a>
+#### Fix
+
+<!-- TODO: translate body -->
+
+<a id="10-june-30-2025"></a>
+### 2.1.0 (June 30, 2025) { #10-june-30-2025 }
+
+<a id="10-june-30-2025-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
+<a id="10-june-30-2025-gameanvil-210-or-later"></a>
 #### GameAnvil 2.1.0 or later
+<a id="10-june-30-2025-new"></a>
 #### New
 ###### GameAnvil 2.1.0 Connector
 * To coincide with the release of GameAnvil 2.1.0 server, Connector version 2.1.0 is also being released.
   * There are no significant functional changes compared to version 2.0.0, but some bug fixes, ResultCode name changes, typos, and incorrect descriptions have been modified.
 
+<a id="10-june-30-2025-change"></a>
 #### Change
 * Updated engine protocol for GameAnvil 2.1 servers.
   * Servers prior to GameAnvil 2.1 are no longer supported.
@@ -34,6 +67,7 @@
     | FORCE\_CLOSE\_BASE\_CONNECTION<br>Calling close() of BaseConnection on the server | FORCE\_CLOSE\_CONNECTION<br>Calling close() of IConnection on the server |
     | FORCE\_CLOSE\_BASE\_USER<br>Calling closeConnection() of BaseUser on the server | FORCE\_CLOSE\_USER<br>Call closeConnection() on IUser on server |
 
+<a id="10-june-30-2025-fix"></a>
 #### Fix
 * Fixed the issue where the onDisconnect callback would be called after the user's status changed when the server was forcibly terminated
 * Fixed an issue where the server and Hammer protocol buffers could be incompatible depending on the creation environment when created in different environments
@@ -42,10 +76,14 @@
 ---
 
 
-### 2.0.0 (December 4, 2024)
+<a id="00-december-4-2024"></a>
+### 2.0.0 (December 4, 2024) { #00-december-4-2024 }
 
+<a id="00-december-4-2024-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.0.0.unitypackage)
+<a id="00-december-4-2024-gameanvil-200-or-later"></a>
 #### GameAnvil 2.0.0 or later
+<a id="00-december-4-2024-span-stylecolor-e11d21newspan"></a>
 #### <span style="color: #e11d21">New</span>
 ###### GameAnvil 2.0 Connector
 * A new connector using async await has been released.
@@ -61,6 +99,7 @@ var (err, res) = await connector.ConnectAndAuthentication(
                                              "password");
 ```
 
+<a id="00-december-4-2024-span-stylecolor-e11d21removespan"></a>
 #### <span style="color: #e11d21">Remove</span>
 ###### Removed ConnectionAgent
 * The distinction between ConnectionAgent and GameAnvilConnector was ambiguous.
@@ -77,6 +116,7 @@ var (err, res) = await connector.ConnectAndAuthentication(
 * Messages received from the server without a request still use the delegate.
     * SetMessageCallback method
 
+<a id="00-december-4-2024-span-stylecolor-e11d21changespan"></a>
 #### <span style="color: #e11d21">Change</span>
 
 ###### Use ProtoBuffer 4.28.3
@@ -119,28 +159,38 @@ using var myUser = new GameAnvilUser(connector, "ServiceName", subId);
     public async Task<ErrorResult<ResultCodeLogin, LoginResult>> Login(string userType, string channelId, Payload? requestPayload = null)
     ```
 
+<a id="00-december-4-2024-span-stylecolor-e11d21fixspan"></a>
 #### <span style="color: #e11d21">Fix</span>
 * Fixed an issue where the connection would sometimes not work properly in fast internet environments.
 
-### 1.4.0 (2023.12.13)
+<a id="40-20231213"></a>
+### 1.4.0 (2023.12.13) { #40-20231213 }
 
+<a id="40-20231213-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.4.0.unitypackage)
 
+<a id="40-20231213-new"></a>
 #### New
 Support for compressed packets in payloads. Updated to protobuf 3.24.1 and improved to not require index to be specified when registering a protocol.
 
+<a id="40-20231213-change"></a>
 #### Change
 Modified to give a Login failure response instead of a SystemError response if you enter the wrong ChannelId at login.
 
+<a id="40-20231213-fix"></a>
 #### Fix
 Fixed an issue that does not disconnect in CONNECT_ALREADY_REQUEST state.
 
-### 1.3.0 (2022.12.27)
+<a id="30-20221227"></a>
+### 1.3.0 (2022.12.27) { #30-20221227 }
 
+<a id="30-20221227-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.3.0.unitypackage)
 
+<a id="30-20221227-gameanvil-130-or-later"></a>
 #### GameAnvil 1.3.0 or later
 
+<a id="30-20221227-new"></a>
 #### New
 New features added including fast connectivity, changing log levels, and synchronization. New features are available through the GameAnvil connector component.
 ###### Fast connectivity
@@ -163,6 +213,7 @@ The provision of components greatly enhances the convenience of integrating with
   * You can set and use custom values in key-value pairs on a room-by-room basis.
   * It supports CAS method value setting, making timing issues easy to resolve.
 
+<a id="30-20221227-fix"></a>
 #### Fix
 
 * Fixed an issue where resending a match request after a successful match would incorrectly record whether a room was entered or not.
@@ -170,6 +221,7 @@ The provision of components greatly enhances the convenience of integrating with
 * Fixed an issue with garbage being generated when calling update() method
 * Fixed an issue when an error occurs without registering a listener for the error
  
+<a id="30-20221227-change"></a>
 #### Change
 
 * API changes: Modified to receive ErrorCode as a name change and factor
@@ -211,45 +263,61 @@ The provision of components greatly enhances the convenience of integrating with
 
 ---
 
-### 1.2.3 (2022.01.28)
+<a id="23-20220128"></a>
+### 1.2.3 (2022.01.28) { #23-20220128 }
 
+<a id="23-20220128-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.3.unitypackage)
 
+<a id="23-20220128-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0 and later
 
+<a id="23-20220128-fix"></a>
 #### Fix
 * Fixed problems that fail to process compressed packets sent from the server and cause errors
 
 ------
-### 1.2.2 (2021.11.30)
+<a id="22-20211130"></a>
+### 1.2.2 (2021.11.30) { #22-20211130 }
 
+<a id="22-20211130-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.2.unitypackage)
 
+<a id="22-20211130-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0 and later
 
+<a id="22-20211130-fix"></a>
 #### Fix
 
 * Fixed a problem in which IsJoinedRoom() changes to false if you call MatchRoom while entering the room and fail
 
 ------
-### 1.2.1 (2021.08.10) 
+<a id="21-20210810"></a>
+### 1.2.1 (2021.08.10) { #21-20210810 }
 
+<a id="21-20210810-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.1.unitypackage)
 
+<a id="21-20210810-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0 and later
 
+<a id="21-20210810-fix"></a>
 #### Fix
 
 * Fixed a bug in which OnDisconnect is called twice when SocketException occurs
 
 ------
 
-### 1.2.0 (2021.07.13) 
+<a id="20-20210713"></a>
+### 1.2.0 (2021.07.13) { #20-20210713 }
 
+<a id="20-20210713-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.0.unitypackage)
 
+<a id="20-20210713-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0 and later
 
+<a id="20-20210713-change"></a>
 #### Change
 
 * Changed the return type of Send() to void
@@ -342,57 +410,78 @@ The provision of components greatly enhances the convenience of integrating with
     * Added ResultCodeSessionClose 
 
 ------
-### 1.1.6 (2023.01.20)
+<a id="16-20230120"></a>
+### 1.1.6 (2023.01.20) { #16-20230120 }
 
+<a id="16-20230120-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.6.unitypackage)
 
+<a id="16-20230120-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 and later
 
+<a id="16-20230120-fix"></a>
 #### Fix
 * Fixed issues that can be blocked when connect() is called with useIpv6 option enabled 
 
 ------
 
-### 1.1.5 (2022.01.28)
+<a id="15-20220128"></a>
+### 1.1.5 (2022.01.28) { #15-20220128 }
 
+<a id="15-20220128-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.5.unitypackage)
 
+<a id="15-20220128-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 and later
 
+<a id="15-20220128-fix"></a>
 #### Fix
 * Fixed problems that fail to process compressed packets sent from the server and cause errors
 
 ------
-### 1.1.4 (2021.11.30) 
+<a id="14-20211130"></a>
+### 1.1.4 (2021.11.30) { #14-20211130 }
 
+<a id="14-20211130-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.4.unitypackage)
 
+<a id="14-20211130-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 and later
 
+<a id="14-20211130-fix"></a>
 #### Fix
 * Fixed a problem in which IsJoinedRoom() changes to false if you call MatchRoom while entering the room and fail
 
 ------
-### 1.1.3 (2021.08.10) 
+<a id="13-20210810"></a>
+### 1.1.3 (2021.08.10) { #13-20210810 }
 
+<a id="13-20210810-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.3.unitypackage)
 
+<a id="13-20210810-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 and later
+<a id="13-20210810-fix"></a>
 #### Fix
 * Fixed a bug in which OnDisconnect is called twice when SocketException occurs
 
 ------
 
-### 1.1.2 (2021.04.15) 
+<a id="12-20210415"></a>
+### 1.1.2 (2021.04.15) { #12-20210415 }
 
+<a id="12-20210415-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.2.unitypackage)
 
+<a id="12-20210415-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 and later
+<a id="12-20210415-new"></a>
 #### New
 * Added ConnectionAgent.PauseClientStateCheck() to pause the ClientStateCheck feature of GameAnvil Server. It calls when the message loop stops working, such as the app entering the background.
 * Added the connection agent.ResumeClientStateCheck() to re-operate the paused ClientStateCheck feature. It calls when the message loop works again, such as when the app returns in the background.
 * Added Singleserver.SetOnPauseClientStateCheck().
 * Added Singleserver.SetOnResumeClientStateCheck().
+<a id="12-20210415-fix"></a>
 #### Fix
 * Fixed a bug with the ResultCodeDisconnect value crossing to 0 when force is false on OnDisconnect
 
@@ -400,16 +489,21 @@ The provision of components greatly enhances the convenience of integrating with
 
 
 
-### 1.1.1 (2021.04.07) 
+<a id="11-20210407"></a>
+### 1.1.1 (2021.04.07) { #11-20210407 }
 
+<a id="11-20210407-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.1.unitypackage)
 
+<a id="11-20210407-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 and later
+<a id="11-20210407-change"></a>
 #### Change
 * Added ContainsListener overloading to check individual registration. 
 * Added RemoveAllListenersForMsg, RemoveAllListenersForMsgId to delete all listers by message
 * Added ContainsUserListener, ContainsUserNotificationListener, ContainsUserErrorListener.
 * Added ContainsConnectionListener, ContainsConnectionNotificationListener, ContainsConnectionErrorListener, ContainsConnectionErrorListener.
+<a id="11-20210407-fix"></a>
 #### Fix
 * Fixed bugs that do not initialize some information in the UserAgent in situations such as forced shutdown, logout, or login failure
 
@@ -417,11 +511,15 @@ The provision of components greatly enhances the convenience of integrating with
 
 
 
-### 1.1.0 (2020.12.18) 
+<a id="10-20201218"></a>
+### 1.1.0 (2020.12.18) { #10-20201218 }
 
+<a id="10-20201218-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.0.unitypackage)
 
+<a id="10-20201218-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 and later
+<a id="10-20201218-change"></a>
 #### Change
 * Full transition to .Net 4.5 and later support
 	* Replaced all of your libraries with the latest version for .Net 4.5
@@ -432,11 +530,15 @@ The provision of components greatly enhances the convenience of integrating with
 
 ------
 
-### 1.0.0 (2020.08.31) 
+<a id="00-20200831"></a>
+### 1.0.0 (2020.08.31) { #00-20200831 }
 
+<a id="00-20200831-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
 
+<a id="00-20200831-gameanvil-100-or-later"></a>
 #### GameAnvil 1.0.0 or later
+<a id="00-20200831-change"></a>
 #### Change
 
 * Removed MoveService
@@ -448,12 +550,14 @@ The provision of components greatly enhances the convenience of integrating with
 
 	* <span style="color:#eb6420">Currently, there is a problem that FORCE_CLOSE_DUPLICATE_LOGIN case has FORCE_CLOSE_BY_NEW_CONNECTION. To be revised later.</span>
 
+<a id="00-20200831-fix"></a>
 #### Fix
 
 * Fixed an issue in which the isLogin of UserAgent returns true even when disconnected
 
 
 
+<a id="00-20200831-detailed-resultcode-changes"></a>
 #### Detailed ResultCode changes
 
 * ResultCodeAuth
@@ -510,8 +614,10 @@ To be revised later.</span>
 
 
 
-### 1.0.0-EA2 (2020.07.07)
+<a id="00-ea2-20200707"></a>
+### 1.0.0-EA2 (2020.07.07) { #00-ea2-20200707 }
 
+<a id="00-ea2-20200707-c-sharp"></a>
 #### C-Sharp
 ##### Change
 
@@ -525,8 +631,10 @@ To be revised later.</span>
 
 -----
 
-### 1.0.0-EA (2020.06.29)
+<a id="00-ea-20200629"></a>
+### 1.0.0-EA (2020.06.29) { #00-ea-20200629 }
 
+<a id="00-ea-20200629-c-sharp"></a>
 #### C-Sharp
 ##### Change
 
@@ -579,8 +687,10 @@ To be revised later.</span>
 
 
 
-### 0.12.1.1 (2020.06.23)
+<a id="1211-20200623"></a>
+### 0.12.1.1 (2020.06.23) { #1211-20200623 }
 
+<a id="1211-20200623-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -591,8 +701,10 @@ To be revised later.</span>
 
 
 
-### 0.12.1 (2020.04.06)
+<a id="121-20200406"></a>
+### 0.12.1 (2020.04.06) { #121-20200406 }
 
+<a id="121-20200406-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -617,8 +729,10 @@ To be revised later.</span>
 
 
 
-### 0.12.0 (2020.02.14)
+<a id="120-20200214"></a>
+### 0.12.0 (2020.02.14) { #120-20200214 }
 
+<a id="120-20200214-c-sharp"></a>
 #### C-Sharp
 
 ##### Change

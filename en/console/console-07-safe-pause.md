@@ -1,6 +1,10 @@
-## Game > GameAnvil > Console User Guide > Safe Pause
+<!-- pre-align:aligned sig=755a9b9d5bdd -->
 
-## What is Safe Pause?
+<a id="game-gameanvil-console-user-guide-safe-pause"></a>
+## Game > GameAnvil > Console User Guide > Safe Pause { #game-gameanvil-console-user-guide-safe-pause }
+
+<a id="what-is-safe-pause"></a>
+## What is Safe Pause? { #what-is-safe-pause }
 
 Safe Pause is a feature that allows you to pause any game node without stopping the service. SafePause's departure node transfers all users and room information in real time to the destination node that is performing the same service. Therefore, SafePause is not available unless more than two game node exist in the same service.
 
@@ -10,7 +14,8 @@ In the SafePause process, the sender and receiver change to **SAFE PAUSE** and *
 
 When SafePause completes, the **SafePause**state changes to **Pause** state. Naturally, there are no users or rooms on that node, so you can shut it down safely. If you need a patch or check, you can proceed at this time. **Ready(Lock)** state also turn to **Ready** state upon completion of SafePause and can be operated on the console.
 
-## How to use Safe Pause
+<a id="how-to-use-safe-pause"></a>
+## How to use Safe Pause { #how-to-use-safe-pause }
 
 Select the Operations menu to view the Safe Pause main screen. It shows a list of nodes associated with Safe Pause currently in progress. Click on **Select Node** to open a pop-up to select the node to perform SafePause as shown below.
 

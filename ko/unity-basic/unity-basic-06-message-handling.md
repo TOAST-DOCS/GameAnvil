@@ -1,10 +1,13 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 메시지 핸들링
+<a id="game-gameanvil-unity-basic-development-guide-message-handling"></a>
+## Game > GameAnvil > Unity 기초 개발 가이드 > 메시지 핸들링 { #game-gameanvil-unity-basic-development-guide-message-handling }
 
-## 메시지 핸들링
+<a id="message-handling"></a>
+## 메시지 핸들링 { #message-handling }
 
 GameAnvilUserController의 RequestUser()와 SendUser() 메소드를 이용하여 사용자가 정의한 메시지를 서버로 전송할 수 있습니다. 메시지를 전송하기 위해서는 메시지를 생성하고 등록하는 과정이 필요합니다.
 
-### 메시지 생성
+<a id="create-a-message"></a>
+### 메시지 생성 { #create-a-message }
 
 GameAnvil은 기본 메시지 프로토콜로 [ProtocolBuffers](https://developers.google.com/protocol-buffers/docs/proto3)를 사용합니다. .proto 파일에 메시지를 정의하고, protoc 컴파일러로 실제 클래스 소스 코드를 생성하게 됩니다. 생성된 소스 코드를 프로젝트에 추가하여 사용할 수 있습니다. protoc에 대한 자세한 설명은 [여기](https://developers.google.com/protocol-buffers/docs/proto3#generating)를 참고하십시오. 
 
@@ -43,7 +46,8 @@ message SampleReceive
 /protoc --csharp_out=./ messages.proto
 ```
 
-### 메시지 등록
+<a id="register-messages"></a>
+### 메시지 등록 { #register-messages }
 
 새로 생성한 메시지를 사용하려면 사용할 메시지를 ProtocolManager에 미리 등록해야 합니다. 미리 등록하지 않으면, 동작하지 않거나 오동작하거나 예외가 발생할 수 있습니다.
 
@@ -51,8 +55,10 @@ message SampleReceive
 GameAnvilProtocolManager.RegisterProtocol(Messages.MessagesReflection.Descriptor);
 ```
 
-### 메시지 전송
+<a id="send-messages"></a>
+### 메시지 전송 { #send-messages }
 
+<a id="send-messages-requestuser"></a>
 #### RequestUser
 
 RequestUser()로 메시지를 전송하고 응답을 받을 수 있습니다.
@@ -100,6 +106,7 @@ ResultCode의 상세 내용은 다음과 같습니다.
 | HANDLER_ERROR     | 11 | 실패. 서버의 핸들러에서 예외 발생.                       |
 | SUCCESS           | 0  | 성공                                         |
 
+<a id="send-messages-senduser"></a>
 #### SendUser
 
 SendUser()로 메시지를 전송하면 SendUser()의 호출 즉시 서버로 전송되며 별도의 응답을 기다리지 않습니다.
@@ -125,6 +132,7 @@ SendUser()은 다음과 같이 1개의 매개변수를 가지고 있습니다.
 |----------|---------|------------|
 | IMessage | message | 서버로 보낼 메시지 |
 
+<a id="send-messages-messagecallback"></a>
 #### MessageCallback
 
 SendUser() 로 보내는 메시지와 상관없이 서버에서 보내는 메시지를 수신하기 위해서는 SetMessageCallback\<TProtoBuffer\>() 을 이용해 콜백을 등록할 수 있습니다. 등록된 콜백을 해제할 때는 RemoveMessageCallback\<TProtoBuffer\>()을 이용하면 됩니다.

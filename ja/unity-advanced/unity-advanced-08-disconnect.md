@@ -1,6 +1,10 @@
-## Game > GameAnvil > Unity 基礎開発ガイド > 接続終了
+<!-- pre-align:aligned sig=679b63c58911 -->
 
-## 接続終了
+<a id="game-gameanvil-unity-advanced-development-guide-disconnection"></a>
+## Game > GameAnvil > Unity 基礎開発ガイド > 接続終了 { #game-gameanvil-unity-advanced-development-guide-disconnection }
+
+<a id="terminate-the-gameanvil-connector"></a>
+## 接続終了 { #terminate-the-gameanvil-connector }
 
 ゲームプレイ終了前にGameAnvilConnector.Disconnect()関数を呼び出して接続を終了することを推奨します。終了しない場合、サーバーでクライアントの終了を認知できない可能性があり、この場合不必要な動作を継続する可能性があります。
 

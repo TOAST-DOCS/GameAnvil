@@ -1,6 +1,10 @@
-## Game > GameAnvil > 테스트 개발 가이드 > 시나리오 테스트 개발 가이드
+<!-- pre-align:aligned sig=83add965b261 -->
 
-### 시나리오 테스트란?
+<a id="game-gameanvil-guide-to-test-development-guide-to-scenario-test-development"></a>
+## Game > GameAnvil > 테스트 개발 가이드 > 시나리오 테스트 개발 가이드 { #game-gameanvil-guide-to-test-development-guide-to-scenario-test-development }
+
+<a id="what-is-a-scenario-test"></a>
+### 시나리오 테스트란? { #what-is-a-scenario-test }
 
 시나리오 테스트란, 미리 정해진 규칙 대로 서버에 부하를 가한 뒤 TPS 등 성능과 관련된 지표를 얻는 테스트를 말합니다. 여기에서 테스트를 진행하는 규칙을 시나리오라고 합니다. 또, 서버에 부하를 가하기 위해서는 다수의 커넥션을 생성하고 유지해야 하는데, 이 커넥션 각각을 시나리오 액터 라고 부릅니다.
 
@@ -226,7 +230,8 @@ scenario
     .endEdit();
 ```
 
-### 시나리오 테스트 작성 예시
+<a id="example-of-writing-a-scenario-test"></a>
+### 시나리오 테스트 작성 예시 { #example-of-writing-a-scenario-test }
 
 아래 예시는 실제 서버에 부하를 인가하도록 작성된 예시입니다.
 
@@ -234,10 +239,12 @@ scenario
 |-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | [GameAnvil Scenario Server](https://static.toastoven.net/prod_gameanvil/files/v2_2/GameAnvilScenarioServer.zip) | [GameAnvil Scenario Tester](https://static.toastoven.net/prod_gameanvil/files/v2_2/GameAnvilScenarioTester.zip) |
 
-### 액션
+<a id="action"></a>
+### 액션 { #action }
 
 시나리오 중에 엔진에 요청 등 수행할 수 있는 동작을 액션이라고 합니다. 액션은 시나리오 중에 특정 시점에 조건과 함께 결합하여 등록할 수 있습니다.
 
+<a id="action-move-status"></a>
 #### 스테이트 이동
 
 ```java
@@ -248,6 +255,7 @@ changeState("StateA")
 changeState(StateA.class)
 ```
 
+<a id="action-end-scenario"></a>
 #### 시나리오 종료
 
 ```java
@@ -255,106 +263,124 @@ bool isSuccessful = true;
 ScenarioAction.finish(isSuccessful);
 ```
 
+<a id="action-progress-in-connection"></a>
 #### 연결 진행
 
 ```java
 ScenarioAction.connect()
 ```
 
+<a id="action-progress-in-authentication"></a>
 #### 인증 진행
 
 ```java
 ScenarioAction.authenticate()
 ```
 
+<a id="action-progress-in-login"></a>
 #### 로그인 진행
 
 ```java
 ScenarioAction.login()
 ```
 
+<a id="action-progress-in-user-matchmaking"></a>
 #### 유저 매치메이킹 진행
 
 ```java
 ScenarioAction.matchUserStart()
 ```
 
+<a id="action-progress-in-room-matchmaking"></a>
 #### 룸 매치메이킹 진행
 
 ```java
 ScenarioAction.matchRoom()
 ```
 
+<a id="action-proceed-with-excluding-room"></a>
 #### 방 퇴장 진행
 
 ```java
 ScenarioAction.leaveRoom()
 ```
 
+<a id="action-progress-in-logout"></a>
 #### 로그아웃 진행
 
 ```java
 ScenarioAction.logout()
 ```
 
+<a id="action-proceed-with-requesting-named-room-action"></a>
 #### 네임드 룸 동작 요청 진행
 
 ```java
 ScenarioAction.namedRoom()
 ```
 
+<a id="action-progress-in-party-matchmaking"></a>
 #### 파티 매치메이킹 진행
 
 ```java
 ScenarioAction.matchPartyStart()
 ```
 
+<a id="action-proceed-with-canceling-party-matchmaking"></a>
 #### 파티 매치메이킹 취소 진행
 
 ```java
 ScenarioAction.matchPartyCancel()
 ```
 
+<a id="action-proceed-with-requesting-channel-information"></a>
 #### 채널 정보 요청 진행
 
 ```java
 ScenarioAction.getChannelInfo()
 ```
 
+<a id="action-proceed-with-requesting-all-channel-information"></a>
 #### 모든 채널 정보 요청 진행
 
 ```java
 ScenarioAction.getAllChannelInfo()
 ```
 
+<a id="action-proceed-with-requesting-number-of-channel-users-number-of-rooms"></a>
 #### 채널 유저 수, 룸 수 요청 진행
 
 ```java
 ScenarioAction.getChannelCountInfo()
 ```
 
+<a id="action-proceed-with-requesting-number-of-users-for-all-channels-and-number-of-rooms"></a>
 #### 모든 채널의 유저 수, 룸 수 요청 진행
 
 ```java
 ScenarioAction.getAllChannelCountInfo()
 ```
 
+<a id="action-proceed-with-moving-channel"></a>
 #### 채널 이동 진행
 
 ```java
 ScenarioAction.moveChannel()
 ```
 
+<a id="action-progress-in-snapshot-request"></a>
 #### 스냅샷 요청 진행
 
 ```java
 ScenarioAction.snapshot()
 ```
 
-### 액션 등록
+<a id="register-action"></a>
+### 액션 등록 { #register-action }
 
 아래는 액션을 등록하는 메서드 목록입니다.
 
+<a id="register-action-scenario-entry-point"></a>
 #### 시나리오 진입 시점
 
 시나리오 진입 시점에 실행할 액션을 등록할 수 있습니다.
@@ -366,6 +392,7 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"));
 ```
 
+<a id="register-action-scenario-movement-point"></a>
 #### 시나리오 이동 시점
 
 시나리오 이동 시점에 실행할 액션을 등록할 수 있습니다.
@@ -377,6 +404,7 @@ scenario
     .addActionOnExit(scenarioActor -> scenarioActor.resetChannle());
 ```
 
+<a id="register-action-packet-reception-point"></a>
 #### 패킷 수신 시점
 
 패킷 수신 시점에 실행할 액션을 등록할 수 있습니다.
@@ -389,6 +417,7 @@ scenario
 ```
 
 
+<a id="register-action-timer-calling-point"></a>
 #### 타이머 호출 시점
 
 타이머 호출 시점에 실행할 액션을 등록할 수 있습니다.
@@ -400,10 +429,12 @@ scenario
     .setActionInTimer("TimerName", changeState("OtherStateNameToEnter"));
 ```
 
-### 조건 기능
+<a id="conditional-trigger"></a>
+### 조건 기능 { #conditional-trigger }
 
 조건에 따라 액션 수행 여부를 설정할 수 있습니다.
 
+<a id="conditional-trigger-always"></a>
 #### 항상
 
 ```java
@@ -413,6 +444,7 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"), always());
 ```
 
+<a id="conditional-trigger-result-success"></a>
 #### 결과 성공시
 
 ```java
@@ -422,6 +454,7 @@ scenario
     .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
 ```
 
+<a id="conditional-trigger-result-failure"></a>
 #### 결과 실패시
 
 ```java
@@ -431,6 +464,7 @@ scenario
     .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
 ```
 
+<a id="conditional-trigger-conditional-inversion"></a>
 #### 조건 반전
 
 ```java
@@ -440,6 +474,7 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"), NOT(scenarioActor -> scenarioActor.valid()));
 ```
 
+<a id="conditional-trigger-conditional-combination"></a>
 #### 조건 결합
 
 ```java
@@ -449,7 +484,8 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"), AND(scenarioActor -> scenarioActor.valid(), ifSuccess());
 ```
 
-### 향상된 콜백 등록 기능
+<a id="enhanced-callback-registration-feature"></a>
+### 향상된 콜백 등록 기능 { #enhanced-callback-registration-feature }
 
 이 방식으로 등록한 리스너는 User 에이전트를 통해 등록한 리스너와 다르게 State의 종료 시점에 자동으로 정리되므로 onExit에서 리스너를 제거해 주는 동작을 할 필요가 없어집니다.
 

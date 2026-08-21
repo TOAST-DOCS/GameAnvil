@@ -1,6 +1,10 @@
-## Game > GameAnvil > 서버 개발 가이드 > 게임 노드 구현
+<!-- pre-align:aligned sig=b2564be6b47a -->
 
-## Game Node
+<a id="game-gameanvil-server-development-guide-implement-game-node"></a>
+## Game > GameAnvil > 서버 개발 가이드 > 게임 노드 구현 { #game-gameanvil-server-development-guide-implement-game-node }
+
+<a id="game-node"></a>
+## Game Node { #game-node }
 
 ![GameNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gamenode_on_network.png)
 
@@ -14,7 +18,8 @@ GameNode는 실제 게임 객체가 생성되고 게임 콘텐츠를 구현하�
 
 이러한 세션이 향하는 곳은 바로 유저 객체입니다. GameNode는 이러한 유저 객체와 그들의 그룹인 방 객체를 관리합니다. 이번 챕터는 이러한 GameNode와 GameUser 그리고 GameRoom에 대해 설명합니다.
 
-## GameNode 구현
+<a id="implement-gamenode"></a>
+## GameNode 구현 { #implement-gamenode }
 
 GameNode는 BaseGameNode 클래스를 구현해야 합니다. 아래의 예제 코드는 GameNode에서 기본적으로 재정의할 수 있는 콜백 메서드를 보여줍니다. 노드 공통 콜백과 더불어 채널 관리를 위한 콜백이 존재합니다.
 
@@ -148,7 +153,8 @@ public class _GameNodeTest {
 
 이러한 GameNode의 주 목적은 노드에 접속된 모든 GameUser와 GameRoom 객체들에 대한 처리를 수행하는 것입니다. 이에 대해서는 바로 달아서 설명하도록 하겠습니다.
 
-## 유저 구현
+<a id="implement-user"></a>
+## 유저 구현 { #implement-user }
 
 유저 객체는 로그인 과정을 거쳐 GameNode에 생성됩니다. 유저 기반의 콘텐츠는 이 클래스를 중심으로 구현해야 합니다. 앞서 살펴본 모든 예제와 마찬가지로 유저 또한 처리할 고유의 메시지와 핸들러를 연결할 수 있습니다. 아래의 예제 코드를 보면 유저는 꽤 많은 콜백 메서드를 제공하는 것을 볼 수 있습니다. 이 중 일부는 기본 구현이 제공되므로 특별히 필요한 상황이 아니라면 재정의하지 않아도 됩니다. 이는 유저뿐만 아니라 엔진에서 제공하는 대부분의 클래스에 해당합니다.
 
@@ -510,15 +516,18 @@ GameAnvil은 두 종류의 매치메이킹 기능, 룸 매치메이킹과 유저
 | onAfterMoveOutChannel    | 기존 채널에서 다른 채널로 이동 준비 완료 | onMoveOutChannel이 성공하면 후처리를 위해 호출됩니다.                                                                                                                   |
 | onMoveInChannel          | 새로운 채널로 이동 처리           | 유저가 다른 채널로 이동할 때, 대상 노드에서 호출됩니다. 사용자는 임의의 정보를 outPayload에 담아서 클라이언트로 전달할 수 있습니다.                                                                        |
 
-### 로그인이란?
+<a id="what-is-a-login"></a>
+### 로그인이란? { #what-is-a-login }
 
 앞서 설명한 내용과 예제 코드에서 로그인에 관한 내용이 자주 등장합니다. 또한 이러한 로그인은 클라이언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 콜백 메서드 중 onLogin()은 최초에 유저를 생성하기 위해 로그인을 시도하는 과정에서 호출됩니다. 이때, 사용자는 유저 객체를 구성하기 위한 정보를 DB 등으로부터 획득할 수 있습니다. 이러한 onLogin() 콜백이 성공하면 GameNode 상에 해당 유저 객체가 생성됩니다. 이렇게 로그인이 완료되면, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고받으며 여러 가지 콘텐츠를 구현할 수 있습니다.
 
-### 로그아웃
+<a id="logout"></a>
+### 로그아웃 { #logout }
 
 로그아웃은 로그인의 반대 개념입니다. 즉, GameNode 상에서 자신의 유저 객체를 제거하는 과정입니다. 로그아웃을 시작하면 해당 유저 객체는 onLogout() 콜백을 호출하여 메모리상에서 삭제되기 전에 DB 등으로 자신의 최종 상태를 보관할 수 있습니다. 이러한 로그아웃은 클라이언트가 명시적으로 요청할 수도 있고, 클라이언트의 접속이 끊긴 상태에서 임의의 시간이 경과한 후 엔진에 의해 자동으로 처리되기도 합니다. 그러므로 만일 모바일 게임과 같이 잦은 접속 끊김이 예상될 경우에는 바로 로그아웃이 진행되지 않도록 적절한 [설정](server-impl-16-config-vm.md#game)을 해둘 수 있습니다. 
 
-## 방 구현
+<a id="implement-room"></a>
+## 방 구현 { #implement-room }
 
 2명 이상의 유저는 방을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 유저들의 요청은 방 안에서 모두 순서가 보장됩니다. 물론 1명의 유저를 위한 방 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. 방을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다. 이러한 방은 유저와 마찬가지로 기본 클래스인 IRoom 인터페이스를 구현하여 여러 가지 콜백 메서드를 재정의할 수 있으며 자체적으로 메시지를 처리할 수도 있습니다. 아래의 예제 코드는 SampleUser를 위한 SampleRoom 클래스입니다.
 
@@ -774,7 +783,8 @@ public class _GameRoomTest {
 | onForceMatchRoomUnregistered | 방 매치메이킹이 취소        | 방 매치메이킹이 취소될 때 호출됩니다.                                                                                                                                                                           |
 | canTransfer                  | 방 전송이 가능한 상태인지 확인  | 해당 방이 다른 노드로 전송될 수 있는 상태인지 체크하기 위해 호출됩니다.  만일 방에서 아직 게임이 플레이 중이거나 준비가 안 된 경우에는 false를 반환하여 전송을 미룰 수 있습니다. false를 반환한 경우에는 엔진이 임의의 시간 이후에 지속적으로 이 콜백을 호출합니다. 참고로 방 전송은 오직 무점검 패치를 진행할 때에만 사용됩니다. |
 
-## 방 종류
+<a id="room-type"></a>
+## 방 종류 { #room-type }
 
 앞서 살펴본 방의 구현 법과 별개로 엔진에서 제공하는 방의 종류는 크게 두 가지입니다. 이 두 가지의 방을 총 네 가지의 방법으로 사용합니다.
 
@@ -790,6 +800,7 @@ public class _GameRoomTest {
 | Normal Room | 1. 클라이언트는 CreateRoom / JoinRoom 요청을 통해 생성 및 참여합니다.<br>2. 룸 매치메이킹을 통해 NormalRoom을 생성하거나 참여할 수 있습니다. 또한 CreateRoom으로 만든 방도 룸 매치메이킹 대상으로 등록이 가능합니다. 이때, 방 아이디는 엔진에 의해 관리되고 매칭되는 방과 유저 사이에서 자동으로 공유됩니다.                                                                                |
 | Named Room  | 3. 클라이언트는 NamedRoom 요청을 통해 생성 및 참여합니다.<br>4. 유저 매치메이킹을 통해 NamedRoom을 생성하거나 참여할 수 있습니다. 이때, 생성되는 NamedRoom의 방 이름은 엔진에서 고유하게 생성하고 관리합니다. 룸 매치메이킹과 달리 일반적인 NamedRoom으로 생성한 방은 유저 매치메이킹 대상이 될 수 없습니다. 단, 파티 매치메이킹을 위해 NamedRoom으로 파티 룸을 생성한 후 여러 명의 유저들이 하나의 파티로 매치메이킹을 요청할 수 있습니다. |
 
-## 채널
+<a id="channel"></a>
+## 채널 { #channel }
 
 GameNode들은 그 용도에 맞춰 논리적으로 그룹화할 수 있습니다. 이러한 논리 그룹을 [채널](server-impl-09-channel)이라고 합니다. 예를 들어, GameNode 1과 2를 "Beginner" 채널로 묶고, GameNode 3과 4를 "Expert" 채널로 묶을 수 있습니다. 이에 대한 자세한 설명은 [별도의 챕터](server-impl-09-channel)에서 더 자세하게 다루도록 합니다.

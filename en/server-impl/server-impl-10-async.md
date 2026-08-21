@@ -1,6 +1,10 @@
-## Game > GameAnvil > Server Development Guide > Asynchronous Support
+<!-- pre-align:aligned sig=7327694298f5 -->
 
-## Asynchronous Support
+<a id="game-gameanvil-server-development-guide-asynchronous-support"></a>
+## Game > GameAnvil > Server Development Guide > Asynchronous Support { #game-gameanvil-server-development-guide-asynchronous-support }
+
+<a id="asynchronous-support"></a>
+## Asynchronous Support { #asynchronous-support }
 
 GameAnvil supports asynchronous processing for the following purposes:
 
@@ -31,7 +35,8 @@ Response httpResponse = httpFuture.get(); // In Java 21, only Virtual Thread is 
 > Virtual Thread: This is a new thread added in Java 21 that works similarly to the Fiber of the previous version of GameAnvil. For more information, see [here](https://openjdk.org/jeps/444).
 
 
-## RDBMS Support
+<a id="rdbms-support"></a>
+## RDBMS Support { #rdbms-support }
 
 In existing Java, many RDBMS drivers use `java.sql.DriverManager`, so queries are blocked. In Java 21, however, when running above Virtual Thread, you can benefit from improved utilization of asynchronous, by changing these block queries to the form that stops Virtual Thread only. GameAnvil can also be executed above Virtual Thread to improve performance through asynchronous queries. These drivers are mainly [MySQL Connector/J](https://github.com/mysql/mysql-connector-j). 
 
@@ -42,7 +47,8 @@ You can also use a driver such as [jasync-sql](https://github.com/jasync-sql/jas
 > Not all libraries support Virtual Thread. Library created according to the previous version may not operate normally when running from GameAnvil. For example, [MySQL Connector/J](https://github.com/mysql/mysql-connector-j) supports Virtual Thread from version 9.x or later. 8.x version may not operate normally.
 
 
-## Redis Support
+<a id="redis-support"></a>
+## Redis Support { #redis-support }
 Libraries that are used extensively have [Jedis](https://github.com/redis/jedis), but internal engine team checks suggest that [Jedis](https://github.com/redis/jedis) may cause threads to lock when using Virtual Thread. GameAnvil uses customized Virtual Thread, which makes it very difficult to detect unknown actions and debugs when these problems occur. If you are considering using Jedis, we recommend using [Lettuce](https://github.com/redis/lettuce). When you are already using Jedis and migration is difficult, you can avoid threads being locked by using the code that runs jedis from another thread pool, such as
 
 ```java
@@ -55,7 +61,8 @@ GameAnvil recommends using [Lettuce](https://github.com/redis/lettuce) for Redis
 
 
 
-## Pinning Issues
+<a id="pinning-issues"></a>
+## Pinning Issues { #pinning-issues }
 * When using the code to temporarily stop Virtual Thread within the synchronized block of Virtual Thread, Virtual Thread may experience problems of locking. The simple reproduction methods are as follows:
 
 ```java

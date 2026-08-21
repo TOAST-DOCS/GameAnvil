@@ -1,4 +1,5 @@
-## Game > GameAnvil > Unity Advanced Development Guide > Preventing Background Disconnection
+<a id="game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection"></a>
+## Game > GameAnvil > Unity Advanced Development Guide > Preventing Background Disconnection { #game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection }
 
 As described in the [Unity Basic Development Guide > Prevent Background Disconnection](../unity-basic/unity-basic-07-pause), your game may lose connection to the server when it goes into the background on a mobile device. To prevent this, you can pause the ability to check for connections to the server.
 
@@ -39,4 +40,11 @@ public class ConnectHandler : MonoBehaviour
     }
     ...
 }
-```
+```## Prevent Background Connection Drop
+
+<!-- TODO: translate body -->
+
+### Pause and Resume Connection Confirmation Feature
+
+<!-- TODO: translate body -->
+

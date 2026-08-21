@@ -1,8 +1,12 @@
-## Game > GameAnvil > Server Concept Description > Node
+<!-- pre-align:aligned sig=378876ac9b0b -->
+
+<a id="game-gameanvil-server-concept-description-node"></a>
+## Game > GameAnvil > Server Concept Description > Node { #game-gameanvil-server-concept-description-node }
 
 
 
-## Node
+<a id="node"></a>
+## Node { #node }
 
 A node is the most basic unit of the GameAnvil server configuration. Each node performs the functions tailored to its role independently. You can freely set which role to perform with several nodes. Before detailing the node, you can divide the nodes by role as follows: 
 
@@ -24,7 +28,8 @@ The hierarchical structure of these nodes is the same as the image below:
 
 
 
-## Single Thread (Single-Threaded)
+<a id="single-thread-single-threaded"></a>
+## Single Thread (Single-Threaded) { #single-thread-single-threaded }
 
 One node in GameAnvil is processed as a single thread. This is very important. By default, each node must be processed asynchronously, and ensure that these node threads run continuously without blocking. These run models are very compatible with those of Vert.x or Node.js.
 

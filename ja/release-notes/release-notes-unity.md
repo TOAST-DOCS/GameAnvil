@@ -1,14 +1,47 @@
-## Game > GameAnvil > リリースノート > Unity Connector
+<!-- pre-align:aligned sig=b62d92d16bcd -->
 
-### 2.1.0 (2025.06.30)
+<a id="game-gameanvil-release-notes-unity-connector"></a>
+## Game > GameAnvil > リリースノート > Unity Connector { #game-gameanvil-release-notes-unity-connector }
 
+<a id="20-january-29-2026"></a>
+### 2.2.0 (2026.01.29) { #20-january-29-2026 }
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-download"></a>
+#### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector.unitypackage)
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-gameanvil-220-or-later"></a>
+#### GameAnvil 2.2.0 以降
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-change"></a>
+#### Change
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-fix"></a>
+#### Fix
+
+<!-- TODO: translate body -->
+
+<a id="10-june-30-2025"></a>
+### 2.1.0 (2025.06.30) { #10-june-30-2025 }
+
+<a id="10-june-30-2025-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
+<a id="10-june-30-2025-gameanvil-210-or-later"></a>
 #### GameAnvil 2.1.0以上
+<a id="10-june-30-2025-new"></a>
 #### New
 ###### GameAnvil 2.1.0 Connector
 * GameAnvil 2.1.0サーバーのリリースに合わせて、Connectorも2.1.0バージョンをリリースします。
   * 2.0.0と比較して機能上の大きな変更点はなく、一部のバグ修正、ResultCodeの名称変更、誤字脱字や不適切な説明などの修正があります。
 
+<a id="10-june-30-2025-change"></a>
 #### Change
 * GameAnvil 2.1サーバーに合わせてエンジンプロトコルをアップデート
   * GameAnvil 2.1以前のバージョンのサーバーは今後サポートされません
@@ -34,6 +67,7 @@
     | FORCE\_CLOSE\_BASE\_CONNECTION<br>サーバーでBaseConnectionのclose()を呼び出し | FORCE\_CLOSE\_CONNECTION<br>サーバーでIConnectionのclose()を呼び出し |
     | FORCE\_CLOSE\_BASE\_USER<br>サーバーでBaseUserのcloseConnection()を呼び出し | FORCE\_CLOSE\_USER<br>サーバーでIUserのcloseConnection()を呼び出し |
 
+<a id="10-june-30-2025-fix"></a>
 #### Fix
 * サーバーで強制終了された場合、onDisconnectコールバックが呼び出された後にUserの状態が変更されていたのを、Userの状態が変更された後にonDisconnectコールバックが呼び出されるように修正
 * サーバーとHammerのプロトコルバッファをそれぞれ異なる環境で生成する際、生成環境によって互換性がなくなる可能性があった問題を修正
@@ -42,10 +76,14 @@
 ---
 
 
-### 2.0.0 (2024.12.4)
+<a id="00-december-4-2024"></a>
+### 2.0.0 (2024.12.4) { #00-december-4-2024 }
 
+<a id="00-december-4-2024-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.0.0.unitypackage)
+<a id="00-december-4-2024-gameanvil-200-or-later"></a>
 #### GameAnvil 2.0.0以上
+<a id="00-december-4-2024-span-stylecolor-e11d21newspan"></a>
 #### <span style="color: #e11d21">New</span>
 ###### GameAnvil 2.0 Connector
 * async awaitを使用した新規コネクタがリリースされました。
@@ -61,6 +99,7 @@ var (err, res) = await connector.ConnectAndAuthentication(
                                              "password");
 ```
  
+<a id="00-december-4-2024-span-stylecolor-e11d21removespan"></a>
 #### <span style="color: #e11d21">Remove</span>
 ###### ConnectionAgent削除
 * ConnectionAgentはGameAnvilConnectorと区分が曖昧でした。
@@ -77,6 +116,7 @@ var (err, res) = await connector.ConnectAndAuthentication(
 * サーバーからリクエストなしに受信する種類のメッセージは、従来通りデリゲートを使用します。
     * SetMessageCallbackメソッド
 
+<a id="00-december-4-2024-span-stylecolor-e11d21changespan"></a>
 #### <span style="color: #e11d21">Change</span>
 
 ###### ProtoBuffer 4.28.3使用
@@ -119,31 +159,41 @@ using var myUser = new GameAnvilUser(connector, "ServiceName", subId);
     public async Task<ErrorResult<ResultCodeLogin, LoginResult>> Login(string userType, string channelId, Payload? requestPayload = null)
     ```
 
+<a id="00-december-4-2024-span-stylecolor-e11d21fixspan"></a>
 #### <span style="color: #e11d21">Fix</span>
 * インターネットが高速な環境で時々正常に接続されない問題が修正されました。
 
-### 1.4.0 (2023.12.13)
+<a id="40-20231213"></a>
+### 1.4.0 (2023.12.13) { #40-20231213 }
 
+<a id="40-20231213-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.4.0.unitypackage)
 
+<a id="40-20231213-new"></a>
 #### New
 
 Payloadで圧縮パケットをサポートします。protobuf 3.24.1にアップデートされ、Protocol登録時にindexを指定しなくてもよいように改善されました。
 
+<a id="40-20231213-change"></a>
 #### Change
 
 ログイン時に誤ったChannelIdを入力した場合、SystemErrorレスポンスの代わりにLogin失敗レスポンスを返すように修正されました。
 
+<a id="40-20231213-fix"></a>
 #### Fix
 
 CONNECT_ALREADY_REQUEST状態でDisconnectができない問題が修正されました。
 
-### 1.3.0 (2022.12.27)
+<a id="30-20221227"></a>
+### 1.3.0 (2022.12.27) { #30-20221227 }
 
+<a id="30-20221227-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.3.0.unitypackage)
 
+<a id="30-20221227-gameanvil-130-or-later"></a>
 #### GameAnvil 1.3.0以上
 
+<a id="30-20221227-new"></a>
 #### New
 
 高速接続、ログレベル変更、同期機能などが新たに追加されました。GameAnvilコネクタコンポーネントを通じて新しい機能を利用できます。
@@ -173,6 +223,7 @@ CONNECT_ALREADY_REQUEST状態でDisconnectができない問題が修正され�
     * ルーム単位でkey-valueペアとしてカスタム値を設定して使用できます。
     * CAS方式の値設定をサポートするため、タイミングの問題を容易に解決できます。
 
+<a id="30-20221227-fix"></a>
 #### Fix
 
 * マッチング成功後にマッチングリクエストを再度送信した際、ルーム入室可否が誤って記録される問題を修正
@@ -180,6 +231,7 @@ CONNECT_ALREADY_REQUEST状態でDisconnectができない問題が修正され�
 * update()メソッド呼び出し時にガベージが発生する問題を解決
 * エラーに対するリスナーを登録していない状態でエラーが発生した場合、例外が発生する現象を修正
 
+<a id="30-20221227-change"></a>
 #### Change
 
 * API変更：名前変更および引数としてErrorCodeを受け取るように修正
@@ -221,48 +273,64 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 
 ---
 
-### 1.2.3 (2022.01.28)
+<a id="23-20220128"></a>
+### 1.2.3 (2022.01.28) { #23-20220128 }
 
+<a id="23-20220128-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.3.unitypackage)
 
+<a id="23-20220128-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0以上
 
+<a id="23-20220128-fix"></a>
 #### Fix
 
 * サーバーから送信された圧縮パケットを処理できずエラーが発生する問題を修正
 
 ------
 
-### 1.2.2 (2021.11.30)
+<a id="22-20211130"></a>
+### 1.2.2 (2021.11.30) { #22-20211130 }
 
+<a id="22-20211130-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.2.unitypackage)
 
+<a id="22-20211130-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0以上
 
+<a id="22-20211130-fix"></a>
 #### Fix
 
 * ルームに入室した状態でMatchRoomを呼び出して失敗した場合、IsJoinedRoom()がfalseに変わる問題を修正
 
 ------
 
-### 1.2.1 (2021.08.10)
+<a id="21-20210810"></a>
+### 1.2.1 (2021.08.10) { #21-20210810 }
 
+<a id="21-20210810-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.1.unitypackage)
 
+<a id="21-20210810-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0以上
 
+<a id="21-20210810-fix"></a>
 #### Fix
 
 * SocketException発生時にOnDisconnectが2回呼び出されるバグを修正
 
 ------
 
-### 1.2.0 (2021.07.13)
+<a id="20-20210713"></a>
+### 1.2.0 (2021.07.13) { #20-20210713 }
 
+<a id="20-20210713-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.0.unitypackage)
 
+<a id="20-20210713-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0以上
 
+<a id="20-20210713-change"></a>
 #### Change
 
 * Send()の戻り値の型をvoidに変更
@@ -356,60 +424,80 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 
 ------
 
-### 1.1.6 (2023.01.20)
+<a id="16-20230120"></a>
+### 1.1.6 (2023.01.20) { #16-20230120 }
 
+<a id="16-20230120-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.6.unitypackage)
 
+<a id="16-20230120-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0以上
 
+<a id="16-20230120-fix"></a>
 #### Fix
 
 * useIpv6オプションが有効な状態でconnect()呼び出し時にブロックされる可能性のある問題を修正
 
 ------
 
-### 1.1.5 (2022.01.28)
+<a id="15-20220128"></a>
+### 1.1.5 (2022.01.28) { #15-20220128 }
 
+<a id="15-20220128-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.5.unitypackage)
 
+<a id="15-20220128-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0以上
 
+<a id="15-20220128-fix"></a>
 #### Fix
 
 * サーバーから送信された圧縮パケットを処理できずエラーが発生する問題を修正
 
 ------
 
-### 1.1.4 (2021.11.30)
+<a id="14-20211130"></a>
+### 1.1.4 (2021.11.30) { #14-20211130 }
 
+<a id="14-20211130-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.4.unitypackage)
 
+<a id="14-20211130-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0以上
 
+<a id="14-20211130-fix"></a>
 #### Fix
 
 * ルームに入室した状態でMatchRoomを呼び出して失敗した場合、IsJoinedRoom()がfalseに変わる問題を修正
 
 ------
 
-### 1.1.3 (2021.08.10)
+<a id="13-20210810"></a>
+### 1.1.3 (2021.08.10) { #13-20210810 }
 
+<a id="13-20210810-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.3.unitypackage)
 
+<a id="13-20210810-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0以上
 
+<a id="13-20210810-fix"></a>
 #### Fix
 
 * SocketException発生時にOnDisconnectが2回呼び出されるバグを修正
 
 ------
 
-### 1.1.2 (2021.04.15)
+<a id="12-20210415"></a>
+### 1.1.2 (2021.04.15) { #12-20210415 }
 
+<a id="12-20210415-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.2.unitypackage)
 
+<a id="12-20210415-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0以上
 
+<a id="12-20210415-new"></a>
 #### New
 
 * GameAnvil ServerのClientStateCheck機能を一時停止させるConnectionAgent.PauseClientStateCheck()を追加。アプリがバックグラウンドに移行するなど、メッセージループが動作しなくなる場合に呼び出す。
@@ -417,18 +505,23 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 * Singleserver.SetOnPauseClientStateCheck() 追加。
 * Singleserver.SetOnResumeClientStateCheck() 追加。
 
+<a id="12-20210415-fix"></a>
 #### Fix
 
 * OnDisconnectでforceがfalseの時、ResultCodeDisconnectの値が0で返ってくるバグを修正
 
 ------
 
-### 1.1.1 (2021.04.07)
+<a id="11-20210407"></a>
+### 1.1.1 (2021.04.07) { #11-20210407 }
 
+<a id="11-20210407-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.1.unitypackage)
 
+<a id="11-20210407-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0以上
 
+<a id="11-20210407-change"></a>
 #### Change
 
 * listenerの個別登録有無を確認できるContainsListenerオーバーロードを追加。
@@ -436,18 +529,23 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 * ContainsUserListener、ContainsUserNotificationListener、ContainsUserErrorListener 追加。
 * ContainsConnectionListener、ContainsConnectionNotificationListener、ContainsConnectionErrorListener、ContainsConnectionErrorListener 追加。
 
+<a id="11-20210407-fix"></a>
 #### Fix
 
 * 強制終了、ログアウト、ログイン失敗などの状況でUserAgentの一部情報が初期化されないバグを修正
 
 ------
 
-### 1.1.0 (2020.12.18)
+<a id="10-20201218"></a>
+### 1.1.0 (2020.12.18) { #10-20201218 }
 
+<a id="10-20201218-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.0.unitypackage)
 
+<a id="10-20201218-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0以上
 
+<a id="10-20201218-change"></a>
 #### Change
 
 * .Net 4.5以上サポートへの完全移行
@@ -459,12 +557,16 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 
 ------
 
-### 1.0.0 (2020.08.31)
+<a id="00-20200831"></a>
+### 1.0.0 (2020.08.31) { #00-20200831 }
 
+<a id="00-20200831-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
 
+<a id="00-20200831-gameanvil-100-or-later"></a>
 #### GameAnvil 1.0.0以上
 
+<a id="00-20200831-change"></a>
 #### Change
 
 * MoveService削除
@@ -476,10 +578,12 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 
     * <span style="color:#eb6420">現在FORCE_CLOSE_DUPLICATE_LOGINケースにFORCE_CLOSE_BY_NEW_CONNECTIONが渡される問題があります。次回リリース時に修正される予定です。</span>
 
+<a id="00-20200831-fix"></a>
 #### Fix
 
 * Disconnect時にもUserAgentのisLoginがtrueを返す問題を修正
 
+<a id="00-20200831-detailed-resultcode-changes"></a>
 #### ResultCode詳細変更事項
 
 * ResultCodeAuth
@@ -535,8 +639,10 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 
 -----
 
-### 1.0.0-EA2 (2020.07.07)
+<a id="00-ea2-20200707"></a>
+### 1.0.0-EA2 (2020.07.07) { #00-ea2-20200707 }
 
+<a id="00-ea2-20200707-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -551,8 +657,10 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 
 -----
 
-### 1.0.0-EA (2020.06.29)
+<a id="00-ea-20200629"></a>
+### 1.0.0-EA (2020.06.29) { #00-ea-20200629 }
 
+<a id="00-ea-20200629-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -604,8 +712,10 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 
 -----
 
-### 0.12.1.1 (2020.06.23)
+<a id="1211-20200623"></a>
+### 0.12.1.1 (2020.06.23) { #1211-20200623 }
 
+<a id="1211-20200623-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -614,8 +724,10 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 
 -----
 
-### 0.12.1 (2020.04.06)
+<a id="121-20200406"></a>
+### 0.12.1 (2020.04.06) { #121-20200406 }
 
+<a id="121-20200406-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -638,8 +750,10 @@ ResultCode.PARSE_ERROR  | パケットパースに失敗したことを示す |
 
 -----
 
-### 0.12.0 (2020.02.14)
+<a id="120-20200214"></a>
+### 0.12.0 (2020.02.14) { #120-20200214 }
 
+<a id="120-20200214-c-sharp"></a>
 #### C-Sharp
 
 ##### Change

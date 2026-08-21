@@ -1,6 +1,10 @@
-## Game > GameAnvil > Test Development Guide > How to implement Functional Test
+<!-- pre-align:aligned sig=ef059736c23a -->
 
-## Tester
+<a id="game-gameanvil-test-development-guide-how-to-implement-functional-test"></a>
+## Game > GameAnvil > Test Development Guide > How to implement Functional Test { #game-gameanvil-test-development-guide-how-to-implement-functional-test }
+
+<a id="tester"></a>
+### Tester { #tester }
 
 It is the default module for using GameHammer. It is responsible for the default settings and the Connection object. To create a Tester object, create a Builder first, configure the necessary options for a test and call `build()`.
 
@@ -18,7 +22,18 @@ Tester tester = Tester.newBuilderWithConfig()
                     .build();
 ```
 
-## Connection
+<a id="tester-create-object"></a>
+#### Create Object
+
+<!-- TODO: translate body -->
+
+<a id="tester-add-option"></a>
+#### Add Option
+
+<!-- TODO: translate body -->
+
+<a id="connection"></a>
+### Connection { #connection }
 
 It handles the connection to the game server and authentication and takes care of users. Create Tester using as below:
 
@@ -30,7 +45,13 @@ The created Connection object is managed by Tester and it is separated by UUID. 
 
 Connection provides the following features: 
 
-### Connect
+<a id="connection-create-object"></a>
+#### Create Object
+
+<!-- TODO: translate body -->
+
+<a id="connection-connect"></a>
+#### Connect
 
 Connects to the GameAnvil server.
 
@@ -44,7 +65,8 @@ if(resultConnect.isSuccess()){
 
 When you call `get()`on the Future returned by `connect()`, it waits for the connection to succeed or fail and returns a ResultConnect object. You can get the result from the returned ResultConnect object. You can also pass a callback as the second argument to `connect()`to get the result. Other APIs besides `connect()` can also return a Future and wait for the result, or pass a callback to get the result. 
 
-### Authentication
+<a id="connection-authentication"></a>
+#### Authentication
 
 Request authentication to the GameAnvil server. The other features of the GameAnvil connector can be used only when the authentication is successful.
 
@@ -56,7 +78,8 @@ if(resultAuthentication.isSuccess){
 }
 ```
 
-### GetChannelList
+<a id="connection-getchannellist"></a>
+#### GetChannelList
 
 Request the list of channels available to the specified service.
 
@@ -68,7 +91,8 @@ if(resultChannelList.isSuccess){
 }
 ```
 
-### GetChannelInfo
+<a id="connection-getchannelinfo"></a>
+#### GetChannelInfo
 
 Request the information of the specified channel.
 
@@ -80,7 +104,8 @@ if(resultChannelList.isSuccess){
 }
 ```
 
-### Request
+<a id="connection-request"></a>
+#### Request
 
 Send message to server and wait for response.
 
@@ -92,7 +117,8 @@ if(packetResult.isSuccess()){
 }
 ```
 
-### Send
+<a id="connection-send"></a>
+#### Send
 
 Send message to server.
 
@@ -100,7 +126,8 @@ Send message to server.
 connection.send(message);
 ```
 
-### Close
+<a id="connection-close"></a>
+#### Close
 
 Severs the connection. To have the users created when disconnected log out, enter true as a factor.
 
@@ -108,7 +135,8 @@ Severs the connection. To have the users created when disconnected log out, ente
 connection.close(true);
 ```
 
-### WaitForAdminKickoutNoti
+<a id="connection-waitforadminkickoutnoti"></a>
+#### WaitForAdminKickoutNoti
 
 Wait until the forcibly closed by admin notification is received. It is passed when the admin forcibly disconnects.
 
@@ -118,17 +146,8 @@ ResultAdminKickoutNoti resultAdminKickoutNoti = future.get(WAIT_TIME_OUT, TimeUn
 // resultAdminKickoutNoti 
 ```
 
-### WaitForForceCloseNoti
-
-Wait until the forcible close notification. It is passed when the server calls `BaseUser.closeConnection()`, fails to authenticate, or is logged into a duplicate account or an exception occurs while UserTransfer is running.
-
-```
-Future<ResultForceCloseNoti> future = connection.waitForForceCloseNoti(); 
-ResultForceCloseNoti resultForceCloseNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked 
-// resultForceCloseNoti 
-```
-
-### WaitForDisconnect
+<a id="connection-waitfordisconnect"></a>
+#### WaitForDisconnect
 
 Wait until a network disconnected notification is received. It is passed when the server calls `BaseConnection.close()`, a socket error occurs or calls either `Connection.close()` or `Tester.Close()`.
 
@@ -138,7 +157,8 @@ ResultDisconnect resultDisconnect = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECO
 // resultDisconnect 
 ```
 
-## User
+<a id="user"></a>
+### User { #user }
 
 It is responsible for the major features required for the game such as login, room creation, join, and matching. User can be created as below:
 
@@ -153,7 +173,8 @@ Check if User that is matched with ServiceName and SubId using `Connection.getUs
 
 User provides the following features: 
 
-### Login
+<a id="user-login"></a>
+#### Login
 
 Log into the specified channel using the specified user type. User type and channel use the character strings specified by server.
 
@@ -170,7 +191,8 @@ if(resultLogin.isSuccess()){
 }
 ```
 
-### Logout
+<a id="user-logout"></a>
+#### Logout
 
 Log out from the logged in channel.
 
@@ -187,7 +209,8 @@ if(resultLogout.isSuccess()){
 }
 ```
 
-### WaitForForceLogoutNoti
+<a id="user-waitforforcelogoutnoti"></a>
+#### WaitForForceLogoutNoti
 
 Wait until a forcible logout notification is sent. It is passed when the server calls `BaseUser.kickout()`.
 
@@ -197,7 +220,8 @@ ResultForceLogoutNoti resultForceLogoutNoti = future.get(WAIT_TIME_OUT, TimeUnit
 // resultForceLogoutNoti 
 ```
 
-### CreateRoom
+<a id="user-createroom"></a>
+#### CreateRoom
 
 Create a room, name it with the specified room type and join the room. Room type uses the character strings configured from server.
 
@@ -214,7 +238,8 @@ if(resultCreateRoom.isSuccess()){
 }
 ```
 
-### JoinRoom
+<a id="user-joinroom"></a>
+#### JoinRoom
 
 Join the room that has the specified ID. It fails when there is no room with the specified ID.
 
@@ -231,7 +256,8 @@ if(resultJoinRoom.isSuccess()){
 }
 ```
 
-### NamedRoom
+<a id="user-namedroom"></a>
+#### NamedRoom
 
 Join the room with the specified name. If there is no room with the specified name, create such a room and join it. If the room is for party matching, enter true as useParty.
 
@@ -248,7 +274,8 @@ if(resultNamedRoom.isSuccess()){
 }
 ```
 
-### LeaveRoom
+<a id="user-leaveroom"></a>
+#### LeaveRoom
 
 Leave the current room.
 
@@ -265,7 +292,8 @@ if(resultLeaveRoom.isSuccess()){
 }
 ```
 
-### WaitForForceLeaveRoomNoti
+<a id="user-waitforforceleaveroomnoti"></a>
+#### WaitForForceLeaveRoomNoti
 
 Wait until a forcible kickout notification is sent. It is passed when the server calls BaseUser.kickoutRoom.
 
@@ -275,7 +303,8 @@ ResultForceLeaveRoomNoti resultForceLeaveRoomNoti = future.get(WAIT_TIME_OUT, Ti
 // resultForceLeaveRoomNoti 
 ```
 
-### MatchUserStart
+<a id="user-matchuserstart"></a>
+#### MatchUserStart
 
 Request user matchmaking. If the user already joined a room, the request may fail depending on server requirements. Matching success notification can be received by WaitForMatchUserDoneNoti and the match timeout notification can be received by WaitForMatchUserTimeoutNoti.
 
@@ -292,7 +321,8 @@ if(resultMatchUserStart.isSuccess()){
 }
 ```
 
-### MatchUserCancel
+<a id="user-matchusercancel"></a>
+#### MatchUserCancel
 
 Cancel the user matchmaking request. If match is not requested, matching was successful, or a timeout occurred, it may fail.
 
@@ -309,7 +339,8 @@ if(resultMatchUserCancel.isSuccess()){
 }
 ```
 
-### WaitForMatchUserDoneNoti
+<a id="user-waitformatchuserdonenoti"></a>
+#### WaitForMatchUserDoneNoti
 
 Wait until the user matchmaking or party matchmaking request complete notification is sent.  
 
@@ -319,7 +350,8 @@ ResultMatchUserDone resultMatchUserDone = future.get(WAIT_TIME_OUT, TimeUnit.MIL
 // resultMatchUserDone 
 ```
 
-### WaitForMatchUserTimeoutNoti
+<a id="user-waitformatchusertimeoutnoti"></a>
+#### WaitForMatchUserTimeoutNoti
 
 Wait until the user matchmaking or party matchmaking request timed out notification is sent.  
 
@@ -329,7 +361,8 @@ ResultMatchUserTimeout resultMatchUserTimeout = future.get(WAIT_TIME_OUT, TimeUn
 // resultMatchUserTimeout 
 ```
 
-### MatchPartyStart
+<a id="user-matchpartystart"></a>
+#### MatchPartyStart
 
 Request party matchmaking. It can be requested when the user joined a room for party matchmaking. Matching success notification can be received by WaitForMatchUserDoneNoti and the match timeout notification can be received by WaitForMatchUserTimeoutNoti.
 
@@ -346,7 +379,8 @@ if(resultMatchPartyStart.isSuccess()){
 }
 ```
 
-### WaitForMatchPartyStartNoti
+<a id="user-waitformatchpartystartnoti"></a>
+#### WaitForMatchPartyStartNoti
 
 Wait until the user receives a party matchmaking start notification. It is passed when someone else started party matchmaking in a room for party matchmaking.
 
@@ -356,7 +390,8 @@ ResultMatchPartyStart resultMatchPartyStart = future.get(WAIT_TIME_OUT, TimeUnit
 // resultMatchPartyStart 
 ```
 
-### MatchPartyCancel
+<a id="user-matchpartycancel"></a>
+#### MatchPartyCancel
 
 Cancel the party matchmaking request. If party matchmaking is not in progress, party matchmaking was successful, or a timeout occurred, it may fail.
 
@@ -373,7 +408,8 @@ if(resultMatchPartyCancel.isSuccess()){
 }
 ```
 
-### WaitForMatchPartyCancelNoti
+<a id="user-waitformatchpartycancelnoti"></a>
+#### WaitForMatchPartyCancelNoti
 
 Wait until the party matchmaking cancel notification is sent. It is passed when someone else cancels party matchmaking while party matchmaking is in progress.
 
@@ -383,7 +419,8 @@ ResultMatchPartyCancel resultMatchPartyCancel = future.get(WAIT_TIME_OUT, TimeUn
 // resultMatchPartyCancel 
 ```
 
-### MatchRoom
+<a id="user-matchroom"></a>
+#### MatchRoom
 
 Request the room matchmaking. If there is no room, the user may create an arbitrary room and join that room.
 
@@ -400,7 +437,8 @@ if(resultMatchRoom.isSuccess()){
 }
 ```
 
-### MoveChannel
+<a id="user-movechannel"></a>
+#### MoveChannel
 
 Move to the specified channel.
 
@@ -417,7 +455,8 @@ if(resultMoveChannel.isSuccess()){
 }
 ```
 
-### WaitForMoveChannelNoti
+<a id="user-waitformovechannelnoti"></a>
+#### WaitForMoveChannelNoti
 
 Wait until you receive a channel move notification. If you move the channel for reasons such as room entry, matchmaking, etc., it will be delivered.
 
@@ -427,7 +466,8 @@ ResultMoveChannelNoti resultMoveChannelNoti = future.get(WAIT_TIME_OUT, TimeUnit
 // resultMoveChannelNoti 
 ```
 
-### Request
+<a id="user-request"></a>
+#### Request
 
 Send message to server and wait for response.
 
@@ -444,7 +484,8 @@ if(packetResult.isSuccess()){
 }
 ```
 
-### Send
+<a id="user-send"></a>
+#### Send
 
 Send message to server.
 
@@ -452,7 +493,8 @@ Send message to server.
 user.send(message);
 ```
 
-### WaitForNotice
+<a id="user-waitfornotice"></a>
+#### WaitForNotice
 
 Wait until a notification is sent. It is passed when an admin sent a notification or a notification is sent by REST API.
 
@@ -462,9 +504,11 @@ ResultNotice resultNotice = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // 
 // resultNotice 
 ```
 
-## Write test code
+<a id="write-test-code"></a>
+### Write test code { #write-test-code }
 
-### Basic Settings
+<a id="write-test-code-basic-settings"></a>
+#### Basic Settings
 
 Write the BeforeClass, AfterClass, and After codes as follows when writing test code using JUnit.
 
@@ -508,7 +552,8 @@ public class TestWithGameHammer {
 
 If it is written in this way, you can stop the users participated in a preceding test remain from affecting the following test. 
 
-### Request/Response test
+<a id="write-test-code-requestresponse-test"></a>
+#### Request/Response test
 
 Test codes using GameHammer can be categorized by 2 types. The former is a group of test codes in Request/Response type. If Request is sent by the client, Response must be sent. If response is not sent, a timeout occurs. Most of the APIs provided by the GameAnvil connector use the Request/Response method and GameHammer supports tests in this Request/Response type.
 
@@ -551,7 +596,8 @@ First, create a message and send it to the server as a factor in `connection.req
 
 The APIs of Connection and User that return Future can be tested by using this method.
 
-### Send/Receive
+<a id="write-test-code-sendreceive"></a>
+#### Send/Receive
 
 The client sends Send, but it does not wait for response. The server may send Send regardless of the client's actions as well. The test can be written as below:
 

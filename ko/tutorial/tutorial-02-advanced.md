@@ -1,6 +1,10 @@
-## Game > GameAnvil > 심화 튜토리얼
+<!-- pre-align:aligned sig=577d65630622 -->
 
-### GameAnvil로 게임 서버 쉽게 만들기
+<a id="game-gameanvil-in-depth-tutorial"></a>
+## Game > GameAnvil > 심화 튜토리얼 { #game-gameanvil-in-depth-tutorial }
+
+<a id="create-game-server-easily-with-gameanvil"></a>
+### GameAnvil로 게임 서버 쉽게 만들기 { #create-game-server-easily-with-gameanvil }
 
 GameAnvil은 실시간 멀티플레이어 게임 서버 제작 플랫폼입니다.
 GameAnvil은 서버 엔진뿐만 아니라, 서버에 클라이언트를 연결하기 위한 커넥터를 제공합니다.
@@ -14,7 +18,8 @@ GameAnvil을 사용하면 손쉽게 게임 서버와 클라이언트를 개발�
 
 이 문서는 서버의 개념과 API를 단순 나열하는 대신 좀 더 구체적인 예시를 통해 설명하고 이해를 돕기 위해 실제 플레이가 가능한 멀티플레이어 직소 퍼즐 게임을 개발하는 과정을 순서대로 설명합니다. 문서의 내용을 직접 하나씩 따라하며 자연스럽게 GameAnvil과 멀티플레이어 게임 개발에 대한 이해도를 높일 수 있습니다.
 
-## 프로젝트 구성
+<a id="project-configuration"></a>
+## 프로젝트 구성 { #project-configuration }
 
 멀티플레이어 게임을 만들려면 클라이언트와 대응하는 서버 프로그램이 필요합니다. 이 예제에서는 클라이언트 프로그램 제작에 Unity와 GameAnvil 커넥터를, 서버 프로그램 제작에 앞서 소개한 서버 엔진 GameAnvil을 사용합니다. 먼저 GameAnvil을 이용한 서버 프로그램 프로젝트를 생성한 뒤 Unity와 GameAnvil 커넥터를 이용해 클라이언트 프로그램 프로젝트를 생성합니다.
 
@@ -22,7 +27,8 @@ GameAnvil을 사용하면 손쉽게 게임 서버와 클라이언트를 개발�
 
 [서버 샘플 프로젝트 다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil_tutorial_advanced.zip?disposition=attachment)
 
-### GameAnvil 프로젝트 구성
+<a id="gameanvil-project-configuration"></a>
+### GameAnvil 프로젝트 구성 { #gameanvil-project-configuration }
 
 프로젝트에 GameAnvil을 적용하려면 Maven 저장소에서 GameAnvil 라이브러리를 내려받고 GameAnvil을 구동하는 데 필수인 설정 파일을 작성해야 합니다. 마지막으로 약간의 보일러플레이트 코드를 작성하면 개발 초기 설정이 끝납니다. 이번 챕터에서는 개발을 시작하기 위한 초기 설정을 완료하는 것을 목표로 합니다. 실제 프로세스를 실행해 서버를 구동하는 것은 다음 챕터에서 다룹니다.
 
@@ -76,7 +82,8 @@ Project 탭에서 SDK 설정을 확인합니다. 만약 설정된 SDK가 없다�
 
 프로젝트 준비가 거의 끝났지만 실행을 위해서는 몇 가지 설정이 필요합니다. 여기에서는 우선 클라이언트 프로젝트를 먼저 생성한 뒤 서버 설정을 마치고 실행합니다.
 
-### Unity 프로젝트 구성
+<a id="unity-project-configuration"></a>
+### Unity 프로젝트 구성 { #unity-project-configuration }
 
 Unity Hub를 실행합니다. 오른쪽 상단의 **NEW**를 클릭해 새로운 프로젝트 생성 창을 엽니다
 
@@ -104,9 +111,11 @@ Unity Hub를 실행합니다. 오른쪽 상단의 **NEW**를 클릭해 새로운
 
 클라이언트 프로젝트 설정이 완료되었습니다.
 
-## 서버 구동 및 연결
+<a id="server-run-and-connect"></a>
+## 서버 구동 및 연결 { #server-run-and-connect }
 
-### GameAnvil 서버 구동
+<a id="run-gameanvil-server"></a>
+### GameAnvil 서버 구동 { #run-gameanvil-server }
 
 실행 설정이 완료되면 우측의 gradle 메뉴에서 Tasks > other > `runMain` 실행을 더블 클릭합니다. 이렇게 한 번 실행한 이후에는 IntelliJ 우측 상단의 초록색 삼각형 Run 아이콘을 클릭해도 서버가 실행됩니다.
 
@@ -127,7 +136,8 @@ GameAnvil 서버는 여러 개의 노드들로 구성되어 있습니다. 이 �
 
 각각의 노드는 코드를 실행하기 위해 준비하는데 시간이 필요하며, 각 노드가 준비 완료되면 onReady 로그를 출력합니다. 클라이언트가 서버로 접속하는데 직접적인 역할을 수행하는 노드는 게이트웨이 노드입니다. 게이트웨이 노드가 준비되어 GatewayNode의 onReady 로그가 출력 되었다면 GameAnvil 서버는 언제든 접속이 가능한 상태가 된 것입니다.
 
-### 커넥트 핸들러 작성
+<a id="write-connect-handler"></a>
+### 커넥트 핸들러 작성 { #write-connect-handler }
 
 이제 Unity 프로젝트로 이동하여 GameAnvil 서버에 접속할 수 있도록 코드를 작성해 보겠습니다. 서버와 연결하려면 먼저 커넥터 객체를 생성해야 합니다.
 
@@ -215,7 +225,8 @@ public class ConnectHandler : MonoBehaviour
 }
 ```
 
-### Connector와 User의 생성
+<a id="create-connector-and-user"></a>
+### Connector와 User의 생성 { #create-connector-and-user }
 
 커넥터에서 여러 기능을 이용하기 위해서 Connector와 User를 생성해야 합니다. Connector는 주로 서버 접속, 인증 등의 기능을 제공하며 User는 로그인, 방 생성 및 입장 등 유저와 관련된 기능을 제공합니다.
 
@@ -245,7 +256,8 @@ public GameAnvilUser getUser()
 
 <br>
 
-### 서버 연결
+<a id="connect-to-server"></a>
+### 서버 연결 { #connect-to-server }
 
 커넥터에서 제공하는 API를 사용하여 서버에 접속하는 Connect() 메서드는 다음과 같습니다.
 
@@ -282,19 +294,22 @@ Connect() 함수에서는 GameAnvilConnector의 Connect 메서드를 호출하�
 
 이것으로 서버가 접속을 받아들일 준비가 된 것처럼 클라이언트도 서버에 접속할 준비가 완료되었습니다.
 
-### 서버 연결 확인
+<a id="confirm-server-connection"></a>
+### 서버 연결 확인 { #confirm-server-connection }
 
 이제 Unity 클라이언트에서 플레이 모드로 진입하여 콘솔 상에 결과 코드가 제대로 출력되는지 확인합니다. 게임 화면의 텍스트 상에 IP, Port의 접속 정보와 더불어 연결 성공 메시지를 확인할 수 있습니다. 게임 서버에 접속 완료된 클라이언트는 이제 서버를 통해 메시지를 주고받을 수 있습니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/15_connect_success.png)
 
-## Room 및 User 생성
+<a id="create-room-and-user"></a>
+## Room 및 User 생성 { #create-room-and-user }
 
 서버에 접속한 클라이언트를 **게임 유저**라고 합니다. 서버에 접속한 클라이언트는 서버상에서 하나 이상의 게임 유저(User)로 로그인할 수 있습니다(이 예제에서는 하나의 유저로 로그인하는 경우를 다룹니다). 게임 유저는 하나의 **게임 룸**에 속함으로써 동일한 룸에 속한 다른 유저들과 통신할 수 있습니다. 즉, 유저들이 서로 다른 유저와 게임 관련 메지시를 교환하려면 해당 유저들은 같은 방(Room) 안에 속해 있어야 합니다.
 
 GameAnvil에서는 게임 유저와 게임 룸의 기본 구현을 미리 준비해 두었으므로 엔진의 클래스를 확장하고 커넥터의 API를 이용해 쉽게 게임 유저와 룸의 구조를 완성할 수 있습니다. 엔진 측에서는 게임 유저와 룸을 정의하는 방법을 다루고, 커넥터 측에서는 방 생성이나 참여 등을 요청하는 API를 사용하는 예제를 다루고자 합니다.
 
-### User
+<a id="user"></a>
+### User { #user }
 
 서버에서는 게임 유저와 게임 룸의 기능을 클래스로 정의합니다. 우선 게임 유저를 정의해 보겠습니다.
 
@@ -475,7 +490,8 @@ public class BasicUser extends BaseGameUser {
 
 <br>
 
-### Room
+<a id="room"></a>
+### Room { #room }
 
 로그인 가능한 유저 구현을 완료했습니다. 이제 게임 룸을 구현합니다. 유저 생성 방법과 마찬가지로 **GameAnvil Room** 파일 템플릿을 이용해 BaseGameRoom를 상속하여 클래스를 생성합니다. **File name**에는 **BasicRoom**을, **Service name**에는 **BASIC_SERVICE**를, **Room type**에는 **ROOM_TYPE_BASIC**을, **User**에는 이전 단계에서 생성한 BaseGameUser를 상속한 클래스의 클래스명 **BasicUser**를 입력합니다.
 
@@ -626,7 +642,8 @@ public class BasicRoom extends BaseGameRoom<BasicUser> {
 
 <br>
 
-### GameNode
+<a id="gamenode"></a>
+### GameNode { #gamenode }
 
 이제 게임 유저와 게임 방이 준비되었습니다. 하지만 아직 게임 유저/게임 룸의 생성과 삭제 요청을 처리하는 노드가 없습니다. 게임 유저와 게임 룸을 관리하는 역할을 하는 노드는 GameNode입니다. 이 노드는 일반적으로 게임 서버가 하기를 기대하는 대부분의 게임 로직 처리 역할을 수행하는 노드입니다. GameAnvil에 노드를 추가하는 방법은 자연스럽고 간단합니다. 게임 유저와 게임 룸을 정의했던 것과 마찬가지로, 미리 정의된 추상 클래스를 상속 구현하여 클래스를 만든 뒤 원하는 기능을 추가 구현하면 됩니다.
 **GameAnvil GameNode** 템플릿 선택 후 파일명을 **BasicGameNode**로, 서비스 이름을 **BASIC_SERVICE**로 설정하고 **OK** 버튼을 눌러 게임 노드 클래스를 생성합니다.
@@ -717,7 +734,8 @@ public class BasicGameNode extends BaseGameNode {
 
 <br>
 
-### 게임 노드, 유저, 룸 설정
+<a id="game-node-user-and-room-settings"></a>
+### 게임 노드, 유저, 룸 설정 { #game-node-user-and-room-settings }
 
  마우스 오른쪽 버튼으로 클릭한 뒤 **New > Java Class**를 선택해 직접 클래스를 생성할 수도 있습니다. 
 
@@ -764,13 +782,15 @@ public class BasicUser extends BaseGameUser {
 
 이제 클라이언트가 서버에 접속해서 게임 유저로서 로그인하고, 게임 룸을 생성할 수 있는 기능이 구현 완료되었습니다. 하지만 서버에 접속한다고 해서 바로 게임 관련 기능(게임 유저 생성, 게임 룸 생성 등)을 요청할 수 있는 것은 아닙니다. 지금 상태에서 서버와 클라이언트를 실행한다고 해도 클라이언트는 게임 서버의 기능을 사용할 수 없을 것입니다. 서버에 이러한 것들을 요청하려면 서버 접속 이후에 클라이언트 인증 과정이 필요합니다. 다음 챕터에서는 서버와 클라이언트에서 인증을 어떻게 처리하는지 다룹니다.
 
-## 서버 접속
+<a id="server-connection"></a>
+## 서버 접속 { #server-connection }
 
 클라이언트가 서버에 접속하고 나서 게임에 로그인하기 전에 유저의 신원을 확인하고 인증 과정을 거칠 필요가 있습니다.
 게임 노드가 게임 유저와 게임 룸 생성 역할을 담당한다면, 게이트웨이 노드는 유저의 접속과 인증 기능을 담당합니다. 게임 노드를 클래스 작성을 통해 구현한 것처럼 게이트웨이 노드도 일관성 있는 방식으로 구현할 수 있습니다.
 **GameAnvil GatewayNode** 템플릿 선택 후 파일명을 **BasicGatewayNode**로 설정하고 **OK** 버튼을 눌러 게이트웨이 노드 클래스를 생성합니다. 게이트웨이 노드 클래스는 기본 생성된 코드 외에 별도로 추가 코드는 필요하지 않습니다.
 
-### 프로토콜 등록
+<a id="register-protocol"></a>
+### 프로토콜 등록 { #register-protocol }
 
 인증 과정을 거치면서 서버와 클라이언트는 서로 사용할 프로토콜을 확인하는 과정을 거칩니다. 따라서 인증 과정을 거치기 전에 프로토콜을 등록해야 합니다. 프로토콜 등록은 한 번만 하면 되기 때문에, getConnector() 코드 내부에 프로토콜 등록 코드를 추가해보겠습니다. 튜토리얼을 따라 진행하다보면 구현하게 되는 인게임 채팅에서 사용할 프로토콜을 미리 등록해봅니다.
 
@@ -791,7 +811,8 @@ public GameAnvilConnector getConnector()
 
 <br>
 
-### 인증 코드 추가
+<a id="add-authentication-code"></a>
+### 인증 코드 추가 { #add-authentication-code }
 
 유니티 프로젝트로 이동해서 클라이언트 측 구현을 해보겠습니다. 클라이언트에서는 연결 요청과 마찬가지로 인증 요청을 커넥터 GameAnvilConnector API를 통해 요청할 수 있습니다. 인증 요청은 연결 요청 이후에만 성립할 수 있습니다. 인증 요청 결과를 화면 상의 텍스트와 콘솔을 통해 출력하여 확인할 수 있도록 하겠습니다.
 
@@ -820,17 +841,20 @@ public async void Auth()
 
 이제 클라이언트가 서버에 접속할 뿐만 아니라 인증 과정까지 요청할 수 있도록 설정되었습니다.
 
-### 인증 확인
+<a id="verify-authentication"></a>
+### 인증 확인 { #verify-authentication }
 
 Unity 클라이언트에서 플레이 모드로 진입합니다. 콘솔 상에 로그가 접속, 인증 순으로 순차 출력됨을 확인합니다. 다시 정리하면, 클라이언트의 Auth 요청에 따라 서버의 게이트웨이 노드에서 사용자 인증이 완료되어 서버에 로그인할 수 있는 상태가 된 것입니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/19_auth_success.png)
 
-## 로그인
+<a id="login"></a>
+## 로그인 { #login }
 
 이제 마지막으로 수행할 과정은 게임 노드에 로그인하여 게임 유저를 생성하는 것입니다. 게임 유저는 서버에 접속한 다른 클라이언트와 통신하기 위해 필요한 개념으로, 클라이언트 간에 통신을 하려면 각 클라이언트는 게임 유저를 생성하여 게임 룸을 통해서 메시지를 주고받도록 하고 있습니다.
 
-### 로그인 코드 추가
+<a id="add-login-code"></a>
+### 로그인 코드 추가 { #add-login-code }
 
 접속 및 인증이 완료된 클라이언트는 게임 노드로 로그인을 할 수 있습니다. 서버에 로그인하면 게임 노드에 해당 클라이언트를 위한 게임 유저 객체가 생성됩니다. 클라이언트는 자신의 서버측 게임 유저 객체를 통해 서버 혹은 다른 유저들과 메시지를 주고 받을 수 있게 됩니다. 앞서 작성한 인증 코드를 아래와 같이 수정하여 인증이 성공한 경우에 바로 로그인을 진행하도록 합니다.
 
@@ -856,15 +880,18 @@ public async void Login()
 
 로그인을 요청할 때 같이 전달한 콜백 메서드가 로그인 요청 결과를 로그로 출력하도록 합니다.
 
-### 로그인 확인
+<a id="confirm-login"></a>
+### 로그인 확인 { #confirm-login }
 
 Unity 테스트 모드를 통해 성공적으로 로그인되는 것을 확인합니다.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/20_login_success.png)
 
-## 방 생성 및 참가
+<a id="create-and-participate"></a>
+## 방 생성 및 참가 { #create-and-participate }
 
-### 클라이언트 작업
+<a id="client-task"></a>
+### 클라이언트 작업 { #client-task }
 
 Unity 프로젝트에서 ConnectHandler 코드에 방 생성을 요청하는 메서드를 작성합니다. 이때, CreateRoom 메서드의 두 번째 인자인 RoomType은 반드시 서버에서 지정한 값과 같아야 함에 유의합니다. 일반적으로 이러한 RoomType 등의 프로토콜은 서버와 클라이언트 개발자가 사전에 값을 미리 정의해두고 사용합니다. 방 생성 결과 코드를 콘솔에 출력합니다. 또, 방 생성에 성공하면 roomId를 클라이언트 측에 저장해두고, 게임 씬으로 이동하도록 코드를 작성합니다.
 
@@ -954,7 +981,8 @@ public class GameManager : MonoBehaviour
 
 이제 클라이언트에 서버 접속, 인증, 로그인 기능뿐만 아니라 방 참가와 생성 기능까지 모두 구현되었습니다.
 
-### Room 생성 및 참가 테스트
+<a id="create-and-test-participation-in-room"></a>
+### Room 생성 및 참가 테스트 { #create-and-test-participation-in-room }
 
 Unity 프로젝트의 상단 도구 모음 바에서 **File > Build Setting**을 선택합니다. 아래와 같이 필요한 씬들을 빌드할 씬 목록에 차례대로 추가합니다. 만약 씬 순서가 잘못되었다면 리스트 상의 항목을 드래그하여 ConnectScene이 맨 위로 오도록 순서를 알맞게 조정합니다.
 
@@ -971,13 +999,15 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 새로운 
 - 서버 구현 수정 후 서버 프로세스를 재시작하였는가?
 - 서비스명은 GameAnvilConfig.json에 설정한 것과 동일하게 서버/클라이언트에 구현되었는가?
 
-## 인게임 채팅 구현
+<a id="perform-in-game-chat"></a>
+## 인게임 채팅 구현 { #perform-in-game-chat }
 
 이제 클라이언트 간에 서버를 통해 통신할 수 있는 환경이 구성되었습니다. 여기에서는 클라이언트에서 생성한 데이터를 원격의 클라이언트가 받아볼 수 있는 간단한 예제를 구현해 보겠습니다. 예제 프로젝트 내부에 미리 구현된 프로토콜을 이용해 채팅 기록을 주고받는 방법을 알아봅니다. 이 예제 한정으로 통신 데이터를 클라이언트로부터 서버로 전송할 때는 MessageRequest 클래스를 사용합니다. 서버로부터 클라이언트로 통신 데이터를 전송할 때는 MessageResponse또는 MessageBroadcast 클래스를 사용합니다.
 
 (프로젝트 템플릿을 사용해서 직접 프로젝트를 생성한 경우 Message 클래스들을 이용할 수 없습니다. 튜토리얼용으로 만들어진 프로젝트를 다운로드해 내부의 BasicProtocol.java가 프로젝트에 포함될 수 있도록 설정하십시오. 또한 서버 실행 전에 프로토콜을 등록하는 과정도 필요합니다. 서버 측의 프로토콜 관련 설정은 미리 준비된 튜토리얼용 프로젝트에 미리 완료되어 있으므로 튜토리얼 프로젝트를 그대로 사용했다면 진행하지 않아도 됩니다.)
 
-### 클라이언트 측 전송 구현
+<a id="perform-client-side-transfer"></a>
+### 클라이언트 측 전송 구현 { #perform-client-side-transfer }
 
 먼저 클라이언트에서 서버 방향으로 메시지를 보내는 코드를 작성해 보겠습니다. 일단 로그인한 유저로 서버에 연결되면 유저 에이전트를 통해 서버의 기능을 활용할 수 있습니다. 여기에서는 유저 에이전트의 Send 기능을 활용해 방에 패킷을 전송합니다. 메시지 전송을 위해서는 전송할 내용을 담은 패킷을 인자로 넘겨 주어야 합니다.
 
@@ -1028,7 +1058,8 @@ public class GameManager : MonoBehaviour
 
 이렇게 하면 클라이언트에서 서버 방향으로 패킷을 전송하는 기능이 구현되었습니다. 하지만 지금은 패킷을 서버로 보낸다고 해도 서버에서는 아무런 응답이 없을 것입니다. 그 이유는 서버 측에서 해당 패킷을 받았을 때 내용을 어떻게 분석하고 어떤 동작을 할지 정의해 주지 않았기 때문입니다. 다음 챕터에서는 서버 측 구현을 다루겠습니다.
 
-### 서버 측 응답 구현
+<a id="perform-server-side-response"></a>
+### 서버 측 응답 구현 { #perform-server-side-response }
 
 우선 서버에서 채팅 프로토콜을 사용할 수 있도록 서버 구동 전 프로토콜 등록을 합니다.
 
@@ -1084,7 +1115,8 @@ public class BasicHandler implements IMessageHandler<IRoomDispatchContext, Messa
 
 이렇게 해서 클라이언트가 송신한 패킷을 서버가 수신하고, 약간의 처리를 한 뒤 다시 되돌려주는 기능이 서버에 추가되었습니다. 이때 클라이언트 또한 서버에서 송신한 패킷을 어떻게 처리할지 지정해야 합니다.
 
-### 클라이언트 측 수신 구현
+<a id="perform-client-side-reception"></a>
+### 클라이언트 측 수신 구현 { #perform-client-side-reception }
 
 클라이언트에서도 서버 측의 패킷을 처리하기 위해 미리 핸들러를 등록해야 합니다. 그렇지 않으면 패킷을 받았을 때 처리 방법을 알 수 없는 프로토콜이라고 판단해서 내용을 버리게 됩니다. 서버에서 보내는 내용을 수신했을 때 이것을 감지하고 내용을 처리하려면 서버에서 보내는 패킷의 프로토콜 타입의 핸들러를 등록하면 됩니다. 즉, MessageBroadcast 타입의 메시지를 처리하는 핸들러 등록 코드를 작성해서 등록합니다.
 
@@ -1109,7 +1141,8 @@ void Start()
 
 <br>
 
-### 메시지 전달 확인
+<a id="confirm-message-delivery"></a>
+### 메시지 전달 확인 { #confirm-message-delivery }
 
 서버 수정 후 새로 실행했는지 확인하고, Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 빌드된 게임에서 방을 생성하고 서버측 로그를 확인합니다. 그 상태로 Unity 에디터에서 플레이모드로 진입한 후 앞서 생성한 방의 RoomId를 입력하여 해당 방에 참가합니다.
 
@@ -1119,7 +1152,8 @@ void Start()
 
 간단한 채팅 서버 구현을 통해서 메시지 처리 과정을 학습했습니다. 다음에는 좀 더 실용적인 예제의 구현 과정을 살펴보겠습니다.
 
-## 퍼즐 게임 구현
+<a id="perform-puzzle-game"></a>
+## 퍼즐 게임 구현 { #perform-puzzle-game }
 
 게임 씬에는 싱글 플레이가 가능한 퍼즐 게임이 미리 구현되어 있습니다. 플레이 모드로 진입하여 퍼즐 조각을 드래그해 알맞은 위치 근처에 놓으면 격자상의 정확한 위치로 보정됩니다. 이번 챕터에서는 이 게임을 멀티플레이어 게임으로 만들어 보겠습니다.
 
@@ -1127,7 +1161,8 @@ void Start()
 
 메시지는 미리 정의한 프로토콜에 기반하여 정의되기만 하면 서버와 클라이언트 간에 송수신이 가능합니다. XML, json 등 여러 가지 표현 수단이 있겠지만 GameAnvil은 Google Protocol Buffers를 사용합니다. 이는 속도와 안정성 측면에서 가장 좋은 솔루션 중 하나입니다.
 
-### Google Protocol Buffers를 이용한 메시지 직렬화/역직렬화
+<a id="serialize-and-deserialize-messages-with-google-protocol-buffers"></a>
+### Google Protocol Buffers를 이용한 메시지 직렬화/역직렬화 { #serialize-and-deserialize-messages-with-google-protocol-buffers }
 
 프로토콜 버퍼를 사용하려면 먼저 메시지를 어떻게 정의할 것인지 명세를 작성해야 합니다. 예를 들면 MessageRequet의 명세에는 단일 문자열을 포함시킵니다. 그 후 프로토콜 명세를 컴파일해 원하는 언어의 파일로 변환합니다. 이후에는 MessageRequest를 사용했던 방식과 비슷하게 패킷의 메시지 프로토콜로 사용할 수 있습니다.
 
@@ -1166,7 +1201,8 @@ C# 클래스 파일은 파인더와 파일 탐색기 등의 프로그램을 이�
 
 퍼즐 위치 동기화를 위한 메시지 프로토콜 작성이 끝났습니다.
 
-### 프로토콜 등록
+<a id="perform-puzzle-game-register-protocol"></a>
+### 프로토콜 등록 { #perform-puzzle-game-register-protocol }
 
 프로토콜을 정의하고 컴파일까지 무사히 마쳤다면 서버와 클라이언트 양쪽에 해당 프로토콜 클래스를 등록해야 합니다. GameAnvil 서버의 Main 메서드에서 아래와 같이 프로토콜을 등록합니다.
 
@@ -1205,7 +1241,8 @@ public GameAnvilConnector getConnector()
 
 <br>
 
-### 클라이언트 측 전송 구현
+<a id="perform-puzzle-game-perform-client-side-transfer"></a>
+### 클라이언트 측 전송 구현 { #perform-puzzle-game-perform-client-side-transfer }
 
 이제 게임을 위한 프로토콜 정의 및 등록까지 모두 마쳤습니다. 지금부터는 이러한 프로토콜에 기반한 메시지를 실제로 전송하는 기능을 구현합니다. 우선 클라이언트 측에서 데이터를 전송하는 부분을 먼저 구현합니다. 퍼즐 조각을 드래그하는 동안 그 위치를 서버로 전송해 보겠습니다.
 
@@ -1271,7 +1308,8 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
 <br>
 
-### 서버 측 응답 구현
+<a id="perform-puzzle-game-perform-server-side-response"></a>
+### 서버 측 응답 구현 { #perform-puzzle-game-perform-server-side-response }
 
 클라이언트 측에서는 지속적으로 퍼즐의 위치를 서버에 보내게 되었습니다. 이제 퍼즐의 위치를 서버에서 어떻게 처리할지 작성해야 합니다. MessageRequest를 가공하여 MessageResponse, MessageBroadcast로 유저에게 되돌려주었던 것과 같이 퍼즐 위치를 다시 게임 룸의 모든 유저에게 되돌려주도록 구현해 보겠습니다.
 
@@ -1308,7 +1346,8 @@ PuzzlePositionHandler도 역시 @GameAnvilController 어노테이션과 @GameRoo
 
 <br>
 
-### 클라이언트 측 수신 구현
+<a id="perform-puzzle-game-perform-client-side-reception"></a>
+### 클라이언트 측 수신 구현 { #perform-puzzle-game-perform-client-side-reception }
 
 앞서 서버에서 송신한 MessageBroadcast를 처리하기 위해 미리 핸들러를 등록해야 했습니다. 이번에도 마찬가지로 퍼즐 위치를 처리하는 핸들러를 만들기 위해 GameManager의 Start 메서드에 PuzzlePosition 메시지를 처리하는 핸들러 등록 코드를 작성합니다. 이 핸들러는 메시지를 수신하면 퍼즐 객체를 찾아서 서버에서 받은 위치로 이동시킵니다.
 
@@ -1347,7 +1386,8 @@ public class GameManager : MonoBehaviour{
 
 <br>
 
-### 퍼즐 위치 동기화 확인
+<a id="confirm-puzzle-location-synchronization"></a>
+### 퍼즐 위치 동기화 확인 { #confirm-puzzle-location-synchronization }
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 빌드된 게임에서 방을 생성한 뒤 Unity 플레이 모드를 실행하고 생성된 방의 RoomId를 입력해서 방에 참가합니다. 이제 퍼즐 조각을 드래그해 위치를 이동하면 해당 퍼즐 조각의 위치가 동기화되어 원격 클라이언트에 반영되는 것을 확인할 수 있습니다.
 
@@ -1355,7 +1395,8 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 빌드된 
 
 <br>
 
-### 중간 유입 유저 처리하기
+<a id="handle-late-joiner"></a>
+### 중간 유입 유저 처리하기 { #handle-late-joiner }
 
 게임 중 임의의 퍼즐 조각 위치가 변경된 후에 새로운 유저가 방에 입장할 경우를 생각해 봅시다. 이때, 기존 유저와 신규 유저 사이의 퍼즐 상태는 서로 다릅니다. 새롭게 들어온 유저는 초기의 퍼즐 상태를 가지고 있으므로 기존 유저와 퍼즐 상태를 동기화해 주어야 합니다. 이를 해결하기 위해서 서버 측 로직을 수정해 주겠습니다. 이제 서버는 퍼즐의 위치 정보를 모두 보관하고, 새로운 유저가 입장하면 해당 정보를 이용하여 동기화하도록 로직을 수정합니다.
 
@@ -1432,11 +1473,13 @@ public class BasicRoom extends BaseGameRoom<BasicUser> {
 
 <br>
 
-## 퍼즐 섞기 구현
+<a id="perform-puzzle-mix"></a>
+## 퍼즐 섞기 구현 { #perform-puzzle-mix }
 
 퍼즐 위치를 랜덤으로 섞는 로직을 구현해 보겠습니다. 클라이언트에서 퍼즐 위치 섞기를 요청하면 서버에서 퍼즐을 섞은 후 새로운 위치를 결정합니다. 그리고 변경된 위치 정보를 다시 클라이언트로 되돌려주는 것이 기본 아이디어입니다.
 
-### 프로토콜 등록
+<a id="perform-puzzle-mix-register-protocol"></a>
+### 프로토콜 등록 { #perform-puzzle-mix-register-protocol }
 
 우선 퍼즐 섞기 요청을 하기 위한 프로토콜을 제작해 보겠습니다. 서버 프로젝트로 이동하여 Puzzle.proto 파일에 프로토콜 명세를 추가합니다. 이 프로토콜은 특별히 클라이언트에서 서버로 보낼 정보가 없으므로 필드가 하나도 없습니다. 이 또한 프로토콜로서 충분히 유의미합니다.
 
@@ -1466,7 +1509,8 @@ message ScatterPuzzle { } // 퍼즐 섞기 요청 프로토콜
 
 <br>
 
-### 클라이언트 측 구현
+<a id="implement-client-side"></a>
+### 클라이언트 측 구현 { #implement-client-side }
 
 유니티 프로젝트로 이동하여 GameManager.cs에 아래와 같이 섞기 요청을 위한 코드를 작성합니다. Scatter 메서드가 호출되면 GameAnvilUser를 통해 새로운 ScatterPuzzle 타입의 메시지가 게임 룸으로 전송됩니다.
 
@@ -1486,7 +1530,8 @@ public class GameManager : Monobehaviour {
 
 **Hierarchy** 패널의 **Scatter Puzzle Button**을 클릭합니다. **Inspector**의 **Button** 컴포넌트에서 **OnClick** 리스너에 항목을 추가한 뒤 GameManager 컴포넌트를 드래그해 등록하고, 드롭다운에서 Scatter 메서드를 선택합니다.
 
-### 서버 측 구현
+<a id="server-side-implementation"></a>
+### 서버 측 구현 { #server-side-implementation }
 
 섞기 요청이 들어왔을 때의 처리는 앞서 사용한 방식대로 핸들러를 이용합니다. **GameAnvil RoomMessageHandler** 파일 템플릿을 통해 ScatterPuzzleHandler 클래스를 생성합니다. 16개 각 퍼즐의 위치를 랜덤하게 설정한 후 PuzzlePositon 타입의 메시지를 송신합니다. 또한 서버의 puzzlePositions 맵도 새로운 위치 정보로 갱신합니다.
 
@@ -1547,17 +1592,20 @@ public class ScatterPuzzleHandler implements IMessageHandler<IRoomDispatchContex
 
 이제 클라이언트 측의 전송 기능과 서버 측의 응답 기능이 모두 완성되었습니다.
 
-### 퍼즐 섞기 기능 확인
+<a id="confirm-puzzle-mix"></a>
+### 퍼즐 섞기 기능 확인 { #confirm-puzzle-mix }
 
 Unity 에디터에서 플레이 모드로 진입합니다. Scatter Puzzle 버튼을 클릭하여 퍼즐 섞기 기능이 잘 작동하는지 확인합니다.
 
-## 더 나은 중간 유입 유저 처리
+<a id="better-late-joiner-process"></a>
+## 더 나은 중간 유입 유저 처리 { #better-late-joiner-process }
 
 앞에서 중간 유입 유저를 처리하는 과정에서 동기화 문제가 발생했습니다. 그 원인은 유저가 방에 입장하는 시점을 퍼즐 조각의 위치 동기화 시점으로 적합하다고 생각했기 때문입니다. 하지만 우리가 구현 중인 퍼즐 게임은 유저가 방에 입장하는 시점에 씬 이동이 발생합니다.
 
 그러므로 우리는 리스너 등록과 onJoinRoom 콜백 호출의 두 가지 시점으로 나누어서 생각해야 합니다. 이는 게임 클라이언트의 구현에 따라 문제가 없을 수도 있고, 문제가 될 수도 있습니다. onJoinRoom 콜백 호출 이후 씬 이동이 시작되기 때문에 씬 이동이 완료된 직후에 클라이언트가 직접 서버로 퍼즐 위치 동기화를 요청하고자 합니다.
 
-### 프로토콜 등록
+<a id="better-late-joiner-process-register-protocol"></a>
+### 프로토콜 등록 { #better-late-joiner-process-register-protocol }
 
 서버 프로젝트로 이동하여, 퍼즐 위치 동기화를 요청하기 위한 프로토콜을 Puzzle.proto에 추가합니다.
 
@@ -1583,7 +1631,8 @@ message PuzzlePositionReq {} // 퍼즐 동기화 요청
 
 <br>
 
-### 클라이언트 측 구현
+<a id="better-late-joiner-process-implement-client-side"></a>
+### 클라이언트 측 구현 { #better-late-joiner-process-implement-client-side }
 
 씬 이동 직후 서버에 퍼즐 위치를 요청하도록 하기 위해서는 GameScence으로 씬 이동 직후 실행되는 Start 함수를 수정해야 합니다. GameManager의 Start 메서드에 다음과 같이 새로 만든 PuzzlePositionReq 프로토콜 메시지를 전송하는 코드를 추가합니다.
 
@@ -1624,7 +1673,8 @@ public class GameManager : MonoBehaviour
 
 <br>
 
-### 서버 측 구현
+<a id="better-late-joiner-process-server-side-implementation"></a>
+### 서버 측 구현 { #better-late-joiner-process-server-side-implementation }
 
 onJoinRoom에 잘못 구현했던 퍼즐 위치 송신 코드는 제거하고, Puzzle.PuzzlePositionReq 메시지에 대한 핸들러 PuzzlePositionReqHandler 클래스를 생성 후 새롭게 작성합니다.
 
@@ -1653,13 +1703,16 @@ public class PuzzlePositionReqHandler implements IMessageHandler<IRoomDispatchCo
 
 <br>
 
-### 중간 유입 유저 처리 확인
+<a id="confirm-late-joiner-processing"></a>
+### 중간 유입 유저 처리 확인 { #confirm-late-joiner-processing }
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 이제 빌드된 게임에서 방을 생성하고 퍼즐 섞기를 실행합니다. 그 상태에서 Unity 에디터의 플레이 모드로 진입하여 이 방에 참가한 후 퍼즐 위치가 동기화되는 것을 확인합니다.
 
-## 유저 매치메이킹 구현
+<a id="perform-user-matchmaking"></a>
+## 유저 매치메이킹 구현 { #perform-user-matchmaking }
 
-### 서버 측 구현
+<a id="perform-user-matchmaking-server-side-implementation"></a>
+### 서버 측 구현 { #perform-user-matchmaking-server-side-implementation }
 
 유저 매치메이킹은 유저들의 매치메이킹 요청을 한데 모아 적절한 기준에 맞춰 비슷한 수준의 유저들끼리 서로 같은 방에서 게임을 시작할 수 있게 합니다. 승점이나 점수 등 다양한 요소를 사용자가 직접 구현해 유저들을 적절하게 구분하고 매칭할 수 있습니다. 여기에서는 유저 2명을 하나의 게임으로 매칭해 주는 로직을 구현합니다.
 
@@ -1789,7 +1842,8 @@ public class BasicUserMatchMaker extends AbstractUserMatchMaker<BasicUserMatchIn
 
 <br>
 
-### 클라이언트 측 구현
+<a id="perform-user-matchmaking-implement-client-side"></a>
+### 클라이언트 측 구현 { #perform-user-matchmaking-implement-client-side }
 
 매치메이킹 로직은 모두 서버에 구현되어 있기 때문에 클라이언트에서는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 MatchUser 메서드를 추가합니다. 그리고 매치메이킹이 끝난 시점에 씬을 이동하도록 코드를 추가합니다.
 
@@ -1829,11 +1883,13 @@ public class ConnectHandler : MonoBehaviour
 
 씬에서 MatchUser 버튼의 OnClick 리스너에 ConnectHandler 컴포넌트를 드래그해서 등록하고, 드롭다운에서 MatchUser 메서드를 선택합니다.
 
-### 유저 매치메이킹 테스트
+<a id="user-matchmaking-test"></a>
+### 유저 매치메이킹 테스트 { #user-matchmaking-test }
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태로 Unity 에디터에서 플레이 모드에 진입합니다. 양측에서 모두 User Match Making 버튼을 눌러 매칭이 성사되고 동일한 방 번호로 묶이게 되는 것을 확인합니다.
 
-## 룸 매치메이킹 구현
+<a id="perform-room-matchmaking"></a>
+## 룸 매치메이킹 구현 { #perform-room-matchmaking }
 
 룸 매치메이킹은 매치 메이커가 관리하는 방들 중에서 유저의 요구 사항에 가장 적합한 방으로 자동 입장시킬 수 있는 기능입니다. 즉, 유저 매치메이킹이 유저와 유저를 매칭시켜주는 기능이라면, 룸 매치메이킹은 유저와 방을 매칭시켜주는 기능입니다. 이때, 구현 방식에 따라서 다양한 조건으로 유저를 방에 매칭할 수 있습니다. 여기에서는 아직 정원이 차지 않은 방 중에 인원이 가장 적은 방으로 입장하는 매치메이킹을 구현합니다.
 
@@ -1841,7 +1897,8 @@ Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이합니다. 그 상태
 
 추가로 기존 로직을 일부 수정합니다. 룸 매치메이킹은 모든 방이 아닌 룸 매치메이킹 대상으로 신청한 방들만을 대상으로 수행됩니다. 따라서 방 생성 시점에 룸 매치메이킹을 대상으로 신청하는 코드를 추가합니다.
 
-### 서버 측 구현
+<a id="perform-room-matchmaking-server-side-implementation"></a>
+### 서버 측 구현 { #perform-room-matchmaking-server-side-implementation }
 
 우선 매치메이킹 요청을 나타낼 클래스를 구현합니다. BasicRoomMatchForm 클래스를 생성합니다.
 
@@ -2012,7 +2069,8 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 <br>
 
-### 클라이언트 구현
+<a id="implement-client"></a>
+### 클라이언트 구현 { #implement-client }
 
 유저 매치메이킹과 마찬가지로 클라이언트는 매치메이킹이 필요한 시점에 요청을 보내기만 하면 됩니다. ConnectHandler에 RoomMatchMaking 메서드를 추가합니다.
 
@@ -2049,13 +2107,15 @@ public class ConnectHandler : MonoBehaviour {
 
 <br>
 
-### 룸 매치메이킹 테스트
+<a id="room-matchmaking-test"></a>
+### 룸 매치메이킹 테스트 { #room-matchmaking-test }
 
 Unity에서 `cmd+b` 또는 `ctrl+b`로 빌드 후 플레이 상태에서 방을 생성합니다. 그 상태로 Unity 에디터에서 플레이 모드로 진입합니다. 플레이 모드에서 Room Match Making 버튼을 눌러 빌드 모드에서 생성한 방으로 이동하는지 확인합니다.
 
 <br>
 
-## Room 떠나기 구현
+<a id="perform-to-leave-room"></a>
+## Room 떠나기 구현 { #perform-to-leave-room }
 
 마지막으로 방을 떠나는 기능 구현을 위해 Unity 클라이언트의 GameManager에 아래 메서드를 추가합니다.
 
@@ -2089,6 +2149,7 @@ public class GameManager : MonoBehaviour
 
 씬에서 Leave Room 버튼의 OnClick 리스너에 GameManager 컴포넌트를 드래그해 등록하고, 드롭다운 메뉴에서 LeaveRoom 메서드를 선택합니다.
 
-## 프로젝트 마무리
+<a id="end-project"></a>
+## 프로젝트 마무리 { #end-project }
 
 이상 GameAnvil과 Unity를 이용해 실시간 멀티플레이가 가능한 퍼즐 게임을 구현해 보았습니다. 그 과정에서 GameAnvil의 핵심 기능 다수를 사용하였습니다. 하지만 GameAnvil은 이 튜토리얼에 포함되지 않은 더욱 풍성하고 다양한 기능들을 지원합니다. 이러한 기능들에 대해서는 이어지는 문서를 참고하십시오. 또한 함께 제공되는 레퍼런스 샘플 프로젝트와 JavaDoc도 GameAnvil을 이해하는 데 많은 도움이 될 것입니다.

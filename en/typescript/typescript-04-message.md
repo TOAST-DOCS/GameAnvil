@@ -1,10 +1,15 @@
-## Game > GameAnvil > Guide to CocosCreator Development > Message Handling
+<!-- pre-align:aligned sig=1d277a52032c -->
 
-## Message
+<a id="game-gameanvil-guide-to-cocoscreator-development-message-handling"></a>
+## Game > GameAnvil > Guide to CocosCreator Development > Message Handling { #game-gameanvil-guide-to-cocoscreator-development-message-handling }
+
+<a id="message"></a>
+## Message { #message }
 
 In addition to the GameAnvilConnector and GameAnvilUser default features, you can send custom messages to the server using request() and send(). To send a message, you must pre-register the message, and a process to create the message object is required.
 
-### Create Message
+<a id="create-message"></a>
+### Create Message { #create-message }
 
 GameAnvil provides a message protocol based on [Google Protocol Buffers](https://developers.google.com/protocol-buffers/docs/proto3) by default. The message is defined in the .proto file and translated to the actual class source code with protoc. It adds the generated source code to your project and use the code.
 
@@ -99,7 +104,8 @@ npm run protoc
 
 You can then check that the .ts and .d.ts files are created in the ./protocol folder.
 
-### Register Message
+<a id="register-message"></a>
+### Register Message { #register-message }
 
 To use newly created messages, you must pre-register the messages you want to use in GameAnvilProtocolManager. If you do not pre-register before Authenticate, or if the server and protocol are different, it may be disabled.
 
@@ -115,7 +121,8 @@ To disable the registered message, use the unregisterProtol() method.
 GameAnvilProtocolManager.unregisterProtocol(Messages);
 ```
 
-### Send Message
+<a id="send-message"></a>
+### Send Message { #send-message }
 
 You can send messages created through connectors or users. The following is an example of sending messages through a connector:
 

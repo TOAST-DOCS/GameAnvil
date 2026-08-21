@@ -1,6 +1,10 @@
-## Game > GameAnvil > コンソール使用ガイド > サービスとチャンネル
+<!-- pre-align:aligned sig=da0d847670f4 -->
 
-## サービス
+<a id="game-gameanvil-console-user-guide-service-and-channel"></a>
+## Game > GameAnvil > コンソール使用ガイド > サービスとチャンネル { #game-gameanvil-console-user-guide-service-and-channel }
+
+<a id="service"></a>
+## サービス { #service }
 
 このドキュメントでは、先ほどの構成情報(Config)の登録で触れた「サービス」について説明します。
 
@@ -12,7 +16,8 @@
 
 詳細は[Game > GameAnvil > サーバー開発ガイド > ゲームノード実装](../server-impl/server-impl-03-game-node/#gamenode)または[Game > GameAnvil > サーバー開発ガイド > サポートノード実装](../server-impl/server-impl-05-support-node/#supportnode)を参照してください。
 
-## チャンネル
+<a id="channel"></a>
+## チャンネル { #channel }
 
 チャンネルは、1つのサービスを論理的に分割する方法を提供します。例えば、RPSGameサービスを「初級」、「中級」、「上級」チャンネルなどに分けることができます。 
 

@@ -1,6 +1,10 @@
-## Game > GameAnvil > Server Development Guide > MatchNode Implementation
+<!-- pre-align:aligned sig=add9a354ba1f -->
 
-## MatchNode and MatchMaker
+<a id="game-gameanvil-server-development-guide-matchnode-implementation"></a>
+## Game > GameAnvil > Server Development Guide > MatchNode Implementation { #game-gameanvil-server-development-guide-matchnode-implementation }
+
+<a id="matchnode-and-matchmaker"></a>
+## MatchNode and MatchMaker { #matchnode-and-matchmaker }
 
 ![MatchNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_matchnode_on_network.png)
 
@@ -14,7 +18,8 @@ These matchmakers run independently on MatchNode. At this time, MatchNode cannot
 > 
 > MatchNode is not a required node, so you do not need to run it if you do not use matchmaking.
 
-## MatchingGroup
+<a id="matchinggroup"></a>
+## MatchingGroup { #matchinggroup }
 
 Similar to channels, matching groups are one of the logical ways to divide a single server group. However, unlike channels, matching groups are not clearly pre-configured and used value. Also, a channel is a way to logically divide GameNodes, while a matching group is a way to logically divide matchmaking. If user matching or room matching is requested from the same matching group, a matched room is created within the channel that requested the matching. 
 
@@ -41,11 +46,13 @@ Let's take a look again at onMatchUser, the user matchmaking callback method des
 
 Matching groups can be defined based on skills, such as “Beginners,” “Medians” and “Masters” or they can be defined by country, such as “Korea,,“Japan” and “the United States.” In other words, any value that the user wants can be a matching group.
 
-## Implementing User Match Maker
+<a id="implementing-user-match-maker"></a>
+## Implementing User Match Maker { #implementing-user-match-maker }
 
 User matchmaking places game users' matching requests on the queue. It compares and analyzes the content of this request queue at a specific interval and allows arbitrary users to enter a room based on the standard that is desired by the user. Here, engine users can focus on the logic that determines how to compare and analyze the content of the request queue and how to match users. For reference, the most popular user matchmaking game is "League of Legends."
 
-### Implementing User Match Request
+<a id="implementing-user-match-request"></a>
+### Implementing User Match Request { #implementing-user-match-request }
 
 The most fundamental element of this user matchmaking is the match request itself. These match requests are implemented by inheriting BaseUser MatchInfo abstract class provided by engine as follows. At this point, the getId() method must be implemented to provide a game user's ID that can distinguish the requester. You must also implement a Serializable interface because requests must be serializable at any time. The example below further implements a Comparable interface for comparison between matching requests.
 
@@ -112,7 +119,8 @@ The methods that need to be overridden in a user match request are summarized in
 | getId        | Match requester information    | It is used to determine which user the user match request is from. Therefore, it must be overridden to return the requester's ID.                                           |
 | getPartySize | Match Request Party Size | Returns the size of the request party. This value determines whether a party matchmaking request is made, which overrides to return 0 for user matchmaking requests. For a party match request, return the number of party members. |
 
-### User match maker
+<a id="user-match-maker"></a>
+### User match maker { #user-match-maker }
 
 User matchmaker actually handles user match requests and inherits BaseUserMatchMaker abstract class provided by engine, especially since the onMatch() method is a callback that is called to perform a real match, so please take a look carefully. onRefill() method is a callback that handles fill requests for matchmaking that has already been completed. For example, you can use it to fill one more person when four people are matchmaking and one person exits the game. The example code below shows how to implement these user matchmakers.
 
@@ -184,7 +192,8 @@ Callback methods for these user matchmakers are summarized in the table below:
 | onMatch   | Process match request   | Users can directly process match requests using API provided by BaseUserMatchMaker. In other words, it allows users to implement logic directly as they wish. The processing flow of example code is the most basic method. <br> In other words, the minimum match requests are obtained using getMatchRequests API, the requests are combined according to the number of people the user wants, and then put in order in a random collection. If you pass this collection as a factor to the matchSingles API, it matches the number of people in the group. For an example code, it is two-person user matchmaking, so we move around the collection and extract two people in order to match them to one game. |
 | onRefill  | Process Match refill request  | If any user leaves during the user/party matchmaking process, the process is performed to fill in the new user. In general, you can call matchRefill when onLeaveRoom is called for a match-making room. This means asking for a refill when someone leaves a matched room. Refill does not use match requests stacked in the queue. It only covers new match requests that come in after refill requests.                                                                                                                                                      |
 
-### Send requests from GameUser to matchmaker
+<a id="send-requests-from-gameuser-to-matchmaker"></a>
+### Send requests from GameUser to matchmaker { #send-requests-from-gameuser-to-matchmaker }
 
 Client can now request a user matchmaking from server. This request is forwarded to GameUser and then the engine calls the onMatchUser callback method. We have looked at earlier while explaining GameNode and GameUser. Users can use the user matchmaker provided by GameAnvil in this callback method, or they can use a separate matchmaker or other solution they have implemented themselves. However, unless there is a specific reason, we recommend using GameAnvil's user matchmaking.
 
@@ -223,7 +232,8 @@ Finally, client can cancel the previously requested user matchmaking at any time
     }
 ```
 
-## Implementing Room Matchmaker
+<a id="implementing-room-matchmaker"></a>
+## Implementing Room Matchmaker { #implementing-room-matchmaker }
 
 Room matchmaking is a feature that automatically allows users to enter the most suitable room. It is up to the user to implement which room to enter the user who requested room matchmaking. You can make to enter the room with the most users, or the quietest room. Also, you can enter the room with the highest average score. All users need to do is focus on this matching logic. For reference, the most representative room match making games include "Hangame Poker" and "Kartrider."
 
@@ -234,7 +244,8 @@ Room matchmaking is a feature that automatically allows users to enter the most 
 > 
 > Room matchmakers and user matchmakers operate independently of each other. In other words, if you request user matching and room matching to the same matching group, the two requests will not match together.
 
-### Implement Room matching request
+<a id="implement-room-matching-request"></a>
+### Implement Room matching request { #implement-room-matching-request }
 
 The essence of such room matchmaking is the match request itself. A match request refers to a request sent by a single user and inherits the BaseRoomMatchForm abstract class provided by the engine, as shown below. Requests must be serializable at any time, so you need to implement an additional serializable interface. Here is an example of implementing such a match request.
 
@@ -248,7 +259,8 @@ public class SampleRoomMatchForm extends AbstractRoomMatchForm {
 
 Room matching requests basically contain information for use in matching logic. This is used by users to implement matchmaking logic themselves. One important piece of information in room matching requests is the matching user category. A matching user category is random string to separate groups of users in a room. For example, if you're playing 2 vs. 2 teams in a four-person room, it can be used to designate which teams each user belongs to. If no value is specified, the default value of the engine is used.
 
-### Implement Room matching information
+<a id="implement-room-matching-information"></a>
+### Implement Room matching information { #implement-room-matching-information }
 
 For a room to be matched, match information is managed by a room match maker. In other words, one room matching information may be considered to mean one matchable room information. In this case, various pieces of information and state values of the room may be included. It inherits and implement BaseRoomMatchInfo and must set the ID of the room, the matching user category and maximum number of people for each matching category. And finally, the serializable interface must be implemented to serialize the room matching information. Below shows an example code. 
 
@@ -291,7 +303,8 @@ public class GameRoomMatchInfo extends BaseRoomMatchInfo implements Serializable
 }
 ```
 
-### Register/Refresh Room matching Information
+<a id="registerrefresh-room-matching-information"></a>
+### Register/Refresh Room matching Information { #registerrefresh-room-matching-information }
 
 These room matching information can be registered/updated directly by user, which means that a particular room may not be registered as a room matchmaking target if user does not want to. This registration process is typically done in onCreateRoom callback method, where a room is created as follows.
 
@@ -338,7 +351,8 @@ updateRoomMatch(gameRoomMatchInfo); // Update this room matching information.
 
 When the room disappears, the room matching information is automatically deleted from the engine, so you don't need to delete it separately.
 
-### Room matchmaker
+<a id="room-matchmaker"></a>
+### Room matchmaker { #room-matchmaker }
 
 Now it's time to create a room matchmaker. The room matchmaker inherits BaseRoomMatchMaker abstract class provided by engine. Room matchmaking is the process of finding the most suitable room, so special callback methods are provided for before and after the actual match. Users can override these callback methods to perform any match they want. The example code below shows how these room matchmakers can be implemented.  
 
@@ -386,7 +400,8 @@ The following table summarizes the room matchmaker's callback methods explained 
 | compare | Compare matchmaking information for sorting | Compares matchmaking information for sorting. The result value is -1: ascending, 0: no change, or 1: descending. |
 
 
-### Send requests from GameUser to matchmaker
+<a id="implementing-room-matchmaker-send-requests-from-gameuser-to-matchmaker"></a>
+### Send requests from GameUser to matchmaker { #implementing-room-matchmaker-send-requests-from-gameuser-to-matchmaker }
 
 Client can now request a room matchmaking from server. This request is forwarded to GameUser and then the engine calls onMatchRoom callback method. We have shared about this earlier while explaining GameNode and GameUser. Users can use the room matchmaker provided by GameAnvil in this callback method, or use a separate matchmaker or other solution they have implemented themselves. However, unless there is a specific reason, we recommend using GameAnvil's room matchmaking.
 

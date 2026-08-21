@@ -10,7 +10,8 @@ GameAnvilを使用すると、手軽にゲームサーバーとクライアン�
 
 GameAnvilはサーバーエンジンだけでなく、クライアントをサーバーに接続するのを支援するコネクタも提供します。サーバーとクライアントが相互作用する様子を確認できるサンプルを完成させながら、GameAnvilを使用してゲームを開発する全体的な流れに慣れることができます。
 
-## 実習環境の準備 - サーバープロジェクト
+<a id="game-gameanvil-basic-tutorial"></a>
+## 実習環境の準備 - サーバープロジェクト { #game-gameanvil-basic-tutorial }
 
 マルチプレイヤーゲームを作成するには、クライアントと対応するサーバープログラムが必要です。ゲームサーバーを構築した後、続いてクライアントを実装する方式でチュートリアルが進行します。
 
@@ -20,7 +21,8 @@ GameAnvilはサーバーエンジンだけでなく、クライアントをサ�
 
 [サーバーサンプルプロジェクトのダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Basic_Server.zip?disposition=attachment)
 
-### プロジェクト構成
+<a id="create-multiplayer-games-easily-with-gameanvil"></a>
+### プロジェクト構成 { #create-multiplayer-games-easily-with-gameanvil }
 
 今回のチャプターでは、開発を開始するために初期設定を完了することを目標とします。実際のプロセスを実行してサーバーを起動することは、次のチャプターで扱います。
 
@@ -58,7 +60,8 @@ IntelliJ右上のボタングループで**New Project**をクリックした後
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/5_gameanvil_project_view_init.png)
 
-## GameAnvilサーバー設定ファイルの修正
+<a id="prepare-practice-environment---server-project"></a>
+## GameAnvilサーバー設定ファイルの修正 { #prepare-practice-environment---server-project }
 
 プロジェクトパネルのresourcesパッケージ配下にあるGameAnvilConfig.jsonファイルを通じて、GameAnvilサーバー設定を変更できます。
 
@@ -90,7 +93,8 @@ GameAnvilConfig.jsonファイルのgame側の最後を見ると、Todoと表示�
   ]
 ```
 
-### サービスについて
+<a id="configure-project"></a>
+### サービスについて { #configure-project }
 
 サービスとは、1つのサーバーが複数のゲームを提供する場合、各ゲームサービスを区別して呼ぶ名前です。サービス名は特定サービスを表すサーバーとクライアント間で約束された文字列です。以降の過程でサービス名を入力する際に使用するため、覚えておく必要があります。
 
@@ -100,7 +104,8 @@ GameAnvilConfig.jsonファイルのgame側の最後を見ると、Todoと表示�
 "serviceName" : "Sync",
 ```
 
-### チャンネルについて
+<a id="java-version-settings"></a>
+### チャンネルについて { #java-version-settings }
 
 チャンネルは単一サーバー群を論理的に分割できる方法の1つです。例ではチャンネルを使用しないため、このドキュメントでは詳細な説明を省略します。チャンネルを使用しないため、game部分のchannelIDsを以下のように修正します。
 
@@ -126,9 +131,11 @@ GameAnvilConfig.jsonファイルのgame側の最後を見ると、Todoと表示�
 
 参考までに、gateway設定を見るとTCP_SOCKETコネクションは18200ポートを使用するように設定されていることが確認できます。これはクライアントと接続されるポートで、以降クライアントプロジェクトでサーバー接続情報を記入する部分でこのポート番号を使用することになります。
 
-## GameAnvilサーバー起動
+<a id="modify-gameanvil-server-setting-file"></a>
+## GameAnvilサーバー起動 { #modify-gameanvil-server-setting-file }
 
-### Javaバージョン設定
+<a id="about-service"></a>
+### Javaバージョン設定 { #about-service }
 
 GameAnvilはJava 21バージョンをサポートします。バージョンによって一部の設定方法が異なる場合があり、ここではJava 21バージョンを使用しました。
 
@@ -144,7 +151,8 @@ GameAnvilはJava 21バージョンをサポートします。バージョンに�
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/9_gradle_config.png)
 
-### サーバー起動
+<a id="about-channel"></a>
+### サーバー起動 { #about-channel }
 
 実行設定が完了したら、右側のgradleメニューからTasks > other > `runMain`実行をダブルクリックします。このように一度実行した後は、IntelliJ右上の緑色の三角形のRunアイコンをクリックしてもサーバーが実行されます。
 
@@ -168,9 +176,11 @@ GameAnvilサーバーは複数のノードで構成されています。これ�
 
 次のチャプターではGameAnvilの複数のノードのうち、サンプルゲーム動作のために必要なBasicGameNodeを実装してみます。
 
-## GameAnvilサーバー機能の実装
+<a id="implement-gameanvil-server-feature"></a>
+## GameAnvilサーバー機能の実装 { #implement-gameanvil-server-feature }
 
-### ゲームノードの実装
+<a id="perform-game-node"></a>
+### ゲームノードの実装 { #perform-game-node }
 
 GameAnvilは`I-`プレフィックスを付けた複数のノードインターフェースを提供します。基本的なノードの機能はエンジン内部にすでに実装されており、ユーザーはこれらのインターフェースを実装して多様なコールバック機能を使用できます。今回の例ではIGameNodeインターフェースを実装したゲームノードクラスを作成して使用してみます。
 
@@ -252,7 +262,8 @@ public class SyncGameNode implements IGameNode {
 
 ```
 
-### ノードについて
+<a id="about-node"></a>
+### ノードについて { #about-node }
 
 全てのノードは、何か処理を開始できるループが始まったかどうかに応じて状態を持ちます。以下はノードが持ちうる状態の一部です。
 
@@ -267,13 +278,15 @@ public class SyncGameNode implements IGameNode {
 
 GameAnvilは大部分のコードがあらかじめ用意されているため、この段階でさらに作成するコードはありません。生成されたそのままゲームノードを使用すればよいです。
 
-### ユーザータイプについて
+<a id="about-user-type"></a>
+### ユーザータイプについて { #about-user-type }
 
 各ゲームノードでルームに参加してパケットをやり取りする主体がユーザーですが、各ユーザー実装を区別する約束された文字列です。
 
 GameAnvilで提供されるルームベースの実装を使用するには、上記で実装したノード以外に**ゲームユーザー**と**ゲームルーム**クラスが必要です。インターフェースの実装だけで簡単に実装する方法を説明します。
 
-### ゲームユーザーの実装
+<a id="implement-game-user"></a>
+### ゲームユーザーの実装 { #implement-game-user }
 
 クライアントがサーバーにログインすると、サーバーでは該当クライアント情報を**ゲームユーザー**というオブジェクトとして作成し、メモリに保存して維持します。ゲームユーザーがどのような情報を表現するかは、ユーザーが必要に応じて自由に実装可能です。ゲームユーザーの実装も、クラスの継承とコールバックのオーバーライドを通じて一貫性を持って実装できます。
 
@@ -453,7 +466,8 @@ public class SyncGameUser implements IUser {
 
 このチュートリアルでは特別な検証過程なしにログインを許可するため、onLogin関数で常にtrueを返すようにしました。このようにすると、クライアントからログインリクエストがあった際に常にユーザーオブジェクトを生成し、成功レスポンスを返すことになります。
 
-### ゲームルームの実装
+<a id="run-server"></a>
+### ゲームルームの実装 { #run-server }
 
 正常にゲームユーザーとしてゲームノードに接続すると、他のユーザーとゲームルームを通じてパケットをやり取りできるようになります。ゲームルームとは、パケットをやり取りするユーザーを論理的にまとめたグループです。ゲームルームもインターフェースの実装を通じて生成できます。
 
@@ -583,29 +597,25 @@ public class SynGameRoom implements IRoom<SyncGameUser> {
 
 ゲームルームはゲームユーザーがサーバーにルーム生成リクエストを行うと生成されます。クライアント側では簡単にメソッド呼び出しだけでルームを生成し、存在するルームに入室できます。ユーザーがルームに入室する時点、またはルームが生成される時点にカスタムコードを挿入したい場合は、適切なコールバックをオーバーライドして簡単にコードを組み込むことができます。
 
-## サーバー実装の仕上げ
+<a id="prepare-practice-environment---client-project"></a>
+## 実習環境の準備 - クライアントプロジェクト { #prepare-practice-environment---client-project }
 
-ここまで、基礎チュートリアルサンプル実行のためのサーバー構築が完了しました。再度サーバーを実行してみると、ログの中に`All nodes are ready!!`という文言を確認できます。このログが表示されたということは、GameAnvilサーバーが正常に実行されたことを意味します。
-
-![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/17_all_nodes_are_ready.png)
-
-これでクライアントのリクエストを受け付けるサーバーが準備できました。次の段階ではGameAnvilコネクタとUnityサンプルプロジェクトを活用してクライアントを実装してみます。
-
-## 実習環境の準備 - クライアントプロジェクト
-
-### GameAnvilConnectorのダウンロード
+<a id="download-gameanvilconnector"></a>
+### GameAnvilConnectorのダウンロード { #download-gameanvilconnector }
 
 GameAnvilコネクタdll使用のために以下のファイルをダウンロードします。
 
 [gameanvil_connector_2.0.0.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
 
-### Unity Packageのダウンロード
+<a id="download-unity-package"></a>
+### Unity Packageのダウンロード { #download-unity-package }
 
 GameAnvilコネクタ使用実習のために以下のリンクからUnityパッケージをダウンロードします。
 
 [gameanvil_tutorial_basic.unitypackage](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil_tutorial_basic.unitypackage)
 
-### Unityプロジェクトの作成
+<a id="create-unity-project"></a>
+### Unityプロジェクトの作成 { #create-unity-project }
 
 Unity Hubを実行した後、右上のNew Projectボタンをクリックします。Unity Hubのバージョンは問いません。
 
@@ -619,7 +629,8 @@ Unity Hubを実行した後、右上のNew Projectボタンをクリックしま
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/20_new_unity_project_done.png)
 
-### GameAnvilConnector及びUnity Packageのインポート
+<a id="import-gameanvilconnector-and-unity-package"></a>
+### GameAnvilConnector及びUnity Packageのインポート { #import-gameanvilconnector-and-unity-package }
 
 プロジェクトビューをマウスの右ボタンでクリックし、**Import Package > Custom Package...**を選択した後、Finderまたはファイルエクスプローラーが開いたら、前の段階でダウンロードしたUnityパッケージを選択します。gameanvil_connector、gameanvil_tutorial_basicの順にImportを実行します。
 
@@ -647,7 +658,8 @@ Canvasに追加されたUI Managerを通じて、例で使用されたUnity UI�
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/26_intro_scene_to_build_settings.png)
 
-## GameAnvilManager
+<a id="gameanvilmanager"></a>
+## GameAnvilManager { #gameanvilmanager }
 
 Hierarchyビューでマウスの右ボタンをクリックし、**GameAnvil > GameAnvilManager**をクリックします。GameAnvilManagerゲームオブジェクトが生成され、GameAnvilManagerゲームオブジェクトのインスペクター上で以下のように設定を修正できます。
 
@@ -660,7 +672,8 @@ Hierarchyビューでマウスの右ボタンをクリックし、**GameAnvil > 
 
 今は詳細設定について詳しく知らなくても大丈夫です。チュートリアルを進めながら、各項目に関する説明を確認できます。
 
-## サーバーとクライアントの接続
+<a id="connect-server-and-client"></a>
+## サーバーとクライアントの接続 { #connect-server-and-client }
 
 GameAnvilクライアントがGameAnvilサーバーに接続するためには、Connect、Authentication、Loginの3段階を経る必要があります。
 
@@ -674,7 +687,8 @@ GameAnvilクライアントがGameAnvilサーバーに接続するためには�
 
 ここではHierarchyビュー上のTesterゲームオブジェクトにコンポーネントとして追加されているGameAnvilManagerTesterスクリプトをソースコードエディタで開き、実装を追加しながら各過程を直接実習します。
 
-### Connect関連フィールド設定
+<a id="connect-related-field-settings"></a>
+### Connect関連フィールド設定 { #connect-related-field-settings }
 
 接続するサーバー情報を記載します。ローカルでサーバーを直接立ち上げる場合なので、ipは`127.0.0.1`を使用します。portはゲートウェイノードのデフォルトポートである`18200`を使用します。ipとport情報は、プレイモードで修正できるようにUnityのInputFieldと接続するコードが作成されていることを確認できます。
 
@@ -692,7 +706,8 @@ public int managerPort
 }
 ```
 
-### Authentication関連フィールド設定
+<a id="authentication-related-field-settings"></a>
+### Authentication関連フィールド設定 { #authentication-related-field-settings }
 
 認証に必要な情報を記載します。認証に必要な情報としては、accountId、deviceId、passwordの3つがあります。今は認証段階を無条件で通過するようにサーバー実装がされている状態なので、どのような値に設定しても動作に異常はないでしょう。プレイモードでUnityのInputFieldを通じて入力された値を使用できるように、コードが作成されていることを確認できます。
 
@@ -716,7 +731,8 @@ public string managerDeviceId
 }
 ```
 
-### Login関連フィールド設定
+<a id="login-related-field-settings"></a>
+### Login関連フィールド設定 { #login-related-field-settings }
 
 ログインに必要な情報を記載します。ログインに必要な情報としては、ユーザータイプ、チャンネルID、そしてサービス名があります。サーバー実装時に作成したユーザータイプとサービス名を使用する必要があります。プレイモードでUnityのInputFieldを通じて値を修正できるように設定されています。
 
@@ -740,7 +756,8 @@ public string managerChannelId
 }
 ```
 
-### フィールド自動入力設定
+<a id="set-field-auto-input"></a>
+### フィールド自動入力設定 { #set-field-auto-input }
 
 プレイモードで毎回入力値を入力する手間を省くために、ConstantManagerで使用する値をあらかじめ入力しておくことができます。例で使用した入力値は以下のとおりです。
 
@@ -768,7 +785,8 @@ public class ConstantManager : MonoBehaviour
 }
 ```
 
-### Unity UI設定
+<a id="unity-ui-settings"></a>
+### Unity UI設定 { #unity-ui-settings }
 
 ```c#
 void Start()
@@ -799,7 +817,8 @@ public void OnManagerStateChanged(GameAnvilManager.LoginState oldState, GameAnvi
 }
 ```
 
-### ログインAPI呼び出し
+<a id="call-login-api"></a>
+### ログインAPI呼び出し { #call-login-api }
 
 Connect、Authentication、Loginの過程が統合されたGameAnvilManagerのLogin APIは、次のように使用します。result値を通じて呼び出し結果を確認できます。
 
@@ -833,7 +852,8 @@ public async void ManagerLogin()
 }
 ```
 
-### ログアウトAPI呼び出し
+<a id="call-logout-api"></a>
+### ログアウトAPI呼び出し { #call-logout-api }
 
 ```c#
 public async void ManagerLogout()
@@ -842,7 +862,8 @@ public async void ManagerLogout()
 }
 ```
 
-### サーバー接続及びログインテスト
+<a id="test-server-connection-and-login"></a>
+### サーバー接続及びログインテスト { #test-server-connection-and-login }
 
 サーバーが実行中か確認した後、Unityエディタでプレイモードに入ります。**Login**をクリックして、正常にサーバー接続及びログインが進行することを確認します。
 
@@ -854,9 +875,11 @@ public async void ManagerLogout()
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/29_logout_success.png)
 
-## ゲームルーム生成及び入室
+<a id="create-and-enter-game-room"></a>
+## ゲームルーム生成及び入室 { #create-and-enter-game-room }
 
-### ルーム生成及び入室関連フィールド設定
+<a id="room-creation-and-stage-related-fields-settings"></a>
+### ルーム生成及び入室関連フィールド設定 { #room-creation-and-stage-related-fields-settings }
 
 ```c#
 public string managerRoomType
@@ -872,7 +895,8 @@ public int managerRoomId
 }
 ```
 
-### ゲームルーム生成リクエストAPI使用
+<a id="use-game-room-creation-request-api"></a>
+### ゲームルーム生成リクエストAPI使用 { #use-game-room-creation-request-api }
 
 GameAnvilコネクタのルーム生成リクエストAPIを呼び出して、クライアントは簡単にサーバーへゲームルーム生成をリクエストできます。ゲームルーム生成リクエストメソッドを呼び出す際、パラメータとしてルームタイプを渡す必要がありますが、サーバーと事前に合意したルームタイプ値を渡せば問題ありません。
 
@@ -900,7 +924,8 @@ public async void ManagerCreateRoom()
 
 ゲームルーム生成機能の実装が終わりました。テストは少し後回しにして、ゲームルーム入室機能を先に実装します。
 
-### ゲームルーム入室リクエストAPI使用
+<a id="use-game-room-input-request-api"></a>
+### ゲームルーム入室リクエストAPI使用 { #use-game-room-input-request-api }
 
 サーバーにゲームルームが生成されたと仮定しましょう。該当ルームに接続するためには、GameAnvilコネクタでゲームルーム入室リクエストメソッドを呼び出せばよいです。このとき、ルーム生成時に受け取ったゲームルームIDを渡します。プレイモードでUnityのInputFieldを通じて、入室するルームIDを入力します。
 
@@ -928,7 +953,8 @@ public async void ManagerJoinRoom()
 
 これでゲームルーム生成機能と入室機能が全て完成しました。
 
-### ゲームルームテスト
+<a id="game-room-test"></a>
+### ゲームルームテスト { #game-room-test }
 
 Unityエディタでショートカットキー`CMD + b`または`Ctrl + b`を押してビルドします。ビルド結果として出たウィンドウでボタンをクリックし、ゲームルームが生成されることを確認します。ゲームルームが生成されると、画面にゲームルームのIDが表示されます。
 
@@ -938,11 +964,13 @@ Unityエディタでショートカットキー`CMD + b`または`Ctrl + b`を�
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/31_join_room_success.png)
 
-## 同期コントローラー入門
+<a id="introduction-to-synchronization-controller"></a>
+## 同期コントローラー入門 { #introduction-to-synchronization-controller }
 
 これで同じゲームルームに接続したゲームユーザー間では、パケットをやり取りできます。このパケットを通じて、必要な情報をクライアントプロセス間で同期するようにコードを作成できます。より簡単な方法としては、同期したいゲームオブジェクトに同期コンポーネントをアタッチするだけでも同期を実装できます。
 
-### 同期コントローラー
+<a id="synchronization-controller"></a>
+### 同期コントローラー { #synchronization-controller }
 
 Hierarchyビュー上でSyncControllerゲームオブジェクトを探し、次のようにSyncControllerがコンポーネントとして追加されていることを確認します。
 
@@ -952,7 +980,8 @@ Hierarchyビュー上でSyncControllerゲームオブジェクトを探し、次
 
 これでGameAnvilの全ての同期機能を利用できます。次は最も単純な例を通じて、同期コンポーネントのアタッチ及び使用方法を確認してみます。
 
-### 同期オブジェクト
+<a id="synchronization-object"></a>
+### 同期オブジェクト { #synchronization-object }
 
 プロジェクトビューでResourcesフォルダ内部へ移動した後、Characterプレハブをダブルクリックしてプレハブ修正画面へ切り替えます。インスペクターウィンドウでSync、TransformSync、RigidBody2DSync、AnimatorSyncコンポーネントが追加されていることを確認します。
 
@@ -1031,7 +1060,8 @@ private void OnEnterRoom()
 }
 ```
 
-### 同期テスト
+<a id="synchronization-test"></a>
+### 同期テスト { #synchronization-test }
 
 Unityエディタで`CMD + b`または`Ctrl + b`ショートカットキーを押してビルドします。ビルド結果として出たウィンドウでログイン後、ゲームルームを生成し、**Toggle Hide**ボタンを押して同期ゲームオブジェクトをテストする画面が見えるようにします。
 
@@ -1047,6 +1077,7 @@ Unityエディタで`CMD + b`または`Ctrl + b`ショートカットキーを�
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/basic-tutorial/33_sync_test.gif)
 
-## チュートリアルの仕上げ
+<a id="end-tutorial"></a>
+## チュートリアルの仕上げ { #end-tutorial }
 
 このドキュメントでは、GameAnvilコネクタの便利機能である接続、認証、ログイン過程を統合した簡易ログイン機能と同期機能について、実習を通じて学びました。チュートリアルの冒頭で紹介したように、GameAnvilにはゲームサーバー制作に必要な全ての機能が用意されており、チュートリアルではその一部のみ軽く扱いました。続くドキュメントで、より詳細な使用方法を学ぶことができます。

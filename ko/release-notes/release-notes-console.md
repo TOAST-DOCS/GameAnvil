@@ -1,14 +1,22 @@
-## Game > GameAnvil > 릴리스 노트 > Console
+<!-- pre-align:aligned sig=9a3c9a5812cb -->
 
-## 2025. 06. 30.
-### Change
+<a id="game-gameanvil-release-notes-console"></a>
+## Game > GameAnvil > 릴리스 노트 > Console { #game-gameanvil-release-notes-console }
+
+<a id="2025-06-30"></a>
+## 2025. 06. 30. { #2025-06-30 }
+<a id="change"></a>
+### Change { #change }
 * GameAnvil 2.1 이상 지원
 
-### Fix
+<a id="fix"></a>
+### Fix { #fix }
 * 기타 안정성 개선
 
-## 2024. 12. 10.
-### Change
+<a id="2024-12-10"></a>
+## 2024. 12. 10. { #2024-12-10 }
+<a id="2024-12-10-change"></a>
+### Change { #2024-12-10-change }
 * GameAnvil 1.x 지원 중단
 * GameAnvil 2.0 지원
 * SafePause 화면 개편
@@ -40,18 +48,24 @@
 }
 ```
 
-### Fix
+<a id="2024-12-10-fix"></a>
+### Fix { #2024-12-10-fix }
 * 기타 안정성 개선
 
-## 2024. 04. 09.
-### Change
+<a id="april-9-2024"></a>
+## 2024. 04. 09. { #april-9-2024 }
+<a id="april-9-2024-change"></a>
+### Change { #april-9-2024-change }
 * SafePause 개선
 
-## 2024. 01. 09.
-### Fix
+<a id="january-9-2024"></a>
+## 2024. 01. 09. { #january-9-2024 }
+<a id="january-9-2024-fix"></a>
+### Fix { #january-9-2024-fix }
 * 기타 안정성 개선
 
-### Change
+<a id="january-9-2024-change"></a>
+### Change { #january-9-2024-change }
 * 서버 화면 개편
   * 일반 서버, 오토스케일 그룹 메뉴 분리
   * 생성된 서버, 오토스케일 그룹 상세 검색 및 제어 기능 추가
@@ -72,37 +86,49 @@
     * GameAnvil Config를 미리 JSON 형식으로 작성하여 생성 가능
 
 
-## 2023. 09. 26.
-### New
+<a id="september-26-2023"></a>
+## 2023. 09. 26. { #september-26-2023 }
+<a id="new"></a>
+### New { #new }
 * 소프트웨어 라이선스 동의 화면 추가
 
-### Change
+<a id="september-26-2023-change"></a>
+### Change { #september-26-2023-change }
 * GameAnvil 프로젝트 활성화 시 진행 상황 표시 기능 추가
 
 
-## 2023. 08. 29.
-### Change
+<a id="august-29-2023"></a>
+## 2023. 08. 29. { #august-29-2023 }
+<a id="august-29-2023-change"></a>
+### Change { #august-29-2023-change }
 * 서버 생성 및 제어 중에 다른 서버를 추가로 생성 및 제어가 가능하도록 사용성 개선
 
-### Fix
+<a id="august-29-2023-fix"></a>
+### Fix { #august-29-2023-fix }
 * 기타 안정성 개선
 
 
-## 2023. 07. 25.
-### Fix
+<a id="july-25-2023"></a>
+## 2023. 07. 25. { #july-25-2023 }
+<a id="july-25-2023-fix"></a>
+### Fix { #july-25-2023-fix }
 * Auto-Scale 그룹의 배포 파일이 수정되지 않는 문제 수정
 * 로그인이 만료된 경우 NHN Cloud 로그인 페이지로 이동되도록 수정
 * 기타 안정성 개선
 
 
-## 2023. 07. 11.
-### Fix
+<a id="july-11-2023"></a>
+## 2023. 07. 11. { #july-11-2023 }
+<a id="july-11-2023-fix"></a>
+### Fix { #july-11-2023-fix }
 * 여러 서버에 배포되어 있는 파일을 일괄 변경할 수 있도록 수정
 * 기타 안정성 개선
 
 
-## 2023. 06. 27.
-### Change
+<a id="june-27-2023"></a>
+## 2023. 06. 27. { #june-27-2023 }
+<a id="changes"></a>
+### Change { #changes }
 * 모니터링 대시보드 화면 개선
   * 현재 사용 중인 CPU Core 잔여량 그래프 추가
   * 서버별, 노드별 상태 모니터링 추가
@@ -110,27 +136,34 @@
   * 오토스케일 그룹 상태 모니터링 추가
   * 유저 분포 이력 및 그래프 추가
 
-### Fix
+<a id="june-27-2023-fix"></a>
+### Fix { #june-27-2023-fix }
 * 기타 안정성 개선
 
 
-## 2023. 05. 30.
-### New
+<a id="may-30-2023"></a>
+## 2023. 05. 30. { #may-30-2023 }
+<a id="may-30-2023-new"></a>
+### New { #may-30-2023-new }
 * CloudTrail과 연동되어 사용자 액션 추적 가능
 
-### Change
+<a id="may-30-2023-change"></a>
+### Change { #may-30-2023-change }
 * Auto-Scale 그룹의 노드가 노드 모니터링 페이지에 노출되도록 수정
 * 배포 파일의 Major 버전을 확인하여 이미 실행되어 있는 서버와 호환되지 않은 서버가 추가적으로 시작되지 않도록 변경
 
-### Fix
+<a id="may-30-2023-fix"></a>
+### Fix { #may-30-2023-fix }
 * Auto-Scale 그룹의 Gateway에 접속이 안 되는 문제 수정
 * 기타 안정성 개선
 
 
-### 2022. 12. 27.
+<a id="december-27-2022"></a>
+### 2022. 12. 27. { #december-27-2022 }
 
 GameAnvil 1.3.0부터 완전히 새로워진 Console과 연동합니다. 새로운 Console은 이전 버전에 대한 단순한 업데이트가 아닙니다. GameAnvil 서버를 NHN Cloud 인프라와 통합하여 더욱 쉽고 편하게 게임 서비스를 운영할 수 있는 새로운 UX를 제공하기 위해 거의 모든 부분이 새롭게 구현되었습니다. 이러한 이유로 Console은 GameAnvil과 버전을 맞추기 위해 1.1과 1.2를 건너뛰고 바로 1.3으로 버전업합니다.
 
+<a id="december-27-2022-new"></a>
 #### New
 
 * ````인프라````를 직접 생성하고 관리할 수 있습니다.
@@ -151,70 +184,86 @@ GameAnvil 1.3.0부터 완전히 새로워진 Console과 연동합니다. 새로�
   * Drag & Drop 형태의 UI로 쉽고 편하게 노드 구성 가능
 
 
+<a id="december-27-2022-fix"></a>
 #### Fix
 
 * 없음
 
+<a id="december-27-2022-change"></a>
 #### Change
 
 * 없음
 
 ---
 
-### 2021. 07. 13.
+<a id="july-13-2021"></a>
+### 2021. 07. 13. { #july-13-2021 }
 
+<a id="july-13-2021-change"></a>
 #### Change
 
 * 인스턴스 설정의 각 입력 값에 대한 가이드 문서를 최신화
 * 인스턴스 중지 시 Kill로 강제종료 하지 않고 매니지먼트 노드를 통해 정상적으로 종료되도록 변경
 * 인스턴스 설정 시 기본포트가 변경(신규 생성하는 인스턴스에 한함)
 
+<a id="july-13-2021-fix"></a>
 #### Fix
 
 * 인증 필터의 순서가 명시적이지 않아 간헐적으로 오류 발생하는 현상 수정
 
 ---
 
-### 2021. 06. 15.
+<a id="june-15-2021"></a>
+### 2021. 06. 15. { #june-15-2021 }
 
+<a id="june-15-2021-new"></a>
 #### New
 
 * 일문 번역 적용
 
+<a id="june-15-2021-change"></a>
 #### Change
 
 * 모니터링 시 오탐지를 줄이기 위해 모니터링 실행 주기와 에러 허용 횟수 변경
 
 ---
 
-### 2021. 05. 25.
+<a id="may-25-2021"></a>
+### 2021. 05. 25. { #may-25-2021 }
 
+<a id="may-25-2021-new"></a>
 #### New
 
 * 서비스 생성만 가능하고 수정 및 삭제가 되지 않아 별도 관리 페이지 생성
 
+<a id="may-25-2021-change"></a>
 #### Change
 
 * 기존 인스턴스 설정을 노드 단위로 저장 및 관리하던 방식에서 인스턴스 단위로 저장 및 관리하도록 변경
 * VM Option 입력 메시지를 10,240바이트까지 입력할 수 있도록 변경
 
+<a id="may-25-2021-fix"></a>
 #### Fix
 
 * 인스턴스 설정 생성 시 각 노드의 사용자 가이드가 정상적인 가이드 페이지로 이동하도록 수정
 
 ---
 
-### 2021. 04. 27.
+<a id="april-27-2021"></a>
+### 2021. 04. 27. { #april-27-2021 }
 
+<a id="april-27-2021-new"></a>
 #### New
 
 * 영문 번역 적용
 
+<a id="april-27-2021-change"></a>
 #### Change
 
 * VM Option 입력 메시지를 512바이트까지 입력할 수 있도록 변경
 * Toast UI Chart Vue 버전 4.2.1로 적용
 
+<a id="april-27-2021-fix"></a>
 #### Fix
 
 * 머신 설정 오류 발생 시 재시도 버튼을 누르면 무조건 Java 11로 셋팅되는 문제 수정
@@ -222,8 +271,10 @@ GameAnvil 1.3.0부터 완전히 새로워진 Console과 연동합니다. 새로�
 
 ---
 
-### 2021. 03. 23.
+<a id="march-23-2021"></a>
+### 2021. 03. 23. { #march-23-2021 }
 
+<a id="march-23-2021-change"></a>
 #### Change
 
 * 등록된 머신이 없을 때 인스턴스 등록화면 접근 시 머신등록 페이지를 안내하도록 변경
@@ -231,14 +282,17 @@ GameAnvil 1.3.0부터 완전히 새로워진 Console과 연동합니다. 새로�
 * 모니터링 대시보드 동시접속자 변화 그래프 데이터가 몇시 몇분 데이터인지 표시하도록 변경
 * 인스턴스 등록 / 수정 화면에서 Port 입력란 아래 중복 체크 버튼을 Port 중복 체크로 문구 변경
 
+<a id="march-23-2021-fix"></a>
 #### Fix
 
 * 노드 모니터링에서 선택 안하고 Resume / Pause 눌렀을 때 안내 팝업 나오도록 수정
 
 ---
 
-### 2021. 02. 23.
+<a id="february-23-2021"></a>
+### 2021. 02. 23. { #february-23-2021 }
 
+<a id="february-23-2021-new"></a>
 #### New
 
 ##### GameAnvil Console 출시

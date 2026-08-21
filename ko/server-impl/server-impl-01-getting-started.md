@@ -1,6 +1,10 @@
-## Game > GameAnvil > 서버 개발 가이드 > 시작하기
+<!-- pre-align:aligned sig=1c47fe5642cb -->
 
-## 시작하기에 앞서
+<a id="game-gameanvil-server-development-guide-getting-started"></a>
+## Game > GameAnvil > 서버 개발 가이드 > 시작하기 { #game-gameanvil-server-development-guide-getting-started }
+
+<a id="before-starting"></a>
+## 시작하기에 앞서 { #before-starting }
 
 이 문서는 GameAnvil을 이용해 서버를 구현할 때 필요한 기본 요소들과 구현 방법에 대해 설명합니다. 이 문서와 함께 제공되는 튜토리얼 프로젝트 [GameAnvil 튜토리얼](../tutorial/tutorial-01-basic.md)을 참고하길 권장합니다.
 
@@ -8,13 +12,15 @@ GameAnvil 서버는 기본적으로 노드(Node) 단위로 구성합니다. 그�
 
 ![Nodes on Network.png](https://static.toastoven.net/prod_gameanvil/images/user_nodes_on_network_.png)
 
-## 콜백 재정의
+<a id="redefine-callback"></a>
+## 콜백 재정의 { #redefine-callback }
 
 기본적으로 GameAnvil 대부분의 기능은 콜백 형태로 제공합니다. 즉, 엔진 사용자는 GameAnvil이 제공하는 기본 인터페이스(IGatewayNode, ISupportNode, IGameNode)를 구현 후 이러한 콜백 메서드를 재정의하는 형태로 대부분의 기능을 사용하게 됩니다. 이 과정에서 엔진 사용자가 필요한 콜백 메서드만 구현하면 되므로 일부 콜백 메서드는 무시할 수도 있습니다. 이러한 기본 인터페이스들은 모두 "I"로 시작하는 이름을 가지며 com.nhn.gameanvil 패키지 혹은 그 하위 패키지로 제공됩니다.
 
 ![callback-1.png](https://static.toastoven.net/prod_gameanvil/images/callback-1.png)
 
-## 모든 구현의 시작, 노드
+<a id="start-of-all-implements-nodes"></a>
+## 모든 구현의 시작, 노드 { #start-of-all-implements-nodes }
 
 예를 들어, 모든 노드는 공통적으로 아래의 콜백 메서드들을 재정의해야 합니다. 그리고 각각의 노드는 그 역할에 맞는 추가 콜백 메서드의 구현을 요구할 수 있습니다. 아래의 코드에서 예를 든, SampleGatewayNode는 GatewayNode의 기본 클래스인 BaseGatewayNode를 구현하고 있습니다.
 
@@ -67,15 +73,18 @@ public class SampleGatewayNode extends BaseGatewayNode {
 | onReady        | 준비 완료 | 노드가 모든 준비를 마친 후, 구동 완료 단계입니다. 이때, 노드는 Ready 상태이므로 사용자는 이때부터 모든 기능을 사용할 수 있습니다.              |
 | onShuttingdown | 노드 정지 | 노드가 Shutdown 명령을 받을 때 호출됩니다. 중지된 노드는 재개(Resume)할 수 없습니다.                                   | |
 
-## _(underscore)로 시작하는 메서드와 변수
+<a id="methods-and-variables-beginning-with-underscore"></a>
+## _(underscore)로 시작하는 메서드와 변수 { #methods-and-variables-beginning-with-underscore }
 
 엔진을 사용하다 보면 사용자가 구현 인터페이스에서 _로 시작하는 메서드나 변수를 볼 수 있습니다. 이는 엔진 내부에서만 사용하기 위함을 의미합니다. 즉, 사용자는 _로 시작하는 변수나 메서드에 접근하면 안됩니다. 이는 Java의 스코프 제어가 유연하지 못함으로 인해 일부 노출을 허용한 경우이므로 주의가 필요합니다.
 
-## gameanvil 패키지와 gameanvilcore 패키지
+<a id="gameanvil-package-and-gameanvilcore-package"></a>
+## gameanvil 패키지와 gameanvilcore 패키지 { #gameanvil-package-and-gameanvilcore-package }
 
 엔진은 크게 2가지의 상위 패키지로 구성됩니다. 그중 하나인 gameanvil 패키지는 사용자를 위한 것입니다. 이 패키지 안의 모든 클래스나 API는 자유롭게 사용 가능합니다. 반면에 gameanvilcore 패키지는 엔진 코어 로직을 포함하고 있으므로 사용자가 직접 접근하는 것을 허용하지 않습니다. 그럼에도 불구하고 사용자에게 노출되는 것은 현재 GameAnvil이 지원하는 Java 버전의 스코프 제어 한계 때문입니다. 사용자 코드를 작성하는 과정에서 gameanvilcore 패키지의 내용이 포함되지 않도록 각별한 주의가 필요합니다.
 
-## IntelliJ 템플릿으로 프로젝트 구성
+<a id="configure-project-with-intellij-template"></a>
+## IntelliJ 템플릿으로 프로젝트 구성 { #configure-project-with-intellij-template }
 
 GameAnvil 프로젝트를 처음부터 하나씩 구성하는 것은 여러 가지 복잡한 과정을 요구합니다. 엔진 라이브러리를 불러오는 것과 더불어 구성 파일을 작성해야 하고, 프로토콜 명세를 작성할 스크립트와 이를 컴파일할 컴파일러도 필요합니다. 이와 같은 일련의 과정으로 인해 개발 시간을 불필요하게 낭비하는 것을 방지하기 위해 GameAnvil은 이러한 내용들을 모두 포함한 IntelliJ 용 템플릿을 제공합니다. 아래 링크에서 템플릿 파일을 다운로드한 뒤 다음 과정을 따라 하십시오.
 

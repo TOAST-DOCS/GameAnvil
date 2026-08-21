@@ -1,6 +1,10 @@
-## Game > GameAnvil > サーバー開発ガイド > ゲートウェイノード実装
+<!-- pre-align:aligned sig=4435e036d920 -->
 
-## Gateway Node
+<a id="game-gameanvil-server-development-guide-implement-gateway-node"></a>
+## Game > GameAnvil > サーバー開発ガイド > ゲートウェイノード実装 { #game-gameanvil-server-development-guide-implement-gateway-node }
+
+<a id="gateway-node"></a>
+## Gateway Node { #gateway-node }
 
 ![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gatewaynode_on_network.png)
 
@@ -10,7 +14,8 @@ GatewayNodeはクライアントが接続する関門(Gateway)です。つまり
 
 一般的にクライアントはGatewayNodeと1つのコネクションを結びます。この時、該当コネクションに対して認証手続きを進め、成功した場合に限り1つ以上のセッションを作成できます。それぞれのセッションはクライアントとユーザー間の論理的接続単位です。上記の図はクライアントが1つのコネクションを通じてGameサービスとChatサービスでセッションを作成した様子です。このような構造は意図せずクライアントの接続が切れても、簡単に[セッション復旧 (Session Recovery)](#session-recovery)を可能にします。
 
-### GatewayNode実装
+<a id="implement-gatewaynode"></a>
+### GatewayNode実装 { #implement-gatewaynode }
 
 このようなGatewayNodeは、@GameAnvilGatewayNodeアノテーションを宣言してエンジンに登録し、IGatewayNodeインターフェースを実装してコールバックメソッドのみをオーバーライドすれば済みます。これらの共通コールバックメソッドは、その名前が用途を明確に説明しています。
 ```java
@@ -85,7 +90,8 @@ public class SampleGatewayNode implements IGatewayNode {
 ```
 
 
-### Connection実装
+<a id="implement-connection"></a>
+### Connection実装 { #implement-connection }
 
 コネクションはクライアントの物理的接続自体を意味します。クライアントは固有のAccountIdを利用してコネクション上で認証手続きを進めることができます。認証が成功した場合、該当AccountIdは作成されたコネクションにマッピングされます。
 
@@ -161,7 +167,8 @@ public class SampleConnection implements IConnection {
 | onResume       | 再開     | コンソールを通じてGatewayNodeが一時停止状態で駆動を再開すると、該当GatewayNodeの全てのコネクションに対して呼び出されます。ユーザーは再開状態でコネクションに対して処理したいコードをここに実装できます。                             |
 | onDisconnect   | 接続終了  | クライアントから接続が切れた時に呼び出されます。この時、追加で処理するコードをここに実装します。                                                                                                  |
 
-### Session実装
+<a id="perform-session"></a>
+### Session実装 { #perform-session }
 
 コネクションを正常に結んだクライアントは、該当コネクション間でサービスごとに1つずつGameNodeに対する論理的なセッションを結ぶことができます。GameAnvilは内部的にコネクションのAccountIdとセッションのSubIdを組み合わせて全体サーバーで固有のセッションを区分できます。
 
@@ -222,17 +229,20 @@ public class SampleSession implements ISession {
 | onAfterLogin   | ログイン後処理 | GameNodeにログインを完了した後に呼び出されます。ログイン完了後にセッションで処理するコードがあればここに実装します。                                                                        |
 | onAfterLogout  | ログアウト後処理 | ログアウト処理が完了した後に呼び出されます。ログアウト以後にセッションで処理するコードがあればここに実装します。                                                                             |
 
-## ConnectionとSession
+<a id="connection-and-session"></a>
+## ConnectionとSession { #connection-and-session }
 
 クライアントはゲートウェイノードに接続します。つまり、コネクションを生成します。このコネクションを通じてアカウントとユーザー情報をもとに認証とログインを進めることができます。ログインまで完了すると任意のゲームノードにユーザーオブジェクトが生成されます。これはゲートウェイノードと該当ゲームノードの間に論理的なセッションが生成されたことを意味します。このようにコネクションとセッション生成が完了すると、該当ユーザーはゲーム進行が可能になります。これについてはすぐ後でゲームノードを説明する際にもう一度見ていくことにします。
 
-### Session Recovery
+<a id="session-recovery"></a>
+### Session Recovery { #session-recovery }
 
 もし、クライアントとゲートウェイノードの間に再接続が発生すると、下の図のようにセッション復旧(Session Recovery)が行われます。再接続をする過程でクライアントは複数台のゲートウェイノードのうち、以前とは異なる場所にコネクションを試みることもあります。この場合、ユーザーオブジェクトが存在するゲームノードに対する位置情報をもとに新しくセッションを復旧します。したがってユーザーはゲーム進行中に再接続をしても以前のゲーム状態を続けることができます。
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionRecovery.png)
 
-### Location Node
+<a id="location-node"></a>
+### Location Node { #location-node }
 
 先ほど見てきたコネクション復旧の図でロケーションノードが見えます。ロケーションノードはGameAnvilが内部的にユーザーやルームなどの位置情報を管理するシステムノードです。ユーザーはロケーションノードについて直接実装したり使用することはできません。しかし位置情報を管理するロケーションノードの役割を理解することは、全体的なGameAnvilシステムの流れを理解するのに役立つため、ここで簡単に言及したいと思います。
 

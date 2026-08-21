@@ -1,11 +1,16 @@
-## Game > GameAnvil > TypeScript開発ガイド > インストール
+<!-- pre-align:aligned sig=770818316ec8 -->
 
-## GameAnvil Connector
+<a id="game-gameanvil-typescript-development-guide-install"></a>
+## Game > GameAnvil > TypeScript開発ガイド > インストール { #game-gameanvil-typescript-development-guide-install }
+
+<a id="gameanvil-connector"></a>
+## GameAnvil Connector { #gameanvil-connector }
 
 コネクタは、GameAnvilサーバーに合わせたクライアントを制作するために開発されたライブラリです。GameAnvil Connectorを利用すると、GameAnvilが基本的に提供するパケット送信、ユーザー及びルーム機能などを簡単に実装できます。
 
 
-### gameanvil-connector.jsのダウンロード
+<a id="download-gameanvil-connectorjs"></a>
+### gameanvil-connector.jsのダウンロード { #download-gameanvil-connectorjs }
 
 コネクタは以下からダウンロードできます。
 
@@ -13,7 +18,8 @@
 
 npmを通じたダウンロードやgitを通じたダウンロードは、今後サポートされる予定です。
 
-### gameanvil-connector.jsのインストール例
+<a id="example-of-installation-of-gameanvil-connectorjs"></a>
+### gameanvil-connector.jsのインストール例 { #example-of-installation-of-gameanvil-connectorjs }
 
 このセクションでは、GameAnvil ConnectorのTypeScriptバージョンのインストールと利用方法について説明します。
 
@@ -52,7 +58,8 @@ await connector.connect();
 2. 次に、GameAnvilConnectorオブジェクトに接続情報(host, port)を入力します。これは開発サーバーによって内容が異なる場合があるため、必ず開発したサーバーに合わせて内容を修正してください。
 3. 最後に、connect()関数を呼び出してサーバーに接続リクエストを送信します。
 
-### gameanvil-connector.jsの実行例
+<a id="example-of-running-gameanvil-connectorjs"></a>
+### gameanvil-connector.jsの実行例 { #example-of-running-gameanvil-connectorjs }
 
 サンプルコードを実行するために、Webpackをインストールして実行してみましょう。
 index.htmlファイルを作成します。

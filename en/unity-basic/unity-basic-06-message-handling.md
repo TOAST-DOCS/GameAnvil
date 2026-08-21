@@ -1,10 +1,13 @@
-## Game > GameAnvil > Unity Basic Development Guide > Message Handling
+<a id="game-gameanvil-unity-basic-development-guide-message-handling"></a>
+## Game > GameAnvil > Unity Basic Development Guide > Message Handling { #game-gameanvil-unity-basic-development-guide-message-handling }
 
-## Message handling
+<a id="message-handling"></a>
+## Message handling { #message-handling }
 
 In addition to the basic functionality of the UserAgent, you can send messages to the server using Request() and Send(). Sending a message involves creating and registering a message.
 
-### Create a message
+<a id="create-a-message"></a>
+### Create a message { #create-a-message }
 
 GameAnvil uses [ProtocolBuffer](https://developers.google.com/protocol-buffers/docs/proto3)as its default messaging protocol. You will define your messages in a .proto file, and generate the actual class source code with the protoc compiler. You can use the generated source code by adding it to your project. The protoc compiler can be found in the GameAnvil/protoc folder. For a detailed description of protoc, see [here](https://developers.google.com/protocol-buffers/docs/proto3#generating).
 
@@ -45,7 +48,8 @@ Then, run the Windows Command Prompt (cmd) to navigate to the protocols folder a
 
 You'll then see that a Messages.cs file has been created in the protocols folder. 
 
-### Register messages
+<a id="register-messages"></a>
+### Register messages { #register-messages }
 
 To use newly created messages, you must pre-register the messages you want to use with ProtocolManager. If you don't pre-register them, they might not work, malfunction, or throw exceptions.
 
@@ -53,7 +57,8 @@ To use newly created messages, you must pre-register the messages you want to us
 ProtocolManager.getInstance().RegisterProtocol(Messages.MessagesReflection.Descriptor);
 ```
 
-### Send messages
+<a id="send-messages"></a>
+### Send messages { #send-messages }
 
 When you send a message to Request(), it waits for a server response. While waiting for the server response, additional Request() are queued and processed sequentially after the server response is processed. To receive and process a server response, you must pass callback parameters.
 
@@ -97,25 +102,18 @@ Messages.SampleRequest SampleRequest = new Messages.SampleRequest();
 user.Request(SampleRequest, (UserAgent user, Messages.SampleResponse res) => { }); // pass callback parameters
 ```
 
-### Custom packets
+<a id="send-messages-requestuser"></a>
+#### RequestUser
 
-You can use the Packet class to serialize arbitrary data other than a ProtocolBuffer into a byte stream. For more information about Packets, see [Unity Advanced Development Guide > Packets](../unity-advanced/unity-advanced-05-packet.md).
+<!-- TODO: translate body -->
 
-```c#
-Connector connector = new Connector();
-UserAgent user = GameAnvilConnector.getUserAgent();
-int reqMsgId = 1;
-int resMsgId = 2;
+<a id="send-messages-senduser"></a>
+#### SendUser
 
-user.AddListener(resMsgId, (UserAgent user, Packet packet)=> { });
+<!-- TODO: translate body -->
 
-Messages.SampleSend sampleSend = new Messages.SampleSend(); 
-// using the packet class
-Packet sampleSendPacket = new Packet(reqMsgIndex, sampleSend.ToByteArray())
-user.Send(sampleSendPacket);
+<a id="send-messages-messagecallback"></a>
+#### MessageCallback
 
-Messages.SampleRequest sampleRequest = new Messages.SampleRequest();
-// using the packet class
-Packet sampleRequestPacket = new Packet(reqMsgIndex, sampleRequestPacket.ToByteArray())
-user.Request(sampleRequestPacket, (UserAgent user, Packet packet)=> { });
-```
+<!-- TODO: translate body -->
+

@@ -1,6 +1,10 @@
-## Game > GameAnvil > サーバー開発ガイド > 始める
+<!-- pre-align:aligned sig=1c47fe5642cb -->
 
-## はじめに
+<a id="game-gameanvil-server-development-guide-getting-started"></a>
+## Game > GameAnvil > サーバー開発ガイド > 始める { #game-gameanvil-server-development-guide-getting-started }
+
+<a id="before-starting"></a>
+## はじめに { #before-starting }
 
 このドキュメントは、GameAnvilを利用してサーバーを実装する際に必要な基本要素と実装方法について説明します。このドキュメントと共に提供されるチュートリアルプロジェクト[GameAnvilチュートリアル](../tutorial/tutorial-01-basic.md)を参考にすることを推奨します。
 
@@ -8,13 +12,15 @@ GameAnvilサーバーは基本的にノード(Node)単位で構成します。�
 
 ![Nodes on Network.png](https://static.toastoven.net/prod_gameanvil/images/user_nodes_on_network_.png)
 
-## コールバックの再定義
+<a id="redefine-callback"></a>
+## コールバックの再定義 { #redefine-callback }
 
 基本的にGameAnvilの大部分の機能はコールバック形式で提供されます。つまり、エンジンユーザーはGameAnvilが提供する基本インターフェース(IGatewayNode、ISupportNode、IGameNode)を実装後、このようなコールバックメソッドを再定義する形式で大部分の機能を使用することになります。この過程でエンジンユーザーが必要なコールバックメソッドのみ実装すればよいため、一部のコールバックメソッドは無視することもできます。これらの基本インターフェースは全て「I」で始まる名前を持ち、com.nhn.gameanvilパッケージまたはその下位パッケージとして提供されます。
 
 ![callback-1.png](https://static.toastoven.net/prod_gameanvil/images/callback-1.png)
 
-## 全ての実装の始まり、ノード
+<a id="start-of-all-implements-nodes"></a>
+## 全ての実装の始まり、ノード { #start-of-all-implements-nodes }
 
 例えば、全てのノードは共通して以下のコールバックメソッドを再定義する必要があります。そして、それぞれのノードはその役割に合った追加のコールバックメソッドの実装を要求する場合があります。以下のコードで例に挙げたSampleGatewayNodeは、GatewayNodeの基本インターフェースであるIGatewayNodeを実装しています。
 
@@ -103,15 +109,18 @@ public class SampleGatewayNode implements IGatewayNode {
 | onShuttingdown | ノード停止 | ノードがShutdown命令を受け取る時に呼び出されます。停止したノードは再開(Resume)できません。                                                                  |
 | onResume       | 再開   | ノードが一時停止状態で駆動を再開する時に呼び出されます。ユーザーは再開状態で処理したいコードをここに実装できます。                                  |
 
-## _(underscore)で始まるメソッドと変数
+<a id="methods-and-variables-beginning-with-underscore"></a>
+## _(underscore)で始まるメソッドと変数 { #methods-and-variables-beginning-with-underscore }
 
 エンジンを使用していると、ユーザーが実装インターフェースで_で始まるメソッドや変数を見かけることがあります。これはエンジン内部でのみ使用することを意味します。つまり、ユーザーは_で始まる変数やメソッドにアクセスしてはいけません。これはJavaのスコープ制御が柔軟でないために一部の公開を許容しているものですので、注意が必要です。
 
-## gameanvilパッケージとgameanvilcoreパッケージ
+<a id="gameanvil-package-and-gameanvilcore-package"></a>
+## gameanvilパッケージとgameanvilcoreパッケージ { #gameanvil-package-and-gameanvilcore-package }
 
 エンジンは大きく2つの上位パッケージで構成されます。そのうちの1つであるgameanvilパッケージはユーザーのためのものです。このパッケージ内の全てのクラスやAPIは自由に使用可能です。反面、gameanvilcoreパッケージはエンジンコアロジックを含んでいるため、ユーザーが直接アクセスすることを許可しません。それにもかかわらずユーザーに公開されているのは、現在GameAnvilがサポートするJavaバージョンのスコープ制御の限界のためです。ユーザーコードを作成する過程でgameanvilcoreパッケージの内容が含まれないよう、格別の注意が必要です。
 
-## IntelliJテンプレートでプロジェクト構成
+<a id="configure-project-with-intellij-template"></a>
+## IntelliJテンプレートでプロジェクト構成 { #configure-project-with-intellij-template }
 
 GameAnvilプロジェクトを最初から1つずつ構成することは、様々な複雑な過程を要求します。エンジンライブラリを読み込むことに加え、構成ファイルを作成しなければならず、プロトコル仕様を作成するスクリプトとこれをコンパイルするコンパイラも必要です。このような一連の過程により開発時間を不必要に浪費することを防ぐために、GameAnvilはこれらの内容を全て含んだIntelliJ用テンプレートを提供します。以下のリンクからテンプレートファイルをダウンロードした後、次の手順に従ってください。
 

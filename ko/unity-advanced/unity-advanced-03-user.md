@@ -1,11 +1,14 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > 유저
+<a id="game-gameanvil-unity-advanced-development-guide-user"></a>
+## Game > GameAnvil > Unity 심화 개발 가이드 > 유저 { #game-gameanvil-unity-advanced-development-guide-user }
 
-## 유저
+<a id="useragent"></a>
+## 유저 { #useragent }
 
 GameAnvilUser는 GameAnvil 서버의 유저와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공합니다.
 GameAnvil 서버는 여러 개의 서비스를 동시에 운영할 수 있으며, 하나의 GameAnvilUser는 하나의 서비스에 로그인하여 서로 독립적으로 동작하게 됩니다. 즉, 여러 개의 GameAnvilUser를 만들어 서로 다른 서비스에 로그인하여 동시에 사용이 가능합니다. SubId를 다르게 한다면 같은 서비스에 여러 개의 GameAnvilUser를 동시에 로그인하여 사용하는 것도 가능합니다.
 
-### 생성
+<a id="create"></a>
+### 생성 { #create }
 
 GameAnvilUser를 사용하기 위해서는 먼저 GameAnvilUser 객체를 생성해야합니다.
 
@@ -42,7 +45,8 @@ public void CreateUsers()
 }
 ```
 
-### 해제
+<a id="disable"></a>
+### 해제 { #disable }
 
 사용을 완료한 GameAnvilUser는 Dispose()를 호출하여 해제해줘야 합니다.
 
@@ -59,10 +63,12 @@ public void DisposeUser()
 }
 ```
 
-### 로그인/로그아웃
+<a id="loginlogout"></a>
+### 로그인/로그아웃 { #loginlogout }
 
 로그인은 클라이언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다. 로그아웃은 로그인의 반대 개념입니다. 다시 말해, GameNode 상에서 자신의 유저 객체를 제거하는 과정입니다.
 
+<a id="loginlogout-login"></a>
 #### 로그인
 
 Login()을 호출하여 서비스에 로그인합니다. 로그인 시 어떤 UserType으로 어떤 채널에 로그인할지 입력해 줘야 합니다. 추가 정보가 필요하다면 Payload에 담아 보낼 수 있습니다.
@@ -130,7 +136,8 @@ LoginResult의 상세 내용은 다음과 같습니다.
 | Payload | RoomPayload  | 유저가 속한 방의 추가정보  |
 | bool    | IsMatching   | 매칭을 요청한 상태인지 여부 |
 
-### 로그아웃
+<a id="logout"></a>
+### 로그아웃 { #logout }
 
 Logout()을 호출하여 서비스에서 로그아웃합니다.
 
@@ -174,6 +181,7 @@ ResultCodeLogout의 상세 내용은 다음과 같습니다.
 | LOGOUT_SUCCESS      | 0   | 성공.                                        |
 | LOGOUT_FAIL_CONTENT | 401 | 실패. 사용자 코드에서 거부됨.                          |
 
+<a id="logout-force-logout-notification"></a>
 #### 강제 로그아웃 알림
 Logout()을 호출하지 않더라도 서버에서 유저를 강제로 로그아웃을 시킬 수 있습니다. 이 경우 OnForceLogout을 통해 이에 대한 알림을 받을 수 있습니다.
 ```c#
@@ -187,10 +195,12 @@ public void AddOnLogout()
 ```
 서버의 구현에 따라 매개변수 Payload payload를 통해 추가 정보를 얻을 수도 있습니다.
 
-### 방 생성, 입장, 퇴장
+<a id="create-enter-and-leave-rooms"></a>
+### 방 생성, 입장, 퇴장 { #create-enter-and-leave-rooms }
 
 2명 이상의 유저는 방을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 유저들의 요청은 방 안에서 모두 순서가 보장됩니다. 물론 1명의 유저를 위한 방 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. 방을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다.
 
+<a id="create-enter-and-leave-rooms-create-room"></a>
 #### 방 생성
 
 CreateRoom()을 호출하여 방을 생성하고 그 방으로 입장합니다.
@@ -250,6 +260,7 @@ CreatedRoomResult의 상세 내용은 다음과 같습니다.
 | String? | RoomName | 생성한 방의 이름         |
 | Payload | payload  | 클라이언트에서 필요한 추가 정보 |
 
+<a id="create-enter-and-leave-rooms-enter-room"></a>
 #### 방 입장
 
 JoinRoom()을 호출하여 이미 생성된 방에 입장합니다.
@@ -310,6 +321,7 @@ JoinRoomResult의 상세 내용은 다음과 같습니다.
 | String? | RoomName | 입장한 방의 이름.         |
 | Payload | payload  | 클라이언트에서 필요한 추가 정보. |
 
+<a id="create-enter-and-leave-rooms-leave-room"></a>
 #### 방 퇴장
 
 LeaveRoom()을 호출하여 입장한 방에서 퇴장할 수 있습니다.
@@ -355,6 +367,7 @@ ResultCodeLeaveRoom의 상세 내용은 다음과 같습니다.
 | LEAVE_ROOM_SUCCESS      | 0   | 성공.                                        |
 | LEAVE_ROOM_FAIL_CONTENT | 801 | 실패. 사용자 코드에서 거부됨.                          |
 
+<a id="create-enter-and-leave-rooms-notification-for-forced-to-leave-the-room"></a>
 #### 방 강제 퇴장 알림
 LeaveRoom()을 호출하지 않더라도 서버에서 강제로 방에서 퇴장을 시킬 수 있습니다. 이 경우 OnForceLeaveRoom를 통해 이에 대한 알림을 받을 수 있습니다.
 ```c#
@@ -368,6 +381,7 @@ public void AddOnLeaveRoom()
 ```
 매개변수 int roomId를 통해 어떤 방에서 강제로 퇴장 당했는지 알수 있으며, 서버의 구현에 따라 매개변수 Payload payload를 통해 추가 정보를 얻을 수도 있습니다. 
 
+<a id="create-enter-and-leave-rooms-enter-the-room-with-the-specified-name"></a>
 #### 지정한 이름의 방에 입장
 
 NamedRoom()을 호출하여 지정한 이름의 방에 입장할 수 있습니다. 지정한 이름의 방이 없을 경우에는 방을 생성한 후 그 방으로 입장합니다.
@@ -429,10 +443,12 @@ NamedRoomResult의 상세 내용은 다음과 같습니다.
 | String? | RoomName | 입장한 방의 이름          |
 | Payload | payload  | 클라이언트에서 필요한 추가 정보. |
 
-### 매치메이킹
+<a id="matchmaking"></a>
+### 매치메이킹 { #matchmaking }
 
 GameAnvil은 두 가지 매치메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치메이킹입니다.
 
+<a id="matchmaking-room-matchmaking"></a>
 #### 룸 매치메이킹
 
 룸 매치메이킹은 조건에 맞는 방으로 유저를 입장시켜 주는 방식입니다. 룸 매치메이킹 요청 시 조건에 맞는 방이 있으면 해당 방으로 바로 입장시켜 주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장시켜 줍니다.
@@ -516,6 +532,7 @@ MatchResult의 상세 내용은 다음과 같습니다.
 | String   | RoomName | 입장한 방의 이름.         |
 | Payload? | payload  | 클라이언트에서 필요한 추가 정보. |
 
+<a id="matchmaking-user-matchmaking"></a>
 #### 유저 매치메이킹
 
 유저 매치메이킹은 유저 풀을 만들고 그 안에서 조건에 맞는 유저들을 찾아 새로 생성한 방으로 입장시켜 주는 방식입니다. 유저 풀에 조건에 맞는 유저의 수가 모자랄 경우 매치메이킹이 완료될 때까지 시간이 걸릴 수 있고, 시간 내에 매치메이킹이 완료되지 않으면 시간 초과되어 매칭이 실패할 수 있습니다.
@@ -630,6 +647,7 @@ ResultCodeMatchUserCancel의 상세 내용은 다음과 같습니다.
 | MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM | 1202 | 실패. 이미 방에 들어가 있음.                          |
 | MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS     | 1203 | 실패. 유저 매치메이킹이 진행중이 아님.                     |
 
+<a id="matchmaking-party-matchmaking"></a>
 #### 파티 매치메이킹
 
 파티 매치메이킹은 유저 매치메이킹의 특수한 형태로, 2명 이상의 유저가 한 파티로 묶여 유저 풀에 등록되고, 조건이 맞는 다른 유저들을 찾아 새로 생성한 방으로 함께 입장시켜 주는 방식입니다. 파티로 묶은 유저들은 항상 같은 방으로 입장합니다. 파티 외에 같이 매칭된 유저들은 서버의 매치 메이커 구현에 따라 또 다른 파티일 수도 있고, 개인일 수도 있습니다.
@@ -755,8 +773,10 @@ ResultCodeMatchPartyStart의 상세 내용은 다음과 같습니다.
 | MATCH_PARTY_CANCEL_FAIL_ALREADY_JOINED_ROOM | 1403 | 실패, 파티매칭을 취소할 때, 이미 방에 입장해 있는 경우           |
 | MATCH_PARTY_CANCEL_FAIL_NOT_IN_PROGRESS     | 1404 | 실패, 파티매칭 진행 중이 아닌데 취소하려고 할 때               | 
 
-### 채널
+<a id="channel"></a>
+### 채널 { #channel }
 
+<a id="channel-move-notification"></a>
 #### 채널 이동 알림
 
 경우에 따라서 매치메이킹의 결과로 채널 이동이 발생할 수 있습니다. 채널 이동이 되었을 경우 OnMoveChannel을 통해 알림을 받을 수 있습니다. 그리고 MoveChannelResult 매개변수를 이동한 채널의 정보를 얻을 수 있으며, 서버 구현에 따라서 추가정보를 얻을 수도 있습니다.
@@ -771,6 +791,7 @@ public void AddOnMoveChannel()
 }
 ```
 
+<a id="channel-moving-channels"></a>
 #### 채널 이동
 
 MoveChannel()을 호출하여 서비스 내의 다른 채널로 이동할 수 있습니다.
@@ -829,7 +850,8 @@ MoveChannelResult 의 상세 내용은 다음과 같습니다.
 | string   | ChannelId | 입장한 방의 아이디.                                                                         |
 | Payload? | payload   | 클라이언트에서 필요한 추가 정보.                                                                  |
 
-### 채널 정보
+<a id="channel-information"></a>
+### 채널 정보 { #channel-information }
 
 GameAnvil은 설정에서 자유롭게 채널을 구성할 수 있습니다. 이런 채널 구성은 서버와 클라이언트 간에 미리 약속하여 고정된 형태로 사용할 수도 있지만, 상황에 따라 다양하게 변경하여 사용할 수도 있습니다. GameAnvilUser에서는 이렇게 변경된 채널 정보를 얻어올 수 있도록 몇 가지 메소드를 제공합니다.
 
@@ -840,6 +862,7 @@ GameAnvil은 설정에서 자유롭게 채널을 구성할 수 있습니다. 이
 | GetAllChannelCountInfo() | 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수) 요청 |
 | GetAllChannelInfo()      | 특정 서비스의 모든 채널에 대한 정보(사용자 정의) 요청       |
 
+<a id="channel-information-getchannelcountinfo"></a>
 #### GetChannelCountInfo
 
 GetChannelCountInfo()는 특정 채널의 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다.
@@ -897,6 +920,7 @@ ChannelCountResult의 상세 내용은 다음과 같습니다.
 
 <br>
 
+<a id="channel-information-getchannelinfo"></a>
 #### GetChannelInfo
 
 GetChannelInfo()는 특정 채널의 정보(사용자 정의)를 요청하여 받아올 수 있습니다.
@@ -944,6 +968,7 @@ ResultCodeChannelInfo의 상세 내용은 다음과 같습니다.
 | CHANNEL_INFO_FAIL_INVALID_CHANNEL_ID | 1923 | 실패. 잘못된 채널 아이디                             |
 | CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924 | 실패. 채널을 찾을 수 없음                            |
 
+<a id="channel-information-getallchannelcountinfo"></a>
 #### GetAllChannelCountInfo
 
 GetAllChannelCountInfo()는 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다.
@@ -989,6 +1014,7 @@ ResultCodeAllChannelCountInfo의 상세 내용은 다음과 같습니다.
 | ALL_CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1932 | 실패. 잘못된 서비스 아이디                            |
 | ALL_CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1933 | 실패. 채널을 찾을 수 없음                            |
 
+<a id="channel-information-getallchannelinfo"></a>
 #### GetAllChannelInfo
 
 GetAllChannelInfo()는 특정 서비스의 모든 채널에 대한 정보(사용자 정의)를 요청하여 받아올 수 있습니다.

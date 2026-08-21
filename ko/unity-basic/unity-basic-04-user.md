@@ -1,25 +1,33 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 유저컨트롤러
+<!-- pre-align:aligned sig=2b73e5c9449e -->
 
-## GameAnvilUser
+<a id="game-gameanvil-basic-development-guide-to-unity-user-controller"></a>
+## Game > GameAnvil > Unity 기초 개발 가이드 > 유저컨트롤러 { #game-gameanvil-basic-development-guide-to-unity-user-controller }
+
+<a id="gameanviluser"></a>
+## GameAnvilUser { #gameanviluser }
 
 GameAnvilUser는 GameAnvil 서버의 GameNode와 관련된 작업을 담당합니다. 로그인(Login()), 로그아웃(Logout()) 및 방 관리 등 기본 기능을 제공하며, 직접 정의한 프로토콜을 기반으로 클라이언트는 자신의 유저 객체를 통해 다른 객체들과 메시지를 주고 받으며 여러 가지 콘텐츠를 구현할 수 있습니다.
 
 GameAnvilManager는 기본적으로 간편 로그인 과정에서 생성된 하나의 GameAnvilUser를 관리하는 GameAnvilUserController를 제공합니다. LoginResult의 UserController를 통해서 얻을 수 있습니다.
 
-### 로그인
+<a id="login"></a>
+### 로그인 { #login }
 
 로그인은 클라언트가 서버에 접속한 후 GameNode에 자신의 유저 객체를 만드는 과정이라고 정의할 수 있습니다.
 
 로그인은 간편 로그인에서 한 번에 처리되기 때문에 설명을 생략합니다. 자세한 내용은 [Unity 심화 개발 가이드 > 유저](../unity-advanced/unity-advanced-03-user.md)를 참고하십시오.
 
-### 로그아웃
+<a id="logout"></a>
+### 로그아웃 { #logout }
 
 GameAnvilManager에서는 게임 서버에서 로그아웃하고, 자동으로 접속 종료까지 처리됩니다. 로그아웃에 대한 더 자세한 설명은 [Unity 심화 개발 가이드 > 유저](../unity-advanced/unity-advanced-03-user.md)를 참고하십시오.
 
-### 방 생성, 입장, 퇴장
+<a id="create-enter-leave-room"></a>
+### 방 생성, 입장, 퇴장 { #create-enter-leave-room }
 
 2명 이상의 유저는 방을 통해 동기화된 메시지 흐름을 만들 수 있습니다. 즉, 유저들의 요청은 방 안에서 모두 순서가 보장됩니다. 물론 1명의 유저를 위한 방 생성도 콘텐츠에 따라서 의미를 가질 수도 있습니다. 방을 어떻게 사용할지는 어디까지나 엔진 사용자의 몫입니다.
 
+<a id="create-enter-leave-room-createroom"></a>
 #### CreateRoom
 
 CreateRoom()을 호출하여 방을 생성하고 그 방으로 입장합니다.
@@ -82,6 +90,7 @@ CreatedRoomResult의 상세 내용은 다음과 같습니다.
 | String? | RoomName | 생성한 방의 이름         |
 | Payload | payload  | 클라이언트에서 필요한 추가 정보 |
 
+<a id="create-enter-leave-room-joinroom"></a>
 #### JoinRoom
 
 JoinRoom()을 호출하여 이미 생성된 방에 입장합니다.
@@ -144,6 +153,7 @@ JoinRoomResult의 상세 내용은 다음과 같습니다.
 | String? | RoomName | 입장한 방의 이름.         |
 | Payload | payload  | 클라이언트에서 필요한 추가 정보. |
 
+<a id="create-enter-leave-room-leaveroom"></a>
 #### LeaveRoom
 
 LeaveRoom()을 호출하여 입장한 방에서 퇴장할 수 있습니다.
@@ -191,6 +201,7 @@ ResultCodeLeaveRoom 상세 내용은 다음과 같습니다.
 | LEAVE_ROOM_SUCCESS      | 0   | 성공.                                        |
 | LEAVE_ROOM_FAIL_CONTENT | 801 | 실패. 사용자 코드에서 거부됨.                          |
 
+<a id="create-enter-leave-room-namedroom"></a>
 #### NamedRoom
 
 NamedRoom()을 호출하여 지정한 이름의 방에 입장할 수 있습니다. 지정한 이름의 방이 없을 경우에는 방을 생성한 후 그 방으로 입장합니다.
@@ -255,10 +266,12 @@ NamedRoomResult 의 상세 내용은 다음과 같습니다.
 | String? | RoomName | 입장한 방의 이름          |
 | Payload | payload  | 클라이언트에서 필요한 추가 정보. |
 
-### 매치메이킹
+<a id="matchmaking"></a>
+### 매치메이킹 { #matchmaking }
 
 GameAnvil은 크게 두 가지 매치메이킹을 제공합니다. 하나는 방 단위의 매칭을 수행하는 룸 매치메이킹이고, 다른 하나는 유저 단위의 매칭을 수행하는 유저 매치메이킹입니다.
 
+<a id="matchmaking-room-matchmaking"></a>
 #### 룸 매치메이킹
 
 룸 매치메이킹은 조건에 맞는 방으로 유저를 입장시켜 주는 방식입니다. 룸 매치메이킹 요청 시 조건에 맞는 방이 있으면 해당 방으로 바로 입장시켜 주고 조건에 맞는 방이 없다면 새로운 방을 생성하여 입장시켜 줍니다.
@@ -345,6 +358,7 @@ MatchResult의 상세 내용은 다음과 같습니다.
 | String   | RoomName | 입장한 방의 이름.         |
 | Payload? | payload  | 클라이언트에서 필요한 추가 정보. |
 
+<a id="matchmaking-user-matchmaking"></a>
 #### 유저 매치메이킹
 
 유저 매치메이킹은 유저 풀을 만들고 그 안에서 조건에 맞는 유저들을 찾아 새로 생성한 방으로 입장시켜 주는 방식입니다. 유저 풀에 조건에 맞는 유저의 수가 모자랄 경우 매치메이킹이 완료될 때까지 시간이 걸릴 수 있고, 시간 내에 매치메이킹이 완료되지 않으면 시간 초과되어 매칭이 실패할 수 있습니다.

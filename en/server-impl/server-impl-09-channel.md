@@ -1,6 +1,10 @@
-## Game > GameAnvil > Server Development Guide > Channel
+<!-- pre-align:aligned sig=2d6ba0bf38a3 -->
 
-## Channel
+<a id="game-gameanvil-server-development-guide-channel"></a>
+## Game > GameAnvil > Server Development Guide > Channel { #game-gameanvil-server-development-guide-channel }
+
+<a id="channel"></a>
+## Channel { #channel }
 
 ![channel-sync2.png](https://static.toastoven.net/prod_gameanvil/images/channel-sync2.png)
 
@@ -82,11 +86,13 @@ These channels allow you to:
 * You can view the number of users and rooms per channel.
 * You can send messages on a per-channel basis. Use the publishToChannel API to deliver messages to all game nodes that belong to the target channel.
 
-## Manage Channel Information
+<a id="manage-channel-information"></a>
+## Manage Channel Information { #manage-channel-information }
 
 Users can implement their own information to be managed in a channel. This information is automatically synchronized within the same channel.
 
-### Channel User Information
+<a id="channel-user-information"></a>
+### Channel User Information { #channel-user-information }
 
 First, to manage user information in a channel, you need to enable channel user information through an annotation when implementing the user class with useChannelInfo settings, as shown below:
 ```java
@@ -199,7 +205,8 @@ public class SampleGameUser implements IUser {
 
 Note that when you move channels, the old channel automatically deletes user information from that channel, so you only need to worry about adding new information on the destination channel.
 
-### Channel Room Information
+<a id="channel-room-information"></a>
+### Channel Room Information { #channel-room-information }
 
 To manage room information in a channel, set useChannelInfo to true when implementing the room class, just like the game user we looked at earlier.
 ```java
@@ -292,7 +299,8 @@ public class SampleGameRoom implements IRoom<SampleGameUser> {
 }
 ```
 
-## Synchronize Channel Information
+<a id="synchronize-channel-information"></a>
+## Synchronize Channel Information { #synchronize-channel-information }
 
 Game nodes in the same channel share channel-related information with each other. For example, when a user or room information changes on one Game Node in the same channel in the manner described above, the following callback methods are called on the remaining Game Nodes in that channel. These callbacks allow all Game Nodes within the same channel to synchronize their information. The following callback methods are used by Game Nodes to synchronize these channels.
 
@@ -334,7 +342,8 @@ public void onChannelInfo(IPayload payload) {
 }
 ```
 
-### Synchronize Channel Information with Client
+<a id="synchronize-channel-information-with-client"></a>
+### Synchronize Channel Information with Client { #synchronize-channel-information-with-client }
 
 The client can request channel information from the server at any time. To do so, onChannelInfo is called from the Game Node's callback method, which we discussed earlier. However, to prevent incorrect implementation or malicious use by clients, this callback method call has a minimal re-invocation period (1 second by default).  For example, if a client makes 10 requests for channel information in 1 second, the server will only call the onChannelInfo callback method once. The other 9 requests will pass information that it has previously cached. Here is some pseudo code that implements such an onChannelInfo.
 
@@ -369,6 +378,7 @@ public void onChannelInfo(Payload outPayload) {
 }
 ```
 
-### Pass the Number of Users and Rooms in the Channel to the Client
+<a id="pass-the-number-of-users-and-rooms-in-the-channel-to-the-client"></a>
+### Pass the Number of Users and Rooms in the Channel to the Client { #pass-the-number-of-users-and-rooms-in-the-channel-to-the-client }
 
 The GameAnvil connector provides the GetChannelCountInfo API to request this information. The engine always manages the number of users/rooms per channel, so you don't need to implement anything.

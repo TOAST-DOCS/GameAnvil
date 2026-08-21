@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 매니저
+<!-- pre-align:aligned sig=9b7534989ae2 -->
 
-## GameAnvilManager
+<a id="game-gameanvil-basic-development-guide-to-unity-manager"></a>
+## Game > GameAnvil > Unity 기초 개발 가이드 > 매니저 { #game-gameanvil-basic-development-guide-to-unity-manager }
+
+<a id="gameanvilmanager"></a>
+## GameAnvilManager { #gameanvilmanager }
 
 GameAnvilManager는 기본 설정과 에이전트 관리를 담당하며, 내부 동작과 관련된 로그를 볼 수 있도록 옵션을 설정하거나 콜백을 등록할 수 있습니다. GameAnvilManager를 사용하려면 먼저 씬에 GameAnvilManager를 추가해야 합니다.
 
-### 생성
+<a id="create"></a>
+### 생성 { #create }
 
 Unity Hierarchy 창에서 마우스 오른쪽 버튼을 클릭한 뒤 **GameAnvil > GameAnvilManager**를 선택해 바로 생성할 수 있습니다.
 
@@ -12,7 +17,8 @@ Unity Hierarchy 창에서 마우스 오른쪽 버튼을 클릭한 뒤 **GameAnvi
 
 또는 빈 GameObject를 생성하고 GameAnvilManager 컴포넌트를 추가할 수도 있습니다.
 
-### 설정
+<a id="settings"></a>
+### 설정 { #settings }
 
 GameAnvilManager에는 여러 가지 설정값이 있습니다. GameAnvilManager 생성 시 기본값으로 설정되지만 필요하다면 Inspector 창에서 직접 값을 변경할 수 있습니다.
 

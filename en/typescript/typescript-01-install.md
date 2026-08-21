@@ -1,11 +1,16 @@
-## Game > GameAnvil > TypeScript Development Guide > Install
+<!-- pre-align:aligned sig=770818316ec8 -->
 
-## GameAnvil Connector
+<a id="game-gameanvil-typescript-development-guide-install"></a>
+## Game > GameAnvil > TypeScript Development Guide > Install { #game-gameanvil-typescript-development-guide-install }
+
+<a id="gameanvil-connector"></a>
+## GameAnvil Connector { #gameanvil-connector }
 
 The connector is a library developed to create clients suitable for the GameAnvil server. With GameAnvil Connector, you can easily implement the packet transfer, user, and room features provided by GameAnvil.
 
 
-### Download gameanvil-connector.js
+<a id="download-gameanvil-connectorjs"></a>
+### Download gameanvil-connector.js { #download-gameanvil-connectorjs }
 
 You can download the connector below:
 
@@ -13,7 +18,8 @@ You can download the connector below:
 
 Downloads via npm and via git are expected to be supported.
 
-### Example of Installation of gameanvil-connector.js
+<a id="example-of-installation-of-gameanvil-connectorjs"></a>
+### Example of Installation of gameanvil-connector.js { #example-of-installation-of-gameanvil-connectorjs }
 
 This section covers how to install and use the TypeScript version of the GameAnvil Connector. 
 
@@ -52,7 +58,8 @@ The code above is the simplest example code that uses a connector. To simply exp
 2. And then, enter the connection information (host, port) for the GameAnvilConnector object. It can vary depending on the development server, so be sure to modify the content to fit the developed server.
 3. Finally, call the connect() function to send the connection request to the server.
 
-### Example of Running gameanvil-connector.js
+<a id="example-of-running-gameanvil-connectorjs"></a>
+### Example of Running gameanvil-connector.js { #example-of-running-gameanvil-connectorjs }
 
 To run the example code, we install and run Webpack.
 Create the index.html file.

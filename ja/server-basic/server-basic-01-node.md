@@ -1,8 +1,12 @@
-## Game > GameAnvil > サーバー概念説明 > ノード
+<!-- pre-align:aligned sig=378876ac9b0b -->
+
+<a id="game-gameanvil-server-concept-description-node"></a>
+## Game > GameAnvil > サーバー概念説明 > ノード { #game-gameanvil-server-concept-description-node }
 
 
 
-## Node
+<a id="node"></a>
+## Node { #node }
 
 GameAnvilサーバー構成の最も基本となる単位はノードです。各ノードはその役割に合った機能を独立して実行します。 いくつのノードでどのような役割を実行するかは自由に設定可能です。ノードを詳しく説明する前に、役割別にノードを分類すると次のとおりです。 
 
@@ -24,7 +28,8 @@ GameAnvilサーバー構成の最も基本となる単位はノードです。�
 
 
 
-## シングルスレッド (Single-Threaded)
+<a id="single-thread-single-threaded"></a>
+## シングルスレッド (Single-Threaded) { #single-thread-single-threaded }
 
 GameAnvilでは1つのノードは1つのスレッドで処理されます。これは非常に重要です。各ノードは基本的に全ての処理を非同期的に行う必要があり、このノードスレッドはブロッキングなしで持続的に稼働することが保証されなければなりません。このような稼働モデルはVert.xやNode.jsのそれと非常に似ています。
 

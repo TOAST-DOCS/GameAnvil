@@ -1,10 +1,15 @@
-## Game > GameAnvil > TypeScript 개발 가이드 > 로거
+<!-- pre-align:aligned sig=033ad3290f52 -->
 
-## GameAnvilLogger
+<a id="game-gameanvil-typescript-development-guide-logger"></a>
+## Game > GameAnvil > TypeScript 개발 가이드 > 로거 { #game-gameanvil-typescript-development-guide-logger }
+
+<a id="gameanvilllogger"></a>
+## GameAnvilLogger { #gameanvilllogger }
 
 커넥터 내부의 동작에 대한 로그를 받아보고 싶을 때 사용합니다.
 
-### 리스너 설정
+<a id="listener-settings"></a>
+### 리스너 설정 { #listener-settings }
 
 아래와 같이 설정하면 커넥터 내부 동작 로그가 콘솔에 표시됩니다.
 

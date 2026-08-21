@@ -1,10 +1,15 @@
-## Game > GameAnvil > CocosCreator 開発ガイド > 再接続
+<!-- pre-align:aligned sig=10f17cff9fb6 -->
 
-## 再接続
+<a id="game-gameanvil-cocoscreator-development-guide-relogin"></a>
+## Game > GameAnvil > CocosCreator 開発ガイド > 再接続 { #game-gameanvil-cocoscreator-development-guide-relogin }
+
+<a id="relogin"></a>
+## 再接続 { #relogin }
 
 ゲーム途中、様々な理由でサーバーとの接続が切れることがあります。接続が切れた際、既存のプレイを継続できるように再接続機能をサポートします。使用するAPIは一般的な接続方法と同様に使用できます。結果を通じて再接続に関するより詳細な情報を受け取ります。
 
-### 認証
+<a id="authentication"></a>
+### 認証 { #authentication }
 
 再接続後に認証を進めると、結果値として以前プレイしていたユーザー情報が含まれて返ってきます。
 
@@ -25,7 +30,8 @@ loginedUserInfoList.forEach((userInfo: AlreadyLoginedUserInfo) => {
 });
 ```
 
-### ログイン
+<a id="login"></a>
+### ログイン { #login }
 
 認証結果として受け取ったユーザー情報を利用してログインを進めます。この時、userTypeやchannelIdなど、以前のユーザー情報と同じ値を利用してログインする必要があります。そうしないとログインに失敗する可能性があります。
 

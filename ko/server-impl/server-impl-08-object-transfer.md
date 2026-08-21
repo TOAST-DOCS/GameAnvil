@@ -1,10 +1,15 @@
-## Game > GameAnvil > 서버 개발 가이드 > 전송 가능 객체
+<!-- pre-align:aligned sig=613b3d3dd876 -->
 
-## 객체 전송(Object Transfer)
+<a id="game-gameanvil-server-development-guide-transferable-objects"></a>
+## Game > GameAnvil > 서버 개발 가이드 > 전송 가능 객체 { #game-gameanvil-server-development-guide-transferable-objects }
+
+<a id="object-transfer"></a>
+## 객체 전송(Object Transfer) { #object-transfer }
 
 GameAnvil에서 객체 전송이란 하나의 노드에서 다른 노드로 객체가 이동하는 것을 의미합니다. 사용자가 관심을 가져야 할 객체 전송은 모두 게임 노드 사이에서 발생합니다. 그 대표적인 두 가지인 유저 전송과 룸 전송에 대해 살펴봅니다.
 
-## 유저 전송(UserTransfer)
+<a id="user-transfer-usertransfer"></a>
+## 유저 전송(UserTransfer) { #user-transfer-usertransfer }
 
 ![gamenode-user-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-user-transfer2.png)
 
@@ -19,7 +24,8 @@ GameAnvil에서 객체 전송이란 하나의 노드에서 다른 노드로 객�
 - 셋째, 임의의 게임 노드에 대해 Safe Pause를 진행하면 해당 노드의 유저 객체들은 다른 유효한 게임 노드들로 분산되어 전송됩니다. 이 경우는 운영 측면에서 GameAnvil Console을
   통해 명시적으로 명령을 내린 경우입니다.
 
-### 유저 전송 및 전송 가능한 유저 타이머 구현
+<a id="user-transfer-implementation"></a>
+### 유저 전송 및 전송 가능한 유저 타이머 구현 { #user-transfer-implementation }
 
 실제 유저 전송은 GameAnvil이 내부적으로 조용하게 처리합니다. 이때, 클라이언트는 자신의 게임 유저 객체가 서버 사이에서 전송되는지 인지하지 못합니다. 즉, 다른 게임 노드의 방으로 들어가더라도 클라이언트는 단지 하나의 GameAnvil 서버 군에서 임의의 방으로 들어간 것뿐이죠.
 
@@ -60,7 +66,8 @@ public void onTransferIn(IReadOnlyTransferPack transferPack, ITimerHandlerTransf
 
 위의 2가지 메서드는 GameAnvil이 알아서 호출합니다. 사용자는 그냥 구현만 하면 됩니다.
 
-## 방 전송 (RoomTranfer)
+<a id="room-transfer-roomtranfer"></a>
+## 방 전송 (RoomTranfer) { #room-transfer-roomtranfer }
 
 ![gamenode-room-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-room-transfer2.png)
 
@@ -68,7 +75,8 @@ public void onTransferIn(IReadOnlyTransferPack transferPack, ITimerHandlerTransf
 
 이러한 방 전송을 발생시키는 것은 오직 Safe Pause 명령뿐입니다. 이 명령은 일반적으로 GameAnvil Console을 통해 게임 운영자가 명시적으로 전달합니다.
 
-### 방 전송  및 전송 가능한 방 타이머 구현
+<a id="implement-room-transfer-and-transferable-room-timer"></a>
+### 방 전송  및 전송 가능한 방 타이머 구현 { #implement-room-transfer-and-transferable-room-timer }
 
 실제 방 전송은 GameAnvil이 내부적으로 조용하게 처리합니다. 이때, 클라이언트는 자신의 게임 유저와 더불어 자신이 속한 방 객체가 서버 사이에서 전송되는지 인지하지 못할 가능성이 높습니다. 특별한 문제가 발생하지 않는 한 전체 흐름이 매우 빠르게 진행되기 때문에 전송 전의 게임 흐름을 전송 후에 계속 이어감에 있어 무리가 없습니다.
 

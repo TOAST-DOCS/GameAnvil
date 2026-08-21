@@ -1,14 +1,19 @@
-## Game > GameAnvil > サーバー開発ガイド > トピックの使用
+<!-- pre-align:aligned sig=47c08c3441a1 -->
+
+<a id="game-gameanvil-server-development-guide-about-topic"></a>
+## Game > GameAnvil > サーバー開発ガイド > トピックの使用 { #game-gameanvil-server-development-guide-about-topic }
 
 
 
-## 購読と発行
+<a id="subscription-and-publishing"></a>
+## 購読と発行 { #subscription-and-publishing }
 
 GameAnvilは購読-発行モデルをサポートします。つまり、任意のトピックを購読した対象は、全て発行を通じて同様にメッセージを受け取ることができます。このような購読と発行に関する使用法は、トピックを中心に行われます。
 
 
 
-### トピック
+<a id="topics"></a>
+### トピック { #topics }
 
 ユーザーはいつでも任意のトピックを購読できます。また、GameAnvilは内部的にいくつかのトピックをデフォルトで購読しています。これらのトピックは、大きくノードトピックとユーザートピックに分かれます。これを通じてメッセージはノード単位で転送された後、ノード内のオブジェクトに伝達されます。次は、このようなノードトピックとユーザートピックを利用して発行するコードの例です。
 
@@ -24,7 +29,8 @@ void publishToUser(String nodeTopic, String topic, Packet packet);
 ```
 
 
-### GameAnvilトピック
+<a id="gameanvil-topic"></a>
+### GameAnvilトピック { #gameanvil-topic }
 
 GameAnvilは内部的に以下のトピックをデフォルトで購読します。GameAnvilTopicは、ユーザーが絶対に任意で購読してはいけません。
 
@@ -38,7 +44,8 @@ GameAnvilは内部的に以下のトピックをデフォルトで購読しま�
 
 
 
-### トピック購読及び購読解除
+<a id="subscribe-and-unsubscribe-to-topics"></a>
+### トピック購読及び購読解除 { #subscribe-and-unsubscribe-to-topics }
 
 前述のとおり、トピックは大きくノードトピックとユーザートピックに分かれます。ノードトピックは、全ての種類のノードクラスで購読します。一方、ユーザートピックはノード内部のオブジェクトのためのものなので、IUserContextとIRoomContextを実装した全てのユーザーとルームクラスで購読可能です。ノードトピックとユーザートピックの購読及び購読解除方法は、次のサンプルコードと同様です。
 
@@ -83,7 +90,8 @@ boolean addTopic(String topic);
 void removeTopic(String topic);
 ```
 
-### 発行
+<a id="publish"></a>
+### 発行 { #publish }
 
 ユーザーは任意のトピックへメッセージを発行できます。このとき、該当トピックを購読している対象は、全て同一のメッセージを受信することになります。
 

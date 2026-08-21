@@ -1,29 +1,42 @@
-## Game > GameAnvil > 릴리스 노트 > Unity Connector
+<!-- pre-align:aligned sig=b62d92d16bcd -->
 
-### 2.2.0 (2026.01.29)
+<a id="game-gameanvil-release-notes-unity-connector"></a>
+## Game > GameAnvil > 릴리스 노트 > Unity Connector { #game-gameanvil-release-notes-unity-connector }
 
+<a id="20-january-29-2026"></a>
+### 2.2.0 (2026.01.29) { #20-january-29-2026 }
+
+<a id="20-january-29-2026-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector.unitypackage)
+<a id="20-january-29-2026-gameanvil-220-or-later"></a>
 #### GameAnvil 2.2.0 이상
 * GameAnvil 2.2.0 서버 출시에 맞춰 Connector도 2.2.0 버전을 출시합니다.
 
+<a id="20-january-29-2026-change"></a>
 #### Change
 * 엔진 버전에 맞게 프로토콜 버전 업데이트
 
+<a id="20-january-29-2026-fix"></a>
 #### Fix
 * 오탈자 및 잘못된 설명 수정
 
 ---
 
 
-### 2.1.0 (2025.06.30)
+<a id="10-june-30-2025"></a>
+### 2.1.0 (2025.06.30) { #10-june-30-2025 }
 
+<a id="10-june-30-2025-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)
+<a id="10-june-30-2025-gameanvil-210-or-later"></a>
 #### GameAnvil 2.1.0 이상
+<a id="10-june-30-2025-new"></a>
 #### New
 ###### GameAnvil 2.1.0 Connector
 * GameAnvil 2.1.0 서버 릴리즈에 맞춰 Connector도 2.1.0 버전을 릴리즈합니다.
   * 2.0.0과 비교하여 기능상의 큰 변경점은 없으며, 일부 버그 수정, ResultCode 이름 변경, 오탈자 및 잘못된 설명 등의 수정 사항이 있습니다.
 
+<a id="10-june-30-2025-change"></a>
 #### Change
 * GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
   * GameAnvil 2.1 이전 버전의 서버는 더 이상 지원하지 않음
@@ -49,6 +62,7 @@
     | FORCE\_CLOSE\_BASE\_CONNECTION<br>서버에서 BaseConnection의 close() 호출 | FORCE\_CLOSE\_CONNECTION<br>서버에서 IConnection의 close() 호출 |
     | FORCE\_CLOSE\_BASE\_USER<br>서버에서 BaseUser의 closeConnection() 호출 | FORCE\_CLOSE\_USER<br>서버에서 IUser의 closeConnection() 호출 |
 
+<a id="10-june-30-2025-fix"></a>
 #### Fix
 * 서버에서 강제 종료한 경우 onDisconnect 콜백이 호출된 이후에 User의 상태가 바뀌던 것을 User의 상태가 바뀐 후 onDisconnect 콜백이 호출되도록 수정
 * 서버와 해머의 프로토콜 버퍼를 각각 다른 환경에서 생성할 때 생성 환경에 따라 서로 호환되지 않을 수 있는 문제 수정
@@ -57,10 +71,14 @@
 ---
 
 
-### 2.0.0 (2024.12.4)
+<a id="00-december-4-2024"></a>
+### 2.0.0 (2024.12.4) { #00-december-4-2024 }
 
+<a id="00-december-4-2024-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-2.0.0.unitypackage)
+<a id="00-december-4-2024-gameanvil-200-or-later"></a>
 #### GameAnvil 2.0.0 이상
+<a id="00-december-4-2024-span-stylecolor-e11d21newspan"></a>
 #### <span style="color: #e11d21">New</span>
 ###### GameAnvil 2.0 Connector
 * async await 을 사용한 신규 커넥터가 출시되었습니다.
@@ -76,6 +94,7 @@ var (err, res) = await connector.ConnectAndAuthentication(
                                              "password");
 ```
  
+<a id="00-december-4-2024-span-stylecolor-e11d21removespan"></a>
 #### <span style="color: #e11d21">Remove</span>
 ###### ConnectionAgent 제거
 * ConnectionAgent 는 GameAnvilConnector 와 구분이 모호했습니다.
@@ -92,6 +111,7 @@ var (err, res) = await connector.ConnectAndAuthentication(
 * 서버로부터 요청 없이 받는 종류의 메세지는 기존처럼 대리자를 사용합니다.
     * SetMessageCallback 메서드
 
+<a id="00-december-4-2024-span-stylecolor-e11d21changespan"></a>
 #### <span style="color: #e11d21">Change</span>
 
 ###### ProtoBuffer 4.28.3 사용
@@ -134,31 +154,41 @@ using var myUser = new GameAnvilUser(connector, "ServiceName", subId);
     public async Task<ErrorResult<ResultCodeLogin, LoginResult>> Login(string userType, string channelId, Payload? requestPayload = null)
     ```
 
+<a id="00-december-4-2024-span-stylecolor-e11d21fixspan"></a>
 #### <span style="color: #e11d21">Fix</span>
 * 인터넷이 빠른 환경에서 가끔 정상적으로 연결이 되지 않는 문제가 수정되었습니다.
 
-### 1.4.0 (2023.12.13)
+<a id="40-20231213"></a>
+### 1.4.0 (2023.12.13) { #40-20231213 }
 
+<a id="40-20231213-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.4.0.unitypackage)
 
+<a id="40-20231213-new"></a>
 #### New
 
 Payload에서 압축 패킷을 지원합니다. protobuf 3.24.1로 업데이트되었으며, Protocol 등록 시 index를 지정하지 않아도 되도록 개선되었습니다.
 
+<a id="40-20231213-change"></a>
 #### Change
 
 로그인 시 잘못된 ChannelId를 입력할 경우 SystemError 응답 대신 Login 실패 응답을 주도록 수정되었습니다.
 
+<a id="40-20231213-fix"></a>
 #### Fix
 
 CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수정되었습니다.
 
-### 1.3.0 (2022.12.27)
+<a id="30-20221227"></a>
+### 1.3.0 (2022.12.27) { #30-20221227 }
 
+<a id="30-20221227-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.3.0.unitypackage)
 
+<a id="30-20221227-gameanvil-130-or-later"></a>
 #### GameAnvil 1.3.0 이상
 
+<a id="30-20221227-new"></a>
 #### New
 
 빠른 연결, 로그 레벨 변경, 동기화 기능 등이 새롭게 추가되었습니다. 게임엔빌 커넥터 컴포넌트를 통해 새로운 기능을 이용할 수 있습니다.
@@ -188,6 +218,7 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
     * 방 단위로 key-value 쌍으로 커스텀 값을 설정하여 사용할 수 있습니다.
     * CAS방식의 값 설정을 지원하므로 타이밍 이슈를 쉽게 해결할 수 있습니다.
 
+<a id="30-20221227-fix"></a>
 #### Fix
 
 * 매칭 성공 후 매칭 요청을 다시 보냈을 때 방 입장 여부가 잘못 기록되는 문제 수정
@@ -195,6 +226,7 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 * update() 메서드 호출 시에 가비지가 생성 되는 이슈 해결
 * 에러에 대한 리스너를 등록하지 않은 상태에서 에러가 발생한 경우 예외가 발생하는 현상 수정
 
+<a id="30-20221227-change"></a>
 #### Change
 
 * API 변경 : 이름 변경 및 인자로 ErrorCode를 받도록 수정
@@ -236,48 +268,64 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 
 ---
 
-### 1.2.3 (2022.01.28)
+<a id="23-20220128"></a>
+### 1.2.3 (2022.01.28) { #23-20220128 }
 
+<a id="23-20220128-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.3.unitypackage)
 
+<a id="23-20220128-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0 이상
 
+<a id="23-20220128-fix"></a>
 #### Fix
 
 * 서버에서 보낸 압축 패킷을 처리하지 못하고 오류가 발생하는 문제 수정
 
 ------
 
-### 1.2.2 (2021.11.30)
+<a id="22-20211130"></a>
+### 1.2.2 (2021.11.30) { #22-20211130 }
 
+<a id="22-20211130-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.2.unitypackage)
 
+<a id="22-20211130-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0 이상
 
+<a id="22-20211130-fix"></a>
 #### Fix
 
 * 방에 입장한 상태에서 MatchRoom을 호출하여 실패한경우 IsJoinedRoom()이 false로 바뀌는 문제 수정
 
 ------
 
-### 1.2.1 (2021.08.10)
+<a id="21-20210810"></a>
+### 1.2.1 (2021.08.10) { #21-20210810 }
 
+<a id="21-20210810-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.1.unitypackage)
 
+<a id="21-20210810-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0 이상
 
+<a id="21-20210810-fix"></a>
 #### Fix
 
 * SocketException 발생시 OnDisconnect가 두번 호출되는 버그 수정
 
 ------
 
-### 1.2.0 (2021.07.13)
+<a id="20-20210713"></a>
+### 1.2.0 (2021.07.13) { #20-20210713 }
 
+<a id="20-20210713-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.2.0.unitypackage)
 
+<a id="20-20210713-gameanvil-120-and-later"></a>
 #### GameAnvil 1.2.0 이상
 
+<a id="20-20210713-change"></a>
 #### Change
 
 * Send() 의 리턴 타입이 void로 변경
@@ -371,60 +419,80 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 
 ------
 
-### 1.1.6 (2023.01.20)
+<a id="16-20230120"></a>
+### 1.1.6 (2023.01.20) { #16-20230120 }
 
+<a id="16-20230120-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.6.unitypackage)
 
+<a id="16-20230120-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 이상
 
+<a id="16-20230120-fix"></a>
 #### Fix
 
 * useIpv6 옵션 활성화상태에서 connect() 호출 시 블록 될 수 있는 이슈 수정
 
 ------
 
-### 1.1.5 (2022.01.28)
+<a id="15-20220128"></a>
+### 1.1.5 (2022.01.28) { #15-20220128 }
 
+<a id="15-20220128-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.5.unitypackage)
 
+<a id="15-20220128-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 이상
 
+<a id="15-20220128-fix"></a>
 #### Fix
 
 * 서버에서 보낸 압축 패킷을 처리하지 못하고 오류가 발생하는 문제 수정
 
 ------
 
-### 1.1.4 (2021.11.30)
+<a id="14-20211130"></a>
+### 1.1.4 (2021.11.30) { #14-20211130 }
 
+<a id="14-20211130-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.4.unitypackage)
 
+<a id="14-20211130-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 이상
 
+<a id="14-20211130-fix"></a>
 #### Fix
 
 * 방에 입장한 상태에서 MatchRoom을 호출하여 실패한경우 IsJoinedRoom()이 false로 바뀌는 문제 수정
 
 ------
 
-### 1.1.3 (2021.08.10)
+<a id="13-20210810"></a>
+### 1.1.3 (2021.08.10) { #13-20210810 }
 
+<a id="13-20210810-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.3.unitypackage)
 
+<a id="13-20210810-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 이상
 
+<a id="13-20210810-fix"></a>
 #### Fix
 
 * SocketException 발생시 OnDisconnect가 두번 호출되는 버그 수정
 
 ------
 
-### 1.1.2 (2021.04.15)
+<a id="12-20210415"></a>
+### 1.1.2 (2021.04.15) { #12-20210415 }
 
+<a id="12-20210415-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.2.unitypackage)
 
+<a id="12-20210415-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 이상
 
+<a id="12-20210415-new"></a>
 #### New
 
 * GameAnvil Server의 ClientStateCheck기능을 일시 정지시키는 ConnectionAgent.PauseClientStateCheck() 추가. 앱이 백그라운드로 진입하는 등 메시지 루프가 동작하지 않게 되는 경우 호출해준다.
@@ -432,18 +500,23 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 * Singleserver.SetOnPauseClientStateCheck() 추가.
 * Singleserver.SetOnResumeClientStateCheck() 추가.
 
+<a id="12-20210415-fix"></a>
 #### Fix
 
 * OnDisconnect에서 force가 false일 때 ResultCodeDisconnect 값이 0으로 넘어오는 버그 수정
 
 ------
 
-### 1.1.1 (2021.04.07)
+<a id="11-20210407"></a>
+### 1.1.1 (2021.04.07) { #11-20210407 }
 
+<a id="11-20210407-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.1.unitypackage)
 
+<a id="11-20210407-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 이상
 
+<a id="11-20210407-change"></a>
 #### Change
 
 * listener개별 등록 여부를 확인 할 수 있는 ContainsListener 오버 로딩 추가.
@@ -451,18 +524,23 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 * ContainsUserListener, ContainsUserNotificationListener, ContainsUserErrorListener 추가.
 * ContainsConnectionListener, ContainsConnectionNotificationListener, ContainsConnectionErrorListener, ContainsConnectionErrorListener 추가.
 
+<a id="11-20210407-fix"></a>
 #### Fix
 
 * 강제 종료, 로그아웃, 로그인 실패 등의 상황에서 UserAgent의 일부 정보가 초기화 되지 않는 버그 수정
 
 ------
 
-### 1.1.0 (2020.12.18)
+<a id="10-20201218"></a>
+### 1.1.0 (2020.12.18) { #10-20201218 }
 
+<a id="10-20201218-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.1.0.unitypackage)
 
+<a id="10-20201218-gameanvil-110-and-later"></a>
 #### GameAnvil 1.1.0 이상
 
+<a id="10-20201218-change"></a>
 #### Change
 
 * .Net 4.5 이상 지원으로 완전 전환
@@ -474,12 +552,16 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 
 ------
 
-### 1.0.0 (2020.08.31)
+<a id="00-20200831"></a>
+### 1.0.0 (2020.08.31) { #00-20200831 }
 
+<a id="00-20200831-download"></a>
 #### [다운로드](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-1.0.0.unitypackage)
 
+<a id="00-20200831-gameanvil-100-or-later"></a>
 #### GameAnvil 1.0.0 이상
 
+<a id="00-20200831-change"></a>
 #### Change
 
 * MoveService 제거
@@ -491,10 +573,12 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 
     * <span style="color:#eb6420">현재 FORCE_CLOSE_DUPLICATE_LOGIN 케이스에 FORCE_CLOSE_BY_NEW_CONNECTION 가 넘어오는 문제가 있다. 추후 수정 될 예정.</span>
 
+<a id="00-20200831-fix"></a>
 #### Fix
 
 * Disconnect시에도 UserAgent의 isLogin이 true를 리턴하는 이슈 수정
 
+<a id="00-20200831-detailed-resultcode-changes"></a>
 #### ResultCode 세부 변경사항
 
 * ResultCodeAuth
@@ -550,8 +634,10 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 
 -----
 
-### 1.0.0-EA2 (2020.07.07)
+<a id="00-ea2-20200707"></a>
+### 1.0.0-EA2 (2020.07.07) { #00-ea2-20200707 }
 
+<a id="00-ea2-20200707-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -566,8 +652,10 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 
 -----
 
-### 1.0.0-EA (2020.06.29)
+<a id="00-ea-20200629"></a>
+### 1.0.0-EA (2020.06.29) { #00-ea-20200629 }
 
+<a id="00-ea-20200629-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -619,8 +707,10 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 
 -----
 
-### 0.12.1.1 (2020.06.23)
+<a id="1211-20200623"></a>
+### 0.12.1.1 (2020.06.23) { #1211-20200623 }
 
+<a id="1211-20200623-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -629,8 +719,10 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 
 -----
 
-### 0.12.1 (2020.04.06)
+<a id="121-20200406"></a>
+### 0.12.1 (2020.04.06) { #121-20200406 }
 
+<a id="121-20200406-c-sharp"></a>
 #### C-Sharp
 
 ##### Change
@@ -653,8 +745,10 @@ CONNECT_ALREADY_REQUEST 상태에서 Disconnect가 되지 않는 이슈가 수�
 
 -----
 
-### 0.12.0 (2020.02.14)
+<a id="120-20200214"></a>
+### 0.12.0 (2020.02.14) { #120-20200214 }
 
+<a id="120-20200214-c-sharp"></a>
 #### C-Sharp
 
 ##### Change

@@ -1,8 +1,12 @@
-## Game > GameAnvil > Server Concept Description > Distributed Server
+<!-- pre-align:aligned sig=9cc80f834dc0 -->
+
+<a id="game-gameanvil-server-concept-description-distributed-server"></a>
+## Game > GameAnvil > Server Concept Description > Distributed Server { #game-gameanvil-server-concept-description-distributed-server }
 
 
 
-## Distributed Server
+<a id="distributed-server"></a>
+## Distributed Server { #distributed-server }
 
 Previously, in the basic concept, GameAnvil's node configuration is as shown in the image below. In other words, a process can be operated by freely configuring multiple nodes. However, all GameAnvil processes must have one inter-process communication (IPC) node. This IPC node is responsible for communication between GameAnvil processes. In fact, there are more low-level nodes that are responsible for actual network processing, but the user should understand this as an IPC node as a whole.
 
@@ -10,7 +14,8 @@ Previously, in the basic concept, GameAnvil's node configuration is as shown in 
 
 
 
-### Node-to-Node Communication
+<a id="node-to-node-communication"></a>
+### Node-to-Node Communication { #node-to-node-communication }
 
 The picture below depicts two or more GameAnvil processes communicating each other through these IPC nodes. In the picture, two different GameAnvil processes run the nodes in different configurations. At this point, each node can communicate each other.
 
@@ -20,7 +25,8 @@ In order to communicate with many different process nodes, each node passes mess
 
 
 
-### Meetpoint
+<a id="meetpoint"></a>
+### Meetpoint { #meetpoint }
 
 For these IPCs, processes interconnect through Meetpoint. GameAnvil can set one or more Meetpoint IP address pairs in the following form. GameAnvil process synchronizes the entire server group information by attempting to access one of the Meetpoint addresses set during initial drive.
 

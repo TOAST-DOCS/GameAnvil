@@ -1,12 +1,17 @@
-## Game > GameAnvil > サーバー開発ガイド > サポートノード実装
+<!-- pre-align:aligned sig=03794eb9e0e5 -->
 
-## Support Node
+<a id="game-gameanvil-server-development-guide-supportnode-implementation"></a>
+## Game > GameAnvil > サーバー開発ガイド > サポートノード実装 { #game-gameanvil-server-development-guide-supportnode-implementation }
+
+<a id="support-node"></a>
+## Support Node { #support-node }
 
 ![SupportNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_supportnode_on_network.png)
 
 SupportNodeは名前の通り補助的な機能を実行するためのノードです。ゲームユーザーやルームオブジェクトに関係なく任意の機能を実装できます。また、SupportNodeはGatewayNodeを通じた接続を要求しないため、別途のコネクションやセッション管理が必要ありません。このような特徴を基に、SupportNodeは主に独自の機能を担当します。例えば、ログを集約して送信したり、課金サーバーとの通信を専任するなどの役割として使用できます。また、エンジンのRESTful機能を使用して簡単なWebサーバーの代用として使用することも可能です。このとき、SupportNodeは上の図のように内部ネットワークだけでなく**外部ネットワーク(Public)**に公開することもできるため、GatewayNodeへ接続する前/後に必要な機能を担当することもできます。このように任意の補助的な機能を柔軟に実装して配置できることがSupportNodeの長所です。
 
-## SupportNode実装
+<a id="implement-supportnode"></a>
+## SupportNode実装 { #implement-supportnode }
 
 このようなSupportNodeは基本的にISupportNodeインターフェースを実装します。ノード共通コールバックメソッドのみを持っています。SupportNodeは先に確認した他のノードとは異なり、ユーザーが定義したRESTful処理ができるということです。言い換えると、SupportNodeはユーザーが定義した一般的なパケット処理に加えてRESTfulメッセージを処理できる唯一のユーザーノードです。
 

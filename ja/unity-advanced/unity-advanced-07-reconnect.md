@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 応用開発ガイド > 再接続
+<!-- pre-align:aligned sig=1316231165e8 -->
 
-## 再接続
+<a id="game-gameanvil-unity-advanced-development-guide-reconnection"></a>
+## Game > GameAnvil > Unity 応用開発ガイド > 再接続 { #game-gameanvil-unity-advanced-development-guide-reconnection }
+
+<a id="reconnect"></a>
+## 再接続 { #reconnect }
 
 ゲーム中、様々な理由でサーバーとの接続が切れることがあります。接続が切れた際、既存のプレイを継続できるように再接続機能をサポートします。使用するAPIは一般的な接続方法と同じですが、結果として受け取る情報に違いがあります。
 
-### サーバー接続
+<a id="connect-to-the-server"></a>
+### サーバー接続 { #connect-to-the-server }
 
 GameAnvilConnectorのConnect関数を利用してサーバーに接続します。一般的な場合と同じです。
 
@@ -23,7 +28,8 @@ public async void Connect()
 }
 ```
 
-### 認証
+<a id="verify"></a>
+### 認証 { #verify }
 
 GameAnvilConnectorのAuthenticate関数を利用して認証手続きを進めます。入力値は一般的な場合と同じです。ただし認証の結果として受け取るResultCodeAuth値のうち、loginedUserInfoListに以前プレイしていたユーザー情報が含まれて返ってきます。
 
@@ -53,7 +59,8 @@ public async void Authenticate()
 }
 ```
 
-### ログイン
+<a id="sign-in"></a>
+### ログイン { #sign-in }
 
 認証結果として受け取ったユーザー情報を利用してログインを進めます。この時、userTypeやchannelIdなど以前のユーザー情報と同じ値を利用してログインする必要があります。そうしないとログインに失敗する可能性があります。
 

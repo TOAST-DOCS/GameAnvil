@@ -1,10 +1,15 @@
-## Game > GameAnvil > Typescript開発ガイド > User
+<!-- pre-align:aligned sig=8b81c88112a2 -->
 
-## GameAnvilUser
+<a id="game-gameanvil-guide-to-typescript-development-user"></a>
+## Game > GameAnvil > Typescript開発ガイド > User { #game-gameanvil-guide-to-typescript-development-user }
+
+<a id="gameanviluser"></a>
+## GameAnvilUser { #gameanviluser }
 
 GameAnvilUserは、サーバーのGameNode上に存在するユーザーに対応するクライアント側のオブジェクトです。サーバーのユーザーオブジェクトに命令を下したり、ユーザーの情報を受け取ってサーバーとクライアントを同期させたりできます。エンジンに事前に定義されたルーム機能やマッチメイキング機能なども利用できますが、直接プロトコルを実装して新しい機能を追加することも可能です。
 
-### 生成
+<a id="create"></a>
+### 生成 { #create }
 
 GameAnvilUserを使用するには、まず新しいGameAnvilUserオブジェクトを作成し、作成されたユーザーを通じてサーバーにログインする必要があります。
 
@@ -15,7 +20,8 @@ const serviceName: string;
 const user = new GameAnvilUser(connector, serviceName, 1);
 ```
 
-### 多数のGameUserAgent生成
+<a id="create-multiple-gameuseragnets"></a>
+### 多数のGameUserAgent生成 { #create-multiple-gameuseragnets }
 
 GameAnvilConnectorオブジェクトはプロセス内で1つだけ使用するのが一般的ですが、GameAnvilUserは複数同時に作成して運用することがサポートされています。それぞれが異なるサービスにログインすることが可能で、もし1つのサービスで複数のGameAnvilUserを使用したい場合は、subIdを利用して区別して作成できます。
 
@@ -29,7 +35,8 @@ const user2 = new GameAnvilUser(connector, serviceName, 2);
 const user3 = new GameAnvilUser(connector, otherServiceName, 1);
 ```
 
-### ログイン
+<a id="login"></a>
+### ログイン { #login }
 
 GameNode内に、クライアントに対応するサーバーユーザーオブジェクトの作成をリクエストします。GameNodeへのログインが完了しないと、ユーザーの様々な機能は使用できません。
 
@@ -84,7 +91,8 @@ if (user.isLoggedIn) {
 }
 ```
 
-### ログアウト
+<a id="logout"></a>
+### ログアウト { #logout }
 
 サーバーに明示的にユーザーを削除するようにリクエストできます。ログアウト動作の完了時点で、Promiseを通じてログアウトに成功したかどうかや、サーバーから渡された追加データなどを確認できます。
 
@@ -123,7 +131,8 @@ user.onForceLogout = (user, payload) => {
 }
 ```
 
-### メッセージ受信コールバック登録
+<a id="register-message-reception-callback"></a>
+### メッセージ受信コールバック登録 { #register-message-reception-callback }
 
 サーバーからプロトコルバッファメッセージを受信した際に、処理関数を実行するように設定できます。1つのプロトコルバッファに対しては、1つの処理関数のみ登録可能で、既に処理関数が登録されている状態で再度登録すると、既存の処理関数は削除されます。
 
@@ -144,7 +153,8 @@ user.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userInfo) =
 });
 ```
 
-### ルーム新規生成後に入室
+<a id="enter-after-creating-a-new-room"></a>
+### ルーム新規生成後に入室 { #enter-after-creating-a-new-room }
 
 サーバーにルームを作成した後、すぐに入室できます。ルーム名が不要な場合は、空の文字列を渡します。ルームタイプは、サーバーと事前に協議した値を使用する必要があります。
 
@@ -207,7 +217,8 @@ if (user.isJoinedRoom) {
 console.log(`Current joined room id: ${user.roomId}`);
 ```
 
-### 既存ルームに入室
+<a id="enter-an-existing-room"></a>
+### 既存ルームに入室 { #enter-an-existing-room }
 
 サーバーで作成されたルームIDが分かっている場合、そのルームへの入室をリクエストできます。
 
@@ -257,7 +268,8 @@ if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
 }
 ```
 
-### 入室中のルームから退場
+<a id="exit-the-room-entering"></a>
+### 入室中のルームから退場 { #exit-the-room-entering }
 
 入室中のルームから退室するよう、サーバーにリクエストできます。
 
@@ -298,7 +310,8 @@ user.onForceLeaveRoom = (user, roomId, payload) => {
 }
 ```
 
-### ユーザーマッチメイキングプールに登録
+<a id="register-in-user-matchmaking-pool"></a>
+### ユーザーマッチメイキングプールに登録 { #register-in-user-matchmaking-pool }
 
 ユーザーマッチメイキングは、ユーザープールを作成し、その中から条件に合うユーザーをまとめて新しく作成したルームに入室させる方式です。ユーザープールに条件に合うユーザーの数が足りない場合、マッチメイキングが完了するまでに時間がかかることがあります。制限時間内にマッチメイキングが完了しないと、マッチングはキャンセルされます。
 
@@ -352,7 +365,8 @@ user.onMatchUserDone = (user, resultCode, matchResult) => {
 console.log(`Is in progress of match making?`, user.isUserMatchInPrgress);
 ```
 
-### ユーザーマッチメイキングプールから削除
+<a id="remove-user-matchmaking-pool"></a>
+### ユーザーマッチメイキングプールから削除 { #remove-user-matchmaking-pool }
 
 ユーザーマッチメイキングをリクエストしたものの、マッチメイキングがまだ進行中の状態で、リクエストをキャンセルできます。
 
@@ -386,7 +400,8 @@ if (resultCode === ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS) {
 | `MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM` | 1202 | 失敗: 既にマッチングが成立しています |
 | `MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS` | 1203 | 失敗: マッチングが進行中でない場合 |
 
-### ルームマッチメイキング
+<a id="room-matchmaking"></a>
+### ルームマッチメイキング { #room-matchmaking }
 
 ルームマッチメイキングは、条件に合うルームにユーザーを入室させる方式です。ルームマッチメイキングをリクエストした際に、条件に合うルームがあればそのルームにすぐに入室させ、条件に合うルームがなければ新しいルームを作成して入室させるか、リクエストを失敗として処理します。
 
@@ -454,7 +469,8 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 }
 ```
 
-### 指定した名前のルーム
+<a id="room-with-the-specified-name"></a>
+### 指定した名前のルーム { #room-with-the-specified-name }
 
 指定した名前のルームに入室したり、パーティマッチング用のルームに入室したりできます。指定した名前のルームがない場合は、新しく作成して入室します。
 
@@ -504,7 +520,8 @@ if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
 }
 ```
 
-### パーティーマッチング
+<a id="match-party"></a>
+### パーティーマッチング { #match-party }
 
 パーティマッチメイキングは、ユーザーマッチメイキングの特殊な形態で、2人以上のユーザーが1つのパーティとしてユーザープールに登録され、条件に合う他のユーザーを探して新しく作成したルームに一緒に入室するものです。パーティとしてまとまったユーザーは、常に同じルームに入室します。パーティと一緒にマッチングされるユーザーは、サーバーのマッチメーカーの実装によって、別のパーティであったり、個人であったりします。
 
@@ -569,7 +586,8 @@ user.onMatchUserDone = (user, resultCode, matchResult) => {
 console.log(`Is in progress of match making? ${user.isPartyMatchInProgress}`);
 ```
 
-### パーティーマッチングキャンセル
+<a id="cancel-party-match"></a>
+### パーティーマッチングキャンセル { #cancel-party-match }
 
 パーティマッチメイキングがまだ進行中の状態であれば、リクエストをキャンセルできます。
 
@@ -602,7 +620,8 @@ if (matchCancelResult.resultCode === ResultCodeMatchPartyCancel.MATCH_PARTY_CANC
 | `MATCH_PARTY_CANCEL_FAIL_CONTENT` | 1401 | 失敗: コンテンツで拒否されました |
 | `MATCH_PARTY_CANCEL_FAIL_PARTY_MATCH_WEIRD` | 1402 | 失敗: パーティマッチングをキャンセルした際、ルームがパーティマッチング用のルームでない場合 |
 
-### パケット送信
+<a id="send-packet"></a>
+### パケット送信 { #send-packet }
 
 ゲームサーバーにユーザーのパケットを送信できます。事前に登録されたプロトコルのみ送信可能である点にご注意ください。
 
@@ -617,7 +636,8 @@ const message = new UserInfo({name, age, job});
 user.sendUser(message);
 ```
 
-### パケット送信後に応答パケット待機
+<a id="wait-for-response-packet-after-sending-packet"></a>
+### パケット送信後に応答パケット待機 { #wait-for-response-packet-after-sending-packet }
 
 ゲームサーバーにユーザーのパケットを送信した後、サーバーから応答があれば、それを受け取って処理できます。事前に登録されたプロトコルのみ送信可能である点にご注意ください。
 
@@ -629,7 +649,8 @@ const echoResult = await user.requestUser<EchoRes>(new EchoReq({ message: "Hello
 console.log(echoResult.message); // Hello World!
 ```
 
-### チャンネル移動
+<a id="move-channel"></a>
+### チャンネル移動 { #move-channel }
 
 ユーザーが属するチャネルから退出させ、指定したチャネルに移動させることができます。
 
@@ -691,7 +712,8 @@ user.onMoveChannel = (user, result) => {
 console.log(`Current channel id: ${user.channelId}`);
 ```
 
-### サーバーからの通知
+<a id="notifications-from-server"></a>
+### サーバーからの通知 { #notifications-from-server }
 
 サーバーからの通知に対して、事前に処理関数を登録できます。より複雑な形式のデータ伝達を希望する場合は、カスタムプロトコルの登録を検討してみてください。
 
@@ -701,7 +723,8 @@ user.onNotice = (user, message) => {
 }
 ```
 
-### 接続解除
+<a id="disconnect"></a>
+### 接続解除 { #disconnect }
 
 サーバーによって接続が解除されたり、その他の理由で接続が切れたりした場合の処理関数を事前に登録できます。
 
@@ -720,7 +743,8 @@ user.onSessionClose = (user, resultCode, payload) => {
 | `SESSION_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041 | クライアントとの接続切断を検知。通常は発生せず、発生した場合はGameAnvil開発チームへの問い合わせが必要です。 |
 | `SESSION_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | セッションが見つからない場合。通常は発生せず、発生した場合はGameAnvil開発チームへの問い合わせが必要です。 |
 
-### 管理者による強制退場
+<a id="forced-exit-by-admin"></a>
+### 管理者による強制退場 { #forced-exit-by-admin }
 
 サーバーの管理ツールによってサーバーから強制退出させられた場合に、実行する処理関数を事前に登録できます。
 

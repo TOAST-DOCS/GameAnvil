@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 基礎開発ガイド > マネージャー
+<!-- pre-align:aligned sig=9b7534989ae2 -->
 
-## GameAnvilManager
+<a id="game-gameanvil-basic-development-guide-to-unity-manager"></a>
+## Game > GameAnvil > Unity 基礎開発ガイド > マネージャー { #game-gameanvil-basic-development-guide-to-unity-manager }
+
+<a id="gameanvilmanager"></a>
+## GameAnvilManager { #gameanvilmanager }
 
 GameAnvilManagerは基本設定とエージェント管理を担当し、内部動作に関連するログを確認できるようにオプションを設定したりコールバックを登録したりできます。GameAnvilManagerを使用するには、まずシーンにGameAnvilManagerを追加する必要があります。
 
-### 生成
+<a id="create"></a>
+### 生成 { #create }
 
 Unity Hierarchyウィンドウでマウスの右ボタンをクリックした後、**GameAnvil > GameAnvilManager**を選択してすぐに生成できます。
 
@@ -12,7 +17,8 @@ Unity Hierarchyウィンドウでマウスの右ボタンをクリックした�
 
 または空のGameObjectを生成し、GameAnvilManagerコンポーネントを追加することもできます。
 
-### 設定
+<a id="settings"></a>
+### 設定 { #settings }
 
 GameAnvilManagerには様々な設定値があります。GameAnvilManager生成時にデフォルト値として設定されますが、必要であればInspectorウィンドウで直接値を変更できます。
 

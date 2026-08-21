@@ -1,9 +1,14 @@
-## Game > GameAnvil > Unity 応用開発ガイド > 始める
+<!-- pre-align:aligned sig=a3de63cffd6b -->
 
-## 始める
+<a id="game-gameanvil-in-depth-development-guide-to-unity-get-started"></a>
+## Game > GameAnvil > Unity 応用開発ガイド > 始める { #game-gameanvil-in-depth-development-guide-to-unity-get-started }
+
+<a id="get-started"></a>
+## 始める { #get-started }
 GameAnvilConnectorは、GameAnvilが提供する多様な機能を手軽に利用できるように支援します。
 
-## GameAnvilConnectorのインストール
+<a id="install-gameanvilconnector"></a>
+## GameAnvilConnectorのインストール { #install-gameanvilconnector }
 
 gameanvil-connector.unitypackageを利用して、GameAnvilConnectorをプロジェクトに含めることができます。まず[こちら](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage)からgameanvil-connector.unitypackageをダウンロードします。そしてメニューの**Assets > Import Package > Custom Package...**を選択します。
 
@@ -26,7 +31,8 @@ gameanvil-connector.unitypackageを利用して、GameAnvilConnectorをプロジ
 DLLファイルはC#で作成されたもので、Android、iOS、PCなどのプラットフォームで全て使用可能です。
 
 
-## GameAnvilConnectorの生成
+<a id="create-gameanvilconnector"></a>
+## GameAnvilConnectorの生成 { #create-gameanvilconnector }
 GameAnvilサーバーと接続するためには、必ずGameAnvilConnectorを使用する必要があります。次のように簡単にGameAnvilConnectorを生成して使用できます。
 [Unity 基礎開発ガイド > マネージャー](../unity-basic/unity-basic-02-gameanvil-manager.md)で扱うGameAnvilManagerも、内部的にGameAnvilConnectorを使用します。  
 ```c#
@@ -35,7 +41,8 @@ using GameAnvil;
 GameAnvilConnector connector = new GameAnvilConnector();
 ```
 
-## GameAnvilConfig
+<a id="gameanvilconfig"></a>
+## GameAnvilConfig { #gameanvilconfig }
 GameAnvilConfigには、GameAnvilConnector動作時に使用されるいくつかの設定が定義されています。これらの設定は定義されており、GameAnvilConfigに定義されているデフォルト値として設定されますが、必要であればGameAnvilConfigの値を直接変更して使用できます。
 
 ```c#
@@ -57,7 +64,8 @@ GameAnvilConfig.UseSocketNoDelay = true;
 | int  | PingIntervalMillis          | サーバーとの接続を確認するためにPingメッセージを送る周期設定 (単位 : ミリ秒、デフォルト値 : 3000、0の場合は使用しない)                                           |
 | bool | UseIPv6                     | 接続時にIPv6アドレスへ変換するかどうか (デフォルト値 : false)                                                                                                       |
 | bool | UseSocketNoDelay            | ソケットのNodelay使用有無 (デフォルト値 : true)                                                                                                        |
-## GameAnvilLogger
+<a id="gameanvillogger"></a>
+## GameAnvilLogger { #gameanvillogger }
 
 GameAnvilConnectorは直接ログを残さず、コールバックを通じてログを伝達します。次のようにGameAnvilLoggerにコールバックを登録することで、GameAnvilConnectorで発生するログを受け取ることができます。
 

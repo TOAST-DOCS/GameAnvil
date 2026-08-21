@@ -1,9 +1,42 @@
-## Game > GameAnvil > リリースノート > GameAnvil
-### 2.1.0 (2025.06.30)
+<!-- pre-align:aligned sig=f8e8eba64050 -->
+
+<a id="game-gameanvil-release-notes-gameanvil"></a>
+## Game > GameAnvil > リリースノート > GameAnvil { #game-gameanvil-release-notes-gameanvil }
+<a id="20-january-2026"></a>
+### 2.2.0 (2026.01) { #20-january-2026 }
+
+<!-- TODO: translate body -->
+
+<a id="20-january-2026-change"></a>
+#### Change
+
+<!-- TODO: translate body -->
+
+##### Java 25 実行サポート
+
+<!-- TODO: translate body -->
+
+##### インターフェースから Base クラスへの変更
+
+<!-- TODO: translate body -->
+
+##### NodeView の使用方法の変更
+
+<!-- TODO: translate body -->
+
+<a id="20-january-2026-fix"></a>
+#### Fix
+
+<!-- TODO: translate body -->
+
+<a id="10-june-30-2025"></a>
+### 2.1.0 (2025.06.30) { #10-june-30-2025 }
+<a id="10-june-30-2025-new"></a>
 #### New
 ##### 依存関係の管理とspring bootの追加
 * GameAnvilの依存関係管理にspring bootを使用し、Beanを追加または注入できます。
 * 従来のインターフェースを使用してエンジンに登録していたコードも、今後はアノテーションを宣言してエンジンに登録します。
+<a id="10-june-30-2025-remove"></a>
 #### Remove
 ##### Gateway、Connectionでのメッセージ処理を非推奨化
 * 使用性が低く、直感的でないAPIであるため、今後のリリースで削除される予定です。
@@ -11,6 +44,7 @@
 ##### Gateway、ConnectionからTimer、Topicを削除
 * 使用性が低く、直感的でないAPIを削除しました。
 * Room、Userなど、一般的に使用されるゲームノードでは引き続き使用できます。
+<a id="10-june-30-2025-fix"></a>
 #### FIX
 * ChannelCountInfo APIをリクエストする際、予期せぬエラーメッセージが発生する可能性があった問題を修正しました。
 * サーバー終了までのデフォルト待機時間が減少しました。
@@ -25,8 +59,10 @@
 * 内部ポートに不明なパケットが流入した際にクラッシュする可能性があった問題を修正しました。
 
 
-### 2.0.0 (2024.12.04)
+<a id="00-december-4-2024"></a>
+### 2.0.0 (2024.12.04) { #00-december-4-2024 }
 
+<a id="00-december-4-2024-new"></a>
 #### New
 ##### Java 21
 * GameAnvil 2.0はJava 21またはそれ以上のバージョンでのみ動作します。
@@ -62,6 +98,7 @@
 
 ##### パケットパース中にエラー発生時、エラーログを出力
 
+<a id="00-december-4-2024-remove"></a>
 #### Remove
 ##### Quasar依存関係の削除
 * Quasar及び関連コードが削除されました。 
@@ -91,6 +128,7 @@
 * 代わりにaddTopic(String)、removeTopic(String)を使用します。
 
 
+<a id="00-december-4-2024-change"></a>
 #### Change
 #####  レスポンスを受け取るAPIの戻り値がFutureに変更 
 * GameAnvilのAPIも、他の多くの非同期方式APIと同様にFutureを返す方式に変更されました。これで、より自由にコードフローを作成できます。 
@@ -278,6 +316,7 @@ scheduleTimerAtFixedRate - N回、固定ディレイ
 | RoomMatchMaker | onPreMatch | 削除 | onMatchへ統合 |
 | RoomMatchMaker | onPostMatch | 削除 |  onMatchへ統合 |
 
+<a id="00-december-4-2024-fix"></a>
 #### Fix
 
 * Request API使用中に失敗時、エラーログにパケット情報を追加
@@ -301,13 +340,16 @@ scheduleTimerAtFixedRate - N回、固定ディレイ
 
 ---
 
-### 1.4.2 (2024.02.26)
+<a id="42-20240226"></a>
+### 1.4.2 (2024.02.26) { #42-20240226 }
 
+<a id="42-20240226-new"></a>
 #### New
 * Safe-Pause機能を改善しました。 
   * すでにSafe-Pauseが進行中の場合でも、進行中でないノードを出発地/到着地ノードに指定して新しいSafe-Pauseを実行できるように改善しました。 
   * GameNodeと共にMatchNodeもSafe-Pauseをサポートします。 
 
+<a id="42-20240226-fix"></a>
 #### Fix
 * エンジンのログ内容を補強し、可読性を改善しました。 
   * request失敗時に送信するパケットの詳細情報を追加しました。
@@ -315,13 +357,16 @@ scheduleTimerAtFixedRate - N回、固定ディレイ
   * MultiRequestで個別のリクエストが失敗した場合、どのリクエストが失敗したかログを残すようにしました。
   * マシン間接続状態に関連するログ内容を補強しました。 
 
+<a id="42-20240226-change"></a>
 #### Change
 * GameAnvilConfig.jsonでmanagementIpと共にmanagementPortも設定できるように変更されました。
 
 ------
 
-### 1.4.1 (2023.12.13)
+<a id="41-20231213"></a>
+### 1.4.1 (2023.12.13) { #41-20231213 }
 
+<a id="41-20231213-new"></a>
 #### New
 ###### エンジンProtobufバージョンを3.24.1にアップデート
 ###### Protobuf関連の便利機能を追加
@@ -331,6 +376,7 @@ scheduleTimerAtFixedRate - N回、固定ディレイ
 ###### Protocol登録時、indexを指定しなくてもよいように改善 
   * 既存のnumberはエンジンで自動的に割り当てます。
 
+<a id="41-20231213-fix"></a>
 #### Fix
 * サーバーでRequest呼び出し時、対象がない場合は即座に失敗レスポンスをするよう改善しました。
     * エンジンのrequestToGameUserのようなリクエスト(request) APIを呼び出した際、対象が見つからない場合、Timeoutまで待つ代わりに即座に失敗を返すよう改善しました。
@@ -351,24 +397,20 @@ scheduleTimerAtFixedRate - N回、固定ディレイ
 * マッチメイキング失敗時にクライアントへ通知を送信します。
     * マッチメイキングが失敗した際にも、クライアントへ適切な結果を送信するように改善しました。
 
+<a id="41-20231213-change"></a>
 #### Change
-## 動的ログレベル設定
-    * GameAnvilConfig.jsonでip項目の代わりにipcIpとmanagementIpを使用します。
-    * BaseChannelInfoで正常にシリアライズしない問題を修正しました。BaseChannelInfoの代わりにGameAnvilServerでsetObjectSerializerを呼び出してシリアライズできます。
-* matchUser、matchParty呼び出し時、Payloadを入れません。独自に保管します。
- * 全てのロケーションノード(マスターノード)のクラスタリングが完了した後にのみ、ロケーションノードへリクエストを送信できるよう修正しました。全てのロケーションノードのクラスタリングが完了したかを確認し、一定時間内に全クラスタリングが完了しない場合はエラーログを残す機能を追加しました。
- * ユーザーマッチング時、ランダムチャンネルでマッチングされたルームが生成されていた従来の方式から、マッチングをリクエストしたチャンネルの中からマッチングされたルームが生成される方式に変更しました。
-  
-------
+<a id="31-20230420"></a>
+### 1.3.1 (2023.04.20) { #31-20230420 }
 
-### 1.3.1 (2023.04.20)
-
+<a id="31-20230420-new"></a>
 #### New
 
+<a id="31-20230420-fix"></a>
 #### Fix
 
 * 新しく起動したノードのチャンネル情報が更新されない問題を修正
 
+<a id="31-20230420-change"></a>
 #### Change
 
 - Consoleで確認するSupportノードの有効状態チェックAPIを変更
@@ -376,8 +418,10 @@ scheduleTimerAtFixedRate - N回、固定ディレイ
 
 ------
 
-### 1.3.0 (2022.12.27)
+<a id="30-20221227"></a>
+### 1.3.0 (2022.12.27) { #30-20221227 }
 
+<a id="30-20221227-new"></a>
 #### New
 
 ###### Console 1.3との連携 
@@ -396,6 +440,7 @@ GameAnvil 1.3は、完全に新しくなったConsole 1.3と完璧に連携し�
 ###### 性能最適化
 GameAnvil 1.3は、以前のバージョンに比べてパケット処理性能が5%以上向上しました。内部動作コードを最適化し、より速い速度で動作します。
 
+<a id="30-20221227-fix"></a>
 #### Fix
 
 - Safe Pause関連バグ修正
@@ -463,6 +508,7 @@ GameAnvil 1.3は、以前のバージョンに比べてパケット処理性能�
 
   - ghostTimeout値がdemandClientStateCheck値より少なくとも3秒以上大きくなるよう制約事項を追加
 
+<a id="30-20221227-change"></a>
 #### Change
 
 - Safe Pause高度化
@@ -498,10 +544,12 @@ GameAnvil 1.3は、以前のバージョンに比べてパケット処理性能�
 
 ---
 
-### 1.2.0 (2021.07.13)
+<a id="20-20210713"></a>
+### 1.2.0 (2021.07.13) { #20-20210713 }
 
 より詳細な情報は[リリースノート](https://nhnent.dooray.com/share/posts/sGAj_STlTEWDr5LPgKgIhg)を参照
 
+<a id="20-20210713-new"></a>
 #### New
 
 * ユーザーライセンス適用
@@ -546,6 +594,7 @@ public class GameUser extends BaseUser {
 
 
 
+<a id="20-20210713-fix"></a>
 #### Fix
 
 * チャンネル情報管理及び同期機能リファクタリング
@@ -564,6 +613,7 @@ public class GameUser extends BaseUser {
 
 
 
+<a id="20-20210713-change"></a>
 #### Change
 
 * クラウドACL環境に合わせて基本ポートが変更されました。
@@ -618,7 +668,9 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.12 (2021.06.07)
+<a id="112-20210607"></a>
+### 1.1.12 (2021.06.07) { #112-20210607 }
+<a id="112-20210607-change"></a>
 #### Change
 
 * SupportNodeにGateway接続情報を受け取れるAPI追加
@@ -646,8 +698,10 @@ public class GameUser extends BaseUser {
 ```
 ---
 
-### 1.1.11 (2021.05.06)
+<a id="111-20210506"></a>
+### 1.1.11 (2021.05.06) { #111-20210506 }
 
+<a id="111-20210506-change"></a>
 #### Change
 
 * HttpRequestにPATCHメソッドを使用できるAPI追加
@@ -657,16 +711,20 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.10 (2021-04-21)
+<a id="110-2021-04-21"></a>
+### 1.1.10 (2021-04-21) { #110-2021-04-21 }
 
+<a id="110-2021-04-21-fix"></a>
 #### Fix
 
 * RedisSingleに漏れていたpassword対応API追加
 
 ---
 
-### 1.1.9 (2021-04-16)
+<a id="19-2021-04-16"></a>
+### 1.1.9 (2021-04-16) { #19-2021-04-16 }
 
+<a id="19-2021-04-16-fix"></a>
 #### Fix
 
 * クライアントのPauseClientStateCheckを受信した際、idleClientTimeoutチェックも同時に停止するように修正。
@@ -674,8 +732,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.8 (2021-04-15)
+<a id="18-2021-04-15"></a>
+### 1.1.8 (2021-04-15) { #18-2021-04-15 }
 
+<a id="18-2021-04-15-new"></a>
 #### New
 
 * クライアントのPauseClientStateCheckを受け取り、入力された時間分、該当クライアントの状態チェックを行わない機能を追加。
@@ -686,16 +746,20 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.7 (2021-04-02)
+<a id="17-2021-04-02"></a>
+### 1.1.7 (2021-04-02) { #17-2021-04-02 }
 
+<a id="17-2021-04-02-fix"></a>
 #### Fix
 
 * /game-data/get使用時、GameData値がJsonObjectではなくStringで送信される問題を修正
 
 ---
 
-### 1.1.6 (2021-03-30)
+<a id="16-2021-03-30"></a>
+### 1.1.6 (2021-03-30) { #16-2021-03-30 }
 
+<a id="16-2021-03-30-change"></a>
 #### Change
 
 * Dynamic Module機能がGameAnvilから仕様外となり削除されました。
@@ -704,8 +768,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.5 (2021-03-19)
+<a id="15-2021-03-19"></a>
+### 1.1.5 (2021-03-19) { #15-2021-03-19 }
 
+<a id="15-2021-03-19-change"></a>
 #### Change
 
 * GameAnvil DB & Admin機能(GameData、Dynamic Module除く)削除
@@ -731,16 +797,20 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.4 (2021-03-18)
+<a id="14-2021-03-18"></a>
+### 1.1.4 (2021-03-18) { #14-2021-03-18 }
 
+<a id="14-2021-03-18-fix"></a>
 #### Fix
 
 * ルームマッチングにMatchingGroup適用時、断続的に生成されたルームにJoinできない問題を修正
 
 ---
 
-### 1.1.3 (2021-02-05)
+<a id="13-2021-02-05"></a>
+### 1.1.3 (2021-02-05) { #13-2021-02-05 }
 
+<a id="13-2021-02-05-fix"></a>
 #### Fix
 
 * インスタンス再起動時、Disable状態から復旧しない問題を修正
@@ -750,16 +820,20 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.2 (2021-01-07)
+<a id="12-2021-01-07"></a>
+### 1.1.2 (2021-01-07) { #12-2021-01-07 }
 
+<a id="12-2021-01-07-fix"></a>
 #### Fix
 
 * DynamicModuleでSuspendExecution例外が発生する可能性のあるコード呼び出し時の例外処理が漏れており、DynamicModuleのメソッドが正常に呼び出されない問題を修正
 
 ---
 
-### 1.1.1 (2021-01-05)
+<a id="11-2021-01-05"></a>
+### 1.1.1 (2021-01-05) { #11-2021-01-05 }
 
+<a id="11-2021-01-05-fix"></a>
 #### Fix
 
 * GatewayNodeでgetNodeId()を呼び出すとNPEが発生する問題を修正
@@ -768,10 +842,12 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.0 (2020-12-17)
+<a id="10-2020-12-17"></a>
+### 1.1.0 (2020-12-17) { #10-2020-12-17 }
 
 より詳細な情報は[リリースノート](https://nhnent.dooray.com/share/posts/bWby9jGjQri2cFNR_KYbnw)を参照
 
+<a id="10-2020-12-17-new"></a>
 #### New
 
 * Jdk11サポート
@@ -803,6 +879,7 @@ public class GameUser extends BaseUser {
     * "-Dalarm.url" VMオプションを使用して、Alarmを受け取るURLを指定できます。
     * [GameAnvil-Guide/69 Alarm使用方法](https://nhnent.dooray.com/share/posts/Ap6DJT9KSaGv916_tj-xAA)
 
+<a id="10-2020-12-17-change"></a>
 #### Change
 
 * BaseObjectのfindAllUserLocsOfAccount戻り値をUserLocへ変更
@@ -813,6 +890,7 @@ public class GameUser extends BaseUser {
     * /management/locationLookupNodeInfo
     * /management/matchNodeInfo
 
+<a id="10-2020-12-17-fix"></a>
 #### Fix
 
 * 同一AccountIdで異なるSubIdを使用する場合、ログインは成功するが、その後レスポンスパケットを受け取れない問題を修正しました。
@@ -821,30 +899,38 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.0.7 (2021.01.05)
+<a id="07-20210105"></a>
+### 1.0.7 (2021.01.05) { #07-20210105 }
 
+<a id="07-20210105-fix"></a>
 #### Fix
 - GatewayNodeでgetNodeId()を呼び出すとNPEが発生する問題を修正
 
 ---
 
-### 1.0.6 (2020.12.28)
+<a id="06-20201228"></a>
+### 1.0.6 (2020.12.28) { #06-20201228 }
 
+<a id="06-20201228-fix"></a>
 #### Fix
 - `RoomMatchMaking failure. The matched-room({}) does not exist in the game node.` ログが残りながらルームマッチングが失敗する場合、該当ユーザーは再接続するまで継続してルームマッチングが失敗する問題を修正
 
 ---
 
-### 1.0.5 (2020.11.17)
+<a id="05-20201117"></a>
+### 1.0.5 (2020.11.17) { #05-20201117 }
 
+<a id="05-20201117-fix"></a>
 #### Fix
 
 - RoomMatchReqでエラーレスポンス時、パケットヘッダ復元(restore)ができない問題を修正
 
 ---
 
-### 1.0.4 (2020.10.29)
+<a id="04-20201029"></a>
+### 1.0.4 (2020.10.29) { #04-20201029 }
 
+<a id="04-20201029-fix"></a>
 #### Fix
 
 - 任意のSessionにまだ何のパケットも送信されたことがない場合に、このSessionへsend呼び出し時NPE(Null Pointer Exception)が発生する問題を修正
@@ -855,28 +941,34 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.0.3 (2020.10.26)
+<a id="03-20201026"></a>
+### 1.0.3 (2020.10.26) { #03-20201026 }
 
+<a id="03-20201026-change"></a>
 #### Change
 
 - 以前仕様から除外されていたお知らせ機能APIを再度有効化
 
 ---
 
-### 1.0.2 (2020.10.12)
+<a id="02-20201012"></a>
+### 1.0.2 (2020.10.12) { #02-20201012 }
 
+<a id="02-20201012-new"></a>
 #### New
 
 - Logに表示されるNode情報をユーザーが自由に設定できる機能を追加
 - HostIdを直接入力できる機能を追加
 - nodeInfoByHostIdでHostId別に情報を送信する機能を追加
 
+<a id="02-20201012-fix"></a>
 #### Fix
 
 - IP 0.0.0.0をバインディングする際にエラーが発生する問題を修正
 - ConfigModuleの/config/get使用時、成否の値が失敗でレスポンスする問題を修正
 - GameNodeが駆動された状態で他のGameNodeが駆動される場合、Publish Packet処理によりエラーが発生する可能性のある問題に例外処理を追加
 
+<a id="02-20201012-change"></a>
 #### Change
 
 - UserId,RoomId生成時、最後の桁に使用するShardIndex値の範囲を指定できるように修正
@@ -885,8 +977,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.0.1 (2020.09.07)
+<a id="01-20200907"></a>
+### 1.0.1 (2020.09.07) { #01-20200907 }
 
+<a id="01-20200907-fix"></a>
 #### Fix
 
 - onLogin()でfalseを返す場合、Payloadがクライアントへ送信されない問題を修正
@@ -894,10 +988,12 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.0.0 (2020.08.31)
+<a id="00-20200831"></a>
+### 1.0.0 (2020.08.31) { #00-20200831 }
 
 より詳細な情報は[配布ノート](https://nhnent.dooray.com/share/posts/5Fvh0aszQ5u6d_ZZxRWPvA)を参照
 
+<a id="00-20200831-new"></a>
 #### New
 
 - 性能と安定性が大幅に向上(0.9バージョン対比約7倍)
@@ -909,6 +1005,7 @@ public class GameUser extends BaseUser {
 - サーバーLogレベルをランタイムに変更できるAPIを追加
 - Node単位でサービス中にLogレベルを変更可能
 
+<a id="00-20200831-fix"></a>
 #### Fix
 
 - ユーザー転送問題を修正、使用法改善及び最適化
@@ -919,6 +1016,7 @@ public class GameUser extends BaseUser {
 - Nodeの一部のTimerオブジェクトが解除されず持続的に累積していたMemory Leakを修正
 - クライアント接続チェック過程で新しく接続するユーザーが意図せず切断されていた問題を修正
 
+<a id="00-20200831-change"></a>
 #### Change
 
 - Node名を以下の表のように、より直感的に変更
@@ -948,8 +1046,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.10.2 (2020.04.08)
+<a id="102-20200408"></a>
+### 0.10.2 (2020.04.08) { #102-20200408 }
 
+<a id="102-20200408-new"></a>
 #### New
 
 - GameAnvil APIリファレンス(JavaDoc)サイトオープン
@@ -964,6 +1064,7 @@ public class GameUser extends BaseUser {
 
   `java -javaagent:QUASAR_PATH\quasar-core-0.7.10-jdk8.jar=bm -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication`
 
+<a id="102-20200408-fix"></a>
 #### Fix
 
 - Quasarスタックバグを修正
@@ -972,13 +1073,16 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.10.1 (2020.02.11)
+<a id="101-20200211"></a>
+### 0.10.1 (2020.02.11) { #101-20200211 }
 
+<a id="101-20200211-new"></a>
 #### New
 
 - ユーザーへ提供するツールをまとめたUtilクラスを提供
 - 従来はエンジンのあちこちに散らばっていたツールを該当クラス一箇所へ整理
 
+<a id="101-20200211-change"></a>
 #### Change
 
 - Topic処理コード性能改善
@@ -986,8 +1090,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.10.0 (2020.02.06)
+<a id="100-20200206"></a>
+### 0.10.0 (2020.02.06) { #100-20200206 }
 
+<a id="100-20200206-new"></a>
 #### New
 
 - 従来問題が多かった非同期サポートAPIを新しくリファクタリング
@@ -996,10 +1102,12 @@ public class GameUser extends BaseUser {
 - ByteStringベースのカスタムプロトコル機能サポート
 - Google protobuf以外にユーザーが希望する方式でメッセージをシリアライズ可能
 
+<a id="100-20200206-fix"></a>
 #### Fix
 
 - 以前のバージョンで最も深刻な問題だったファイバーの状態が壊れる問題を全て修正
 
+<a id="100-20200206-change"></a>
 #### Change
 
 - エンジンで使用するパケットとヘッダサイズの最適化
@@ -1009,12 +1117,15 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.9 (2019.10.25)
+<a id="99-20191025"></a>
+### 0.9.9 (2019.10.25) { #99-20191025 }
 
+<a id="99-20191025-new"></a>
 #### New
 
 - プロセス単位でWatchDogを連携できるようポートを追加で開放
 
+<a id="99-20191025-fix"></a>
 #### Fix
 
 - ゴーストユーザーバグ修正
@@ -1024,6 +1135,7 @@ public class GameUser extends BaseUser {
 - マッチンググループが別々のチャンネルのユーザーへ正常に適用されなかった問題を修正
 - パーティーマッチメイキング時にTimeoutに対するコールバックを正常に受け取れなかった問題を修正
 
+<a id="99-20191025-change"></a>
 #### Change
 
 - ルームマッチメイキングをすでに進行中の状態で重複リクエストが来た場合のエラーコードを追加
@@ -1031,19 +1143,23 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.8 (2019.09.05)
+<a id="98-20190905"></a>
+### 0.9.8 (2019.09.05) { #98-20190905 }
 
+<a id="98-20190905-new"></a>
 #### New
 
 - SessionにClientTopicを追加及び削除できるaddTopic(),removeTopic() APIを追加
 - Packet TTL機能追加
 - Dangling Locationを定期的にチェックして整理するロジック追加
 
+<a id="98-20190905-fix"></a>
 #### Fix
 
 - AdminでユーザーをKickする場合、クライアントへForceLogoutNotiを送信しないように修正
 - LocationNodeのSpot誤動作修正
 
+<a id="98-20190905-change"></a>
 #### Change
 
 - onAuthenticate()コールバック失敗時に該当ソケットを閉じる前にForceCloseNotiをクライアントへ送信するように変更
@@ -1051,14 +1167,17 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.7 (2019.07.27)
+<a id="97-20190727"></a>
+### 0.9.7 (2019.07.27) { #97-20190727 }
 
+<a id="97-20190727-new"></a>
 #### New
 
 - 異常に残っているRoomを定期的にチェックして整理するロジック追加
 - ユーザーマッチメイキングはリクエスト後に再ログインしても以前のマッチリクエストがキャンセルされずに進行中の場合があるため、このような以前のユーザーマッチメイキング処理状態を知らせるために再ログインレスポンスに新しいフラグを追加
 - Packet Expire機能追加(デフォルト30秒)
 
+<a id="97-20190727-fix"></a>
 #### Fix
 
 - Connection ID(CID)が重複する問題を修正
@@ -1070,6 +1189,7 @@ public class GameUser extends BaseUser {
 - ルームマッチメイキング重複処理バグ修正
 - ルームに接続が切れたユーザーが残る問題を修正
 
+<a id="97-20190727-change"></a>
 #### Change
 
 - Session Disconnectの全てのケースについてログを追加
@@ -1078,12 +1198,15 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.6 (2019.06.23)
+<a id="96-20190623"></a>
+### 0.9.6 (2019.06.23) { #96-20190623 }
 
+<a id="96-20190623-new"></a>
 #### New
 
 - 転送可能な時点をコンテンツで調整できるようUserとRoomにcanTransfer()インターフェースを追加
 
+<a id="96-20190623-fix"></a>
 #### Fix
 
 - エンジン内部コードに存在していたメモリリーク修正
@@ -1093,6 +1216,7 @@ public class GameUser extends BaseUser {
 - NodeInfoManager同期問題を修正
 - ユーザーオブジェクトが正常に整理されない問題を修正
 
+<a id="96-20190623-change"></a>
 #### Change
 
 - 既存のAsyncAwaitHttpRequestをFiberHttpRequestに名前変更
@@ -1104,12 +1228,15 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.5 (2019.06.21)
+<a id="95-20190621"></a>
+### 0.9.5 (2019.06.21) { #95-20190621 }
 
+<a id="95-20190621-fix"></a>
 #### Fix
 
 - 無停止パッチ時に新しいユーザーがログインしたりユーザー転送中の場合、Pauseされたノードで該当ユーザーが整理されないエラー修正
 
+<a id="95-20190621-change"></a>
 #### Change
 
 - 文字列形式のserviceIdを整数型に変更
@@ -1119,18 +1246,22 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.4 (2019.05.24)
+<a id="94-20190524"></a>
+### 0.9.4 (2019.05.24) { #94-20190524 }
 
+<a id="94-20190524-new"></a>
 #### New
 
 - コンテンツで使用するプロトコルをファイル単位で登録できる機能追加
 - 内部パケット処理を効率化するため
 - MoveService機能追加
 
+<a id="94-20190524-fix"></a>
 #### Fix
 
 - ルームマッチメイキングで使用する比較演算子(Comparator)のエラー修正
 
+<a id="94-20190524-change"></a>
 #### Change
 
 - Authenticationレスポンスに直近のログイン情報を追加し次回ログイン時に活用可能
@@ -1140,14 +1271,17 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.3 (2019.04.10)
+<a id="93-20190410"></a>
+### 0.9.3 (2019.04.10) { #93-20190410 }
 
+<a id="93-20190410-fix"></a>
 #### Fix
 
 - AsyncAwait.call() APIでtimeoutが発生するとNPE(Null Pointer Exception)も発生する問題を修正
 - Epoll有効化時に停止する問題を修正
 - ログイン時に発生するInvalid System Target Locationエラー修正
 
+<a id="93-20190410-change"></a>
 #### Change
 
 - ManagementNodeはこれ以上エンジンユーザーが拡張して使用不可
@@ -1157,13 +1291,16 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.2 (2019.02.11)
+<a id="92-20190211"></a>
+### 0.9.2 (2019.02.11) { #92-20190211 }
 
+<a id="92-20190211-new"></a>
 #### New
 
 - Adminを利用した予約お知らせ、予約メンテナンス機能追加
 - Adminを利用したWhite IP,White User,White Device機能追加
 
+<a id="92-20190211-fix"></a>
 #### Fix
 
 - AsyncAwait.run() APIで誤った方式で例外が処理されていたコード修正
@@ -1173,6 +1310,7 @@ public class GameUser extends BaseUser {
 - パケットヘッダ生成時に発生していたメモリリーク修正
 - ルームマッチメイキングで発生していたメモリリーク修正
 
+<a id="92-20190211-change"></a>
 #### Change
 
 - onLogout()コールバックにpayload追加
@@ -1182,8 +1320,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.1 (2018.11.12)
+<a id="91-20181112"></a>
+### 0.9.1 (2018.11.12) { #91-20181112 }
 
+<a id="91-20181112-new"></a>
 #### New
 
 - マッチメイキングを専任するMatchNode追加
@@ -1192,6 +1332,7 @@ public class GameUser extends BaseUser {
 - AdminのMachine情報でノード種類別に追加情報を追加
 - ユーザーが同一DeviceIdとUserIdで再ログインする際に呼び出されるonLoginByOtherConnection()コールバック追加
 
+<a id="91-20181112-fix"></a>
 #### Fix
 
 - Dynamic Moduleバグ修正
@@ -1202,6 +1343,7 @@ public class GameUser extends BaseUser {
 - ノードShutdown時に発生していたエラー修正
 - ルームマッチメイキングを使用しないにも関わらずマッチング情報を削除する際にNPE(Null Pointer Exception)が発生する問題を修正
 
+<a id="91-20181112-change"></a>
 #### Change
 
 - 一部インターフェースの位置変更
@@ -1211,8 +1353,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.9.0 (2018.06.27)
+<a id="90-20180627"></a>
+### 0.9.0 (2018.06.27) { #90-20180627 }
 
+<a id="90-20180627-new"></a>
 #### New
 
 - ユーザーマッチメイキング機能追加
@@ -1221,10 +1365,12 @@ public class GameUser extends BaseUser {
 - Reconnect機能追加
 - (旧) Test Agent追加
 
+<a id="90-20180627-fix"></a>
 #### Fix
 
 - Account単位の重複ログイン処理問題を修正
 
+<a id="90-20180627-change"></a>
 #### Change
 
 - OracleJDKからAdoptOpenJDKに変更
@@ -1232,8 +1378,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.8.6 (2018.06.28)
+<a id="86-20180628"></a>
+### 0.8.6 (2018.06.28) { #86-20180628 }
 
+<a id="86-20180628-new"></a>
 #### New
 
 - Send from Session to Management機能追加
@@ -1243,6 +1391,7 @@ public class GameUser extends BaseUser {
 - Custom Serializer機能追加
 - RoomFinderにCustom Serializerをplug-in可能
 
+<a id="86-20180628-fix"></a>
 #### Fix
 
 - チャンネルユーザーマネージャーでチャンネルがtopicとして使用されるpublishに対する空文字列例外処理追加
@@ -1269,6 +1418,7 @@ public class GameUser extends BaseUser {
 - UpdateRoomInfo/DelRoomInfoが該当Nodeで即時反映されるように修正
 - ファイバー内でblocking callを呼び出す部分により出力されていたError修正
 
+<a id="86-20180628-change"></a>
 #### Change
 
 - FindRoomListは全ルームリストcontainerを一度にserialize/deserializeするように修正
@@ -1279,8 +1429,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.8.5 (2017.12.18)
+<a id="85-20171218"></a>
+### 0.8.5 (2017.12.18) { #85-20171218 }
 
+<a id="85-20171218-new"></a>
 #### New
 
 - JWT認証トークンを使用したHTTPセッション認証及び管理機能追加
@@ -1288,11 +1440,13 @@ public class GameUser extends BaseUser {
 - 1つのGameNodeに複数のRoomTypeを使用できる機能追加
 - Serverの全情報をWebで閲覧できる機能追加 (NodeInfoPage)
 
+<a id="85-20171218-fix"></a>
 #### Fix
 
 - タイマー削除ができないバグ修正
 - onPostLeaveRoomが2回呼び出されるバグ修正
 
+<a id="85-20171218-change"></a>
 #### Change
 
 - ゴーストユーザー処理改善
@@ -1303,8 +1457,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.8.4 (2018.01.10)
+<a id="84-20180110"></a>
+### 0.8.4 (2018.01.10) { #84-20180110 }
 
+<a id="84-20180110-new"></a>
 #### New
 
 - Bootstrap適用
@@ -1313,6 +1469,7 @@ public class GameUser extends BaseUser {
 - 複数のメッセージを送受信できるMulti Dispatch機能追加
 - ServiceNodeSender(以前のCustomServiceSender) publishToLobbyメソッド追加
 
+<a id="84-20180110-change"></a>
 #### Change
 
 - AsyncAwait, RAsyncAwait名前変更
@@ -1328,14 +1485,17 @@ public class GameUser extends BaseUser {
 - ReverseAsyncCall -> RAsyncWaitingCall
 - ReverseAsyncRun -> RAsyncWaitingRun
 
+<a id="84-20180110-fix"></a>
 #### Fix
 
 - Session IPエラー修正
 
 ---
 
-### 0.8.3 (2017.10.26)
+<a id="83-20171026"></a>
+### 0.8.3 (2017.10.26) { #83-20171026 }
 
+<a id="83-20171026-new"></a>
 #### New
 
 - RESTハンドリング機能追加
@@ -1347,6 +1507,7 @@ public class GameUser extends BaseUser {
 - Nodeがshutdownされる際、contentsでresourceを解放できるようonShutdown()インターフェースを追加
 - ServiceNodeSenderにpublishToNode関数追加
 
+<a id="83-20171026-fix"></a>
 #### Fix
 
 - ManagementのJMX Management API修正及び追加(SessionGateway, CustomGateway)
@@ -1359,6 +1520,7 @@ public class GameUser extends BaseUser {
 - ログインプロセス改善 (Invalid Target Locationエラーログ関連修正)
 - ルームを削除するdelRoomInfo呼び出し時、該当ノード状態がREADYでなければリターン処理
 
+<a id="83-20171026-change"></a>
 #### Change
 
 - SessionノードとクライアントのEnd-Pointを1つに統合 (Session Gateway)
@@ -1376,19 +1538,23 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 0.8.2 (2017.09.21)
+<a id="82-20170921"></a>
+### 0.8.2 (2017.09.21) { #82-20170921 }
 
+<a id="82-20170921-new"></a>
 #### New
 
 - CustomServiceにRestObject機能追加
 - CustomServiceにRestHandler追加
 
+<a id="82-20170921-fix"></a>
 #### Fix
 
 - Cacheでユーザー情報が削除されないバグ修正
 - エンジン内部で発生していたNPE(Null Pointer Exception)に対する例外処理追加
 - パケット送信にCID(Connection ID)を正常に適用できなかった問題を修正
 
+<a id="82-20170921-change"></a>
 #### Change
 
 - Customモジュールネーミングを全て新しく変更

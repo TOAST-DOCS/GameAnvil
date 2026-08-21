@@ -1,6 +1,10 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 오토스케일
+<!-- pre-align:aligned sig=f185ad2f462c -->
 
-## 오토스케일
+<a id="game-gameanvil-console-user-guide-autoscale"></a>
+## Game > GameAnvil > 콘솔 사용 가이드 > 오토스케일 { #game-gameanvil-console-user-guide-autoscale }
+
+<a id="auto-scale"></a>
+## 오토스케일 { #auto-scale }
 
 **오토스케일 그룹** 탭에서 오토스케일을 생성하고 관리할 수 있습니다. 오토스케일 그룹은 지정한 조건에 따라 그룹 내의 서버가 자동으로 증설되거나 감축됩니다.
 
@@ -21,7 +25,8 @@
 
 이 문서의 나머지 내용은 오토스케일 그룹의 생성에서 사용하는 설정 항목에 대해 살펴봅니다.
 
-## 오토스케일 그룹 생성
+<a id="create-auto-scale-group"></a>
+## 오토스케일 그룹 생성 { #create-auto-scale-group }
 
 오토스케일 그룹을 생성할 때 다음과 같은 정보를 입력해야 합니다.
 
@@ -31,7 +36,8 @@
 * 최대 서버: 오토스케일 그룹이 최대한 증설할 수 있는 최대 인스턴스 개수입니다.
 * 시작 서버: 오토스케일 그룹이 최초로 시작할 인스턴스 개수입니다.의
 
-## 증설/감축 정책
+<a id="scale-outin-policy"></a>
+## 증설/감축 정책 { #scale-outin-policy }
 
 오토스케일 그룹의 증설/감축 정책을 설정합니다.
 
@@ -40,7 +46,8 @@
 * 조건 연산자: 여러 개의의 조건을 AND/OR 연산으로 조합할 수 있습니다.
 * 오토스케일 조건: 오토스케일 증설/감축 조건을 설정할 수 있습니다. **+** 를 클릭해 여러 개의 조건을 조합할 수 있습니다.
 
-## 노드 구성
+<a id="node-configuration"></a>
+## 노드 구성 { #node-configuration }
 
 오토스케일 그룹의 노드 구성은 일반 서버 구성과 일부 차이가 있습니다. 가장 큰 차이점은 오토스케일 그룹을 단일 노드로 구성된 서버로만 생성이 가능하다는 것입니다. 이때, GATEWAY, GAME 2가지 노드만 선택 가능합니다. SUPPORT와 MATCH는 아직 오토스케일을 지원하지 않습니다.
 

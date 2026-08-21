@@ -1,6 +1,10 @@
-## Game > GameAnvil > Server Development Guide > Implement Gateway Node
+<!-- pre-align:aligned sig=4435e036d920 -->
 
-## Gateway Node
+<a id="game-gameanvil-server-development-guide-implement-gateway-node"></a>
+## Game > GameAnvil > Server Development Guide > Implement Gateway Node { #game-gameanvil-server-development-guide-implement-gateway-node }
+
+<a id="gateway-node"></a>
+## Gateway Node { #gateway-node }
 
 ![GatewayNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gatewaynode_on_network.png)
 
@@ -10,7 +14,8 @@ GatewayNode is a gateway accessed by the client. The service manages sessions fo
 
 Typically, a client establishes one connection to a GatewayNode. At this time, the service allows you to proceed with the authentication procedure for the connection. If it’s successful, you can create one or more sessions in one year. Each session is the logical unit of connection between the client and the user. The image above shows a session created by the client with the Game service and the Chat service through one connection. This structure allows simple [session recovery](#session-recovery) even if the client's connection is accidentally lost.
 
-### Implement GatewayNode
+<a id="implement-gatewaynode"></a>
+### Implement GatewayNode { #implement-gatewaynode }
 
 For such GatewayNode, @GameAnvilGatewayNode annotation can be declared and registered in the engine, and the IGatewayNode interface can be implemented to redefine only the callback method. These common callback methods are clearly explained with their name.
 ```java
@@ -85,7 +90,8 @@ public class SampleGatewayNode implements IGatewayNode {
 ```
 
 
-### Implement Connection
+<a id="implement-connection"></a>
+### Implement Connection { #implement-connection }
 
 Connection designates the physical access itself to the client. The client can proceed with the authentication procedure on the connection using its unique AccountId. If authentication succeeds, the accountId is mapped to the created connection.
 
@@ -161,7 +167,8 @@ For the meaning and usage of these callbacks, see the table below:
 | onResume | Resume | When GatewayNode runs again during a temporary stop, all connections in the GatewayNode are called. Here, the user can implement the code he wants to process for the connection in a restarted state. |
 | onDisconnect | Access Ended | Called when the connection is lost from the client. At this time, the code to be processed is implemented here. |
 
-### Perform Session
+<a id="perform-session"></a>
+### Perform Session { #perform-session }
 
 Clients who are successfully connected can enter a logical session for GameNode, one per service, between those connections. GameAnvil internally combines the accountId of the connection and the subId of the session to allow unique sessions to be distinguished across the server.
 
@@ -222,17 +229,20 @@ For the meaning and usage of these callbacks, see the table below:
 | onAfterLogin | Login After Processing | After logging in to GameNode, the payload is called. If there is any code to be processed by the session after logging in, implement it here. |
 | onAfterLogout | Logout After Processing | You will be called after logout processing is completed. If there is any code to be processed in the session after logout, implement it here. |
 
-## Connection and Session
+<a id="connection-and-session"></a>
+## Connection and Session { #connection-and-session }
 
 The client connects to the gateway node. Create a connection, for example. This connection allows you to authenticate and log in based on your account and user information. Once logged in, the user object is created in the random game node. It means that a logical session has been created between the gateway node and the game node. Once the connection and session creation are complete, the user can proceed with the game. We'll come back to this later when we discuss game nodes.
 
-### Session Recovery
+<a id="session-recovery"></a>
+### Session Recovery { #session-recovery }
 
 If a re-connection occurs between the client and the gateway node, Session Recovery proceeds as shown in the image below. In the process of reconnecting, the client may try to connect to any of the multiple gateway nodes. In this case, a new session is restored based on the location information of the game node where the user object exists. Therefore, even if the user resumes during the game, the user can continue to play the previous game status.
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionRecovery.png)
 
-### Location Node
+<a id="location-node"></a>
+### Location Node { #location-node }
 
 The location node is shown in the connection recovery image you looked at earlier. A location node is a system node that GameAnvil internally manages location information, such as users and rooms. The user cannot directly implement or use the location node. However, to understand the role of the location node in managing location information, it is easy to understand the flow of the overall GameAnvil system.
 

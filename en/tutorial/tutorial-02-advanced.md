@@ -1,6 +1,10 @@
-## Game > GameAnvil > In-depth Tutorial
+<!-- pre-align:aligned sig=577d65630622 -->
 
-### Create Game Server Easily with GameAnvil
+<a id="game-gameanvil-in-depth-tutorial"></a>
+## Game > GameAnvil > In-depth Tutorial { #game-gameanvil-in-depth-tutorial }
+
+<a id="create-game-server-easily-with-gameanvil"></a>
+### Create Game Server Easily with GameAnvil { #create-game-server-easily-with-gameanvil }
 
 GameAnvil is a real-time multiplayer game server creation platform. GameAnvil provides a connector to connect clients to servers, as well as server engines. It makes it easy to develop and operate your game servers and clients.
 
@@ -12,7 +16,8 @@ Use the templates provided to easily build a server, and with the features provi
 
 Instead of just listing the concepts and APIs for the server, this article presents an orderly description of the process of developing a real-playing multiplayer puzzle game with a more concrete example to help you understand. Follow the content of the document one by one, and naturally increase your understanding of GameAnvil and multiplayer game development.
 
-## Project Configuration
+<a id="project-configuration"></a>
+## Project Configuration { #project-configuration }
 
 To create a multiplayer game, you need a server program that is adaptable to the client. In this example, Unity and GameAnvil connectors are used for client program creation, and the server engine GameAnvil introduced earlier for server program creation. First create a server program project using GameAnvil, then create a client program project using the Unity and GameAnvil connectors.
 
@@ -20,7 +25,8 @@ By performing the steps below, the final server sample project created can be do
 
 [Download Server Sample Project](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Advanced_Server.zip?disposition=attachment)
 
-### GameAnvil Project Configuration
+<a id="gameanvil-project-configuration"></a>
+### GameAnvil Project Configuration { #gameanvil-project-configuration }
 
 To apply GameAnvil to your project, you must download the GameAnvil Library from the Maven repository and write the setting file required to run GameAnvil. Finally, if you write a little bit of the boiler plate code, the development initial settings will end. This chapter aims to complete the initial configuration to get started with the development. Running a server by running a real process is covered in the next chapter.
 
@@ -74,7 +80,8 @@ Check the **gradle** settings in the **Set** menu.
 
 The project is almost ready, but several settings are required to run. Here, first create a client project, then complete the server settings and run it.
 
-### Unity Project Configuration
+<a id="unity-project-configuration"></a>
+### Unity Project Configuration { #unity-project-configuration }
 
 Run the Unity Hub. Click **NEW** on the top right to open the Create New Project window
 
@@ -102,9 +109,11 @@ Finally, to provide convenience for testing, select the Player tab in the Projec
 
 Client project configuration has been completed.
 
-## Server Run and Connect
+<a id="server-run-and-connect"></a>
+## Server Run and Connect { #server-run-and-connect }
 
-### Run GameAnvil Server
+<a id="run-gameanvil-server"></a>
+### Run GameAnvil Server { #run-gameanvil-server }
 
 When the execution is set, double-click Tasks > other > `runMain` from the gradle menu on the right. Once executed, the server runs even if you click the green Run triangle icon on the top right of the IntelliJ.
 
@@ -126,7 +135,8 @@ GameAnvil server consists of multiple nodes. These nodes divide the functions th
 
 Each node needs time to prepare to execute the code,. When each node is ready, it will output an onReady log. A gateway node is to perform the direct role for the client to connect to the server. If the gateway node is ready and the onReady logs for GatewayNode are output, the GameAnvil server will be connectable at any time.
 
-### Write Connect Handler
+<a id="write-connect-handler"></a>
+### Write Connect Handler { #write-connect-handler }
 
 Now go to the Unity project to write the code to allow you to connect to the GameAnvil server. You must first create a connector object to connect to the server.
 
@@ -214,7 +224,8 @@ public class ConnectHandler : MonoBehaviour
 }
 ```
 
-### Create Connector and User
+<a id="create-connector-and-user"></a>
+### Create Connector and User { #create-connector-and-user }
 
 You must create a Connector and a User to use multiple features in the connector. The Connector provides features such as server access and authentication, and the User provides features related to the user, such as login, room creation, and entry.
 
@@ -244,7 +255,8 @@ public GameAnvilUser getUser()
 
 <br>
 
-### Connect to Server
+<a id="connect-to-server"></a>
+### Connect to Server { #connect-to-server }
 
 The Connect() method to connect to the server using the API provided by the connector is as follows:
 
@@ -281,19 +293,22 @@ The Connect() function calls the Connect method of the GameAnvilConnector. This 
 
 The client is also prepared to connect to the server as the server is prepared to accept the connection.
 
-### Confirm Server Connection
+<a id="confirm-server-connection"></a>
+### Confirm Server Connection { #confirm-server-connection }
 
 Now enter play mode from the Unity client to see if the result code is printed correctly on the console. On the game screen, you can see success messages for the connection, along with the access information for the IP and Port. Clients connected to the game server can now receive messages through the server.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/15_connect_success.png)
 
-## Create Room and User
+<a id="create-room-and-user"></a>
+## Create Room and User { #create-room-and-user }
 
 The client connected to the server is called the **game user**. Clients connected to the server can log in as more than one game user (in this example, when logging in as a single user) on the server. Game users can communicate with other users in the same room because they belong to one **game room**. It means that users must be in the same room to exchange messages related to the game with different users.
 
 GameAnvil has pre-prepared the default implementation of the game user and the game room, allowing you to easily expand the engine class and complete the structure of the game user and the room using the connector's API. On the engine side, we discuss how to define the game user and the room, while on the connector side, we discuss examples of using APIs that request room creation or participation.
 
-### User
+<a id="user"></a>
+### User { #user }
 
 On a server, the features of the game user and the game room are defined as classes. First, let me define the game user.
 
@@ -486,7 +501,8 @@ public class BasicUser implements IUser {
 
 <br>
 
-### Room
+<a id="room"></a>
+### Room { #room }
 
 The implementation of an loginable user has been completed. The game room is now implemented. Just like the user creation method, the IRoom interface implemented class is created using the **GameAnvil Room** file template. Enter **BasicRoom** in **File name**, **BASIC_SERVICE** in **Service name**, **ROOM_TYPE_BASIC** in Room type, and the class name **BasicUser** of the IUser implementation class created in the previous step in **User**.
 
@@ -648,7 +664,8 @@ public class BasicRoom implements IRoom<BasicUser> {
 
 <br>
 
-### GameNode
+<a id="gamenode"></a>
+### GameNode { #gamenode }
 
 The game user and the game room are now prepared. But there are still no nodes to process the creation and deletion requests for game users/game rooms. GameNode is the node that serves to manage game users and game rooms. This node is the node that performs most game logic processing roles generally expected of a game server. Adding nodes to GameAnvil is natural and simple. Just like you have defined the game user and the game room, you can create a class by implementing a predefined interface and then implementing additional desired features. After selecting the **GameAnvil GameNode** template, create a game node class with the file name **BasicGameNode**, set the service name to **BASIC\_SERVICE** and press the **OK** button.
 
@@ -748,7 +765,8 @@ Register it in the settings file to link the game user and game room you created
 
 <br>
 
-### Game Node, User, and Room Settings
+<a id="game-node-user-and-room-settings"></a>
+### Game Node, User, and Room Settings { #game-node-user-and-room-settings }
 
  You can also create a class by right-clicking and selecting **New > Java Class**. 
 
@@ -796,11 +814,13 @@ Finally, in the section registering the Config, you will proceed with tasks such
 
 The feature allows the client to connect to the server, log in as a game user, and create a game room has now been implemented. But because you are connected to the server, you can't immediately request game-related features (create a game user, create a game room, etc.) Even if you run the server and client in the current state, the client will not be able to use the features of the game server. To request these to the server, a client authentication process is required after accessing the server. The next chapter covers how to proceed with authentication on the server and client.
 
-## Server Connection
+<a id="server-connection"></a>
+## Server Connection { #server-connection }
 
 After the client connects to the server, the user must be verified and authenticated before logging in to the game. If the game node is responsible for the game user and the game room creation role, the gateway node is responsible for the user's access and authentication feature. Gateway nodes can also be implemented in a consistent manner like game nodes through class creation. After selecting the **GameAnvil GatewayNode** template, set the file name to **BasicGatewayNode** and press the **OK** button to create a gateway node class. For gateway node classes, additional codes are not required other than the default created code.
 
-### Register Protocol
+<a id="register-protocol"></a>
+### Register Protocol { #register-protocol }
 
 During the authentication process, the server and client verify the protocols to use each other. Therefore, you must register the protocol before performing the authentication process. You can only register a protocol once, so please add the protocol registration code inside the getConnector() code. After following the tutorial, pre-register the protocol to use in the game chat that will be implemented.
 
@@ -821,7 +841,8 @@ public GameAnvilConnector getConnector()
 
 <br>
 
-### Add Authentication Code
+<a id="add-authentication-code"></a>
+### Add Authentication Code { #add-authentication-code }
 
 Go to the unity project to implement the client-side. The client can request authentication through the connector GameAnvilConnector API, like the connection request. Requests for authentication can only be submitted after the connection request. We will enable you to check the authentication request result through the text on the screen and the console.
 
@@ -850,17 +871,20 @@ public async void Auth()
 
 The client is now set not only to connect to the server, but also to request the authentication process.
 
-### Verify Authentication
+<a id="verify-authentication"></a>
+### Verify Authentication { #verify-authentication }
 
 Enter play mode from the Unity client. Verify that logs on the console are accessed and issued in order of authentication. Once cleaned up, the user has been authenticated from the server's gateway node to be able to log in to the server according to the client's Auth request.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/19_auth_success.png)
 
-## Login
+<a id="login"></a>
+## Login { #login }
 
 The last step is to log in to the game node to create a game user. The game user is a concept required to communicate with other clients connected to the server. To communicate between clients, each client creates a game user to send messages through the game room.
 
-### Add Login Code
+<a id="add-login-code"></a>
+### Add Login Code { #add-login-code }
 
 Clients who have accessed and authenticated can log in to the game node. When you log in to the server, a game user object is created for the client in the game node. The client can send and receive messages from the server or other users through its server-side game user objects. Modify the authentication code you wrote previously as shown below to make sure you log in immediately when the authentication is successful:
 
@@ -886,15 +910,18 @@ public async void Login()
 
 Enable the callback methods you send together when you request an login to log out the results of the login request.
 
-### Confirm Login
+<a id="confirm-login"></a>
+### Confirm Login { #confirm-login }
 
 Verify that you logged in successfully through the Unity test mode.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/20_login_success.png)
 
-## Create and Participate
+<a id="create-and-participate"></a>
+## Create and Participate { #create-and-participate }
 
-### Client Task
+<a id="client-task"></a>
+### Client Task { #client-task }
 
 Enter the method to request creation of room in the ConnectHandler code in the Unity project. Please note that in this case, the RoomType, the second element of the CreateRoom method, must be equal to the value specified on the server. Generally, protocols such as RoomType are predefined and used by servers and client developers. Output the room creation result code to the console. Also, once the creation succeeded, the roomId will be stored on the client side and the code will be written to move to the game thin.
 
@@ -984,7 +1011,8 @@ public class GameManager : MonoBehaviour
 
 Now the server access, authentication, and login features, as well as room participation and creation features are implemented on the client.
 
-### Create and Test Participation in Room
+<a id="create-and-test-participation-in-room"></a>
+### Create and Test Participation in Room { #create-and-test-participation-in-room }
 
 Select **File > Build Setting** in the top toolbar bar of the Unity project. Add the tones you need to build as shown below. If the thin order is incorrect, drag the items on the list to adjust the order so that ConnectScene appears at the top.
 
@@ -1001,13 +1029,15 @@ If the scalp is not working properly, please check the below again:
 - Is the server process restarted after modifying the server implementation?
 - Is the service name implemented on the server/client like the one set for GameAnvilConfig.json?
 
-## Perform In-Game Chat
+<a id="perform-in-game-chat"></a>
+## Perform In-Game Chat { #perform-in-game-chat }
 
 An environment that can communicate between clients via the server has now been configured. Here we will implement a simple example of how data generated by the client can be received by a remote client. Learn how to get chat history using a previously implemented protocol within the example project. With this example limit, the MessageRequest class is used when transferring communication data from client to server. When sending communication data from the server to the client, the MessageResponse or MessageBroadcast class is used.
 
 (Message classes are not available when a project is created using a project template.) Download the project created for the tutorial to allow the internal BasicProtocol.java to be included in the project. A process of registering a protocol before the server runs is also required. Configuration for the protocol on the server side is pre-prepared for the tutorial project, so if the tutorial project is still in use, you don't have to proceed.)
 
-### Perform Client Side Transfer
+<a id="perform-client-side-transfer"></a>
+### Perform Client Side Transfer { #perform-client-side-transfer }
 
 First, write the code to send the message from the client to the server. Once connected to the server as a logged-in user, you can use the server's features through the user agent. Here you use the Send feature of the user agent to send packets to the room. To send a message, the packet containing the content to be sent must be delivered as an argument.
 
@@ -1058,7 +1088,8 @@ public class GameManager : MonoBehaviour
 
 This has made it possible to send packets from the client to the server. But even if you send the packet to the server right now, there will be no response from the server. The reason for this is that the server side did not define how to analyze the content and what to do when the packet was received. The following chapter will cover implementation on the server side.
 
-### Perform Server Side Response
+<a id="perform-server-side-response"></a>
+### Perform Server Side Response { #perform-server-side-response }
 
 First, register a protocol before running the server to allow the chat protocol to be used on the server.
 
@@ -1112,7 +1143,8 @@ In the code above, first use the Message value of the MessageRequest object to c
 
 It allows the server to receive the packets sent by the client, and then process them a little bit and then return them back to the server. At this time, the client must also specify how to process the packets sent from the server.
 
-### Perform Client Side Reception
+<a id="perform-client-side-reception"></a>
+### Perform Client Side Reception { #perform-client-side-reception }
 
 You must register a pre-handler to process server-side packets on the client as well. Otherwise, when the packet is received, the processing method is judged to be unknown and the contents will be deleted. To detect it and process the content when you receive the send from the server, you can register a protocol-type operator for the packet sent from the server. Enter and register the dealers registration code to process messages in the MessageBroadcast type.
 
@@ -1137,7 +1169,8 @@ void Start()
 
 <br>
 
-### Confirm Message Delivery
+<a id="confirm-message-delivery"></a>
+### Confirm Message Delivery { #confirm-message-delivery }
 
 After modifying the server, make sure you have a new run, build and play with `cmd+b` or `ctrl+b` in Unity. Create a room in the built game and check the server-side logs. Enter the RoomId of the previously created room after entering play mode in the Unity editor's state and join the room.
 
@@ -1147,7 +1180,8 @@ In any game process, enter text in the input box and press Enter. Then the same 
 
 You’ve learned the message processing process through a simple chat server implementation. Next, we will look at the implementation process of a more practical example.
 
-## Perform Puzzle Game
+<a id="perform-puzzle-game"></a>
+## Perform Puzzle Game { #perform-puzzle-game }
 
 A puzzle game with single play can be pre-implemented in the game scene. When you enter play mode and drag the puzzle piece to place it near the correct location, it will be balanced to the exact location on the grid. In this chapter, we will try to make this game to be a multiplayer game.
 
@@ -1155,7 +1189,8 @@ Messages sent between users in the same room can contain any value other than Me
 
 If messages are only defined based on a predefined protocol, it is possible to send and receive messages between the server and the client. There are many different expressions, including XML, json, and more, but GameAnvil uses Google Protocol Buffers. This is one of the best solutions in terms of speed and reliability.
 
-### Serialize and Deserialize Messages with Google Protocol Buffers
+<a id="serialize-and-deserialize-messages-with-google-protocol-buffers"></a>
+### Serialize and Deserialize Messages with Google Protocol Buffers { #serialize-and-deserialize-messages-with-google-protocol-buffers }
 
 To use the protocol buffer, you must first specify how to define the message. For example, contain a single string in the specifications of MessageRequet. After that, compile the protocol specifications to convert them to a file in the desired language. Later, it can be used as a message protocol for the packet similar to the way you used MessageRequest.
 
@@ -1193,7 +1228,8 @@ C# class files are transferred to the Asset/Protocol path of the Unity project u
 
 Creating message protocols to synchronize puzzle positions has been completed.
 
-### Register Protocol
+<a id="perform-puzzle-game-register-protocol"></a>
+### Register Protocol { #perform-puzzle-game-register-protocol }
 
 If you have defined a protocol and compiled it successfully, then you must register the protocol class on both the server and the client. Register a protocol from the Main method of the GameAnvil server as shown below.
 
@@ -1232,7 +1268,8 @@ public GameAnvilConnector getConnector()
 
 <br>
 
-### Perform Client Side Transfer
+<a id="perform-puzzle-game-perform-client-side-transfer"></a>
+### Perform Client Side Transfer { #perform-puzzle-game-perform-client-side-transfer }
 
 Now you've finished with both defining and registering protocols for the game. Now implement the feature to actually send messages based on these protocols. First implement the parts that transfer data from the client side. Transfer the location to the server while dragging a puzzle piece.
 
@@ -1298,7 +1335,8 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
 <br>
 
-### Perform Server Side Response
+<a id="perform-puzzle-game-perform-server-side-response"></a>
+### Perform Server Side Response { #perform-puzzle-game-perform-server-side-response }
 
 On the client side, the location of the puzzle has been constantly sent to the server. Now you need to write down how to locate the puzzle on the server. Process MessageRequest to get the puzzle location back to all the users in the game room, like you did with MessageResponse and MessageBroadcast.
 
@@ -1331,7 +1369,8 @@ PuzzlePositionHandler is also registered as a handler used by BasicRoom with @Ga
 
 <br>
 
-### Perform Client Side Reception
+<a id="perform-puzzle-game-perform-client-side-reception"></a>
+### Perform Client Side Reception { #perform-puzzle-game-perform-client-side-reception }
 
 You had to register a pre-handler to process MessageBroadcasts sent from the server earlier. In order to create a manipulator for handling puzzle positions in the same way this time, enter the manipulator registration code for handling PuzzlePosition messages in the Start method of GameManager. When the message is received, the dealers locate the puzzle object and move it to the received location on the server.
 
@@ -1370,7 +1409,8 @@ public class GameManager : MonoBehaviour{
 
 <br>
 
-### Confirm Puzzle Location Synchronization
+<a id="confirm-puzzle-location-synchronization"></a>
+### Confirm Puzzle Location Synchronization { #confirm-puzzle-location-synchronization }
 
 Build and play with `cmd+b` or `ctrl+b in` Unity. After creating a room in the built game, run Unity play mode and enter the RoomId of the created room to join the room. Now, if you drag a puzzle piece to the location, you can see that the location of the puzzle piece is synchronized to reflect to the remote client.
 
@@ -1378,7 +1418,8 @@ Build and play with `cmd+b` or `ctrl+b in` Unity. After creating a room in the b
 
 <br>
 
-### Handle Late Joiner
+<a id="handle-late-joiner"></a>
+### Handle Late Joiner { #handle-late-joiner }
 
 Let’s think if a new user enters the room after the random puzzle piece location changes during the game. At this time, the puzzle status between an existing user and a new user is different. The newly entered user has an initial puzzle status, so the existing user and puzzle status must be synchronized. To address this, please modify the server-side logic. The server now retains all the location information in the puzzle, and when a new user enters it, it fixes the logic to use that information to synchronize.
 
@@ -1455,11 +1496,13 @@ This issue is not resolved right now and will be discussed in more detail. These
 
 <br>
 
-## Perform Puzzle Mix
+<a id="perform-puzzle-mix"></a>
+## Perform Puzzle Mix { #perform-puzzle-mix }
 
 We will implement a logic that blends puzzle positions with random positions. If the client requests to mix the puzzle location, the server determines the new location after mixing the puzzle. And the basic idea is to return the changed location information to the client.
 
-### Register Protocol
+<a id="perform-puzzle-mix-register-protocol"></a>
+### Register Protocol { #perform-puzzle-mix-register-protocol }
 
 First, we will create a protocol to request a puzzle mix. Go to the server project to add a protocol specification to the Puzzle.proto file. This protocol has no field because it has no specific information to send from client to server. This is also useful enough as a protocol.
 
@@ -1489,7 +1532,8 @@ Move the created C# class back to the Asset/Protocol folder of the Unity project
 
 <br>
 
-### Implement Client Side
+<a id="implement-client-side"></a>
+### Implement Client Side { #implement-client-side }
 
 Go to the unit project and write the code for the mix request in GameManager.cs as shown below. When the Scatter method is called, messages of the new ScatterPuzzle type are sent to the game room through GameAnvilUser.
 
@@ -1509,7 +1553,8 @@ public class GameManager : Monobehaviour {
 
 Click the **Scatter Puzzle Button** in the **Hierarchy** panel. Add an item to the **OnClick** listener from the **Button** component of **Inspector**, drag the GameManager component to register and select the Scatter method from the dropdown.
 
-### Server Side Implementation
+<a id="server-side-implementation"></a>
+### Server Side Implementation { #server-side-implementation }
 
 Handler uses the previously used method to process when a mix request is received. Create a ScatterPuzzleHandler class through the **GameAnvil RoomMessageHandler** file template. After randomly setting the positions of each of the 16 puzzles, send a message of the PuzzlePositon type. The puzzlePositions map of the server is also updated with new location information.
 
@@ -1569,17 +1614,20 @@ public class ScatterPuzzleHandler {
 
 Sending on the client side and responding on the server side are now completed.
 
-### Confirm Puzzle Mix
+<a id="confirm-puzzle-mix"></a>
+### Confirm Puzzle Mix { #confirm-puzzle-mix }
 
 Enter play mode from the Unity editor. Click the Scatter Puzzle button to see if the puzzle mixing feature works properly.
 
-## Better Late Joiner Process
+<a id="better-late-joiner-process"></a>
+## Better Late Joiner Process { #better-late-joiner-process }
 
 A synchronization problem occurred while handling late joiners in front of the user. The reason for this was that the user thought the time when they entered the room was appropriate as the time when the location of the puzzle fragment was synchronized. But the puzzle game we're implementing will have a fine move when the user enters the room.
 
 Therefore, we have to think of it as two points in time when registering readers and calling for onJoinRoom callbacks. This may be without problems depending on the implementation of the game client, or may cause problems. Since the thin move begins after the onJoinRoom callback call, the client wishes to request a puzzle location synchronization directly to the server immediately after the thin move is complete.
 
-### Register Protocol
+<a id="better-late-joiner-process-register-protocol"></a>
+### Register Protocol { #better-late-joiner-process-register-protocol }
 
 Go to the server project and add the protocol to Puzzle.proto to request puzzle location synchronization.
 
@@ -1605,7 +1653,8 @@ Transfer the created C# class to the Unity project after recompiling the protoco
 
 <br>
 
-### Implement Client Side
+<a id="better-late-joiner-process-implement-client-side"></a>
+### Implement Client Side { #better-late-joiner-process-implement-client-side }
 
 To enable the server to request the puzzle location immediately after the thin move, you must modify the Start function running immediately after the thin move with GameScence. Add the code to send the newly created PuzzlePositionReq protocol message to the GameManager Start method as follows.
 
@@ -1646,7 +1695,8 @@ public class GameManager : MonoBehaviour
 
 <br>
 
-### Server Side Implementation
+<a id="better-late-joiner-process-server-side-implementation"></a>
+### Server Side Implementation { #better-late-joiner-process-server-side-implementation }
 
 Remove the puzzle location sending code that has been incorrectly implemented to onJoinRoom, and create a new PuzzlePositionReqHandler class for the handling of the Puzzle.PuzzlePositionReq message.
 
@@ -1673,13 +1723,16 @@ public class PuzzlePositionReqHandler {
 
 <br>
 
-### Confirm Late Joiner Processing
+<a id="confirm-late-joiner-processing"></a>
+### Confirm Late Joiner Processing { #confirm-late-joiner-processing }
 
 Build and play with `cmd+b` or `ctrl+b in` Unity. Now create a room in the built game and run Puzzle Mix. In that state, enter the Unity editor's play mode and join the room to confirm that the puzzle location is synchronized.
 
-## Perform User MatchMaking
+<a id="perform-user-matchmaking"></a>
+## Perform User MatchMaking { #perform-user-matchmaking }
 
-### Server Side Implementation
+<a id="perform-user-matchmaking-server-side-implementation"></a>
+### Server Side Implementation { #perform-user-matchmaking-server-side-implementation }
 
 User matchmaking collects users' matchmaking requests to allow users of the same level to start the game in the same room according to the appropriate criteria. You can implement various elements, such as win points or scores, to adequately separate and match users. It implements a logic that matches two users in one game.
 
@@ -1795,7 +1848,8 @@ public class BasicUserMatchMaker extends AbstractUserMatchMaker<BasicUserMatchIn
 
 <br>
 
-### Implement Client Side
+<a id="perform-user-matchmaking-implement-client-side"></a>
+### Implement Client Side { #perform-user-matchmaking-implement-client-side }
 
 Since all matching logic is implemented on the server, the client can only send a request when matching is needed. Add the MatchUser method to the ConnectHandler. And add the code to move the scenes to the point when the matches are finished.
 
@@ -1835,11 +1889,13 @@ public class ConnectHandler : MonoBehaviour
 
 Drag the ConnectHandler component to the OnClick listener on the MatchUser button in the tone to register and select the MatchUser method in the dropdown.
 
-### User Matchmaking Test
+<a id="user-matchmaking-test"></a>
+### User Matchmaking Test { #user-matchmaking-test }
 
 Build and play with `cmd+b` or `ctrl+b in` Unity. In that state, enters play mode in the Unity editor. Press the User Match Making button on both sides to confirm that the match is completed and attached to the same room number.
 
-## Perform Room Matchmaking
+<a id="perform-room-matchmaking"></a>
+## Perform Room Matchmaking { #perform-room-matchmaking }
 
 Room matchmaking is a feature that lets you automatically fit any of the rooms managed by a matchmaker into the rooms that best meet the user’s needs. So where user matchmaking is a feature to match users and users, room matchmaking is a feature to match users and rooms. At this time, you can match a user with a room in various conditions depending on the implementation method. Here, matches are realized by entering the room with the least number of people that have not yet had a garden.
 
@@ -1847,7 +1903,8 @@ First, you need a class to actually perform the matches. And the room matchmaker
 
 Modify some of the existing logic additionally. Room matchmaking is performed only for the rooms applied for room matchmaking and not for all rooms. At the time of creation, the code to apply for room matchmaking is therefore added.
 
-### Server Side Implementation
+<a id="perform-room-matchmaking-server-side-implementation"></a>
+### Server Side Implementation { #perform-room-matchmaking-server-side-implementation }
 
 First implement the class to specify the matchmaking request. Create a BasicRoomMatchForm class.
 
@@ -1997,7 +2054,8 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 <br>
 
-### Implement Client
+<a id="implement-client"></a>
+### Implement Client { #implement-client }
 
 Like user matchmaking, the client must only send a request when matching is required. Add the RoomMatchMaking method to the ConnectHandler.
 
@@ -2034,13 +2092,15 @@ Drag and register the ConnectHandler component to the OnClick listener on the Ma
 
 <br>
 
-### Room Matchmaking Test
+<a id="room-matchmaking-test"></a>
+### Room Matchmaking Test { #room-matchmaking-test }
 
 Create a room in the play status after building it with `cmd+b` or `ctrl+b` in Unity. In that state, enters play mode in the Unity editor. In play mode, press the Room Match Making button to see if you are moving to the room you created in build mode.
 
 <br>
 
-## Perform To Leave Room
+<a id="perform-to-leave-room"></a>
+## Perform To Leave Room { #perform-to-leave-room }
 
 At last, add the following methods to the GameManager of the Unity client to implement the feature to leave the room.
 
@@ -2074,6 +2134,7 @@ public class GameManager : MonoBehaviour
 
 Drag the GameManager component to the OnClick listener of the Leave Room button in the tone to register and select the LeaveRoom method from the drop-down menu.
 
-## End Project
+<a id="end-project"></a>
+## End Project { #end-project }
 
 We have implemented a puzzle game with real-time multiplay using GameAnvil and Unity. Numerous key features of GameAnvil have been used in that process. However, GameAnvil supports more extensive and diverse features that are not included in this tutorial. For these features, see the following article. Also included reference sample projects and JavaDoc will help a lot to understand GameAnvil.

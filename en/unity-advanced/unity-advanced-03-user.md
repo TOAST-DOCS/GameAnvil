@@ -1,6 +1,8 @@
-## Game > GameAnvil > Unity Advanced Development Guide > User
+<a id="game-gameanvil-unity-advanced-development-guide-user"></a>
+## Game > GameAnvil > Unity Advanced Development Guide > User { #game-gameanvil-unity-advanced-development-guide-user }
 
-## UserAgent
+<a id="useragent"></a>
+## UserAgent { #useragent }
 
 The UserAgent is responsible for operations related to GameNodes on the GameAnvil server. It provides basic functionality such as login(), logout(), and room management. Based on the protocols you define, clients can message other objects through their user objects and implement different content. 
 
@@ -15,7 +17,18 @@ if (userAgent == null) {
 
 The GameAnvil server can run multiple services simultaneously, and a UserAgent can log in to one service and operate independently of another. This means that you can create multiple UserAgents to log in to different services and use them simultaneously. It is also possible to have multiple UserAgents logged into the same service at the same time by using different SubIds. 
 
-### Login/Logout
+<a id="create"></a>
+### Create { #create }
+
+<!-- TODO: translate body -->
+
+<a id="disable"></a>
+### Disable { #disable }
+
+<!-- TODO: translate body -->
+
+<a id="loginlogout"></a>
+### Login/Logout { #loginlogout }
 
 Login can be defined as the process by which a client connects to the server and creates its own user object in GameNode. Logging out is the opposite of logging in. In other words, it is the process of removing a user object from the GameNode. 
 
@@ -58,14 +71,67 @@ userAgent.Logout((UserAgent user, Defines.ResultCodeLogout result, bool force, P
 ...
 ```
 
-### Create, enter, and leave rooms
+<a id="loginlogout-login"></a>
+#### Login
+
+<!-- TODO: translate body -->
+
+<a id="logout"></a>
+### Logout { #logout }
+
+<!-- TODO: translate body -->
+
+<a id="logout-force-logout-notification"></a>
+#### Force Logout Notification
+
+<!-- TODO: translate body -->
+
+<a id="create-enter-and-leave-rooms"></a>
+### Create, enter, and leave rooms { #create-enter-and-leave-rooms }
 
 This is the same as creating, entering, and leaving rooms in [Unity Basic Development Guide > UserAgent](../unity-basic/unity-basic-04-user-agent.md).
 
-### Matchmaking
+<a id="create-enter-and-leave-rooms-create-room"></a>
+#### Create Room
+
+<!-- TODO: translate body -->
+
+<a id="create-enter-and-leave-rooms-enter-room"></a>
+#### Enter Room
+
+<!-- TODO: translate body -->
+
+<a id="create-enter-and-leave-rooms-leave-room"></a>
+#### Leave Room
+
+<!-- TODO: translate body -->
+
+<a id="create-enter-and-leave-rooms-notification-for-forced-to-leave-the-room"></a>
+#### Notification for Forced to Leave the Room
+
+<!-- TODO: translate body -->
+
+<a id="create-enter-and-leave-rooms-enter-the-room-with-the-specified-name"></a>
+#### Enter the room with the specified name
+
+<!-- TODO: translate body -->
+
+<a id="matchmaking"></a>
+### Matchmaking { #matchmaking }
 
 GameAnvil offers two types of matchmaking. One is Room Matchmaking, which performs room-by-room matching, and the other is User Matchmaking, which performs user-by-user matching. For more information, see Matchmaking in the [Unity Basic Development Guide > UserAgent](../unity-basic/unity-basic-04-user-agent.md).
 
+<a id="matchmaking-room-matchmaking"></a>
+#### Room Matchmaking
+
+<!-- TODO: translate body -->
+
+<a id="matchmaking-user-matchmaking"></a>
+#### User Matchmaking
+
+<!-- TODO: translate body -->
+
+<a id="matchmaking-party-matchmaking"></a>
 #### Party matchmaking
 
 Party matchmaking is a specialized form of user matchmaking where two or more users are grouped together as a party, added to a user pool, and matched with other eligible users to enter a newly created room together. Partyed users will always enter the same room. Outside of parties, the matching users can be other parties or individuals, depending on the server's matchmaker implementation.
@@ -166,6 +232,17 @@ userAgent.MatchPartyCancel(Constants.RoomType, (UserAgent user, Defines.ResultCo
 });
 ```
 
+<a id="channel"></a>
+### Channel { #channel }
+
+<!-- TODO: translate body -->
+
+<a id="channel-move-notification"></a>
+#### Channel move notification
+
+<!-- TODO: translate body -->
+
+<a id="channel-moving-channels"></a>
 #### Moving channels
 
 In some cases, channel moves can occur as a result of matchmaking. You can be notified via onMoveChannelListeners or IUserListener.OnMoveChannel when a channel move has occurred.
@@ -207,7 +284,8 @@ userAgent.MoveChannel(channelId, usePayload ? customPayload : null, (UserAgent u
 });
 ```
 
-### Channel information
+<a id="channel-information"></a>
+### Channel information { #channel-information }
 
 GameAnvil allows you to freely change channel configurations in the settings. These channel configurations can be pre-agreed between the server and the client and used in a fixed form, or they can be changed flexibly to suit the situation. UserAgent provides several functions to get information about these changed channels or to move channels. 
 
@@ -374,430 +452,23 @@ userAgent.GetAllChannelInfo(serviceName, (ConnectionAgent connection, ResultCode
 });
 ```
 
-### Listener
+<a id="channel-information-getchannelcountinfo"></a>
+#### GetChannelCountInfo
 
-There are two main ways that UserAgent can receive results or notifications from the server for every request.
-One is to add a function to the delegate defined on the UserAgent. The other is to register a listener that implements the IUserListener interface.
+<!-- TODO: translate body -->
 
-The UserAgent has each delegate as a member so that it can receive the results or notifications of any action. By registering a function on this delegate, you can call the APIs described earlier without callback parameters, or receive a response from the registered function when the server sends a notification.
+<a id="channel-information-getchannelinfo"></a>
+#### GetChannelInfo
 
-```c#
-/// <summary>
-/// Delegate to receive login results
-/// </summary>
-/// <param name="userAgent">The user agent that made the Login() request</param>
-/// <param name="result">Login() request result</param>
-/// <param name="loginInfo">Login information</param>
-public Interface.DelUserOnLogin onLoginListeners;
+<!-- TODO: translate body -->
 
-/// <summary>
-/// Delegate to receive room match request results.
-/// </summary>
-/// <param name="userAgent">The user agent that requested MatchRoom().
-/// <param name="result">Result of the MatchRoom() request</param>
-/// <param name="resultCode">User result code</param>
-/// <param name="roomId">Id of the matched room</param>
-/// <param name="roomName">Name of the matched room</param>
-/// <param name="created">Whether the matched room was created</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnMatchRoom onMatchRoomListeners;
+<a id="channel-information-getallchannelcountinfo"></a>
+#### GetAllChannelCountInfo
 
-/// <summary>
-/// Representatives to receive the results of room creation requests.
-/// </summary>
-/// <param name="userAgent">The user agent that requested CreateRoom().
-/// <param name="result">Result of the CreateRoom() request</param>
-/// <param name="roomName">Name of the created room</param>
-/// <param name="roomId">Id of the created room</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnCreateRoom onCreateRoomListeners;
+<!-- TODO: translate body -->
 
-/// <summary>
-/// Delegates to receive room entry request results.
-/// </summary>
-/// <param name="userAgent">The user agent that requested JoinRoom().
-/// <param name="result">Result of the JoinRoom() request</param>
-/// <param name="roomId">Id of the room entered</param>
-/// <param name="roomName">Name of the room you joined</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnJoinRoom onJoinRoomListeners;
+<a id="channel-information-getallchannelinfo"></a>
+#### GetAllChannelInfo
 
-/// <summary>
-/// Delegate to receive the results of a named room request.
-/// </summary>
-/// <param name="userAgent">The user agent that requested NameRoom().
-/// <param name="result">Result of the NameRoom() request</param>
-/// <param name="roomName">Room name</param>
-/// <param name="roomId">Id of the room entered</param>
-/// <param name="created">Whether the entered room was created</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnNamedRoom onNamedRoomListeners;
+<!-- TODO: translate body -->
 
-/// <summary>
-/// Delegate to receive the results of the party matching request.
-/// </summary>
-/// <param name="userAgent">The user agent that requested MatchPartyStart().
-/// <param name="result">Result of the MatchPartyStart() request</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnMatchPartyStart onMatchPartyStartListeners;
-
-/// <summary>
-/// Delegates to receive the results of canceling a party matching request.
-/// </summary>
-/// <param name="userAgent">The user agent that requested MatchPartyCancel()</param>.
-/// <param name="result">Result of the MatchPartyCancel() request</param>
-public Interface.DelUserOnMatchPartyCancel onMatchPartyCancelListeners;
-
-/// <summary>
-/// Delegate to receive the result of a user matching request.
-/// </summary>
-/// <param name="userAgent">The user agent that requested MatchUserStart()</param>.
-/// <param name="result">Result of the MatchUserStart() request</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnMatchUserStart onMatchUserStartListeners;
-
-/// <summary>
-/// Delegates to receive the results of user matching requests.
-/// </summary>
-/// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
-/// <param name="result">Result of the MatchUserStart() or MatchPartyStart() request</param>
-/// <param name="created">Whether a room was created</param>
-/// <param name="roomId">Id of the matched room</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnMatchUserDone onMatchUserDoneListeners;
-
-/// <summary>
-/// Delegate for user matching timeout notification.
-/// </summary>
-/// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
-public Interface.DelUserOnMatchUserTimeout onMatchUserTimeoutListeners;
-
-/// <summary>
-/// The agent to receive the result of canceling a user matching request.
-/// </summary>
-/// <param name="userAgent">The user agent that requested MatchUserCancel()</param>.
-/// <param name="result">Result of the MatchUserCancel() request</param>
-public Interface.DelUserOnMatchUserCancel onMatchUserCancelListeners;
-
-/// <summary>
-/// Delegates to be notified when a user leaves a room or is forced to leave.
-/// </summary>
-/// <param name="userAgent">The user agent that requested LeaveRoom().
-/// <param name="result">Result of the LeaveRoom() request</param>
-/// <param name="force">Whether to force the user to leave</param>
-/// <param name="roomId">Id of the room to leave</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnLeaveRoom onLeaveRoomListeners;
-
-/// <summary>
-/// Delegates to be notified of the results of channel information requests or channel moves forced by the server.
-/// </summary>
-/// <param name="userAgent">The user agent that requested GetChannelInfo().
-/// <param name="result">Result of the GetChannelInfo() request</param>
-/// <param name="channelInfo">Channel information received from the server</param>
-public Interface.DelUserOnChannelInfo onChannelInfoListeners;
-
-/// <summary>
-/// Delegates to be notified of the results of any channel information list requests or channel moves forced by the server.
-/// </summary>
-/// <param name="userAgent">The user agent that requested GeAllChannelInfo().
-/// <param name="result">GeAllChannelInfo() information request result</param>
-/// <param name="channelInfo">List of channel information received from the server</param>
-public Interface.DelUserOnAllChannelInfo onAllChannelInfoListeners;
-
-/// <summary>
-/// Delegates to be notified of channel information request results or channel moves forced by the server.
-/// </summary>
-/// <param name="userAgent">The user agent that requested GetChannelCountInfo().
-/// <param name="result">Result of the GetChannelCountInfo() request</param>
-/// <param name="channelCountInfo">The channel's user count and room count information received from the server</param>.
-public Interface.DelUserOnChannelCountInfo onChannelCountInfoListeners;
-
-/// <summary>
-/// A delegate to be notified of the results of any channel information requests or channel moves forced by the server.
-/// </summary>
-/// <param name="userAgent">The user agent that requested GetAllChannelCountInfo().
-/// <param name="result">Result of the GetAllChannelCountInfo() request</param>
-/// <param name="channelCountInfo">List of channel's user count and room count information received from the server</param>
-public Interface.DelUserOnAllChannelCountInfo onAllChannelCountInfoListeners;
-
-/// <summary>
-/// Delegates to be notified of channel move request results or channel moves forced by the server.
-/// </summary>
-/// <param name="userAgent">The user agent that performed the MoveChannel()</param>.
-/// <param name="result">MoveChannel() result code</param>
-/// <param name="force">Whether the server forced the channel to be moved</param>
-/// <param name="channelId">Id of the moved channel</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnMoveChannel onMoveChannelListeners;
-
-/// <summary>
-/// Delegate to receive snapshot request results.
-/// </summary>
-/// <param name="userAgent">The user agent that took the snapshot</param>.
-/// <param name="result">Snapshot() request result</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnSnapshot onSnapshotListeners;
-
-/// <summary>
-/// Delegates to be notified when errors occur while using basic functionality.
-/// </summary>
-/// <param name="userAgent">The user agent where the error occurred</param>
-/// <param name="errorCode">Error code</param>
-/// <param name="command">Command to raise the error</param>
-public Interface.DelUserOnErrorCommand onErrorCommandListeners;
-
-/// <summary>
-/// Delegates to be notified when a packet transmission error occurs.
-/// </summary>
-/// <param name="userAgent">The user agent where the error occurred</param>
-/// <param name="errorCode">Error code</param>
-/// <param name="command">The message where the error occurred</param>
-public Interface.DelUserOnErrorCustomCommand onErrorCustomCommandListeners;
-
-/// <summary>
-/// The delegate to be notified of the result of a logout request or forced logout.
-/// </summary>
-/// <param name="userAgent">The user agent that requested Logout().
-/// <param name="result">Logout() result</param>
-/// <param name="force">Whether forced by the server</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnLogout onLogoutListeners;
-
-/// <summary>
-/// Representatives to be notified.
-/// </summary>
-/// <param name="userAgent">The user agent that received the Notice()</param>.
-/// <param name="message">Notice message</param>
-public Interface.DelUserOnNotice onNoticeListeners;
-
-/// <summary>
-/// Delegates to receive kickout notifications.
-/// </summary>
-/// <param name="userAgent">The user agent that was kicked out</param>.
-/// <param name="message">Message received from the child</param>
-public Interface.DelUserOnAdminKickout onAdminKickoutListeners;
-
-/// <summary>
-/// Delegates to be notified when a session on the server is closed.
-/// </summary>
-/// <param name="userAgent">The user agent whose session has been closed</param>
-/// <param name="result">Reason the session was closed</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelUserOnSessionClose onSessionCloseListeners;
-```
-<br>
-
-IUserListener is an interface that defines the results or notifications of any action of UserAgent. You can register a listener implementing this interface with UserAgent.AddUserListener() to receive responses as a registered listener.
-
-```c#
-class UserListener : IUserListener{
-    /// <summary>
-    /// Login() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that made the Login() request</param>
-    /// <param name="result">Login() request result</param>
-    /// <param name="loginInfo">Login information</param>
-    void OnLogin(UserAgent userAgent, GameAnvil.Defines.ResultCodeLogin result, UserAgent.LoginInfo loginInfo);
-    
-    /// <summary>
-    /// MatchRoom() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested MatchRoom()</param>.
-    /// <param name="result">Result of the MatchRoom() request</param>
-    /// <param name="resultCode">User result code</param>
-    /// <param name="roomId">Id of the matched room</param>
-    /// <param name="roomName">Name of the matched room</param>
-    /// <param name="created">Whether the matched room was created</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnMatchRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchRoom result, int resultCode, int roomId, string roomName, bool created, Payload payload);
-    
-    /// <summary>
-    /// CreateRoom() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested CreateRoom()</param>.
-    /// <param name="result">CreateRoom() request result</param>
-    /// <param name="roomId">Id of the created room</param>
-    /// <param name="roomName">Name of the created room</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnCreateRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeCreateRoom result, int roomId, string roomName, Payload payload);
-    
-    /// <summary>
-    /// JoinRoom() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested JoinRoom()</param>
-    /// <param name="result">Result of the JoinRoom() request</param>
-    /// <param name="roomId">Id of the room entered</param>
-    /// <param name="roomName">Name of the room you joined</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnJoinRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeJoinRoom result, int roomId, string roomName, Payload payload);
-    
-    /// <summary>
-    /// NameRoom() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested NameRoom()</param>
-    /// <param name="result">Result of the NameRoom() request</param>
-    /// <param name="roomName">Room name</param>
-    /// <param name="roomId">Id of the room entered</param>
-    /// <param name="created">Whether the entered room was created</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnNamedRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeNamedRoom result, int roomId, string roomName, bool created, Payload payload);
-    
-    /// <summary>
-    /// MatchUserStart() result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested MatchUserStart()</param>
-    /// <param name="result">Result of the MatchUserStart() request</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnMatchUserStart(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserStart result, Payload payload);
-    
-    /// <summary>
-    /// The result of a MatchUserStart() or MatchPartyStart() request.
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
-    /// <param name="result">Result of the MatchUserStart() or MatchPartyStart() request</param>
-    /// <param name="created">Whether a room was created</param>
-    /// <param name="roomId">Id of the matched room</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnMatchUserDone(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserDone result, bool created, int roomId, Payload payload);
-    
-    /// <summary>
-    /// MatchUserStart() or MatchPartyStart() timeout
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested MatchUserStart() or MatchPartyStart()</param>.
-    void OnMatchUserTimeout(UserAgent userAgent);
-    
-    /// <summary>
-    /// Results of MatchUserCancel()
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested MatchUserCancel()</param>.
-    /// <param name="result">Result of the MatchUserCancel() request</param>
-    void OnMatchUserCancel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchUserCancel result);
-    
-    /// <summary>
-    /// The result of a MatchPartyStart() request.
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested MatchPartyStart()</param>.
-    /// <param name="result">Result of the MatchPartyStart() request</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnMatchPartyStart(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchPartyStart result, Payload payload);
-    
-    /// <summary>
-    /// The result of a MatchPartyCancel() request.
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested MatchPartyCancel()</param>.
-    /// <param name="result">Result of the MatchPartyCancel() request</param>
-    void OnMatchPartyCancel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMatchPartyCancel result);
-    
-    /// <summary>
-    /// LeaveRoom() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested LeaveRoom()</param>
-    /// <param name="result">Result of the LeaveRoom() request</param>
-    /// <param name="force">Whether to force the user to leave</param>
-    /// <param name="roomId">Id of the room to leave</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnLeaveRoom(UserAgent userAgent, GameAnvil.Defines.ResultCodeLeaveRoom result, bool force, int roomId, Payload payload);
-    
-    /// <summary>
-    /// GetChannelInfo() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested GetChannelInfo()</param>.
-    /// <param name="result">Result of the GetChannelInfo() request</param>
-    /// <param name="channelInfo">Channel information received from the server</param>
-    void OnChannelInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeChannelInfo result, Payload channelInfo);
-    
-    /// <summary>
-    /// GeAllChannelInfo() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested GeAllChannelInfo()</param>
-    /// <param name="result">Result of the GeAllChannelInfo() information request</param>
-    /// <param name="channelInfo">List of channel information received from the server</param>
-    void OnAllChannelInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeAllChannelInfo result, Dictionary<string, Payload> channelInfo);
-    
-    /// <summary>
-    /// GetChannelCountInfo() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested GetChannelCountInfo()</param>.
-    /// <param name="result">Result of the GetChannelCountInfo() request</param>
-    /// <param name="channelCountInfo">The number of users and rooms in the channel received from the server</param>
-    void OnChannelCountInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo);
-    
-    /// <summary>
-    /// GetAllChannelCountInfo() request result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested GetAllChannelCountInfo()</param>.
-    /// <param name="result">Result of the GetAllChannelCountInfo() request</param>
-    /// <param name="channelCountInfo">List of channel's user count and room count information received from the server</param>
-    void OnAllChannelCountInfo(UserAgent userAgent, GameAnvil.Defines.ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo);
-    
-    /// <summary>
-    /// MoveChannel() result
-    /// </summary>
-    /// <param name="userAgent">The user agent that did the MoveChannel()</param>.
-    /// <param name="result">MoveChannel() result code</param>
-    /// <param name="force">Whether the server forced the channel to be moved</param>
-    /// <param name="channelId">Id of the moved channel</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnMoveChannel(UserAgent userAgent, GameAnvil.Defines.ResultCodeMoveChannel result, bool force, string channelId, Payload payload);
-    
-    /// <summary>
-    /// Snapshot() request result
-    /// </summary>
-    /// <param name="userAgent">Snapshot() requested user agent</param>
-    /// <param name="result">Snapshot() request result</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnSnapshot(UserAgent userAgent, GameAnvil.Defines.ResultCodeSnapshot result, Payload payload);
-    
-    /// <summary>
-    /// A basic functionality error occurred.
-    /// </summary>
-    /// <param name="userAgent">User agent where the error occurred</param>
-    /// <param name="errorCode">Error code</param>
-    /// <param name="command">Command to raise the error</param>
-    void OnError(UserAgent userAgent, GameAnvil.Defines.ErrorCode errorCode, User.Defines.Commands command);
-    
-    /// <summary>
-    /// A packet transmission error occurred.
-    /// </summary>
-    /// <param name="userAgent">The user agent where the error occurred</param>
-    /// <param name="errorCode">Error code</param>
-    /// <param name="command">The message where the error occurred</param>
-    void OnError(UserAgent userAgent, GameAnvil.Defines.ErrorCode errorCode, string command);
-    
-    /// <summary>
-    /// Logout() result
-    /// </summary>
-    /// <param name="userAgent">The user agent that requested Logout()</param>
-    /// <param name="result">Logout() result</param>
-    /// <param name="force">Whether forced by the server</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnLogout(UserAgent userAgent, GameAnvil.Defines.ResultCodeLogout result, bool force, Payload payload);
-    
-    /// <summary>
-    /// Notice()
-    /// </summary>
-    /// <param name="userAgent">The user agent that received the Notice()</param>.
-    /// <param name="message">Notice message</param>
-    void OnNotice(UserAgent userAgent, string message);
-    
-    /// <summary>
-    /// Notify if kicked out
-    /// </summary>
-    /// <param name="userAgent">The user agent that was kicked out</param>.
-    /// <param name="message">Message received from admin</param>
-    void OnAdminKickout(UserAgent userAgent, string message);
-    
-    /// <summary>
-    /// Notifies the user listener when the session on the server is closed<para></para>
-    /// If you receive this notification, log back in and restart.
-    /// </summary>
-    /// <param name="userAgent">The user agent whose session was closed</param>
-    /// <param name="result">Reason the session was closed</param>
-    /// <param name="payload">Additional information received from the server</param>
-    void OnSessionClose(UserAgent userAgent, GameAnvil.Defines.ResultCodeSessionClose result, Payload payload);
-}
-
-UserAgent userAgent = connector.GetUserAgent(serviceId, subId);
-userAgent.AddUserListener(new UserListener());
-```

@@ -1,37 +1,47 @@
-## Game > GameAnvil > 개요
+<!-- pre-align:aligned sig=6bcec4ef6ca3 -->
+
+<a id="game-gameanvil-overview"></a>
+## Game > GameAnvil > 개요 { #game-gameanvil-overview }
 
 GameAnvil은 Java 기반의 고성능 실시간 게임 서버 엔진입니다. 게임 서버의 개발 시간을 단축하고 성능과 안정성을 높이는 것을 지향합니다. GameAnvil을 이용하여 풍부한 Java 생태계의 혜택을
 누리면서 쉽고 빠르게 실시간 게임 서버를 개발해 보세요. 초보 개발자도 쉽게 익혀서 바로 실시간 게임 서버를 개발하면서 Unity 혹은 Type Script 등으로 개발 중인 클라이언트를 바로 연동할 수 있습니다.
 또한 GameAnvil 시스템은 게임 서버의 개발뿐만 아니라 기능/성능 테스트는 물론이고 클라우드상에서의 운영과 모니터링까지 책임질 수 있는 전반적인 도구를 함께 제공합니다.
 
-## 공식 레퍼런스 게임
+<a id="official-reference-game"></a>
+## 공식 레퍼런스 게임 { #official-reference-game }
 
 GameAnvil을 이용하여 개발하고 서비스 중인 대표적인 게임들은 아래와 같습니다.
 
 ![gameanvil-references.png](https://static.toastoven.net/prod_gameanvil/images/gameanvil-references.png)
 
-## 특징
+<a id="character"></a>
+## 특징 { #character }
 
 GameAnvil의 궁극적인 목표는 경험이 많지 않는 개발자도 쉽게 실시간 콘텐츠를 개발하여 서비스할 수 있도록 지원하는 것입니다. 이런 측면에서 코드 생산성과 사용 편의성을 높이고, 가능한 사용자로 하여금 기술적
 진입 장벽을 낮추고자 합니다. 또한 클라우드 상품의 장점을 극대화하여 더욱 쉽게 서비스를 운영할 수 있도록 지원하고자 합니다.
 
+<a id="character-increase-code-productivity"></a>
 #### 코드 생산성 증대
 
 * 간결하고 쉽게 순차적 코드만 작성하면 엔진이 알아서 Virtual Thread 기반으로 고성능 비동기 처리를 합니다.
 
+<a id="character-reliable-performance"></a>
 #### 안정적인 성능
 
 * 고성능 라이브러리를 기반으로 최적의 비동기 처리와 안정적인 성능을 제공 합니다.
 
+<a id="character-easy-to-use"></a>
 #### 편리한 사용 법
 
 * 클라우드 상에서 서버 관리와 모니터링은 물론이고 테스트까지 지원 합니다.
 
+<a id="character-flexible-server-configuration"></a>
 #### 유연한 서버 구성
 
 * 소규모 게임에서 대규모 게임까지 서비스 규모와 특성에 맞춰 최적의 구성이 가능 합니다.
 
-## 추천 사용 대상 게임
+<a id="recommended-games"></a>
+## 추천 사용 대상 게임 { #recommended-games }
 
 현재 GameAnvil은 아래와 같은 종류의 게임들에 거의 완벽하게 대응합니다.
 
@@ -41,24 +51,29 @@ GameAnvil의 궁극적인 목표는 경험이 많지 않는 개발자도 쉽게 
 * 실시간 콘텐츠 혹은 DB 저장소 등이 필요한 인디 게임
 * 그 외, 실시간 콘텐츠를 쉽게 작성하여 서비스하고 싶은 여러 가지 게임
 
-## 손쉬운 유니티 개발 환경의 통합
+<a id="integrate-an-easy-to-use-unit-development-environment"></a>
+## 손쉬운 유니티 개발 환경의 통합 { #integrate-an-easy-to-use-unit-development-environment }
 
 GameAnvil 서버와 쉽게 연동 가능한  **게임앤빌 커넥터** 유니티 패키지를 제공합니다. 해당 패키지를 통해 기존 유니티 개발 환경을 바로 GameAnvil 서버와 연동할 수 있습니다.
 
+<a id="integrate-an-easy-to-use-unit-development-environment-fast-connection-and-authentication"></a>
 #### 빠른 연결 및 인증
 
 * 서버에 대한 연결 및 인증을 전용 API를 통해 쉽고 빠르게 처리할 수 있습니다.
 
+<a id="integrate-an-easy-to-use-unit-development-environment-rich-multiplayer-api"></a>
 #### 풍부한 멀티 플레이 API
 
 * 방 생성, 방 입장, 매치메이킹 등 멀티 플레이 게임을 구현함에 있어 필요한 모든 기능이 API로 제공됩니다.
 
+<a id="integrate-an-easy-to-use-unit-development-environment-support-synchronization-component"></a>
 #### 동기화 컴포넌트 지원
 
 * 컴포넌트를 등록하는 것만으로도 별도의 서버 구현 없이 유저 간 동기화가 가능합니다.
 * 좌표 동기화, 강제 동기화, 에니메이터 동기화 외에 사용자가 정의한 값 동기화를 지원합니다.
 
-## 추천 사용 대상 개발자
+<a id="recommended-developers"></a>
+## 추천 사용 대상 개발자 { #recommended-developers }
 
 **경험이 적은 개발자**도 쉽게 개발하여 안정적으로 서비스할 수 있도록 편의성과 유연성을 갖추고 있습니다.
 
@@ -66,29 +81,34 @@ GameAnvil 서버와 쉽게 연동 가능한  **게임앤빌 커넥터** 유니�
 |--------------------------------------------------------------------------|----------------------------------------------------------------------------------------|--------------------------------------------------------------------|------------------------------------------------------------------| 
 | Java<br/>Virtual Thread<br/>Continuation<br/>Single Thread<br/>Lock Free | No SPOF<br/>Monitoring<br/>Load Balance<br/>Non-Stop Patchable<br/>Connection Recovery | PaaS<br/>Test Support<br/>Connectors<br/>Documentation<br/>Samples | Node<br/>Runtime Scalable<br/>TCP / IP<br/>WebSocket<br/>HTTP(S) | 
 
+<a id="recommended-developers-developers-who-know-how-to-handle-java"></a>
 #### 1. **Java**를 다룰 줄 아는 개발자
 
 * Java를 다룰 줄 아는 개발자에게는 최상의 선택입니다. 엔진이 제공하는 처리 흐름 위에서 콘텐츠에만 집중할 수 있습니다.
 * DB나 Redis 그리고 HTTP 등 게임 서버 개발에 필요한 모든 API를 GameAnvil이 제공합니다.
 
+<a id="recommended-developers-developer-who-has-developed-a-game-server-in-other-languages-such-as-c-c-and-more"></a>
 #### 2. **C++, C#** 등 다른 언어로 게임 서버를 개발해 본 개발자
 
 * 다른 언어로 게임 서버를 개발해 본 개발자는 Java의 기본적인 문법만 익히면 바로 콘텐츠 개발을 시작할 수 있습니다.
 * Java와 다른 언어 사이에서 오는 차이점 외에는 문제될 것이 없습니다. Java를 익히면서 콘텐츠 개발을 진행해보세요. GameAnvil 개발진도 C++에서 Java로 큰 어려움 없이 전환하였습니다.
 
+<a id="recommended-developers-a-junior-or-beginner-developer-who-has-never-developed-a-game-server"></a>
 #### 3. **게임 서버를 개발해 본 적 없는 주니어 혹은 신입 개발자**
 
 * 게임 서버를 개발해 본 적이 없더라도 제공되는 가이드 문서와 레퍼런스를 바탕으로 쉽고 편하게 실시간 콘텐츠를 개발할 수 있습니다.
 * 실제 게임 서버에서 처리해야 할 대부분의 기능은 엔진에서 담당하므로 콘텐츠에만 집중할 수 있습니다.
 
-## 아직 지원하지 않는 게임
+<a id="unsupported-games"></a>
+## 아직 지원하지 않는 게임 { #unsupported-games }
 
 GameAnvil은 아직 진화 단계에 있습니다. 그렇다보니 아직 다음과 같은 스타일의 게임은 지원하지 않습니다. 하지만 빠른 시일 내에 지원할 수 있도록 모든 개발진이 지금도 최선을 다하고 있습니다.
 
 * MMO(RPG) 게임
 * FPS 혹은 AOS 등의 P2P 기반 게임
 
-## 참고 서버 구성
+<a id="configure-reference-server"></a>
+## 참고 서버 구성 { #configure-reference-server }
 
 | 게임 스타일 | 최대 동시 접속자 수 | 실시간 콘텐츠 유무 | 매치메이킹 사용 | ** 최소 VM 대수 | 대략적인 구성                                   |
 |--------|-------------|------------|----------|-------------|-------------------------------------------|
@@ -103,12 +123,14 @@ GameAnvil은 아직 진화 단계에 있습니다. 그렇다보니 아직 다음
 
 ** DB나 Redis 등의 저장소는 대수에서 제외됩니다.
 
-## 참고 영상
+<a id="additional-videos"></a>
+## 참고 영상 { #additional-videos }
 
 * NDC 2021 [Java로 실시간 겜서버 엔진 개발 가능? ㅇㅇ 가능](https://youtu.be/kQyu5pAChcA)
 * NHN Cloud On 2022 웨비나 [On.5 온라인 게임 개발도 쉽고 빠르게](https://www.youtube.com/watch?v=Uv2a6fAU1xM)
 
-## 개인정보 처리에 대한 안내
+<a id="information-on-personal-information-processing"></a>
+## 개인정보 처리에 대한 안내 { #information-on-personal-information-processing }
 
 GameAnvil 서비스를 이용하는 과정에서 고객은 이용자의 개인정보를 수집/이용할 수 있으며, 이 경우 고객은 개인정보보호법 등 관련 법령을 준수할 의무가 있습니다.
 또한, 이 과정에서 고객과 NHN Cloud 간 개인정보 처리에 관한 업무 위수탁 관계가 발생할 수 있습니다. 위탁자의 지위에 있는 고객은 수탁사인 NHN Cloud와 별도 서면에 의한 위탁 계약을 체결할 수 있으며

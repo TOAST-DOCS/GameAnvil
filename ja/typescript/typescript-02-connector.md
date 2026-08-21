@@ -1,10 +1,15 @@
-## Game > GameAnvil > TypeScript開発ガイド > 接続エージェント
+<!-- pre-align:aligned sig=5e9747b9d2ff -->
 
-## GameAnvilConnector
+<a id="game-gameanvil-typescript-development-guide-connection-agent"></a>
+## Game > GameAnvil > TypeScript開発ガイド > 接続エージェント { #game-gameanvil-typescript-development-guide-connection-agent }
+
+<a id="gameanvilconnector"></a>
+## GameAnvilConnector { #gameanvilconnector }
 
 GameAnvilConnectorは、サーバーへの接続と通信を担当するクラスで、このオブジェクトを通じてサーバーにリクエストを送信したり、サーバーから受信するメッセージに対するハンドラを登録して管理したりできます。前のインストールチャプターでは、GameAnvilConnectorの作成とconnect機能の使用方法について説明しました。このドキュメントでは、より詳細な使用方法と、GameAnvilConnectorの他の機能について見ていきます。
 
-### 生成
+<a id="create"></a>
+### 生成 { #create }
 
 以下のようにGameAnvilConnectorオブジェクトを作成します。通常は、1つのプロセスで1つのコネクタオブジェクトを使用するのが一般的です。
 
@@ -14,7 +19,8 @@ import { GameAnvilConnector } from "gameanvil-connector";
 const connector = new GameAnvilConnector();
 ```
 
-### サーバー接続
+<a id="server-connection"></a>
+### サーバー接続 { #server-connection }
 
 connect()関数を利用してサーバーに接続します。呼び出す前に、hostとportをあらかじめ設定しておく必要があります。
 
@@ -45,7 +51,8 @@ connector.connect()
 
 コネクタのほとんどのAPIは、このように非同期で動作し、Promiseオブジェクトを返すため、上記のように状況に合わせてawaitやthenなどの機能を使用できます。
 
-### 切断検知
+<a id="detect-disconnection"></a>
+### 切断検知 { #detect-disconnection }
 
 サーバーによって接続が強制的に終了されたり、ネットワークの問題などで接続が切れたりした場合に実行する動作を指定できます。
 
@@ -81,7 +88,8 @@ connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) =>
 
 2番目の引数で、サーバーの実装に応じた追加情報を受け取ります。追加情報の処理方法は、後ほど説明します。
 
-### 認証
+<a id="authentication"></a>
+### 認証 { #authentication }
 
 サーバーへの接続に成功した後、エンジンの全ての機能を使用するためには、まず認証を進める必要があります。authentication()関数は、サーバーとあらかじめ協議されたaccountId、deviceId、password値を引数として受け取り、認証動作を実行してPromiseを返します。認証動作完了時点でPromiseを通じて認証に成功したかどうかと、サーバーから受け取った追加データなどを確認できます。
 
@@ -122,7 +130,8 @@ if (connector.isAuthenticated) {
 }
 ```
 
-### 接続と認証の両方を進行
+<a id="proceed-with-both-connection-and-authentication"></a>
+### 接続と認証の両方を進行 { #proceed-with-both-connection-and-authentication }
 
 接続が完了すると認証が必須となるため、この二つを順次実行する便利な関数を呼び出すと便利です。
 
@@ -140,7 +149,8 @@ console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 
 認証結果は、通常、認証のみをリクエストした場合の結果と同じ方法で使用します。
 
-### Pingリクエスト
+<a id="request-ping"></a>
+### Pingリクエスト { #request-ping }
 
 基本的にPingリクエストは定期的に送信されるように設定されていますが、設定を変更して手動にした場合は、手動でメソッドを呼び出してPingリクエストを送信できます。
 
@@ -151,7 +161,8 @@ connector.ping();
 Pingリクエストに対するレスポンスを受け取った場合、設定によってはpongログが出力されることがあります。
 
 
-### メッセージ受信コールバック登録
+<a id="register-message-reception-callback"></a>
+### メッセージ受信コールバック登録 { #register-message-reception-callback }
 
 サーバーからプロトコルバッファメッセージを受信した際に、処理関数を実行するように設定できます。1つのプロトコルバッファに対しては、1つの処理関数のみ登録可能で、既に処理関数が登録されている状態で再度登録すると、既存の処理関数は削除されます。
 
@@ -172,7 +183,8 @@ connector.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userIn
 });
 ```
 
-### チャンネルユーザー及びルーム数情報リクエスト
+<a id="request-channel-user-and-room-count-information"></a>
+### チャンネルユーザー及びルーム数情報リクエスト { #request-channel-user-and-room-count-information }
 
 サーバーにある特定のサービスの全てのチャネルの、それぞれのユーザー数とルーム数の情報をリクエストできます。
 
@@ -202,7 +214,8 @@ console.log(`${channelCountInfo.channelId} userCount: ${channlCountInfo.userCoun
 ```
 
 
-### チャンネル情報リクエスト
+<a id="request-channel-information"></a>
+### チャンネル情報リクエスト { #request-channel-information }
 
 サーバーにある特定のサービスの全てのチャネルの、それぞれの情報をリクエストできます。
 
@@ -228,7 +241,8 @@ const result = await connector.getChannelInfo(serviceName, channelId);
 const payload = result.data;
 ```
 
-### チャンネル一覧リクエスト
+<a id="request-channel-list"></a>
+### チャンネル一覧リクエスト { #request-channel-list }
 
 サーバーにある特定のサービスの全てのチャネル一覧をリクエストできます。
 
@@ -242,7 +256,8 @@ for (let channelId of result) {
 }
 ```
 
-### ユーザー状態チェック一時停止及び再開
+<a id="pause-and-resume-user-status-check"></a>
+### ユーザー状態チェック一時停止及び再開 { #pause-and-resume-user-status-check }
 
 アプリがバックグラウンドに移行した場合など、ユーザーステータスチェックに応答できない状況が予想される場合に、アプリを一時停止できます。
 
@@ -262,7 +277,8 @@ connector.pauseClientStateCheck(pauseTime);
 connector.resumeClientStateCheck();
 ```
 
-### パケット送信
+<a id="send-packet"></a>
+### パケット送信 { #send-packet }
 
 ゲートウェイサーバーにプロトコルバッファメッセージを送信できます。
 
@@ -299,7 +315,8 @@ if (result.resultCode === ResultCode.Success) {
 }
 ```
 
-### 例外ハンドリング
+<a id="except-handling"></a>
+### 例外ハンドリング { #except-handling }
 
 サーバー接続中に例外が発生した場合に実行する動作を指定できます。
 
@@ -311,7 +328,8 @@ connector.onException = (exception: Error) => {
 
 登録された関数の最初の引数には、エラーオブジェクトが渡されます。
 
-### 接続終了
+<a id="end-connection"></a>
+### 接続終了 { #end-connection }
 
 サーバーとの接続を明示的に終了するようにリクエストできます。
 

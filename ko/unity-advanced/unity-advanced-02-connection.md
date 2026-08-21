@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > 커넥터
+<!-- pre-align:aligned sig=7eecd13a676d -->
 
-## 커넥터
+<a id="game-gameanvil-unity-advanced-development-guide-connector"></a>
+## Game > GameAnvil > Unity 심화 개발 가이드 > 커넥터 { #game-gameanvil-unity-advanced-development-guide-connector }
+
+<a id="connectionagent"></a>
+## 커넥터 { #connectionagent }
 
 GameAnvilConnector는 GameAnvil 서버와의 연결을 관리하는 작업을 담당합니다. 연결(Connect()), 인증(Authentication()) 등 기본 세션 관리 기능 및 채널 목록 등을 제공합니다.
 
-### 서버 연결
+<a id="connect-to-the-server"></a>
+### 서버 연결 { #connect-to-the-server }
 
 Connect() 를 호출하여 서버에 연결합니다.
 
@@ -33,7 +38,8 @@ Connect()은 다음과 같은 2개의 매개변수를 가지고 있습니다.
 
 별도의 리턴값은 없고 성공할 경우 다음 코드를 실행하게 되며, 실패할 경우 예외가 발생하게 됩니다.
 
-### 인증
+<a id="authentication"></a>
+### 인증 { #authentication }
 
 서버에 연결한 후 Authentication() 를 호출하여 인증 절차를 진행합니다.
 Authentication() 메소드를 호출하면 서버에서는 Connection 객체의 onAuthenticate() 콜백이 호출되며, 이 콜백의 처리 결과로 인증의 성공, 실패가 결정됩니다.
@@ -92,7 +98,8 @@ AuthenticationResult의 상세 내용은 다음과 같습니다.
 | String                       | Message           | 인증 메시지                          |
 | Payload                      | payload           | 클라이언트에서 필요한 추가 정보               |
 
-### 연결과 인증
+<a id="connection-and-authentication"></a>
+### 연결과 인증 { #connection-and-authentication }
 
 연결 또는 인증시 필요한 값을 GameAnvilConnector의 속성으로 저장하여 사용할 수도 있습니다.
 
@@ -146,7 +153,8 @@ public async void ConnectAndAuthentication2()
 }
 ```
 
-### 보안 연결
+<a id="secure-connection"></a>
+### 보안 연결 { #secure-connection }
 GameAnvil 서버에 보안 설정을 하였을때는 ConnectSecure() 을 호출하여 보안 연결을 해야합니다. 
 ```c#
 public async void ConnectSecure()
@@ -171,7 +179,8 @@ ConnectSecure()은 다음과 같은 2개의 매개변수를 가지고 있습니�
 
 별도의 리턴값은 없고 성공할 경우 다음 코드를 실행하게 되며, 실패할 경우 예외가 발생하게 됩니다.
 
-### 채널 정보
+<a id="channel-information"></a>
+### 채널 정보 { #channel-information }
 
 GameAnvil은 설정에서 자유롭게 채널을 구성할 수 있습니다. 이런 채널 구성은 서버와 클라이언트 간에 미리 약속하여 고정된 형태로 사용할 수도 있지만, 상황에 따라 다양하게 변경하여 사용할 수도 있습니다. GameAnvilConnector에서는 이렇게 변경된 채널 정보를 얻어올 수 있도록 몇 가지 메소드를 제공합니다. 
 
@@ -183,6 +192,7 @@ GameAnvil은 설정에서 자유롭게 채널을 구성할 수 있습니다. 이
 | GetAllChannelCountInfo() | 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수) 요청 |
 | GetAllChannelInfo()      | 특정 서비스의 모든 채널에 대한 정보(사용자 정의) 요청       |
 
+<a id="channel-information-getchannellist"></a>
 #### GetChannelList
 
 GetChannelList()는 특정 서비스의 채널 아이디 목록을 요청하여 받아올 수 있습니다.
@@ -227,6 +237,7 @@ ResultCodeChannelList의 상세 내용은 다음과 같습니다.
 | CHANNEL_LIST_SUCCESS              | 0    | 성공                                         |
 | CHANNEL_LIST_FAIL_NO_CHANNEL_LIST | 1801 | 실패. 채널 목록을 찾을 수 없음                         |                          
 
+<a id="channel-information-getchannelcountinfo"></a>
 #### GetChannelCountInfo
 
 GetChannelCountInfo()는 특정 채널의 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다.
@@ -284,6 +295,7 @@ ChannelCountResult 의 상세 내용은 다음과 같습니다.
 
 <br>
 
+<a id="channel-information-getchannelinfo"></a>
 #### GetChannelInfo
 
 GetChannelInfo()는 특정 채널의 정보(사용자 정의)를 요청하여 받아올 수 있습니다.
@@ -331,6 +343,7 @@ ResultCodeChannelInfo 상세 내용은 다음과 같습니다.
 | CHANNEL_INFO_FAIL_INVALID_CHANNEL_ID | 1923 | 실패. 잘못된 채널 아이디                             |
 | CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924 | 실패. 채널을 찾을 수 없음                            |
 
+<a id="channel-information-getallchannelcountinfo"></a>
 #### GetAllChannelCountInfo
 
 GetAllChannelCountInfo()는 특정 서비스의 모든 채널에 대한 카운트 정보(유저와 방 개수)를 요청하여 받아올 수 있습니다.
@@ -376,6 +389,7 @@ ResultCodeAllChannelCountInfo의 상세 내용은 다음과 같습니다.
 | ALL_CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1932 | 실패. 잘못된 서비스 아이디                            |
 | ALL_CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1933 | 실패. 채널을 찾을 수 없음                            |
 
+<a id="channel-information-getallchannelinfo"></a>
 #### GetAllChannelInfo
 
 GetAllChannelInfo()는 특정 서비스의 모든 채널에 대한 정보(사용자 정의)를 요청하여 받아올 수 있습니다.
@@ -423,7 +437,8 @@ ResultCodeAllChannelInfo의 상세 내용은 다음과 같습니다.
 
 ChannelInfoResult의 channelInfo 필드는 채널 아이디를 키로, 사용자 정의 채널 정보를 담은 Payload를 값으로 가지는 Dictionary<string, Payload> 입니다. 이를 이용해 채널 별 사용자 정의 정보를 얻을 수 있습니다.
 
-### 연결 종료
+<a id="terminate-the-connection"></a>
+### 연결 종료 { #terminate-the-connection }
 
 Disconnect() 메소드를 이용해 서버와의 연결을 종료합니다.
 
@@ -443,6 +458,7 @@ public async void Disconnect()
 
 별도의 리턴값은 없고 성공할 경우 다음 코드를 실행하게 되며, 실패할 경우 예외가 발생하게 됩니다.
 
+<a id="terminate-the-connection-end-connection-notification"></a>
 #### 연결 종료 알림
 Disconnect() 를 호출하지 않더라도 서버에서 강제로 연결을 종료하거나, 네트워크에 문제가 생기면 연결이 끊어질 수 있으며, 이에 대한 알림을 받을 수 있습니다. 
 ```c#

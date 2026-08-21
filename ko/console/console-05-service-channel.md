@@ -1,6 +1,10 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 서비스와 채널
+<!-- pre-align:aligned sig=da0d847670f4 -->
 
-## 서비스
+<a id="game-gameanvil-console-user-guide-service-and-channel"></a>
+## Game > GameAnvil > 콘솔 사용 가이드 > 서비스와 채널 { #game-gameanvil-console-user-guide-service-and-channel }
+
+<a id="service"></a>
+## 서비스 { #service }
 
 이 문서에서는 앞서 구성 정보(Config) 등록을 다루면서 언급한 '서비스'에 대해 설명합니다.
 
@@ -12,7 +16,8 @@
 
 자세한 내용은 [Game > GameAnvil > 서버 개발 가이드 > 게임 노드 구현](../server-impl/server-impl-03-game-node/#gamenode) 이나  [Game > GameAnvil > 서버 개발 가이드 > 서포트 노드 구현](../server-impl/server-impl-05-support-node/#supportnode)을 참고 하십시오.
 
-## 채널
+<a id="channel"></a>
+## 채널 { #channel }
 
 채널은 하나의 서비스를 논리적으로 나눌 수 있는 방법을 제공합니다. 예를 들어 RPSGame 서비스를 '초보', '중수', '고수' 채널 등으로 나눌 수 있습니다. 
 

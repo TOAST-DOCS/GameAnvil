@@ -1,7 +1,27 @@
-## Game > GameAnvil > Release Notes > GameHammer
+<!-- pre-align:aligned sig=39fc01e201f7 -->
 
-### 2.1.0 (June 30, 2025)
+<a id="game-gameanvil-release-notes-gamehammer"></a>
+## Game > GameAnvil > Release Notes > GameHammer { #game-gameanvil-release-notes-gamehammer }
 
+<a id="20-january-29-2026"></a>
+### 2.2.0 (January 29, 2026) { #20-january-29-2026 }
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-new"></a>
+#### New
+
+<!-- TODO: translate body -->
+
+<a id="20-january-29-2026-change"></a>
+#### Change
+
+<!-- TODO: translate body -->
+
+<a id="10-june-30-2025"></a>
+### 2.1.0 (June 30, 2025) { #10-june-30-2025 }
+
+<a id="10-june-30-2025-change"></a>
 #### Change
 * GameHammer has also released version 2.1.0 to coincide with the release of GameAnvil 2.1.0. Expand comment. Comment on line R6ResolvedCode has comments. Press enter to view.
 * Engine protocol updated to match GameAnvil 2.1 server.
@@ -19,13 +39,16 @@
     | FORCE\_CLOSE\_BASE\_CONNECTION<br>The server calls close() on BaseConnection | FORCE\_CLOSE\_CONNECTION<br>Calling close() on IConnection on the server |
     | FORCE\_CLOSE\_BASE\_USER<br>Calling closeConnection() on BaseUser on the server | FORCE\_CLOSE\_USER<br>Calling closeConnection() on IUser on the server |
 
+<a id="10-june-30-2025-fix"></a>
 #### Fix
 * Fixed an issue where protocol buffers for servers and hammers could be incompatible with each other depending on the creation environment when created in different environments.
 
 ---
 
-### 2.0.0 (2024.12.04)
+<a id="00-20241204"></a>
+### 2.0.0 (2024.12.04) { #00-20241204 }
 
+<a id="00-20241204-new"></a>
 #### New
 
 * Added the feature to configure whether to output the ClientStateCheckOK log.
@@ -38,12 +61,14 @@
     * MATCH_PARTY_CANCEL_FAIL_ALREADY_JOINED_ROOM
     * MATCH_PARTY_CANCEL_FAIL_NOT_IN_PROGRESS
 
+<a id="00-20241204-change"></a>
 #### Change
 
 * Modified Hammer to more accurately monitor connectivity.
 * Modified user code to use only the service name instead of the service ID.
 * Updated the protobuf dependency to 4.28.3.
 
+<a id="00-20241204-fix"></a>
 #### Fix
 
 * Fixed an issue where the user's status check response settings were not initialized.
@@ -55,8 +80,10 @@
 
 ---
 
-### 1.4.0 (2023.12.13)
+<a id="40-20231213"></a>
+### 1.4.0 (2023.12.13) { #40-20231213 }
 
+<a id="40-20231213-new"></a>
 #### New
 
 * Improved usability of scenario testing
@@ -70,6 +97,7 @@
 * Updated to the latest version of protobuf 3
 * Improvement has been made that you don't need to specify an index when registering Protocol
 
+<a id="40-20231213-change"></a>
 #### Change
 
 * Modified to give a Login failure response instead of a SystemError response when entering the wrong ChannelId at login
@@ -78,6 +106,7 @@
     * Modified callback to be preceded so that it is unified with other APIs
 * Improved packet code/decode performance
 
+<a id="40-20231213-fix"></a>
 #### Fix
 
 * Fixed issues that do not leave a log if an exception occurs in the state's onEnter, onExit
@@ -87,13 +116,17 @@
 
 ---
 
-### 1.3.0 (2022.12.27)
+<a id="30-20221227"></a>
+### 1.3.0 (2022.12.27) { #30-20221227 }
+<a id="30-20221227-new"></a>
 #### New
 * Added the feature to load settings through vmOption
 
 ---
-### 1.2.1 (2021.11.30)
+<a id="21-20211130"></a>
+### 1.2.1 (2021.11.30) { #21-20211130 }
 
+<a id="21-20211130-new"></a>
 #### New 
 
 * Added SecureSocket support feature.
@@ -103,7 +136,9 @@
 
 ---
 
-### 1.2.0(2021.07.13)
+<a id="game-gameanvil-release-notes-gamehammer-1"></a>
+### 1.2.0(2021.07.13) { #game-gameanvil-release-notes-gamehammer-1 }
+<a id="game-gameanvil-release-notes-gamehammer-1-change"></a>
 #### Change
 * Organized the package structure
 	* Grouped packages for internal use with gameanvilcore.
@@ -156,8 +191,10 @@
     * Added FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION
   * Added ResultCodeSessionClose
 
-### 1.1.2 (2021.11.30)
+<a id="12-20211130"></a>
+### 1.1.2 (2021.11.30) { #12-20211130 }
 
+<a id="12-20211130-new"></a>
 #### New 
 
 * Added SecureSocket support feature.
@@ -167,12 +204,15 @@
 
 ---
 
-### 1.1.1 (2021.04.16)
+<a id="11-20210416"></a>
+### 1.1.1 (2021.04.16) { #11-20210416 }
 
+<a id="11-20210416-new"></a>
 #### New 
 
 * Added `Connection.setSendPingPaced()` to enable ping feature on and off.
 
+<a id="11-20210416-fix"></a>
 #### Fix
 
 * Fixed bugs that do not apply pingIngerval in config
@@ -180,12 +220,15 @@
 
 ---
 
-### 1.1.0 (2021.04.15)
+<a id="10-20210415"></a>
+### 1.1.0 (2021.04.15) { #10-20210415 }
 
+<a id="10-20210415-change"></a>
 #### Change
 
 * Raised to 1.1.0 to match the version on the server.
 
+<a id="10-20210415-new"></a>
 #### New
 
 * Added sendPauseClientStateCheck()
@@ -194,13 +237,16 @@
 
 ---
 
-### 1.0.2 (2020.02.10)
+<a id="02-20200210"></a>
+### 1.0.2 (2020.02.10) { #02-20200210 }
 
+<a id="02-20200210-fix"></a>
 #### Fix
 * Fixed an issue where if a client did not send any packets to a game node for a specified amount of time (default 10 seconds), the server would send a status check request to the client, and GameHammer would incorrectly respond to this status check request, resulting in a disconnect.
 * Fixed an issue that caused packetSeq to overflow and not respond from the server when the number of requested packets became very large due to prolonged scenario testing.  
 * Fixed problems that increase packetSeq even when sent
 
+<a id="02-20200210-change"></a>
 #### Change
 * Enhanced log content.
     * Added accountId, userId
@@ -212,21 +258,26 @@
 
 ---
 
-### 1.0.1 (2020.12.28)
+<a id="01-20201228"></a>
+### 1.0.1 (2020.12.28) { #01-20201228 }
 
+<a id="01-20201228-fix"></a>
 #### Fix
 * Fixed a bug where all the overlapping queues were released at the first response when waitFor was used overlapping for the same message
 * Fixed a bug where getPayloads() in ResultAuthentication returns null
 * Fixed an issue that HandlerPing.onPingTime() occurs intermittently in HandlerPing.onPingTime() at the end of the test
 * Fixed an issue that ConcurrentModificationException occurs intermittently in Statistics.record() during testing
 
+<a id="01-20201228-change"></a>
 #### Change
 * Changed the output log from error to warn if the GameHammerConfig.json file does not exist.
 
 ---
 
-### 1.0.0 (2020.12.18)
+<a id="00-20201218"></a>
+### 1.0.0 (2020.12.18) { #00-20201218 }
 
+<a id="00-20201218-fix"></a>
 #### Fix
 * Fixed an issue that failed to test for a long time in EA version.
 * Significantly improved TPS performance over EA version (approximately 2x)
@@ -246,6 +297,7 @@
         * addListenerMoveChannelNoti
         * addListenerNotice
 
+<a id="00-20201218-change"></a>
 #### Change
 * Tester
     * Sync/Async support for all request method features
@@ -255,13 +307,16 @@
     * Removed the concept of TRANSACTION and EVENT
         * Instead, use changeState() from each State to go directly to the desired State
 
+<a id="00-20201218-new"></a>
 #### New
 * Added waitForXXX feature so that noti sent from the server can be waited and processed.
 
 ---
 
-### 1.0.0-EA (2020.08.03)
+<a id="00-ea-20200803"></a>
+### 1.0.0-EA (2020.08.03) { #00-ea-20200803 }
 
+<a id="00-ea-20200803-new"></a>
 #### New
 * Tester - Supports syncing feature with servers on behalf of GameAnvil Connector
     * Connection - Support for functions handled by the Connection Agent on the GameAnvil Connector

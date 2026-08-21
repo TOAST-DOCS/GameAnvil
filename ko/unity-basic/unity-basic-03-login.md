@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 간편 로그인
+<!-- pre-align:aligned sig=b92e901cd14a -->
 
-## 간편 로그인
+<a id="game-gameanvil-basic-development-guide-to-unity-quick-login"></a>
+## Game > GameAnvil > Unity 기초 개발 가이드 > 간편 로그인 { #game-gameanvil-basic-development-guide-to-unity-quick-login }
+
+<a id="quick-login"></a>
+## 간편 로그인 { #quick-login }
 
 GameAnvilManager에서 제공하는 간편 로그인 기능은 GameAnvil 서버에 접속, 인증, 로그인하는 절차를 한 번에 처리할 수 있도록 합니다. 접속, 인증, 로그인하는 절차에 대한 좀 더 자세한 내용은 [Unity 심화 개발 가이드 > 커넥터](../unity-advanced/unity-advanced-02-connection.md) 또는 서버 개발 가이드를 참고하십시오.
 
-### 간편 로그인 설정
+<a id="quick-login-settings"></a>
+### 간편 로그인 설정 { #quick-login-settings }
 
 간편 로그인을 사용하기 위해서는 GameAnvilManager 설정중 Login 동작시 사용되는 값을 미리 설정해 주어야 합니다. 간편 로그인에서 사용되는 설정의 종류는 다음과 같습니다.
 
@@ -36,7 +41,8 @@ public void Start()
 }
 ```
 
-### 간편 로그인 사용
+<a id="use-quick-login"></a>
+### 간편 로그인 사용 { #use-quick-login }
 
 간편 로그인을 통해 서버에 접속, 인증, 로그인합니다. 리턴값 LoginResult를 이용해 결과를 확인할 수 있습니다. 이때 서버와의 연결에 문제가 발생하는 경우 예외가 발생할 수도 있습니다.
 
@@ -122,7 +128,8 @@ public async void ManagerLogin()
 
 보다 자세한 실패 이유는 LoginResult의 authenticationResult나 loginResult를 이용해 확인할 수 있습니다.
 
-## Disconnect
+<a id="disconnect"></a>
+## Disconnect { #disconnect }
 
 GameAnvilManager의 Logout() 메소드를 이용해서 서버와의 연결을 해제할 수 있습니다.
 
@@ -137,7 +144,8 @@ public async void ManagerLogout()
 }
 ```
 
-## 상태 변경 알림
+<a id="notification-for-status-change"></a>
+## 상태 변경 알림 { #notification-for-status-change }
 
 Logout()을 호출하지 않더라도 네트워크에 문제가 있거나, 서버에서 강제로 로그아웃을 시키는 등 GameAnvilManager의 상태가 변경될 수 있으며, 이에 대한 알림을 받을 수 있습니다.
 

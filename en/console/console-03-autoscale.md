@@ -1,6 +1,10 @@
-## Game > GameAnvil > Console User guide > Autoscale
+<!-- pre-align:aligned sig=f185ad2f462c -->
 
-## Auto scale
+<a id="game-gameanvil-console-user-guide-autoscale"></a>
+## Game > GameAnvil > Console User guide > Autoscale { #game-gameanvil-console-user-guide-autoscale }
+
+<a id="auto-scale"></a>
+## Auto scale { #auto-scale }
 
 You can create and manage autoscales from the **Autoscale Group** tab. Autoscale groups automatically scale-out/-in servers within the group based on the conditions you specify.
 
@@ -21,7 +25,8 @@ Once the autoscale group is created, you can check the list as follows. Also, ju
 
 The remainder of this article explores the configuration items used in the creation of an autoscale group.
 
-## Create Auto scale group
+<a id="create-auto-scale-group"></a>
+## Create Auto scale group { #create-auto-scale-group }
 
 When creating an autoscale group, you must enter the following information.
 
@@ -31,7 +36,8 @@ When creating an autoscale group, you must enter the following information.
 * Maximum servers: The maximum number of instances that an autoscale group can grow to.
 * Start server: The number of instances that the autoscale group will initially start.
 
-## Scale Out/In Policy
+<a id="scale-outin-policy"></a>
+## Scale Out/In Policy { #scale-outin-policy }
 
 It sets the scale-out/-in policy for autoscale group.
 
@@ -40,7 +46,8 @@ It sets the scale-out/-in policy for autoscale group.
 * Condition operator: Multiple conditions can be combined as AND/OR operations.
 * Autoscale condition: Autoscale scale-out/-in conditions can be set. You can combine multiple conditions by clicking **+**.
 
-## Node configuration
+<a id="node-configuration"></a>
+## Node configuration { #node-configuration }
 
 The node configuration of an autoscale group is partially different from that of the normal server configuration. The biggest difference is that autoscale groups can only be created with a server composed of a single node. At this time, only two nodes can be selected, GATEWAY and GAME. SUPPORT and MATCH do not yet support autoscale.
 

@@ -1,10 +1,15 @@
-## Game > GameAnvil > CocosCreator 開発ガイド > パケット
+<!-- pre-align:aligned sig=53c95f95568b -->
 
-## パケット
+<a id="game-gameanvil-cocoscreator-development-guide-packet"></a>
+## Game > GameAnvil > CocosCreator 開発ガイド > パケット { #game-gameanvil-cocoscreator-development-guide-packet }
+
+<a id="packet"></a>
+## パケット { #packet }
 
 サーバーとやり取りする全てのメッセージは、パケットに載せて処理されます。
 
-### 生成
+<a id="create"></a>
+### 生成 { #create }
 
 Protocol Bufferを利用した生成方法は以下のとおりです。
 
@@ -21,7 +26,8 @@ const data: Unit8Array;
 const packet: Packet = PacketFactory.makeCustomPacket(1, data);
 ```
 
-### 圧縮
+<a id="compress"></a>
+### 圧縮 { #compress }
 
 パケットサイズが大きい場合、圧縮してデータ使用量を減らすことができます。
 
@@ -29,7 +35,8 @@ const packet: Packet = PacketFactory.makeCustomPacket(1, data);
 const packet: Packet = PacketFactory.makePacket(message, PacketOption.compress);
 ```
 
-### ペイロード
+<a id="payload"></a>
+### ペイロード { #payload }
 
 GameAnvilが提供する基本APIを利用する際、追加のデータが必要になる場合があります。このために基本APIには、追加データを渡すことができるpayloadというパラメータが含まれています。このpayloadに必要なデータをパケットに込めてlist形式で保存できます。ここに追加データを入れてサーバーへ送ったり、サーバーから送られたメッセージを取り出すことができます。
 

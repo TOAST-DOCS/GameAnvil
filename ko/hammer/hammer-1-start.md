@@ -1,6 +1,10 @@
-## Game > GameAnvil > 테스트 개발 가이드 > 시작하기
+<!-- pre-align:aligned sig=3180aad95516 -->
 
-### 개요
+<a id="game-gameanvil-guide-to-test-development-get-started"></a>
+## Game > GameAnvil > 테스트 개발 가이드 > 시작하기 { #game-gameanvil-guide-to-test-development-get-started }
+
+<a id="overview"></a>
+### 개요 { #overview }
 
 GameHammer는 GameAnvil 엔진을 이용한 게임 서버 개발 뒤 사용할 수 있는 성능 및 기능 테스트 도구입니다. 실제 커넥터에서 제공하는 모든 기능을 똑같이 사용 하여 테스트 할 수 있으며, 스트레스 테스트를 위해 다수의 GameHammer를 동시에 실행하는 등으로 사용할 수 있습니다. 테스트 진행 중에 진행 상황을 확인하거나 테스트 최종 결과를 취합해 확인하고 저장할 수 있습니다.
 
@@ -13,20 +17,24 @@ GameHammer는 GameAnvil 엔진을 이용한 게임 서버 개발 뒤 사용할 �
 
 이 가이드에서는 게임 헤머의 사용법을 상세한 예제와 함께 제공합니다. 서버 엔진과 동일하게 IntelliJ를 기준으로 사용 설명합니다.
 
-### 지원 환경 및 프로토콜
+<a id="supported-environment-and-protocol"></a>
+### 지원 환경 및 프로토콜 { #supported-environment-and-protocol }
 
+<a id="supported-environment-and-protocol-supported-network-protocol"></a>
 #### 지원하는 네트워크 프로토콜
 
 * TCP/IP
 * SSL over TCP/IP
 
+<a id="supported-environment-and-protocol-available-application-protocol-format"></a>
 #### 사용 가능한 응용 프로토콜 형식
 
 * Google Protocol Buffers
 * 커스텀 바이트 스트림
 * HTTP/HTTPS(특정한 용도로 한정)
 
-### 프로젝트에 GameHammer 디펜던시 추가
+<a id="add-gamehammer-dependency-to-project"></a>
+### 프로젝트에 GameHammer 디펜던시 추가 { #add-gamehammer-dependency-to-project }
 
 GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.xml 파일의 dependencies 요소에 다음과 같이 추가하면 GameHammer를 사용할 수 있습니다.
 
@@ -41,7 +49,8 @@ GameHammer는 GameAnvil과 마찬가지로 Maven을 통해 배포됩니다. pom.
 <dependencies>
 ```
 
-### Maven으로 GameHammer jar 파일 생성하기
+<a id="create-gamehammer-jar-file-with-maven"></a>
+### Maven으로 GameHammer jar 파일 생성하기 { #create-gamehammer-jar-file-with-maven }
 
 GameHammer를 이용해 테스트 시나리오를 작성한 뒤 GameAnvil 콘솔에서 테스트할 목적 등으로 jar 파일을 생성할 수 있습니다.
 

@@ -1,19 +1,25 @@
-## Game > GameAnvil > サーバー開発ガイド > Java開発環境設定
+<!-- pre-align:aligned sig=b74bc45b3f53 -->
+
+<a id="game-gameanvil-server-development-guide-java-development-environment-setup"></a>
+## Game > GameAnvil > サーバー開発ガイド > Java開発環境設定 { #game-gameanvil-server-development-guide-java-development-environment-setup }
 
 
 
-## IntelliJ開発環境チェックポイント
+<a id="intellij-development-environment-checkpoint"></a>
+## IntelliJ開発環境チェックポイント { #intellij-development-environment-checkpoint }
 
 IntelliJでJava 21バージョンを初期設定する過程で一部の設定が漏れると、サーバービルド及び実行が意図した通りに動作しない場合があります。このドキュメントは、このような試行錯誤を減らし、簡単かつ便利に開発環境を確認できるようにガイドラインを提供します。
 
 
-### JDKインストール
+<a id="install-jdk"></a>
+### JDKインストール { #install-jdk }
 
 GameAnvilはAdoptium Temurinを使用します。Javaバージョンは21をサポートしています。ユーザーは希望するJDKを直接インストールして開発環境を構築できます。特別な理由がなければ、[TemurinJDK](https://adoptium.net/temurin/releases)の使用を推奨します。
 
 
 
-### JDK for Importer
+<a id="jdk-for-importer"></a>
+### JDK for Importer { #jdk-for-importer }
 
 1. **File** > **Settings...** をクリックします。
 
@@ -27,7 +33,8 @@ GameAnvilはAdoptium Temurinを使用します。Javaバージョンは21をサ�
 
 
 
-### Project SDK, Language level設定
+<a id="set-project-sdk-language-level"></a>
+### Project SDK, Language level設定 { #set-project-sdk-language-level }
 
 1. **File** > **Project Structure...** をクリックします。
 
@@ -40,7 +47,8 @@ GameAnvilはAdoptium Temurinを使用します。Javaバージョンは21をサ�
 
 
 
-### 使用するモジュールのLanguage level設定
+<a id="set-the-language-level-of-the-module-to-use"></a>
+### 使用するモジュールのLanguage level設定 { #set-the-language-level-of-the-module-to-use }
 
 1. **Project Settings** -> **Modules**を選択した後、ユーザーの開発プロジェクトを指定して、**Language level**を先ほどのProject SDKと同じに設定します。
 

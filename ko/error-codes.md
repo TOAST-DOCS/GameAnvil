@@ -1,6 +1,10 @@
-## Game > GameAnvil > 오류 코드
+<!-- pre-align:aligned sig=02e49a151ed8 -->
 
-## Client
+<a id="game-gameanvil-error-codes"></a>
+## Game > GameAnvil > 오류 코드 { #game-gameanvil-error-codes }
+
+<a id="client"></a>
+## Client { #client }
 
 | ResultCode                    | Name                                             | Value | Description                                                                                                                                         |
 |-------------------------------|--------------------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -136,7 +140,8 @@
 |                               | SOCKET_TIME_OUT                                  | 2101  | 타임아웃이 발생, 컨넥터에서 연결을 끊음                                                                                                                              |
 |                               | SOCKET_ERROR                                     | 2102  | 소켓 에러가 발생하여 연결을 끊음                                                                                                                                  |
 
-## Server
+<a id="server"></a>
+## Server { #server }
 
 | Category   | Name                                             | Value | Description |
 |------------|--------------------------------------------------|------:| ----------- |

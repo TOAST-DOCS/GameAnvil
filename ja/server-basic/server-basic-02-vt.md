@@ -1,6 +1,10 @@
-## Game > GameAnvil > サーバー概念説明 > Virtual Thread
+<!-- pre-align:aligned sig=d9d45df7e543 -->
 
-## Virtual Thread
+<a id="game-gameanvil-virtual-thread"></a>
+## Game > GameAnvil > サーバー概念説明 > Virtual Thread { #game-gameanvil-virtual-thread }
+
+<a id="virtual-thread"></a>
+## Virtual Thread { #virtual-thread }
 
 Virtual ThreadはJDK 21で追加された機能で、軽量ユーザースレッド(Lightweight User Thread)です。GameAnvilではVirtual Threadをサーバーコードの基本フロー単位として使用しています。先ほど見てきたノードのシングルスレッドは、多数のセッション、ユーザー、そしてルームなどを同時に効果的に処理するために多数のVirtual Threadでコードフローが分かれます。つまり、GameAnvilはVirtual ThreadベースのContinuationを使用します。
 
@@ -14,11 +18,13 @@ Virtual ThreadはJDK 21で追加された機能で、軽量ユーザースレッ
 
 GameAnvilサーバーコードは非同期処理をベースにします。このために[非同期サポートAPI](../server-impl/server-impl-10-async.md)を提供します。このような非同期APIを使用して任意のVirtual Thread上でブロッキング呼び出しをする場合には、該当Virtual Threadのみpark(待機状態)されます。
 
-## Virtual Threadベースの非同期処理
+<a id="virtual-thread-2"></a>
+## Virtual Threadベースの非同期処理 { #virtual-thread-2 }
 GameAnvilエンジンはカスタムVirtual Thread Executorを実装しました。このExecutorは1つのPlatform Threadで動作し、1つのノードで複数のVirtual Threadを実行させることができます。1つのVirtual Threadで任意の時間がかかるI/O呼び出しをした場合に、該当Virtual Threadは呼び出しが完了するまで実行権限を他のVirtual Threadに譲って動作します。このような実装はマルチスレッド同期問題を悩まずサーバーを作成できるようにする代わりに、コードをVirtual Thread上で非同期に処理されるようにコードを作成する必要があります。GameAnvilで提供するメソッドは基本的にこのような非同期処理を使用して動作し、エンジンユーザーは同期問題を気にせず読みやすいコードを作成できます。
 
 
-## Virtual Thread使用時の注意事項
+<a id="virtual-thread-3"></a>
+## Virtual Thread使用時の注意事項 { #virtual-thread-3 }
 スレッドブロッキング呼び出しになり得る作業(代表的にsynchronized使用)は使用しないようにすべきであり、もし呼び出した時には該当Platform Threadがブロックされ、その結果全てのVirtual Threadがブロックされてノード全体が止まる結果を招くことになります。 
 
 ```java

@@ -1,6 +1,10 @@
-## Game > GameAnvil > 応用チュートリアル
+<!-- pre-align:aligned sig=577d65630622 -->
 
-### GameAnvilでゲームサーバーを簡単に作成する
+<a id="game-gameanvil-in-depth-tutorial"></a>
+## Game > GameAnvil > 応用チュートリアル { #game-gameanvil-in-depth-tutorial }
+
+<a id="create-game-server-easily-with-gameanvil"></a>
+### GameAnvilでゲームサーバーを簡単に作成する { #create-game-server-easily-with-gameanvil }
 
 GameAnvilは、リアルタイムマルチプレイヤーゲームサーバー制作プラットフォームです。
 GameAnvilはサーバーエンジンだけでなく、サーバーにクライアントを接続するためのコネクタを提供します。
@@ -14,7 +18,8 @@ GameAnvilを使用すると、手軽にゲームサーバーとクライアン�
 
 このドキュメントは、サーバーの概念とAPIを単に羅列する代わりに、より具体的な例を通じて説明し、理解を助けるために、実際にプレイ可能なマルチプレイヤージグソーパズルゲームを開発する過程を順序立てて説明します。ドキュメントの内容を直接1つずつ実践しながら、自然とGameAnvilとマルチプレイヤーゲーム開発に対する理解度を高めることができます。
 
-## プロジェクト構成
+<a id="project-configuration"></a>
+## プロジェクト構成 { #project-configuration }
 
 マルチプレイヤーゲームを作成するには、クライアントと対応するサーバープログラムが必要です。この例では、クライアントプログラムの制作にUnityとGameAnvilコネクタを使用し、サーバープログラムの制作に先ほど紹介したサーバーエンジンGameAnvilを使用します。まずGameAnvilを利用したサーバープログラムプロジェクトを作成した後、UnityとGameAnvilコネクタを利用してクライアントプログラムプロジェクトを作成します。
 
@@ -22,7 +27,8 @@ GameAnvilを使用すると、手軽にゲームサーバーとクライアン�
 
 [サーバーサンプルプロジェクトのダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Advanced_Server.zip?disposition=attachment)
 
-### GameAnvilプロジェクト構成
+<a id="gameanvil-project-configuration"></a>
+### GameAnvilプロジェクト構成 { #gameanvil-project-configuration }
 
 プロジェクトにGameAnvilを適用するには、MavenリポジトリからGameAnvilライブラリをダウンロードし、GameAnvilを駆動するのに必須の設定ファイルを作成する必要があります。最後に若干のボイラープレートコードを作成すれば、開発初期設定が完了します。今回のチャプターでは、開発を開始するための初期設定を完了することを目標とします。実際のプロセスを実行してサーバーを起動することは、次のチャプターで扱います。
 
@@ -76,7 +82,8 @@ ProjectタブでSDK設定を確認します。もし設定されたSDKがない�
 
 プロジェクトの準備はほぼ完了しましたが、実行するにはいくつかの設定が必要です。ここではまずクライアントプロジェクトを作成し、サーバー設定を完了してから実行します。
 
-### Unityプロジェクト構成
+<a id="unity-project-configuration"></a>
+### Unityプロジェクト構成 { #unity-project-configuration }
 
 Unity Hubを実行します。右上の**NEW**をクリックして新しいプロジェクト作成ウィンドウを開きます。
 
@@ -104,9 +111,11 @@ Unity Hubを実行します。右上の**NEW**をクリックして新しいプ�
 
 クライアントプロジェクトの設定が完了しました。
 
-## サーバー起動及び接続
+<a id="server-run-and-connect"></a>
+## サーバー起動及び接続 { #server-run-and-connect }
 
-### GameAnvilサーバー起動
+<a id="run-gameanvil-server"></a>
+### GameAnvilサーバー起動 { #run-gameanvil-server }
 
 実行設定が完了したら、右側のgradleメニューからTasks > other > `runMain`をダブルクリックして実行します。一度このように実行すると、その後はIntelliJの右上にある緑色の三角形の実行アイコンをクリックしてもサーバーが起動します。
 
@@ -128,7 +137,8 @@ GameAnvilサーバーは、複数のノードで構成されています。こ�
 
 それぞれのノードはコードを実行するための準備に時間を要し、各ノードの準備が完了するとonReadyログを出力します。クライアントがサーバーに接続するうえで直接的な役割を果たすノードは、ゲートウェイノードです。ゲートウェイノードが準備され、GatewayNodeのonReadyログが出力されれば、GameAnvilサーバーはいつでも接続可能な状態になったことになります。
 
-### コネクトハンドラ作成
+<a id="write-connect-handler"></a>
+### コネクトハンドラ作成 { #write-connect-handler }
 
 Unityプロジェクトへ移動し、GameAnvilサーバーに接続できるようにコードを作成します。サーバーと接続するには、まずコネクタオブジェクトを生成する必要があります。
 
@@ -216,7 +226,8 @@ public class ConnectHandler : MonoBehaviour
 }
 ```
 
-### ConnectorとUserの生成
+<a id="create-connector-and-user"></a>
+### ConnectorとUserの生成 { #create-connector-and-user }
 
 コネクタで様々な機能を利用するために、ConnectorとUserを生成する必要があります。Connectorは主にサーバー接続、認証などの機能を提供し、Userはログイン、ルーム生成及び入室など、ユーザーに関連する機能を提供します。
 
@@ -246,7 +257,8 @@ public GameAnvilUser getUser()
 
 <br>
 
-### サーバー接続
+<a id="connect-to-server"></a>
+### サーバー接続 { #connect-to-server }
 
 コネクタが提供するAPIを使用してサーバーに接続するConnect()メソッドは次のとおりです。
 
@@ -283,19 +295,22 @@ Connect()関数ではGameAnvilConnectorのConnectメソッドを呼び出して�
 
 これでサーバーが接続を受け入れる準備ができたように、クライアントもサーバーに接続する準備が完了しました。
 
-### サーバー接続確認
+<a id="confirm-server-connection"></a>
+### サーバー接続確認 { #confirm-server-connection }
 
 これでUnityクライアントでプレイモードに入り、コンソール上に結果コードが正しく出力されるか確認します。ゲーム画面のテキスト上にIP、Portの接続情報と共に接続成功メッセージを確認できます。ゲームサーバーへの接続が完了したクライアントは、サーバーを通じてメッセージをやり取りできるようになります。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/15_connect_success.png)
 
-## Room及びUser生成
+<a id="create-room-and-user"></a>
+## Room及びUser生成 { #create-room-and-user }
 
 サーバーに接続したクライアントを**ゲームユーザー**と呼びます。サーバーに接続したクライアントは、サーバー上で1つ以上のゲームユーザー(User)としてログインできます(この例では、1つのユーザーとしてログインする場合を扱います)。ゲームユーザーは1つの**ゲームルーム**に属することで、同一ルームに属する他のユーザーと通信できます。つまり、ユーザーが他のユーザーとゲーム関連のメッセージを交換するには、該当ユーザーは同じルーム(Room)内に属している必要があります。
 
 GameAnvilではゲームユーザーとゲームルームの基本実装をあらかじめ用意しているため、エンジンのクラスを拡張し、コネクタのAPIを利用して簡単にゲームユーザーとルームの構造を完成させることができます。エンジン側ではゲームユーザーとルームを定義する方法を扱い、コネクタ側ではルーム生成や参加などをリクエストするAPIを使用する例を扱います。
 
-### User
+<a id="user"></a>
+### User { #user }
 
 サーバーではゲームユーザーとゲームルームの機能をクラスとして定義します。まずゲームユーザーを定義してみます。
 
@@ -488,7 +503,8 @@ public class BasicUser implements IUser {
 
 <br>
 
-### Room
+<a id="room"></a>
+### Room { #room }
 
 ログイン可能なユーザー実装が完了しました。次はゲームルームを実装します。ユーザー生成方法と同様に**GameAnvil Room**ファイルテンプレートを利用してIRoomインターフェースを実装したクラスを生成します。**File name**には**BasicRoom**を、**Service name**には**BASIC_SERVICE**を、**Room type**には**ROOM_TYPE_BASIC**を、**User**には前の段階で生成したIUser実装クラスのクラス名**BasicUser**を入力します。
 
@@ -650,7 +666,8 @@ public class BasicRoom implements IRoom<BasicUser> {
 
 <br>
 
-### GameNode
+<a id="gamenode"></a>
+### GameNode { #gamenode }
 
 これでゲームユーザーとゲームルームの準備ができました。しかし、まだゲームユーザー/ゲームルームの生成と削除リクエストを処理するノードがありません。ゲームユーザーとゲームルームを管理する役割を果たすノードはGameNodeです。このノードは、一般的にゲームサーバーが行うことを期待される大部分のゲームロジック処理の役割を遂行するノードです。GameAnvilにノードを追加する方法は自然で簡単です。ゲームユーザーとゲームルームを定義したのと同様に、あらかじめ定義されたインターフェースを実装してクラスを作成した後、希望する機能を追加実装すればよいです。
 **GameAnvil GameNode**テンプレートを選択後、ファイル名を**BasicGameNode**に、サービス名を**BASIC_SERVICE**に設定し、**OK**ボタンを押してゲームノードクラスを生成します。
@@ -751,7 +768,8 @@ public class BasicGameNode implements IGameNode {
 
 <br>
 
-### ゲームノード、ユーザー、ルーム設定
+<a id="game-node-user-and-room-settings"></a>
+### ゲームノード、ユーザー、ルーム設定 { #game-node-user-and-room-settings }
 
  マウスの右ボタンでクリックした後、**New > Java Class**を選択して直接クラスを生成することもできます。 
 
@@ -799,13 +817,15 @@ public class StringValues {
 
 これでクライアントがサーバーに接続してゲームユーザーとしてログインし、ゲームルームを生成できる機能の実装が完了しました。しかし、サーバーに接続したからといって、すぐにゲーム関連機能(ゲームユーザー生成、ゲームルーム生成など)をリクエストできるわけではありません。今の状態でサーバーとクライアントを実行しても、クライアントはゲームサーバーの機能を使用できないでしょう。サーバーにこれらをリクエストするには、サーバー接続後にクライアント認証プロセスが必要です。次のチャプターでは、サーバーとクライアントで認証をどのように処理するかを扱います。
 
-## サーバー接続
+<a id="server-connection"></a>
+## サーバー接続 { #server-connection }
 
 クライアントがサーバーに接続してからゲームにログインする前に、ユーザーの身元を確認し、認証プロセスを経る必要があります。
 ゲームノードがゲームユーザーとゲームルーム生成の役割を担当するなら、ゲートウェイノードはユーザーの接続と認証機能を担当します。ゲームノードをクラス作成を通じて実装したように、ゲートウェイノードも一貫性のある方式で実装できます。
 **GameAnvil GatewayNode**テンプレートを選択後、ファイル名を**BasicGatewayNode**に設定し、**OK**ボタンを押してゲートウェイノードクラスを生成します。ゲートウェイノードクラスは、基本生成されたコード以外に別途追加コードは必要ありません。
 
-### プロトコル登録
+<a id="register-protocol"></a>
+### プロトコル登録 { #register-protocol }
 
 認証プロセスを経ながら、サーバーとクライアントは互いに使用するプロトコルを確認するプロセスを経ます。したがって、認証プロセスを経る前にプロトコルを登録する必要があります。プロトコル登録は一度だけ行えばよいため、getConnector()コード内部にプロトコル登録コードを追加してみます。チュートリアルに従って進めると実装することになるインゲームチャットで使用するプロトコルをあらかじめ登録してみます。
 
@@ -826,7 +846,8 @@ public GameAnvilConnector getConnector()
 
 <br>
 
-### 認証コードの追加
+<a id="add-authentication-code"></a>
+### 認証コードの追加 { #add-authentication-code }
 
 Unityプロジェクトに移動してクライアント側の実装を行ってみます。クライアントでは接続リクエストと同様に、認証リクエストをコネクタGameAnvilConnector APIを通じてリクエストできます。認証リクエストは接続リクエスト後にのみ成立します。認証リクエストの結果を画面上のテキストとコンソールを通じて出力し、確認できるようにします。
 
@@ -855,17 +876,20 @@ public async void Auth()
 
 これでクライアントがサーバーに接続するだけでなく、認証プロセスまでリクエストできるように設定されました。
 
-### 認証確認
+<a id="verify-authentication"></a>
+### 認証確認 { #verify-authentication }
 
 Unityクライアントでプレイモードに入ります。コンソール上にログが接続、認証の順に順次出力されることを確認します。整理すると、クライアントのAuthリクエストに従い、サーバーのゲートウェイノードでユーザー認証が完了し、サーバーにログインできる状態になったということです。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/19_auth_success.png)
 
-## ログイン
+<a id="login"></a>
+## ログイン { #login }
 
 最後に行う過程は、ゲームノードにログインしてゲームユーザーを生成することです。ゲームユーザーはサーバーに接続した他のクライアントと通信するために必要な概念で、クライアント間で通信を行うには、各クライアントはゲームユーザーを生成し、ゲームルームを通じてメッセージをやり取りするようにしています。
 
-### ログインコードの追加
+<a id="add-login-code"></a>
+### ログインコードの追加 { #add-login-code }
 
 接続及び認証が完了したクライアントは、ゲームノードへログインできます。サーバーにログインすると、ゲームノードに該当クライアントのためのゲームユーザーオブジェクトが生成されます。クライアントは、自身のサーバー側ゲームユーザーオブジェクトを通じてサーバーまたは他のユーザーとメッセージをやり取りできるようになります。先ほど作成した認証コードを以下のように修正し、認証が成功した場合にすぐログインを進めるようにします。
 
@@ -891,15 +915,18 @@ public async void Login()
 
 ログインをリクエストする際に一緒に渡したコールバックメソッドが、ログインリクエスト結果をログに出力するようにします。
 
-### ログイン確認
+<a id="confirm-login"></a>
+### ログイン確認 { #confirm-login }
 
 Unityテストモードを通じて、正常にログインされることを確認します。
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_0/tutorial/advanced-tutorial/20_login_success.png)
 
-## ルーム生成及び参加
+<a id="create-and-participate"></a>
+## ルーム生成及び参加 { #create-and-participate }
 
-### クライアント作業
+<a id="client-task"></a>
+### クライアント作業 { #client-task }
 
 UnityプロジェクトでConnectHandlerコードにルーム生成をリクエストするメソッドを作成します。このとき、CreateRoomメソッドの2番目の引数であるRoomTypeは、必ずサーバーで指定した値と同じである必要がある点に留意します。一般的にこのようなRoomTypeなどのプロトコルは、サーバーとクライアント開発者が事前に値をあらかじめ定義しておき使用します。ルーム生成結果コードをコンソールに出力します。また、ルーム生成に成功すればroomIdをクライアント側に保存しておき、ゲームシーンへ移動するようにコードを作成します。
 
@@ -989,7 +1016,8 @@ public class GameManager : MonoBehaviour
 
 これでクライアントにサーバー接続、認証、ログイン機能だけでなく、ルーム参加と生成機能まで全て実装されました。
 
-### Room生成及び参加テスト
+<a id="create-and-test-participation-in-room"></a>
+### Room生成及び参加テスト { #create-and-test-participation-in-room }
 
 Unityプロジェクトの上部ツールバーで**File > Build Settings**を選択します。以下のように必要なシーンをビルドするシーンリストに順次追加します。もしシーンの順序が間違っている場合は、リスト上の項目をドラッグしてConnectSceneが一番上に来るように順序を適切に調整します。
 
@@ -1006,13 +1034,15 @@ Unityで`cmd+b`または`ctrl+b`でビルド後にプレイします。新しい
 - サーバー実装修正後、サーバープロセスを再起動したか？
 - サービス名はGameAnvilConfig.jsonに設定したものと同じようにサーバー/クライアントに実装されているか？
 
-## インゲームチャットの実装
+<a id="perform-in-game-chat"></a>
+## インゲームチャットの実装 { #perform-in-game-chat }
 
 これでクライアント間でサーバーを通じて通信できる環境が構築されました。ここではクライアントで生成したデータをリモートのクライアントが受信できる簡単な例を実装してみます。例のプロジェクト内部にあらかじめ実装されたプロトコルを利用して、チャット履歴をやり取りする方法を学びます。この例限定で、通信データをクライアントからサーバーへ送信する際はMessageRequestクラスを使用します。サーバーからクライアントへ通信データを送信する際はMessageResponseまたはMessageBroadcastクラスを使用します。
 
 (プロジェクトテンプレートを使用して直接プロジェクトを作成した場合、Messageクラスを利用できません。チュートリアル用に作成されたプロジェクトをダウンロードし、内部のBasicProtocol.javaがプロジェクトに含まれるように設定してください。また、サーバー実行前にプロトコルを登録する過程も必要です。サーバー側のプロトコル関連設定は、あらかじめ用意されたチュートリアル用プロジェクトで完了しているため、チュートリアルプロジェクトをそのまま使用した場合は行わなくても構いません。)
 
-### クライアント側の送信実装
+<a id="perform-client-side-transfer"></a>
+### クライアント側の送信実装 { #perform-client-side-transfer }
 
 まずクライアントからサーバー方向へメッセージを送信するコードを作成してみます。一度ログインしたユーザーとしてサーバーに接続されると、ユーザーエージェントを通じてサーバーの機能を活用できます。ここではユーザーエージェントのSend機能を活用してルームにパケットを送信します。メッセージ送信のためには、送信する内容を含むパケットを引数として渡す必要があります。
 
@@ -1063,7 +1093,8 @@ public class GameManager : MonoBehaviour
 
 このようにして、クライアントからサーバー方向へパケットを送信する機能が実装されました。しかし今はパケットをサーバーへ送っても、サーバーでは何の応答もないでしょう。その理由は、サーバー側で該当パケットを受け取った際に内容をどう分析し、どのような動作をするか定義していないためです。次のチャプターではサーバー側の実装を扱います。
 
-### サーバー側のレスポンス実装
+<a id="perform-server-side-response"></a>
+### サーバー側のレスポンス実装 { #perform-server-side-response }
 
 まずサーバーでチャットプロトコルを使用できるように、サーバー起動前にプロトコル登録を行います。
 
@@ -1117,7 +1148,8 @@ public class BasicHandler {
 
 こうしてクライアントが送信したパケットをサーバーが受信し、若干の処理を行った後に送り返す機能がサーバーに追加されました。このときクライアントもまた、サーバーから送信されたパケットをどのように処理するか指定する必要があります。
 
-### クライアント側の受信実装
+<a id="perform-client-side-reception"></a>
+### クライアント側の受信実装 { #perform-client-side-reception }
 
 クライアントでもサーバー側のパケットを処理するために、あらかじめハンドラを登録する必要があります。そうでなければ、パケットを受け取った際に処理方法が分からないプロトコルだと判断して内容を破棄することになります。サーバーから送られる内容を受信した際にこれを検知して内容を処理するには、サーバーから送られるパケットのプロトコルタイプのハンドラを登録すればよいです。つまり、MessageBroadcastタイプのメッセージを処理するハンドラ登録コードを作成して登録します。
 
@@ -1142,7 +1174,8 @@ void Start()
 
 <br>
 
-### メッセージ伝達確認
+<a id="confirm-message-delivery"></a>
+### メッセージ伝達確認 { #confirm-message-delivery }
 
 サーバー修正後に新しく実行したか確認し、Unityで`cmd+b`または`ctrl+b`でビルド後にプレイします。ビルドされたゲームでルームを生成し、サーバー側のログを確認します。その状態でUnityエディタでプレイモードに入った後、先ほど生成したルームのRoomIdを入力して該当ルームに参加します。
 
@@ -1152,7 +1185,8 @@ void Start()
 
 簡単なチャットサーバー実装を通じてメッセージ処理過程を学習しました。次はもう少し実用的な例の実装過程を見ていきます。
 
-## パズルゲームの実装
+<a id="perform-puzzle-game"></a>
+## パズルゲームの実装 { #perform-puzzle-game }
 
 ゲームシーンにはシングルプレイが可能なパズルゲームがあらかじめ実装されています。プレイモードに入りパズルピースをドラッグして適切な位置の近くに置くと、格子上の正確な位置に補正されます。今回のチャプターでは、このゲームをマルチプレイヤーゲームにしてみます。
 
@@ -1160,7 +1194,8 @@ void Start()
 
 メッセージはあらかじめ定義したプロトコルに基づいて定義さえすれば、サーバーとクライアント間で送受信が可能です。XML、jsonなど様々な表現手段がありますが、GameAnvilはGoogle Protocol Buffersを使用します。これは速度と安定性の側面で最も良いソリューションの1つです。
 
-### Google Protocol Buffersを利用したメッセージシリアライズ/デシリアライズ
+<a id="serialize-and-deserialize-messages-with-google-protocol-buffers"></a>
+### Google Protocol Buffersを利用したメッセージシリアライズ/デシリアライズ { #serialize-and-deserialize-messages-with-google-protocol-buffers }
 
 プロトコルバッファを使用するには、まずメッセージをどのように定義するか仕様を作成する必要があります。例えばMessageRequestの仕様には単一文字列を含めます。その後プロトコル仕様をコンパイルし、希望する言語のファイルに変換します。その後はMessageRequestを使用した方式と同様に、パケットのメッセージプロトコルとして使用できます。
 
@@ -1199,7 +1234,8 @@ C#クラスファイルはFinderやファイルエクスプローラーなどの
 
 パズル位置同期のためのメッセージプロトコル作成が終わりました。
 
-### プロトコル登録
+<a id="perform-puzzle-game-register-protocol"></a>
+### プロトコル登録 { #perform-puzzle-game-register-protocol }
 
 プロトコルを定義しコンパイルまで無事に終えたら、サーバーとクライアントの両方に該当プロトコルクラスを登録する必要があります。GameAnvilサーバーのMainメソッドで以下のようにプロトコルを登録します。
 
@@ -1238,7 +1274,8 @@ public GameAnvilConnector getConnector()
 
 <br>
 
-### クライアント側の送信実装
+<a id="perform-puzzle-game-perform-client-side-transfer"></a>
+### クライアント側の送信実装 { #perform-puzzle-game-perform-client-side-transfer }
 
 これでゲームのためのプロトコル定義及び登録まで全て終わりました。今からはこのようなプロトコルに基づいたメッセージを実際に送信する機能を実装します。まずクライアント側でデータを送信する部分を先に実装します。パズルピースをドラッグする間、その位置をサーバーへ送信してみます。
 
@@ -1304,7 +1341,8 @@ public class Puzzle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
 <br>
 
-### サーバー側のレスポンス実装
+<a id="perform-puzzle-game-perform-server-side-response"></a>
+### サーバー側のレスポンス実装 { #perform-puzzle-game-perform-server-side-response }
 
 クライアント側では継続的にパズルの位置をサーバーへ送ることになりました。次はパズルの位置をサーバーでどのように処理するか作成する必要があります。MessageRequestを加工してMessageResponse、MessageBroadcastでユーザーに送り返したように、パズル位置を再度ゲームルームの全ユーザーに送り返すように実装してみます。
 
@@ -1337,7 +1375,8 @@ PuzzlePositionHandlerもやはり@GameAnvilControllerアノテーションと@Ga
 
 <br>
 
-### クライアント側の受信実装
+<a id="perform-puzzle-game-perform-client-side-reception"></a>
+### クライアント側の受信実装 { #perform-puzzle-game-perform-client-side-reception }
 
 先ほどサーバーから送信されたMessageBroadcastを処理するために、あらかじめハンドラを登録する必要がありました。今回も同様にパズル位置を処理するハンドラを作成するために、GameManagerのStartメソッドにPuzzlePositionメッセージを処理するハンドラ登録コードを作成します。このハンドラはメッセージを受信すると、パズルオブジェクトを探してサーバーから受け取った位置へ移動させます。
 
@@ -1376,7 +1415,8 @@ public class GameManager : MonoBehaviour{
 
 <br>
 
-### パズル位置同期確認
+<a id="confirm-puzzle-location-synchronization"></a>
+### パズル位置同期確認 { #confirm-puzzle-location-synchronization }
 
 Unityで`cmd+b`または`ctrl+b`でビルド後にプレイします。ビルドされたゲームでルームを生成した後、Unityプレイモードを実行し、生成されたルームのRoomIdを入力してルームに参加します。これでパズルピースをドラッグして位置を移動すると、該当パズルピースの位置が同期され、リモートクライアントに反映されることを確認できます。
 
@@ -1384,7 +1424,8 @@ Unityで`cmd+b`または`ctrl+b`でビルド後にプレイします。ビルド
 
 <br>
 
-### 途中参加ユーザーの処理
+<a id="handle-late-joiner"></a>
+### 途中参加ユーザーの処理 { #handle-late-joiner }
 
 ゲーム中に任意のパズルピースの位置が変更された後、新しいユーザーがルームに入室する場合を考えてみましょう。このとき、既存ユーザーと新規ユーザー間のパズル状態は異なります。新しく入ってきたユーザーは初期のパズル状態を持っているため、既存ユーザーとパズル状態を同期させる必要があります。これを解決するために、サーバー側のロジックを修正します。サーバーはパズルの位置情報を全て保管し、新しいユーザーが入室すれば該当情報を利用して同期するようにロジックを修正します。
 
@@ -1461,11 +1502,13 @@ public class BasicRoom implements IRoom<BasicUser> {
 
 <br>
 
-## パズルシャッフルの実装
+<a id="perform-puzzle-mix"></a>
+## パズルシャッフルの実装 { #perform-puzzle-mix }
 
 パズル位置をランダムに混ぜるロジックを実装してみます。クライアントでパズル位置シャッフルをリクエストすると、サーバーでパズルを混ぜた後に新しい位置を決定します。そして変更された位置情報を再度クライアントへ送り返すのが基本的なアイデアです。
 
-### プロトコル登録
+<a id="perform-puzzle-mix-register-protocol"></a>
+### プロトコル登録 { #perform-puzzle-mix-register-protocol }
 
 まずパズルシャッフルをリクエストするためのプロトコルを作成してみます。サーバープロジェクトへ移動し、Puzzle.protoファイルにプロトコル仕様を追加します。このプロトコルは特にクライアントからサーバーへ送る情報がないため、フィールドが1つもありません。これもまたプロトコルとして十分に有意義です。
 
@@ -1495,7 +1538,8 @@ message ScatterPuzzle { } // パズルシャッフルリクエストプロトコ
 
 <br>
 
-### クライアント側の実装
+<a id="implement-client-side"></a>
+### クライアント側の実装 { #implement-client-side }
 
 Unityプロジェクトへ移動し、GameManager.csに以下のようにシャッフルリクエストのためのコードを作成します。Scatterメソッドが呼び出されると、GameAnvilUserを通じて新しいScatterPuzzleタイプのメッセージがゲームルームへ送信されます。
 
@@ -1515,7 +1559,8 @@ public class GameManager : Monobehaviour {
 
 **Hierarchy**パネルの**Scatter Puzzle Button**をクリックします。**Inspector**の**Button**コンポーネントで**OnClick**リスナーに項目を追加した後、GameManagerコンポーネントをドラッグして登録し、ドロップダウンからScatterメソッドを選択します。
 
-### サーバー側の実装
+<a id="server-side-implementation"></a>
+### サーバー側の実装 { #server-side-implementation }
 
 シャッフルリクエストが入った時の処理は、先ほど使用した方式どおりハンドラを利用します。**GameAnvil RoomMessageHandler**ファイルテンプレートを通じてScatterPuzzleHandlerクラスを生成します。16個の各パズルの位置をランダムに設定した後、PuzzlePositonタイプのメッセージを送信します。またサーバーのpuzzlePositionsマップも新しい位置情報で更新します。
 
@@ -1575,17 +1620,20 @@ public class ScatterPuzzleHandler {
 
 これでクライアント側の送信機能とサーバー側の応答機能が全て完成しました。
 
-### パズルシャッフル機能の確認
+<a id="confirm-puzzle-mix"></a>
+### パズルシャッフル機能の確認 { #confirm-puzzle-mix }
 
 Unityエディタでプレイモードに入ります。Scatter Puzzleボタンをクリックしてパズルシャッフル機能が正しく動作するか確認します。
 
-## より良い途中参加ユーザー処理
+<a id="better-late-joiner-process"></a>
+## より良い途中参加ユーザー処理 { #better-late-joiner-process }
 
 先ほど途中参加ユーザーを処理する過程で同期問題が発生しました。その原因は、ユーザーがルームに入室する時点をパズルピースの位置同期時点として適切だと考えたためです。しかし、私たちが実装中のパズルゲームは、ユーザーがルームに入室する時点でシーン移動が発生します。
 
 そのため、私たちはリスナー登録とonJoinRoomコールバック呼び出しの2つの時点に分けて考える必要があります。これはゲームクライアントの実装によって問題がない場合もあれば、問題になる場合もあります。onJoinRoomコールバック呼び出し以降にシーン移動が始まるため、シーン移動が完了した直後に、クライアントが直接サーバーへパズル位置同期をリクエストするようにします。
 
-### プロトコル登録
+<a id="better-late-joiner-process-register-protocol"></a>
+### プロトコル登録 { #better-late-joiner-process-register-protocol }
 
 サーバープロジェクトへ移動し、パズル位置同期をリクエストするためのプロトコルをPuzzle.protoに追加します。
 
@@ -1611,7 +1659,8 @@ message PuzzlePositionReq {} // パズル同期リクエスト
 
 <br>
 
-### クライアント側の実装
+<a id="better-late-joiner-process-implement-client-side"></a>
+### クライアント側の実装 { #better-late-joiner-process-implement-client-side }
 
 シーン移動直後にサーバーへパズル位置をリクエストするようにするためには、GameSceneへシーン移動した直後に実行されるStart関数を修正する必要があります。GameManagerのStartメソッドに、次のように新しく作成したPuzzlePositionReqプロトコルメッセージを送信するコードを追加します。
 
@@ -1652,7 +1701,8 @@ public class GameManager : MonoBehaviour
 
 <br>
 
-### サーバー側の実装
+<a id="better-late-joiner-process-server-side-implementation"></a>
+### サーバー側の実装 { #better-late-joiner-process-server-side-implementation }
 
 onJoinRoomに誤って実装していたパズル位置送信コードは削除し、Puzzle.PuzzlePositionReqメッセージに対するハンドラPuzzlePositionReqHandlerクラスを生成後、新しく作成します。
 
@@ -1679,13 +1729,16 @@ public class PuzzlePositionReqHandler {
 
 <br>
 
-### 途中参加ユーザー処理確認
+<a id="confirm-late-joiner-processing"></a>
+### 途中参加ユーザー処理確認 { #confirm-late-joiner-processing }
 
 Unityで`cmd+b`または`ctrl+b`でビルド後にプレイします。これでビルドされたゲームでルームを生成し、パズルシャッフルを実行します。その状態でUnityエディタのプレイモードに入り、このルームに参加した後、パズル位置が同期されることを確認します。
 
-## ユーザーマッチメイキングの実装
+<a id="perform-user-matchmaking"></a>
+## ユーザーマッチメイキングの実装 { #perform-user-matchmaking }
 
-### サーバー側の実装
+<a id="perform-user-matchmaking-server-side-implementation"></a>
+### サーバー側の実装 { #perform-user-matchmaking-server-side-implementation }
 
 ユーザーマッチメイキングは、ユーザーのマッチメイキングリクエストを一箇所に集め、適切な基準に合わせて似たレベルのユーザー同士が同じルームでゲームを開始できるようにします。勝ち点やスコアなど様々な要素をユーザーが直接実装し、ユーザーを適切に区分してマッチングできます。ここではユーザー2人を1つのゲームとしてマッチングするロジックを実装します。
 
@@ -1801,7 +1854,8 @@ public class BasicUserMatchMaker extends AbstractUserMatchMaker<BasicUserMatchIn
 
 <br>
 
-### クライアント側の実装
+<a id="perform-user-matchmaking-implement-client-side"></a>
+### クライアント側の実装 { #perform-user-matchmaking-implement-client-side }
 
 マッチメイキングロジックは全てサーバーに実装されているため、クライアントではマッチメイキングが必要な時点でリクエストを送るだけで済みます。ConnectHandlerにMatchUserメソッドを追加します。そしてマッチメイキングが終わった時点でシーンを移動するようにコードを追加します。
 
@@ -1841,11 +1895,13 @@ public class ConnectHandler : MonoBehaviour
 
 シーンでMatchUserボタンのOnClickリスナーにConnectHandlerコンポーネントをドラッグして登録し、ドロップダウンからMatchUserメソッドを選択します。
 
-### ユーザーマッチメイキングテスト
+<a id="user-matchmaking-test"></a>
+### ユーザーマッチメイキングテスト { #user-matchmaking-test }
 
 Unityで`cmd+b`または`ctrl+b`でビルド後にプレイします。その状態でUnityエディタでプレイモードに入ります。両側で全てUser Match Makingボタンを押し、マッチングが成立して同じルーム番号でまとめられることを確認します。
 
-## ルームマッチメイキングの実装
+<a id="perform-room-matchmaking"></a>
+## ルームマッチメイキングの実装 { #perform-room-matchmaking }
 
 ルームマッチメイキングは、マッチメーカーが管理するルームの中でユーザーの要求事項に最も適したルームへ自動入室させることができる機能です。つまり、ユーザーマッチメイキングがユーザーとユーザーをマッチングさせる機能なら、ルームマッチメイキングはユーザーとルームをマッチングさせる機能です。このとき、実装方式によって多様な条件でユーザーをルームにマッチングできます。ここではまだ定員が埋まっていないルームの中で、人数が最も少ないルームへ入室するマッチメイキングを実装します。
 
@@ -1853,7 +1909,8 @@ Unityで`cmd+b`または`ctrl+b`でビルド後にプレイします。その状
 
 さらに既存のロジックを一部修正します。ルームマッチメイキングは全てのルームではなく、ルームマッチメイキング対象として申請したルームのみを対象に実行されます。したがって、ルーム生成時点でルームマッチメイキングを対象として申請するコードを追加します。
 
-### サーバー側の実装
+<a id="perform-room-matchmaking-server-side-implementation"></a>
+### サーバー側の実装 { #perform-room-matchmaking-server-side-implementation }
 
 まずマッチメイキングリクエストを表すクラスを実装します。BasicRoomMatchFormクラスを生成します。
 
@@ -1995,7 +2052,8 @@ public class BasicRoom extends BaseRoom<BasicUser> {
 
 <br>
 
-### クライアント実装
+<a id="implement-client"></a>
+### クライアント実装 { #implement-client }
 
 ユーザーマッチメイキングと同様に、クライアントはマッチメイキングが必要な時点でリクエストを送るだけで済みます。ConnectHandlerにRoomMatchMakingメソッドを追加します。
 
@@ -2032,13 +2090,15 @@ public class ConnectHandler : MonoBehaviour {
 
 <br>
 
-### ルームマッチメイキングテスト
+<a id="room-matchmaking-test"></a>
+### ルームマッチメイキングテスト { #room-matchmaking-test }
 
 Unityで`cmd+b`または`ctrl+b`でビルド後、プレイ状態でルームを生成します。その状態でUnityエディタでプレイモードに入ります。プレイモードでRoom Match Makingボタンを押し、ビルドモードで生成したルームへ移動するか確認します。
 
 <br>
 
-## Room退出の実装
+<a id="perform-to-leave-room"></a>
+## Room退出の実装 { #perform-to-leave-room }
 
 最後にルームを退出する機能実装のために、UnityクライアントのGameManagerに以下のメソッドを追加します。
 
@@ -2072,6 +2132,7 @@ public class GameManager : MonoBehaviour
 
 シーンでLeave RoomボタンのOnClickリスナーにGameManagerコンポーネントをドラッグして登録し、ドロップダウンメニューからLeaveRoomメソッドを選択します。
 
-## プロジェクトの仕上げ
+<a id="end-project"></a>
+## プロジェクトの仕上げ { #end-project }
 
 以上、GameAnvilとUnityを利用して、リアルタイムマルチプレイが可能なパズルゲームを実装してみました。その過程で、GameAnvilの核心機能の多くを使用しました。しかし、GameAnvilはこのチュートリアルに含まれていない、さらに豊富で多様な機能をサポートしています。これらの機能については、続くドキュメントを参照してください。また、共に提供されるリファレンスサンプルプロジェクトとJavaDocも、GameAnvilを理解するのに大いに役立つでしょう。

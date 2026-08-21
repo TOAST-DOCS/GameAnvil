@@ -1,6 +1,10 @@
-## Game > GameAnvil > Unity Advanced Development Guide > Connector
+<!-- pre-align:aligned sig=7eecd13a676d -->
 
-## ConnectionAgent
+<a id="game-gameanvil-unity-advanced-development-guide-connector"></a>
+## Game > GameAnvil > Unity Advanced Development Guide > Connector { #game-gameanvil-unity-advanced-development-guide-connector }
+
+<a id="connectionagent"></a>
+## ConnectionAgent { #connectionagent }
 
 The ConnectionAgent is responsible for operations related to the Connection node on the GameAnvil server. It provides basic session management functions such as Connect() and Authentication(), as well as a list of channels, and can implement different content based on your own defined protocols. The ConnectionAgent is automatically created when the connector is initialized and can be obtained using the Connector.GetConnectionAgent() function.
 
@@ -8,7 +12,8 @@ The ConnectionAgent is responsible for operations related to the Connection node
 ConnectionAgent connectionAgent = connector.GetConnectionAgent();
 ```
 
-### Connect to the server
+<a id="connect-to-the-server"></a>
+### Connect to the server { #connect-to-the-server }
 
 Connect to the server using the ConnectionAgent's Connect function. 
 
@@ -30,7 +35,8 @@ connector.GetConnectionAgent().Connect(ip, port, (ConnectionAgent connectionAgen
 });
 ```
 
-### Authentication
+<a id="authentication"></a>
+### Authentication { #authentication }
 
 Use the ConnectionAgent's Authenticate function to perform the authentication process. It takes as parameters deviceId, accountId, password, payload, and a callback to handle the response. The deviceId is used to handle duplicate connections, and the accountId and password can be used to handle authentication on the server. If additional information beyond the deviceId, accountId, and password is needed for authentication, it can be sent in the payload, and the payload parameter can be omitted if not used.
 When you call the Authenticate function, the server calls the onAuthentication() callback of the BaseConnection, and the processing of this callback determines whether the authentication succeeds or fails.
@@ -59,7 +65,18 @@ connector.GetConnectionAgent().Authenticate(deviceId, accountId, password, paylo
 });
 ```
 
-### Channel information
+<a id="connection-and-authentication"></a>
+### Connection and Authentication { #connection-and-authentication }
+
+<!-- TODO: translate body -->
+
+<a id="secure-connection"></a>
+### Secure Connection { #secure-connection }
+
+<!-- TODO: translate body -->
+
+<a id="channel-information"></a>
+### Channel information { #channel-information }
 
 GameAnvil allows you to freely configure channels in the settings. These channel configurations can be pre-agreed between the server and client and used in a fixed form, or they can be varied to suit the situation. ConnectionAgent provides a few functions to get this changed channel information. 
 
@@ -185,7 +202,33 @@ connector.GetConnectionAgent().GetAllChannelInfo(serviceName, (ConnectionAgent c
 });
 ```
 
-### Terminate the connection
+<a id="channel-information-getchannellist"></a>
+#### GetChannelList
+
+<!-- TODO: translate body -->
+
+<a id="channel-information-getchannelcountinfo"></a>
+#### GetChannelCountInfo
+
+<!-- TODO: translate body -->
+
+<a id="channel-information-getchannelinfo"></a>
+#### GetChannelInfo
+
+<!-- TODO: translate body -->
+
+<a id="channel-information-getallchannelcountinfo"></a>
+#### GetAllChannelCountInfo
+
+<!-- TODO: translate body -->
+
+<a id="channel-information-getallchannelinfo"></a>
+#### GetAllChannelInfo
+
+<!-- TODO: translate body -->
+
+<a id="terminate-the-connection"></a>
+### Terminate the connection { #terminate-the-connection }
 
 Use the ConnectionAgent's Disconnect function to terminate the connection to the server. 
 
@@ -205,186 +248,8 @@ connector.GetConnectionAgent().Disconnect((ConnectionAgent connectionAgent, Resu
 });
 ```
 
-### Listener
+<a id="terminate-the-connection-end-connection-notification"></a>
+#### End Connection Notification
 
-There are two main ways that ConnectionAgent can receive results or notifications from the server for every request.
-One is to add a function to the delegate defined on the ConnectionAgent. The other is to register a listener that implements the IConnectionListener interface.
-
-First, the first method. The ConnectionAgent has a delegate as a member for each of its actions so that it can receive the result or notification of any action. If you call the APIs described earlier without callback parameters, or if the server sends you a notification, you'll receive the response as a function registered with the delegate.  
-
-```c#
-/// <summary>
-/// The result of Connect()
-/// </summary>
-/// <param name="connectionAgent">The connection agent that requested Connect().
-/// <param name="result">Result of Connect()</param>
-public Interface.DelConnectionOnConnect onConnectListeners;
-
-/// <summary>
-/// Authentication() result
-/// </summary>
-/// <param name="connectionAgent">The connection agent that requested Authentication()</param>.
-/// <param name="result">Authentication() request result</param>
-/// <param name="loginedUserInfoList">List of login information left on the server</param>
-/// <param name="message">Message received from the server</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelConnectionOnAuthentication onAuthenticationListeners;
-
-/// <summary>
-/// GetChannelList() request result
-/// </summary>
-/// <param name="connectionAgent">The connection agent that requested GetChannelList()</param>.
-/// <param name="result">Result of the GetChannelList() request</param>
-/// <param name="channelIdList">The list of channels received from the server</param>
-public Interface.DelConnectionOnChannelList onChannelListListeners;
-
-/// <summary>
-/// GetChannelInfo() request result
-/// </summary>
-/// <param name="connectionAgent">The connection agent that requested GetChannelInfo()</param>.
-/// <param name="result">Result of the GetChannelInfo() request</param>
-/// <param name="channelInfo">Channel information received from the server</param>
-public Interface.DelConnectionOnChannelInfo onChannelInfoListeners;
-
-/// <summary>
-/// GetAllChannelInfo() request result
-/// </summary>
-/// <param name="connectionAgent"> The connection agent that made the GetAllChannelInfo() request</param>.
-/// <param name="result">The result of the GetAllChannelInfo() request</param>
-/// <param name="channelInfo">List of channel information received from the server</param>
-public Interface.DelConnectionOnAllChannelInfo onAllChannelInfoListeners;
-
-/// <summary>
-/// The result of the GetChannelCountInfo() request.
-/// </summary>
-/// <param name="connectionAgent">The connection agent that requested GetChannelCountInfo()</param>.
-/// <param name="result">Result of the GetChannelCountInfo() request</param>
-/// <param name="channelCountInfo">The number of users and rooms in the channel received from the server</param>
-public Interface.DelConnectionOnChannelCountInfo onChannelCountInfoListeners;
-
-/// <summary>
-/// The result of the GetAllChannelCountInfo() request.
-/// </summary>
-/// <param name="connectionAgent">The connection agent that requested GetAllChannelCountInfo()</param>.
-/// <param name="result">Result of the GetAllChannelCountInfo() request</param>
-/// <param name="channelCountInfo">The number of users and rooms for the channel received from the server</param>
-public Interface.DelConnectionOnAllChannelCountInfo onAllChannelCountInfoListeners;
-
-/// <summary>
-/// Disconnect() notification
-/// </summary>
-/// <param name="connectionAgent">The connection agent where the Disconnect() occurred</param>
-/// <param name="result">>Disconnect() reason</param>
-/// <param name="force">Whether to force termination</param>
-/// <param name="payload">Additional information received from the server</param>
-public Interface.DelConnectionOnDisconnect onDisconnectListeners;
-
-/// <summary>
-/// Errors while using the basic functionality of the connection.
-/// </summary>
-/// <param name="connectionAgent">The connection agent where the error occurred</param>.
-/// <param name="errorCode">Error code</param>
-/// <param name="commands">Commands to raise an error</param>
-public Interface.DelConnectionOnErrorCommand onErrorCommandListeners;
-
-/// <summary>
-/// Raises an error after a packet is sent.
-/// </summary>
-/// <param name="connectionAgent">The connection agent to request processing from</param>.
-/// <param name="errorCode">Error code</param>
-/// <param name="command">Message name of the packet</param>
-public Interface.DelConnectionOnErrorCustomCommand onErrorCustomCommandListeners;
-```
-<br>
-
-Next, the second method. IConnectionListener is an interface that defines the results or notifications of any action of the ConnectionAgent. You can register a listener that implements this interface with ConnectionAgent.AddConnectionListener() to receive responses from the registered listener. 
-
-```c#
-public class ConnectionListener : IConnectionListener
-{
-    /// <summary>
-    /// The result of Connect()
-    /// </summary>
-    /// <param name="connectionAgent">The connection agent that requested Connect()</param>
-    /// <param name="result">The result of Connect()</param>
-    public void OnConnect(ConnectionAgent connectionAgent, ResultCodeConnect result) { }
-    
-    /// <summary>
-    /// Authentication() result
-    /// </summary>
-    /// <param name="connectionAgent">The connection agent that requested Authentication()</param>.
-    /// <param name="result">Authentication() request result</param>
-    /// <param name="loginedUserInfoList">List of login information left on the server</param>
-    /// <param name="message">Message received from the server</param>
-    /// <param name="payload">Additional information received from the server</param>
-    public void OnAuthentication(ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) { }
-
-    /// <summary>
-    /// GetChannelList() request result 
-    /// </summary>
-    /// <param name="connectionAgent">The connection agent that requested GetChannelList()</param>.
-    /// <param name="result">Result of the GetChannelList() request</param>
-    /// <param name="channelIdList">List of channels received from the server</param>
-    public void OnChannelList(ConnectionAgent connectionAgent, ResultCodeChannelList result, List<string> channelIdList) { }
-
-    /// <summary>
-    /// The result of GetChannelInfo
-    /// </summary>
-    /// <param name="connectionAgent">ConnectionAgent</param>
-    /// <param name="result">Result of GetChannelInfo</param>
-    /// <param name="channelInfo">Channel information</param>
-    public void OnChannelInfo(ConnectionAgent connectionAgent, ResultCodeChannelInfo result, Payload channelInfo) { }
-
-    /// <summary>
-    /// Results of all channel information requests.
-    /// </summary>
-    /// <param name="connectionAgent">The connection agent that requested GetAllChannelInfo().
-    /// <param name="result">Result of the GetAllChannelInfo() request</param>
-    /// <param name="channelInfo">Channel information received from the server</param>
-    public void OnAllChannelInfo(ConnectionAgent connectionAgent, ResultCodeAllChannelInfo result, Dictionary<string, Payload> channelInfo) { }
-
-    /// <summary>
-    /// GetChannelCountInfo() request result
-    /// </summary>
-    /// <param name="connectionAgent">The connection agent that requested GetChannelCountInfo().
-    /// <param name="result">Result of the GetChannelCountInfo() request</param>
-    /// <param name="channelCountInfo">Channel's user count and room count information received from the server</param>
-    public void OnChannelCountInfo(ConnectionAgent connectionAgent, ResultCodeChannelCountInfo result, ChannelCountInfo channelCountInfo) { }
-
-    /// <summary>
-    /// GetAllChannelCountInfo() information request result
-    /// </summary>
-    /// <param name="connectionAgent">The connection agent that requested GetAllChannelCountInfo().
-    /// <param name="result">Result of the GetAllChannelCountInfo() request</param>
-    /// <param name="channelCountInfo">The channel's user count and room count information received from the server</param>
-    public void OnAllChannelCountInfo(ConnectionAgent connectionAgent, ResultCodeAllChannelCountInfo result, Dictionary<string, ChannelCountInfo> channelCountInfo) { }
-    
-    /// <summary>
-    /// Notifies the result of Disconnect() or forced connection termination.
-    /// </summary>
-    /// <param name="connectionAgent">The connection agent where Disconnect() occurred</param>
-    /// <param name="result">Disconnect() result or reason for forced connection termination</param>
-    /// <param name="force">Whether to force termination</param>
-    /// <param name="payload">Additional information received from the server</param>
-    public void OnDisconnect(ConnectionAgent connectionAgent, ResultCodeDisconnect result, bool force, Payload payload) { }
-    
-    /// <summary>
-    /// Error while using the basic functions of the connection.
-    /// </summary>
-    /// <param name="connectionAgent">The connection agent where the error occurred</param>
-    /// <param name="errorCode">Error code</param>
-    /// <param name="commands">Commands to throw on error</param>
-    public void OnError(ConnectionAgent connectionAgent, ErrorCode errorCode, Commands commands) { }
-    
-    /// <summary>
-    /// Raises an error after sending a packet.
-    /// </summary>
-    /// <param name="connectionAgent">The connection agent to request processing from</param>.
-    /// <param name="errorCode">Error code</param>
-    /// <param name="command">Message name of the packet</param>
-    public void OnError(ConnectionAgent connectionAgent, ErrorCode errorCode, string command) { }
-}
-
-/// <param name="command" /> connector.GetConnectionAgent().AddConnectionListener(new ConnectionListener);
-```
+<!-- TODO: translate body -->
 

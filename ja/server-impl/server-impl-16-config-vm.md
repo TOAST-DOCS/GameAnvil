@@ -1,6 +1,10 @@
-## Game > GameAnvil > サーバー開発ガイド > サーバー構成と起動
+<!-- pre-align:aligned sig=a11eb9fd2b68 -->
 
-## 構成(Configuration)
+<a id="game-gameanvil-server-development-guide-configuring-and-running-a-server"></a>
+## Game > GameAnvil > サーバー開発ガイド > サーバー構成と起動 { #game-gameanvil-server-development-guide-configuring-and-running-a-server }
+
+<a id="configuration"></a>
+## 構成(Configuration) { #configuration }
 
 GameAnvilは、大きく2つの方法でサーバーを構成できます。最も代表的な方法は、NHN Cloudのコンソールを通じて、駆動するサーバーをGUI上で構成することです。この方法は、クラウド上でVMベースのサービス
 またはテストのために使用する方法です。しかし、この方法は開発過程で使用するには煩わしく不便です。そこで、ユーザーが開発中にPCで直接サーバーを構成できるように、GameAnvilConfig.jsonファイルを
@@ -20,12 +24,14 @@ gameServiceBuilder.gameNode(SampleGameNode::new, config -> {
 
 それでは、これらの内容を一度確認してみましょう。
 
-## GameAnvilConfig.json編集
+<a id="modify-gameanvilconfigjson"></a>
+## GameAnvilConfig.json編集 { #modify-gameanvilconfigjson }
 
 GameAnvilConfigは、サーバーを柔軟に構成するために非常に多数の設定を提供します。大部分はエンジンのデフォルト値で十分なため、ここではユーザーの理解が必要な設定値のみ説明します。大きく5つに
 分けられます。
 
-### 共通設定(common)
+<a id="common-settings-common"></a>
+### 共通設定(common) { #common-settings-common }
 
 ノード構成に関係なく、必須の共通情報を設定します。
 
@@ -45,7 +51,8 @@ GameAnvilConfigは、サーバーを柔軟に構成するために非常に多�
 | meetEndPoints  | 対象ノードのicpIpとipcPortを登録します。<br />該当サーバーのendpointを含めることが可能で、リストで複数登録可能です。 | -          |
 | debugMode      | デバッグ時に各種timeoutが発生しないようにするオプションで、**サービス時には必ずfalseにする必要があります。** | false      |
 
-### location
+<a id="location"></a>
+### location { #location }
 
 実はロケーションノードは、サーバー全体のユーザーとルームの位置情報を担当するシステムノードです。エンジンが管理して直接使用する用途なので、ユーザーが追加の実装を行う必要はありません。しかし、このようなシステムノードもいくつの
 ノードで構成するかはユーザーの選択次第であるため、別途の構成方法を提供します。開発過程では、以下の使用例をそのまま使用しても構いません。一方、実際のサービスのための構成は、ゲームのコンテンツやボリュームに合わせて適切に
@@ -72,18 +79,21 @@ GameAnvilConfigは、サーバーを柔軟に構成するために非常に多�
 | replicaSize | 複製グループのサイズ( master + slave )の個数を設定します。                                                                                                                                                                                                                                                                                       | 0   |
 | shardFactor | shardingのための引数を設定します。 <br />-全shardの個数 = clusterSize x replicaSize x shardFactor <br />-1つのマシン(VM)で駆動するshardの個数 = replicaSize x shardFactor < br />-固有shardの総数(masterシャードの個数) = clusterSize x shardFactor | 0   |
 
-### Location Cluster
+<a id="location-cluster"></a>
+### Location Cluster { #location-cluster }
 
 masterロケーションノードにリクエストして、ユーザーやルームなどの位置情報を照会できます。ただし、全てのロケーションノードのクラスタリングが完了した後でのみリクエストを送信できます。ロケーションノードを使用するように設定した場合
 エンジン内部ではロケーションノードを駆動し、全てのロケーションノードのクラスタリングが完了したかチェックします。一定時間内に全体のクラスタリングが完了しない場合、エラーログを残します。
 
-### Location Fail-over
+<a id="location-fail-over"></a>
+### Location Fail-over { #location-fail-over }
 
 replicaSizeを2以上に設定する場合、masterロケーションノードとslaveロケーションノードが存在することになります。もしmasterロケーションノードが停止した場合、slaveロケーションノードがmasterの
 役割を代替するようにlocation fail-over機能が実装されています。masterロケーションノードがあったサーバーを再起動する場合には、VmOptionに `-DrestartedAfterDown=true` を
 追加して区別できるようにします。このとき再起動されるロケーションノードは全てslaveとして駆動します。
 
-### match
+<a id="match"></a>
+### match { #match }
 
 マッチノードはマッチメイキングを実行するノードです。つまり、ユーザーが実装したマッチメーカーを駆動します。このようなマッチノードは、いくつのノードを駆動するかだけを決定すれば良いです。一般的な開発過程や小規模なサービスでは、1つの
 マッチノードでも十分です。
@@ -104,7 +114,8 @@ replicaSizeを2以上に設定する場合、masterロケーションノード�
 |-----------|------------------------------------------------------|-----|
 | nodeCnt   | マッチノードの個数を設定します。 <br /> 0の場合、マッチノードを生成しません。   | 0   |
 
-### gateway
+<a id="gateway"></a>
+### gateway { #gateway }
 
 ゲートウェイノードはクライアントが接続を結ぶノードです。そのため、接続するクライアントの規模に合わせて適切な数のノードを準備する必要があります。
 
@@ -135,7 +146,8 @@ replicaSizeを2以上に設定する場合、masterロケーションノード�
 | nodeCnt                   | ゲートウェイノードの個数を設定します。 <br /> 0の場合、ゲートウェイノードを生成しません。 | 0    |
 | duplicateLoginServices   | 重複ログイン可能サービスを設定します。                                   | -    |
 
-### game
+<a id="game"></a>
+### game { #game }
 
 ゲームノードは、実際のゲーム関連オブジェクトが生成され、コンテンツがプレイされるノードです。ゲームコンテンツの特性に合わせてノード数やチャンネルなどを構成できます。
 
@@ -240,7 +252,8 @@ replicaSizeを2以上に設定する場合、masterロケーションノード�
 | channelIDs  | ノードごとに付与するチャンネルIDであり、一意の値である必要はありません。<br>ただし、""はチャンネルを使用しないことを意味します。                                                                                                                                                                                                                                                                             |      |
 | userTimeout | 切断後のユーザーオブジェクト削除タイムアウト時間(ms)を設定します。<br/>User状態が切断されてからUserオブジェクトが生存する時間で、該当時間が過ぎる前に再接続されない場合、logout処理されてUserオブジェクトが削除されます。<br/>クライアントの接続切れ後、ユーザーオブジェクトをサーバーから削除せずに、どの程度の間管理するかを設定します。<br/>0の場合、Userオブジェクトは維持されずに即座に削除されます。  | 0    |
 
-### support
+<a id="support"></a>
+### support { #support }
 
 サポートノードは補助的な役割を遂行するノードです。クライアントとの直接通信も可能なので、ゲームに関連する情報を交換したり、定期的な操作、あるいはゲーム外で独立した実装が必要な操作などを委任して処理するのに
 適しています。
@@ -281,17 +294,20 @@ replicaSizeを2以上に設定する場合、masterロケーションノード�
 | restIp      | RESTfulリクエストのためのIPアドレスを指定します。<br/>(設定値がない場合は、該当マシンのプライベートIPに自動指定)       | -   |
 | restPort    | RESTfulリクエストのためのポートを指定します。                                                              | 0   |
 
-## VMオプション
+<a id="vm-options"></a>
+## VMオプション { #vm-options }
 
 GameAnvilサーバーの起動のために開発チームで使用しているVMオプションの核心的な部分を共有します。ここで推奨するVMオプションは、これまで数回の大規模性能テストを通じて検証されました。これを参考に、ユーザーが
 適宜変更しながら使用してください。
 
-### 推奨VMオプション
+<a id="recommended-vm-options"></a>
+### 推奨VMオプション { #recommended-vm-options }
 
 * JVMのメモリサイズはシステムに合わせて設定します。参考までに、開発チームは8GBマシンでは4～6GBを、16GBマシンでは10～12GBを使用します。
 * GameAnvilはG1GCを公式GCとして使用します。そのため、特別な理由がなければG1GCの使用を推奨します。
 * GCログのための最小限のオプションを追加することを強く推奨します。特に、開発過程では必須です。
 
+<a id="recommended-vm-options-java-21"></a>
 #### Java 21
 
 ```
@@ -310,11 +326,13 @@ GameAnvilサーバーの起動のために開発チームで使用しているVM
 * 2行目の `--add-opens java.base/java.lang.invoke=ALL-UNNAMED` 構文は、GameAnvilでのリフレクション性能最適化のための構文です。このオプションを削除しても起動することは
   できますが、性能が低下する可能性があります。
 
-### GCログのためのVMオプション
+<a id="vm-options-for-gc-logs"></a>
+### GCログのためのVMオプション { #vm-options-for-gc-logs }
 
 GCログのためのオプションは、メモリリークなどを追跡するために必須です。そのため、特別な理由がない限り、少なくとも開発過程では次のようなGCログ関連オプションを追加することを推奨します。しかし、実際のサービスでは性能に
 影響を与える可能性があるため、一部の最適化されたオプションのみ必要に応じて追加する必要がある場合もあります。先ほど推奨したオプションに加え、各Javaバージョンに応じて次のようなオプションを追加できます。
 
+<a id="vm-options-for-gc-logs-java-21"></a>
 #### Java 21
 
 ```

@@ -1,6 +1,10 @@
-## Game > GameAnvil > テスト開発ガイド > シナリオテスト開発ガイド
+<!-- pre-align:aligned sig=83add965b261 -->
 
-### シナリオテストとは？
+<a id="game-gameanvil-guide-to-test-development-guide-to-scenario-test-development"></a>
+## Game > GameAnvil > テスト開発ガイド > シナリオテスト開発ガイド { #game-gameanvil-guide-to-test-development-guide-to-scenario-test-development }
+
+<a id="what-is-a-scenario-test"></a>
+### シナリオテストとは？ { #what-is-a-scenario-test }
 
 シナリオテストとは、予め定められたルール通りにサーバーへ負荷をかけた後、TPSなど性能に関連する指標を得るテストを指します。ここでテストを進めるルールをシナリオと呼びます。また、サーバーに負荷をかけるためには多数のコネクションを生成して維持する必要がありますが、このコネクションそれぞれをシナリオアクターと呼びます。
 
@@ -226,7 +230,8 @@ scenario
     .endEdit();
 ```
 
-### シナリオテスト作成例
+<a id="example-of-writing-a-scenario-test"></a>
+### シナリオテスト作成例 { #example-of-writing-a-scenario-test }
 
 以下の例は、実際にサーバーへ負荷をかけるように作成された例です。
 
@@ -234,10 +239,12 @@ scenario
 |-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | [GameAnvil Scenario Server](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvilScenarioServer.zip) | [GameAnvil Scenario Tester](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvilScenarioTester.zip) |
 
-### アクション
+<a id="action"></a>
+### アクション { #action }
 
 シナリオ中にエンジンへリクエストするなど実行できる動作をアクションと呼びます。アクションはシナリオ中の特定時点に条件と組み合わせて登録できます。
 
+<a id="action-move-status"></a>
 #### ステート移動
 
 ```java
@@ -248,6 +255,7 @@ changeState("StateA")
 changeState(StateA.class)
 ```
 
+<a id="action-end-scenario"></a>
 #### シナリオ終了
 
 ```java
@@ -255,106 +263,124 @@ bool isSuccessful = true;
 ScenarioAction.finish(isSuccessful);
 ```
 
+<a id="action-progress-in-connection"></a>
 #### 接続進行
 
 ```java
 ScenarioAction.connect()
 ```
 
+<a id="action-progress-in-authentication"></a>
 #### 認証進行
 
 ```java
 ScenarioAction.authenticate()
 ```
 
+<a id="action-progress-in-login"></a>
 #### ログイン進行
 
 ```java
 ScenarioAction.login()
 ```
 
+<a id="action-progress-in-user-matchmaking"></a>
 #### ユーザーマッチメイキング進行
 
 ```java
 ScenarioAction.matchUserStart()
 ```
 
+<a id="action-progress-in-room-matchmaking"></a>
 #### ルームマッチメイキング進行
 
 ```java
 ScenarioAction.matchRoom()
 ```
 
+<a id="action-proceed-with-excluding-room"></a>
 #### ルーム退場進行
 
 ```java
 ScenarioAction.leaveRoom()
 ```
 
+<a id="action-progress-in-logout"></a>
 #### ログアウト進行
 
 ```java
 ScenarioAction.logout()
 ```
 
+<a id="action-proceed-with-requesting-named-room-action"></a>
 #### ネームドルーム動作リクエスト進行
 
 ```java
 ScenarioAction.namedRoom()
 ```
 
+<a id="action-progress-in-party-matchmaking"></a>
 #### パーティーマッチメイキング進行
 
 ```java
 ScenarioAction.matchPartyStart()
 ```
 
+<a id="action-proceed-with-canceling-party-matchmaking"></a>
 #### パーティーマッチメイキングキャンセル進行
 
 ```java
 ScenarioAction.matchPartyCancel()
 ```
 
+<a id="action-proceed-with-requesting-channel-information"></a>
 #### チャンネル情報リクエスト進行
 
 ```java
 ScenarioAction.getChannelInfo()
 ```
 
+<a id="action-proceed-with-requesting-all-channel-information"></a>
 #### 全チャンネル情報リクエスト進行
 
 ```java
 ScenarioAction.getAllChannelInfo()
 ```
 
+<a id="action-proceed-with-requesting-number-of-channel-users-number-of-rooms"></a>
 #### チャンネルユーザー数、ルーム数リクエスト進行
 
 ```java
 ScenarioAction.getChannelCountInfo()
 ```
 
+<a id="action-proceed-with-requesting-number-of-users-for-all-channels-and-number-of-rooms"></a>
 #### 全チャンネルのユーザー数、ルーム数リクエスト進行
 
 ```java
 ScenarioAction.getAllChannelCountInfo()
 ```
 
+<a id="action-proceed-with-moving-channel"></a>
 #### チャンネル移動進行
 
 ```java
 ScenarioAction.moveChannel()
 ```
 
+<a id="action-progress-in-snapshot-request"></a>
 #### スナップショットリクエスト進行
 
 ```java
 ScenarioAction.snapshot()
 ```
 
-### アクション登録
+<a id="register-action"></a>
+### アクション登録 { #register-action }
 
 以下はアクションを登録するメソッド一覧です。
 
+<a id="register-action-scenario-entry-point"></a>
 #### シナリオ進入時点
 
 シナリオ進入時点に実行するアクションを登録できます。
@@ -366,6 +392,7 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"));
 ```
 
+<a id="register-action-scenario-movement-point"></a>
 #### シナリオ移動時点
 
 シナリオ移動時点に実行するアクションを登録できます。
@@ -377,6 +404,7 @@ scenario
     .addActionOnExit(scenarioActor -> scenarioActor.resetChannle());
 ```
 
+<a id="register-action-packet-reception-point"></a>
 #### パケット受信時点
 
 パケット受信時点に実行するアクションを登録できます。
@@ -389,6 +417,7 @@ scenario
 ```
 
 
+<a id="register-action-timer-calling-point"></a>
 #### タイマー呼び出し時点
 
 タイマー呼び出し時点に実行するアクションを登録できます。
@@ -400,10 +429,12 @@ scenario
     .setActionInTimer("TimerName", changeState("OtherStateNameToEnter"));
 ```
 
-### 条件機能
+<a id="conditional-trigger"></a>
+### 条件機能 { #conditional-trigger }
 
 条件に従ってアクションを実行するかどうかを設定できます。
 
+<a id="conditional-trigger-always"></a>
 #### 常に
 
 ```java
@@ -413,6 +444,7 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"), always());
 ```
 
+<a id="conditional-trigger-result-success"></a>
 #### 結果成功時
 
 ```java
@@ -422,6 +454,7 @@ scenario
     .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
 ```
 
+<a id="conditional-trigger-result-failure"></a>
 #### 結果失敗時
 
 ```java
@@ -431,6 +464,7 @@ scenario
     .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
 ```
 
+<a id="conditional-trigger-conditional-inversion"></a>
 #### 条件反転
 
 ```java
@@ -440,6 +474,7 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"), NOT(scenarioActor -> scenarioActor.valid()));
 ```
 
+<a id="conditional-trigger-conditional-combination"></a>
 #### 条件結合
 
 ```java
@@ -449,7 +484,8 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"), AND(scenarioActor -> scenarioActor.valid(), ifSuccess());
 ```
 
-### 向上したコールバック登録機能
+<a id="enhanced-callback-registration-feature"></a>
+### 向上したコールバック登録機能 { #enhanced-callback-registration-feature }
 
 この方式で登録したリスナーは、Userエージェントを通じて登録したリスナーとは異なり、Stateの終了時点に自動的に整理されるため、onExitでリスナーを削除する動作を行う必要がなくなります。
 

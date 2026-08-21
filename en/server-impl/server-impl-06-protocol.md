@@ -1,8 +1,12 @@
-## Game > GameAnvil > Server Development Guide > Protocol Definition
+<!-- pre-align:aligned sig=55d81451968d -->
+
+<a id="game-gameanvil-server-development-guide-protocol-definition"></a>
+## Game > GameAnvil > Server Development Guide > Protocol Definition { #game-gameanvil-server-development-guide-protocol-definition }
 
 
 
-##  Protocol Definition and Compile
+<a id="protocol-definition-and-compile"></a>
+##  Protocol Definition and Compile { #protocol-definition-and-compile }
 
 GameAnvil uses [Google Protocol Buffers](https://protobuf.dev/) to define and build protocols. The examples below describe how to define and build these protocols. Firstly, create SampleGame.proto file as a text editor and define the desired protocol. For more detailed grammar on protocol buffer, refer to [Official Protocol Buffers Guide](https://protobuf.dev/programming-guides/proto3/).
 
@@ -61,7 +65,8 @@ protoc ./MyGame.proto --java_out=../java --csharp_out=./
 ```
 
 
-## GeneratedMessageV3 and packet
+<a id="generatedmessagev3-and-packet"></a>
+## GeneratedMessageV3 and packet { #generatedmessagev3-and-packet }
 
 GameAnvil servers support most classes of `com.google.protobuf.GeneratedMessageV3` so that proto-buffer objects can be used in any transferable method. In normal situations, there is no problem with using proto buffer object as it is, but in certain situations, such as sending it to multiple clients, you can use `com.nhn.gameanvil.packet.Packet` class to improve performance.
 

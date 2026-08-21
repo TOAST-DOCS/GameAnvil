@@ -1,9 +1,14 @@
-## Game > GameAnvil > テスト開発ガイド > 機能テスト開発ガイド
+<!-- pre-align:aligned sig=ef059736c23a -->
 
-### Tester
+<a id="game-gameanvil-test-development-guide-how-to-implement-functional-test"></a>
+## Game > GameAnvil > テスト開発ガイド > 機能テスト開発ガイド { #game-gameanvil-test-development-guide-how-to-implement-functional-test }
+
+<a id="tester"></a>
+### Tester { #tester }
 
 GameHammerを使用するための基本モジュールです。機能テストや性能テストを行うには、必須で1つのTesterオブジェクトを生成する必要があります。基本設定とConnectionオブジェクトの管理を担当します。
 
+<a id="tester-create-object"></a>
 #### オブジェクト生成
 
 Testerオブジェクトの生成は、以下のようにビルダーを通じて行えます。
@@ -12,6 +17,7 @@ Testerオブジェクトの生成は、以下のようにビルダーを通じ�
 Tester tester = Tester.newBuilder().build();
 ```
 
+<a id="tester-add-option"></a>
 #### オプション追加
 
 オブジェクト生成時にビルダーを通じて詳細オプションを追加できます。
@@ -41,10 +47,12 @@ Tester tester = Tester.newBuilderWithConfig()
                     .build();
 ```
 
-### Connection
+<a id="connection"></a>
+### Connection { #connection }
 
 Connectionはゲームサーバーとの接続、認証などの機能を処理し、ユーザーの管理を担当します。
 
+<a id="connection-create-object"></a>
 #### オブジェクト生成
 
 以下のようにTesterを通じて生成します。
@@ -56,6 +64,7 @@ Connection connection = tester.createConnection(uuid++);
 
 生成されたConnectionオブジェクトはTesterでまとめて管理され、UUIDで区分されます。すでに生成されたオブジェクトのUUIDが入力されると、該当オブジェクトを返します。
 
+<a id="connection-connect"></a>
 #### Connect
 
 GameAnvilサーバーに接続します。
@@ -84,6 +93,7 @@ public void connectResponseListener(ResultConnect resultConnect, ConsoleTestActo
 
 `connect()`以外に他のAPIもFutureを返して結果を待つか、コールバックを渡して結果を受け取ることができます。このガイドではFuture方式を代表として説明します。
 
+<a id="connection-authentication"></a>
 #### Authentication
 
 GameAnvilサーバーに認証をリクエストします。認証に成功して初めてGameAnvilコネクタの他の機能を使用できます。
@@ -96,6 +106,7 @@ if (resultAuthentication.isSuccess) {
 }
 ```
 
+<a id="connection-getchannellist"></a>
 #### GetChannelList
 
 指定したサービスで使用可能なチャンネルリストをリクエストします。
@@ -108,6 +119,7 @@ if (resultChannelList.isSuccess) {
 }
 ```
 
+<a id="connection-getchannelinfo"></a>
 #### GetChannelInfo
 
 指定したチャンネルの情報をリクエストします。
@@ -120,6 +132,7 @@ if (resultChannelInfo.isSuccess) {
 }
 ```
 
+<a id="connection-request"></a>
 #### Request
 
 サーバーへメッセージを送信し、レスポンスを待ちます。
@@ -134,6 +147,7 @@ if (packetResult.isSuccess()) {
 }
 ```
 
+<a id="connection-send"></a>
 #### Send
 
 サーバーへメッセージを送信します。
@@ -144,6 +158,7 @@ GeneratedMessageV3 message;
 connection.send(message);
 ```
 
+<a id="connection-close"></a>
 #### Close
 
 接続を切断します。接続終了時に生成したユーザーを全てログアウト処理するには、引数にtrueを入力します。
@@ -152,6 +167,7 @@ connection.send(message);
 connection.close(true);
 ```
 
+<a id="connection-waitforadminkickoutnoti"></a>
 #### WaitForAdminKickoutNoti
 
 Admin強制終了通知を受け取るまで待ちます。Adminから強制終了する場合、通知が送信されます。
@@ -161,6 +177,7 @@ Future<ResultAdminKickoutNoti> future = connection.waitForAdminKickoutNoti();
 ResultAdminKickoutNoti resultAdminKickoutNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
+<a id="connection-waitfordisconnect"></a>
 #### WaitForDisconnect
 
 ネットワーク接続切断通知を受け取るまで待ちます。サーバーで`IConnection::close()`を呼び出すか、ソケットエラーが発生するか、`Connection::close()`, `Tester::Close()`を呼び出す場合に送信されます。
@@ -170,7 +187,8 @@ Future<ResultDisconnect> future = connection.waitForDisconnect();
 ResultDisconnect resultDisconnect = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
-### User
+<a id="user"></a>
+### User { #user }
 
 ログインをはじめ、ルーム生成、入室、マッチングなどゲームに必要な主要機能を担当します。次のようにUserを生成できます。
 
@@ -185,6 +203,7 @@ if (user == null) {
 
 Userは次のような機能を提供します。
 
+<a id="user-login"></a>
 #### Login
 
 指定したユーザータイプで指定したチャンネルにログインします。ユーザータイプとチャンネルはサーバーで設定した文字列を使用します。
@@ -197,6 +216,7 @@ if (resultLogin.isSuccess()) {
 }
 ```
 
+<a id="user-logout"></a>
 #### Logout
 
 ログインしたチャンネルからログアウトします。
@@ -209,6 +229,7 @@ if (resultLogout.isSuccess()) {
 }
 ```
 
+<a id="user-waitforforcelogoutnoti"></a>
 #### WaitForForceLogoutNoti
 
 強制ログアウト通知を受け取るまで待ちます。サーバーで`IUser::kickout()`を呼び出す場合に送信されます。
@@ -218,6 +239,7 @@ Future<ResultForceLogoutNoti> future = connection.waitForForceLogoutNoti();
 ResultForceLogoutNoti resultForceLogoutNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
+<a id="user-createroom"></a>
 #### CreateRoom
 
 指定したルームタイプで指定した名前のルームを生成し、そのルームに入室します。ルームタイプはサーバーで設定した文字列を使用します。
@@ -230,6 +252,7 @@ if (resultCreateRoom.isSuccess()) {
 }
 ```
 
+<a id="user-joinroom"></a>
 #### JoinRoom
 
 指定したIDのルームに入室します。指定したIDのルームがない場合は失敗します。
@@ -243,6 +266,7 @@ if (resultJoinRoom.isSuccess()) {
 }
 ```
 
+<a id="user-namedroom"></a>
 #### NamedRoom
 
 指定した名前のルームに入室します。指定した名前のルームがない場合はルームを生成し、そのルームに入室します。パーティーマッチングのためのルームである場合はusePartyにtrueを入力します。
@@ -255,6 +279,7 @@ if (resultNamedRoom.isSuccess()) {
 }
 ```
 
+<a id="user-leaveroom"></a>
 #### LeaveRoom
 
 現在のルームから退場します。
@@ -267,6 +292,7 @@ if (resultLeaveRoom.isSuccess()) {
 }
 ```
 
+<a id="user-waitforforceleaveroomnoti"></a>
 #### WaitForForceLeaveRoomNoti
 
 ルーム強制退場通知を受け取るまで待ちます。サーバーでBaseUser.kickoutRoom()を呼び出す場合に送信されます。
@@ -276,6 +302,7 @@ Future<ResultForceLeaveRoomNoti> future = connection.waitForForceLeaveRoomNoti()
 ResultForceLeaveRoomNoti resultForceLeaveRoomNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
+<a id="user-matchuserstart"></a>
 #### MatchUserStart
 
 ユーザーマッチメイキングをリクエストします。すでにルームに入室している場合など、サーバーの条件によってリクエストが失敗することがあります。WaitForMatchUserDoneNotiを通じてマッチ成功通知、WaitForMatchUserTimeoutNotiを通じてマッチタイムアウト通知を受け取ることができます。
@@ -288,6 +315,7 @@ if (resultMatchUserStart.isSuccess()) {
 }
 ```
 
+<a id="user-matchusercancel"></a>
 #### MatchUserCancel
 
 ユーザーマッチメイキングリクエストをキャンセルします。マッチリクエスト中でない場合、すでにマッチングが成功しているかタイムアウトが発生している場合は失敗することがあります。
@@ -300,6 +328,7 @@ if (resultMatchUserCancel.isSuccess()) {
 }
 ```
 
+<a id="user-waitformatchuserdonenoti"></a>
 #### WaitForMatchUserDoneNoti
 
 ユーザーマッチメイキングまたはパーティーマッチメイキング完了通知を受け取るまで待ちます。
@@ -309,6 +338,7 @@ Future<ResultMatchUserDone> future = connection.waitForMatchUserDoneNoti();
 ResultMatchUserDone resultMatchUserDone = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
+<a id="user-waitformatchusertimeoutnoti"></a>
 #### WaitForMatchUserTimeoutNoti
 
 ユーザーマッチメイキングまたはパーティーマッチメイキングに対するタイムアウト通知を受け取るまで待ちます。
@@ -318,6 +348,7 @@ Future<ResultMatchUserTimeout> future = connection.waitForMatchUserTimeoutNoti()
 ResultMatchUserTimeout resultMatchUserTimeout = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
+<a id="user-matchpartystart"></a>
 #### MatchPartyStart
 
 パーティーマッチメイキングをリクエストします。パーティーマッチメイキングのためのルームに入室した状態でリクエストできます。WaitForMatchUserDoneNotiを通じてマッチ成功通知、WaitForMatchUserTimeoutNotiを通じてマッチタイムアウト通知を受け取ることができます。
@@ -330,6 +361,7 @@ if (resultMatchPartyStart.isSuccess()) {
 }
 ```
 
+<a id="user-waitformatchpartystartnoti"></a>
 #### WaitForMatchPartyStartNoti
 
 パーティーマッチメイキング開始通知を受け取るまで待ちます。パーティーマッチメイキングのためのルームで他の人がパーティーマッチメイキングを開始した場合に送信されます。
@@ -339,6 +371,7 @@ Future<ResultMatchPartyStart> future = connection.waitForMatchPartyStartNoti();
 ResultMatchPartyStart resultMatchPartyStart = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
+<a id="user-matchpartycancel"></a>
 #### MatchPartyCancel
 
 パーティーマッチメイキングリクエストをキャンセルします。パーティーマッチメイキング中でない場合、すでにパーティーマッチメイキングに成功しているかタイムアウトが発生した場合は失敗することがあります。
@@ -351,6 +384,7 @@ if (resultMatchPartyCancel.isSuccess()) {
 }
 ```
 
+<a id="user-waitformatchpartycancelnoti"></a>
 #### WaitForMatchPartyCancelNoti
 
 パーティーマッチメイキングキャンセル通知を受け取るまで待ちます。パーティーマッチメイキング中に他の人がパーティーマッチメイキングをキャンセルした場合に送信されます。
@@ -360,6 +394,7 @@ Future<ResultMatchPartyCancel> future = connection.waitForMatchPartyCancelNoti()
 ResultMatchPartyCancel resultMatchPartyCancel = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
+<a id="user-matchroom"></a>
 #### MatchRoom
 
 ルームマッチメイキングをリクエストします。ルームがない場合は任意のルームを生成し、そのルームに入室することもできます。
@@ -372,6 +407,7 @@ if (resultMatchRoom.isSuccess()) {
 }
 ```
 
+<a id="user-movechannel"></a>
 #### MoveChannel
 
 指定したチャンネルに移動します。
@@ -384,6 +420,7 @@ if (resultMoveChannel.isSuccess()) {
 }
 ```
 
+<a id="user-waitformovechannelnoti"></a>
 #### WaitForMoveChannelNoti
 
 チャンネル移動通知を受け取るまで待ちます。ルーム入室、マッチメイキングなどの理由でチャンネルを移動することになると送信されます。
@@ -393,6 +430,7 @@ Future<ResultMoveChannelNoti> future = connection.waitForMoveChannelNoti();
 ResultMoveChannelNoti resultMoveChannelNoti = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
+<a id="user-request"></a>
 #### Request
 
 サーバーへメッセージを送信し、レスポンスを待ちます。
@@ -405,6 +443,7 @@ if(packetResult.isSuccess()){
 }
 ```
 
+<a id="user-send"></a>
 #### Send
 
 サーバーへメッセージを送信します。
@@ -413,6 +452,7 @@ if(packetResult.isSuccess()){
 user.send(message);
 ```
 
+<a id="user-waitfornotice"></a>
 #### WaitForNotice
 
 お知らせ通知を受け取るまで待ちます。Adminからお知らせを送信するか、REST APIを利用してお知らせを送信する場合に送信されます。
@@ -422,10 +462,12 @@ Future<ResultNotice> future = connection.waitForMoveChannelNoti();
 ResultNotice resultNotice = future.get(WAIT_TIME_OUT, TimeUnit.MILLISECOND); // blocked
 ```
 
-### ユニットテストコード作成
+<a id="write-test-code"></a>
+### ユニットテストコード作成 { #write-test-code }
 
 JUnitを利用してテストコードを作成する方法を代表として説明します。
 
+<a id="write-test-code-basic-settings"></a>
 #### 基本設定
 
 次のようにBeforeClass、AfterClass、Afterコードを作成します。
@@ -474,6 +516,7 @@ public class TestWithGameHammer {
     }
 ```
 
+<a id="write-test-code-requestresponse-test"></a>
 #### Request/Responseテスト
 
 クライアントからRequestを送信する場合、サーバーでは必ずResponseを送信する必要があります。レスポンスを送信しないとtimeoutが発生します。GameAnvilコネクタが提供するAPIの大部分がこのようなRequest/Response方式であり、GameHammerでもこのようなRequest/Response方式のテストをサポートしています。
@@ -519,6 +562,7 @@ public void RequestTest() {
 
 `Connection`、`User`のAPIのうち、`Future`を返すAPIは全てこの方式を使用してテストできます。
 
+<a id="write-test-code-sendreceive"></a>
 #### Send/Receiveテスト
 
 Request/Responseとは異なり、Sendは送信後にレスポンスを待ちません。そしてサーバーでもクライアントの動作に関係なくSendを送信できます。テストは次のように作成できます。

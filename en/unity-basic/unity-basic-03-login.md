@@ -1,10 +1,15 @@
-## Game > GameAnvil > Basic Development Guide to Unity > Quick Login
+<!-- pre-align:aligned sig=b92e901cd14a -->
 
-## Quick Login
+<a id="game-gameanvil-basic-development-guide-to-unity-quick-login"></a>
+## Game > GameAnvil > Basic Development Guide to Unity > Quick Login { #game-gameanvil-basic-development-guide-to-unity-quick-login }
+
+<a id="quick-login"></a>
+## Quick Login { #quick-login }
 
 The quick login feature provided by GameAnvilManager allows you to process the procedures for accessing, authenticating and logging in to the GameAnvil server at once. For more information about the procedures for accessing, authenticating, and logging in, see the [In-depth Development Guide to Unity > Connector](../unity-advanced/unity-advanced-02-connection.md) or Server Development Guide.
 
-### Quick Login Settings
+<a id="quick-login-settings"></a>
+### Quick Login Settings { #quick-login-settings }
 
 To use a quick login, you must pre-set the value to be used for the Login operation during the GameAnvilManager setting. The following types of settings are used for quick login:
 
@@ -18,7 +23,8 @@ These settings can be set in the Inspector window of GameAnvilManager in the Uni
 
 ```c# public void Start() { GameAnvilManager gameAnvilManager = GameAnvilManager.Instance; gameAnvilManager.ip = managerIp; gameAnvilManager.port = managerPort; gameAnvilManager.accountId = managerAccountId; gameAnvilManager.deviceId = managerDeviceId; gameAnvilManager.password = managerPassword; gameAnvilManager.userType = managerUserType; gameAnvilManager.channelId = managerChannelId; gameAnvilManager.serviceName = managerServiceName; } ```
 
-### Use Quick Login
+<a id="use-quick-login"></a>
+### Use Quick Login { #use-quick-login }
 
 Quick Login allows you to connect, authenticate, and log in to the server. You can check the result using the return value LoginResult. If there are problems with the connection to the server at this time, exceptions may occur.
 
@@ -44,7 +50,8 @@ You can check the reason for the failure when the SMS login failed, using the lo
 
 More detailed reasons for failure can be found using the authenticationResult or loginResult in LoginResult.
 
-## Disconnect
+<a id="disconnect"></a>
+## Disconnect { #disconnect }
 
 You can use GameAnvilManager's Logout() method to disconnect from the server.
 
@@ -52,6 +59,7 @@ When calling Logout(), you can process the process of logout, server connection 
 
 ```c# public async void ManagerLogout() { GameAnvilManager gameAnvilManager = GameAnvilManager.Instance; var logoutPayload = new Payload(new Protocol.LogoutData()); await gameAnvilManager.Logout(logoutPayload); } ```
 
-## Notification for Status Change
+<a id="notification-for-status-change"></a>
+## Notification for Status Change { #notification-for-status-change }
 
 You may receive notification that the status of GameAnvilManager may change, such as having a problem with the network because you are not calling Logout(), or being forcibly logged out of the server. ```c# public void addStateChangeListener() { gameAnvilManager.onStateChange.AddListener((GameAnvilManager.LoginState oldState, GameAnvilManager.LoginState newState) => { // Status Change Notification }); } ``` You can see the status before changing to oldState and after changing to newState.  

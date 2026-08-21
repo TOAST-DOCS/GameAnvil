@@ -1,10 +1,15 @@
-## Game > GameAnvil > Guide to Typescript Development > User
+<!-- pre-align:aligned sig=8b81c88112a2 -->
 
-## GameAnvilUser
+<a id="game-gameanvil-guide-to-typescript-development-user"></a>
+## Game > GameAnvil > Guide to Typescript Development > User { #game-gameanvil-guide-to-typescript-development-user }
+
+<a id="gameanviluser"></a>
+## GameAnvilUser { #gameanviluser }
 
 GameAnvilUser is the object on the client side that responds to the user that exists on the GameNode of the server. You can synchronize the server and the client by giving commands to or receiving user information from the server's user objects. You can use predefined room features, matchmaking, and more for your engine, but you can also implement a direct protocol to add new features.
 
-### Create
+<a id="create"></a>
+### Create { #create }
 
 To use GameAnvilUser, you must first create a new GameAnvilUser object and log in to the server through the created user.
 
@@ -15,7 +20,8 @@ const serviceName: string;
 const user = new GameAnvilUser(connector, serviceName, 1);
 ```
 
-### Create Multiple GameUserAgnets
+<a id="create-multiple-gameuseragnets"></a>
+### Create Multiple GameUserAgnets { #create-multiple-gameuseragnets }
 
 GameAnvilConnector objects are generally used only within the process, while GameAnvilUser can create and operate multiple objects at the same time. Multiple users can log in to different services each, and if you want to use multiple GameAnvilUsers for one service, you can use subId to separate and create them.
 
@@ -29,7 +35,8 @@ const user2 = new GameAnvilUser(connector, serviceName, 2);
 const user3 = new GameAnvilUser(connector, otherServiceName, 1);
 ```
 
-### Login
+<a id="login"></a>
+### Login { #login }
 
 Request creation of server user objects that respond to clients within GameNode. You must log in to GameNode to use various other features of the user.
 
@@ -82,7 +89,8 @@ if (user.isLoggedIn) {
 }
 ```
 
-### Logout
+<a id="logout"></a>
+### Logout { #logout }
 
 You can explicitly request the server to delete the user. When the logout is complete, Promise lets you see if the logout was successful, additional data sent from the server, and more.
 
@@ -121,7 +129,8 @@ user.onForceLogout = (user, payload) => {
 }
 ```
 
-### Register Message Reception Callback
+<a id="register-message-reception-callback"></a>
+### Register Message Reception Callback { #register-message-reception-callback }
 
 When you receive a protobuf message from the server, you can set the processing function to run. For one protobuf, only one process function can be registered, and if you re-register the process function while the number is already registered, the existing process function will be deleted.
 
@@ -142,7 +151,8 @@ user.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userInfo) =
 });
 ```
 
-### Enter after Creating a New Room
+<a id="enter-after-creating-a-new-room"></a>
+### Enter after Creating a New Room { #enter-after-creating-a-new-room }
 
 You can create a room on the server and enter it immediately. If room names are not required, you can pass an empty string. The room type must use a value that is previously agreed to with the server.
 
@@ -205,7 +215,8 @@ If it’s in the room, you can check the ID of the room through the roomId attri
 console.log(`Current joined room id: ${user.roomId}`);
 ```
 
-### Enter an Existing Room
+<a id="enter-an-existing-room"></a>
+### Enter an Existing Room { #enter-an-existing-room }
 
 If you are aware of the room ID generated on the server, you can request entry into the room.
 
@@ -256,7 +267,8 @@ if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
 }
 ```
 
-### Exit the Room Entering
+<a id="exit-the-room-entering"></a>
+### Exit the Room Entering { #exit-the-room-entering }
 
 You can request the server to exit the room entering.
 
@@ -297,7 +309,8 @@ user.onForceLeaveRoom = (user, roomId, payload) => {
 }
 ```
 
-### Register in User Matchmaking Pool
+<a id="register-in-user-matchmaking-pool"></a>
+### Register in User Matchmaking Pool { #register-in-user-matchmaking-pool }
 
 User matchmaking is a method to create a user pool and hold the appropriate users in it to enter the newly created room. If the number of users in the user pool that meet the conditions is low, it may take time for the matching to complete. If matchmaking is not completed within the timeout, the matching is canceled.
 
@@ -351,7 +364,8 @@ You can check whether your registration request is being sent and processed befo
 console.log(`Is in progress of match making?`, user.isUserMatchInPrgress);
 ```
 
-### Remove User Matchmaking Pool
+<a id="remove-user-matchmaking-pool"></a>
+### Remove User Matchmaking Pool { #remove-user-matchmaking-pool }
 
 You can cancel the request if you have requested a user matchmaking, but the matchmaking is still in progress.
 
@@ -385,7 +399,8 @@ If the request failed, you can find out about the source through errorCode. The 
 | `MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM` | 1202 | Failed: Already matched |
 | `MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS` | 1203 | Failed: When matching is not in progress |
 
-### Room Matchmaking
+<a id="room-matchmaking"></a>
+### Room Matchmaking { #room-matchmaking }
 
 Room matchmaking is a method to get the user into a room suitable for conditions. If you have a room that meets the conditions, you will immediately enter the room. If no room meets the conditions, you will create and register a new room.
 
@@ -453,7 +468,8 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 }
 ```
 
-### Room with the specified name
+<a id="room-with-the-specified-name"></a>
+### Room with the specified name { #room-with-the-specified-name }
 
 You can enter a room with the name you specified, or enter a room for party matching. If there is no room with the name you specified, it will be created and entered.
 
@@ -503,7 +519,8 @@ if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
 }
 ```
 
-### Match Party
+<a id="match-party"></a>
+### Match Party { #match-party }
 
 Party Matchmaking is a special type of user matchmaking that involves having two or more users associated with a party registered in a user pool to find other users who are eligible and enter a newly created room together. The users associated with the party will always be in the same room. The user matched as a party may be another party or individual depending on the server's metric implementation.
 
@@ -568,7 +585,8 @@ You can check the status before and after the party match, as shown below:
 console.log(`Is in progress of match making? ${user.isPartyMatchInProgress}`);
 ```
 
-### Cancel Party Match
+<a id="cancel-party-match"></a>
+### Cancel Party Match { #cancel-party-match }
 
 If the party matchmaking is still in progress, you can cancel the request.
 
@@ -602,7 +620,8 @@ If the cancellation fails, you can find out about the source through errorCode. 
 | `LOGOUT_FAIL_CONTENT` | 1401 | Failed: Denied from the content |
 | `MATCH_PARTY_CANCEL_FAIL_PARTY_MATCH_WEIRD` | 1402 | Failed: When the party match is canceled, if the room is not a room for the party match |
 
-### Send Packet
+<a id="send-packet"></a>
+### Send Packet { #send-packet }
 
 You can transfer user packets to a game server. Note that only pre-registered protocols can be sent.
 
@@ -617,7 +636,8 @@ const message = new UserInfo({name, age, job});
 user.sendUser(message);
 ```
 
-### Wait for Response Packet after Sending Packet
+<a id="wait-for-response-packet-after-sending-packet"></a>
+### Wait for Response Packet after Sending Packet { #wait-for-response-packet-after-sending-packet }
 
 After sending the user's packet to the game server, you can receive and process the response from the server. Note that only pre-registered protocols can be sent.
 
@@ -629,7 +649,8 @@ const echoResult = await user.requestUser<EchoRes>(new EchoReq({ message: "Hello
 console.log(echoResult.message); // Hello World!
 ```
 
-### Move Channel
+<a id="move-channel"></a>
+### Move Channel { #move-channel }
 
 You can move the user from the channel the user belongs to to the specified channel. 
 
@@ -691,7 +712,8 @@ If you want to know the channel ID information for the current user, please refe
 console.log(`Current channel id: ${user.channelId}`);
 ```
 
-### Notifications from Server
+<a id="notifications-from-server"></a>
+### Notifications from Server { #notifications-from-server }
 
 You can register a pre-process function for notifications coming from the server. If you want a more comlicated form of data transfer, consider registering custom protocols.
 
@@ -701,7 +723,8 @@ user.onNotice = (user, message) => {
 }
 ```
 
-### Disconnect
+<a id="disconnect"></a>
+### Disconnect { #disconnect }
 
 You can pre-register the process function when it is disconnected by the server or for the other reasons.
 
@@ -720,7 +743,8 @@ user.onSessionClose = (user, resultCode, payload) => {
 | `SESSION_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041 | Detect disconnection with the client. It generally does not occur. If it occurs, you need to contact the GameAnvil development team. |
 | `SESSION_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | If the session could not be found. It generally does not occur. If it occurs, you need to contact the GameAnvil development team.
 
-### Forced Exit by Admin
+<a id="forced-exit-by-admin"></a>
+### Forced Exit by Admin { #forced-exit-by-admin }
 
 You can pre-register the process function when it is extracted from the server by the server's administrator tool.
 

@@ -1,25 +1,33 @@
-## Game > GameAnvil > Unity 基礎開発ガイド > ユーザーコントローラー
+<!-- pre-align:aligned sig=2b73e5c9449e -->
 
-## GameAnvilUser
+<a id="game-gameanvil-basic-development-guide-to-unity-user-controller"></a>
+## Game > GameAnvil > Unity 基礎開発ガイド > ユーザーコントローラー { #game-gameanvil-basic-development-guide-to-unity-user-controller }
+
+<a id="gameanviluser"></a>
+## GameAnvilUser { #gameanviluser }
 
 は、GameAnvilサーバーのGameNodeに関連するタスクを担当します。ログイン(Login())、ログアウト(Logout())、ルーム管理などの基本機能を提供し、直接定義したプロトコルに基づいて、クライアントは自身のユーザーオブジェクトを通じて他のオブジェクトとメッセージをやり取りし、様々なコンテンツを実装できます。
 
 GameAnvilManagerは、基本的に簡単ログインの過程で作成された一つのGameAnvilUserを管理するGameAnvilUserControllerを提供します。LoginResultのUserControllerを通じて取得できます。
 
-### ログイン
+<a id="login"></a>
+### ログイン { #login }
 
 ログインは、クライアントがサーバーに接続した後、GameNodeに自身のユーザーオブジェクトを作成するプロセスと定義できます。
 
 ログインは簡易ログインで一度に処理されるため、説明を省略します。詳細は[Unity 応用開発ガイド > ユーザー](../unity-advanced/unity-advanced-03-user.md)を参照してください。
 
-### ログアウト
+<a id="logout"></a>
+### ログアウト { #logout }
 
 GameAnvilManagerではゲームサーバーからログアウトし、自動的に接続終了まで処理されます。ログアウトに関するより詳細な説明は[Unity 応用開発ガイド > ユーザー](../unity-advanced/unity-advanced-03-user.md)を参照してください。
 
-### ルームの作成、入室、退室
+<a id="create-enter-leave-room"></a>
+### ルームの作成、入室、退室 { #create-enter-leave-room }
 
 ルームを利用することで、複数のユーザーからの操作（メッセージ）を、全員で共有された一つの時系列（同期化された流れ）に沿って処理する仕組みを構築できます。つまり、ルーム内では、全てのユーザーのリクエストが、サーバーによって厳密な順序で処理されることが保証されます。もちろん、1人のユーザーのためのルーム作成も、コンテンツによっては意味を持つ場合があります。ルームをどのように使用するかは、完全にエンジンユーザー次第です。
 
+<a id="create-enter-leave-room-createroom"></a>
 #### CreateRoom
 
 CreateRoom()を呼び出してルームを作成し、そのルームに入室します。
@@ -82,6 +90,7 @@ CreatedRoomResultの詳細は以下の通りです。
 | String? | RoomName | 作成したルームの名前 |
 | Payload | payload | クライアントで必要な追加情報 |
 
+<a id="create-enter-leave-room-joinroom"></a>
 #### JoinRoom
 
 JoinRoom()を呼び出して、既に作成されているルームに入室します。
@@ -144,6 +153,7 @@ JoinRoomResultの詳細は以下の通りです。
 | String? | RoomName | 入室したルームの名前。 |
 | Payload | payload | クライアントで必要な追加情報。 |
 
+<a id="create-enter-leave-room-leaveroom"></a>
 #### LeaveRoom
 
 LeaveRoom()を呼び出して、入室中のルームから退室できます。
@@ -191,6 +201,7 @@ ResultCodeLeaveRoomの詳細は以下の通りです。
 | LEAVE_ROOM_SUCCESS      | 0   | 成功。                                        |
 | LEAVE_ROOM_FAIL_CONTENT | 801 | 失敗。ユーザーコードで拒否されました。 |
 
+<a id="create-enter-leave-room-namedroom"></a>
 #### NamedRoom
 
 NamedRoom()を呼び出して、指定した名前のルームに入室できます。指定した名前のルームがない場合は、ルームを作成してからそのルームに入室します。
@@ -255,10 +266,12 @@ NamedRoomResultの詳細は以下の通りです。
 | String? | RoomName | 入室したルームの名前 |
 | Payload | payload | クライアントで必要な追加情報。 |
 
-### マッチメイキング
+<a id="matchmaking"></a>
+### マッチメイキング { #matchmaking }
 
 GameAnvilは大きく2種類のマッチメイキングを提供します。1つはルーム単位のマッチングを行うルームマッチメイキングで、もう1つはユーザー単位のマッチングを行うユーザーマッチメイキングです。
 
+<a id="matchmaking-room-matchmaking"></a>
 #### ルームマッチメイキング
 
 ルームマッチメイキングは、条件に合うルームへユーザーを入室させる方式です。ルームマッチメイキングリクエスト時に条件に合うルームがあれば該当ルームへ即時入室させ、条件に合うルームがなければ新しいルームを生成して入室させます。
@@ -345,6 +358,7 @@ MatchResultの詳細は次のとおりです。
 | String   | RoomName | 入室したルームの名前。         |
 | Payload? | payload | クライアントで必要な追加情報。 |
 
+<a id="matchmaking-user-matchmaking"></a>
 #### ユーザーマッチメイキング
 
 ユーザーマッチメイキングは、ユーザープールを作成し、その中で条件に合うユーザーを探して新しく生成したルームへ入室させる方式です。ユーザープールに条件に合うユーザーの数が不足している場合、マッチメイキングが完了するまで時間がかかることがあり、時間内にマッチメイキングが完了しない場合はタイムアウトとなりマッチングが失敗する可能性があります。

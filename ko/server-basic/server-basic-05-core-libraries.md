@@ -1,8 +1,12 @@
-## Game > GameAnvil > 서버 개념 설명 > 핵심 라이브러리
+<!-- pre-align:aligned sig=0461c198f4a1 -->
+
+<a id="game-gameanvil-server-concept-description-core-libraries"></a>
+## Game > GameAnvil > 서버 개념 설명 > 핵심 라이브러리 { #game-gameanvil-server-concept-description-core-libraries }
 
 
 
-## 핵심 라이브러리
+<a id="key-libraries"></a>
+## 핵심 라이브러리 { #key-libraries }
 
 아래의 3가지가 GameAnvil에서 사용하는 핵심 라이브러리입니다. ZeroMQ 그리고 Netty는 엔진 내부에서 사용하므로 GameAnvil 사용자가 직접 사용할 일은 없습니다. Protocol Buffers는 메시지를 직렬화/역직렬화하는 과정에서 사용합니다. 직접 사용 여부와 관계없이 아래의 3가지 라이브러리를 잘 이해하고 있다면 엔진 사용에 많은 도움이 될 것입니다.
 

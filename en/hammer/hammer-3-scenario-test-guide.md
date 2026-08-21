@@ -1,6 +1,10 @@
-## Game > GameAnvil > Guide to Test Development > Guide to Scenario Test Development
+<!-- pre-align:aligned sig=83add965b261 -->
 
-### What is a scenario test?
+<a id="game-gameanvil-guide-to-test-development-guide-to-scenario-test-development"></a>
+## Game > GameAnvil > Guide to Test Development > Guide to Scenario Test Development { #game-gameanvil-guide-to-test-development-guide-to-scenario-test-development }
+
+<a id="what-is-a-scenario-test"></a>
+### What is a scenario test? { #what-is-a-scenario-test }
 
 Scenario tests are tests that obtain metrics related to performance after loading the server according to predefined rules. Here the rules for performing the test are called scenarios. In addition, to load the server, you must create and maintain multiple connections, each of which is called a scenario actor.
 
@@ -226,7 +230,8 @@ scenario
     .endEdit();
 ```
 
-### Example of Writing a Scenario Test
+<a id="example-of-writing-a-scenario-test"></a>
+### Example of Writing a Scenario Test { #example-of-writing-a-scenario-test }
 
 The example below is an example written to authorize a load to a real server:
 
@@ -234,10 +239,12 @@ The example below is an example written to authorize a load to a real server:
 |-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | [GameAnvil Scenario Server](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvilScenarioServer.zip) | [GameAnvil Scenario Tester](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvilScenarioTester.zip) |
 
-### Action
+<a id="action"></a>
+### Action { #action }
 
 Operations that can be performed during scenarios are called actions, such as requests to the engine. Actions can be registered at a certain point in time, combined with conditions.
 
+<a id="action-move-status"></a>
 #### Move Status
 
 ```java
@@ -248,6 +255,7 @@ changeState("StateA")
 changeState(StateA.class)
 ```
 
+<a id="action-end-scenario"></a>
 #### End Scenario
 
 ```java
@@ -255,106 +263,124 @@ bool isSuccessful = true;
 ScenarioAction.finish(isSuccessful);
 ```
 
+<a id="action-progress-in-connection"></a>
 #### Progress in Connection
 
 ```java
 ScenarioAction.connect()
 ```
 
+<a id="action-progress-in-authentication"></a>
 #### Progress in Authentication
 
 ```java
 ScenarioAction.authenticate()
 ```
 
+<a id="action-progress-in-login"></a>
 #### Progress in Login
 
 ```java
 ScenarioAction.login()
 ```
 
+<a id="action-progress-in-user-matchmaking"></a>
 #### Progress in User Matchmaking
 
 ```java
 ScenarioAction.matchUserStart()
 ```
 
+<a id="action-progress-in-room-matchmaking"></a>
 #### Progress in Room Matchmaking
 
 ```
 java ScenarioAction.matchRoom()
 ```
 
+<a id="action-proceed-with-excluding-room"></a>
 #### Proceed with Excluding Room
 
 ```
 java ScenarioAction.leaveRoom()
 ```
 
+<a id="action-progress-in-logout"></a>
 #### Progress in Logout
 
 ```
 java ScenarioAction.logout()
 ```
 
+<a id="action-proceed-with-requesting-named-room-action"></a>
 #### Proceed with Requesting Named Room Action
 
 ```
 java ScenarioAction.namedRoom()
 ```
 
+<a id="action-progress-in-party-matchmaking"></a>
 #### Progress in Party Matchmaking
 
 ```
 java ScenarioAction.matchPartyStart()
 ```
 
+<a id="action-proceed-with-canceling-party-matchmaking"></a>
 #### Proceed with Canceling Party Matchmaking
 
 ```
 java ScenarioAction.matchPartyCancel()
 ```
 
+<a id="action-proceed-with-requesting-channel-information"></a>
 #### Proceed with Requesting Channel Information
 
 ```
 java ScenarioAction.getChannelInfo()
 ```
 
+<a id="action-proceed-with-requesting-all-channel-information"></a>
 #### Proceed with Requesting All Channel Information
 
 ```
 java ScenarioAction.getAllChannelInfo()
 ```
 
+<a id="action-proceed-with-requesting-number-of-channel-users-number-of-rooms"></a>
 #### Proceed with Requesting Number of Channel Users, Number of Rooms
 
 ```
 java ScenarioAction.getChannelCountInfo()
 ```
 
+<a id="action-proceed-with-requesting-number-of-users-for-all-channels-and-number-of-rooms"></a>
 #### Proceed with Requesting Number of Users for All Channels and Number of Rooms
 
 ```
 java ScenarioAction.getAllChannelCountInfo()
 ```
 
+<a id="action-proceed-with-moving-channel"></a>
 #### Proceed with Moving Channel
 
 ```
 java ScenarioAction.moveChannel()
 ```
 
+<a id="action-progress-in-snapshot-request"></a>
 #### Progress in Snapshot Request
 
 ```
 java ScenarioAction.snapshot()
 ```
 
-### Register Action
+<a id="register-action"></a>
+### Register Action { #register-action }
 
 Below is a list of methods to register actions:
 
+<a id="register-action-scenario-entry-point"></a>
 #### Scenario Entry Point
 
 You can register the actions to be executed at the time the scenario enters.
@@ -366,6 +392,7 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"));
 ```
 
+<a id="register-action-scenario-movement-point"></a>
 #### Scenario Movement Point
 
 You can register the actions to be executed at the time of scenario migration.
@@ -377,6 +404,7 @@ scenario
     .addActionOnExit(scenarioActor -> scenarioActor.resetChannle());
 ```
 
+<a id="register-action-packet-reception-point"></a>
 #### Packet Reception Point
 
 You can register the actions to be executed at the time the packet is received.
@@ -389,6 +417,7 @@ scenario
 ```
 
 
+<a id="register-action-timer-calling-point"></a>
 #### Timer Calling Point
 
 You can register the actions to be executed at the time call time point.
@@ -400,10 +429,12 @@ scenario
     .setActionInTimer("TimerName", changeState("OtherStateNameToEnter"));
 ```
 
-### Conditional Trigger
+<a id="conditional-trigger"></a>
+### Conditional Trigger { #conditional-trigger }
 
 You can set whether to execute the action depending on the condition.
 
+<a id="conditional-trigger-always"></a>
 #### Always
 
 ```java
@@ -413,6 +444,7 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"), always());
 ```
 
+<a id="conditional-trigger-result-success"></a>
 #### Result Success
 
 ```java
@@ -422,6 +454,7 @@ scenario
     .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
 ```
 
+<a id="conditional-trigger-result-failure"></a>
 #### Result Failure
 
 ```java
@@ -431,6 +464,7 @@ scenario
     .addActionOnReceive(ResultConnect.class, changeState("OtherStateNameToEnter"), ifSuccess());
 ```
 
+<a id="conditional-trigger-conditional-inversion"></a>
 #### Conditional Inversion
 
 ```java
@@ -440,6 +474,7 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"), NOT(scenarioActor -> scenarioActor.valid()));
 ```
 
+<a id="conditional-trigger-conditional-combination"></a>
 #### Conditional Combination
 
 ```java
@@ -449,7 +484,8 @@ scenario
     .addActionOnEnter(changeState("OtherStateNameToEnter"), AND(scenarioActor -> scenarioActor.valid(), ifSuccess());
 ```
 
-### Enhanced Callback Registration Feature
+<a id="enhanced-callback-registration-feature"></a>
+### Enhanced Callback Registration Feature { #enhanced-callback-registration-feature }
 
 The listener registered in this way is automatically cleaned up at the end time of the state unlike the listener registered through the user agent, eliminating the need to do anything to remove the listener from onExit.
 
