@@ -1,3 +1,5 @@
+<!-- pre-align:aligned sig=a0b0bd0e481a -->
+
 <a id="game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection"></a>
 ## Game > GameAnvil > Unity 심화 개발 가이드 > 백그라운드 접속 끊김 방지 { #game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection }
 

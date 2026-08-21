@@ -1,3 +1,5 @@
+<!-- pre-align:aligned sig=941b0b4cb0e6 -->
+
 <a id="game-gameanvil-basic-tutorial"></a>
 ## Game > GameAnvil > 기초 튜토리얼 { #game-gameanvil-basic-tutorial }
 
