@@ -1,6 +1,8 @@
-## Game > GameAnvil > Basic Tutorial
+<a id="game-gameanvil-basic-tutorial"></a>
+## Game > GameAnvil > Basic Tutorial { #game-gameanvil-basic-tutorial }
 
-### Create Multiplayer Games Easily with GameAnvil
+<a id="create-multiplayer-games-easily-with-gameanvil"></a>
+### Create Multiplayer Games Easily with GameAnvil { #create-multiplayer-games-easily-with-gameanvil }
 
 GameAnvil is a real-time multiplayer game server creation platform. It makes it easy to develop and operate your game servers and clients.
 
@@ -8,8 +10,8 @@ This article covers the process of using the basic features of GameAnvil to deve
 
 GameAnvil provides not only server engines, but also connectors that help connect clients to the server. Completing a sample to see how the server and client interact, you get familiar with the overall flow of using GameAnvil to develop your game.
 
-<a id="game-gameanvil-basic-tutorial"></a>
-## Prepare Practice Environment - Server Project { #game-gameanvil-basic-tutorial }
+<a id="prepare-practice-environment---server-project"></a>
+## Prepare Practice Environment - Server Project { #prepare-practice-environment---server-project }
 
 To create multiplayer games, you need a server program that corresponds to the client. After building up a game server, the tutorial proceeds in a way to implement the client.
 
@@ -19,8 +21,8 @@ By performing the steps below, the final server sample project created can be do
 
 [Download Server Sample Project](https://static.toastoven.net/prod_gameanvil/files/v2_1/GameAnvil_Tutorial_Basic_Server.zip?disposition=attachment)
 
-<a id="create-multiplayer-games-easily-with-gameanvil"></a>
-### Configure Project { #create-multiplayer-games-easily-with-gameanvil }
+<a id="configure-project"></a>
+### Configure Project { #configure-project }
 
 This chapter aims to complete the initial configuration to get started with the development. The next chapter covers running the server by actually executing the process.
 
@@ -58,8 +60,8 @@ The server project skeleton has now been configured on IntelliJ. You can check t
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/5_gameanvil_project_view_init.png)
 
-<a id="prepare-practice-environment---server-project"></a>
-## Modify GameAnvil Server Setting File { #prepare-practice-environment---server-project }
+<a id="modify-gameanvil-server-setting-file"></a>
+## Modify GameAnvil Server Setting File { #modify-gameanvil-server-setting-file }
 
 You can change the GameAnvil server setting through the GameAnvilConfig.json file found in the resources package subpart of the project panel.
 
@@ -91,8 +93,8 @@ If you look at the last part of the game page of the GameAnvilConfig.json file, 
   ]
 ```
 
-<a id="configure-project"></a>
-### About Service { #configure-project }
+<a id="about-service"></a>
+### About Service { #about-service }
 
 A service is a name used to separate each game service when a single server provides multiple games. The service name is an agreed string between the server and the client that denotes a specific service. Don’t forget it as it will be used when entering a service name in a later process.
 
@@ -102,8 +104,8 @@ Here it uses a service with the name of Sync. Modify the contents below in servi
 "serviceName" : "Sync",
 ```
 
-<a id="java-version-settings"></a>
-### About Channel { #java-version-settings }
+<a id="about-channel"></a>
+### About Channel { #about-channel }
 
 Channel is one of the methods to logically split a single server group. As a channel is not used in the example, we will omit the detailed description in this article. The content is modified as follows in the channelIDs in the game section because it does not use a channel:
 
@@ -129,11 +131,11 @@ The content of the GameAnvil server setting file that has been written thus is a
 
 With the gateway settings, you can see that the TCP\_SOCKET connection is set to use the 18200 port. This is the port connected to the client, which will be used in future client projects to enter the server access information.
 
-<a id="modify-gameanvil-server-setting-file"></a>
-## Run GameAnvil Server { #modify-gameanvil-server-setting-file }
+<a id="run-gameanvil-server"></a>
+## Run GameAnvil Server { #run-gameanvil-server }
 
-<a id="about-service"></a>
-### Java Version Settings { #about-service }
+<a id="java-version-settings"></a>
+### Java Version Settings { #java-version-settings }
 
 GameAnvil supports Java 21 version. Some configuration methods may vary depending on the version, and Java 21 version was used here.
 
@@ -149,8 +151,8 @@ Check the **gradle** settings in the **Set** menu.
 
 ![](https://static.toastoven.net/prod_gameanvil/images/v2_1/tutorial/basic-tutorial/9_gradle_config.png)
 
-<a id="about-channel"></a>
-### Run Server { #about-channel }
+<a id="run-server"></a>
+### Run Server { #run-server }
 
 When the execution is set, double-click Tasks > other > `runMain` from the gradle menu on the right. Once executed, the server runs even if you click the green Run triangle icon on the top right of the IntelliJ.
 
@@ -462,8 +464,8 @@ Game users are created by requiring the client to log in to the server. On the s
 
 In this tutorial, to allow login without special validation, we have enabled the onLogin function to always return true. It will always create user objects when the client has a login request and responds successfully.
 
-<a id="run-server"></a>
-### Implement Game Room { #run-server }
+<a id="implement-game-room"></a>
+### Implement Game Room { #implement-game-room }
 
 Once you successfully access the game node as a game user, you can now receive packets from other users and through the game room. Game Room is a group that logically binds the users who receive the packet. Game rooms can also be created through interface implementation.
 

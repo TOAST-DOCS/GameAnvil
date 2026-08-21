@@ -1,11 +1,16 @@
-## Game > GameAnvil > Unity 基礎開発ガイド > ネットワーク接続確認
+<!-- pre-align:aligned sig=e626004b1194 -->
 
-## NetworkChecker
+<a id="game-gameanvil-unity-basic-development-guide-connectivity-check"></a>
+## Game > GameAnvil > Unity 基礎開発ガイド > ネットワーク接続確認 { #game-gameanvil-unity-basic-development-guide-connectivity-check }
+
+<a id="networkchecker"></a>
+## NetworkChecker { #networkchecker }
 
 LTE、Wi-Fi切り替えなどの理由でインターネット接続が切れる場合、これを認識してサーバーとの接続を解除できます。
 該当機能を使用したいシーンにはNetworkCheckerが存在する必要があります。
 
-### NetworkChecker 生成
+<a id="create-a-networkchecker"></a>
+### NetworkChecker 生成 { #create-a-networkchecker }
 
 Unity Hierarchyウィンドウでマウスの右ボタンをクリックした後、**GameAnvil > NetworkChecker**を選択してすぐに生成できます。
 

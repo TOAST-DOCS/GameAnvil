@@ -1,6 +1,8 @@
-## Game > GameAnvil > 基礎チュートリアル
+<a id="game-gameanvil-basic-tutorial"></a>
+## Game > GameAnvil > 基礎チュートリアル { #game-gameanvil-basic-tutorial }
 
-### GameAnvilでマルチプレイヤーゲームを簡単に作成する
+<a id="create-multiplayer-games-easily-with-gameanvil"></a>
+### GameAnvilでマルチプレイヤーゲームを簡単に作成する { #create-multiplayer-games-easily-with-gameanvil }
 
 GameAnvilはリアルタイムマルチプレイヤーゲームサーバー制作プラットフォームです。
 GameAnvilを使用すると、手軽にゲームサーバーとクライアントを開発・運用できます。
@@ -466,8 +468,8 @@ public class SyncGameUser implements IUser {
 
 このチュートリアルでは特別な検証過程なしにログインを許可するため、onLogin関数で常にtrueを返すようにしました。このようにすると、クライアントからログインリクエストがあった際に常にユーザーオブジェクトを生成し、成功レスポンスを返すことになります。
 
-<a id="run-server"></a>
-### ゲームルームの実装 { #run-server }
+<a id="implement-game-room"></a>
+### ゲームルームの実装 { #implement-game-room }
 
 正常にゲームユーザーとしてゲームノードに接続すると、他のユーザーとゲームルームを通じてパケットをやり取りできるようになります。ゲームルームとは、パケットをやり取りするユーザーを論理的にまとめたグループです。ゲームルームもインターフェースの実装を通じて生成できます。
 

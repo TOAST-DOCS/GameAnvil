@@ -1,3 +1,5 @@
+<!-- pre-align:aligned sig=021fed3a8700 -->
+
 <a id="game-gameanvil-unity-basic-development-guide-message-handling"></a>
 ## Game > GameAnvil > Unity 기초 개발 가이드 > 메시지 핸들링 { #game-gameanvil-unity-basic-development-guide-message-handling }
 
