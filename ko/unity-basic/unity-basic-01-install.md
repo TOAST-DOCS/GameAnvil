@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 기초 개발 가이드 > 시작하기
+<!-- pre-align:aligned sig=a7e4b2f6746d -->
 
-## GameAnvilConnector
+<a id="game-gameanvil-basic-development-guide-to-unity-get-started"></a>
+## Game > GameAnvil > Unity 기초 개발 가이드 > 시작하기 { #game-gameanvil-basic-development-guide-to-unity-get-started }
+
+<a id="gameanvilconnector"></a>
+## GameAnvilConnector { #gameanvilconnector }
 
 GameAnvilConnector는 GameAnvil이 제공하는 다양한 기능들을 간편하게 이용할 수 있도록 도와줍니다.
 
-## GameAnvilConnector 설치
+<a id="install-gameanvilconnector"></a>
+## GameAnvilConnector 설치 { #install-gameanvilconnector }
 
 gameanvil-connector.unitypackage를 이용해 GameAnvilConnector를 프로젝트에 포함할 수 있습니다. 먼저 [여기](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector.unitypackage)에서 gameanvil-connector.unitypackage를 다운로드합니다. 그리고 메뉴의 **Assets > Import Package > Custom Package...** 를 선택합니다.
 

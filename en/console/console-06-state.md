@@ -1,12 +1,17 @@
-## Game > GameAnvil > Console User Guide > State
+<!-- pre-align:aligned sig=ca641a919c72 -->
+
+<a id="game-gameanvil-console-user-guide-state"></a>
+## Game > GameAnvil > Console User Guide > State { #game-gameanvil-console-user-guide-state }
 
 
-## State
+<a id="state"></a>
+## State { #state }
 Multiple game servers can be configured for a single game service. And each game server can be configured with multiple nodes. These servers and nodes have different state values. The rest of this document describes the state of the server and nodes.
 
 
 
-## Server State
+<a id="server-state"></a>
+## Server State { #server-state }
 
 Server states are a combination of the state of processes (S/W) and instances (H/W). The dashboard, which you can see on the Server Management page, lists these server’s state and displays the number of servers in each state. It also displays each state in a distinct color.
 
@@ -24,7 +29,8 @@ The following describes each server state.
 | TRANSIT    | Switching between two states. You cannot command that server until the transition to the target state is completed.                                |
 
 
-## Node State
+<a id="node-state"></a>
+## Node State { #node-state }
 
 Node state shows the state of multiple nodes that make up a game server. Also, nodes on the same server can be in different state. 
 
@@ -42,17 +48,20 @@ Node state shows the state of multiple nodes that make up a game server. Also, n
 
 
 
-## States related to Safe Pause
+<a id="states-related-to-safe-pause"></a>
+## States related to Safe Pause { #states-related-to-safe-pause }
 
 Some of the server state and node states are related to Safe Pause. If you proceed with Safe Pause for any node, the server and node will be transited to that state. A further explanation is as follows.
 
 
+<a id="states-related-to-safe-pause-state-of-nodes-undergoing-safe-pause"></a>
 #### State of nodes undergoing Safe Pause
 
 * SAFE PAUSE: If you safely pause (Safe Pause) on any node, it will securely transfer the processing information to other nodes. This series of processes is represented in the SAFE PAUSE state. Nodes in this state enter the PAUSE state after transferring all information.
 * READY (LOCK): It is the state of the node to be transferred information such as user/room that was being processed by the node to be Safe Pause. 
 A node in this state cannot perform an external command until the transfer is complete. In other words, it will be in a beta READY state until SafePause is complete.
 
+<a id="states-related-to-safe-pause-state-of-the-server-running-safepause"></a>
 #### State of the server running SafePause
 
 * Some of the multiple nodes that make up the server may be in the SAFE PAUSE or READY (LOCK) state. This is implicitly expressed as SAFE PAUSE state.

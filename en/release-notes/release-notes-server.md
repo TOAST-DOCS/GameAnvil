@@ -1,9 +1,42 @@
-## Game > GameAnvil > Release Notes > GameAnvil
-### 2.1.0 (June 30, 2025)
+<!-- pre-align:aligned sig=f8e8eba64050 -->
+
+<a id="game-gameanvil-release-notes-gameanvil"></a>
+## Game > GameAnvil > Release Notes > GameAnvil { #game-gameanvil-release-notes-gameanvil }
+<a id="20-january-2026"></a>
+### 2.2.0 (January 2026) { #20-january-2026 }
+
+<!-- TODO: translate body -->
+
+<a id="20-january-2026-change"></a>
+#### Change
+
+<!-- TODO: translate body -->
+
+##### Supports running Java 25
+
+<!-- TODO: translate body -->
+
+##### Changed from Interface to Base Class
+
+<!-- TODO: translate body -->
+
+##### Changed the way of using NodeView
+
+<!-- TODO: translate body -->
+
+<a id="20-january-2026-fix"></a>
+#### Fix
+
+<!-- TODO: translate body -->
+
+<a id="10-june-30-2025"></a>
+### 2.1.0 (June 30, 2025) { #10-june-30-2025 }
+<a id="10-june-30-2025-new"></a>
 #### New
 ##### Added Dependency Management and Spring Boot 
 * You can add or inject beans using spring boot to manage GameAnvil dependencies.
 * Codes registered in the engine using an existing interface now declare annotations and register in the engine.
+<a id="10-june-30-2025-remove"></a>
 #### Remove
 ##### Message Processing Deprecated from Gateway, Connection 
 * It will be removed from later releases due to its low utilization and non-intuitive API.
@@ -11,6 +44,7 @@
 ##### Delete Timer, Topic from Gateway, Connection
 * Removed APIs that are low in use and non-intuitive.
 * It can be used as it is on generally used game nodes such as Room, User, and more.
+<a id="10-june-30-2025-fix"></a>
 #### FIX
 * Fixed an issue where expected and different error messages could occur when requesting the ChannelCountInfo API.
 * Default wait time to the server shutdown has been reduced.
@@ -25,8 +59,10 @@
 * Fixed an issue that could cause a crash when unknown packets enter the internal port.
 
 
-### 2.0.0 (December 4, 2024)
+<a id="00-december-4-2024"></a>
+### 2.0.0 (December 4, 2024) { #00-december-4-2024 }
 
+<a id="00-december-4-2024-new"></a>
 #### New
 ##### Java 21
 * GameAnvil 2.0 runs only in Java 21 or later versions.
@@ -62,6 +98,7 @@
 
 ##### Output error logs when an error occurs during packet parsing
 
+<a id="00-december-4-2024-remove"></a>
 #### Remove
 ##### Remove Quasar Dependencies
 * Removed the related code with Quasar. 
@@ -91,6 +128,7 @@
 * Instead, use addTopic (String) and removeTopic (String).
 
 
+<a id="00-december-4-2024-change"></a>
 #### Change
 #####  The return value of the responding API changes to Future 
 * Changed GameAnvil's API to the same way that many other asynchronous APIs return Future. You can now create code flows more freely. 
@@ -277,6 +315,7 @@ scheduleTimerAtFixedRate - N, fixed delay
 | RoomMatchMaker | onPreMatch | Deleted | onMatch 로 병합 |
 | RoomMatchMaker | onPostMatch | Deleted | Merged into onMatch |
 
+<a id="00-december-4-2024-fix"></a>
 #### Fix
 
 * Added packet information to error logs when using Request API fails
@@ -300,13 +339,16 @@ scheduleTimerAtFixedRate - N, fixed delay
 
 ---
 
-### 1.4.2 (2024.02.26)
+<a id="42-20240226"></a>
+### 1.4.2 (2024.02.26) { #42-20240226 }
 
+<a id="42-20240226-new"></a>
 #### New
 * Improved Safe-Pause feature. 
   * Even if Safe-Pause is already in progress, improvements have been made to run new Safe-Pause by designating non-in-progress nodes as origin/destination nodes. 
   * In addition to GameNode, MatchNode also supports Safe-Pause. 
 
+<a id="42-20240226-fix"></a>
 #### Fix
 * Enhanced and improved the readability of the engine's logs. 
   * Added more information about the packets sent when a request fails.
@@ -314,13 +356,16 @@ scheduleTimerAtFixedRate - N, fixed delay
   * Modified to log which requests failed when individual requests failed in MultiRequest
   * Enhanced logs related to machine-to-machine connection status. 
 
+<a id="42-20240226-change"></a>
 #### Change
 * Modified GameAnvilConfig.json to enable managementPort as well as managementIp.
 
 ------
 
-### 1.4.1 (2023.12.13)
+<a id="41-20231213"></a>
+### 1.4.1 (2023.12.13) { #41-20231213 }
 
+<a id="41-20231213-new"></a>
 #### New
 ###### Updated engine Protobuf version to 3.24.1
 ###### Added Protobuf-related convenience features
@@ -330,6 +375,7 @@ scheduleTimerAtFixedRate - N, fixed delay
 ###### When registering for Protocol, we have improved so that you don't need to specify an index. 
   * Existing numbers are automatically assigned by the engine.
 
+<a id="41-20231213-fix"></a>
 #### Fix
 * Improved the server to give an immediate failure response if no target is found when making a request.
     * Improved the engine's request APIs, such as requestToGameUser, to return a failure immediately if the target is not found, instead of waiting for a timeout.
@@ -350,6 +396,7 @@ scheduleTimerAtFixedRate - N, fixed delay
 * It forwards notifications to the client when matchmaking fails.
     * Improved delivery of appropriate results to clients even when matchmaking fails.
 
+<a id="41-20231213-change"></a>
 #### Change
 * Set
     * GameAnvilConfig.json uses ipcIp and managementIp instead of ip entries.
@@ -360,14 +407,18 @@ scheduleTimerAtFixedRate - N, fixed delay
   
 ------
 
-### 1.3.1 (2023.04.20)
+<a id="31-20230420"></a>
+### 1.3.1 (2023.04.20) { #31-20230420 }
 
+<a id="31-20230420-new"></a>
 #### New
 
+<a id="31-20230420-fix"></a>
 #### Fix
 
 * Fixed the issue that the channel information of the newly started node is not updated
 
+<a id="31-20230420-change"></a>
 #### Change
 
 - Changed the Active Status Check API for the Support node that you see in the Console
@@ -375,8 +426,10 @@ scheduleTimerAtFixedRate - N, fixed delay
 
 ------
 
-### 1.3.0 (2022.12.27)
+<a id="30-20221227"></a>
+### 1.3.0 (2022.12.27) { #30-20221227 }
 
+<a id="30-20221227-new"></a>
 #### New
 
 ###### Syncing with Console 1.3 
@@ -395,6 +448,7 @@ The convenience of integrating with the Unity engine has been greatly enhanced b
 ###### Optimize Performance
 GameAnvil 1.3 improves packet processing by more than 5% compare to previous versions. It operates at a faster rate by optimizing the internal action code.
 
+<a id="30-20221227-fix"></a>
 #### Fix
 
 - Fixed Safe Pause-Related Bugs
@@ -462,6 +516,7 @@ GameAnvil 1.3 improves packet processing by more than 5% compare to previous ver
 
   - Add constraints so that the ghotsTimeout value is at least 3 seconds greater than the demandClientStateCheck value
 
+<a id="30-20221227-change"></a>
 #### Change
 
 - Advanced Safe Pause
@@ -497,10 +552,12 @@ GameAnvil 1.3 improves packet processing by more than 5% compare to previous ver
 
 ---
 
-### 1.2.0 (2021.07.13)
+<a id="20-20210713"></a>
+### 1.2.0 (2021.07.13) { #20-20210713 }
 
 For more information, see the [Deployment Note](https://nhnent.dooray.com/share/posts/sGAj_STlTEWDr5LPgKgIhg)
 
+<a id="20-20210713-new"></a>
 #### New
 
 * Apply User Licenses
@@ -545,6 +602,7 @@ public class GameUser extends BaseUser {
 
 
 
+<a id="20-20210713-fix"></a>
 #### Fix
 
 * Refactoring channel information management and synchronization features
@@ -563,6 +621,7 @@ public class GameUser extends BaseUser {
 
 
 
+<a id="20-20210713-change"></a>
 #### Change
 
 * Default port has been changed for the cloud ACL environment.
@@ -617,7 +676,9 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.12 (2021.06.07)
+<a id="112-20210607"></a>
+### 1.1.12 (2021.06.07) { #112-20210607 }
+<a id="112-20210607-change"></a>
 #### Change
 
 * Added API to SupportNode to receive gateway access information
@@ -645,8 +706,10 @@ public class GameUser extends BaseUser {
 ```
 ---
 
-### 1.1.11 (2021.05.06)
+<a id="111-20210506"></a>
+### 1.1.11 (2021.05.06) { #111-20210506 }
 
+<a id="111-20210506-change"></a>
 #### Change
 
 * Add API to HttpReqest to enable PATCH method
@@ -656,16 +719,20 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.10 (2021-04-21)
+<a id="110-2021-04-21"></a>
+### 1.1.10 (2021-04-21) { #110-2021-04-21 }
 
+<a id="110-2021-04-21-fix"></a>
 #### Fix
 
 * Password support APIs added that were missed in RedisSingle
 
 ---
 
-### 1.1.9 (2021-04-16)
+<a id="19-2021-04-16"></a>
+### 1.1.9 (2021-04-16) { #19-2021-04-16 }
 
+<a id="19-2021-04-16-fix"></a>
 #### Fix
 
 * Fixed the idleClientTimeout check to also stop when receiving the client's PauseClientStateCheck.
@@ -673,8 +740,10 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.8 (2021-04-15)
+<a id="18-2021-04-15"></a>
+### 1.1.8 (2021-04-15) { #18-2021-04-15 }
 
+<a id="18-2021-04-15-new"></a>
 #### New
 
 * Added features to receive the client's PauseClientStateCheck and not check the client's status for as long as the time it was entered.
@@ -685,16 +754,20 @@ public class GameUser extends BaseUser {
 
 ---
 
-### 1.1.7 (2021-04-02)
+<a id="17-2021-04-02"></a>
+### 1.1.7 (2021-04-02) { #17-2021-04-02 }
 
+<a id="17-2021-04-02-fix"></a>
 #### Fix
 
 * Fixed a problem with /game-data/get, in which GameData values are transferred to the String instead of to the JsonObject
 
 ---
 
-### 1.1.6 (2021-03-30)
+<a id="16-2021-03-30"></a>
+### 1.1.6 (2021-03-30) { #16-2021-03-30 }
 
+<a id="16-2021-03-30-change"></a>
 #### Change
 
 * Dynamic Module feature has been specified out of GameAnvil and deleted.
@@ -704,8 +777,10 @@ Source delivery and usage due to spec out](https://nhnent.dooray.com/share/posts
 
 ---
 
-### 1.1.5 (2021-03-19)
+<a id="15-2021-03-19"></a>
+### 1.1.5 (2021-03-19) { #15-2021-03-19 }
 
+<a id="15-2021-03-19-change"></a>
 #### Change
 
 * Deleted GameAnvil DB and Admin feature (excluding GameData, Dynamic Module )
@@ -731,16 +806,20 @@ Source delivery and usage due to spec out](https://nhnent.dooray.com/share/posts
 
 ---
 
-### 1.1.4 (2021-03-18)
+<a id="14-2021-03-18"></a>
+### 1.1.4 (2021-03-18) { #14-2021-03-18 }
 
+<a id="14-2021-03-18-fix"></a>
 #### Fix
 
 * Fixed the problem of not joining intermittently created rooms when applying MatchingGroup to room matching
 
 ---
 
-### 1.1.3 (2021-02-05)
+<a id="13-2021-02-05"></a>
+### 1.1.3 (2021-02-05) { #13-2021-02-05 }
 
+<a id="13-2021-02-05-fix"></a>
 #### Fix
 
 * Fixed issues that do not recover from disabled state upon instance re-start
@@ -750,16 +829,20 @@ Source delivery and usage due to spec out](https://nhnent.dooray.com/share/posts
 
 ---
 
-### 1.1.2 (2021-01-07)
+<a id="12-2021-01-07"></a>
+### 1.1.2 (2021-01-07) { #12-2021-01-07 }
 
+<a id="12-2021-01-07-fix"></a>
 #### Fix
 
 * Fixed an issue where DynamicModule fails to call properly due to missing exception handling for code calls that may cause SuspendExcussion exceptions
 
 ---
 
-### 1.1.1 (2021-01-05)
+<a id="11-2021-01-05"></a>
+### 1.1.1 (2021-01-05) { #11-2021-01-05 }
 
+<a id="11-2021-01-05-fix"></a>
 #### Fix
 
 * Fixed the issue of NPE when calling getNodeId() on GatewayNode
@@ -768,10 +851,12 @@ Source delivery and usage due to spec out](https://nhnent.dooray.com/share/posts
 
 ---
 
-### 1.1.0 (2020-12-17)
+<a id="10-2020-12-17"></a>
+### 1.1.0 (2020-12-17) { #10-2020-12-17 }
 
 For more information, see the [Deployment Note](https://nhnent.dooray.com/share/posts/bWby9jGjQri2cFNR_KYbnw)
 
+<a id="10-2020-12-17-new"></a>
 #### New
 
 * Jdk11 support
@@ -803,6 +888,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
     * Use the "-Dalarm.url" VM option to specify the URL to receive the alarm.
     * [How to use GameAnvil-Guide/69 Alarm ](https://nhnent.dooray.com/share/posts/Ap6DJT9KSaGv916_tj-xAA)
 
+<a id="10-2020-12-17-change"></a>
 #### Change
 
 * Changed BaseObject's findAllUserLocsOfAccount return value to UserLoc
@@ -813,6 +899,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
     * /management/locationLookupNodeInfo
     * /management/matchNodeInfo
 
+<a id="10-2020-12-17-fix"></a>
 #### Fix
 
 * If you use a different SubId with the same AccountId, the login succeeds, but we have since fixed the problem of not receiving the response packet.
@@ -821,30 +908,38 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 1.0.7 (2021.01.05)
+<a id="07-20210105"></a>
+### 1.0.7 (2021.01.05) { #07-20210105 }
 
+<a id="07-20210105-fix"></a>
 #### Fix
 - Fixed the issue of NPE when calling getNodeId() on GatewayNode
 
 ---
 
-### 1.0.6 (2020.12.28)
+<a id="06-20201228"></a>
+### 1.0.6 (2020.12.28) { #06-20201228 }
 
+<a id="06-20201228-fix"></a>
 #### Fix
 - `RoomMatchMakingFailure. The matched-room({}) does not exist in the game node.` If the room matching fails with the log remaining, the user will continue to fix the issue of room matching failing until reconnection school
 
 ---
 
-### 1.0.5 (2020.11.17)
+<a id="05-20201117"></a>
+### 1.0.5 (2020.11.17) { #05-20201117 }
 
+<a id="05-20201117-fix"></a>
 #### Fix
 
 - Fixed problems that fail to restore packet header upon error response in RoomMatchReq
 
 ---
 
-### 1.0.4 (2020.10.29)
+<a id="04-20201029"></a>
+### 1.0.4 (2020.10.29) { #04-20201029 }
 
+<a id="04-20201029-fix"></a>
 #### Fix
 
 - Fixed an issue in which NPE(Null Pointer Exception) would occur when no packet was passed to an arbitrary Session
@@ -855,28 +950,34 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 1.0.3 (2020.10.26)
+<a id="03-20201026"></a>
+### 1.0.3 (2020.10.26) { #03-20201026 }
 
+<a id="03-20201026-change"></a>
 #### Change
 
 - Reactivated the notification API that was previously excluded from specifications
 
 ---
 
-### 1.0.2 (2020.10.12)
+<a id="02-20201012"></a>
+### 1.0.2 (2020.10.12) { #02-20201012 }
 
+<a id="02-20201012-new"></a>
 #### New
 
 - Added a feature that is used to allow users to freely set the Node information displayed in Log
 - Added a feature that is used to manually enter HostId
 - Added a feature that is used to pass information to each HostId from nodeInfoByHostId
 
+<a id="02-20201012-fix"></a>
 #### Fix
 
 - Fixed an issue in which an error would occur while binding IP 0.0.0.0
 - Fixed an issue in which the success value would respond as failure when using the /config/get of ConfigModule
 - Added the exception handling for the problems that would cause an error while processing Publish Packet when another GameNode is active while a GameNode is already running
 
+<a id="02-20201012-change"></a>
 #### Change
 
 - Edited so that the value range of ShardIndex that is used in the last digit when creating UserId or RoomId can be specified
@@ -885,8 +986,10 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 1.0.1 (2020.09.07)
+<a id="01-20200907"></a>
+### 1.0.1 (2020.09.07) { #01-20200907 }
 
+<a id="01-20200907-fix"></a>
 #### Fix
 
 - Fixed an issue in which Payload would not be passed to the client when onLogin() returned false
@@ -894,10 +997,12 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 1.0.0 (2020.08.31)
+<a id="00-20200831"></a>
+### 1.0.0 (2020.08.31) { #00-20200831 }
 
 For more information, see the [Deployment Note](https://nhnent.dooray.com/share/posts/5Fvh0aszQ5u6d_ZZxRWPvA)
 
+<a id="00-20200831-new"></a>
 #### New
 
 - Dramatically increased performance and stability (approximately 7 times better than those of version 0.9)
@@ -909,6 +1014,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Added the API that can be used to allow the server Log level to be changed during runtime
 - Log level can be changed while servicing in Node unit
 
+<a id="00-20200831-fix"></a>
 #### Fix
 
 - Fixed a user transfer problem, improved usage and optimization
@@ -919,6 +1025,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Fixed memory leak in which some of the Timer objects of Node persist instead of being disabled
 - Fixed an issue in which newly connected user would be unintentionally disconnected while checking the client connection
 
+<a id="00-20200831-change"></a>
 #### Change
 
 - Changed the Node name into a more intuitive one as shown in the table below
@@ -948,8 +1055,10 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.10.2 (2020.04.08)
+<a id="102-20200408"></a>
+### 0.10.2 (2020.04.08) { #102-20200408 }
 
+<a id="102-20200408-new"></a>
 #### New
 
 - GameAnvil API Reference (JavaDoc) Site Open
@@ -964,6 +1073,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
   `java -javaagent:QUASAR_PATH\quasar-core-0.7.10-jdk8.jar=bm -Xms6g -Xmx6g -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseStringDeduplication`
 
+<a id="102-20200408-fix"></a>
 #### Fix
 
 - Edited the Quasar stack bug
@@ -972,13 +1082,16 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.10.1 (2020.02.11)
+<a id="101-20200211"></a>
+### 0.10.1 (2020.02.11) { #101-20200211 }
 
+<a id="101-20200211-new"></a>
 #### New
 
 - Provided the Util class that was provided to users
 - Organized the tools that were previously scattered throughout the engine into a single class
 
+<a id="101-20200211-change"></a>
 #### Change
 
 - Improved the Topic process code performance
@@ -986,8 +1099,10 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.10.0 (2020.02.06)
+<a id="100-20200206"></a>
+### 0.10.0 (2020.02.06) { #100-20200206 }
 
+<a id="100-20200206-new"></a>
 #### New
 
 - Newly refactored the asynchronous support API that was previously problematic
@@ -996,10 +1111,12 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Support custom protocol based on ByteString
 - Serialize messages the way you want, not just Google protobufs
 
+<a id="100-20200206-fix"></a>
 #### Fix
 
 - Fixed all the issues in which the status of Fiber would be broken, which was the most critical problem in the previous version
 
+<a id="100-20200206-change"></a>
 #### Change
 
 - Optimized the size of the packet and header used by the engine
@@ -1009,12 +1126,15 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.9 (2019.10.25)
+<a id="99-20191025"></a>
+### 0.9.9 (2019.10.25) { #99-20191025 }
 
+<a id="99-20191025-new"></a>
 #### New
 
 - Opened additional port so that WatchDog can be linked in the unit process
 
+<a id="99-20191025-fix"></a>
 #### Fix
 
 - Fixed the ghost user bug
@@ -1024,6 +1144,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Fixed an issue in which matching groups would not be correctly applied to the users in many different channels
 - Fixed an issue in which the callback for Timeout would not be correctly received when party matchmaking
 
+<a id="99-20191025-change"></a>
 #### Change
 
 - Added error code used when a duplicate request is received while room matchmaking is in progress
@@ -1031,19 +1152,23 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.8 (2019.09.05)
+<a id="98-20190905"></a>
+### 0.9.8 (2019.09.05) { #98-20190905 }
 
+<a id="98-20190905-new"></a>
 #### New
 
 - Added addTopic() and removeTopic() API that are used to add or remove ClientTopic to Session
 - Added the Packet TTL feature
 - Added a logic that periodically checks and organizes Dangling Location
 
+<a id="98-20190905-fix"></a>
 #### Fix
 
 - Fixed the system so that ForceLogoutNoti would not be transferred to the client when kicking a user in Admin
 - Fixed all Spot malfunctions of LocationNode
 
+<a id="98-20190905-change"></a>
 #### Change
 
 - Changed the system so that ForceCloseNoti would be transferred before the socket is closed when onAuthenticate() callback failed
@@ -1051,14 +1176,17 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.7 (2019.07.27)
+<a id="97-20190727"></a>
+### 0.9.7 (2019.07.27) { #97-20190727 }
 
+<a id="97-20190727-new"></a>
 #### New
 
 - Added a logic that is used to regularly check the Rooms that abnormally remain
 - As previous user matchmaking may not be canceled and remain when a user matchmaking is requested after logging in again, added a new flag that responds to the status of previous user matchmaking process to re-login response
 - Added Packet Expire feature (default 30 seconds)
 
+<a id="97-20190727-fix"></a>
 #### Fix
 
 - Fixed a problem with overlapping Connection IDs (CIDs)
@@ -1070,6 +1198,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Fixed an issue in which room matchmaking would be processed in duplicate
 - Fixed an issue in which disconnected users would remain in the room
 
+<a id="97-20190727-change"></a>
 #### Change
 
 - Added a log for every instance of Session Disconnect
@@ -1078,12 +1207,15 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.6 (2019.06.23)
+<a id="96-20190623"></a>
+### 0.9.6 (2019.06.23) { #96-20190623 }
 
+<a id="96-20190623-new"></a>
 #### New
 
 - Added the canTransfer() interface to User and Room so that the time of transfer could be adjusted in content
 
+<a id="96-20190623-fix"></a>
 #### Fix
 
 - Fixed memory leak that would exist in internal engine code
@@ -1093,6 +1225,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Fixed a NodeInfoManager synchronization issue
 - Fixed an issue in which user objects would not be properly organized
 
+<a id="96-20190623-change"></a>
 #### Change
 
 - Changed the name of AsyncAwaitHttpRequest to FiberHttpRequest
@@ -1104,12 +1237,15 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.5 (2019.06.21)
+<a id="95-20190621"></a>
+### 0.9.5 (2019.06.21) { #95-20190621 }
 
+<a id="95-20190621-fix"></a>
 #### Fix
 
 - Fixed an issue in which the corresponding user would not be organized in a paused node when a new user logs in or a user is being transferred while performing uninterrupted patch
 
+<a id="95-20190621-change"></a>
 #### Change
 
 - Changed the serviceId from string to integer
@@ -1119,18 +1255,22 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.4 (2019.05.24)
+<a id="94-20190524"></a>
+### 0.9.4 (2019.05.24) { #94-20190524 }
 
+<a id="94-20190524-new"></a>
 #### New
 
 - Added a feature that can be used to register the protocol used by content in the file unit
 - It is to effectively process internal packets
 - Added the MoveService feature
 
+<a id="94-20190524-fix"></a>
 #### Fix
 
 - Corrected errors in the comparator used in room matchmaking
 
+<a id="94-20190524-change"></a>
 #### Change
 
 - By adding the latest login information to the Authentication response so that it could be used in the next login
@@ -1140,14 +1280,17 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.3 (2019.04.10)
+<a id="93-20190410"></a>
+### 0.9.3 (2019.04.10) { #93-20190410 }
 
+<a id="93-20190410-fix"></a>
 #### Fix
 
 - Fixed a problem that also causes Null Pointer Exception (NPE) when timeout occurs in the AsyncAwait.call() API
 - Fixed an issue in which Epoll would stop when it was enabled
 - Fixed an Invalid System Target Location error that would occur while logging in
 
+<a id="93-20190410-change"></a>
 #### Change
 
 - ManagementNode can no longer be expanded by engine users
@@ -1157,13 +1300,16 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.2 (2019.02.11)
+<a id="92-20190211"></a>
+### 0.9.2 (2019.02.11) { #92-20190211 }
 
+<a id="92-20190211-new"></a>
 #### New
 
 - Added the scheduled notification and scheduled maintenance feature using Admin
 - Added the White IP, White User and White Device features using Admin
 
+<a id="92-20190211-fix"></a>
 #### Fix
 
 - Fixed a piece of code that is used to process exceptions in a wrong way in AsyncAwait.run() API
@@ -1173,6 +1319,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Fixed memory leak that would occur when creating a packet header
 - Fixed memory leak that would occur in room matchmaking
 
+<a id="92-20190211-change"></a>
 #### Change
 
 - Added payload to the onLogout() callback
@@ -1182,8 +1329,10 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.1 (2018.11.12)
+<a id="91-20181112"></a>
+### 0.9.1 (2018.11.12) { #91-20181112 }
 
+<a id="91-20181112-new"></a>
 #### New
 
 - Added MatchNode dedicated to matchmaking
@@ -1192,6 +1341,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Added additional information by node type to the Machine of Admin
 - Added the onLoginByOtherConnection() callback that is called when the user logs in again using the same DeviceId and UserId
 
+<a id="91-20181112-fix"></a>
 #### Fix
 
 - Fixed a Dynamic Module bug
@@ -1202,6 +1352,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Fixed an error that would occur when a node is shutdown
 - Fixed problems with Null Pointer Exception (NPE) while deleting matching information even though room matchmaking is not being used
 
+<a id="91-20181112-change"></a>
 #### Change
 
 - Relocated some interface components
@@ -1211,8 +1362,10 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.9.0 (2018.06.27)
+<a id="90-20180627"></a>
+### 0.9.0 (2018.06.27) { #90-20180627 }
 
+<a id="90-20180627-new"></a>
 #### New
 
 - Added the user matchmaking feature
@@ -1221,10 +1374,12 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Added the Reconnect feature
 - Added the (old) Test Agent
 
+<a id="90-20180627-fix"></a>
 #### Fix
 
 - Fixed a duplicate login in the Account unit issue
 
+<a id="90-20180627-change"></a>
 #### Change
 
 - Changed OracleJDK to AdpotOpenJDK
@@ -1232,8 +1387,10 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.8.6 (2018.06.28)
+<a id="86-20180628"></a>
+### 0.8.6 (2018.06.28) { #86-20180628 }
 
+<a id="86-20180628-new"></a>
 #### New
 
 - Added the Send from Session to Management feature
@@ -1243,6 +1400,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Added the Custom Serializer feature
 - Custom Serializer can be plugged into RoomFinder
 
+<a id="86-20180628-fix"></a>
 #### Fix
 
 - Added an empty string exception process for the publication where a channel is used as a topic in the channel user manager
@@ -1269,6 +1427,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Changed UpdateRoomInfo/DelRoomInfo so that they can be instantly applied to the corresponding Node
 - Fixed an error where a blocking call would be displayed in Fiber
 
+<a id="86-20180628-change"></a>
 #### Change
 
 - Changed FindRoomList so that it serializes/de-serializes the container for the entire room list
@@ -1279,8 +1438,10 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.8.5 (2017.12.18)
+<a id="85-20171218"></a>
+### 0.8.5 (2017.12.18) { #85-20171218 }
 
+<a id="85-20171218-new"></a>
 #### New
 
 - Added a feature to be used to authenticate and manage HTTP sessions with the JWT authentication token
@@ -1288,11 +1449,13 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Added a feature to be used to allow a single GameNode to use multiple RoomTypes
 - Added a feature to be used to view all the information of the Server on the web (NodeInfoPage)
 
+<a id="85-20171218-fix"></a>
 #### Fix
 
 - Fixed a bug in which timers would not be removed
 - Fixed a bug in which onPostLeaveRoom would be called twice
 
+<a id="85-20171218-change"></a>
 #### Change
 
 - Improved ghost user handling
@@ -1303,8 +1466,10 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.8.4 (2018.01.10)
+<a id="84-20180110"></a>
+### 0.8.4 (2018.01.10) { #84-20180110 }
 
+<a id="84-20180110-new"></a>
 #### New
 
 - Applied Bootstrap
@@ -1313,6 +1478,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Added the Multi Dispatch feature that is used to send and receive multiple messages
 - Added the ServiceNodeSender (previously CustomServiceSender) publishToLobby method
 
+<a id="84-20180110-change"></a>
 #### Change
 
 - Re-named AsyncAwait and RAsyncAwait
@@ -1328,14 +1494,17 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - ReverseAsyncCall -> RAsyncWaitingCall
 - ReverseAsyncRun -> RAsyncWaitingRun
 
+<a id="84-20180110-fix"></a>
 #### Fix
 
 - Fixed a Session IP error
 
 ---
 
-### 0.8.3 (2017.10.26)
+<a id="83-20171026"></a>
+### 0.8.3 (2017.10.26) { #83-20171026 }
 
+<a id="83-20171026-new"></a>
 #### New
 
 - Added the REST handling feature
@@ -1347,6 +1516,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Added the onShutdown() interface so that contents can disable resource when a node is shutdown
 - Added the publishToNode function to ServiceNodeSender
 
+<a id="83-20171026-fix"></a>
 #### Fix
 
 - Changed and added the JMX Management API of Management (SessionGateway, CustomGateway)
@@ -1359,6 +1529,7 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 - Improved login process (changed related to the Invalid Target Location error log)
 - Returns the node if its status is not READY when the room deleting delRoomInfo is called
 
+<a id="83-20171026-change"></a>
 #### Change
 
 - Integrated Session node and client's End-Point (Session Gateway)
@@ -1376,19 +1547,23 @@ For more information, see the [Deployment Note](https://nhnent.dooray.com/share/
 
 ---
 
-### 0.8.2 (2017.09.21)
+<a id="82-20170921"></a>
+### 0.8.2 (2017.09.21) { #82-20170921 }
 
+<a id="82-20170921-new"></a>
 #### New
 
 - Added the RestObject feature to CustomService
 - Added RestHandler to CustomService
 
+<a id="82-20170921-fix"></a>
 #### Fix
 
 - Fixed a bug in which user information would not be deleted from Cache
 - Added exception handling for NPE (Null Pointer Exception) that occurred inside the engine
 - Fixed the problem of not properly applying the Connection ID (CID) to packet transmission
 
+<a id="82-20170921-change"></a>
 #### Change
 
 - Changed the Custom module naming

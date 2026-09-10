@@ -1,15 +1,48 @@
-## Game > GameAnvil > Release Notes > Typescript Connector
+<!-- pre-align:aligned sig=69edcc77ed76 -->
 
-### 2.1.0 (June 30, 2025)
+<a id="game-gameanvil-release-notes-typescript-connector"></a>
+## Game > GameAnvil > Release Notes > Typescript Connector { #game-gameanvil-release-notes-typescript-connector }
 
+<a id="20-january-28-2026"></a>
+### 2.2.0 (January 28, 2026) { #20-january-28-2026 }
+
+<!-- TODO: translate body -->
+
+<a id="20-january-28-2026-download"></a>
+#### [Download](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector-typescript.zip)
+
+<!-- TODO: translate body -->
+
+<a id="20-january-28-2026-gameanvil-220-or-later"></a>
+#### GameAnvil 2.2.0 or later
+
+<!-- TODO: translate body -->
+
+<a id="20-january-28-2026-changed"></a>
+#### Changed
+
+<!-- TODO: translate body -->
+
+<a id="20-january-28-2026-fix"></a>
+#### Fix
+
+<!-- TODO: translate body -->
+
+<a id="10-june-30-2025"></a>
+### 2.1.0 (June 30, 2025) { #10-june-30-2025 }
+
+<a id="10-june-30-2025-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector-typescript.zip)
+<a id="10-june-30-2025-gameanvil-200-or-later"></a>
 #### GameAnvil 2.0.0 or later
 
 
+<a id="10-june-30-2025-new"></a>
 #### New
 * To coincide with the release of GameAnvil 2.1.0 server, the connector version 2.1.0 has also been released.
 * There are no major functional modifications compared to 2.0.0, but some bug fixes, ResultCode name changes, typos, and incorrect descriptions have been modified.
 
+<a id="10-june-30-2025-changed"></a>
 #### Changed
 * Updated engine protocol to match GameAnvil 2.1 server
     * Servers older than GameAnvil 2.1 are no longer supported
@@ -26,17 +59,22 @@
   | FORCE\_CLOSE\_BASE\_CONNECTION<br>The server calls close() on BaseConnection | FORCE\_CLOSE\_CONNECTION<br>Calling close() on IConnection on the server |
   | FORCE\_CLOSE\_BASE\_USER<br>Calling closeConnection() on BaseUser on the server | FORCE\_CLOSE\_USER<br>Calling closeConnection() on IUser on the server                  |
 
+<a id="10-june-30-2025-fix"></a>
 #### Fix
 * Fixed an issue where a response might not be received if the internally used seq value exceeds the maximum when making a request
 
 ---
 
-### 2.0.0 (December 5, 2024)
+<a id="00-december-5-2024"></a>
+### 2.0.0 (December 5, 2024) { #00-december-5-2024 }
 
+<a id="00-december-5-2024-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-2.0.0.zip)
 
+<a id="00-december-5-2024-gameanvil-200-or-later"></a>
 #### GameAnvil 2.0.0 or later
 
+<a id="00-december-5-2024-new"></a>
 #### New
 
 * A new connector using async await has been released.
@@ -53,6 +91,7 @@ const authResult = await connector.connectAndAuthenticateion(deviceId, accountId
 console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 ```
 
+<a id="00-december-5-2024-remove"></a>
 #### Remove
 
 ###### Removed ConnectionAgent
@@ -70,6 +109,7 @@ console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 * Messages received from the server without a request still use delegates.
     * SetMessageCallback method
 
+<a id="00-december-5-2024-change"></a>
 #### Change
 
 ###### Directly manage UserAgent instances
@@ -96,23 +136,31 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 ------
 
-### 1.2.1 (2021.11.30)
+<a id="21-20211130"></a>
+### 1.2.1 (2021.11.30) { #21-20211130 }
 
+<a id="21-20211130-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.1.zip)
 
+<a id="21-20211130-gameanvil-120-or-later"></a>
 #### GameAnvil 1.2.0 or later
 
+<a id="21-20211130-fix"></a>
 #### Fix
 * Fixed IsJoinedRoom() turning to false when calling MatchRoom while in a room and failing
 
 ------
 
-### 1.2.0 (2021.07.13)
+<a id="20-20210713"></a>
+### 1.2.0 (2021.07.13) { #20-20210713 }
 
+<a id="20-20210713-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.2.0.zip)
 
+<a id="20-20210713-gameanvil-120-or-later"></a>
 #### GameAnvil 1.2.0 or later
 
+<a id="20-20210713-change"></a>
 #### Change
 
 * Changed Request() or other API calls to respond only to the callback passed as an argument when a callback is passed as an argument.
@@ -193,28 +241,37 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
     * Added ResultCodeSessionClose
 
 ------
-### 1.1.4 (2021.11.30)
+<a id="14-20211130"></a>
+### 1.1.4 (2021.11.30) { #14-20211130 }
 
+<a id="14-20211130-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.4.zip)
 
+<a id="14-20211130-gameanvil-110-or-later"></a>
 #### GameAnvil 1.1.0 or later
 
+<a id="14-20211130-fix"></a>
 #### Fix
 * Fixed IsJoinedRoom() turning to false when calling MatchRoom while in a room and failing
 
 ------
 
-### 1.1.3 (2021.04.07)
+<a id="13-20210407"></a>
+### 1.1.3 (2021.04.07) { #13-20210407 }
 
+<a id="13-20210407-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.3.zip)
 
+<a id="13-20210407-gameanvil-110-or-later"></a>
 #### GameAnvil 1.1.0 or later
+<a id="13-20210407-change"></a>
 #### Change
 * Added ContainsCallback, ContainsUndefinedProtocolCallback, and ContainsListener.
 * Added callback option parameter to RemoveCallback and RemoveUndefinedProtocolCallback to allow per-callback deletion.
 * Changed listener in RemoveListener to an optional parameter.
 * Added ContainsOnError, ContainsOnDisconnect.
 * Added callbackoption parameter to RemoveOnError and RemoveOnDisconnect to allow per-call deletion.
+<a id="13-20210407-fix"></a>
 #### Fix
 * Fixed a bug where some information in UserAgent was not initialized in situations such as logout, failed login, etc.
 * Fixed bug with invalid values being passed as arguments in callbacks registered as AddOnError
@@ -224,15 +281,20 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 1.1.2 (2021.03.16)
+<a id="12-20210316"></a>
+### 1.1.2 (2021.03.16) { #12-20210316 }
 
+<a id="12-20210316-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.2.zip)
 
+<a id="12-20210316-gameanvil-110-or-later"></a>
 #### GameAnvil 1.1.0 or later
+<a id="12-20210316-change"></a>
 #### Change
 * Change the default value in Connector.config.
     * PingInterval : 10 -> 3
     * PacketTimeout : 12 -> 5
+<a id="12-20210316-fix"></a>
 #### Fix
 * Fixed a bug in CodeInserter that caused index values to be pushed back from the next message if a .proto had nested message declarations inside the message.
 
@@ -240,11 +302,15 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 1.1.1 (2021.02.10)
+<a id="11-20210210"></a>
+### 1.1.1 (2021.02.10) { #11-20210210 }
 
+<a id="11-20210210-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.1.zip)
 
+<a id="11-20210210-gameanvil-110-or-later"></a>
 #### GameAnvil 1.1.0 or later
+<a id="11-20210210-change"></a>
 #### Change
 * SingleServer
     * Fixed issue with null in payload when using onMatchRoom
@@ -259,11 +325,15 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 1.1.0 (2020.12.18)
+<a id="10-20201218"></a>
+### 1.1.0 (2020.12.18) { #10-20201218 }
 
+<a id="10-20201218-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.1.0.zip)
 
+<a id="10-20201218-gameanvil-110-or-later"></a>
 #### GameAnvil 1.1.0 or later
+<a id="10-20201218-change"></a>
 #### Change
 * Replace the protobufjs you were using with the latest official version that fixes the compatibility issue and puts it on GitEnterprize.
 
@@ -271,11 +341,15 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 1.0.1 (2020.10.08)
+<a id="01-20201008"></a>
+### 1.0.1 (2020.10.08) { #01-20201008 }
 
+<a id="01-20201008-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.1.zip)
 
+<a id="01-20201008-gameanvil-100-or-later"></a>
 #### GameAnvil 1.0.0 or later
+<a id="01-20201008-fix"></a>
 #### FIX
 
 * Fixed a bug that caused packets to be sent in the reverse order of invocation when multiple requests are made at the same time.
@@ -284,11 +358,15 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 1.0.0 (2020.08.31)
+<a id="00-20200831"></a>
+### 1.0.0 (2020.08.31) { #00-20200831 }
 
+<a id="00-20200831-download"></a>
 #### [Download](https://static.toastoven.net/prod_gameanvil/files/gameanvil-connector-typescript-1.0.0.zip)
 
+<a id="00-20200831-gameanvil-100-or-later"></a>
 #### GameAnvil 1.0.0 or later
+<a id="00-20200831-change"></a>
 #### Change
 * Remove MoveService
 * Remove the Reconnect, Retry feature
@@ -299,6 +377,7 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
+<a id="00-20200831-resultcode-detail-changes"></a>
 #### ResultCode detail changes
 
 * ResultCodeAuth
@@ -357,10 +436,13 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 1.0.0-EA3 (2020.07.27)
+<a id="00-ea3-20200727"></a>
+### 1.0.0-EA3 (2020.07.27) { #00-ea3-20200727 }
+<a id="00-ea3-20200727-change"></a>
 #### Change
 * Added IsReconnecting() to ConnectionAgent.
 
+<a id="00-ea3-20200727-fix"></a>
 #### FIX
 * Fixed isLogin() returning true when UserAgent is disconnected after being logged in
 * When using multiple UserAgents and disconnecting without receiving a response to a request, the callback passed along with the request is not deleted and remains, causing the callback to be called twice in the next request.
@@ -369,7 +451,9 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 1.0.0-EA2 (2020.07.07)
+<a id="00-ea2-20200707"></a>
+### 1.0.0-EA2 (2020.07.07) { #00-ea2-20200707 }
+<a id="00-ea2-20200707-change"></a>
 #### Change
 
 * Renamed: Gameflex -> GameAnvil
@@ -380,7 +464,9 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 1.0.0-EA (2020.06.29)
+<a id="00-ea-20200629"></a>
+### 1.0.0-EA (2020.06.29) { #00-ea-20200629 }
+<a id="00-ea-20200629-change"></a>
 #### Change
 * Rename: Tardis -> Gameflex
     * SessionAgent -> ConnectionAgent
@@ -419,6 +505,7 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
         * Added parameter `roomName: string`.
         * Added parameter `created: boolean`.
 
+<a id="00-ea-20200629-new"></a>
 #### New
 * Error codes
     * ResultCodeLogin
@@ -433,7 +520,9 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 0.12.1.1 (June 23, 2020)
+<a id="1211-june-23-2020"></a>
+### 0.12.1.1 (June 23, 2020) { #1211-june-23-2020 }
+<a id="1211-june-23-2020-change"></a>
 #### Change
 
 * Fixed an issue where calling connect() directly from the onDisconnect() callback would result in an error
@@ -442,7 +531,9 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 0.12.1 (2020.04.06)
+<a id="121-20200406"></a>
+### 0.12.1 (2020.04.06) { #121-20200406 }
+<a id="121-20200406-change"></a>
 #### Change
 
 * Applied the JSDoc
@@ -458,7 +549,9 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
 
 
 
-### 0.12.0 (2020.02.14)
+<a id="120-20200214"></a>
+### 0.12.0 (2020.02.14) { #120-20200214 }
+<a id="120-20200214-change"></a>
 #### Change
 
 * Packet
@@ -467,6 +560,7 @@ const myUser = new GameAnvilUser(connector, "ServiceName", subId);
     * GetTimeOut(): number; deleted
     * SetTimeOut(timeOut: number): void; deleted
 
+<a id="120-20200214-new"></a>
 #### New
 
 * ResultCodeMatchRoom

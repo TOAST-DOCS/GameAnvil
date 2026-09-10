@@ -1,9 +1,14 @@
-## Game > GameAnvil > サーバー開発ガイド > コールバックフロー
+<!-- pre-align:aligned sig=d8216d0d9c16 -->
 
-## コールバックフロー
+<a id="game-gameanvil"></a>
+## Game > GameAnvil > サーバー開発ガイド > コールバックフロー { #game-gameanvil }
+
+<a id="section-1"></a>
+## コールバックフロー { #section-1 }
 GameAnvilで動作に従い内部的に処理されるコールバック順序です。
 
-## 認証
+<a id="section-2"></a>
+## 認証 { #section-2 }
 ![callback-flow-1.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-1.png)
 
 クライアントが認証リクエスト時に処理されるコールバックメソッド順序です。
@@ -13,7 +18,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | Client      | Authentication | 1  | クライアントからリクエスト |
 | IConnection | onAuthenticate | 2  |            |
 
-## ログイン
+<a id="section-3"></a>
+## ログイン { #section-3 }
 ![callback-flow-2.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-2.png)
 
 クライアントログインリクエスト時に処理されるコールバックメソッド順序です。
@@ -31,7 +37,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | IUser    | onAfterLogin             | 4   |                      |
 | ISession | onAfterLogin             | 5   |                      |
 
-## ログアウト
+<a id="section-4"></a>
+## ログアウト { #section-4 }
 ![callback-flow-3.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-3.png)
 
 クライアントログアウトリクエスト時に処理されるコールバックメソッド順序です。
@@ -46,7 +53,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | IUser      | onLogout         | 3   |                                               |
 | ISession   | onAfterLogout    | 4   |                                               |
 
-## ルーム生成
+<a id="section-5"></a>
+## ルーム生成 { #section-5 }
 ![callback-flow-4.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-4.png)
 
 クライアントルーム生成リクエスト時に処理されるコールバックメソッド順序です。
@@ -56,7 +64,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | Client  | CreateRoom or NamedRoom | 1   | クライアントからリクエスト |
 | IRoom   | onCreateRoom            | 2   |            |
 
-## ルーム入室
+<a id="section-6"></a>
+## ルーム入室 { #section-6 }
 ![callback-flow-5.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-5.png)
 
 クライアントルーム入室リクエスト時に処理されるコールバックメソッド順序です。
@@ -66,7 +75,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | Client  | JoinRoom or NamedRoom | 1   | クライアントからリクエスト |
 | IRoom   | onJoinRoom            | 2   |            |
 
-## ルーム退出
+<a id="section-7"></a>
+## ルーム退出 { #section-7 }
 ![callback-flow-6.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-6.png)
 
 クライアントルーム退出リクエスト時に処理されるコールバックメソッド順序です。
@@ -80,7 +90,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | IUser   | onAfterLeaveRoom    | 5  | 4、5番の動作はuserとroomで処理されるため、順序は保証されない |
 | IRoom   | onDestroy           | 6  |                                           |
 
-## ルームマッチ
+<a id="section-8"></a>
+## ルームマッチ { #section-8 }
 ![callback-flow-7.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-7.png)
 
 クライアントルームマッチリクエスト時に処理されるコールバックメソッド順序です。マッチング前にルームから出る処理を先に行う
@@ -98,7 +109,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | IRoom                  | onJoinRoom       | 8  |                                           |
 | IUser                  | onMatchRoomFail  | 9  |                                           |
 
-## ユーザーマッチ
+<a id="section-9"></a>
+## ユーザーマッチ { #section-9 }
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-8.png)
 
 クライアントユーザーマッチ開始リクエスト時に処理されるコールバックメソッド順序です。
@@ -114,7 +126,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | - IUser                  | onMatchUserCancel | 4-1 | ルーム入室キャンセル     |
 | IUser                    | onMatchUserFail   | 5   | マッチ失敗    |
 
-## ユーザーマッチキャンセル
+<a id="section-10"></a>
+## ユーザーマッチキャンセル { #section-10 }
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-9.png)
 
 クライアントユーザーマッチキャンセルリクエスト時に処理されるコールバックメソッド順序です。
@@ -124,7 +137,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | Client                   | MatchUserCancel    | 1   | クライアントからリクエスト |
 | IUser                    | onMatchUserCancel  | 2   |            |
 
-## パーティーマッチ
+<a id="section-11"></a>
+## パーティーマッチ { #section-11 }
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-10.png)
 
 クライアントユーザーマッチ開始リクエスト時に処理されるコールバックメソッド順序です。
@@ -142,7 +156,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | IRoom                    | onJoinRoom        | 7   |            |
 | IUser                    | onMatchUserFail   | 8   | マッチ失敗    |
 
-## パーティーマッチキャンセル
+<a id="section-12"></a>
+## パーティーマッチキャンセル { #section-12 }
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-11.png)
 
 クライアントパーティーマッチキャンセルリクエスト時に処理されるコールバックメソッド順序です。
@@ -152,7 +167,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | Client                   | MatchPartyCancel    | 1   | クライアントからリクエスト |
 | IRoom                    | onMatchPartyCancel  | 2   |            |
 
-## ユーザートランスファー
+<a id="section-13"></a>
+## ユーザートランスファー { #section-13 }
 ![callback-flow-9.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-12.png)
 
 ユーザートランスファー開始リクエスト時に処理されるコールバックメソッド順序です。
@@ -166,7 +182,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | - IUser | onPause             | 5  |                  |
 | - IUser | onResume            | 6  |                  |
 
-## ルームトランスファー
+<a id="section-14"></a>
+## ルームトランスファー { #section-14 }
 ![callback-flow-10.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-13.png)
 
 ルームトランスファー開始リクエスト時に処理されるコールバックメソッド順序です。
@@ -182,7 +199,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | - IRoom | onPause           | 6   |                   |
 | - IRoom | onResume          | 7   |                   |
 
-## チャンネル移動
+<a id="section-15"></a>
+## チャンネル移動 { #section-15 }
 ![callback-flow-11.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-14.png)
 
 クライアントチャンネル移動リクエスト時に処理されるコールバックメソッド順序です。
@@ -199,7 +217,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | - IUser  | onResume             | 8  |            |
 | IUser    | onMoveInChannel      | 9  |            |
 
-## チャンネル情報確認
+<a id="section-16"></a>
+## チャンネル情報確認 { #section-16 }
 ![callback-flow-12.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-15.png)
 
 クライアントチャンネル情報リクエスト時に処理されるコールバックメソッド順序です。
@@ -209,7 +228,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | Client      | GetChannelInfo   | 1  | クライアントからリクエスト |
 | - IGameNode | onChannelInfo    | 2  |            |
 
-## チャンネルユーザー情報更新
+<a id="section-17"></a>
+## チャンネルユーザー情報更新 { #section-17 }
 ![callback-flow-13.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-16.png)
 
 クライアントチャンネル情報更新リクエスト時に処理されるコールバックメソッド順序です。
@@ -219,7 +239,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | IUser       | updateChannelUserInfo    | 1  |    |
 | - IGameNode | onChannelRoomInfoUpdate  | 2  |    |
 
-## チャンネルルーム情報更新
+<a id="section-18"></a>
+## チャンネルルーム情報更新 { #section-18 }
 ![callback-flow-14.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-17.png)
 
 クライアントチャンネルルーム情報更新リクエスト時に処理されるコールバックメソッド順序です。
@@ -229,7 +250,8 @@ GameAnvilで動作に従い内部的に処理されるコールバック順序�
 | IRoom       | updateChannelRoomInfo    | 1  |    |
 | - IGameNode | onChannelUserInfoUpdate  | 2  |    |
 
-## ゲームデータ更新
+<a id="section-19"></a>
+## ゲームデータ更新 { #section-19 }
 ![callback-flow-15.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-18.png)
 
 マネジメントノードを通じてゲームデータ更新リクエスト時に処理されるコールバックメソッド順序です。

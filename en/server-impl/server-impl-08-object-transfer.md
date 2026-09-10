@@ -1,10 +1,15 @@
-## Game > GameAnvil > Server Development Guide > Transferable Objects
+<!-- pre-align:aligned sig=613b3d3dd876 -->
 
-## Object Transfer
+<a id="game-gameanvil-server-development-guide-transferable-objects"></a>
+## Game > GameAnvil > Server Development Guide > Transferable Objects { #game-gameanvil-server-development-guide-transferable-objects }
+
+<a id="object-transfer"></a>
+## Object Transfer { #object-transfer }
 
 In GameAnvil, an object transfer is the movement of an object from one node to another. All of the object transfers you should be interested in occur between game nodes. We'll discuss two of the most common: user transfer and room transfer.
 
-## User Transfer (UserTransfer)
+<a id="user-transfer-usertransfer"></a>
+## User Transfer (UserTransfer) { #user-transfer-usertransfer }
 
 ![gamenode-user-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-user-transfer2.png)
 
@@ -19,7 +24,8 @@ This type of user transfers can be categorized in three types.
 - Third, when uninterrupted maintenance for arbitrary game nodes NonStopPatch is executed, the user objects of the node are distributed to other valid game nodes and transferred. In this case,
 explicit command is issued on GameAnvil Console by admins.
 
-### User Transfer Implementation
+<a id="user-transfer-implementation"></a>
+### User Transfer Implementation { #user-transfer-implementation }
 
 Actual user transfer is internally processed by GameAnvil. At this time, the client does not recognize that its own game user object is being transferred among servers. In other words, even when it enters the room of a different game node, the client enters an arbitrary room in the sole GameAnvil server family.
 
@@ -60,7 +66,8 @@ public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack t
 
 The two methods above are automatically called by GameAnvil. The user only has to implement them.
 
-## Room Transfer (RoomTranfer)
+<a id="room-transfer-roomtranfer"></a>
+## Room Transfer (RoomTranfer) { #room-transfer-roomtranfer }
 
 ![gamenode-room-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-room-transfer2.png)
 
@@ -68,7 +75,8 @@ Room transfer is a feature similar to the user transfer that is explained in the
 
 Only the NonStopPatch command can trigger this type of room transfer. This command is explicitly transferred by the game operator through GameAnvil Console.
 
-### Implement Room Transfer and Transferable Room Timer
+<a id="implement-room-transfer-and-transferable-room-timer"></a>
+### Implement Room Transfer and Transferable Room Timer { #implement-room-transfer-and-transferable-room-timer }
 
 The actual room transfer is internally processed by GameAnvil. At this time, the client is not likely to recognize the room object being transferred among the servers with game users. Unless a special problem occurs, the overall flow is quickly progressed and the game flow before the transfer can be continued after the transfer.
 

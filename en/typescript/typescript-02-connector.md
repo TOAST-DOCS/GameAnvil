@@ -1,10 +1,15 @@
-## Game > GameAnvil > TypeScript Development Guide > Connection Agent
+<!-- pre-align:aligned sig=5e9747b9d2ff -->
 
-## GameAnvilConnector
+<a id="game-gameanvil-typescript-development-guide-connection-agent"></a>
+## Game > GameAnvil > TypeScript Development Guide > Connection Agent { #game-gameanvil-typescript-development-guide-connection-agent }
+
+<a id="gameanvilconnector"></a>
+## GameAnvilConnector { #gameanvilconnector }
 
 GameAnvilConnector is a class for server connections and communication, which allows you to register and manage the handler for messages coming from the server via this object. The previous installation chapter covered the creation and use of the connect feature for GameAnvilConnector. In this article, we will learn more about how to use and other features of GameAnvilConnector.
 
-### Create
+<a id="create"></a>
+### Create { #create }
 
 Create a GameAnvilConnector object as shown below: It is common to use one connector object in one process.
 
@@ -14,7 +19,8 @@ import { GameAnvilConnector } from "gameanvil-connector";
 const connector = new GameAnvilConnector();
 ```
 
-### Server Connection
+<a id="server-connection"></a>
+### Server Connection { #server-connection }
 
 Connect to the server using the connect() function. You must pre-set the host and port before calling.
 
@@ -45,7 +51,8 @@ connector.connect()
 
 Most APIs on the connector operate asynchronously like this and return the Promise object, allowing you to use await, then, and other features for the situation above.
 
-### Detect Disconnection
+<a id="detect-disconnection"></a>
+### Detect Disconnection { #detect-disconnection }
 
 You can specify what to do when the connection is forcibly terminated or disconnected due to network problems, etc. by the server.
 
@@ -82,7 +89,8 @@ The first argument in the function lets you know why the connection has been los
 
 The second argument receives additional information based on server implementation. How to process additional information will be explained further later.
 
-### Authentication
+<a id="authentication"></a>
+### Authentication { #authentication }
 
 After successfully connecting to the server, authentication must be proceeded first to use all functions of the engine. The authentication() function indices the pre-conferred accountId, deviceId, and password values with the server to perform the authentication action and returns the Promise. When the authentication is complete, you can check whether the authentication was successful through Promise, additional data received from the server, and more.
 
@@ -123,7 +131,8 @@ if (connector.isAuthenticated) {
 }
 ```
 
-### Proceed with Both Connection and Authentication
+<a id="proceed-with-both-connection-and-authentication"></a>
+### Proceed with Both Connection and Authentication { #proceed-with-both-connection-and-authentication }
 
 Once connected, authentication must be proceeded as required, making it convenient to call the convenience function to run both successively.
 
@@ -141,7 +150,8 @@ Perform the connection and authentication to the unconnected connector in turn, 
 
 Authentication results can generally be used in the same way as the results when authentication is requested only.
 
-### Request Ping
+<a id="request-ping"></a>
+### Request Ping { #request-ping }
 
 By default, ping requests are to be sent periodically, but if you modify the settings manually, you can call the method manually to make a ping request.
 
@@ -152,7 +162,8 @@ connector.ping();
 If you have received a response to a ping request, pong logs may be output depending on the settings.
 
 
-### Register Message Reception Callback
+<a id="register-message-reception-callback"></a>
+### Register Message Reception Callback { #register-message-reception-callback }
 
 When you receive a protobuf message from the server, you can set the processing function to run. For one protobuf, only one process function can be registered, and if you re-register the process function while the number is already registered, the existing process function will be deleted.
 
@@ -173,7 +184,8 @@ connector.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userIn
 });
 ```
 
-### Request Channel User and Room Count Information
+<a id="request-channel-user-and-room-count-information"></a>
+### Request Channel User and Room Count Information { #request-channel-user-and-room-count-information }
 
 You can request information on the number of servers and users of each channel for each particular service on the server.
 
@@ -203,7 +215,8 @@ console.log(`${channelCountInfo.channelId} userCount: ${channlCountInfo.userCoun
 ```
 
 
-### Request Channel Information
+<a id="request-channel-information"></a>
+### Request Channel Information { #request-channel-information }
 
 You can request information on each channel of a particular service on the server.
 
@@ -229,7 +242,8 @@ const result = await connector.getChannelInfo(serviceName, channelId);
 const payload = result.data;
 ```
 
-### Request Channel List
+<a id="request-channel-list"></a>
+### Request Channel List { #request-channel-list }
 
 You can request a list of all channels for specific services on the server.
 
@@ -243,7 +257,8 @@ for (let channelId of result) {
 }
 ```
 
-### Pause and Resume User Status Check
+<a id="pause-and-resume-user-status-check"></a>
+### Pause and Resume User Status Check { #pause-and-resume-user-status-check }
 
 You can stop the app if you expect situations such as being unable to respond to user status check when the app is in the background.
 
@@ -263,7 +278,8 @@ If you restart the app from the background, reset the app if you can now respond
 connector.resumeClientStateCheck();
 ```
 
-### Send Packet
+<a id="send-packet"></a>
+### Send Packet { #send-packet }
 
 You can send the protobuf message to the gateway server.
 
@@ -300,7 +316,8 @@ if (result.resultCode === ResultCode.Success) {
 }
 ```
 
-### Except Handling
+<a id="except-handling"></a>
+### Except Handling { #except-handling }
 
 You can specify what to do if an exception occurs during a server connection.
 
@@ -312,7 +329,8 @@ connector.onException = (exception: Error) => {
 
 The first argument of the registered function sends an error object.
 
-### End Connection
+<a id="end-connection"></a>
+### End Connection { #end-connection }
 
 You can explicitly request that the connection to the server be terminated.
 

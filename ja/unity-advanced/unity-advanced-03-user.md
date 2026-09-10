@@ -1,11 +1,16 @@
-## Game > GameAnvil > Unity 応用開発ガイド > ユーザー
+<!-- pre-align:aligned sig=343635dd9ba0 -->
 
-## ユーザー
+<a id="game-gameanvil-unity-advanced-development-guide-user"></a>
+## Game > GameAnvil > Unity 応用開発ガイド > ユーザー { #game-gameanvil-unity-advanced-development-guide-user }
+
+<a id="useragent"></a>
+## ユーザー { #useragent }
 
 GameAnvilUserは、GameAnvilサーバーのユーザーに関連する作業を担当します。ログイン(Login())、ログアウト(Logout())及びルーム管理などの基本機能を提供します。
 GameAnvilサーバーは複数のサービスを同時に運営でき、1つのGameAnvilUserは1つのサービスにログインして互いに独立して動作します。つまり、複数のGameAnvilUserを作成してそれぞれ異なるサービスにログインし、同時に使用することが可能です。SubIdを異なるものにすれば、同じサービスに複数のGameAnvilUserを同時にログインさせて使用することも可能です。
 
-### 生成
+<a id="create"></a>
+### 生成 { #create }
 
 GameAnvilUserを使用するためには、まずGameAnvilUserオブジェクトを生成する必要があります。
 
@@ -42,7 +47,8 @@ public void CreateUsers()
 }
 ```
 
-### 解除
+<a id="disable"></a>
+### 解除 { #disable }
 
 使用を完了したGameAnvilUserは、Dispose()を呼び出して解除する必要があります。
 
@@ -59,10 +65,12 @@ public void DisposeUser()
 }
 ```
 
-### ログイン/ログアウト
+<a id="loginlogout"></a>
+### ログイン/ログアウト { #loginlogout }
 
 ログインは、クライアントがサーバーに接続した後、GameNodeに自身のユーザーオブジェクトを作成する過程と定義できます。ログアウトはログインの反対の概念です。つまり、GameNode上で自身のユーザーオブジェクトを削除する過程です。
 
+<a id="loginlogout-login"></a>
 #### ログイン
 
 Login()を呼び出してサービスにログインします。ログイン時、どのUserTypeでどのチャンネルにログインするかを入力する必要があります。追加情報が必要な場合はPayloadに入れて送ることができます。
@@ -130,7 +138,8 @@ LoginResultの詳細は次のとおりです。
 | Payload | RoomPayload  | ユーザーが属するルームの追加情報  |
 | bool    | IsMatching   | マッチングをリクエストした状態かどうか |
 
-### ログアウト
+<a id="logout"></a>
+### ログアウト { #logout }
 
 Logout()を呼び出してサービスからログアウトします。
 
@@ -174,6 +183,7 @@ ResultCodeLogoutの詳細は次のとおりです。
 | LOGOUT_SUCCESS      | 0   | 成功。                                        |
 | LOGOUT_FAIL_CONTENT | 401 | 失敗。ユーザーコードで拒否されました。                              |
 
+<a id="logout-force-logout-notification"></a>
 #### 強制ログアウト通知
 Logout()を呼び出さなくても、サーバーからユーザーを強制的にログアウトさせることができます。この場合、OnForceLogoutを通じてこれに対する通知を受け取ることができます。
 ```c#
@@ -187,10 +197,12 @@ public void AddOnLogout()
 ```
 サーバーの実装によっては、パラメータPayload payloadを通じて追加情報を取得することもできます。
 
-### ルームの作成、入室、退室
+<a id="create-enter-and-leave-rooms"></a>
+### ルームの作成、入室、退室 { #create-enter-and-leave-rooms }
 
 ルームを利用することで、複数のユーザーからの操作（メッセージ）を、全員で共有された一つの時系列（同期化された流れ）に沿って処理する仕組みを構築できます。つまり、ルーム内では、全てのユーザーのリクエストが、サーバーによって厳密な順序で処理されることが保証されます。もちろん、1人のユーザーのためのルーム作成も、コンテンツによっては意味を持つ場合があります。ルームをどのように使用するかは、完全にエンジンユーザー次第です。
 
+<a id="create-enter-and-leave-rooms-create-room"></a>
 #### ルーム生成
 
 CreateRoom()を呼び出してルームを作成し、そのルームに入室します。
@@ -251,6 +263,7 @@ CreatedRoomResultの詳細は以下の通りです。
 | String? | RoomName | 作成したルームの名前 |
 | Payload | payload | クライアントで必要な追加情報 |
 
+<a id="create-enter-and-leave-rooms-enter-room"></a>
 #### ルーム入室
 
 JoinRoom()を呼び出して、既に作成されているルームに入室します。
@@ -311,6 +324,7 @@ JoinRoomResultの詳細は以下の通りです。
 | String? | RoomName | 入室したルームの名前。 |
 | Payload | payload | クライアントで必要な追加情報。 |
 
+<a id="create-enter-and-leave-rooms-leave-room"></a>
 #### ルーム退場
 
 LeaveRoom()を呼び出して、入室中のルームから退室できます。
@@ -356,6 +370,7 @@ ResultCodeLeaveRoomの詳細は次のとおりです。
 | LEAVE_ROOM_SUCCESS      | 0   | 成功。                                        |
 | LEAVE_ROOM_FAIL_CONTENT | 801 | 失敗。ユーザーコードで拒否されました。 |
 
+<a id="create-enter-and-leave-rooms-notification-for-forced-to-leave-the-room"></a>
 #### ルーム強制退場通知
 LeaveRoom()を呼び出さなくても、サーバーから強制的にルームから退場させることができます。この場合、OnForceLeaveRoomを通じてこれに対する通知を受け取ることができます。
 ```c#
@@ -369,6 +384,7 @@ public void AddOnLeaveRoom()
 ```
 パラメータint roomIdを通じてどのルームから強制退場させられたかを知ることができ、サーバーの実装によってはパラメータPayload payloadを通じて追加情報を取得することもできます。 
 
+<a id="create-enter-and-leave-rooms-enter-the-room-with-the-specified-name"></a>
 #### 指定した名前のルームに入室
 
 NamedRoom()を呼び出して、指定した名前のルームに入室できます。指定した名前のルームがない場合は、ルームを作成してからそのルームに入室します。
@@ -431,10 +447,12 @@ NamedRoomResultの詳細は次のとおりです。
 | String? | RoomName | 入室したルームの名前 |
 | Payload | payload | クライアントで必要な追加情報。 |
 
-### マッチメイキング
+<a id="matchmaking"></a>
+### マッチメイキング { #matchmaking }
 
 GameAnvilは2種類のマッチメイキングを提供します。1つはルーム単位のマッチングを行うルームマッチメイキングで、もう1つはユーザー単位のマッチングを行うユーザーマッチメイキングです。
 
+<a id="matchmaking-room-matchmaking"></a>
 #### ルームマッチメイキング
 
 ルームマッチメイキングは、条件に合うルームへユーザーを入室させる方式です。ルームマッチメイキングリクエスト時に条件に合うルームがあれば該当ルームへ即時入室させ、条件に合うルームがなければ新しいルームを生成して入室させます。
@@ -519,6 +537,7 @@ MatchResultの詳細は次のとおりです。
 | String   | RoomName | 入室したルームの名前。         |
 | Payload? | payload | クライアントで必要な追加情報。 |
 
+<a id="matchmaking-user-matchmaking"></a>
 #### ユーザーマッチメイキング
 
 ユーザーマッチメイキングは、ユーザープールを作成し、その中で条件に合うユーザーを探して新しく生成したルームへ入室させる方式です。ユーザープールに条件に合うユーザーの数が不足している場合、マッチメイキングが完了するまで時間がかかることがあり、時間内にマッチメイキングが完了しない場合はタイムアウトとなりマッチングが失敗する可能性があります。
@@ -633,6 +652,7 @@ ResultCodeMatchUserCancelの詳細は次のとおりです。
 | MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM | 1202 | 失敗。すでにルームに入室しています。                           |
 | MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS     | 1203 | 失敗。ユーザーマッチメイキングが進行中ではありません。                          |
 
+<a id="matchmaking-party-matchmaking"></a>
 #### パーティーマッチメイキング
 
 パーティーマッチメイキングはユーザーマッチメイキングの特殊な形態で、2人以上のユーザーが1つのパーティーとしてまとめられてユーザープールに登録され、条件に合う他のユーザーを探して新しく生成したルームへ一緒に入室させる方式です。パーティーとしてまとめられたユーザーは常に同じルームに入室します。パーティー以外に一緒にマッチングされたユーザーは、サーバーのマッチメーカー実装によって別のパーティーの場合もあれば、個人の場合もあります。
@@ -758,8 +778,10 @@ ResultCodeMatchPartyStartの詳細は次のとおりです。
 | MATCH_PARTY_CANCEL_FAIL_ALREADY_JOINED_ROOM | 1403 | 失敗。パーティーマッチングをキャンセルする際、すでにルームに入室している場合            |
 | MATCH_PARTY_CANCEL_FAIL_NOT_IN_PROGRESS     | 1404 | 失敗。パーティーマッチング進行中ではないのにキャンセルしようとした場合                 | 
 
-### チャンネル
+<a id="channel"></a>
+### チャンネル { #channel }
 
+<a id="channel-move-notification"></a>
 #### チャンネル移動通知
 
 場合によっては、マッチメイキングの結果としてチャンネル移動が発生することがあります。チャンネル移動が行われた場合、OnMoveChannelを通じて通知を受け取ることができます。そしてMoveChannelResultパラメータから移動したチャンネルの情報を取得でき、サーバー実装によっては追加情報を取得することもできます。
@@ -774,6 +796,7 @@ public void AddOnMoveChannel()
 }
 ```
 
+<a id="channel-moving-channels"></a>
 #### チャネル移動
 
 MoveChannel()を呼び出してサービス内の他のチャンネルへ移動できます。
@@ -832,7 +855,8 @@ MoveChannelResultの詳細は次のとおりです。
 | string   | ChannelId | 入室したルームのID。                                                                    |
 | Payload? | payload   | クライアントで必要な追加情報。                                                             |
 
-### チャンネル情報
+<a id="channel-information"></a>
+### チャンネル情報 { #channel-information }
 
 GameAnvilは設定で自由にチャンネルを構成できます。このようなチャンネル構成は、サーバーとクライアント間であらかじめ約束して固定された形態で使用することもできますが、状況に応じて多様に変更して使用することもできます。GameAnvilUserでは、このように変更されたチャンネル情報を取得できるようにいくつかのメソッドを提供します。
 
@@ -843,6 +867,7 @@ GameAnvilは設定で自由にチャンネルを構成できます。このよ�
 | GetAllChannelCountInfo() | 特定サービスの全てのチャンネルに対するカウント情報(ユーザーとルーム数)リクエスト |
 | GetAllChannelInfo()      | 特定サービスの全てのチャンネルに対する情報(ユーザー定義)リクエスト        |
 
+<a id="channel-information-getchannelcountinfo"></a>
 #### GetChannelCountInfo
 
 GetChannelCountInfo()は、特定チャンネルのカウント情報(ユーザーとルーム数)をリクエストして受け取ることができます。
@@ -900,6 +925,7 @@ ChannelCountResultの詳細は次のとおりです。
 
 <br>
 
+<a id="channel-information-getchannelinfo"></a>
 #### GetChannelInfo
 
 GetChannelInfo()は特定チャンネルの情報(ユーザー定義)をリクエストして受け取ることができます。
@@ -947,6 +973,7 @@ ResultCodeChannelInfoの詳細は次のとおりです。
 | CHANNEL_INFO_FAIL_INVALID_CHANNEL_ID | 1923 | 失敗。無効なチャンネルID                            |
 | CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924 | 失敗。チャンネルが見つかりません                            |
 
+<a id="channel-information-getallchannelcountinfo"></a>
 #### GetAllChannelCountInfo
 
 GetAllChannelCountInfo()は、特定サービスの全てのチャンネルに対するカウント情報(ユーザーとルーム数)をリクエストして受け取ることができます。
@@ -992,6 +1019,7 @@ ResultCodeAllChannelCountInfoの詳細は次のとおりです。
 | ALL_CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1932 | 失敗。無効なサービスID                           |
 | ALL_CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1933 | 失敗。チャンネルが見つかりません                            |
 
+<a id="channel-information-getallchannelinfo"></a>
 #### GetAllChannelInfo
 
 GetAllChannelInfo()は、特定サービスの全てのチャンネルに対する情報(ユーザー定義)をリクエストして受け取ることができます。

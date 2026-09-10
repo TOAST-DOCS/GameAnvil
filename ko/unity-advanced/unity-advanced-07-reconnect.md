@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > 재접속
+<!-- pre-align:aligned sig=1316231165e8 -->
 
-## 재접속
+<a id="game-gameanvil-unity-advanced-development-guide-reconnection"></a>
+## Game > GameAnvil > Unity 심화 개발 가이드 > 재접속 { #game-gameanvil-unity-advanced-development-guide-reconnection }
+
+<a id="reconnect"></a>
+## 재접속 { #reconnect }
 
 게임 중 다양한 이유로 서버와의 접속이 끊어질 수 있습니다. 접속이 끊어졌을 때 기존의 플레이를 이어서 할 수 있도록 재접속 기능을 지원합니다. 사용하는 API는 일반적인 접속 방법과 동일하지만 결과로 받아오는 정보에 차이가 있습니다.
 
-### 서버 접속
+<a id="connect-to-the-server"></a>
+### 서버 접속 { #connect-to-the-server }
 
 GameAnvilConnector의 Connect 함수를 이용해 서버에 접속합니다. 일반적인 경우와 동일합니다.
 
@@ -23,7 +28,8 @@ public async void Connect()
 }
 ```
 
-### 인증
+<a id="verify"></a>
+### 인증 { #verify }
 
 GameAnvilConnector의 Authenticate 함수를 이용해 인증 절차를 진행합니다. 입력 값은 일반적인 경우와 동일합니다. 다만 인증의 결과로 받아오는 ResultCodeAuth 값 중 loginedUserInfoList에 이전에 플레이하던 유저 정보가 포함되어 오게 됩니다.
 
@@ -53,7 +59,8 @@ public async void Authenticate()
 }
 ```
 
-### 로그인
+<a id="sign-in"></a>
+### 로그인 { #sign-in }
 
 인증 결과로 받은 유저 정보를 이용해 로그인을 진행합니다. 이때 userType이나 channelId 등 이전 유저 정보와 동일한 값을 이용해 로그인을 해야 합니다. 그렇지 않으면 로그인이 실패할 수 있습니다.
 

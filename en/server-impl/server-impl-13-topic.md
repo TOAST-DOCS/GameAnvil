@@ -1,14 +1,19 @@
-## Game > GameAnvil > Server Development Guide > About Topic
+<!-- pre-align:aligned sig=47c08c3441a1 -->
+
+<a id="game-gameanvil-server-development-guide-about-topic"></a>
+## Game > GameAnvil > Server Development Guide > About Topic { #game-gameanvil-server-development-guide-about-topic }
 
 
 
-## Subscription and Publishing
+<a id="subscription-and-publishing"></a>
+## Subscription and Publishing { #subscription-and-publishing }
 
 GameAnvil supports a subscription-publishing model, meaning that any audience that subscribes to a topic can all receive the same message through a publication. The usage of these subscriptions and publications is centered around topics.
 
 
 
-### Topics
+<a id="topics"></a>
+### Topics { #topics }
 
 Users can subscribe to any topic at any time. GameAnvil also subscribes to a few topics internally by default. These topics are broadly divided into node topics and user topics. These allow messages to be sent on a per-node basis and then delivered to objects within the node. The following is an example of code that uses these node topics and user topics to publish.
 
@@ -24,7 +29,8 @@ void publishToUser(String nodeTopic, String topic, Packet packet);
 ```
 
 
-### GameAnvil Topic
+<a id="gameanvil-topic"></a>
+### GameAnvil Topic { #gameanvil-topic }
 
 GameAnvil is internally subscribed to the following topics by default. GameAnvilTopic should never be arbitrarily subscribed to by users.
 
@@ -38,7 +44,8 @@ GameAnvil is internally subscribed to the following topics by default. GameAnvil
 
 
 
-### Subscribe and unsubscribe to topics
+<a id="subscribe-and-unsubscribe-to-topics"></a>
+### Subscribe and unsubscribe to topics { #subscribe-and-unsubscribe-to-topics }
 
 As described above, the topics are broadly divided into node topics and user topics. Node topics are subscribed to by any kind of node class that inherits from BaseNode. User topics, on the other hand, are for objects inside the node and can be subscribed to by all user and room classes that inherit from BaseUser and BaseRoom. Subscribing and unsubscribing to node topics and user topics is the same for both, as shown in the following example code.
 
@@ -83,7 +90,8 @@ boolean addTopic(String topic)
 void removeTopic(String topic);
 ```
 
-### Publish
+<a id="publish"></a>
+### Publish { #publish }
 
 Users can publish messages to any topic. Anyone who is subscribed to that topic will receive the same message.
 

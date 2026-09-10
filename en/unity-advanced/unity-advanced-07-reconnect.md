@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity Advanced Development Guide > Reconnection
+<!-- pre-align:aligned sig=1316231165e8 -->
 
-## Reconnect
+<a id="game-gameanvil-unity-advanced-development-guide-reconnection"></a>
+## Game > GameAnvil > Unity Advanced Development Guide > Reconnection { #game-gameanvil-unity-advanced-development-guide-reconnection }
+
+<a id="reconnect"></a>
+## Reconnect { #reconnect }
 
 During a game, you may lose connection to the server for a variety of reasons. We support reconnect so that you can continue playing when you lose connection. The API used is the same as the normal connection method, but the information you receive as a result is different. 
 
-### Connect to the server
+<a id="connect-to-the-server"></a>
+### Connect to the server { #connect-to-the-server }
 
 Connect to the server using the ConnectionAgent's Connect function. This is the same as in the normal case. 
 
@@ -27,7 +32,8 @@ connector.GetConnectionAgent().Connect(ip, port, (ConnectionAgent connectionAgen
 });
 ```
 
-### Verify
+<a id="verify"></a>
+### Verify { #verify }
 
 Use the ConnectionAgent's Authenticate function to perform the authentication process. The input values are the same as in the normal case. However, the loginedUserInfoList will contain the information of previously played users. 
 
@@ -56,7 +62,8 @@ connector.GetConnectionAgent().Authenticate(deviceId, accountId, password, paylo
 });
 ```
 
-### Sign in
+<a id="sign-in"></a>
+### Sign in { #sign-in }
 
 Proceed with login using the user information received as a result of authentication. Make sure to use the same values as the previous user information, such as userType or channelId, otherwise the login may fail. 
 

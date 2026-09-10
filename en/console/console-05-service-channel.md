@@ -1,6 +1,10 @@
-## Game > GameAnvil > Console User Guide > Service and Channel
+<!-- pre-align:aligned sig=da0d847670f4 -->
 
-## Service
+<a id="game-gameanvil-console-user-guide-service-and-channel"></a>
+## Game > GameAnvil > Console User Guide > Service and Channel { #game-gameanvil-console-user-guide-service-and-channel }
+
+<a id="service"></a>
+## Service { #service }
 
 This document describes the 'service' mentioned earlier when dealing with configuration information (Config) registration.
 
@@ -27,7 +31,8 @@ MyChatNode extends gameanvil.GameNode {
 The service name registered with the @ServiceName annotation must match the service name used when configuring the server. Because these service names are easy for human to read but unnecessarily long and large for server programs to read, the Configuration Information (Config) mapped a unique integer for each service name, a service ID. The service ID must be an integer value greater than 0. More information is available in the Server Implementation document.
 
 
-## Channel
+<a id="channel"></a>
+## Channel { #channel }
 
 Channels provide a logical way to divide a service. For example, RPSGame services can be divided into 'beginner', 'intermediate', and 'advanced' channels. However, they are only available for GameNodes and can be any string of channel names. For more information, see [Game>GameAnvil>Server Development Guide>Channel](../server-impl/server-impl-09-channel.md).
 

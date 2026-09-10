@@ -1,14 +1,19 @@
-## Game > GameAnvil > 서버 개발 가이드 > 토픽 사용하기
+<!-- pre-align:aligned sig=47c08c3441a1 -->
+
+<a id="game-gameanvil-server-development-guide-about-topic"></a>
+## Game > GameAnvil > 서버 개발 가이드 > 토픽 사용하기 { #game-gameanvil-server-development-guide-about-topic }
 
 
 
-## 구독과 발행
+<a id="subscription-and-publishing"></a>
+## 구독과 발행 { #subscription-and-publishing }
 
 GameAnvil은 구독-발행 모델을 지원합니다. 즉, 임의의 토픽을 구독한 대상들은 모두 발행을 통해 동일하게 메시지를 전달받을 수 있습니다. 이러한 구독과 발행에 대한 사용법은 토픽을 중심으로 이루어집니다.
 
 
 
-### 토픽
+<a id="topics"></a>
+### 토픽 { #topics }
 
 사용자는 언제든 임의의 토픽을 구독할 수 있습니다. 또한 GameAnvil은 내부적으로 몇 가지 토픽을 기본적으로 구독하고 있습니다. 이러한 토픽은 크게 노드 토픽과 사용자 토픽으로 나뉩니다. 이를 통해 메시지는 노드 단위로 전송된 뒤 노드 내의 객체에 전달됩니다. 다음은 이러한 노드 토픽과 사용자 토픽을 이용해서 발행하는 코드의 예입니다.
 
@@ -24,7 +29,8 @@ void publishToUser(String nodeTopic, String topic, Packet packet);
 ```
 
 
-### GameAnvil 토픽
+<a id="gameanvil-topic"></a>
+### GameAnvil 토픽 { #gameanvil-topic }
 
 GameAnvil은 내부적으로 아래의 토픽들을 기본적으로 구독합니다. GameAnvilTopic은 절대 사용자가 임의로 구독하지 말아야 합니다.
 
@@ -38,7 +44,8 @@ GameAnvil은 내부적으로 아래의 토픽들을 기본적으로 구독합니
 
 
 
-### 토픽 구독 및 구독 취소
+<a id="subscribe-and-unsubscribe-to-topics"></a>
+### 토픽 구독 및 구독 취소 { #subscribe-and-unsubscribe-to-topics }
 
 앞서 토픽은 크게 노드 토픽과 사용자 토픽으로 나뉜다고 했습니다. 노드 토픽은 모든 종류의 노드 클래스에서 구독합니다. 반면에 사용자 토픽은 노드 내부의 객체들을 위한 것이므로 IUserContext와 IRoomContext를 구현한 모든 유저와 방 클래스에서 구독 가능합니다. 노드 토픽과 사용자 토픽의 구독 및 구독 취소 방법은 다음의 예제 코드와 같이 동일합니다.
 
@@ -83,7 +90,8 @@ boolean addTopic(String topic);
 void removeTopic(String topic);
 ```
 
-### 발행하기
+<a id="publish"></a>
+### 발행하기 { #publish }
 
 사용자는 임의의 토픽으로 메시지를 발행할 수 있습니다. 이때, 해당 토픽을 구독 중인 대상은 모두 동일한 메시지를 수신하게 됩니다.
 

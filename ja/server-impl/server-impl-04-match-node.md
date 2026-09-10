@@ -1,6 +1,10 @@
-## Game > GameAnvil > サーバー開発ガイド > マッチノード実装
+<!-- pre-align:aligned sig=add9a354ba1f -->
 
-## MatchNodeとMatchMaker
+<a id="game-gameanvil-server-development-guide-matchnode-implementation"></a>
+## Game > GameAnvil > サーバー開発ガイド > マッチノード実装 { #game-gameanvil-server-development-guide-matchnode-implementation }
+
+<a id="matchnode-and-matchmaker"></a>
+## MatchNodeとMatchMaker { #matchnode-and-matchmaker }
 
 ![MatchNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_matchnode_on_network.png)
 
@@ -14,7 +18,8 @@
 >
 > MatchNodeは必須ノードではないため、マッチメイキングを使用しない場合には稼働する必要がありません。
 
-## マッチンググループ(MatchingGroup)
+<a id="matchinggroup"></a>
+## マッチンググループ(MatchingGroup) { #matchinggroup }
 
 マッチンググループもチャンネルと同様に単一サーバー群を論理的に分けることができる方法の1つです。ただし、マッチンググループはチャンネルと異なり明確にあらかじめ設定しておいて使用する値ではありません。またチャンネルはGameNodeを論理的に分けるための方法である反面、マッチンググループはマッチメイキングを論理的に分けるための方法です。同じマッチンググループでユーザーマッチングまたはルームマッチングをリクエストした場合、マッチングをリクエストしたチャンネル内でマッチングされたルームが生成されます。
 
@@ -41,11 +46,13 @@ public boolean onMatchUser(final String roomType, final String matchingGroup, fi
 
 マッチンググループは「初心者」、「中級者」、「上級者」のように実力をベースに定義することもでき、「韓国」、「日本」、「アメリカ」のように国別に定義することもできます。つまり、ユーザーが望むどんな値もマッチンググループになり得ます。
 
-## ユーザーマッチメーカー実装
+<a id="implementing-user-match-maker"></a>
+## ユーザーマッチメーカー実装 { #implementing-user-match-maker }
 
 ユーザーマッチメイキングはゲームユーザーのマッチングリクエストをキューに積載します。特定時間周期でこのリクエストキューの内容を比較、分析してユーザーが望む基準で任意のユーザーを1つのルームに入室させてくれます。ここでユーザーはリクエストキューの内容をどのように比較して分析しどんな基準でユーザーをマッチングするかに対するロジックにのみ集中すればよいです。ちなみに最も代表的なユーザーマッチメイキングゲームは<リーグ・オブ・レジェンド>があります。
 
-### ユーザーマッチリクエスト実装
+<a id="implementing-user-match-request"></a>
+### ユーザーマッチリクエスト実装 { #implementing-user-match-request }
 
 このようなユーザーマッチメイキングの最も基本はまさにマッチングリクエストそのものです。このようなマッチリクエストを以下のようにエンジンで提供するAbstractUserMatchInfo抽象クラスを継承して実装します。この時、リクエスト者を区分できるゲームユーザーのIDを提供できるようgetId()メソッドは必ず実装しなければなりません。またリクエストはいつでもシリアライズできなければならないためSerializableインターフェースを実装する必要があります。以下の例はマッチングリクエスト間の比較のためにComparableインターフェースを追加で実装しています。
 
@@ -112,7 +119,8 @@ public class SampleUserMatchInfo extends AbstractUserMatchInfo implements Compar
 | getId        | マッチリクエスト者情報   | 該当ユーザーマッチリクエストがどのユーザーから来たものか判断するために使用されます。したがって必ずリクエスト者のIDを返すように再定義しなければなりません。                                                           |
 | getPartySize | マッチリクエストパーティー規模 | リクエストパーティーのサイズを返します。この値でパーティーマッチメイキングリクエストかどうかを判断するため、ユーザーマッチメイキングリクエストの場合には必ず0を返すように再定義します。パーティーマッチリクエストの場合には該当パーティーメンバーの人数を返すようにします。 |
 
-### ユーザーマッチメーカー
+<a id="user-match-maker"></a>
+### ユーザーマッチメーカー { #user-match-maker }
 
 ユーザーマッチメーカーはユーザーマッチリクエストを実際に処理し、エンジンで提供するAbstractUserMatchMaker抽象クラスを継承実装します。特にonMatch()メソッドは実際のマッチングを実行するために呼び出されるコールバックなので注意深く見てください。onRefill()メソッドはすでに完了したマッチメイキングに対して補充リクエストを処理するコールバックです。例えば4名がマッチメイキングされた状態で1名がゲームを終了した時、1名をさらに補充するために使用できます。以下のサンプルコードはこのようなユーザーマッチメーカーを実装する方法を示しています。
 
@@ -186,7 +194,8 @@ public class SampleUserMatchMaker extends AbstractUserMatchMaker<SampleUserMatch
 つまり、getMatchRequests APIを利用して最小限のマッチリクエストを獲得した後、任意の人数に合わせてリクエストを組み合わせ、任意のCollectionに順番に入れます。このCollectionをmatchSingles APIに引数として渡すと定員数に合わせてマッチが行われます。サンプルコードの場合、定員が2名のユーザーマッチメイキングなのでCollectionを巡回しながら順番に2名ずつ抽出して1つのゲームとしてマッチングさせます。
 | onRefill | マッチリフィルリクエスト処理 | ユーザー/パーティーマッチメイキング過程で任意のユーザーが出た場合に新しいユーザーを補充するための処理をします。一般的にマッチメイキングされたルームに対してonLeaveRoomが呼び出される時にmatchRefillを呼び出して連動できます。つまり、マッチングされたルームから誰かが出る時にリフィルをリクエストするのです。リフィルはキューに積まれているマッチリクエストは使用しません。リフィルリクエスト以後に入ってくる新しいマッチリクエストのみその対象とします。                                                                                                                                                                                          |
 
-### GameUserからマッチメーカーへリクエスト伝達する
+<a id="send-requests-from-gameuser-to-matchmaker"></a>
+### GameUserからマッチメーカーへリクエスト伝達する { #send-requests-from-gameuser-to-matchmaker }
 
 これでクライアントはサーバーへユーザーマッチメイキングをリクエストできます。このリクエストはGameUserに伝達された後、エンジンによりonMatchUserコールバックメソッドを呼び出します。これについては先ほどGameNodeとGameUserを説明しながら一度見てきました。ユーザーはこのコールバックメソッドでGameAnvilが提供するユーザーマッチメーカーを使用してもよく、直接実装した別のマッチメーカーや他のソリューションを使用しても構いません。しかし特別な理由がなければGameAnvilのユーザーマッチメイキングを使用することを推奨します。
 
@@ -225,7 +234,8 @@ public boolean onMatchUser(String roomType, String matchingGroup, IPayload paylo
 }
 ```
 
-## ルームマッチメーカー実装
+<a id="implementing-room-matchmaker"></a>
+## ルームマッチメーカー実装 { #implementing-room-matchmaker }
 
 ルームマッチメイキングはユーザーを最も適切なルームへ自動入室させてくれる機能です。ルームマッチメイキングをリクエストしたユーザーをどんな基準でどのルームに入室させるかはユーザーの実装次第です。最もユーザー数が多いルームへ入室させることもでき、最も閑散としたルームへ入室させることもできます。あるいは平均点数が最も高いルームへ入室させることもできます。ユーザーはこのようなマッチングロジックにのみ集中すればよいです。ちなみに最も代表的なルームマッチメイキングゲームは<ハンゲームポーカー>や<カートライダー>などがあります。
 
@@ -236,7 +246,8 @@ public boolean onMatchUser(String roomType, String matchingGroup, IPayload paylo
 >
 > ルームマッチメーカーとユーザーマッチメーカーは互いに独立して運営されます。つまり、同一のマッチンググループでユーザーマッチングとルームマッチングをそれぞれリクエストしても、この二つのリクエストが一緒にマッチングされることはありません。
 
-### ルームマッチリクエスト実装
+<a id="implement-room-matching-request"></a>
+### ルームマッチリクエスト実装 { #implement-room-matching-request }
 
 このようなルームマッチメイキングの最も基本はまさにマッチングリクエストそのものです。マッチングリクエストは一名のユーザーが送ったリクエストを意味し、以下のようにエンジンで提供するAbstractRoomMatchForm抽象クラスを継承実装します。リクエストはいつでもシリアライズできなければならないためSerializableインターフェースを追加で実装する必要があります。次はこのようなマッチリクエストを実装した例です。
 
@@ -250,7 +261,8 @@ public class SampleRoomMatchForm extends AbstractRoomMatchForm {
 
 ルームマッチリクエストは基本的にマッチングロジックで使用する情報を含みます。これはユーザーがマッチメイキングロジックを直接実装する時に使用することになります。ルームマッチリクエストで1つ重要な情報はマッチングユーザーカテゴリーです。マッチングユーザーカテゴリーは1つのルームでユーザーが属するグループを区分するための任意の文字列です。例えば4人定員のルームで二つのチームに分けて2 vs 2のゲームをする場合、それぞれのユーザーが属するチームを指定するための用途として使用できます。もし何の値も指定しなければエンジンのデフォルト値が使用されます。
 
-### ルームマッチ情報実装
+<a id="implement-room-matching-information"></a>
+### ルームマッチ情報実装 { #implement-room-matching-information }
 
 マッチング対象となるルームは、ルームマッチメーカーによりマッチ情報が管理されます。つまり、1つのルームマッチ情報は、1つのマッチング可能なルーム情報を意味すると考えられます。このとき、該当ルームの様々な情報や状態値を含めることができます。BaseRoomMatchInfoを継承して実装し、必須でルームのIDとマッチングユーザーカテゴリー、そしてマッチングカテゴリーごとの最大定員数を設定する必要があります。そして最後に、ルームマッチ情報もシリアライズのために 
 必ずSerializableインターフェースを実装する必要があります。以下はコード例を示しています。
@@ -293,7 +305,8 @@ public class GameRoomMatchInfo extends AbstractRoomMatchInfo {
 }
 ```
 
-### ルームマッチ情報登録/更新
+<a id="registerrefresh-room-matching-information"></a>
+### ルームマッチ情報登録/更新 { #registerrefresh-room-matching-information }
 
 このようなルームマッチ情報は、ユーザーが直接登録/更新できます。つまり、ユーザーが望まない場合には、特定のルームはルームマッチメイキング対象として登録しないことも可能です。このような登録手続きは、一般的に次のようにルームが生成されるonCreateRoomコールバックメソッドで主に行います。
 
@@ -340,7 +353,8 @@ roomContext.updateRoomMatch(gameRoomMatchInfo); // このルームマッチ情�
 
 該当するルームが消滅する際、ルームマッチ情報はエンジンで自動的に削除されるため、ユーザーが別途削除する必要はありません。
 
-### ルームマッチメーカー
+<a id="room-matchmaker"></a>
+### ルームマッチメーカー { #room-matchmaker }
 
 次はルームマッチメーカーを作成する番です。ルームマッチメーカーはエンジンが提供するAbstractRoomMatchMaker抽象クラスを継承して実装します。ルームマッチメイキングは最も適切なルームを探す過程であるため、実際のマッチング前/後のための特別なコールバックメソッドが提供されます。ユーザーはこのコールバックメソッドを再定義して、希望通りにマッチングを実行できます。以下のコード例は、このようなルームマッチメーカーをどのように実装できるかを示しています。
 
@@ -388,7 +402,8 @@ public class SampleRoomMatchMaker extends AbstractRoomMatchMaker<SampleRoomMatch
 | compare    | ソートのためのマッチメイキング情報比較   | ソートのためのマッチメイキング情報を比較します。結果値は -1:昇順、0:変動なし、1:降順です。                                                                                              |
 
 
-### GameUserからマッチメーカーへリクエスト伝達する
+<a id="implementing-room-matchmaker-send-requests-from-gameuser-to-matchmaker"></a>
+### GameUserからマッチメーカーへリクエスト伝達する { #implementing-room-matchmaker-send-requests-from-gameuser-to-matchmaker }
 
 これでクライアントはサーバーへルームマッチメイキングをリクエストできます。このリクエストはGameUserに伝達された後、エンジンによりonMatchRoomコールバックメソッドを呼び出します。これについては先にGameNodeとGameUserを説明しながら一度確認しました。ユーザーはこのコールバックメソッドでGameAnvilが提供するルームマッチメーカーを使用してもよく、直接実装した別のマッチメーカーや他のソリューションを使用しても構いません。しかし特別な理由がない限り、GameAnvilのルームマッチメイキングの使用を推奨します。
 

@@ -1,6 +1,10 @@
-## Game > GameAnvil > Console User guide > Creating a Server
+<!-- pre-align:aligned sig=5ec537c402aa -->
 
-## GameAnvil Menu and Tab
+<a id="game-gameanvil-console-user-guide-creating-a-server"></a>
+## Game > GameAnvil > Console User guide > Creating a Server { #game-gameanvil-console-user-guide-creating-a-server }
+
+<a id="gameanvil-menu-and-tab"></a>
+## GameAnvil Menu and Tab { #gameanvil-menu-and-tab }
 
 The GameAnvil console is divided into menus, each of which is composed of tabs. For example, **Monitor**, **Server**, and **Operation**are menus, and the Monitoring menu is composed of the **Dashboard**, **Server Status**, **User Distribution**, and **Autoscale Group** tabs.
 
@@ -17,7 +21,8 @@ The **Server** menu consists of the **Server**, **Autoscale Group**, **Node**, *
 This document focuses on the functions of these menus and tabs.
 
 
-## Prepare to Create Server
+<a id="prepare-to-create-server"></a>
+## Prepare to Create Server { #prepare-to-create-server }
 
 To create a server, at least a server binary and associated settings and data are required. The console provides a deployment file and Config tab in the Server menu for this. 
 
@@ -39,7 +44,8 @@ The second method is to enter the configuration information directly using the e
 You can also view the list of registered deployment files and configuration files, as well as any history in the History tab.
 
 
-## Create Server
+<a id="create-server"></a>
+## Create Server { #create-server }
 
 Once the deployment and config files have been successfully registered in the previous process, you can now create a server, which can be used for any purpose, such as testing or development, as well as actual services.
 
@@ -53,7 +59,8 @@ The Create Server page appears as follows. Use this document to create a server 
 ![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/new_server_2.png)
 
 
-## Server Basic Information
+<a id="server-basic-information"></a>
+## Server Basic Information { #server-basic-information }
 
 ![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/create-03.png)
 
@@ -69,7 +76,8 @@ The Create Server page appears as follows. Use this document to create a server 
 
 * Memo: you can write a brief memo about that server. This memo is not a value that affects your server's configuration or operations.
 
-## Node Configuration
+<a id="node-configuration"></a>
+## Node Configuration { #node-configuration }
 
 The nodes in GameAnvil are functional units of the game server. The developed server binary contains all kinds of node implementations to be used in the game. 
 Server processes powered by these binary logs can only be configured with any selected node, depending on settings and are set based on the configuration information (Config) that you registered before creating the server. That is, the configuration information (Config) contains node configuration information. If multiple configuration information (Config) is registered, you can select the configuration to apply from the list. You can also enable or disable node settings included in the configuration information by node type.
@@ -92,7 +100,8 @@ At this time, the service name entered in the configuration information (Config)
 
 Click the check box to check if you want the server to start automatically upon creation. It is recommended to use the default value (Start immediately upon creation).
 
-## Check Created Server
+<a id="check-created-server"></a>
+## Check Created Server { #check-created-server }
 After you configure a server, running it creates the number of servers you set. The created servers start in the **TRANSIT** state and are colored yellow. It may take several minutes (from 1 to 60 minutes or more) depending on the state of the NHN Cloud infrastructure before the server progresses to the **RUNNING** state. Especially when the GameAnvil service is running the first server, it may take a little longer as it simultaneously performs basic infrastructure settings. During this time, you can configure additional servers of different types or use other menus. 
 
 When the server runs normally, it changes to **RUNNING** state as shown in the image. Click on this generated server to see the server information. In this case, the user can shut down, delete, or reboot the server through the server control command. Alternatively, the multiple select buttons can be used to select multiple servers at once to execute the command.
@@ -103,20 +112,23 @@ You can view server details by clicking on any item in the server list.
 
 ![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/server_details.png)
 
-## Dynamic Log Level Setting
+<a id="dynamic-log-level-setting"></a>
+## Dynamic Log Level Setting { #dynamic-log-level-setting }
 
 You can set dynamic log levels by clicking **Set Log Level** on the details screen of a running server. Changed log levels only apply while the server is running and are not saved to the logback file. If you shut down and restart the server, it will be reset to the logback settings.
 
 ![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2_1/new-server/dynamic_log_level.png)
 
-## Check Created Node Information
+<a id="check-created-node-information"></a>
+## Check Created Node Information { #check-created-node-information }
 
 All node information that makes up the created server is available on the Node tab.
 
 You can filter only arbitrary node information based on more detailed and clear information such as **node ID** as well as **status**, **node type** and **server type**. 
 ![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/new-server/node_list.png)
 
-## Load Balancer
+<a id="load-balancer"></a>
+## Load Balancer { #load-balancer }
 
 The GameAnvil service link load balancers to efficiently handle client connections. The points that clients can access among GameAnvil nodes are gateway nodes and support nodes. They can all consist of multiple instances. At this time, multiple access points must work with the load balancer for proper load balancing. The load balancer must also be connected to an externally accessible floating IP.
 

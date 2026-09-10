@@ -1,8 +1,12 @@
-## Game > GameAnvil > サーバー概念説明 > コアライブラリ
+<!-- pre-align:aligned sig=0461c198f4a1 -->
+
+<a id="game-gameanvil-server-concept-description-core-libraries"></a>
+## Game > GameAnvil > サーバー概念説明 > コアライブラリ { #game-gameanvil-server-concept-description-core-libraries }
 
 
 
-## コアライブラリ
+<a id="key-libraries"></a>
+## コアライブラリ { #key-libraries }
 
 以下の3つがGameAnvilで使用するコアライブラリです。ZeroMQ及びNettyはエンジン内部で使用するため、GameAnvilユーザーが直接使用することはありません。Protocol Buffersはメッセージをシリアライズ/デシリアライズする過程で使用します。直接使用するかどうかに関わらず、以下の3つのライブラリをよく理解していれば、エンジン使用の際に大いに役立つでしょう。
 

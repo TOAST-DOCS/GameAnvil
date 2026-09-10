@@ -1,11 +1,16 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 시작하기
+<!-- pre-align:aligned sig=ca4d70bcf944 -->
 
-## 시작하기에 앞서
+<a id="game-gameanvil-console-user-guide-getting-started"></a>
+## Game > GameAnvil > 콘솔 사용 가이드 > 시작하기 { #game-gameanvil-console-user-guide-getting-started }
+
+<a id="before-starting"></a>
+## 시작하기에 앞서 { #before-starting }
 
 게임 서버 운영은 개발이 완료된 서버 바이너리를 원하는 규모의 물리 장비로 배포하고, 원하는 논리 구성으로 구동하는 것에서 시작합니다. 또한 모니터링과 바이너리 관리, 그리고 패치 지원 등이 필요합니다. GameAnvil 콘솔은 이러한 요구 사항을 모두 충족합니다. 이 문서에서는 GameAnvil을 이용하여 구현한 게임 서버를 콘솔상에서 배포하고 운영하는 방법을 설명합니다.
 
 
-## 용어 정리
+<a id="glossary"></a>
+## 용어 정리 { #glossary }
 
 이 문서에서는 다음의 용어들을 자주 사용합니다. 대부분의 용어는 일반적인 의미와 다르지 않으나, '게임 서버'와 같은 일부 용어는 GameAnvil에서 특수하게 정의한 의미로 사용하므로 용어를 모두 숙지한 뒤 문서를 이용할 것을 권장합니다.
 
@@ -23,7 +28,8 @@
 | 구성      | 서버를 원하는 형태로 구성(Config)하는 것을 의미. 서버 설정도 동일한 의미를 가집니다.                                                                                                                                    |
 
 
-## GameAnvil 서비스 활성화
+<a id="enable-gameanvil"></a>
+## GameAnvil 서비스 활성화 { #enable-gameanvil }
 
 GameAnvil을 사용하려면 NHN Cloud 콘솔에서 GameAnvil 서비스를 활성화해야 합니다. **서비스 선택** 또는 **서비스 추가**를 클릭합니다.
 
@@ -45,7 +51,8 @@ GameAnvil을 사용하려면 NHN Cloud 콘솔에서 GameAnvil 서비스를 활�
 
 
 
-## GameAnvil 라이선스 동의
+<a id="gameanvil"></a>
+## GameAnvil 라이선스 동의 { #gameanvil }
 
 먼저 라이선스 스크롤을 맨 아래로 내린 후, 약관에 동의하기에 체크할 수 있습니다.
 
@@ -53,7 +60,8 @@ GameAnvil을 사용하려면 NHN Cloud 콘솔에서 GameAnvil 서비스를 활�
 
 
 
-## GameAnvil 상품 선택
+<a id="select-gameanvil-product"></a>
+## GameAnvil 상품 선택 { #select-gameanvil-product }
 
 서비스를 활성화하면 GameAnvil 상품 선택 화면이 표시됩니다. GameAnvil 콘솔을 사용하기 전 상품을 선택해야 합니다.
 
@@ -62,7 +70,8 @@ GameAnvil을 사용하려면 NHN Cloud 콘솔에서 GameAnvil 서비스를 활�
 GameAnvil은 게임 서버의 시스템 노드 규모와 기술 지원 범위가 다른 두 종류의 상품을 제공합니다. 시스템 노드는 GameAnvil 내부적으로 인스턴스와 노드, 그리고 유저 정보 등을 관리하는 데 사용되는 자원이며, 사용자에게는 노출되지 않습니다.
 Standard 상품은 중·소규모 게임에 적절한 상품으로 이중화된 시스템 노드와 풍부한 기술 지원을 제공합니다. Premium 상품은 대규모 게임을 위해 최적화된 시스템 노드와 좀 더 넓은 범위의 기술 지원을 제공합니다. 서비스할 게임의 특성과 규모에 맞추어 상품을 선택하십시오.
 
-## GameAnvil 서비스 대시보드 확인
+<a id="check-gameanvil-service-dashboard"></a>
+## GameAnvil 서비스 대시보드 확인 { #check-gameanvil-service-dashboard }
 
 위 과정을 완료하면 GameAnvil 서비스를 사용할 모든 준비가 완료되었습니다. 콘솔에서 GameAnvil 대시보드를 확인할 수 있습니다.
 

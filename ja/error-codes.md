@@ -1,6 +1,10 @@
-## Game > GameAnvil > エラーコード
+<!-- pre-align:aligned sig=02e49a151ed8 -->
 
-## Client
+<a id="game-gameanvil-error-codes"></a>
+## Game > GameAnvil > エラーコード { #game-gameanvil-error-codes }
+
+<a id="client"></a>
+## Client { #client }
 
 | ResultCode                    | Name                                             | Value | Description                                                                                                                                         |
 |-------------------------------|--------------------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -136,7 +140,8 @@
 |                                | SOCKET_TIME_OUT                                  | 2101  | タイムアウトが発生、コネクタで接続を切断                                                                                                                                                                                                                                                |
 |                                | SOCKET_ERROR                                     | 2102  | ソケットエラーが発生して接続を切断                                                                                                                                                                                                                                                      |
 
-## Server
+<a id="server"></a>
+## Server { #server }
 
 | Category   | Name                                             | Value | Description |
 |------------|--------------------------------------------------|------:| ----------- |

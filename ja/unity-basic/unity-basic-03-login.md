@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 基礎開発ガイド > 簡易ログイン
+<!-- pre-align:aligned sig=b92e901cd14a -->
 
-## 簡単ログイン
+<a id="game-gameanvil-basic-development-guide-to-unity-quick-login"></a>
+## Game > GameAnvil > Unity 基礎開発ガイド > 簡易ログイン { #game-gameanvil-basic-development-guide-to-unity-quick-login }
+
+<a id="quick-login"></a>
+## 簡単ログイン { #quick-login }
 
 GameAnvilManagerが提供する簡易ログイン機能は、GameAnvilサーバーへの接続、認証、ログインの手続きを一度に処理できるようにします。接続、認証、ログインの手続きに関するより詳細な内容は、[Unity 応用開発ガイド > コネクタ](../unity-advanced/unity-advanced-02-connection.md)またはサーバー開発ガイドを参照してください。
 
-### 簡単ログインの設定
+<a id="quick-login-settings"></a>
+### 簡単ログインの設定 { #quick-login-settings }
 
 簡単ログインを使用するには、GameAnvilManagerの設定のうち、ログイン動作時に使用される値をあらかじめ設定しておく必要があります。簡単ログインで使用される設定の種類は以下の通りです。
 
@@ -36,7 +41,8 @@ public void Start()
 }
 ```
 
-### 簡単ログインの使用
+<a id="use-quick-login"></a>
+### 簡単ログインの使用 { #use-quick-login }
 
 簡単ログインを通じて、サーバーへの接続、認証、ログインを行います。戻り値のLoginResultを利用して結果を確認できます。このとき、サーバーとの接続に問題が発生した場合は、例外が発生することがあります。
 
@@ -123,7 +129,8 @@ public async void ManagerLogin()
 
 より詳細な失敗理由は、LoginResultのauthenticationResultやloginResultを利用して確認できます。
 
-## Disconnect
+<a id="disconnect"></a>
+## Disconnect { #disconnect }
 
 GameAnvilManagerのLogout()メソッドを利用してサーバーとの接続を解除できます。
 
@@ -138,7 +145,8 @@ public async void ManagerLogout()
 }
 ```
 
-## 状態変更通知
+<a id="notification-for-status-change"></a>
+## 状態変更通知 { #notification-for-status-change }
 
 Logout()を呼び出さなくても、ネットワークに問題があったり、サーバーから強制的にログアウトさせられるなど、GameAnvilManagerの状態が変更される可能性があり、これに対する通知を受け取ることができます。 
 ```c#

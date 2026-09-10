@@ -1,6 +1,10 @@
-## Game > GameAnvil > Server Development Guide > IDs
+<!-- pre-align:aligned sig=eeed95e57cb0 -->
 
-## Identity (ID)
+<a id="game-gameanvil-server-development-guide-ids"></a>
+## Game > GameAnvil > Server Development Guide > IDs { #game-gameanvil-server-development-guide-ids }
+
+<a id="identity-id"></a>
+## Identity (ID) { #identity-id }
 
 GameAnvil uses many different IDs. Some of them are issued by the server and the rest are configured by the user in GameAnvilConfig. The account information needed to connect passes the information received from the client to the server. Following is the description of the popular ID used by GameAnvil.
 
@@ -14,48 +18,18 @@ GameAnvil uses many different IDs. Some of them are issued by the server and the
 | RoomId    | The unique ID of the room - issued by the server when the room object is created.                                                                                                       | int    | -         |
 | SubId     | A unique secondary ID within a single account (AccountId) that clients pass when they connect.<br>Used to distinguish between multiple sessions within a single connection. The session's unique ID is a combination of AccountId and SubId. | int    | 0 < id    |
 
-### ID Support API
+<a id="id-support-api"></a>
+### ID Support API { #id-support-api }
 
 Some of the features related to the ID mentioned above are provided to engine users as shown in the list below. To obtain or confirm the ID, the API below must be used.
 
-#### ServiceId API
+<a id="id-support-api-verify-valid-id-api"></a>
+#### Verify Valid ID API
 
-| Method                                | Description                                    |
-| ------------------------------------- | --------------------------------------- |
-| boolean isValid(int serviceId)        | Checks if serviceId is valid               |
-| int findServiceId(String serviceName) | Obtains the ServiceId corresponding to the ServiceName |
-| String findServiceName(int serviceId) | Obtains the ServiceName corresponding to the ServiceId |
+<!-- TODO: translate body -->
 
-#### HostId API
+<a id="id-support-api-verify-registered-services-api-insecure"></a>
+#### Verify Registered Services API (Insecure)
 
-| Method                       | Description                     |
-| ---------------------------- | ------------------------ |
-| boolean isValid(long hostId) | Checks for a valid hostId   |
-| long get()                   | Obtains the hostId of the process |
+<!-- TODO: translate body -->
 
-#### NodeId API
-
-| Method                        | Name                          |
-| ----------------------------- | ----------------------------- |
-| boolean isValid(long nodeId)  | Checks for a valid nodeId        |
-| long getHostId(long nodeId)   | Obtains hostId from nodeId    |
-| int getServiceId(long nodeId) | Obtains serviceId from nodeId |
-| int getNodeNum(long nodeId)   | Obtains nodeNum from nodeId   |
-
-#### UserId API
-
-| Method                      | Description                   |
-| --------------------------- | ---------------------- |
-| boolean isValid(int userId) | Checks for a valid userId |
-
-#### RoomId API
-
-| Method                      | Description                   |
-| --------------------------- | ---------------------- |
-| boolean isValid(int roomId) | Checks for a valid roomId |
-
-#### SubId API
-
-| Method                     | Description                  |
-| -------------------------- | --------------------- |
-| boolean isValid(int subId) | Checks for a valid subId |

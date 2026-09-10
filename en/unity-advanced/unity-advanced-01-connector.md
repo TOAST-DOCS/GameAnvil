@@ -1,9 +1,14 @@
-## Game > GameAnvil > In-depth Development Guide to Unity > Get Started
+<!-- pre-align:aligned sig=a3de63cffd6b -->
 
-## Get Started
+<a id="game-gameanvil-in-depth-development-guide-to-unity-get-started"></a>
+## Game > GameAnvil > In-depth Development Guide to Unity > Get Started { #game-gameanvil-in-depth-development-guide-to-unity-get-started }
+
+<a id="get-started"></a>
+## Get Started { #get-started }
 GameAnvilConnector makes it easy to use the various features provided by GameAnvil.
 
-## Install GameAnvilConnector
+<a id="install-gameanvilconnector"></a>
+## Install GameAnvilConnector { #install-gameanvilconnector }
 
 You can include GameAnvilConnector in your project using gameanvil-connector.unitypackage. First download the gameanvil-connector.unitypackage [here](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage). And in the menu, select \*\*Assets > Import Package > Custom Package...\*\*.
 
@@ -26,7 +31,8 @@ When you install the package, the GameAnvilConnector DLL files are installed as 
 DLL files are made in C# and can be used on platforms such as Android, iOS, and PC.
 
 
-## Create GameAnvilConnector
+<a id="create-gameanvilconnector"></a>
+## Create GameAnvilConnector { #create-gameanvilconnector }
 You must use GameAnvilConnector to connect to the GameAnvil server. You can simply create and use GameAnvilConnector as follows:
 The content of GameAnvilManager covered in the [Basic Development Guide to Unity > Manager](../unity-basic/unity-basic-02-gameanvil-manager.md) also uses GameAnvilConnector internally.  
 ```c#
@@ -35,7 +41,8 @@ using GameAnvil;
 GameAnvilConnector connector = new GameAnvilConnector();
 ```
 
-## GameAnvilConfig
+<a id="gameanvilconfig"></a>
+## GameAnvilConfig { #gameanvilconfig }
 GameAnvilConfig defines several settings to be used when running GameAnvilConnector. These settings are defined and set to the default value defined in GameAnvilConfig, but if needed, you can directly change the value of GameAnvilConfig to use.
 
 ```c#
@@ -57,7 +64,8 @@ The following are the types of settings:
 | int | PingIntervalMillis | Set the interval of sending Ping messages to confirm the connection to the server (unit: milliseconds, default: Not used for 3,000, 0 days |
 | bool | UseIPv6 | Convert to IPv6 address when connecting (default: false) |
 | bool | UseSocketNoDelay | Use Nodelay for socket (default: true) |
-## GameAnvilLogger
+<a id="gameanvillogger"></a>
+## GameAnvilLogger { #gameanvillogger }
 
 GameAnvilConnector does not log directly but passes logs through callbacks. You must register a callback to GameAnvilLogger to receive logs that occur from GameAnvilConnector as follows:
 

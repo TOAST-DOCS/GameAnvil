@@ -1,17 +1,25 @@
-## Game > GameAnvil > 릴리스 노트 > GameHammer
+<!-- pre-align:aligned sig=39fc01e201f7 -->
 
-### 2.2.0 (2026.01.29)
+<a id="game-gameanvil-release-notes-gamehammer"></a>
+## Game > GameAnvil > 릴리스 노트 > GameHammer { #game-gameanvil-release-notes-gamehammer }
 
+<a id="20-january-29-2026"></a>
+### 2.2.0 (2026.01.29) { #20-january-29-2026 }
+
+<a id="20-january-29-2026-new"></a>
 #### New
 * Java 21에서 실행할 수 있도록 업데이트
 
+<a id="20-january-29-2026-change"></a>
 #### Change
 * Authentication 응답에서 기존 빈 문자열을 전달하고 있던 message 필드 제거
 
 ---
 
-### 2.1.0 (2025.06.30)
+<a id="10-june-30-2025"></a>
+### 2.1.0 (2025.06.30) { #10-june-30-2025 }
 
+<a id="10-june-30-2025-change"></a>
 #### Change
 * GameAnvil 2.1.0 서버 릴리즈에 맞춰 GameHammer도 2.1.0 버전 릴리즈
 * GameAnvil 2.1 서버에 맞춰 엔진 프로토콜 업데이트
@@ -29,13 +37,16 @@
     | FORCE\_CLOSE\_BASE\_CONNECTION<br>서버에서 BaseConnection의 close() 호출 | FORCE\_CLOSE\_CONNECTION<br>서버에서 IConnection의 close() 호출 |
     | FORCE\_CLOSE\_BASE\_USER<br>서버에서 BaseUser의 closeConnection() 호출 | FORCE\_CLOSE\_USER<br>서버에서 IUser의 closeConnection() 호출 |
 
+<a id="10-june-30-2025-fix"></a>
 #### Fix
 * 서버와 해머의 프로토콜 버퍼를 각각 다른 환경에서 생성할 때 생성 환경에 따라 서로 호환되지 않을 수 있는 문제 수정
 
 ---
 
-### 2.0.0 (2024.12.04)
+<a id="00-20241204"></a>
+### 2.0.0 (2024.12.04) { #00-20241204 }
 
+<a id="00-20241204-new"></a>
 #### New
 
 * ClientStateCheckOK 로그 출력 여부를 설정할 수 있는 기능 추가
@@ -48,12 +59,14 @@
     * MATCH_PARTY_CANCEL_FAIL_ALREADY_JOINED_ROOM
     * MATCH_PARTY_CANCEL_FAIL_NOT_IN_PROGRESS
     
+<a id="00-20241204-change"></a>
 #### Change
 
 * 헤머가 연결 여부를 더 정확하게 감시하도록 수정
 * 사용자 코드에서는 서비스아이디 대신 서비스 이름만 사용하도록 수정
 * protobuf 의존성을 4.28.3으로 업데이트
 
+<a id="00-20241204-fix"></a>
 #### Fix
 
 * 유저의 상태 체크 응답에 대한 설정이 초기화 되지 않는 이슈 수정
@@ -65,8 +78,10 @@
 
 ---
 
-### 1.4.0 (2023.12.13)
+<a id="40-20231213"></a>
+### 1.4.0 (2023.12.13) { #40-20231213 }
 
+<a id="40-20231213-new"></a>
 #### New
 
 * 시나리오 테스트 사용성 개선
@@ -80,6 +95,7 @@
 * protobuf 3 최신 버전으로 업데이트
 * Protocol 등록 시 index를 지정하지 않아도 되도록 개선
 
+<a id="40-20231213-change"></a>
 #### Change
 
 * 로그인 시 잘못된 ChannelId를 입력할 경우 SystemError 응답 대신 Login 실패 응답을 주도록 수정
@@ -88,6 +104,7 @@
     * 다른 API들과 통일되도록 callback을 앞에 받도록 수정
 * 패킷 encode / decode 성능 개선
 
+<a id="40-20231213-fix"></a>
 #### Fix
 
 * State의 onEnter, onExit에서 exception이 발생할 경우 로그가 남지 않는 이슈 수정
@@ -97,13 +114,17 @@
 
 ---
 
-### 1.3.0 (2022.12.27)
+<a id="30-20221227"></a>
+### 1.3.0 (2022.12.27) { #30-20221227 }
+<a id="30-20221227-new"></a>
 #### New
 * vmOption을 통해 설정을 로드할 수 있는 기능 추가
 
 ---
-### 1.2.1 (2021.11.30)
+<a id="21-20211130"></a>
+### 1.2.1 (2021.11.30) { #21-20211130 }
 
+<a id="21-20211130-new"></a>
 #### New 
 
 * SecureSocket지원 기능 추가.
@@ -113,7 +134,9 @@
 
 ---
 
-### 1.2.0(2021.07.13)
+<a id="game-gameanvil-release-notes-gamehammer-1"></a>
+### 1.2.0(2021.07.13) { #game-gameanvil-release-notes-gamehammer-1 }
+<a id="game-gameanvil-release-notes-gamehammer-1-change"></a>
 #### Change
 * 패키지 구조 정리
 	* 내부용 패키지는 gameanvilcore로 묶음.
@@ -166,8 +189,10 @@
     * FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION 추가
   * ResultCodeSessionClose 추가
 
-### 1.1.2 (2021.11.30)
+<a id="12-20211130"></a>
+### 1.1.2 (2021.11.30) { #12-20211130 }
 
+<a id="12-20211130-new"></a>
 #### New 
 
 * SecureSocket지원 기능 추가.
@@ -177,12 +202,15 @@
 
 ---
 
-### 1.1.1 (2021.04.16)
+<a id="11-20210416"></a>
+### 1.1.1 (2021.04.16) { #11-20210416 }
 
+<a id="11-20210416-new"></a>
 #### New 
 
 * ping 기능 온오프 가능하도록 `Connection.setSendPingPaused()`추가.
 
+<a id="11-20210416-fix"></a>
 #### Fix
 
 * config의 pingIngerval이 적용되지 않는 버그 수정
@@ -190,12 +218,15 @@
 
 ---
 
-### 1.1.0 (2021.04.15)
+<a id="10-20210415"></a>
+### 1.1.0 (2021.04.15) { #10-20210415 }
 
+<a id="10-20210415-change"></a>
 #### Change
 
 * 서버의 버전과 맞추기위해 1.1.0으로 올림.
 
+<a id="10-20210415-new"></a>
 #### New
 
 * sendPauseClientStateCheck() 추가.
@@ -204,13 +235,16 @@
 
 ---
 
-### 1.0.2 (2020.02.10)
+<a id="02-20200210"></a>
+### 1.0.2 (2020.02.10) { #02-20200210 }
 
+<a id="02-20200210-fix"></a>
 #### Fix
 * 클라이언트에서 게임 노드로 지정된 시간(default 10초)동안 아무런 패킷을 보내지 않을 경우 서버에서 클라이언트로 상태 확인 요청을 보내게 되는데, GameHammer에서 이 상태 확인 요청에 잘못된 응답을 하여 접속이 끊어지는 문제 수정
 * 시나리오 테스트를 장시간 유지하여 요청한 패킷의 수가 아주 많아질 경우 packetSeq 가 overflow되어 서버에서 응답을 주지 않는 문제 수정  
 * send시에도 packetSeq를 증가시키는 문제 수정
 
+<a id="02-20200210-change"></a>
 #### Change
 * 로그 내용 강화.
     * accountId, userId 추가.
@@ -222,21 +256,26 @@
 
 ---
 
-### 1.0.1 (2020.12.28)
+<a id="01-20201228"></a>
+### 1.0.1 (2020.12.28) { #01-20201228 }
 
+<a id="01-20201228-fix"></a>
 #### Fix
 * 같은 Message에 대해 waitFor를 중첩하여 사용할 경우 첫번째 응답시에 모든 중첩된 대기가 풀리는 버그 수정
 * ResultAuthentication의 getPayloads()가 null을 리턴하는 버그 수정
 * 테스트 종료시 간헐적으로 HandlerPing.onPingTime()에서 NullPointerException발생하는 이슈 수정
 * 테스트중 간헐적으로 Statistics.record()에서 ConcurrentModificationException발생하는 이슈 수정
 
+<a id="01-20201228-change"></a>
 #### Change
 * GameHammerConfig.json파일이 없을 경우 출력되는 로그를 error에서 warn으로 변경.
 
 ---
 
-### 1.0.0 (2020.12.18)
+<a id="00-20201218"></a>
+### 1.0.0 (2020.12.18) { #00-20201218 }
 
+<a id="00-20201218-fix"></a>
 #### Fix
 * EA버전에서 장시간 테스트 실패하는 이슈 수정.
 * EA버전 대비 TPS 성능 대폭 개선(약 2배)
@@ -256,6 +295,7 @@
         * addListenerMoveChannelNoti
         * addListenerNotice
 
+<a id="00-20201218-change"></a>
 #### Change
 * Tester
     * 모든 요청 방식 기능에 Sync/Async 방식을 지원
@@ -265,13 +305,16 @@
     * TRANSACTION과 EVENT 개념 제거
         * 대신 각 State에서 changeState()를 사용해 원하는 State로 직접 이동
 
+<a id="00-20201218-new"></a>
 #### New
 * 서버에서 보내는 noti를 기다려 처리할 수 있도록 waitForXXX 기능 추가.
 
 ---
 
-### 1.0.0-EA (2020.08.03)
+<a id="00-ea-20200803"></a>
+### 1.0.0-EA (2020.08.03) { #00-ea-20200803 }
 
+<a id="00-ea-20200803-new"></a>
 #### New
 * Tester - GameAnvil Connector를 대신하여 서버와의 연동 기능 테스트를 지원
     * Connection - GameAnvil Connector의 ConnectionAgent가 담당하는 기능 지원

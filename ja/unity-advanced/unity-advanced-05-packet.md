@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 応用開発ガイド > パケット
+<!-- pre-align:aligned sig=dd9a8996ee81 -->
 
-## パケット
+<a id="game-gameanvil-unity-advanced-development-guide-packet"></a>
+## Game > GameAnvil > Unity 応用開発ガイド > パケット { #game-gameanvil-unity-advanced-development-guide-packet }
+
+<a id="packets"></a>
+## パケット { #packets }
 
 GameAnvilは基本メッセージプロトコルとしてProtocolBufferメッセージを使用します。そしてこれらのメッセージはパケットに込められて処理されます。ほとんどの場合、GameAnvilConnectorを利用する時はProtocolBufferメッセージのみを使用しても問題ありませんが、状況によってはPacketを利用しなければならない場合もあります。 
 
-### 生成
+<a id="create"></a>
+### 生成 { #create }
 次のようにProtocolBufferメッセージを利用してパケットを生成できます。 
 ```c#
 Packet packet = Packet.MakePacket(new Protocol.SampleRequest());
@@ -18,7 +23,8 @@ Packet packet = Packet.MakeCustomPacket(customMsgId, requestMsg);
 ByteString bytes = packet.ToByteString();
 string JsonString = bytes.ToStringUtf8();
 ```
-### 圧縮
+<a id="compression"></a>
+### 圧縮 { #compression }
 
 サーバーへ送信できるパケットの最大サイズは64Kbytesに制限されています。パケットサイズが64Kbytesを超える場合、圧縮を通じてサイズ制限を回避できます。
 ペイロードも内部的にはパケットとして処理されるため、同様に64Kbytesを超えることはできません。
@@ -27,7 +33,8 @@ string JsonString = bytes.ToStringUtf8();
 Packet packet = Packet.MakePacket(new Protocol.SampleRequest(), PacketOption.Compress);
 ```
 
-### 送信
+<a id="sent"></a>
+### 送信 { #sent }
 このように生成したパケットは、ProtocolBufferメッセージを送信するのと同じ方法でサーバーへ送信できます。 
 ```c#
 public async void RequestPacket()
@@ -50,7 +57,8 @@ public async void RequestPacket()
 }
 ```
 
-### Payload
+<a id="payload"></a>
+### Payload { #payload }
 
 GameAnvilが提供する基本APIを利用する際、追加のデータが必要になる場合があります。このために基本APIには、追加データを渡すことができるペイロードというパラメータが含まれています。このペイロードに追加で必要なデータを追加でき、このように追加したデータをサーバーへ送ったり、サーバーから受け取り利用できます。 
 

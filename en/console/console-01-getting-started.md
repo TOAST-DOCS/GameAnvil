@@ -1,11 +1,16 @@
-## Game > GameAnvil > Console User guide > Getting Started
+<!-- pre-align:aligned sig=ca4d70bcf944 -->
 
-## Before Starting
+<a id="game-gameanvil-console-user-guide-getting-started"></a>
+## Game > GameAnvil > Console User guide > Getting Started { #game-gameanvil-console-user-guide-getting-started }
+
+<a id="before-starting"></a>
+## Before Starting { #before-starting }
 
 Game server operations begin by deploying developed server binary to physical devices of the desired size and running them to the desired logical configuration. They also require monitoring, binary management, patch support and etc. GameAnvil console meets all of these requirements. This document describes how to deploy and operate game servers implemented using GameAnvil on the console.
 
 
-## Glossary
+<a id="glossary"></a>
+## Glossary { #glossary }
 
 The following terms are frequently used in this document. Although most terms do not differ from the general meaning, some terms, such as "game server" are used in GameAnvil's special definition, so it is recommended that you familiarize yourself with the terms before using the document.
 
@@ -23,7 +28,8 @@ The following terms are frequently used in this document. Although most terms do
 | Configuration      | It means configuring the server in the desired form. Server settings have the same meaning.                                                                                                                                    |
 
 
-## Enable GameAnvil
+<a id="enable-gameanvil"></a>
+## Enable GameAnvil { #enable-gameanvil }
 
 GameAnvil requires GameAnvil service to be enabled on NHN Cloud Console. Click **Select Service** or **Add Service**.
 
@@ -43,13 +49,15 @@ When you register your payment method by following the instructions on the scree
 
 Once the service is activated and the organization is created, users have unique console access rights. Users can access the console and set up and manage all the features you need during operational phase.
 
-## GameAnvil 라이선스 동의
+<a id="gameanvil"></a>
+## GameAnvil 라이선스 동의 { #gameanvil }
 
 먼저 라이선스 스크롤을 맨 아래로 내린 후, 약관에 동의하기에 체크할 수 있습니다.
 
 ![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/license_agree.png)
 
-## Select GameAnvil product 
+<a id="select-gameanvil-product"></a>
+## Select GameAnvil product { #select-gameanvil-product }
 
 When the service is activated, GameAnvil product selection screen will be displayed. You have to select the product before using GameAnvil console.
 
@@ -58,7 +66,8 @@ When the service is activated, GameAnvil product selection screen will be displa
 GameAnvil offers two kinds of products that differ in the size of the game server's system nodes and the range of technical support. System nodes are resources used to manage instances, nodes, and user information internally in GameAnvil and are not exposed to users.
 Standard products are suitable for small · medium-sized games, offering dual system nodes and a wealth of technical support. Premium product offers system nodes optimized for large-scale gaming and a wider range of technical support. Choose a product that fits the characteristics and scale of the game you want to service.
 
-## Check GameAnvil service dashboard
+<a id="check-gameanvil-service-dashboard"></a>
+## Check GameAnvil service dashboard { #check-gameanvil-service-dashboard }
 
 Once you have completed the above process, you are ready to use GameAnvil service. You can view GameAnvil dashboard on the console.
 

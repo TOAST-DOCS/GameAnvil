@@ -1,10 +1,15 @@
-## Game > GameAnvil > サーバー開発ガイド > 転送可能オブジェクト
+<!-- pre-align:aligned sig=613b3d3dd876 -->
 
-## オブジェクト転送(Object Transfer)
+<a id="game-gameanvil-server-development-guide-transferable-objects"></a>
+## Game > GameAnvil > サーバー開発ガイド > 転送可能オブジェクト { #game-gameanvil-server-development-guide-transferable-objects }
+
+<a id="object-transfer"></a>
+## オブジェクト転送(Object Transfer) { #object-transfer }
 
 GameAnvilでオブジェクト転送とは、1つのノードから別のノードへオブジェクトが移動することを意味します。ユーザーが関心を持つべきオブジェクト転送は全てゲームノード間で発生します。その代表的な二つであるユーザー転送とルーム転送について見ていきます。
 
-## ユーザー転送(UserTransfer)
+<a id="user-transfer-usertransfer"></a>
+## ユーザー転送(UserTransfer) { #user-transfer-usertransfer }
 
 ![gamenode-user-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-user-transfer2.png)
 
@@ -19,7 +24,8 @@ GameAnvilでオブジェクト転送とは、1つのノードから別のノー�
 - 第三に、任意のゲームノードに対してSafe Pauseを進行すると、該当ノードのユーザーオブジェクトは他の有効なゲームノードへ分散されて転送されます。この場合は運営側面からGameAnvil Consoleを
   通じて明示的に命令を下した場合です。
 
-### ユーザー転送及び転送可能なユーザータイマー実装
+<a id="user-transfer-implementation"></a>
+### ユーザー転送及び転送可能なユーザータイマー実装 { #user-transfer-implementation }
 
 実際のユーザー転送はGameAnvilが内部的に静かに処理します。このとき、クライアントは自分のゲームユーザーオブジェクトがサーバー間で転送されていることを認知しません。つまり、別のゲームノードのルームに入ったとしても、クライアントは単に1つのGameAnvilサーバー群で任意のルームに入ったに過ぎません。
 
@@ -60,7 +66,8 @@ public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack t
 
 上記の2つのメソッドはGameAnvilが自動的に呼び出します。ユーザーはただ実装するだけです。
 
-## ルーム転送(RoomTransfer)
+<a id="room-transfer-roomtranfer"></a>
+## ルーム転送(RoomTransfer) { #room-transfer-roomtranfer }
 
 ![gamenode-room-transfer2.png](https://static.toastoven.net/prod_gameanvil/images/gamenode-room-transfer2.png)
 
@@ -68,7 +75,8 @@ public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack t
 
 このようなルーム転送を発生させるのはSafe Pause命令のみです。この命令は一般的にGameAnvil Consoleを通じてゲーム運営者が明示的に伝達します。
 
-### ルーム転送及び転送可能なルームタイマー実装
+<a id="implement-room-transfer-and-transferable-room-timer"></a>
+### ルーム転送及び転送可能なルームタイマー実装 { #implement-room-transfer-and-transferable-room-timer }
 
 実際のルーム転送はGameAnvilが内部的に静かに処理します。このとき、クライアントは自分のゲームユーザーに加え、自分が属するルームオブジェクトがサーバー間で転送されていることを認知できない可能性が高いです。特別な問題が発生しない限り、全体のフローが非常に高速に進行するため、転送前のゲームフローを転送後に継続することに無理がありません。
 

@@ -1,8 +1,12 @@
-## Game > GameAnvil > 서버 개념 설명 > 노드
+<!-- pre-align:aligned sig=378876ac9b0b -->
+
+<a id="game-gameanvil-server-concept-description-node"></a>
+## Game > GameAnvil > 서버 개념 설명 > 노드 { #game-gameanvil-server-concept-description-node }
 
 
 
-## Node
+<a id="node"></a>
+## Node { #node }
 
 GameAnvil 서버 구성의 가장 기본이 되는 단위는 노드입니다. 각 노드는 그 역할에 맞는 기능을 독립적으로 수행합니다.  몇 개의 노드로 어떤 역할을 수행할지는 자유롭게 설정 가능합니다. 노드를 자세히 설명하기에 앞서 역할별로 노드를 나누면 다음과 같습니다. 
 
@@ -24,7 +28,8 @@ GameAnvil 서버 구성의 가장 기본이 되는 단위는 노드입니다. �
 
 
 
-## 싱글 스레드 (Single-Threaded)
+<a id="single-thread-single-threaded"></a>
+## 싱글 스레드 (Single-Threaded) { #single-thread-single-threaded }
 
 GameAnvil에서 하나의 노드는 하나의 스레드로 처리됩니다. 이것은 매우 중요합니다. 각 노드는 기본적으로 모든 처리를 비동기적으로 해야 하며 이 노드 스레드는 블로킹 없이 지속적으로 구동되는 것이 보장되어야 합니다. 이러한 구동 모델은 Vert.x나 Node.js의 그것과 매우 흡사합니다.
 

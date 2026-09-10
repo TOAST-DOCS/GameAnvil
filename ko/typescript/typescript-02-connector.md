@@ -1,10 +1,15 @@
-## Game > GameAnvil > TypeScript 개발 가이드 > 연결 에이전트
+<!-- pre-align:aligned sig=5e9747b9d2ff -->
 
-## GameAnvilConnector
+<a id="game-gameanvil-typescript-development-guide-connection-agent"></a>
+## Game > GameAnvil > TypeScript 개발 가이드 > 연결 에이전트 { #game-gameanvil-typescript-development-guide-connection-agent }
+
+<a id="gameanvilconnector"></a>
+## GameAnvilConnector { #gameanvilconnector }
 
 GameAnvilConnector는 서버 연결과 통신을 담당하는 클래스로, 이 객체를 통해 서버에 요청하거나 서버로부터 오는 메시지에 대한 핸들러를 등록하여 관리할 수 있습니다. 이전 설치 챕터에서 GameAnvilConnector의 생성과 connect 기능 사용에 대해서 다루었습니다. 이번 문서에서는 더 자세한 사용법과, GameAnvilConnector의 다른 기능들을 알아보겠습니다.
 
-### 생성
+<a id="create"></a>
+### 생성 { #create }
 
 아래와 같이 GameAnvilConnector 객체를 생성합니다. 보통은 하나의 프로세스에서 하나의 커넥터 객체를 사용하는 것이 일반적입니다.
 
@@ -14,7 +19,8 @@ import { GameAnvilConnector } from "gameanvil-connector";
 const connector = new GameAnvilConnector();
 ```
 
-### 서버 접속
+<a id="server-connection"></a>
+### 서버 접속 { #server-connection }
 
 connect() 함수를 이용해 서버에 접속합니다. 호출 전에 host와 port를 미리 설정 해야 합니다.
 
@@ -45,7 +51,8 @@ connector.connect()
 
 커넥터의 대부분의 API가 이처럼 비동기적으로 작동하며 Promise 객체를 반환하므로 위와 같이 상황에 맞게 await, then등의 기능을 사용할 수 있습니다.
 
-### 연결 끊김 감지
+<a id="detect-disconnection"></a>
+### 연결 끊김 감지 { #detect-disconnection }
 
 서버에 의해 연결을 강제적으로 종료되거나, 네트워크 문제 등으로 연결이 끊겼을 때 수행할 동작을 지정할 수 있습니다.
 
@@ -81,7 +88,8 @@ connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) =>
 
 두 번째 인자로는 서버 구현에 따른 추가 정보를 받습니다. 추가 정보 처리 방법은 이후에 추가로 설명합니다.
 
-### 인증
+<a id="authentication"></a>
+### 인증 { #authentication }
 
 서버에 접속 성공한 이후, 엔진의 모든 기능을 사용하기 위해서는 먼저 인증을 진행해야 합니다. authentication() 함수는 서버와 미리 협의된 accountId, deviceId, password 값을 인자로 받아 인증 동작을 수행하고 Promise를 반환합니다. 인증 동작 완료 시점에 Promise를 통해 인증에 성공했는지 여부와 서버로부터 전달 받은 추가 데이터 등을 확인할 수 있습니다.
 
@@ -122,7 +130,8 @@ if (connector.isAuthenticated) {
 }
 ```
 
-### 연결과 인증을 모두 진행
+<a id="proceed-with-both-connection-and-authentication"></a>
+### 연결과 인증을 모두 진행 { #proceed-with-both-connection-and-authentication }
 
 연결을 하고 나면 인증을 필수로 진행해야하므로 이 둘을 순차적으로 실행 시켜주는 편의 함수를 호출하면 편리합니다.
 
@@ -140,7 +149,8 @@ console.log(`Authentication Result : ${ResultCodeAuth[authResult.errorCode]}`);
 
 인증 결과는 일반적으로 인증만 요청했을 때의 결과와 같은 방법으로 사용하면 됩니다.
 
-### 핑 요청
+<a id="request-ping"></a>
+### 핑 요청 { #request-ping }
 
 기본적으로 핑 요청은 주기적으로 보내지도록 되어 있지만, 설정을 수정하여 수동으로 바꾸었을 경우 수동으로 메서드를 호출하여 핑 요청을 할 수 있습니다.
 
@@ -151,7 +161,8 @@ connector.ping();
 핑 요청에 대한 응답을 받았을 경우 설정에 따라 pong 로그가 출력될 수 있습니다.
 
 
-### 메시지 수신 콜백 등록
+<a id="register-message-reception-callback"></a>
+### 메시지 수신 콜백 등록 { #register-message-reception-callback }
 
 서버로부터 프로토버퍼 메시지를 수신 받았을 때, 처리 함수를 실행하도록 설정할 수 있습니다. 하나의 프로토버퍼에 대해서 하나의 처리 함수만 등록이 가능하며, 이미 처리함수를 등록한 상태에서 다시 등록한다면 기존 처리 함수는 지워집니다.
 
@@ -172,7 +183,8 @@ connector.setMessageCallback(UserInfo.descriptor, (connector, resultCode, userIn
 });
 ```
 
-### 채널 유저 및 방 수 정보 요청
+<a id="request-channel-user-and-room-count-information"></a>
+### 채널 유저 및 방 수 정보 요청 { #request-channel-user-and-room-count-information }
 
 서버에 있는 특정 서비스의 모든 채널 각각의 유저와 방 수 정보를 요청할 수 있습니다.
 
@@ -202,7 +214,8 @@ console.log(`${channelCountInfo.channelId} userCount: ${channlCountInfo.userCoun
 ```
 
 
-### 채널 정보 요청
+<a id="request-channel-information"></a>
+### 채널 정보 요청 { #request-channel-information }
 
 서버에 있는 특정 서비스의 모든 채널 각각의 정보를 요청할 수 있습니다.
 
@@ -228,7 +241,8 @@ const result = await connector.getChannelInfo(serviceName, channelId);
 const payload = result.data;
 ```
 
-### 채널 목록 요청
+<a id="request-channel-list"></a>
+### 채널 목록 요청 { #request-channel-list }
 
 서버에 있는 특정 서비스의 모든 채널 목록을 요청할 수 있습니다.
 
@@ -242,7 +256,8 @@ for (let channelId of result) {
 }
 ```
 
-### 유저 상태 체크 일시 정지 및 재개
+<a id="pause-and-resume-user-status-check"></a>
+### 유저 상태 체크 일시 정지 및 재개 { #pause-and-resume-user-status-check }
 
 앱이 백그라운드로 내려간 경우 등 유저 상태 체크에 응답할 수 없는 상황이 예상되는 경우 앱을 일시 정지 시킬 수 있습니다.
 
@@ -262,7 +277,8 @@ connector.pauseClientStateCheck(pauseTime);
 connector.resumeClientStateCheck();
 ```
 
-### 패킷 전송
+<a id="send-packet"></a>
+### 패킷 전송 { #send-packet }
 
 게이트웨이 서버로 프로토버퍼 메시지를 전송할 수 있습니다.
 
@@ -299,7 +315,8 @@ if (result.resultCode === ResultCode.Success) {
 }
 ```
 
-### 예외 핸들링
+<a id="except-handling"></a>
+### 예외 핸들링 { #except-handling }
 
 서버 접속 중에 예외가 발생할 경우 수행할 동작을 지정할 수 있습니다.
 
@@ -311,7 +328,8 @@ connector.onException = (exception: Error) => {
 
 등록된 함수의 첫 번째 인자로는 에러 객체를 전달합니다.
 
-### 연결 종료
+<a id="end-connection"></a>
+### 연결 종료 { #end-connection }
 
 서버와 명시적으로 연결을 종료하도록 요청할 수 있습니다.
 

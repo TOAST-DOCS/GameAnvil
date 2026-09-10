@@ -1,16 +1,22 @@
-## Game > GameAnvil > サーバー開発ガイド > SSLサポート
+<!-- pre-align:aligned sig=5d1a4121264a -->
+
+<a id="game-gameanvil-server-development-guide-ssl-support"></a>
+## Game > GameAnvil > サーバー開発ガイド > SSLサポート { #game-gameanvil-server-development-guide-ssl-support }
 
 
 
-## SSLサポート
+<a id="ssl-support"></a>
+## SSLサポート { #ssl-support }
 
 ゲートウェイノードとサポートノードは、パブリックネットワークに公開されるノードです。そのため、この2つのノードはSSL(secure socket layer)をサポートします。
 
-## SSL設定
+<a id="set-up-ssl"></a>
+## SSL設定 { #set-up-ssl }
 
 SSLは基本的にGameAnvilConfigを通じてセキュリティ設定を行います。認証キーのルートパスはVMオプションで変更できます。
 
-### GatewayNode
+<a id="gatewaynode"></a>
+### GatewayNode { #gatewaynode }
 
 次のように 'secure' 設定を通じてSSL使用を有効化できます。もしSSLを使用しない場合は、該当するキー-値ペアを全て削除します。
 
@@ -49,7 +55,8 @@ SSLは基本的にGameAnvilConfigを通じてセキュリティ設定を行い�
 
 
 
-### SupportNode
+<a id="supportnode"></a>
+### SupportNode { #supportnode }
 
 サポートノードもゲートウェイノードと同様に "restSecure" 設定を通じてSSL使用を有効化できます。もしSSLを使用しない場合は、該当するキー-値ペアを全て削除します。
 
@@ -77,11 +84,13 @@ SSLは基本的にGameAnvilConfigを通じてセキュリティ設定を行い�
 
 
 
-### VM Option
+<a id="vm-option"></a>
+### VM Option { #vm-option }
 
 認証キーのルートパスを設定できるように、次のようなVMオプションを提供します。
 
-### -Dsecure
+<a id="dsecure"></a>
+### -Dsecure { #dsecure }
 
 認証キーのルートパスのデフォルト値は、プロジェクト内のresourcesディレクトリです。もしプロジェクト外部、つまりjarバイナリの外にある認証情報を参照したい場合は、このVMオプションを使用します。
 

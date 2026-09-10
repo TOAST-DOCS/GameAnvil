@@ -1,10 +1,17 @@
-## Game > GameAnvil > Unity 応用開発ガイド > バックグラウンド接続切れ防止
+<!-- machine_translated: true -->
 
-## バックグラウンド接続切れ防止
+<!-- pre-align:aligned sig=a0b0bd0e481a -->
+
+<a id="game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection"></a>
+## Game > GameAnvil > Unity 応用開発ガイド > バックグラウンド接続切れ防止 { #game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection }
+
+<a id="prevent-background-connection-drop"></a>
+## バックグラウンド接続切れ防止 { #prevent-background-connection-drop }
 
 サーバーとクライアントの接続状態を確認するため、サーバーは定期的にクライアントの状態をチェックするメッセージを送り、クライアントはこれに応答するメッセージを送ります。しかしモバイルデバイスでゲームがバックグラウンドに切り替わるとUnityアプリケーションが停止し、アプリケーションが停止するとゲームサーバーとパケットをやり取りできなくなります。この状態では接続状態を確認するためのメッセージもやり取りできなくなるため、結局サーバーとの接続が切れることになります。
 
-### 接続確認機能の一時停止及び再開
+<a id="pause-and-resume-connection-confirmation-feature"></a>
+### 接続確認機能の一時停止及び再開 { #pause-and-resume-connection-confirmation-feature }
 
 接続状態を確認できずにサーバーとの接続が切れるのを防ぐためには、バックグラウンドに切り替わる前にサーバーへ接続確認のための機能の一時停止をリクエストする必要があります。
 アプリケーションがバックグラウンドやフォアグラウンドに切り替わる時、UnityのMonoBehaviourにあるOnApplicationPause()コールバックが呼び出されます。バックグラウンドに切り替わる時にPauseClientStateCheck()を呼び出して接続確認機能を一時停止し、フォアグラウンドに切り替わる時はResumeClientStateCheck()を呼び出して接続確認機能を再開します。 

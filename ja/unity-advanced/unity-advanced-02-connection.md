@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 応用開発ガイド > コネクタ
+<!-- pre-align:aligned sig=7eecd13a676d -->
 
-## コネクタ
+<a id="game-gameanvil-unity-advanced-development-guide-connector"></a>
+## Game > GameAnvil > Unity 応用開発ガイド > コネクタ { #game-gameanvil-unity-advanced-development-guide-connector }
+
+<a id="connectionagent"></a>
+## コネクタ { #connectionagent }
 
 GameAnvilConnectorは、GameAnvilサーバーとの接続を管理する作業を担当します。接続(Connect())、認証(Authentication())など、基本的なセッション管理機能及びチャンネルリストなどを提供します。
 
-### サーバー接続
+<a id="connect-to-the-server"></a>
+### サーバー接続 { #connect-to-the-server }
 
 Connect()を呼び出してサーバーに接続します。
 
@@ -33,7 +38,8 @@ Connect()は次のような2つのパラメータを持っています。
 
 別途の戻り値はなく、成功した場合は次のコードを実行し、失敗した場合は例外が発生します。
 
-### 認証
+<a id="authentication"></a>
+### 認証 { #authentication }
 
 サーバーに接続した後、Authentication()を呼び出して認証手続きを進めます。
 Authentication()メソッドを呼び出すと、サーバーではConnectionオブジェクトのonAuthenticate()コールバックが呼び出され、このコールバックの処理結果で認証の成功、失敗が決定されます。
@@ -93,7 +99,8 @@ AuthenticationResultの詳細は次のとおりです。
 | String                       | Message           | 認証メッセージ                        |
 | Payload                      | payload           | クライアントで必要な追加情報                |
 
-### 接続と認証
+<a id="connection-and-authentication"></a>
+### 接続と認証 { #connection-and-authentication }
 
 接続または認証時に必要な値をGameAnvilConnectorの属性として保存して使用することもできます。
 
@@ -147,7 +154,8 @@ public async void ConnectAndAuthentication2()
 }
 ```
 
-### セキュア接続
+<a id="secure-connection"></a>
+### セキュア接続 { #secure-connection }
 GameAnvilサーバーにセキュリティ設定を行った場合は、ConnectSecure()を呼び出してセキュア接続を行う必要があります。 
 ```c#
 public async void ConnectSecure()
@@ -172,7 +180,8 @@ ConnectSecure()は次のような2つのパラメータを持っています。
 
 別途の戻り値はなく、成功した場合は次のコードを実行し、失敗した場合は例外が発生します。
 
-### チャンネル情報
+<a id="channel-information"></a>
+### チャンネル情報 { #channel-information }
 
 GameAnvilは設定で自由にチャンネルを構成できます。このようなチャンネル構成は、サーバーとクライアント間であらかじめ約束して固定された形態で使用することもできますが、状況に応じて多様に変更して使用することもできます。GameAnvilConnectorでは、このように変更されたチャンネル情報を取得できるようにいくつかのメソッドを提供します。 
 
@@ -184,6 +193,7 @@ GameAnvilは設定で自由にチャンネルを構成できます。このよ�
 | GetAllChannelCountInfo() | 特定サービスの全てのチャンネルに対するカウント情報(ユーザーとルーム数)リクエスト |
 | GetAllChannelInfo()      | 特定サービスの全てのチャンネルに対する情報(ユーザー定義)リクエスト        |
 
+<a id="channel-information-getchannellist"></a>
 #### GetChannelList
 
 GetChannelList()は、特定サービスのチャンネルIDリストをリクエストして受け取ることができます。
@@ -228,6 +238,7 @@ ResultCodeChannelListの詳細は次のとおりです。
 | CHANNEL_LIST_SUCCESS              | 0    | 成功                                       |
 | CHANNEL_LIST_FAIL_NO_CHANNEL_LIST | 1801 | 失敗。チャンネルリストが見つかりません                          |                                |                          
 
+<a id="channel-information-getchannelcountinfo"></a>
 #### GetChannelCountInfo
 
 GetChannelCountInfo()は、特定チャンネルのカウント情報(ユーザーとルーム数)をリクエストして受け取ることができます。
@@ -285,6 +296,7 @@ ChannelCountResultの詳細は次のとおりです。
 
 <br>
 
+<a id="channel-information-getchannelinfo"></a>
 #### GetChannelInfo
 
 GetChannelInfo()は特定チャンネルの情報(ユーザー定義)をリクエストして受け取ることができます。
@@ -332,6 +344,7 @@ ResultCodeChannelInfoの詳細は次のとおりです。
 | CHANNEL_INFO_FAIL_INVALID_CHANNEL_ID | 1923 | 失敗。無効なチャンネルID                            |
 | CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924 | 失敗。チャンネルが見つかりません                            |
 
+<a id="channel-information-getallchannelcountinfo"></a>
 #### GetAllChannelCountInfo
 
 GetAllChannelCountInfo()は、特定サービスの全てのチャンネルに対するカウント情報(ユーザーとルーム数)をリクエストして受け取ることができます。
@@ -378,6 +391,7 @@ ResultCodeAllChannelCountInfoの詳細は次のとおりです。
 | ALL_CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1932 | 失敗。無効なサービスID                           |
 | ALL_CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1933 | 失敗。チャンネルが見つかりません                            |
 
+<a id="channel-information-getallchannelinfo"></a>
 #### GetAllChannelInfo
 
 GetAllChannelInfo()は、特定サービスの全てのチャンネルに対する情報(ユーザー定義)をリクエストして受け取ることができます。
@@ -425,7 +439,8 @@ ResultCodeAllChannelInfoの詳細は次のとおりです。
 
 ChannelInfoResultのchannelInfoフィールドは、チャンネルIDをキーに、ユーザー定義チャンネル情報を含むPayloadを値として持つDictionary<string, Payload>です。これを利用してチャンネルごとのユーザー定義情報を取得できます。
 
-### 接続終了
+<a id="terminate-the-connection"></a>
+### 接続終了 { #terminate-the-connection }
 
 Disconnect()メソッドを利用してサーバーとの接続を終了します。
 
@@ -445,6 +460,7 @@ public async void Disconnect()
 
 別途の戻り値はなく、成功した場合は次のコードを実行し、失敗した場合は例外が発生します。
 
+<a id="terminate-the-connection-end-connection-notification"></a>
 #### 接続終了通知
 Disconnect()を呼び出さなくても、サーバーから強制的に接続を終了したり、ネットワークに問題が発生すると接続が切れることがあり、これに対する通知を受け取ることができます。 
 ```c#

@@ -1,10 +1,15 @@
-## Game > GameAnvil > Basic Development Guide to Unity > Get Started
+<!-- pre-align:aligned sig=a7e4b2f6746d -->
 
-## GameAnvilConnector
+<a id="game-gameanvil-basic-development-guide-to-unity-get-started"></a>
+## Game > GameAnvil > Basic Development Guide to Unity > Get Started { #game-gameanvil-basic-development-guide-to-unity-get-started }
+
+<a id="gameanvilconnector"></a>
+## GameAnvilConnector { #gameanvilconnector }
 
 GameAnvilConnector makes it easy to use the various features provided by GameAnvil.
 
-## Install GameAnvilConnector
+<a id="install-gameanvilconnector"></a>
+## Install GameAnvilConnector { #install-gameanvilconnector }
 
 You can include GameAnvilConnector in your project using gameanvil-connector.unitypackage. First download the gameanvil-connector.unitypackage [here](https://static.toastoven.net/prod_gameanvil/files/v2_1/gameanvil-connector.unitypackage). And in the menu, select \*\*Assets > Import Package > Custom Package...\*\*.
 

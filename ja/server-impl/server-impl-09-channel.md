@@ -1,6 +1,10 @@
-## Game > GameAnvil > サーバー開発ガイド > チャネル
+<!-- pre-align:aligned sig=2d6ba0bf38a3 -->
 
-## チャネル(Channel)
+<a id="game-gameanvil-server-development-guide-channel"></a>
+## Game > GameAnvil > サーバー開発ガイド > チャネル { #game-gameanvil-server-development-guide-channel }
+
+<a id="channel"></a>
+## チャネル(Channel) { #channel }
 
 ![channel-sync2.png](https://static.toastoven.net/prod_gameanvil/images/channel-sync2.png)
 
@@ -82,11 +86,13 @@
 * チャネルごとのユーザー数とルーム数を照会できます。
 * チャネル単位でメッセージを送信できます。publishToChannel APIを使用すると、対象のチャネルに属する全てのゲームノードにメッセージを伝達します。
 
-## チャネル情報管理
+<a id="manage-channel-information"></a>
+## チャネル情報管理 { #manage-channel-information }
 
 ユーザーは、チャネルで管理する情報を直接実装できます。これらの情報は、同じチャネル内で自動的に同期されます。
 
-### チャネルユーザー情報
+<a id="channel-user-information"></a>
+### チャネルユーザー情報 { #channel-user-information }
 
 まず、チャネルでユーザー情報を管理するには、以下のようにユーザークラスを実装する際に、useChannelInfo設定を通じてチャネルユーザー情報管理を有効化する必要があります。
 ```java
@@ -199,7 +205,8 @@ public class SampleGameUser implements IUser {
 
 参考までに、チャネルを移動する際には、移動元のチャネルから自動的に該当のチャネルユーザー情報が削除されるため、ユーザーは移動先のチャネルで新しく追加する情報のみを考慮すれば済みます。
 
-### チャネルルーム情報
+<a id="channel-room-information"></a>
+### チャネルルーム情報 { #channel-room-information }
 
 チャネルでルーム情報を管理するには、前述のゲームユーザーと同様に、ルームクラスを実装する際にuseChannelInfoをtrueに設定します。
 ```java
@@ -292,7 +299,8 @@ public class SampleGameRoom implements IRoom<SampleGameUser> {
 }
 ```
 
-## チャネル情報の同期
+<a id="synchronize-channel-information"></a>
+## チャネル情報の同期 { #synchronize-channel-information }
 
 同じチャネルのゲームノードは、互いにチャネル関連の情報を共有します。例えば、同じチャネルに属する1つのゲームノードで、前述の方法でユーザーやルーム情報が変更されると、そのチャネルの他のゲームノードでは以下のコールバックメソッドが呼び出されます。これらのコールバックを利用して、同じチャネル内の全てのゲームノードが情報を同期できます。以下は、ゲームノードでこのようなチャネル同期のために使用されるコールバックメソッドです。
 
@@ -334,7 +342,8 @@ public void onChannelInfo(IPayload payload) {
 }
 ```
 
-### クライアントへのチャネル情報同期
+<a id="synchronize-channel-information-with-client"></a>
+### クライアントへのチャネル情報同期 { #synchronize-channel-information-with-client }
 
 クライアントはサーバーにいつでもチャネル情報をリクエストできます。このとき、前述のゲームノードのコールバックメソッドのうち、onChannelInfoが呼び出されます。ただし、クライアントの不適切な実装や悪意のある使用を防ぐため、このコールバックメソッドの呼び出しには最小限の再呼び出し周期(デフォルト1秒)が設定されています。例えば、クライアントが1秒間に10回チャネル情報をリクエストしても、サーバーは1回だけonChannelInfoコールバックメソッドを呼び出します。残りの9回のリクエストには、以前にキャッシュした情報を伝達します。以下は、このようなonChannelInfoを実装した疑似コードです。
 
@@ -369,6 +378,7 @@ public void onChannelInfo(Payload outPayload) {
 }
 ```
 
-### クライアントへのチャネルに属するユーザー数とルーム数の伝達
+<a id="pass-the-number-of-users-and-rooms-in-the-channel-to-the-client"></a>
+### クライアントへのチャネルに属するユーザー数とルーム数の伝達 { #pass-the-number-of-users-and-rooms-in-the-channel-to-the-client }
 
 GameAnvilコネクタは、このような情報をリクエストするためにGetChannelCountInfo APIを提供します。エンジンが常にチャネル単位のユーザー数/ルーム数を管理しているため、ユーザーが別途実装する必要はありません。

@@ -1,6 +1,10 @@
-## Game > GameAnvil > サーバー開発ガイド > 非同期サポート
+<!-- pre-align:aligned sig=7327694298f5 -->
 
-## 非同期サポート
+<a id="game-gameanvil-server-development-guide-asynchronous-support"></a>
+## Game > GameAnvil > サーバー開発ガイド > 非同期サポート { #game-gameanvil-server-development-guide-asynchronous-support }
+
+<a id="asynchronous-support"></a>
+## 非同期サポート { #asynchronous-support }
 
 GameAnvilは次のような目的のために非同期処理をサポートします。
 
@@ -31,7 +35,8 @@ Response httpResponse = httpFuture.get();  // Java 21ではVirtual Threadのみ�
 > Virtual Thread: Java 21で追加された新しいThreadです。以前のバージョンのGameAnvilのFiberと類似した動作をします。詳細な動作は[こちら](https://openjdk.org/jeps/444)を参照してください。
 
 
-## RDBMSサポート
+<a id="rdbms-support"></a>
+## RDBMSサポート { #rdbms-support }
 
 既存のJavaにおいて多くのRDBMSドライバーは `java.sql.DriverManager` を使用しているため、クエリはブロッキングです。しかしJava 21ではVirtual Thread上で実行する際、このようなブロッキングクエリをVirtual Threadのみ停止する形に変えて実行し、非同期を活用した向上のメリットを享受できます。GameAnvilもVirtual Thread上で実行し、非同期クエリによる性能向上が可能です。このようなドライバーには代表的に[MySQL Connector/J](https://github.com/mysql/mysql-connector-j)があります。
 
@@ -42,7 +47,8 @@ Response httpResponse = httpFuture.get();  // Java 21ではVirtual Threadのみ�
 > 全てのライブラリがVirtual Threadをサポートしているわけではありません。以前のバージョンに合わせて制作されたライブラリをGameAnvilで実行すると、正常に動作しない場合があります。例えば[MySQL Connector/J](https://github.com/mysql/mysql-connector-j)は、9.xバージョンからVirtual Threadをサポートします。8.xバージョンを使用すると、正常に動作しない場合があります。
 
 
-## Redisサポート
+<a id="redis-support"></a>
+## Redisサポート { #redis-support }
 多く使用されているライブラリには[Jedis](https://github.com/redis/jedis)がありますが、エンジンチーム内部での確認結果、[Jedis](https://github.com/redis/jedis)はVirtual Thread使用時にスレッドがロックされる問題が発生する可能性があります。GameAnvilではカスタムVirtual Threadを使用しており、このような問題が発生すると予期しない動作をし、デバッグが難しく、検知するのが非常に困難です。もしJedisの使用を検討しているなら、[Lettuce](https://github.com/redis/lettuce)の使用を推奨します。すでにJedisを使用していて移行が難しい場合は、次のように別のスレッドプールでjedisを実行するコードを使用して、スレッドがロックされる問題を回避できます。
 
 ```java
@@ -55,7 +61,8 @@ GameAnvilではRedis使用のために[Lettuce](https://github.com/redis/lettuce
 
 
 
-## Pinning問題
+<a id="pinning-issues"></a>
+## Pinning問題 { #pinning-issues }
 * Virtual Threadのsynchronizedブロック内でVirtual Threadを一時停止するコードを使用すると、Virtual Threadがロックされる問題が発生する可能性があります。簡単な再現方法は次のとおりです。
 
 ```java

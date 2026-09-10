@@ -1,6 +1,10 @@
-## Game > GameAnvil > Error Codes
+<!-- pre-align:aligned sig=02e49a151ed8 -->
 
-## Client
+<a id="game-gameanvil-error-codes"></a>
+## Game > GameAnvil > Error Codes { #game-gameanvil-error-codes }
+
+<a id="client"></a>
+## Client { #client }
 
 | ResultCode | Name | Value | Description |
 | ---- | ---- | ---- | ---- |
@@ -136,7 +140,8 @@
 | | SOCKET_TIME_OUT | 2101 | A timeout occurred, and the connector closed the connection. |
 | | SOCKET_ERROR | 2102 | A socket error occurred, and the connection was closed. |
 
-## Server
+<a id="server"></a>
+## Server { #server }
 
 | Category   | Name                                             | Value | Description |
 |------------|--------------------------------------------------|------:| ----------- |

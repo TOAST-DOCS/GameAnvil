@@ -1,9 +1,14 @@
-## Game > GameAnvil > 서버 개발 가이드 > 콜백 흐름
+<!-- pre-align:aligned sig=d8216d0d9c16 -->
 
-## 콜백 흐름
+<a id="game-gameanvil"></a>
+## Game > GameAnvil > 서버 개발 가이드 > 콜백 흐름 { #game-gameanvil }
+
+<a id="section-1"></a>
+## 콜백 흐름 { #section-1 }
 GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입니다.
 
-## 인증
+<a id="section-2"></a>
+## 인증 { #section-2 }
 ![callback-flow-1.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-1.png)
 
 클라이언트가 인증 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -13,7 +18,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | Client      | Authentication | 1  | 클라이언트에서 요청 |
 | IConnection | onAuthenticate | 2  |            |
 
-## 로그인
+<a id="section-3"></a>
+## 로그인 { #section-3 }
 ![callback-flow-2.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-2.png)
 
 클라이언트 로그인 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -31,7 +37,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | IUser    | onAfterLogin             | 4   |                      |
 | ISession | onAfterLogin             | 5   |                      |
 
-## 로그아웃
+<a id="section-4"></a>
+## 로그아웃 { #section-4 }
 ![callback-flow-3.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-3.png)
 
 클라이언트 로그아웃 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -46,7 +53,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | IUser      | onLogout         | 3   |                                               |
 | ISession   | onAfterLogout    | 4   |                                               |
 
-## 방 생성
+<a id="section-5"></a>
+## 방 생성 { #section-5 }
 ![callback-flow-4.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-4.png)
 
 클라이언트 방 생성 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -56,7 +64,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | Client  | CreateRoom or NamedRoom | 1   | 클라이언트에서 요청 |
 | IRoom   | onCreateRoom            | 2   |            |
 
-## 방 입장
+<a id="section-6"></a>
+## 방 입장 { #section-6 }
 ![callback-flow-5.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-5.png)
 
 클라이언트 방 입장 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -66,7 +75,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | Client  | JoinRoom or NamedRoom | 1   | 클라이언트에서 요청 |
 | IRoom   | onJoinRoom            | 2   |            |
 
-## 방 나가기
+<a id="section-7"></a>
+## 방 나가기 { #section-7 }
 ![callback-flow-6.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-6.png)
 
 클라이언트 방 나가기 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -80,7 +90,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | IUser   | onAfterLeaveRoom    | 5  | 4,5 번의 동작은 user와 room에서 처리되어서 순서 보작이 되지않음 |
 | IRoom   | onDestroy           | 6  |                                           |
 
-## 룸 매치
+<a id="section-8"></a>
+## 룸 매치 { #section-8 }
 ![callback-flow-7.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-7.png)
 
 클라이언트 룸 매치 요청 시 처리되는 콜백 메서드 순서입니다. 매치전에 방에서 나가는 처리를 먼저 처리
@@ -98,7 +109,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | IRoom                  | onJoinRoom       | 8  |                                           |
 | IUser                  | onMatchRoomFail  | 9  |                                           |
 
-## 유저 매치
+<a id="section-9"></a>
+## 유저 매치 { #section-9 }
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-8.png)
 
 클라이언트 유저 매치 시작 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -114,7 +126,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | - IUser                  | onMatchUserCancel | 4-1 | 방입장 취소     |
 | IUser                    | onMatchUserFail   | 5   | 매치 실패      |
 
-## 유저 매치 취소
+<a id="section-10"></a>
+## 유저 매치 취소 { #section-10 }
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-9.png)
 
 클라이언트 유저 매치 취소 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -124,7 +137,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | Client                   | MatchUserCancel    | 1   | 클라이언트에서 요청 |
 | IUser                    | onMatchUserCancel  | 2   |            |
 
-## 파티 매치
+<a id="section-11"></a>
+## 파티 매치 { #section-11 }
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-10.png)
 
 클라이언트 유저 매치 시작 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -142,7 +156,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | IRoom                    | onJoinRoom        | 7   |            |
 | IUser                    | onMatchUserFail   | 8   | 매치 실패      |
 
-## 파티 매치 취소
+<a id="section-12"></a>
+## 파티 매치 취소 { #section-12 }
 ![callback-flow-8.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-11.png)
 
 클라이언트 파티 매치 취소 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -152,7 +167,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | Client                   | MatchPartyCancel    | 1   | 클라이언트에서 요청 |
 | IRoom                    | onMatchPartyCancel  | 2   |            |
 
-## 유저 트랜스퍼
+<a id="section-13"></a>
+## 유저 트랜스퍼 { #section-13 }
 ![callback-flow-9.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-12.png)
 
 유저 트랜스퍼 시작 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -166,7 +182,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | - IUser | onPause             | 5  |                  |
 | - IUser | onResume            | 6  |                  |
 
-## 룸 트랜스퍼
+<a id="section-14"></a>
+## 룸 트랜스퍼 { #section-14 }
 ![callback-flow-10.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-13.png)
 
 룸 트랜스퍼 시작 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -182,7 +199,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | - IRoom | onPause           | 6   |                   |
 | - IRoom | onResume          | 7   |                   |
 
-## 채널 이동
+<a id="section-15"></a>
+## 채널 이동 { #section-15 }
 ![callback-flow-11.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-14.png)
 
 클라이언트 채널 이동 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -199,7 +217,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | - IUser  | onResume             | 8  |            |
 | IUser    | onMoveInChannel      | 9  |            |
 
-## 채널 정보 확인
+<a id="section-16"></a>
+## 채널 정보 확인 { #section-16 }
 ![callback-flow-12.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-15.png)
 
 클라이언트 채널 정보 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -209,7 +228,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | Client      | GetChannelInfo   | 1  | 클라이언트에서 요청 |
 | - IGameNode | onChannelInfo    | 2  |            |
 
-## 채널 사용자 정보 갱신
+<a id="section-17"></a>
+## 채널 사용자 정보 갱신 { #section-17 }
 ![callback-flow-13.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-16.png)
 
 클라이언트 채널 정보 갱신 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -219,7 +239,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | IUser       | updateChannelUserInfo    | 1  |    |
 | - IGameNode | onChannelRoomInfoUpdate  | 2  |    |
 
-## 채널 방 정보 갱신
+<a id="section-18"></a>
+## 채널 방 정보 갱신 { #section-18 }
 ![callback-flow-14.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-17.png)
 
 클라이언트 채널 방 정보 갱신 요청 시 처리되는 콜백 메서드 순서입니다.
@@ -229,7 +250,8 @@ GameAnvil에서 동작에 따라 내부적으로 처리되는 콜백 순서입�
 | IRoom       | updateChannelRoomInfo    | 1  |    |
 | - IGameNode | onChannelUserInfoUpdate  | 2  |    |
 
-## 게임데이터 갱신
+<a id="section-19"></a>
+## 게임데이터 갱신 { #section-19 }
 ![callback-flow-15.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-impl/05-1-callback-flow/callback-flow-18.png)
 
 매니지먼트 노드를 통해서 게임 데이터 갱신 요청 시 처리되는 콜백 메서드 순서입니다.

@@ -1,6 +1,10 @@
-## Game > GameAnvil > Unity Basic Development Guide > Preventing Background Disconnection
+<!-- pre-align:aligned sig=d1684502910b -->
 
-## Prevent Background Disconnections
+<a id="game-gameanvil-unity-basic-development-guide-preventing-background-disconnection"></a>
+## Game > GameAnvil > Unity Basic Development Guide > Preventing Background Disconnection { #game-gameanvil-unity-basic-development-guide-preventing-background-disconnection }
+
+<a id="prevent-background-disconnections"></a>
+## Prevent Background Disconnections { #prevent-background-disconnections }
 
 When the game switches to the background on a mobile device, our application freezes. When the application freezes, the process of calling Update() on the GameAnvilConnector doesn't happen, which means it can't send packets to and from the game server. After a while, it won't even be able to send or receive packets to check for connectivity and will eventually disconnect from the server.
 
@@ -10,7 +14,8 @@ The server's connection check pause time can be adjusted via the GameAnvilConnec
 
 For more information, see the [Unity Advanced Development Guide > Preventing Background Disconnection](../unity-advanced/unity-advanced-06-pause).
 
-### Reconnect
+<a id="reconnect"></a>
+### Reconnect { #reconnect }
 
 After the time entered in PauseClientStateCheck() has elapsed, the server will resume checking for connections and you may be disconnected. If this happens, you'll need to reconnect.
 

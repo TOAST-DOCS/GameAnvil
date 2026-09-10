@@ -1,14 +1,22 @@
-## Game > GameAnvil > Release Notes > Console
+<!-- pre-align:aligned sig=9a3c9a5812cb -->
 
-## 2025. 06. 30.
-### Change
+<a id="game-gameanvil-release-notes-console"></a>
+## Game > GameAnvil > Release Notes > Console { #game-gameanvil-release-notes-console }
+
+<a id="2025-06-30"></a>
+## 2025. 06. 30. { #2025-06-30 }
+<a id="change"></a>
+### Change { #change }
 * Support GameAnvil 2.1 or later
 
-### Fix
+<a id="fix"></a>
+### Fix { #fix }
 * Improved stability
 
-## 2024. 12. 10.
-### Change
+<a id="2024-12-10"></a>
+## 2024. 12. 10. { #2024-12-10 }
+<a id="2024-12-10-change"></a>
+### Change { #2024-12-10-change }
 * GameAnvil 1.x support discontinued
 * GameAnvil 2.0 support
 * Updated SafePause screen
@@ -40,18 +48,24 @@
 }
 ```
 
-### Fix
+<a id="2024-12-10-fix"></a>
+### Fix { #2024-12-10-fix }
 * Improved stability
 
-## April 9, 2024
-### Change
+<a id="april-9-2024"></a>
+## April 9, 2024 { #april-9-2024 }
+<a id="april-9-2024-change"></a>
+### Change { #april-9-2024-change }
 * Improved SafePause
 
-## January 9, 2024
-### Fix
+<a id="january-9-2024"></a>
+## January 9, 2024 { #january-9-2024 }
+<a id="january-9-2024-fix"></a>
+### Fix { #january-9-2024-fix }
 * Improved stability
 
-### Change
+<a id="january-9-2024-change"></a>
+### Change { #january-9-2024-change }
 * Server screen reorganized
   * Separated general server from autoscale group menu
   * Added detailed search and control of created servers and autoscale groups
@@ -72,37 +86,49 @@
     * GameAnvil Config can be created by writing it in JSON format in advance
 
 
-## September 26, 2023
-### New
+<a id="september-26-2023"></a>
+## September 26, 2023 { #september-26-2023 }
+<a id="new"></a>
+### New { #new }
 * Added a software license agreement screen
 
-### Change
+<a id="september-26-2023-change"></a>
+### Change { #september-26-2023-change }
 * Added a progress display when activating a GameAnvil project
 
 
-## August 29, 2023
-### Change
+<a id="august-29-2023"></a>
+## August 29, 2023 { #august-29-2023 }
+<a id="august-29-2023-change"></a>
+### Change { #august-29-2023-change }
 * Improved usability to allow additional servers to be created and controlled during server creation and control
 
-### Fix
+<a id="august-29-2023-fix"></a>
+### Fix { #august-29-2023-fix }
 * Improved stability
 
 
-## July 25, 2023
-### Fix
+<a id="july-25-2023"></a>
+## July 25, 2023 { #july-25-2023 }
+<a id="july-25-2023-fix"></a>
+### Fix { #july-25-2023-fix }
 * Fixed an issue where deployment files in Auto-Scale groups are not modified
 * Modified to go to the NHN Cloud login page when login expires
 * Improved stability
 
 
-## July 11, 2023
-### Fix
+<a id="july-11-2023"></a>
+## July 11, 2023 { #july-11-2023 }
+<a id="july-11-2023-fix"></a>
+### Fix { #july-11-2023-fix }
 * Modified to allow bulk changes to files deployed on multiple servers
 * Improved stability
 
 
-## June 27, 2023
-### Changes
+<a id="june-27-2023"></a>
+## June 27, 2023 { #june-27-2023 }
+<a id="changes"></a>
+### Changes { #changes }
 * Improved the monitoring dashboard screen
     * Added a graph of how many CPU cores are currently in use
     * Added per-server, per-node health monitoring
@@ -110,27 +136,34 @@
     * Added the auto scale group health monitoring
     * Added user distribution history and graphs
 
-### Fix
+<a id="june-27-2023-fix"></a>
+### Fix { #june-27-2023-fix }
 * Improved stability
 
 
-## May 30, 2023
-### New
+<a id="may-30-2023"></a>
+## May 30, 2023 { #may-30-2023 }
+<a id="may-30-2023-new"></a>
+### New { #may-30-2023-new }
 * Integration with CloudTrail to track user actions
 
-### Change
+<a id="may-30-2023-change"></a>
+### Change { #may-30-2023-change }
 * Modified to expose nodes in the Auto-Scale group to the node monitoring page
 * Modified to ensure additional servers that incompatible with those already running do not start by checking the major version of the deployment file
 
-### Fix
+<a id="may-30-2023-fix"></a>
+### Fix { #may-30-2023-fix }
 * Fixed an issue where the gateway in an Auto-Scale group is not connected
 * Improved stability
 
 
-### December 27, 2022
+<a id="december-27-2022"></a>
+### December 27, 2022 { #december-27-2022 }
 
 Starting with GameAnvil 1.3.0, it is integrated with the all-new console. The new console is not just a simple update to the previous version. Almost everything has been reimplemented to integrate GameAnvil servers with NHN Cloud infrastructure and provide a new UX that makes running your game service easier and more comfortable. For this reason, the console is skipping 1.1 and 1.2 and going straight to 1.3 to keep up with GameAnvil.
 
+<a id="december-27-2022-new"></a>
 #### New
 
 * You can create and manage your own ````infrastructure````.
@@ -151,70 +184,86 @@ Starting with GameAnvil 1.3.0, it is integrated with the all-new console. The ne
   * Drag & Drop UI for easy and comfortable node configuration
 
 
+<a id="december-27-2022-fix"></a>
 #### Fix
 
 * None
 
+<a id="december-27-2022-change"></a>
 #### Change
 
 * None
 
 ---
 
-### July 13, 2021
+<a id="july-13-2021"></a>
+### July 13, 2021 { #july-13-2021 }
 
+<a id="july-13-2021-change"></a>
 #### Change
 
 * Updated the guide documentation for each input value in the instance settings
 * Modified to terminate instances normally via the management node instead of forcing a kill when stopped
 * Changed default port when setting up an instance (new instances only)
 
+<a id="july-13-2021-fix"></a>
 #### Fix
 
 * Fixed an intermittent error when the order of authentication filters was not explicit.
 
 ---
 
-### June 15, 2021
+<a id="june-15-2021"></a>
+### June 15, 2021 { #june-15-2021 }
 
+<a id="june-15-2021-new"></a>
 #### New
 
 * Applied Japanese translation
 
+<a id="june-15-2021-change"></a>
 #### Change
 
 * Modified how often monitoring runs and how many errors are tolerated to reduce false positives in monitoring
 
 ---
 
-### May 25, 2021
+<a id="may-25-2021"></a>
+### May 25, 2021 { #may-25-2021 }
 
+<a id="may-25-2021-new"></a>
 #### New
 
 * Created a separate page for management as services could only be created but not edited or deleted
 
+<a id="may-25-2021-change"></a>
 #### Change
 
 * Changed the instance settings so that they are now stored and managed as an instance rather than as a node
 * Changed VM Option input message to allow up to 10,240 bytes
 
+<a id="may-25-2021-fix"></a>
 #### Fix
 
 * Fixed an issue in which the user guide of each node would not move to the proper guide page when creating instance settings
 
 ---
 
-### April 27, 2021
+<a id="april-27-2021"></a>
+### April 27, 2021 { #april-27-2021 }
 
+<a id="april-27-2021-new"></a>
 #### New
 
 * Applied English translation
 
+<a id="april-27-2021-change"></a>
 #### Change
 
 * Changed VM Option input message to allow up to 512 bytes
 * Applied Toast UI Chart Vue version 4.2.1
 
+<a id="april-27-2021-fix"></a>
 #### Fix
 
 * Fixed an issue where the machine would be forcibly set to Java 11 if Retry button was clicked after the occurrence of a machine setting error
@@ -222,8 +271,10 @@ Starting with GameAnvil 1.3.0, it is integrated with the all-new console. The ne
 
 ---
 
-### March 23, 2021
+<a id="march-23-2021"></a>
+### March 23, 2021 { #march-23-2021 }
 
+<a id="march-23-2021-change"></a>
 #### Change
 
 * Changed the system so that it shows the machine registration page if the instance registration screen is accessed while there is no registered machine.
@@ -231,14 +282,17 @@ Starting with GameAnvil 1.3.0, it is integrated with the all-new console. The ne
 * Changed the system so that the monitoring dashboard concurrent user influx graph data would display the hour and minute of the data
 * Changed the text of the Check for Duplicates button to Check for Port Duplicates in the instance registration/edit screen
 
+<a id="march-23-2021-fix"></a>
 #### Fix
 
 * Changed the system so that a popup window would appear if Resume/Pause is clicked without selecting node monitoring
 
 ---
 
-### February 23, 2021
+<a id="february-23-2021"></a>
+### February 23, 2021 { #february-23-2021 }
 
+<a id="february-23-2021-new"></a>
 #### New
 
 ##### Released GameAnvil Console

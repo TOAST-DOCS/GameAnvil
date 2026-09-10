@@ -1,42 +1,46 @@
-## Game > GameAnvil > Unity Advanced Development Guide > Preventing Background Disconnection
+<!-- machine_translated: true -->
 
-As described in the [Unity Basic Development Guide > Prevent Background Disconnection](../unity-basic/unity-basic-07-pause), your game may lose connection to the server when it goes into the background on a mobile device. To prevent this, you can pause the ability to check for connections to the server.
+<!-- pre-align:aligned sig=a0b0bd0e481a -->
 
-Here's an example of code that implements this
+<a id="game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection"></a>
+## Game > GameAnvil > Unity Advanced Development Guide > Preventing Background Disconnection { #game-gameanvil-unity-advanced-development-guide-preventing-background-disconnection }
+
+<a id="prevent-background-connection-drop"></a>
+## Prevent Background Connection Drop { #prevent-background-connection-drop }
+
+To check the connection status between the server and client, the server periodically sends messages to check the client's state, and the client responds with its own messages. However, when a game goes into the background on a mobile device, the Unity application pauses, and a paused application can no longer exchange packets with the game server. In this state, the connection check messages cannot be exchanged either, which eventually causes the connection to the server to be dropped.
+
+<a id="pause-and-resume-connection-confirmation-feature"></a>
+### Pause and Resume Connection Confirmation Feature { #pause-and-resume-connection-confirmation-feature }
+
+To prevent the connection from being dropped due to a failed connection check, you must request the server to pause the connection check feature before the application transitions to the background.
+When the application transitions to the background or foreground, Unity's `OnApplicationPause()` callback in `MonoBehaviour` is invoked. Call `PauseClientStateCheck()` when transitioning to the background to pause the connection check feature, and call `ResumeClientStateCheck()` when transitioning to the foreground to resume it.
 
 ```c#
-public class ConnectHandler : MonoBehaviour
-{ 
+public class GameAnvilManager : MonoBehaviour
+{
     ...
+    
     private void OnApplicationPause(bool pause)
-    { ...
+    {
         if (pause)
-        { ...
-            // If there's any work to be done before the app pauses, it's handled here.
-
-            // Suspend the server's clientStateCheck function for the entered number of seconds.
-            // After this time, the clientStateCheck function may be triggered and the connection may be disconnected. 
-            connector.GetConnectionAgent().PauseClientStateCheck(600);
-
-            // Just before the app pauses, call connector.Update() to process the messages that have accumulated on the connector. 
-            // to process any messages that have accumulated in the connector and update the state. 
-            connector.Update();
-        } else
-        { 
-            // Call connector.Update() immediately after the app resumes to process the messages that have been accumulated in the 
-            // process the messages accumulated in the Connector and update the status. 
-            connector.Update();
-
-            // Reactivate the server's clientStateCheck function.
-            connector.GetConnectionAgent().ResumeClientStateCheck();
-
-            // Check the status of the connection as it may be disconnected if it is resumed after a long pause.
-            if (connector.IsConnected())
-            { 
-                // If there's any work to be done after the app resumes, we'll do it here.
-            }
+        {
+            connector.PauseClientStateCheck(pauseClientStateCheckTime);
+        }
+        else
+        {
+            connector.ResumeClientStateCheck();
         }
     }
+    
     ...
 }
 ```
+
+`PauseClientStateCheck()` has one parameter as follows:
+
+| Type | Name | Description |
+|---------|----------------|----------------------------------------------|
+| int | pauseTime | The duration to pause. <br/>Minimum: 10 seconds, Maximum: 15 minutes, Unit: milliseconds |
+
+If a value smaller than the minimum is entered, the minimum value is applied automatically. If a value larger than the maximum is entered, the connection check feature resumes automatically after the maximum duration has elapsed.

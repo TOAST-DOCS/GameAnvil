@@ -1,10 +1,15 @@
-## Game > GameAnvil > CocosCreator開発ガイド > メッセージハンドリング
+<!-- pre-align:aligned sig=1d277a52032c -->
 
-## メッセージ
+<a id="game-gameanvil-guide-to-cocoscreator-development-message-handling"></a>
+## Game > GameAnvil > CocosCreator開発ガイド > メッセージハンドリング { #game-gameanvil-guide-to-cocoscreator-development-message-handling }
+
+<a id="message"></a>
+## メッセージ { #message }
 
 GameAnvilConnector、GameAnvilUserの基本機能の他に、request()とsend()を利用してカスタムメッセージをサーバーに送信できます。メッセージを送信するには、メッセージを事前に登録する必要があり、メッセージオブジェクトを作成するプロセスが必要です。
 
-### メッセージ生成
+<a id="create-message"></a>
+### メッセージ生成 { #create-message }
 
 GameAnvilは、メッセージプロトコルとして[Google Protocol Buffers](https://developers.google.com/protocol-buffers/docs/proto3)を標準で提供しています。.protoファイルにメッセージを定義し、protocで実際のクラスのソースコードにトランスパイルします。このように生成されたソースコードをプロジェクトに追加して使用します。
 
@@ -99,7 +104,8 @@ npm run protoc
 
 すると、./protocolフォルダに.tsと.d.tsファイルが作成されたことを確認できます。
 
-### メッセージ登録
+<a id="register-message"></a>
+### メッセージ登録 { #register-message }
 
 新しく作成したメッセージを使用するには、使用したいメッセージをGameAnvilProtocolManagerに事前に登録する必要があります。Authenticateの前に登録しなかったり、サーバーとプロトコルが異なったりすると、誤動作する可能性があります。
 
@@ -115,7 +121,8 @@ GameAnvilProtocolManager.registerProtocol(Messages);
 GameAnvilProtocolManager.unregisterProtocol(Messages);
 ```
 
-### メッセージ送信
+<a id="send-message"></a>
+### メッセージ送信 { #send-message }
 
 コネクタやユーザーを通じて作成したメッセージを送信できます。以下は、コネクタを通じてメッセージを送信する例です。
 

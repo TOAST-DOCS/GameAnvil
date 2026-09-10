@@ -1,6 +1,10 @@
-## Game > GameAnvil > Server Development Guide > Configuring and Running a Server
+<!-- pre-align:aligned sig=a11eb9fd2b68 -->
 
-## Configuration
+<a id="game-gameanvil-server-development-guide-configuring-and-running-a-server"></a>
+## Game > GameAnvil > Server Development Guide > Configuring and Running a Server { #game-gameanvil-server-development-guide-configuring-and-running-a-server }
+
+<a id="configuration"></a>
+## Configuration { #configuration }
 
 GameAnvil can configure servers in two main ways. The most common method is to configure the server to run through the GUI via NHN Cloud's console. This is the method you will use for VM-based services or testing on the cloud. However, this method is cumbersome and inconvenient to use during development, so we provide the GameAnvilConfig.json file so that you can configure the server directly on your PC during development. The default path to this file is resources/ in your project. If you want to configure the server with multiple processes, each process will need its own GameAnvilConfig.json.
 
@@ -19,13 +23,15 @@ So, let's take a look at these.
 
 
 
-## Modify GameAnvilConfig.json
+<a id="modify-gameanvilconfigjson"></a>
+## Modify GameAnvilConfig.json { #modify-gameanvilconfigjson }
 
 GameAnvilConfig provides a very large number of settings to flexibly configure your server. However, the engine defaults are sufficient for most of them, so we will only describe the settings that you need to understand. They are divided into five main categories
 
 
 
-### Common settings (common)
+<a id="common-settings-common"></a>
+### Common settings (common) { #common-settings-common }
 
 Set common information that is required regardless of node configuration. 
 
@@ -49,7 +55,8 @@ Each configuration item is described below.
 
 
 
-### Location
+<a id="location"></a>
+### Location { #location }
 
 Location nodes are actually system nodes that are responsible for user and room location information for the entire server. They are managed by the engine and are intended for direct use, so you don't need to implement anything additional. However, it's up to you to decide how many of these system nodes you want to configure, so we provide a separate configuration method. During development, you can use the example below as is. On the other hand, the configuration for the actual service must be applied appropriately depending on the content or volume of the game, so it is recommended to have a separate discussion with GameAnvil representatives. Each configuration item is shown below.
 
@@ -74,15 +81,18 @@ Each configuration item is described below.
 | replicaSize | Size of replication group Number of masters + slaves                       | -      |
 | shardFactor | Arguments for sharding <br />-Count of all shards = clusterSize x replicaSize x shardFactor <br />-Number of shards to run on one machine (VM) = replicaSize x shardFactor <br />-Total number of unique shards (number of master shards) = clusterSize x shardFactor | -      |
 
-### Location Cluster
+<a id="location-cluster"></a>
+### Location Cluster { #location-cluster }
 
 You can make requests to the master location node to retrieve location information, such as users and rooms. However, you can only send requests after all location nodes have completed clustering. When you enable location nodes, the engine spins up the location nodes and checks to see if all location nodes have completed clustering. If full clustering is not complete within a certain amount of time, it leaves an error log.
 
-### Location Fail-over
+<a id="location-fail-over"></a>
+### Location Fail-over { #location-fail-over }
 
 If you set replicaSize to 2 or more, there will be a master location node and a slave location node. Location fail-over is implemented so that if the master location node dies, the slave location node takes over the role of the master. If you ` restart`the server where the master location node was located, add `-DrestartedAfterDown=true`to the VmOption to distinguish between them. In this case, all restarted location nodes will run as slaves.
 
-### Match
+<a id="match"></a>
+### Match { #match }
 
 Match nodes are the nodes that perform matchmaking, that is, they drive the matchmaker that you implement. You only need to decide how many of these match nodes you want to drive. For normal development or small services, one match node is sufficient.
 
@@ -107,7 +117,8 @@ Each configuration item is described below.
 
 
 
-### gateway
+<a id="gateway"></a>
+### gateway { #gateway }
 
 Gateway nodes are the nodes that clients connect to, so you need to have the right number of nodes for the number of clients you want to connect to.
 
@@ -143,7 +154,8 @@ Each configuration item is described below.
 
 
 
-### game
+<a id="game"></a>
+### game { #game }
 
 Game nodes are the nodes where actual game-related objects are created and content is played. You can configure the number of nodes, channels, and more to suit the nature of your game content.
 
@@ -246,7 +258,8 @@ Each configuration item is described below:
 | channelIDs | The channel IDs assigned to each node. These do not need to be unique. <br>However, "" indicates that no channels are used. | |
 | userTimeout | Sets the timeout time (ms) for removing a user object after disconnecting. <br/>If the user is not reconnected before the specified time elapses after the user status is disconnected, the user object will be deleted when the logout process is completed. <br/>Sets the period for which the user object will be managed on the server without being removed after the client disconnects. <br/>If 0, the user object will not be maintained and will be deleted immediately. | 0 |
 
-### Support
+<a id="support"></a>
+### Support { #support }
 
 Support nodes are nodes that fulfill a secondary role. They can also communicate directly with clients, making them ideal for exchanging game-related information or delegating periodic tasks or tasks that require independent implementation outside of the game.
 
@@ -290,18 +303,21 @@ Each configuration item is described below.
 
 
 
-## VM Options
+<a id="vm-options"></a>
+## VM Options { #vm-options }
 
 We're sharing the core of the VM options used by our development team to run GameAnvil servers. The VM options we recommend here have been validated over the course of many large-scale performance tests, and we encourage you to use them as a guide and make appropriate changes to suit your needs.
 
 
 
-### Recommended VM Options
+<a id="recommended-vm-options"></a>
+### Recommended VM Options { #recommended-vm-options }
 
 * Set the memory size according to your system. For reference, the development team uses 4-6GB on 8GB machines and 10-12GB on 16GB machines.
 * GameAnvil uses G1GC as its official GC, so you should use G1GC unless you have a specific reason not to.
 * We strongly recommend adding a minimal option for GC logs, especially during development.
 
+<a id="recommended-vm-options-java-21"></a>
 #### Java 21
 
 ```
@@ -319,10 +335,12 @@ We're sharing the core of the VM options used by our development team to run Gam
 Removing this setting may cause GameAnvil to malfunction.
 * The `--add-opens java.base/java.lang.invoke=ALL-UNNAMED` statement in the second line is a statement for GameAnvil to optimize reflection performance. Removing this option will still launch the game. But performance may be reduced.
 
-### VM Options for GC Logs
+<a id="vm-options-for-gc-logs"></a>
+### VM Options for GC Logs { #vm-options-for-gc-logs }
 
 Options for GC logs are essential for tracking memory licks and the like, so we recommend adding the following GC log-related options at least during development if for no other reason. However, in production, you may need to add only some optimized options as needed, as they may affect performance. In addition to the options recommended above, you can add the following options for each Java version.
 
+<a id="vm-options-for-gc-logs-java-21"></a>
 #### Java 21
 
 ```

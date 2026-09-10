@@ -1,6 +1,10 @@
-## Game > GameAnvil > Server Development Guide > Getting Started
+<!-- pre-align:aligned sig=1c47fe5642cb -->
 
-## Before Starting
+<a id="game-gameanvil-server-development-guide-getting-started"></a>
+## Game > GameAnvil > Server Development Guide > Getting Started { #game-gameanvil-server-development-guide-getting-started }
+
+<a id="before-starting"></a>
+## Before Starting { #before-starting }
 
 This article discusses the basic elements and implementation methods required to implement a server using GameAnvil. We recommend that you refer to the [GameAnvil tutorial](../tutorial/tutorial-01-basic.md) provided along with this document.
 
@@ -8,13 +12,15 @@ GameAnvil servers are by default configured as nodes. The nodes where the user's
 
 ![Nodes on Network.png](https://static.toastoven.net/prod_gameanvil/images/user_nodes_on_network_.png)
 
-## Redefine Callback
+<a id="redefine-callback"></a>
+## Redefine Callback { #redefine-callback }
 
 By default, most GameAnvil features are provided in the form of callbacks. Engine users will use most features after implementing the default interface provided by GameAnvil (IGatewayNode, ISupportNode, and IGameNode) in a way that redefines these callback methods. In this process, only the callback methods required by the engine user are implemented, so some callback methods may be ignored. These default interfaces are each name that begins with "I" and are provided as com.nhn.gameanvil packages or subpackets.
 
 ![callback-1.png](https://static.toastoven.net/prod_gameanvil/images/callback-1.png)
 
-## Start of All Implements, Nodes
+<a id="start-of-all-implements-nodes"></a>
+## Start of All Implements, Nodes { #start-of-all-implements-nodes }
 
 For example, all nodes must redefine the callback methods below in common. And each node may require the implementation of additional callback methods for the role. For example, in the code below, SampleGatewayNode implements IGatewayNode, which is the default interface of GatewayNode.
 
@@ -102,15 +108,18 @@ For the meaning and usage of these node common callbacks, see the table below:
 | onShuttingdown | Node stopped | Calls are sent when the node receives a Shutdown command. Stopped nodes cannot be Resume. |
 | onResume | Resume | Calls are called when the node restarts the run while it is temporarily stopped. Here, the user can implement the code he wants to process while in a restart. |
 
-## Methods and variables beginning with _(underscore)
+<a id="methods-and-variables-beginning-with-underscore"></a>
+## Methods and variables beginning with _(underscore) { #methods-and-variables-beginning-with-underscore }
 
 Using the engine, users can see the method or variable beginning with _ in the implementation interface. It means that it should only be used internally in the engine. The user must not access variables or methods beginning with _. This requires caution if you allow some exposures as Java is not flexible for scope control.
 
-## gameanvil package and gameanvilcore package
+<a id="gameanvil-package-and-gameanvilcore-package"></a>
+## gameanvil package and gameanvilcore package { #gameanvil-package-and-gameanvilcore-package }
 
 Engine consists largely of two top packets, and gameanvil package is for the user. All classes or APIs in this package are free to use. On the other hand, the gameanvilcore package contains engine cores logic, so the user is not allowed to access directly. Nevertheless, the users are exposed to the scope control limitations of the Java version currently supported by GameAnvil. Special care is required to avoid the contents of the gameanvilcore package during the user code creation process.
 
-## Configure Project with IntelliJ Template
+<a id="configure-project-with-intellij-template"></a>
+## Configure Project with IntelliJ Template { #configure-project-with-intellij-template }
 
 Configuring GameAnvil projects one by one from the beginning requires many complex processes. You must write a configuration file along with loading the engine library, and also a script to write protocol specifications and a compiler to compile them. In order to avoid unnecessary waste of development time due to this sequence of processes, GameAnvil offers a template for IntelliJ that includes all of these elements. From the link below, download a template file and follow the steps below:
 

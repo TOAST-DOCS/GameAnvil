@@ -1,12 +1,17 @@
-## Game > GameAnvil > 콘솔 사용 가이드 > 상태
+<!-- pre-align:aligned sig=ca641a919c72 -->
+
+<a id="game-gameanvil-console-user-guide-state"></a>
+## Game > GameAnvil > 콘솔 사용 가이드 > 상태 { #game-gameanvil-console-user-guide-state }
 
 
-## 상태
+<a id="state"></a>
+## 상태 { #state }
 하나의 게임 서비스를 위해 여러 대의 게임 서버를 구성할 수 있습니다. 그리고 각 게임 서버는 여러 개의 노드로 구성할 수 있습니다. 이러한 서버와 노드는 서로 다른 상태값을 가집니다. 이 문서의 나머지 부분에서 서버와 노드의 상태에 관해 설명합니다.
 
 
 
-## 서버 상태
+<a id="server-state"></a>
+## 서버 상태 { #server-state }
 
 서버 상태는 프로세스(S/W)와 인스턴스(H/W)의 상태를 복합적으로 표현합니다. 서버 관리 페이지에서 볼 수 있는 대시보드는 이러한 서버 상태를 나열하고 각각의 상태에 속한 서버의 대수를 표시하고 있습니다. 또한 구분되는 색깔로 각각의 상태를 나타냅니다.
 
@@ -24,7 +29,8 @@
 | TRANSIT    | 두 가지 상태 사이를 전환 중입니다. 목표 상태로 전환이 완료될 때까지 해당 서버로 명령할 수 없습니다.                                |
 
 
-## 노드 상태
+<a id="node-state"></a>
+## 노드 상태 { #node-state }
 
 노드 상태는 하나의 게임 서버를 구성하는 여러 노드들의 상태를 보여줍니다. 또한 동일한 서버상의 노드일지라도 서로 다른 상태일 수 있습니다. 
 
@@ -42,16 +48,19 @@
 
 
 
-## Safe Pause 관련 상태
+<a id="states-related-to-safe-pause"></a>
+## Safe Pause 관련 상태 { #states-related-to-safe-pause }
 
 서버 상태와 노드 상태 중에는 Safe Pause와 관련된 것들이 있습니다. 임의의 노드에 대해 Safe Pause를 진행할 경우 서버와 노드는 해당 상태로 전이(Transit)됩니다. 다음은 이에 대한 추가 설명입니다.
 
 
+<a id="states-related-to-safe-pause-state-of-nodes-undergoing-safe-pause"></a>
 #### Safe Pause를 진행하는 노드의 상태
 
 * SAFE PAUSE: 임의의 노드를 안전하게 중지(Safe Pause)시킬 경우 해당 노드가 처리 중이던 정보는 안전하게 다른 노드들로 이관됩니다. 이러한 일련의 과정은 SAFE PAUSE 상태로 나타냅니다. 이 상태의 노드는 모든 정보를 이관한 후 PAUSE 상태로 들어갑니다.
 * READY(LOCK): Safe Pause시킬 노드에서 처리 중이던 유저/방 등의 정보를 이관 받을 노드의 상태입니다. 이 상태의 노드는 이관이 완료될 때까지 외부 명령을 수행할 수 없습니다. 즉, Safe Pause 완료까지 베타적인 READY 상태가 됩니다.
 
+<a id="states-related-to-safe-pause-state-of-the-server-running-safepause"></a>
 #### Safe Pause를 진행하는 서버의 상태
 
 * 서버를 구성하는 여러 개의 노드 중 일부가 SAFE PAUSE 혹은 READY(LOCK) 상태일 수 있습니다. 이러한 서버의 상태는 함축적으로 SAFE PAUSE 상태로 표현합니다.

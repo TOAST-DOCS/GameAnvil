@@ -1,10 +1,15 @@
-## Game > GameAnvil > CocosCreator Development Guide > Relogin
+<!-- pre-align:aligned sig=10f17cff9fb6 -->
 
-## Relogin
+<a id="game-gameanvil-cocoscreator-development-guide-relogin"></a>
+## Game > GameAnvil > CocosCreator Development Guide > Relogin { #game-gameanvil-cocoscreator-development-guide-relogin }
+
+<a id="relogin"></a>
+## Relogin { #relogin }
 
 During the game, connection to the server may be lost for various reasons. The relogin feature is supported so you can continue your existing play when your connection is lost. The API you use can be used the same as the normal access method. The result gives you more detailed information about the relogin.
 
-### Authentication
+<a id="authentication"></a>
+### Authentication { #authentication }
 
 When authentication is proceeded after relogin, the result value will contain the previously played user information.
 
@@ -25,7 +30,8 @@ loginedUserInfoList.forEach((userInfo: AlreadyLoginedUserInfo) => {
 });
 ```
 
-### Login
+<a id="login"></a>
+### Login { #login }
 
 Proceed by logging in using the user information received as a result of authentication. In this case, you must log in using the same value as the previous user information, such as userType or channelId. If not, the login may fail.
 

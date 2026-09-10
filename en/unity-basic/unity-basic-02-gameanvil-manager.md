@@ -1,10 +1,15 @@
-## Game > GameAnvil > Basic Development Guide to Unity > Manager
+<!-- pre-align:aligned sig=9b7534989ae2 -->
 
-## GameAnvilManager
+<a id="game-gameanvil-basic-development-guide-to-unity-manager"></a>
+## Game > GameAnvil > Basic Development Guide to Unity > Manager { #game-gameanvil-basic-development-guide-to-unity-manager }
+
+<a id="gameanvilmanager"></a>
+## GameAnvilManager { #gameanvilmanager }
 
 GameAnvilManager is responsible for default settings and agent management, and you can configure or register callbacks to view logs related to internal behaviour. To use GameAnvilManager, you must add GameAnvilManager to the scene first.
 
-### Create
+<a id="create"></a>
+### Create { #create }
 
 You can create immediately by right-clicking **GameAnvil > GameAnvilManager** in the Unity Hierarchy window.
 
@@ -12,7 +17,8 @@ You can create immediately by right-clicking **GameAnvil > GameAnvilManager** in
 
 Or you can create an empty GameObject and add a GameAnvilManager component.
 
-### Settings
+<a id="settings"></a>
+### Settings { #settings }
 
 GameAnvilManager has several settings values. When creating GameAnvilManager, it is set to the default value, but if needed, you can change the value directly in the Inspector window.
 

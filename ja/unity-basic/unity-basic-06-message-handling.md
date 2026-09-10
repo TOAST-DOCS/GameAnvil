@@ -1,10 +1,15 @@
-## Game > GameAnvil > Unity 基礎開発ガイド > メッセージハンドリング
+<!-- pre-align:aligned sig=021fed3a8700 -->
 
-## メッセージハンドリング
+<a id="game-gameanvil-unity-basic-development-guide-message-handling"></a>
+## Game > GameAnvil > Unity 基礎開発ガイド > メッセージハンドリング { #game-gameanvil-unity-basic-development-guide-message-handling }
+
+<a id="message-handling"></a>
+## メッセージハンドリング { #message-handling }
 
 GameAnvilUserControllerのRequestUser()とSendUser()メソッドを利用して、ユーザーが定義したメッセージをサーバーへ送信できます。メッセージを送信するためには、メッセージを生成して登録する過程が必要です。
 
-### メッセージ生成
+<a id="create-a-message"></a>
+### メッセージ生成 { #create-a-message }
 
 GameAnvilは基本メッセージプロトコルとして[ProtocolBuffers](https://developers.google.com/protocol-buffers/docs/proto3)を使用します。.protoファイルにメッセージを定義し、protocコンパイラで実際のクラスソースコードを生成することになります。生成されたソースコードをプロジェクトに追加して使用できます。protocに関する詳細な説明は[こちら](https://developers.google.com/protocol-buffers/docs/proto3#generating)を参照してください。
 
@@ -43,7 +48,8 @@ message SampleReceive
 /protoc --csharp_out=./ messages.proto
 ```
 
-### メッセージ登録
+<a id="register-messages"></a>
+### メッセージ登録 { #register-messages }
 
 新しく生成したメッセージを使用するには、使用するメッセージをProtocolManagerにあらかじめ登録する必要があります。あらかじめ登録しないと、動作しなかったり誤作動したり、例外が発生する可能性があります。
 
@@ -51,8 +57,10 @@ message SampleReceive
 GameAnvilProtocolManager.RegisterProtocol(Messages.MessagesReflection.Descriptor);
 ```
 
-### メッセージ送信
+<a id="send-messages"></a>
+### メッセージ送信 { #send-messages }
 
+<a id="send-messages-requestuser"></a>
 #### RequestUser
 
 RequestUser()でメッセージを送信し、レスポンスを受け取ることができます。
@@ -100,6 +108,7 @@ ResultCodeの詳細は次のとおりです。
 | HANDLER_ERROR     | 11 | 失敗。サーバーのハンドラで例外が発生しました。                       |
 | SUCCESS           | 0  | 成功                                       |
 
+<a id="send-messages-senduser"></a>
 #### SendUser
 
 SendUser()でメッセージを送信すると、SendUser()の呼び出し直後にサーバーへ送信され、別途のレスポンスは待ちません。
@@ -125,6 +134,7 @@ SendUser()は次のように1つのパラメータを持っています。
 |----------|---------|------------|
 | IMessage | message | サーバーへ送るメッセージ |
 
+<a id="send-messages-messagecallback"></a>
 #### MessageCallback
 
 SendUser()で送るメッセージとは関係なく、サーバーから送られるメッセージを受信するためには、SetMessageCallback<TProtoBuffer>()を利用してコールバックを登録できます。登録されたコールバックを解除する時は、RemoveMessageCallback<TProtoBuffer>()を利用すればよいです。

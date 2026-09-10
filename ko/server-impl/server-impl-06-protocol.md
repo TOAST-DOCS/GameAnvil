@@ -1,8 +1,12 @@
-## Game > GameAnvil > 서버 개발 가이드 > 프로토콜 정의
+<!-- pre-align:aligned sig=55d81451968d -->
+
+<a id="game-gameanvil-server-development-guide-protocol-definition"></a>
+## Game > GameAnvil > 서버 개발 가이드 > 프로토콜 정의 { #game-gameanvil-server-development-guide-protocol-definition }
 
 
 
-## 프로토콜 정의와 컴파일
+<a id="protocol-definition-and-compile"></a>
+## 프로토콜 정의와 컴파일 { #protocol-definition-and-compile }
 
 GameAnvil은 [Google Protocol Buffers](https://protobuf.dev/)를 사용하여 프로토콜을 정의하고 빌드합니다. 아래의 예제는 이러한 프로토콜을 정의하는 법과 빌드하는 법을 설명합니다. 우선 SampleGame.proto 파일을 텍스트 에디터로 생성한 후 원하는 프로토콜을 정의합니다. 프로토콜 버퍼의 자세한 문법은 [공식 Protocol Buffers 가이드](https://protobuf.dev/programming-guides/proto3/)를 참고할 수 있습니다.
 
@@ -61,7 +65,8 @@ protoc ./MyGame.proto --java_out=../java --csharp_out=./
 ```
 
 
-## GeneratedMessage와 패킷
+<a id="generatedmessagev3-and-packet"></a>
+## GeneratedMessage와 패킷 { #generatedmessagev3-and-packet }
 
 다수의 클라이언트에게 메시지를 보낼 때는 다음과 같이 사용할 수 있습니다.
 ```java

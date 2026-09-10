@@ -1,14 +1,21 @@
-## Game > GameAnvil > Unity 심화 개발 가이드 > 메시지 핸들링
+<!-- pre-align:aligned sig=30f67c2adce6 -->
 
-## 메시지 핸들링
+<a id="game-gameanvil-unity-advanced-development-guide-message-handling"></a>
+## Game > GameAnvil > Unity 심화 개발 가이드 > 메시지 핸들링 { #game-gameanvil-unity-advanced-development-guide-message-handling }
+
+<a id="message-handling"></a>
+## 메시지 핸들링 { #message-handling }
 
 GameAvnilConnector, GameAvilUser의 기본 기능 외에도 사용자가 정의한 메시지를 서버로 전송할 수 있습니다.
 
-### 메시지 생성 및 등록
+<a id="create-and-register-message"></a>
+### 메시지 생성 및 등록 { #create-and-register-message }
 메시지를 생성하고 등록하는 방법은 GameAnvilManager를 사용하는 경우와 동일 합니다. [Unity 기초 개발 가이드 > 메시지 핸들링](../unity-basic/unity-basic-06-message-handling.md)에서 소개한 설명을 참고하세요. 
 
-### 메시지 전송
+<a id="sending-messages"></a>
+### 메시지 전송 { #sending-messages }
 
+<a id="sending-messages-request"></a>
 #### Request
 
 GameAvnilConnector에서는 Request(), GameAvilUser에서는 RequestUser()를 호출하여 메시지를 전송하고 응답을 받을 수 있습니다. 
@@ -55,6 +62,7 @@ ResultCode의 상세 내용은 다음과 같습니다.
 | HANDLER_ERROR     | 11 | 실패. 서버의 핸들러에서 예외 발생.                       |
 | SUCCESS           | 0  | 성공                                         |
 
+<a id="sending-messages-senduser"></a>
 #### SendUser
 
 GameAvnilConnector에서는 Send(), GameAvilUser에서는 SendUser()를 호출여 서버로 메시지를 전송하며 별도의 응답을 기다리지는 않습니다.
@@ -78,6 +86,7 @@ Send(), SendUser()는 다음과 같이 1개의 매개변수를 가지고 있습�
 |----------|---------|------------|
 | IMessage | message | 서버로 보낼 메시지 |
 
+<a id="sending-messages-messagecallback"></a>
 #### MessageCallback
 
 Send(), SendUser() 로 보내는 메시지와 상관없이 서버에서 보내는 메시지를 수신하기 위해서는 SetMessageCallback\<TProtoBuffer\>() 을 이용해 콜백을 등록할 수 있습니다. 등록된 콜백을 해제할 때는 RemoveMessageCallback\<TProtoBuffer\>()을 이용하면 됩니다.

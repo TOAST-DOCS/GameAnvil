@@ -1,6 +1,10 @@
-## Game > GameAnvil > 서버 개발 가이드 > 아이디 사용법
+<!-- pre-align:aligned sig=eeed95e57cb0 -->
 
-## 아이디(ID)
+<a id="game-gameanvil-server-development-guide-ids"></a>
+## Game > GameAnvil > 서버 개발 가이드 > 아이디 사용법 { #game-gameanvil-server-development-guide-ids }
+
+<a id="identity-id"></a>
+## 아이디(ID) { #identity-id }
 
 GameAnvil은 여러 종류의 아이디를 사용합니다. 그중 일부는 서버가 자체 발급하고 다른 일부는 사용자가 GameAnvilConfig에 직접 설정합니다. 접속에 필요한 계정 정보 등은 클라이언트에서 입력받은
 정보를 서버로 전달합니다. 다음은 GameAnvil에서 사용하는 대표적인 아이디에 대한 설명입니다.
@@ -15,10 +19,12 @@ GameAnvil은 여러 종류의 아이디를 사용합니다. 그중 일부는 서
 | RoomId    | 방의 고유 아이디 - 방 객체가 생성될 때 서버가 발급                                                                                                       | int    | -            |
 | SubId     | 하나의 계정(AccountId) 내에서 고유한 보조 아이디로서 클라이언트가 접속할 때 전달하는 값<br>하나의 커넥션 내에서 여러 개의 세션을 구분하기 위해 사용하며, 세션의 고유 아이디는 AccountId와 SubId를 조합해서 생성함 | int    | 0 < id       |
 
-### 아이디 지원 API
+<a id="id-support-api"></a>
+### 아이디 지원 API { #id-support-api }
 
 앞서 살펴본 아이디에 관한 일부 기능을 아래의 표와 같이 엔진 사용자에게 제공합니다. 해당 아이디를 획득하거나 확인하기 위해서는 반드시 아래의 API를 사용해야 합니다.
 
+<a id="id-support-api-verify-valid-id-api"></a>
 #### 유효한 아이디 확인 API
 ```java
 /**
@@ -60,6 +66,7 @@ public class GameAnvilIdValidator {
 
 ```
 
+<a id="id-support-api-verify-registered-services-api-insecure"></a>
 #### 등록된 서비스 확인 API(안전하지 않음)
 * 아이디와 이름을 관리할 수 있지만 이 API는 이후 변경될 수 있습니다.
 ```java

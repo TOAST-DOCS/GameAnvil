@@ -1,10 +1,15 @@
-## Game > GameAnvil > TypeScript Development Guide > Logger
+<!-- pre-align:aligned sig=033ad3290f52 -->
 
-## GameAnvillLogger
+<a id="game-gameanvil-typescript-development-guide-logger"></a>
+## Game > GameAnvil > TypeScript Development Guide > Logger { #game-gameanvil-typescript-development-guide-logger }
+
+<a id="gameanvilllogger"></a>
+## GameAnvillLogger { #gameanvilllogger }
 
 Use to receive logs of the activity inside the connector.
 
-### Listener Settings
+<a id="listener-settings"></a>
+### Listener Settings { #listener-settings }
 
 If set as shown below, the connector internal behavior logs appear in the console:
 

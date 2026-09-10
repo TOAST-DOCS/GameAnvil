@@ -1,6 +1,10 @@
-## Game > GameAnvil > コンソール使用ガイド > Safe Pause
+<!-- pre-align:aligned sig=755a9b9d5bdd -->
 
-## Safe Pauseとは？
+<a id="game-gameanvil-console-user-guide-safe-pause"></a>
+## Game > GameAnvil > コンソール使用ガイド > Safe Pause { #game-gameanvil-console-user-guide-safe-pause }
+
+<a id="what-is-safe-pause"></a>
+## Safe Pauseとは？ { #what-is-safe-pause }
 
 Safe Pauseは、サービスを停止せずに任意のゲームノードを一時中断(Pause)できる機能です。Safe Pauseの出発地ノードは、処理中だった全てのユーザーとルーム情報を、同じサービスを実行中の到着地ノードへリアルタイム転送(Transfer)します。そのため、同じサービスのゲームノードが2つ以上存在しない場合、Safe Pauseを使用できません。
 
@@ -10,7 +14,8 @@ Safe Pauseの過程で、転送を送る側と受ける側は、下の図のよ�
 
 Safe Pauseが完了すると、**Safe Pause**状態は**Pause**状態に変わります。当然、そのノードにはいかなるユーザーやルームも存在しないため、安全にシャットダウンできます。パッチやメンテナンスが必要な場合は、この時に行います。**Ready(Lock)**状態もまた、Safe Pauseが完了すると同時に**Ready**状態に切り替わり、コンソール上での操作が可能になります。
 
-## Safe Pauseを使用する
+<a id="how-to-use-safe-pause"></a>
+## Safe Pauseを使用する { #how-to-use-safe-pause }
 
 Safe Pauseメニューを選択すると、Safe Pauseの基本画面が表示されます。この画面は、Safe Pauseを実行できるノードの一覧を表示します。Safe Pauseを実行するノードを選択した後、**Safe Pause実行**をクリックすると、以下のようにSafe Pauseを実行する前のポップアップが開き、実行に関するメモを作成できます。
 

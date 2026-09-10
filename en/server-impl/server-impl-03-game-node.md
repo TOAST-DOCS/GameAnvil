@@ -1,6 +1,10 @@
-## Game > GameAnvil > Server Development Guide > Implement Game Node
+<!-- pre-align:aligned sig=b2564be6b47a -->
 
-## Game Node
+<a id="game-gameanvil-server-development-guide-implement-game-node"></a>
+## Game > GameAnvil > Server Development Guide > Implement Game Node { #game-gameanvil-server-development-guide-implement-game-node }
+
+<a id="game-node"></a>
+## Game Node { #game-node }
 
 ![GameNode on Network.png](https://static.toastoven.net/prod_gameanvil/images/node_gamenode_on_network.png)
 
@@ -14,7 +18,8 @@ Each session can be separated by a unique value within the connection, and we ca
 
 This session is directed to the user object. GameNode manages these user objects and room objects with their groups. This chapter covers these GameNodes, GameUser, and GameRoom.
 
-## Implement GameNode
+<a id="implement-gamenode"></a>
+## Implement GameNode { #implement-gamenode }
 
 GameNode implements the IGameNode interface. The example code below shows the callback methods that can be basically redefined in GameNode. A callback exists for channel management, along with a node common callback.
 
@@ -163,7 +168,8 @@ All nodes need a message handler registration process to process custom messages
 
 The main purpose of such GameNode is to process all GameUser and GameRoom objects connected to the node. Let me explain this right away.
 
-## Implement User
+<a id="implement-user"></a>
+## Implement User { #implement-user }
 
 User objects are created in GameNode through the login process. User-based content must be implemented with this class in the center. As with all the examples discussed earlier, users can also connect their own message and manipulator to handle. From the example code below, you can see that the user offers a lot of callback methods. Some of these features are provided with default implementation, so you should not redefine them unless they are especially necessary. This corresponds to most classes provided not only by users but also by engines.
 
@@ -544,15 +550,18 @@ The callbacks for these users are summarized in the table below:
 | onAfterMoveOutChannel | If onMoveOutChannel succeeds, the user will be called for post-processing. |
 | onMoveInChannel | Move to the new channel | When the user moves to another channel, the user will be called from the target node. The user can transfer any random information to the client by keeping it in outPayload. |
 
-### What is a Login?
+<a id="what-is-a-login"></a>
+### What is a Login? { #what-is-a-login }
 
 The information described above and the example code often display information about the login. These logs can also be defined as the process of creating its own user objects on GameNode after the client connects to the server. Some of the callback methods call onLogin() while trying to log in to create a user first. At this time, the user can obtain information from the DB, etc. to configure user objects. When this onLogin() callback succeeds, the user object is created on GameNode. Once logging is complete, the client can receive messages from other objects through its user object based on a directly defined protocol and implement various content.
 
-### Logout
+<a id="logout"></a>
+### Logout { #logout }
 
 Logout is the opposite concept of login. This is the process of removing its user objects from GameNode. Once logout is started, the user object can keep its final status in DB, etc before being deleted from memory by calling onLogout() callback. Such logouts may be explicitly requested by the client, or are automatically processed by the engine after a certain amount of time has elapsed while the client's connection is lost. Therefore, if frequent access disconnections are expected, such as mobile games, you can make appropriate [setups](server-impl-16-config-vm.md#game) to avoid immediate logout. 
 
-## Implement Room
+<a id="implement-room"></a>
+## Implement Room { #implement-room }
 
 Two or more users can create a synchronized message flow through the room. It means that users' requests are guaranteed to be orderly all inside the room. Creating rooms for one user, of course, can have meaning depending on the content. How to use a room is up to the engine user. These rooms, like the users, implement the default class IRoom interface to redefine multiple callback methods and can also process messages on their own. The example code below is a SampleRoom class for SampleUser.
 
@@ -821,7 +830,8 @@ If you clean up the callback of these rooms, you can see the table below.
 | onForceMatchRoomUnregistered | Room matchmaking is canceled | When room matchmaking is canceled, the user will be called. |
 | canTransfer | Check whether the room is available for transmission | Calls to check whether the room is available for transmission to another node. If the game is still in play or unprepared in the room, you can return false and delay the sending. If false is returned, the engine will continue to call this callback after a random amount of time. Note that room transmission is only used when performing a non-stop check patch. |
 
-## Room Type
+<a id="room-type"></a>
+## Room Type { #room-type }
 
 The method of implementation of the room discussed earlier and the type of room provided by the engine separately are largely two. Use these two rooms in four different ways in total.
 
@@ -836,6 +846,7 @@ These two room types are used in four different ways in total.
 | Normal Room | 1. Clients are created and participated through CreateRoom / JoinRoom requests.<br>2\. You can create or participate in NormalRoom through room matchmaking. You can also register for preventive room matches created with CreateRoom. At this time, the room ID is automatically shared between the room and the user that is managed and matched by the engine. |
 | Named Room | 3. Clients are created and involved via the NamedRoom request.<br>4\. You can create or participate in NamedRoom through user matchmaking. At this time, the room names of the created NamedRoom are created and managed uniquely in the engine. Unlike room matchmaking, rooms created with the normal NamedRoom cannot be targeted for user matchmaking. However, after creating a party room with NamedRoom for party matchmaking, multiple users can request matchmaking as a party. |
 
-## Channel
+<a id="channel"></a>
+## Channel { #channel }
 
 GameNodes can be logically grouped according to their use. These logical groups are called [channels](server-impl-09-channel). For example, you can bind GameNode 1 and 2 to a "Beginner" channel, and GameNode 3 and 4 to an "Expert" channel. For more detailed description, we will cover this again in a [separate chapter](server-impl-09-channel).

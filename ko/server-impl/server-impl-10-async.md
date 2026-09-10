@@ -1,6 +1,10 @@
-## Game > GameAnvil > 서버 개발 가이드 > 비동기 지원
+<!-- pre-align:aligned sig=7327694298f5 -->
 
-## 비동기 지원
+<a id="game-gameanvil-server-development-guide-asynchronous-support"></a>
+## Game > GameAnvil > 서버 개발 가이드 > 비동기 지원 { #game-gameanvil-server-development-guide-asynchronous-support }
+
+<a id="asynchronous-support"></a>
+## 비동기 지원 { #asynchronous-support }
 
 GameAnvil은 다음과 같은 목적을 위해 비동기 처리를 지원합니다.
 
@@ -31,7 +35,8 @@ Response httpResponse = httpFuture.get();  // Java 21 에서는 Virtual Thread �
 > Virtual Thread: Java 21에서 추가된 새로운 Thread입니다 이전 버전 GameAnvil의 Fiber 와 유사한 동작을 합니다 자세한 동작은 [여기](https://openjdk.org/jeps/444)를 참고하십시오.
 
 
-## RDBMS 지원
+<a id="rdbms-support"></a>
+## RDBMS 지원 { #rdbms-support }
 
 기존 Java 에서 많은 RDBMS 드라이버는 `java.sql.DriverManager` 를 사용하고 있으므로 쿼리는 블로킹입니다. 그러나 Java 21 에서는 Virtual Thread 위에서 실행 시 이러한 블로킹 쿼리를 Virtual Thread 만 정지하는 형태로 바꿔 실행하여 비동기를 활용한 향상의 이점을 누릴 수 있습니다. GameAnvil 역시 Virtual Thread 위에서 실행하여 비동기 쿼리를 통한 성능 향상이 가능합니다. 이러한 드라이버는 대표적으로 [MySQL Connector/J](https://github.com/mysql/mysql-connector-j) 가 있겠습니다. 
 
@@ -42,7 +47,8 @@ Response httpResponse = httpFuture.get();  // Java 21 에서는 Virtual Thread �
 > 모든 라이브러리가 Virtual Thread 를 지원하는 것은 아닙니다. 이전 버전에 맞춰 제작된 라이브러리를 GameAnvil 에서 실행 시 정상적으로 동작하지 않을 수 있습니다. 예를 들어 [MySQL Connector/J](https://github.com/mysql/mysql-connector-j) 는 9.x 버전 부터 Virtual Thread 를 지원합니다. 8.x 버전을 사용 시 정상적으로 동작하지 않을 수 있습니다.
 
 
-## Redis 지원
+<a id="redis-support"></a>
+## Redis 지원 { #redis-support }
 많이 사용되고 있는 라이브러리는 [Jedis](https://github.com/redis/jedis)가 있지만 엔진팀 내부 확인 결과 [Jedis](https://github.com/redis/jedis)는 Virtual Thread 사용 시 스레드가 잠기는 문제가 발생할 수 있습니다. GameAnvil에서는 커스텀한 Virtual Thread를 사용하고 있어 이러한 문제 발생 시 알 수 없는 동작을 하고 디버깅이 어려워 매우 탐지하기 어렵습니다. 만약 Jedis 사용을 고려하고 있다면 [Lettuce](https://github.com/redis/lettuce) 사용을 권장합니다. 이미 Jedis를 사용하고 있어 마이그레이션이 어려울 때는 다음과 같이 다른 스레드 풀에서 jedis를 실행하는 코드로 사용하여 스레드가 잠기는 문제를 회피할 수 있습니다.
 
 ```java
@@ -55,7 +61,8 @@ GameAnvil 에서는 Redis 사용을 위해 [Lettuce](https://github.com/redis/le
 
 
 
-## Java 21 Virtual Thread의 Pinning 문제
+<a id="pinning-issues"></a>
+## Java 21 Virtual Thread의 Pinning 문제 { #pinning-issues }
 * Java 21 Virtual Thread의 synchronized 블록 안에서 Virtual Thread를 일시 정지하는 코드를 사용 시 Virtual Thread 가 잠기는 문제가 발생할 수 있습니다. 간단한 재현 방법은 다음과 같습니다.
 
 ```java

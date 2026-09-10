@@ -1,10 +1,15 @@
-## Game > GameAnvil > サーバー開発ガイド > タイマーの使用
+<!-- pre-align:aligned sig=3e8f6f005ca1 -->
 
-## タイマー
+<a id="game-gameanvil-server-development-guide-timer"></a>
+## Game > GameAnvil > サーバー開発ガイド > タイマーの使用 { #game-gameanvil-server-development-guide-timer }
+
+<a id="timer"></a>
+## タイマー { #timer }
 
 指定された時間または周期ごとに任意のコードを実行できます。ここでは、このようなタイマーを設定する方法を説明します。
 
-### TimerHandlerの実装
+<a id="implement-timerhandler"></a>
+### TimerHandlerの実装 { #implement-timerhandler }
 
 タイマー処理を行うには、必ずこのインターフェースを実装する必要があります。GameAnvilのタイマーシステムはこのインターフェースを呼び出します。TimerHandlerは以下のような形で必要な数だけ作成できます。
 
@@ -31,7 +36,8 @@ private ITimerHandler getMyTimerHandler() {
 
 このとき、onTimerメソッドの引数として渡されるtimerオブジェクトには、タイマーの情報が入っています。タイマーオブジェクトを活用して、タイマーを一時停止、再開、停止するなどの追加操作を行うことができます。
 
-### タイマーの追加
+<a id="add-a-timer"></a>
+### タイマーの追加 { #add-a-timer }
 
 前述のタイマーハンドラは、エンジンに追加して初めて実際に駆動します。タイマーを追加するためにaddTimer APIを使用します。
 
@@ -58,7 +64,8 @@ ITimer scheduleTimer(String timerKey, int delay, TimeUnit timeUnit, ITimerHandle
 | handler   | 実行するハンドラオブジェクト                                                 | ユーザー定義                                  |
 
 
-### タイマーの削除
+<a id="remove-a-timer"></a>
+### タイマーの削除 { #remove-a-timer }
 
 エンジンに登録されたタイマーはいつでも削除できます。このとき、removeTimer APIを使用します。タイマー削除のために、登録時に返されたタイマーオブジェクトを保持しておく必要があります。
 
@@ -75,12 +82,14 @@ userContext.scheduleTimer("MyTimer", 1000, TimeUnit.MILLISECONDS, new ITimerHand
 userContext.removeTimer("MyTimer");
 ```
 
-## タイマー転送
+<a id="send-a-timer"></a>
+## タイマー転送 { #send-a-timer }
 
 [転送可能オブジェクト](server-impl-08-object-transfer.md)で、オブジェクトの転送について確認しました。基本的にゲームユーザーとルームオブジェクトは、いつでもゲームノード間で転送される可能性があります。そのため、これらのユーザーとルームオブジェクトに登録したタイマーも一緒に転送できる必要があります。エンジン内部でタイマーを転送する際、タイマーハンドラコードは転送できないため、タイマーハンドラキーのリストを転送します。したがって、タイマーハンドラキーに該当するタイマーをユーザーまたはルーム転送後も使用する場合は、onTransferInコールバックで使用するタイマーハンドラを再登録するようにコードを記述する必要があります。
 
 
-### タイマーハンドラの再登録
+<a id="re-register-the-timer-handler"></a>
+### タイマーハンドラの再登録 { #re-register-the-timer-handler }
 
 ユーザーとルームは転送後も使用するタイマーを登録できるように、onTransferInコールバックを呼び出します。このとき、ユーザーは文字列キーとそれに対応するITimerHandlerを登録できます。文字列キーが転送されたタイマーハンドラキーのリストに存在する場合、再登録するタイマーハンドラを登録します。このコールバックで再登録しなかったタイマーは、ユーザーまたはルームの転送以降、使用されません。
 

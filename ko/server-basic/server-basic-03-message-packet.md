@@ -1,6 +1,10 @@
-## Game > GameAnvil > 서버 개념 설명 > 메세지 처리와 패킷
+<!-- pre-align:aligned sig=6470327d4b32 -->
 
-## 패킷
+<a id="game-gameanvil-server-concept-description-packet"></a>
+## Game > GameAnvil > 서버 개념 설명 > 메세지 처리와 패킷 { #game-gameanvil-server-concept-description-packet }
+
+<a id="section-1"></a>
+## 패킷 { #section-1 }
 
 패킷은 GameAnvil 에서 서버와 클라이언트간 메세지를 전달하는 단위입니다. 자바의 프로토 버퍼나 빌더를 사용하여 패킷을 생성할 수 있습니다. 패킷은 GameAnvil 엔진에서 지원하는 여러 타입에서 만들 수 있는데 간단한 사용법은 다음과 같습니다.
 ```java
@@ -17,7 +21,8 @@ user.send(packet);
 
 위 코드는 게임 유저에서 클라이언트로 패킷을 전달하는 코드입니다. 먼저 전달할 프로토 버퍼를 정의한 뒤 패킷을 생성하고 클라이언트에게 전달합니다. 
 
-## 패킷 활용 성능 최적화 
+<a id="section-2"></a>
+## 패킷 활용 성능 최적화 { #section-2 }
 
 패킷은 내부적으로 프로토 버퍼를 직렬화한 데이터를 캐싱합니다. 그러므로 여러 유저에게 프로토 버퍼 메시지를 보낼 때 패킷을 여러 번 만들어 보내는 대신 한번만 만들어 보내는게 좋습니다. 아래 예제에서는 여러 유저에게 패킷의 얕은 복사를 하여 전달하는 방법을 다룹니다.
 ```java

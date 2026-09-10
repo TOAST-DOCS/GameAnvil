@@ -1,6 +1,10 @@
-## Game > GameAnvil > コンソール使用ガイド > モニタリング
+<!-- pre-align:aligned sig=3ed08ca71185 -->
 
-## モニタリング
+<a id="game-gameanvil-console-user-guide-monitoring"></a>
+## Game > GameAnvil > コンソール使用ガイド > モニタリング { #game-gameanvil-console-user-guide-monitoring }
+
+<a id="monitoring"></a>
+## モニタリング { #monitoring }
 モニタリングメニューのダッシュボードタブは、ゲームサーバー全般にわたって意味のある統計数値をグラフと共に提供します。サーバーとノードの状態はもちろん、ユーザーとルーム、そしてセッションの作成数をリアルタイムで表示します。
 ![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/monitoring/monitoring_dashboard.png)
 
@@ -11,7 +15,8 @@
 
 ![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/monitoring/monitoring_dashboard_node.png)
 
-## サーバー現況
+<a id="server-status"></a>
+## サーバー現況 { #server-status }
 
 サーバー現況タブは、全てのサーバーの物理リソースはもちろん、論理リソース(ユーザー数、セッション数など)情報まで提供します。それぞれの情報は直感的なチャートを通じて、時間による変化の推移を追跡できます。
 
@@ -20,14 +25,16 @@
 ![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/monitoring/server_state_2.png)
 
 
-## ユーザー分布
+<a id="user-distribution"></a>
+## ユーザー分布 { #user-distribution }
 
 同時接続中のユーザー統計は、ゲームサービスで最も重要な情報の1つです。ユーザー分布タブを通じて、日付別のCCUはもちろん、ユーザー分布に関連する様々な情報を提供します。 
 
 ![図](https://static.toastoven.net/prod_gameanvil/images/console/v2/monitoring/concurrent_user_1.png)
 
 
-## オートスケールグループ
+<a id="autoscale-group"></a>
+## オートスケールグループ { #autoscale-group }
 
 オートスケールグループタブで、ユーザーが作成した全てのオートスケールグループに関する情報を確認できます。
 

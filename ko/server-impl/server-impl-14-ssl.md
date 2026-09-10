@@ -1,16 +1,22 @@
-## Game > GameAnvil > 서버 개발 가이드 > SSL 지원
+<!-- pre-align:aligned sig=5d1a4121264a -->
+
+<a id="game-gameanvil-server-development-guide-ssl-support"></a>
+## Game > GameAnvil > 서버 개발 가이드 > SSL 지원 { #game-gameanvil-server-development-guide-ssl-support }
 
 
 
-## SSL 지원
+<a id="ssl-support"></a>
+## SSL 지원 { #ssl-support }
 
 게이트웨이 노드와 서포트 노드는 공용망에 노출되는 노드들입니다. 그러므로 이 두 노드는 SSL(secure socket layer)을 지원합니다.
 
-## SSL 설정하기
+<a id="set-up-ssl"></a>
+## SSL 설정하기 { #set-up-ssl }
 
 SSL은 기본적으로 GameAnvilConfig을 통해 보안 설정을 합니다. 인증키의 루트 경로는 VM 옵션으로 변경할 수 있습니다.
 
-### GatewayNode
+<a id="gatewaynode"></a>
+### GatewayNode { #gatewaynode }
 
 다음과 같이 'secure' 설정을 통해 SSL 사용을 활성화할 수 있습니다. 만일 SSL을 사용하지 않을 경우에는 해당 키-값 쌍을 모두 삭제합니다.
 
@@ -49,7 +55,8 @@ SSL은 기본적으로 GameAnvilConfig을 통해 보안 설정을 합니다. 인
 
 
 
-### SupportNode
+<a id="supportnode"></a>
+### SupportNode { #supportnode }
 
 서포트 노드도 게이트웨이 노드와 비슷하게 "restSecure" 설정을 통해 SSL 사용을 활성화할 수 있습니다. 만일 SSL을 사용하지 않을 경우에는 해당 키-값 쌍을 모두 삭제합니다.
 
@@ -77,11 +84,13 @@ SSL은 기본적으로 GameAnvilConfig을 통해 보안 설정을 합니다. 인
 
 
 
-### VM Option
+<a id="vm-option"></a>
+### VM Option { #vm-option }
 
 인증키의 루트 경로를 설정할 수 있도록 다음과 같은 VM 옵션을 제공합니다.
 
-### -Dsecure
+<a id="dsecure"></a>
+### -Dsecure { #dsecure }
 
 인증키의 루트 경로에 대한 기본 값은 프로젝트 내의 resources 디렉터리입니다. 만일 프로젝트 외부, 즉 jar 바이너리 바깥의 인증 정보를 조회하고자 할 경우에는 이 VM 옵션을 사용하면 됩니다.
 

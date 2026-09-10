@@ -1,14 +1,21 @@
-## Game > GameAnvil > Unity 応用開発ガイド > メッセージハンドリング
+<!-- pre-align:aligned sig=30f67c2adce6 -->
 
-## メッセージハンドリング
+<a id="game-gameanvil-unity-advanced-development-guide-message-handling"></a>
+## Game > GameAnvil > Unity 応用開発ガイド > メッセージハンドリング { #game-gameanvil-unity-advanced-development-guide-message-handling }
+
+<a id="message-handling"></a>
+## メッセージハンドリング { #message-handling }
 
 GameAnvilConnector、GameAnvilUserの基本機能以外にも、ユーザーが定義したメッセージをサーバーへ送信できます。
 
-### メッセージ作成及び登録
+<a id="create-and-register-message"></a>
+### メッセージ作成及び登録 { #create-and-register-message }
 メッセージを作成して登録する方法は、GameAnvilManagerを使用する場合と同じです。[Unity 基礎開発ガイド > メッセージハンドリング](../unity-basic/unity-basic-06-message-handling.md)で紹介した説明を参照してください。 
 
-### メッセージ送信
+<a id="sending-messages"></a>
+### メッセージ送信 { #sending-messages }
 
+<a id="sending-messages-request"></a>
 #### Request
 
 GameAnvilConnectorではRequest()、GameAnvilUserではRequestUser()を呼び出してメッセージを送信し、レスポンスを受け取ることができます。 
@@ -55,6 +62,7 @@ ResultCodeの詳細は次のとおりです。
 | HANDLER_ERROR     | 11 | 失敗。サーバーのハンドラで例外が発生しました。                       |
 | SUCCESS           | 0  | 成功                                       |
 
+<a id="sending-messages-senduser"></a>
 #### SendUser
 
 GameAnvilConnectorではSend()、GameAnvilUserではSendUser()を呼び出してサーバーへメッセージを送信し、別途のレスポンスは待ちません。
@@ -78,6 +86,7 @@ Send()、SendUser()は次のように1つのパラメータを持っています
 |----------|---------|------------|
 | IMessage | message | サーバーへ送るメッセージ |
 
+<a id="sending-messages-messagecallback"></a>
 #### MessageCallback
 
 Send()、SendUser()で送るメッセージとは関係なく、サーバーから送られるメッセージを受信するためには、SetMessageCallback\<TProtoBuffer\>() を利用してコールバックを登録できます。登録されたコールバックを解除する時は、RemoveMessageCallback\<TProtoBuffer\>()を利用すればよいです。
