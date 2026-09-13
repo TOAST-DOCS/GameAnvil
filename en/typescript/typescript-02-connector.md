@@ -66,10 +66,10 @@ connector.onDisconnect = (resultCode: ResultCodeDisconnect, payload: Payload) =>
 The first argument in the function lets you know why the connection has been lost.
 
 | Code Name | Value | Description |
-|---------------------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------|
+|-----------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `FORCE_CLOSE_SYSTEM_ERROR` | 2000 | This is a forced close situation due to a system error. If you receive this code from the client, please contact the GameAnvil development team. |
-| `FORCE_CLOSE_BASE_CONNECTION`  | 2010 | This code is received when the server calls close() on BaseConnection. |
-| `FORCE_CLOSE_BASE_USER` | 2011 | This code is received when the server calls closeConnection() on BaseUser. |
+| `FORCE_CLOSE_CONNECTION` | 2010 | This code is received when the server calls close() on BaseConnection. |
+| `FORCE_CLOSE_USER` | 2011 | This code is received when the server calls closeConnection() on BaseUser. |
 | `FORCE_CLOSE_ADMIN_KICK` | 2012 | This code is received when the Admin user forcibly closes the game. |
 | `FORCE_CLOSE_INVALID_NODE` | 2020 | The GameNode has become invalid. |
 | `FORCE_CLOSE_USER_TRANSFER_FAIL` | 2021 | If a user transfer fails. |
@@ -83,7 +83,7 @@ The first argument in the function lets you know why the connection has been los
 | `FORCE_CLOSE_CHECK_CLIENT_STATE_FAIL` | 2043 | The client does not respond to the server status check. Inquiry required. |
 | `FORCE_CLOSE_GHOST_USER` | 2044 | For ghost users. Inquiry required. |
 | `SOCKET_DISCONNECT` | 2100 | Network connection lost |
-| `SOCKET_TIME_OUT`  | 2101 | A timeout occurred, the connector closed the connection |
+| `SOCKET_TIME_OUT` | 2101 | A timeout occurred, the connector closed the connection |
 | `SOCKET_ERROR` | 2102 | A socket error occurred, the connection was closed |
 
 

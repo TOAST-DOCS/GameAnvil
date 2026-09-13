@@ -455,8 +455,8 @@ if (matchRoomResult.resultCode === ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) {
 | `MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND` | 912 | 失敗: マッチングを行いましたが、ルームが見つかりませんでした |
 | `MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY` | 913 | 失敗: 不正なマッチングユーザーカテゴリです |
 | `MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY` | 914 | 失敗: マッチングユーザーカテゴリのサイズが0の場合 |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL` | 915 | 失敗: マッチング申込書がありません |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL` | 916 | 失敗: マッチング情報がありません |
+| `MATCH_ROOM_FAIL_MATCH_FORM_NULL` | 915 | 失敗: マッチング申込書がありません |
+| `MATCH_ROOM_FAIL_MATCH_INFO_NULL` | 916 | 失敗: マッチング情報がありません |
 
 ルームマッチメイキングに成功した場合、レスポンスを通じてroomIdを含む情報を確認できます。
 
@@ -734,14 +734,15 @@ user.onSessionClose = (user, resultCode, payload) => {
 }
 ```
 
-| コード名                                   | 値  | 説明                                                                                                 |
-|----------------------------------------------|-------|------------------------------------------------------------------------------------------------------|
-| `SESSION_CLOSE_BASE_USER` | 2011 | サーバーでBaseUserの`closeConnection()`を呼び出し |
-| `SESSION_CLOSE_ADMIN_KICK` | 2012 | 管理画面からの強制終了 |
-| `SESSION_CLOSE_DUPLICATE_LOGIN` | 2032 | 重複接続による強制終了 |
-| `SESSION_CLOSE_BY_NEW_CONNECTION` | 2040 | 同じアカウント情報で新しいログインリクエストがあった場合に、以前の接続を終了。ネットワークの瞬断など、再接続時に使用。問い合わせが必要です。 |
-| `SESSION_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041 | クライアントとの接続切断を検知。通常は発生せず、発生した場合はGameAnvil開発チームへの問い合わせが必要です。 |
-| `SESSION_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | セッションが見つからない場合。通常は発生せず、発生した場合はGameAnvil開発チームへの問い合わせが必要です。 |
+| コード名                                                    | 値   | 説明                                                                                                 |
+|--------------------------------------------------------------|-------|------------------------------------------------------------------------------------------------------|
+| `FORCE_CLOSE_USER` | 2011 | サーバーでBaseUserの`closeConnection()`を呼び出し |
+| `FORCE_CLOSE_ADMIN_KICK` | 2012 | 管理画面からの強制終了 |
+| `FORCE_CLOSE_INVALID_PROTOCOL` | 2013 | 不正なプロトコル |
+| `FORCE_CLOSE_DUPLICATE_LOGIN` | 2032 | 重複接続による強制終了 |
+| `FORCE_CLOSE_BY_NEW_CONNECTION` | 2040 | 同じアカウント情報で新しいログインリクエストがあった場合に、以前の接続を終了。ネットワークの瞬断など、再接続時に使用。問い合わせが必要です。 |
+| `FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041 | クライアントとの接続切断を検知。通常は発生せず、発生した場合はGameAnvil開発チームへの問い合わせが必要です。 |
+| `FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | セッションが見つからない場合。通常は発生せず、発生した場合はGameAnvil開発チームへの問い合わせが必要です。 |
 
 <a id="forced-exit-by-admin"></a>
 ### 管理者による強制退場 { #forced-exit-by-admin }

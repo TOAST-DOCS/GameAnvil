@@ -15,55 +15,90 @@ ConnectionAgent connectionAgent = connector.GetConnectionAgent();
 <a id="connect-to-the-server"></a>
 ### Connect to the server { #connect-to-the-server }
 
-Connect to the server using the ConnectionAgent's Connect function. 
+Call Connect() to connect to the server.
 
 ```c#
-/// <summary>
-/// Attempts to connect to the GameAnvil server.
-/// </summary>
-/// <param name="ip">Target IP address</param>
-/// <param name="port">Target port</param>
-/// <param name="onConnect">A delegate to receive connection attempt results</param>
-connector.GetConnectionAgent().Connect(ip, port, (ConnectionAgent connectionAgent, ResultCodeConnect result) => {
-    /// <param name="connectionAgent">The connection agent that requested Connect()</param>
-    /// <param name="result">Connect() request result code</param>
-    if (result == ResultCodeConnect.CONNECT_SUCCESS) {
-		// Successful connection
-    } else {
-	    // Connection failed
+public async void Connect()
+{
+    try
+    {
+        // connector is a variable that stores a GameAnvilConnector instance.
+        await connector.Connect(host, port);
+        // 성공
     }
-});
+    catch (Exception e)
+    {
+        // 실패
+    }
+}
 ```
+
+Connect() has the following two parameters:
+
+| Type   | Name | Description                          |
+|--------|------|--------------------------------------|
+| String | host | IP address or hostname of the server to connect to |
+| int    | port | Port of the server to connect to     |
+
+There is no return value. If the call succeeds, the following code is executed; if it fails, an exception is thrown.
 
 <a id="authentication"></a>
 ### Authentication { #authentication }
 
-Use the ConnectionAgent's Authenticate function to perform the authentication process. It takes as parameters deviceId, accountId, password, payload, and a callback to handle the response. The deviceId is used to handle duplicate connections, and the accountId and password can be used to handle authentication on the server. If additional information beyond the deviceId, accountId, and password is needed for authentication, it can be sent in the payload, and the payload parameter can be omitted if not used.
-When you call the Authenticate function, the server calls the onAuthentication() callback of the BaseConnection, and the processing of this callback determines whether the authentication succeeds or fails.
+After connecting to the server, call Authentication() to proceed with the authentication process. When you call the Authentication() method, the server calls the onAuthenticate() callback of the Connection object, and the result of this callback determines whether authentication succeeds or fails.
 
 ```c#
-/// <summary>
-/// Authenticates with the GameAnvil server<para></para>
-/// Enable connector after successful authentication
-/// </summary>
-/// <param name="deviceId">Unique ID to identify the user's device. Depending on the server implementation, pass an empty string if not used</param>
-/// <param name="accountId">Unique ID to identify the user's account</param>
-/// <param name="passwd">Password for the user account. Depending on the server implementation, pass an empty string if not used</param>
-/// <param name="onAuthentication">A delegate to receive the results of the request</param>.
-connector.GetConnectionAgent().Authenticate(deviceId, accountId, password, payload
-         (ConnectionAgent connectionAgent, ResultCodeAuth result, List<ConnectionAgent.LoginedUserInfo> loginedUserInfoList, string message, Payload payload) => {
-    /// <param name="connectionAgent">The connection agent that requested Authentication().
-    /// <param name="result">Authentication() request result</param>
-    /// <param name="loginedUserInfoList">List of login information left on the server</param>
-    /// <param name="message">Message received from the server</param>
-    /// <param name="payload">Additional information received from the server</param>
-    if (result == ResultCodeAuth.AUTH_SUCCESS) {
-		// Authentication success
-    } else {
-		// Authentication failed
+public async void Authenticate()
+{
+    try
+    {
+        Payload authenticationPayload = new Payload(new Protocol.AuthenticationData());
+        Result<ResultCodeAuth, AuthenticationResult> result = await connector.Authentication("DeviceId", "AccountId", "Password", authenticationPayload);
+        if(result.ResultCode == ResultCodeAuth.AUTH_SUCCESS)
+        {
+            // 성공
+        } else
+        {
+            // 실패
+        }
     }
-});
+    catch (Exception e)
+    {
+        // 예외
+    }
+}
 ```
+
+Authentication() has the following four parameters:
+
+| Type    | Name      | Description                                                                                                                                                                                                         |
+|---------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| String  | deviceId  | Device ID for authentication. <br/>When authentication requests come from different devices, this value can be used to identify which device made the request. If not used, enter string.Empty (empty string). |
+| String  | accountId | Account name for authentication.                                                                                                                                                                                    |
+| String  | password  | Password for authentication. If not used, enter string.Empty (empty string).                                                                                                                                        |
+| Payload | payload   | Additional information required by the user code on the server that processes the authentication request. (default = null)                                                                                          |
+
+The method returns Result<ResultCodeAuth, AuthenticationResult> as the response. You can check the value of the ResultCode field to determine whether the request was successful. If authentication succeeds, the ResultCode field value is ResultCodeAuth.AUTH_SUCCESS; otherwise, authentication has failed. You can obtain the AuthenticationResult from the request through the Data field. This allows you to retrieve authentication result information, and additional information may also be available depending on the server implementation.
+
+The details of ResultCodeAuth are as follows:
+
+| Name                         | Value | Description                                                                                              |
+|------------------------------|-------|----------------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                  | -2    | Packet parsing error. May occur when the server and client versions differ.                              |
+| TIMEOUT                      | -1    | Timeout. No response to the request was received within the specified time.                              |
+| SYSTEM_ERROR                 | 1     | Server system error. Failed due to an unknown error on the server.                                       |
+| INVALID_PROTOCOL             | 2     | Protocol not registered on the server. A protocol not registered in the additional information was used. |
+| AUTH_SUCCESS                 | 0     | Success.                                                                                                 |
+| AUTH_FAIL_CONTENT            | 201   | Failed. Rejected by user code.                                                                           |
+| AUTH_FAIL_INVALID_ACCOUNT_ID | 602   | Failed. Invalid account ID.                                                                              |
+
+The details of AuthenticationResult are as follows:
+
+| Type                         | Name              | Description                                                                                      |
+|------------------------------|-------------------|--------------------------------------------------------------------------------------------------|
+| List<AlreadyLoginedUserInfo> | LoginUserInfoList | List of logged-in user information remaining on the server at the time of successful authentication. |
+| String                       | Message           | Authentication message.                                                                          |
+| Payload                      | payload           | Additional information required by the client.                                                   |
 
 <a id="connection-and-authentication"></a>
 ### Connection and Authentication { #connection-and-authentication }
@@ -73,7 +108,29 @@ connector.GetConnectionAgent().Authenticate(deviceId, accountId, password, paylo
 <a id="secure-connection"></a>
 ### Secure Connection { #secure-connection }
 
-<!-- TODO: translate body -->
+When security settings are configured on the GameAnvil server, you must call ConnectSecure() to establish a secure connection.
+```c#
+public async void ConnectSecure()
+{
+    try
+    {
+        await connector.ConnectSecure(host, port);
+        // 성공
+    }
+    catch (Exception e)
+    {
+        // 실패
+    }
+}
+```
+ConnectSecure() has the following two parameters:
+
+| Type   | Name | Description                                    |
+|--------|------|------------------------------------------------|
+| String | host | IP address or hostname of the server to connect to |
+| int    | port | Port of the server to connect to               |
+
+There is no return value. If the call succeeds, the following code is executed; if it fails, an exception is thrown.
 
 <a id="channel-information"></a>
 ### Channel information { #channel-information }
@@ -205,27 +262,247 @@ connector.GetConnectionAgent().GetAllChannelInfo(serviceName, (ConnectionAgent c
 <a id="channel-information-getchannellist"></a>
 #### GetChannelList
 
-<!-- TODO: translate body -->
+GetChannelList() retrieves a list of channel IDs for a specific service.
+
+```c#
+public async void ChannelList()
+{
+    try
+    {
+        Payload channelInfoPayload = new Payload(new Protocol.ChannelInfoData());
+        Result<ResultCodeChannelList, List<string>> result = await connector.GetChannelList("ServiceName");
+        if (result.ResultCode == ResultCodeChannelList.CHANNEL_LIST_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+GetChannelList() has the following parameter:
+
+| Type   | Name        | Description                              |
+|--------|-------------|------------------------------------------|
+| String | ServiceName | Service to request channel information from |
+
+Returns Result<ResultCodeChannelList, List<string>> as a response. You can check whether the request succeeded by checking the value of the ResultCode field. If GetChannelList succeeds, the value of the ResultCode field is ResultCodeChannelList.CHANNEL_LIST_SUCCESS; otherwise, the request has failed. On success, you can get the resulting list of channel IDs through the Data field.
+
+The details of ResultCodeChannelList are as follows:
+
+| Name                              | Value | Description                                                                                      |
+|-----------------------------------|-------|--------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                       | -2    | Packet parsing error. May occur when the server and client versions differ.                      |
+| TIMEOUT                           | -1    | Timeout. The response to the request did not arrive within the allotted time.                    |
+| SYSTEM_ERROR                      | 1     | Server system error. Failed due to an unknown error on the server.                               |
+| INVALID_PROTOCOL                  | 2     | Protocol not registered on server. A protocol not registered in the additional information was used. |
+| CHANNEL_LIST_SUCCESS              | 0     | Success                                                                                          |
+| CHANNEL_LIST_FAIL_NO_CHANNEL_LIST | 1801  | Failed. The channel list could not be found.                                                     |
 
 <a id="channel-information-getchannelcountinfo"></a>
 #### GetChannelCountInfo
 
-<!-- TODO: translate body -->
+`GetChannelCountInfo()` retrieves count information (number of users and rooms) for a specific channel.
+
+```c#
+public async void ChannelCountInfo()
+{
+    try
+    {
+        Result<ResultCodeChannelCountInfo, ChannelCountResult> result = await connector.GetChannelCountInfo("ServiceName", "ChannelId");
+        if (result.ResultCode == ResultCodeChannelCountInfo.CHANNEL_COUNT_INFO_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+`GetChannelCountInfo()` takes the following two parameters:
+
+| Type   | Name        | Description                              |
+|--------|-------------|------------------------------------------|
+| String | ServiceName | Service for which to request channel information |
+| String | channelId   | ID of the channel for which to request channel information |
+
+The method returns `Result<ResultCodeChannelCountInfo, ChannelCountResult>`. You can check the value of the `ResultCode` field to determine whether the request succeeded. If `GetChannelCountInfo` succeeds, the value of the `ResultCode` field is `ResultCodeChannelCountInfo.CHANNEL_LIST_SUCCESS`; otherwise, the request has failed. You can obtain the `ChannelCountResult` from the `Data` field.
+
+The details of `ResultCodeChannelCountInfo` are as follows:
+
+| Name                                       | Value | Description                                                                                       |
+|--------------------------------------------|-------|---------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                                | -2    | Packet parsing error. May occur when the server and client versions differ.                       |
+| TIMEOUT                                    | -1    | Timeout. A response to the request did not arrive within the specified time.                      |
+| SYSTEM_ERROR                               | 1     | Server system error. Failed due to an unknown error on the server.                                |
+| INVALID_PROTOCOL                           | 2     | Protocol not registered on server. A protocol not registered in the additional information was used. |
+| CHANNEL_COUNT_INFO_SUCCESS                 | 0     | Success.                                                                                          |
+| CHANNEL_COUNT_INFO_FAIL_NO_CHANNEL_INFO    | 1921  | Failed. Channel information not found.                                                            |
+| CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1922  | Failed. Invalid service ID.                                                                       |
+| CHANNEL_COUNT_INFO_FAIL_INVALID_CHANNEL_ID | 1923  | Failed. Invalid channel ID.                                                                       |
+| CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924  | Failed. Channel not found.                                                                        |
+
+The details of `ChannelCountResult` are as follows:
+
+| Type   | Name      | Description                          |
+|--------|-----------|--------------------------------------|
+| string | ChannelId | Returns the channel ID.              |
+| int    | UserCount | Returns the number of users in the channel. |
+| int    | RoomCount | Returns the number of rooms in the channel. |
+
+<br>
 
 <a id="channel-information-getchannelinfo"></a>
 #### GetChannelInfo
 
-<!-- TODO: translate body -->
+You can call GetChannelInfo() to request and retrieve information (user-defined) about a specific channel.
+
+```c#
+public async void ChannelInfo()
+{
+    try
+    {
+        Result<ResultCodeChannelInfo, Payload> result = await connector.GetChannelInfo("ServiceName", "ChannenId");
+        if (result.ResultCode == ResultCodeChannelInfo.CHANNEL_INFO_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+GetChannelInfo() has the following two parameters:
+
+| Type   | Name        | Description                                  |
+|--------|-------------|----------------------------------------------|
+| String | ServiceName | Service to request channel information from  |
+| String | channelId   | ID of the channel to request information from |
+
+The response returns Result<ResultCodeChannelInfo, Payload>. You can check the value of the ResultCode field to determine whether the request succeeded. If GetChannelInfo() succeeds, the value of the ResultCode field is ResultCodeChannelInfo.CHANNEL_LIST_SUCCESS; otherwise, the request has failed. On success, you can also retrieve user-defined channel information from the Payload in the Data field.
+
+The details of ResultCodeChannelInfo are as follows:
+
+| Code Name                            | Value | Description                                                                                   |
+|--------------------------------------|-------|-----------------------------------------------------------------------------------------------|
+| PARSE_ERROR                          | -2    | Packet parsing error. This may occur when the server and client versions differ.              |
+| TIMEOUT                              | -1    | Timeout. A response to the request did not arrive within the allotted time.                   |
+| SYSTEM_ERROR                         | 1     | Server system error. The request failed due to an unknown server error.                       |
+| INVALID_PROTOCOL                     | 2     | Protocol not registered on the server. A protocol not registered in the additional information was used. |
+| CHANNEL_INFO_SUCCESS                 | 0     | Success                                                                                       |
+| CHANNEL_INFO_FAIL_NO_CHANNEL_INFO    | 1921  | Failed. Channel information not found.                                                        |
+| CHANNEL_INFO_FAIL_INVALID_SERVICE_ID | 1922  | Failed. Invalid service ID.                                                                   |
+| CHANNEL_INFO_FAIL_INVALID_CHANNEL_ID | 1923  | Failed. Invalid channel ID.                                                                   |
+| CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924  | Failed. Channel not found.                                                                    |
 
 <a id="channel-information-getallchannelcountinfo"></a>
 #### GetAllChannelCountInfo
 
-<!-- TODO: translate body -->
+GetAllChannelCountInfo() retrieves count information (the number of users and rooms) for all channels in a specific service.
+
+```c#
+public async void AllChannelCountInfo()
+{
+    try
+    {
+        Result<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>> result = await connector.GetAllChannelCountInfo("ServiceName");
+        if (result.ResultCode == ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+GetAllChannelCountInfo() has the following 1 parameter:
+
+| Type | Name | Description |
+|--------|-------------|----------------|
+| String | ServiceName | Service to request channel information from |
+
+It returns Result<ResultCodeAllChannelCountInfo, Dictionary<string, ChannelCountResult>> as the response. You can check the value of the ResultCode field to determine whether the request was successful. If GetAllChannelCountInfo succeeds, the value of the ResultCode field is ResultCodeAllChannelCountInfo.ALL_CHANNEL_COUNT_INFO_SUCCESS; otherwise, the request has failed. You can retrieve the result Dictionary<string, ChannelCountResult> through the Data field. This dictionary uses the channel ID as the key and ChannelCountResult as the value.
+
+The details of ResultCodeAllChannelCountInfo are as follows:
+
+| Name                                           | Value | Description                                                                                     |
+|------------------------------------------------|-------|-------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                                    | -2    | Packet parsing error. May occur when the server and client versions differ.                     |
+| TIMEOUT                                        | -1    | Timeout. A response to the request did not arrive within the specified time.                    |
+| SYSTEM_ERROR                                   | 1     | Server system error. Failed due to an unknown server error.                                     |
+| INVALID_PROTOCOL                               | 2     | Protocol not registered on server. A protocol not registered in the additional information was used. |
+| ALL_CHANNEL_COUNT_INFO_SUCCESS                 | 0     | Success                                                                                         |
+| ALL_CHANNEL_COUNT_INFO_FAIL_NO_CHANNEL_INFO    | 1931  | Failed. Channel information not found.                                                          |
+| ALL_CHANNEL_COUNT_INFO_FAIL_INVALID_SERVICE_ID | 1932  | Failed. Invalid service ID.                                                                     |
+| ALL_CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1933  | Failed. Channel not found.                                                                      |
 
 <a id="channel-information-getallchannelinfo"></a>
 #### GetAllChannelInfo
 
-<!-- TODO: translate body -->
+You can use GetAllChannelInfo() to request and retrieve information (user-defined) for all channels in a specific service.
+
+```c#
+public async void AllChannelInfo()
+{
+    try
+    {
+        Result<ResultCodeAllChannelInfo, ChannelInfoResult> result = await connector.GetAllChannelInfo("ServiceName");
+        if (result.ResultCode == ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+GetAllChannelInfo() has the following 1 parameter.
+
+| Type   | Name        | Description                              |
+|--------|-------------|------------------------------------------|
+| String | ServiceName | Service to request channel information from |
+
+It returns Result<ResultCodeAllChannelInfo, ChannelInfoResult> as a response. You can check the value of the ResultCode field to determine whether the request succeeded. If GetAllChannelInfo succeeds, the value of the ResultCode field is ResultCodeAllChannelInfo.ALL_CHANNEL_INFO_SUCCESS; otherwise, the request has failed. You can retrieve the request result ChannelInfoResult through the Data field.
+
+The details of ResultCodeAllChannelInfo are as follows.
+
+| Name                                     | Value | Description                                                                                      |
+|------------------------------------------|-------|--------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                              | -2    | Packet parsing error. May occur if the server and client versions differ.                        |
+| TIMEOUT                                  | -1    | Timeout. No response to the request received within the specified time.                          |
+| SYSTEM_ERROR                             | 1     | Server system error. Failed due to an unknown server error.                                      |
+| INVALID_PROTOCOL                         | 2     | Protocol not registered on server. A protocol not registered in the additional information was used. |
+| ALL_CHANNEL_INFO_SUCCESS                 | 0     | Success                                                                                          |
+| ALL_CHANNEL_INFO_FAIL_NO_CHANNEL_INFO    | 1911  | Failed. Channel information not found.                                                           |
+| ALL_CHANNEL_INFO_FAIL_INVALID_SERVICE_ID | 1912  | Failed. Invalid service ID.                                                                      |
+| ALL_CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1913  | Failed. Channel not found.                                                                       |
+
+The channelInfo field of ChannelInfoResult is a Dictionary<string, Payload> that uses the channel ID as the key and a Payload containing user-defined channel information as the value. You can use this to retrieve user-defined information for each channel.
 
 <a id="terminate-the-connection"></a>
 ### Terminate the connection { #terminate-the-connection }

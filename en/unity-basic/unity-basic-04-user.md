@@ -88,43 +88,65 @@ The details of CreatedRoomResult are as follows:
 <a id="create-enter-leave-room-joinroom"></a>
 #### JoinRoom
 
-Call JoinRoom() to enter the already created room.
+Call JoinRoom() to enter a room that has already been created.
 
-``` c# public async void ManagerJoinRoom() { GameAnvilManager gameAnvilManager = GameAnvilManager.Instance; GameAnvilUserController userController = gameAnvilManager.UserController; try { Payload joinRoomPayload = new Payload(new Protocol.JoinRoomData()); ErrorResult<ResultCodeJoinRoom, JoinRoomResult> result = await userController.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload); if(result.ErrorCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) { // 성공 } else { // 실패 } } catch (Exception e) { // 예외 } } ```
+``` c#
+public async void ManagerJoinRoom()
+{
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    try
+    {
+        Payload joinRoomPayload = new Payload(new Protocol.JoinRoomData());
+        Result<ResultCodeJoinRoom, JoinRoomResult> result = await userController.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload);
+        if(result.ResultCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    }
+    catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
 
-JoinRoom() has the following four parameters:
+JoinRoom() has the following four parameters.
 
-| Type | Name | Description |
-|--------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| String | roomType | Type of room to enter. |
-| int | roomId | ID of the room to enter. |
-| String | matchingUserCategory | MatchingUserCategory to use in the room to enter. If not used, enter string.Empty <br/>In each room, you can divide the users in the room by category, with an individual room limit applied for each category. JoinRoom may fail if the current number of users for the specified matchingUserCategory is at its maximum. |
-| Payload | payload | Additional information required by the user code on the server that will process the room entry request. (default = null) |
+| Type    | Name                 | Description                                                                                                                                                                                                                                                                                                                                          |
+|---------|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| String  | roomType             | The type of the room to enter.                                                                                                                                                                                                                                                                                                                       |
+| int     | roomId               | The ID of the room to enter.                                                                                                                                                                                                                                                                                                                         |
+| String  | matchingUserCategory | The matchingUserCategory to use in the room to enter. Enter string.Empty (an empty string) if not used. <br/>Each room can divide its users into categories, and a user limit can be applied per category. JoinRoom may fail if the current number of users for the specified matchingUserCategory is at its maximum. |
+| Payload | payload              | Additional information required by the user code on the server that will process the room entry request. (default = null)                                                                                                                                                                                                                            |
 
-In response, ErrorResult<ResultCodeJoinRoom, JoinRoomResult> will be returned, and you can check the value in the ErrorCode field to see if it succeeds. If JoinRoom succeeds, the value in the ErrorCode field will be ResultCodeJoinRoom.JOIN\_ROOM\_SUCCESS, and if not, the creation will fail. You can get the JoinRoomResult result of your request through the Data field. It allows you to get the information of the room you entered, and you can also get additional information depending on the server implementation.
+The response returns Result<ResultCodeJoinRoom, JoinRoomResult>. Check the value of the ResultCode field to determine whether the request succeeded. If JoinRoom succeeds, the value of the ResultCode field is ResultCodeJoinRoom.JOIN_ROOM_SUCCESS; otherwise, the room entry has failed. You can obtain the JoinRoomResult for the request through the Data field. This lets you retrieve information about the room you entered, and you may also obtain additional information depending on the server implementation.
 
-ResultCodeJoinRoom details are as follows:
+The details of ResultCodeJoinRoom are as follows.
 
-| Name | Value | Description |
-|------------------------------------ |----- |---------------------------- |
-| PARSE\_ERROR | -2 | Packet Parsing Error. This can occur if the server and client versions are different. |
-| TIMEOUT | -1 | Timeout. The request will not be responded within the set time. |
-| SYSTEM\_ERROR | 1 | Server System Error. Failed due to an unknown server error. |
-| INVALID\_PROTOCOL | 2 | Protocol unregistered on the server. An unregistered protocol was used in the additional information. |
-| JOIN\_ROOM\_SUCCESS | 0 | Success. |
-| JOIN\_ROOM\_FAIL\_CONTENT | 701 | Failed. User code denied. |
-| JOIN\_ROOM\_FAIL\_ROOM\_DOES\_NOT\_EXIST | 702 | Failed. The room you requested does not exist. |
-| JOIN\_ROOM\_FAIL\_ALREADY\_JOINED\_ROOM | 703 | Failed. Already in the room. |
-| JOIN\_ROOM\_FAIL\_ALREADY\_FULL | 704 | Failed. The room you requested is full. |
-| JOIN\_ROOM\_FAIL\_ROOM\_MATCH | 705 | Failed. A problem occurred with room matchmaking. |
+| Name                               | Value | Description                                                                                          |
+|------------------------------------|-------|------------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                        | -2    | Packet parsing error. This may occur when the server and client versions differ.                     |
+| TIMEOUT                            | -1    | Timeout. The response to the request did not arrive within the specified time.                       |
+| SYSTEM_ERROR                       | 1     | Server system error. Failed due to an unknown error on the server.                                   |
+| INVALID_PROTOCOL                   | 2     | Protocol not registered on the server. A protocol not registered in additional information was used. |
+| JOIN_ROOM_SUCCESS                  | 0     | Success.                                                                                             |
+| JOIN_ROOM_FAIL_CONTENT             | 701   | Failed. Rejected by user code.                                                                       |
+| JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702   | Failed. The requested room does not exist.                                                           |
+| JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM | 703   | Failed. The user is already in a room.                                                               |
+| JOIN_ROOM_FAIL_ALREADY_FULL        | 704   | Failed. The requested room is full.                                                                  |
+| JOIN_ROOM_FAIL_ROOM_MATCH          | 705   | Failed. An issue occurred during room matchmaking.                                                   |
 
-The details of JoinRoomResult are as follows:
+The details of JoinRoomResult are as follows.
 
-| Type | Name | Description |
-|---------|----------|--------------------|
-| int | RoomId | The ID of the room you entered. |
-| String? | RoomName | The name of the room you entered. |
-| Payload | payload | Additional information required by the client. |
+| Type    | Name     | Description                                    |
+|---------|----------|------------------------------------------------|
+| int     | RoomId   | The ID of the room entered.                    |
+| String? | RoomName | The name of the room entered.                  |
+| Payload | payload  | Additional information required by the client. |
 
 <a id="create-enter-leave-room-leaveroom"></a>
 #### LeaveRoom
@@ -220,63 +242,89 @@ GameAnvil provides two mainly matchmaking: One is room matching that performs ma
 <a id="matchmaking-room-matchmaking"></a>
 #### Room Matchmaking
 
-Room matchmaking is a method to get the users into a room that suits their conditions. If you have a room that meets the conditions, you will immediately enter the room. If no room meets the conditions, you will create and register a new room.
+Room matchmaking places users into a room that meets the specified conditions. If a matching room is found when a room matchmaking request is made, the user is placed in that room immediately. If no matching room is found, a new room is created for the user to enter.
 
-You can call MatchRoom() to request room matchmaking.
+You can request room matchmaking by calling MatchRoom().
 
-```c# public async void ManagerMatchRoom() { GameAnvilManager gameAnvilManager = GameAnvilManager.Instance; GameAnvilUserController userController = gameAnvilManager.UserController; try { var matchRoomPayload = new Payload(new Protocol.MatchRoomData()); ErrorResult<ResultCodeMatchRoom, MatchResult> result = await userController.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload); if (result.ErrorCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS) { // 성공 } else { // 실패 } } catch (Exception e) { // 예외 } } ```
+```c#
+public async void ManagerMatchRoom()
+{
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    try
+    {
+        var matchRoomPayload = new Payload(new Protocol.MatchRoomData());
+        Result<ResultCodeMatchRoom, MatchResult> result = await userController.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
+        if (result.ResultCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    }
+    catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
 
 MatchRoom() has the following 7 parameters:
 
-| Type | Name | Description |
-|---------|---------------------------|----------------------------------------------------------------------------------------------------------------------------------|
-| bool | isCreateRoomIfNotJoinRoom | When a room that meets the conditions cannot be found, whether to create a room and enter it. <br/>true : Create if there is no room. <br/>false : If there is no room, it is considered a failure. |
-| bool | isMoveRoomIfJoinedRoom | If you already have entered the room, whether to move to another room. <br/>true : If you're in the room, move the room. <br/>false : If you request a match as you are in the room, it will fail. | string | roomType | Room Type. Find the same type of room |
-| string | matchingGroup | matching group. Find the room created by the same group. |
-| string | matchingUserCategory | Usage user category in matched rooms.<br/>In each room, you can divide the users in the room by category, with an individual room limit applied for each category. Finds rooms with a specified matchingUserCategory that doesn't have the maximum number of users. |
-| Payload | payload | Additional information required by the server's user code to process the matchmaking request. (default = null) |
-| Payload | leaveRoomPayload | Additional information required by the server's user code to process the room exit when moving to a different room. (default = null) |
+| Type    | Name                      | Description                                                                                                                                                                                                                                                      |
+|---------|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| bool    | isCreateRoomIfNotJoinRoom | Whether to create and enter a room when no matching room is found. <br/>true: Creates a room if none exists. <br/>false: Returns a failure if no room exists.                                                                                                    |
+| bool    | isMoveRoomIfJoinedRoom    | Whether to move to a different room when the user is already in a room. <br/>true: Moves to a different room if already in one. <br/>false: Returns a failure if a matchmaking request is made while already in a room.                                          |
+| string  | roomType                  | Room type. Finds rooms of the same type.                                                                                                                                                                                                                         |
+| string  | matchingGroup             | Matching group. Finds rooms created in the same group.                                                                                                                                                                                                           |
+| string  | matchingUserCategory      | User category to use in the matched room.<br/>Each room can divide users into categories and apply a capacity limit per category. Finds rooms with a specified matchingUserCategory that doesn't have the maximum number of users. |
+| Payload | payload                   | Additional information required by the server's user code to process the matchmaking request. (default = null)                                                                                                                                                   |
+| Payload | leaveRoomPayload          | Additional information required by the server's user code to process the room exit when moving to a different room. (default = null)                                                                                                                             |
 
-In response, ErrorResult<ResultCodeMatchRoom, MatchResult> will be returned, and you can check the values in the ErrorCode field to see if they are successful. If MatchRoom succeeds, the value in the ErrorCode field will be ResultCodeMatchRoom.NAMED\_ROOM\_SUCCESS, and if not, the entry or creation will fail. You can get MatchResult of the request result through the Data field. It allows you to get information about the rooms you entered or created, and you can also get additional information depending on the server implementation.
+The response returns Result<ResultCodeMatchRoom, MatchResult>. You can check whether the request was successful by verifying the value of the ResultCode field. If MatchRoom succeeds, the value of the ResultCode field is ResultCodeMatchRoom.NAMED_ROOM_SUCCESS; otherwise, the room entry or creation has failed. You can obtain the MatchResult of the request through the Data field. This allows you to retrieve information about the room you entered or created, and you may also obtain additional information depending on the server implementation.
 
-ResultCodeMatchRoom details are as follows:
+The details of ResultCodeMatchRoom are as follows.
 
-| Name | Value | Description |
-|------------------------------------------------ |----- |---------------------------------------------------------------------------------------- | | PARSE\_ERROR | -2 | Packet Parsing Error. This can occur if the server and client versions are different. |
-| TIMEOUT | -1 | Timeout. The request will not be responded within the set time. |
-| SYSTEM\_ERROR | 1 | Server System Error. Failure due to unknown server error |
-| INVALID\_PROTOCOL | 2 | Protocol unregistered on the server. An unregistered protocol was used in the additional information. |
-| NAMED\_ROOM\_SUCCESS | 0 | Success |
-| NAMED\_ROOM\_FAIL\_CONTENT | 701 | Failed. User code denied |
-| NAMED\_ROOM\_FAIL\_ROOM\_DOES\_NOT\_EXIST | 702 | Failed. In the process of entering a room, the room has disappeared. |
-| NAMED\_ROOM\_FAIL\_ALREADY\_JOINED\_ROOM | 703 | Failed. Already in the room |
-| NAMED\_ROOM\_FAIL\_INVALID\_ROOM\_NAME | 704 | Failed. Invalid room name requested. |
-| NAMED\_ROOM\_FAIL\_CREATE\_ROOM | 705 | Failed. Failed to create a room. |
-| MATCH\_ROOM\_SUCCESS | 0 | Success |
-| MATCH\_ROOM\_FAIL\_CONTENT | 901 | Failed. User code denied. |
-| MATCH\_ROOM\_FAIL\_ROOM\_DOES\_NOT\_EXIST | 902 | Failed. The room does not exist. |
-| MATCH\_ROOM\_FAIL\_ALREADY\_JOINED\_ROOM | 903 | Failed. Already in the room. |
-| MATCH\_ROOM\_FAIL\_LEAVE\_ROOM | 904 | Failed. If moving to another room fails to leave the existing room. | | MATCH\_ROOM\_FAIL\_IN\_PROGRESS | 905 | Failed. If the matchmaking is already in progress. | | MATCH\_ROOM\_FAIL\_MATCHED\_ROOM\_DOES\_NOT\_EXIST | 906 | Failed. While looking for a room for your condition, the room disappeared<br/>While entering a room, it may occur if all users in the room leave the room. |
-| MATCH\_ROOM\_FAIL\_CREATE\_FAILED\_ROOM\_ID | 907 | Failed. If the creation of room ID failed. |
-| MATCH\_ROOM\_FAIL\_CREATE\_FAILED\_ROOM | 908 | Failed. If room creation failed. |
-| MATCH\_ROOM\_FAIL\_INVALID\_ROOM\_ID | 909 | Failed. If an invalid room ID is used. |
-| MATCH\_ROOM\_FAIL\_INVALID\_NODE\_ID | 910 | Failed. If an invalid node ID is used. |
-| MATCH\_ROOM\_FAIL\_INVALID\_USER\_ID | 911 | Failed. If an invalid user ID is used. |
-| MATCH\_ROOM\_FAIL\_MATCHED\_ROOM\_NOT\_FOUND | 912 | Failed. If matching is in progress but room cannot be found. |
-| MATCH\_ROOM\_FAIL\_INVALID\_MATCHING\_USER\_CATEGORY | 913 | Failed. If an invalid matching user category used. |
-| MATCH\_ROOM\_FAIL\_MATCHING\_USER\_CATEGORY\_EMPTY | 914 | Failed. When the user category size in the match room is 0\. |
-| MATCH\_ROOM\_FAIL\_MATCH\_FORM\_NULL | 915 | Failure. If the matching request is NULL. |
-| MATCH\_ROOM\_FAIL\_MATCH\_INFO\_NULL | 916 | Failed. If the matching information is NULL. |
+| Name                                           | Value | Description                                                                                                                                                              |
+|------------------------------------------------|-------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                                    | -2    | Packet parsing error. This may occur when the server and client versions differ.                                                                                         |
+| TIMEOUT                                        | -1    | Timeout. A response to the request was not received within the allotted time.                                                                                            |
+| SYSTEM_ERROR                                   | 1     | Server system error. Failed due to an unknown server error.                                                                                                              |
+| INVALID_PROTOCOL                               | 2     | Protocol not registered on the server. A protocol that is not registered in the additional information was used.                                                         |
+| NAMED_ROOM_SUCCESS                             | 0     | Success.                                                                                                                                                                 |
+| NAMED_ROOM_FAIL_CONTENT                        | 701   | Failed. Rejected by the user code.                                                                                                                                       |
+| NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST            | 702   | Failed. The room disappeared during the room entry process.                                                                                                              |
+| NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM            | 703   | Failed. Already in a room.                                                                                                                                               |
+| NAMED_ROOM_FAIL_INVALID_ROOM_NAME              | 704   | Failed. An invalid room name was requested.                                                                                                                              |
+| NAMED_ROOM_FAIL_CREATE_ROOM                    | 705   | Failed. Room creation failed.                                                                                                                                            |
+| MATCH_ROOM_SUCCESS                             | 0     | Success.                                                                                                                                                                 |
+| MATCH_ROOM_FAIL_CONTENT                        | 901   | Failed. Rejected by the user code.                                                                                                                                       |
+| MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST            | 902   | Failed. The room does not exist.                                                                                                                                         |
+| MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM            | 903   | Failed. Already in a room.                                                                                                                                               |
+| MATCH_ROOM_FAIL_LEAVE_ROOM                     | 904   | Failed. Failed to leave the existing room when moving to a different room.                                                                                               |
+| MATCH_ROOM_FAIL_IN_PROGRESS                    | 905   | Failed. Matchmaking is already in progress.                                                                                                                              |
+| MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST    | 906   | Failed. The room disappeared while joining a room that matched the conditions.<br/>This may occur when all users in the room leave during the room entry process.        |
+| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_ID          | 907   | Failed. Room ID creation failed.                                                                                                                                         |
+| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM             | 908   | Failed. Room creation failed.                                                                                                                                            |
+| MATCH_ROOM_FAIL_INVALID_ROOM_ID                | 909   | Failed. An invalid room ID was used.                                                                                                                                     |
+| MATCH_ROOM_FAIL_INVALID_NODE_ID                | 910   | Failed. An invalid node ID was used.                                                                                                                                     |
+| MATCH_ROOM_FAIL_INVALID_USER_ID                | 911   | Failed. An invalid user ID was used.                                                                                                                                     |
+| MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND         | 912   | Failed. Matchmaking was attempted but no room was found.                                                                                                                 |
+| MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY | 913   | Failed. An invalid matching user category was used.                                                                                                                      |
+| MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY   | 914   | Failed. The user category size in the matching room is 0.                                                                                                                |
+| MATCH_ROOM_FAIL_MATCH_FORM_NULL                | 915   | Failed. The match form is NULL.                                                                                                                                          |
+| MATCH_ROOM_FAIL_MATCH_INFO_NULL                | 916   | Failed. The match information is NULL.                                                                                                                                   |
 
-The details of MatchResult are as follows:
+The details of MatchResult are as follows.
 
-| Type | Name | Description |
-|---------- |-------------------- |
-| bool | IsCancel | Whether the request was canceled. |
-| int | RoomId | ID of the room you entered. |
-| bool | Created | Whether a new room has been created. |
-| String | RoomName | Name of the room you entered. |
-| Payload? | payload | Additional information required by the client.
+| Type     | Name     | Description                                  |
+|----------|----------|----------------------------------------------|
+| bool     | IsCancel | Whether the request was canceled.            |
+| int      | RoomId   | ID of the room you entered.                  |
+| bool     | Created  | Whether a new room has been created.         |
+| String   | RoomName | Name of the room you entered.                |
+| Payload? | payload  | Additional information required by the client. |
 
 <a id="matchmaking-user-matchmaking"></a>
 #### User Matchmaking

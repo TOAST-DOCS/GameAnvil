@@ -768,51 +768,50 @@ Register it in the settings file to link the game user and game room you created
 <a id="game-node-user-and-room-settings"></a>
 ### Game Node, User, and Room Settings { #game-node-user-and-room-settings }
 
- You can also create a class by right-clicking and selecting **New > Java Class**. 
+You can also create a class by right-clicking and selecting **New > Java Class**.
 
 ```java
-@GameAnvilGameNode(gameServiceName = StringValues.serviceName)
-public class BasicGameNode implements IGameNode {
+@GameAnvilGameNode(gameServiceName = "BASIC_SERVICE")
+public class BasicGameNode extends BaseGameNode {
     // ...
 }
 
 @GameAnvilRoom(
-    gameServiceName = StringValues.serviceName,
-    gameType = StringValues.roomType,
-    useChannelInfo = false
+    gameServiceName = "BASIC_SERVICE",
+    gameType = "USER_TYPE_BASIC",
+    useChannelInfo = true
 )
-public class BasicRoom implements IRoom<BasicUser> {
+public class BasicRoom extends BaseGameRoom<BasicUser> {
     // ...
 }
 
 @GameAnvilUser(
-    gameServiceName = StringValues.serviceName,
-    gameType = StringValues.userType,
-    useChannelInfo = false)
-public class BasicUser implements IUser {
+    gameServiceName = "BASIC_SERVICE",
+    gameType = "USER_TYPE_BASIC",
+    useChannelInfo = true)
+public class BasicUser extends BaseGameUser {
     // ...
 }
 ```
 
-And the @GameAnvilGameNode annotation provided by the engine automatically register the setting related to the game node, the user via the @GameAnvilUser annotation, and the @GameAnvilRoom annotation. 
+And the @GameAnvilGameNode annotation provided by the engine automatically registers the settings related to the game node, the user via the @GameAnvilUser annotation, and the room via the @GameAnvilRoom annotation.
 
 The user type is the agreed string between the server and client to identify each user implementation, and the room type is the agreed string between the server and client to identify each room implementation.
 
-Remember, this type must be used when implementing a future client project. The user and room type used in the example are as follows:
+Remember, this type must be used when implementing a future client project. The user and room types used in the example are as follows.
 
-```java
-public class StringValues {
-    public static final String serviceName = "BASIC_SERVICE";
-    public static final String userType = "USER_TYPE_BASIC";
-    public static final String roomType = "ROOM_TYPE_BASIC";
-}
-```
+| Type           | value            |
+|----------------|------------------|
+| Severvice Name | BASIC_SERVICE    |
+| User Type      | USER_TYPE_BASIC  |
+| Room Type      | ROOM_TYPE_BASIC  |
 
-Enter the BasicGameNode, BasicUser, and BasicRoom creators to use in the example as parameters.
+
+Enter the BasicGameNode, BasicUser, and BasicRoom constructors used in the example as parameters, respectively.
 
 Finally, in the section registering the Config, you will proceed with tasks such as setting up channel information, registering protocols, and more. The part of registering protocols will be covered in the later part of implementing in-game chat and puzzle logic.
 
-The feature allows the client to connect to the server, log in as a game user, and create a game room has now been implemented. But because you are connected to the server, you can't immediately request game-related features (create a game user, create a game room, etc.) Even if you run the server and client in the current state, the client will not be able to use the features of the game server. To request these to the server, a client authentication process is required after accessing the server. The next chapter covers how to proceed with authentication on the server and client.
+The feature allows the client to connect to the server, log in as a game user, and create a game room has now been implemented. But because you are connected to the server, you can't immediately request game-related features (create a game user, create a game room, etc.). Even if you run the server and client in the current state, the client will not be able to use the features of the game server. To request these to the server, a client authentication process is required after accessing the server. The next chapter covers how authentication is handled on both the server and client.
 
 <a id="server-connection"></a>
 ## Server Connection { #server-connection }

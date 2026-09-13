@@ -69,8 +69,10 @@ If the login fails, you can find out about the source through errorCode. The fol
 | `TIMEOUT` | -1 | `TIMEOUT` |
 | `SYSTEM_ERROR` | 1 | Server system error |
 | `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 301 | Failed: Denied from content | | `LOGIN_FAIL_NOT_EXIST_NODE` | 302 | Failed: Node does not exist | | `LOGIN_FAIL_TIMEOUT_GAME_SERVER` | 303 | Failed: Game server is unresponsive |
+| `LOGIN_SUCCESS` | 0 | Success |
+| `LOGIN_FAIL_CONTENT` | 301 | Failed: Denied from content |
+| `LOGIN_FAIL_NOT_EXIST_NODE` | 302 | Failed: Node does not exist |
+| `LOGIN_FAIL_TIMEOUT_GAME_SERVER` | 303 | Failed: Game server is unresponsive |
 | `LOGIN_FAIL_INVALID_SERVICEID` | 310 | Failed: Invalid service ID |
 | `LOGIN_FAIL_INVALID_USERTYPE` | 311 | Failed: Invalid user type |
 | `LOGIN_FAIL_INVALID_USERID` | 312 | Failed: Invalid user ID |
@@ -181,13 +183,13 @@ if (resultCreateRoom.resultCode === ResultCodeCreateRoom.CREATE_ROOM_SUCCESS) {
 If the creation or entry of a room fails, you can find out about the source through errorCode. The following are the errorCode types you can receive from the server:
 
 | Code Name | Value | Description |
-|------------------------|-------|-----------------------------------|
+|------------------------------------------|-------|-------------------------------------|
 | `PARSE_ERROR` | -2 | Packet parsing error |
 | `TIMEOUT` | -1 | timeout |
 | `SYSTEM_ERROR` | 1 | Server system error |
 | `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 601 | Failed: Denied from the content |
+| `CREATE_ROOM_SUCCESS` | 0 | Success |
+| `CREATE_ROOM_FAIL_CONTENT` | 601 | Failed: Denied from the content |
 | `CREATE_ROOM_FAIL_ALREADY_JOINED_ROOM` | 602 | Failed: Already in the room |
 | `CREATE_ROOM_FAIL_CREATE_ROOM_ID` | 603 | Failed: Failed to issue room ID |
 | `CREATE_ROOM_FAIL_CREATE_ROOM` | 604 | Failed: Failed to create a room |
@@ -247,13 +249,13 @@ if (resultJoinRoom.resultCode === ResultCodeJoinRoom.JOIN_ROOM_SUCCESS) {
 If entering the room fails, you can find out about the source through errorCode. The following are the errorCode types you can receive from the server:
 
 | Code Name | Value | Description |
-|------------------------|-------|-----------------------------------|
+|-----------------------------------------|-------|-------------------------------------|
 | `PARSE_ERROR` | -2 | Packet parsing error |
 | `TIMEOUT` | -1 | Timeout |
 | `SYSTEM_ERROR` | 1 | Server system error |
 | `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 701 | Failed: Denied from content |
+| `JOIN_ROOM_SUCCESS` | 0 | Success |
+| `JOIN_ROOM_FAIL_CONTENT` | 701 | Failed: Denied from content |
 | `JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST` | 702 | Failed: Room does not exist |
 | `JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM` | 703 | Failed: Already in the room |
 | `JOIN_ROOM_FAIL_ALREADY_FULL` | 704 | Failed: If the room is already full |
@@ -293,13 +295,13 @@ if (leaveRoomResult.resultCode === ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS) {
 If exiting the room has failed, you can find out about the source through errorCode. The following are the errorCode types you can receive from the server:
 
 | Code Name | Value | Description |
-|------------------------|-------|-----------------------------------|
-| `PARSE_ERROR` | -2 | Packet parsing error |
-| `TIMEOUT` | -1 | timeout |
-| `SYSTEM_ERROR` | 1 | Server system error |
-| `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 801 | Failed: Denied from the content |
+|------------------------|-------|-------------------------------------|
+| `PARSE_ERROR`          | -2    | Packet parsing error                |
+| `TIMEOUT`              | -1    | timeout                             |
+| `SYSTEM_ERROR`         | 1     | Server system error                 |
+| `INVALID_PROTOCOL`     | 2     | Protocol not registered on server   |
+| `LEAVE_ROOM_SUCCESS`   | 0     | Success                             |
+| `LEAVE_ROOM_FAIL_CONTENT` | 801 | Failed: Denied from the content    |
 
 If you are force-checked from the room by the server, you can register the process function to run.
 
@@ -341,8 +343,8 @@ If the registration in the pool failed, you can find out about the reason throug
 | `TIMEOUT` | -1 | Timeout |
 | `SYSTEM_ERROR` | 1 | Server system error |
 | `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 1101 | Failed: Denied from the content |
+| `MATCH_USER_START_SUCCESS` | 0 | Success |
+| `MATCH_USER_START_FAIL_CONTENT` | 1101 | Failed: Denied from the content |
 | `MATCH_USER_START_FAIL_ALREADY_JOINED_ROOM` | 1102 | Failed: Already in the room |
 
 If the pool is registered normally, the user match is performed on the server. If the match is successful, a pre-registered callback is called to the user. Before requesting the user matching pool, you can register a callback as shown below.
@@ -394,8 +396,8 @@ If the request failed, you can find out about the source through errorCode. The 
 | `TIMEOUT` | -1 | Timeout |
 | `SYSTEM_ERROR` | 1 | Server system error |
 | `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 1201 | Failed: Denied from the content |
+| `MATCH_USER_CANCEL_SUCCESS` | 0 | Success |
+| `MATCH_USER_CANCEL_FAIL` | 1201 | Failed: Denied from the content |
 | `MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM` | 1202 | Failed: Already matched |
 | `MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS` | 1203 | Failed: When matching is not in progress |
 
@@ -439,8 +441,8 @@ If matchmaking fails, you can find out about the cause through errorCode. The fo
 | `TIMEOUT` | -1 | Timeout |
 | `SYSTEM_ERROR` | 1 | Server system error |
 | `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 901 | Failed: Denied from the content |
+| `MATCH_ROOM_SUCCESS` | 0 | Success |
+| `MATCH_ROOM_FAIL_CONTENT` | 901 | Failed: Denied from the content |
 | `MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST` | 902 | Failed: Room does not exist |
 | `MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM` | 903 | Failed: Already in the room |
 | `MATCH_ROOM_FAIL_LEAVE_ROOM` | 904 | Failed: Failed to leave an existing room |
@@ -454,8 +456,8 @@ If matchmaking fails, you can find out about the cause through errorCode. The fo
 | `MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND` | 912 | Failed: Matched, but no room found |
 | `MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY` | 913 | Failed: Invalid matching user category |
 | `MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY` | 914 | Failed: If the matching user category size is 0 |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL` | 915 | Failed: No matching request form |
-| `MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL` | 916 | Failed: No matching information |
+| `MATCH_ROOM_FAIL_MATCH_FORM_NULL` | 915 | Failed: No matching request form |
+| `MATCH_ROOM_FAIL_MATCH_INFO_NULL` | 916 | Failed: No matching information |
 
 If the room matchmaking is successful, you can check the information that includes roomId through the response.
 
@@ -497,13 +499,13 @@ if (namedRoomResult.resultCode === ResultCodeNamedRoom.NAMED_ROOM_SUCCESS) {
 If the action fails, you can find out about the cause through errorCode. The following are the errorCode types you can receive from the server:
 
 | Code Name | Value | Description |
-|------------------------|-------|-----------------------------------|
+|----------------------------------------------|-------|-------------------------------------|
 | `PARSE_ERROR` | -2 | Packet parsing error |
 | `TIMEOUT` | -1 | Timeout |
 | `SYSTEM_ERROR` | 1 | Server system error |
 | `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 1001 | Failed: Denied from the content |
+| `NAMED_ROOM_SUCCESS` | 0 | Success |
+| `NAMED_ROOM_FAIL_CONTENT` | 1001 | Failed: Denied from the content |
 | `NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST` | 1002 | Failed: Failed to create a room and the room could not be found |
 | `NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM` | 1003 | Failed: Already in the room |
 | `NAMED_ROOM_FAIL_INVALID_ROOM_NAME` | 1004 | Failed: Enter an invalid room name |
@@ -549,13 +551,13 @@ if (matchStartResult.resultCode === ResultCodeMatchPartyStart.MATCH_PARTY_START_
 If the party match failed to start, you can find out about the cause through errorCode. The following are the errorCode types you can receive from the server:
 
 | Code Name | Value | Description |
-|------------------------|-------|-----------------------------------|
+|----------------------------------------------|-------|-------------------------------------|
 | `PARSE_ERROR` | -2 | Packet parsing error |
 | `TIMEOUT` | -1 | Timeout |
 | `SYSTEM_ERROR` | 1 | Server system error |
 | `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 1301 | Failed: Denied from content |
+| `MATCH_PARTY_START_SUCCESS` | 0 | Success |
+| `MATCH_PARTY_START_FAIL_CONTENT` | 1301 | Failed: Denied from content |
 | `MATCH_PARTY_START_FAIL_PARTY_MATCH_WEIRD` | 1302 | Failed: When requesting party match, if the room is not a room for party matching |
 
 If the start of the party match is normal, matching the party starts on the server. At this time, if users in the same party want to receive a notification at the start, you can register a processing function as follows:
@@ -611,13 +613,12 @@ if (matchCancelResult.resultCode === ResultCodeMatchPartyCancel.MATCH_PARTY_CANC
 If the cancellation fails, you can find out about the source through errorCode. The following are the errorCode types you can receive from the server:
 
 | Code Name | Value | Description |
-|------------------------|-------|-----------------------------------|
+|----------------------------------------------|-------|-------------------------------------|
 | `PARSE_ERROR` | -2 | Packet parsing error |
 | `TIMEOUT` | -1 | Timeout |
 | `SYSTEM_ERROR` | 1 | Server system error |
-| `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 1401 | Failed: Denied from the content |
+| `MATCH_PARTY_CANCEL_SUCCESS` | 0 | Success |
+| `MATCH_PARTY_CANCEL_FAIL_CONTENT` | 1401 | Failed: Denied from the content |
 | `MATCH_PARTY_CANCEL_FAIL_PARTY_MATCH_WEIRD` | 1402 | Failed: When the party match is canceled, if the room is not a room for the party match |
 
 <a id="send-packet"></a>
@@ -676,13 +677,13 @@ iF (moveChannelResult.resultCode === ResultcodeMoveChannel.MOVE_CHANNEL_SUCCESS)
 If the channel move fails, you can find out about the source through errorCode. The following are the errorCode types you can receive from the server:
 
 | Code Name | Value | Description |
-|------------------------|-------|-----------------------------------|
+|----------------------------------------------|-------|-------------------------------------|
 | `PARSE_ERROR` | -2 | Packet parsing error |
 | `TIMEOUT` | -1 | Timeout |
 | `SYSTEM_ERROR` | 1 | Server system error |
 | `INVALID_PROTOCOL` | 2 | Protocol not registered on server |
-| `LOGOUT_SUCCESS` | 0 | Success |
-| `LOGOUT_FAIL_CONTENT` | 1601 | Failed: Denied from the content |
+| `MOVE_CHANNEL_SUCCESS` | 0 | Success |
+| `MOVE_CHANNEL_FAIL_CONTENT` | 1601 | Failed: Denied from the content |
 | `MOVE_CHANNEL_FAIL_NODE_NOT_FOUND` | 1602 | Failed: Channel node not found |
 | `MOVE_CHANNEL_FAIL_ALREADY_JOINED_CHANNEL` | 1603 | Failed: Already in the requested channel |
 | `MOVE_CHANNEL_FAIL_ALREADY_JOINED_ROOM` | 1604 | Failed: Channel cannot be moved because you already entered the room |
@@ -735,13 +736,14 @@ user.onSessionClose = (user, resultCode, payload) => {
 ```
 
 | Code Name | Value | Description |
-|----------------------------------------------|-------|------------------------------------------------------------------------------------------------------|
-| `SESSION_CLOSE_BASE_USER` | 2011 | The server called BaseUser's `closeConnection()` |
-| `SESSION_CLOSE_ADMIN_KICK` | 2012 | The connection was forced to close by the admin |
-| `SESSION_CLOSE_DUPLICATE_LOGIN` | 2032 | The connection was forced to close due to a duplicate connection |
-| `SESSION_CLOSE_BY_NEW_CONNECTION` | 2040 | The previous connection was closed when a new login request was made with the same account information. Use when connecting back to the network. Inquiry required. |
-| `SESSION_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041 | Detect disconnection with the client. It generally does not occur. If it occurs, you need to contact the GameAnvil development team. |
-| `SESSION_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | If the session could not be found. It generally does not occur. If it occurs, you need to contact the GameAnvil development team.
+|---------------------------------------------------|-------|------------------------------------------------------------------------------------------------------|
+| `FORCE_CLOSE_USER` | 2011 | The server called BaseUser's `closeConnection()` |
+| `FORCE_CLOSE_ADMIN_KICK` | 2012 | The connection was forced to close by the admin |
+| `FORCE_CLOSE_INVALID_PROTOCOL` | 2013 | Invalid protocol |
+| `FORCE_CLOSE_DUPLICATE_LOGIN` | 2032 | The connection was forced to close due to a duplicate connection |
+| `FORCE_CLOSE_BY_NEW_CONNECTION` | 2040 | The previous connection was closed when a new login request was made with the same account information. Use when connecting back to the network. Inquiry required. |
+| `FORCE_CLOSE_DISCONNECT_ALARM_FROM_CLIENT` | 2041 | Detect disconnection with the client. It generally does not occur. If it occurs, you need to contact the GameAnvil development team. |
+| `FORCE_CLOSE_DISCONNECT_ALARM_NOT_FIND_SESSION` | 2042 | If the session could not be found. It generally does not occur. If it occurs, you need to contact the GameAnvil development team. |
 
 <a id="forced-exit-by-admin"></a>
 ### Forced Exit by Admin { #forced-exit-by-admin }
