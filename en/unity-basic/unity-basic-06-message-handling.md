@@ -107,15 +107,106 @@ user.Request(SampleRequest, (UserAgent user, Messages.SampleResponse res) => { }
 <a id="send-messages-requestuser"></a>
 #### RequestUser
 
-<!-- TODO: translate body -->
+You can send a message and receive a response using RequestUser().
+
+```c#
+public async void ManagerRequest()
+{
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    try
+    {
+        var (resultCode, response) = await userController.RequestUser<Protocol.SampleResponse>(new Protocol.SampleRequest());
+        if (resultCode == ResultCode.SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+RequestUser\<TProtoBuffer\>() takes one type parameter and one parameter, as described below.
+
+| Type       | Name           | Description                              |
+|----------|--------------|----------------|
+| Type parameter  | TProtoBuffer | Message type to receive as a response |
+| IMessage | message      | Message to send to the server     |
+
+It returns an ErrorResult<ResultCode, TProtoBuffer> as the response. You can check the value of the ErrorCode field to determine whether the request was successful. If RequestUser() succeeds, the value of the ErrorCode field is ResultCode.SUCCESS; otherwise, the message transmission has failed. You can retrieve the response message through the Data field.
+
+The details of ResultCode are as follows.
+
+| Name                | Value  | Description                                         |
+|-------------------|----|--------------------------------------------|
+| PARSE_ERROR       | -2 | Packet parsing error. This may occur when the server and client versions differ.   |
+| TIMEOUT           | -1 | Timeout. The response to the request did not arrive within the allotted time.          |
+| SYSTEM_ERROR      | 1  | Server system error. Failed due to an unknown error on the server.              |
+| INVALID_PROTOCOL  | 2  | Protocol not registered on the server. A protocol that is not registered in the additional information was used. |
+| HANDLER_NOT_EXIST | 10 | Failed. No handler on the server.                            |
+| HANDLER_ERROR     | 11 | Failed. An exception occurred in the server's handler.                       |
+| SUCCESS           | 0  | Success                                         |
 
 <a id="send-messages-senduser"></a>
 #### SendUser
 
-<!-- TODO: translate body -->
+When you send a message using SendUser(), the message is sent to the server immediately upon the call, without waiting for a separate response.
+
+```c#
+public async void ManagerSend()
+{
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    try
+    {
+        userController.SendUser(new Protocol.SampleSend());
+    } catch (Exception e)
+    {
+        // exception
+    }
+}
+```
+
+SendUser() has one parameter as follows:
+
+| Type     | Name    | Description                  |
+|----------|---------|------------------------------|
+| IMessage | message | Message to send to the server |
 
 <a id="send-messages-messagecallback"></a>
 #### MessageCallback
 
-<!-- TODO: translate body -->
+To receive messages sent from the server regardless of messages sent with SendUser(), you can register a callback using SetMessageCallback\<TProtoBuffer\>(). To unregister a registered callback, use RemoveMessageCallback\<TProtoBuffer\>().
+
+```c#
+public async void ManagerMessageCallback()
+{
+    GameAnvilManager gameAnvilManager = GameAnvilManager.Instance;
+    GameAnvilUserController userController = gameAnvilManager.UserController;
+    userController.SetMessageCallback((GameAnvilUserController user, ResultCode resultCode, Protocol.SampleReceive receive) =>
+    {
+        return Task.CompletedTask;
+    });
+    
+    userController.RemoveMessageCallback<Protocol.SampleReceive>();
+}
+```
+
+SetMessageCallback\<TProtoBuffer\>() has one type parameter and one parameter as follows:
+
+| Type                                                          | Name         | Description                                        |
+|---------------------------------------------------------------|--------------|----------------------------------------------------|
+| Type parameter                                                | TProtoBuffer | The type of message to receive from the server     |
+| Func<GameAnvilUserController, ResultCode, TProtoBuffer, Task> | callback     | The callback method called when the server sends a message |
+
+RemoveMessageCallback\<TProtoBuffer\>() has one type parameter as follows:
+
+| Type           | Name         | Description                                           |
+|----------------|--------------|-------------------------------------------------------|
+| Type parameter | TProtoBuffer | The type of message that the registered callback receives |
 

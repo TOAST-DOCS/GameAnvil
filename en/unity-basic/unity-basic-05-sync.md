@@ -24,9 +24,16 @@ The SyncController must exist in the scene where you want to use the Sync featur
 <a id="create-a-synccontroller"></a>
 ### Create a SyncController { #create-a-synccontroller }
 
-Create a GameObject and add the SyncController component. You can add it as a component by choosing Add Component > GameAnvil > SyncController.
+You can create immediately by right-clicking in the Unity Hierarchy window and selecting **GameAnvil > SyncController**.
 
-Alternatively, you can create one directly from the Unity Hierarchy by right-clicking and selecting GameAnvil > SyncController.
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/02-add-sync-controller.png)
+
+Or you can create an empty GameObject and add a SyncController component.
+SyncController has the following options:
+
+| Option | Description |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Lazy Loading | Whether to automatically synchronize existing data immediately after entering a room. <br/>If this option is set to false, call SyncController::InstantiateSyncObject() directly at the point when you want to synchronize existing data. <br/>(Default: true) |
 
 <a id="synchronizing-gameobject-creationdestruction-sync"></a>
 ## Synchronizing GameObject creation/destruction, Sync { #synchronizing-gameobject-creationdestruction-sync }
@@ -186,87 +193,84 @@ Provides the ability to synchronize user-defined values of type int, float, bool
 <a id="add-or-change-a-custom-value"></a>
 ### Add or change a custom value { #add-or-change-a-custom-value }
 
-You can add or change a custom value with SyncController.SetCustomProperty<T>(). You specify the type of the custom value when you call the function. You pass a key to distinguish the custom value as a parameter of type string. The server stores that custom value data and broadcasts it to all users in the same room so that they can synchronize.
+You can use SetCustomProperty\<T\>() to add or change custom values. The server stores the custom value data and broadcasts it to all users in the same room so that it can be synchronized.
+SetCustomProperty\<T\>() has one type parameter and two parameters as follows:
+
+| Type | Name | Description |
+|---------|-------|-------------------------------------------------|
+| Type parameter | T | The type of the custom value to store. Must be one of int, float, bool, or string. |
+| String | key | A key used to identify the custom value |
+| T | value | The custom value |
 
 ```c#
-/// <summary>
-/// Adds a user-defined value.
-/// </summary>
-/// <typeparam name="T">Type of custom value</typeparam>
-/// <param name="key">Key to distinguish the custom value</param>
-/// <param name="value">Custom value</param>
-public static void SetCustomProperty<T>(string key, T value);
-```
-
-Let's look at a usage example.
-
-```c#
-SyncController.SetCustomProperty<float>("custom_key", 0.9f);
+public void SetCustomProperty()
+{
+    SyncController.Instance.SetCustomProperty("IntValue", 1);
+    SyncController.Instance.SetCustomProperty("FloatValue", 1.0f);
+    SyncController.Instance.SetCustomProperty("BoolValue", false);
+    SyncController.Instance.SetCustomProperty("StringValue", "Value");
+}
 ```
 
 <a id="make-sure-your-custom-values-are-up-to-date-before-making-changes"></a>
 ### Make sure your custom values are up to date before making changes { #make-sure-your-custom-values-are-up-to-date-before-making-changes }
 
-When you call SyncController.SetCustomPropertyCAS<T>(), it sends a packet to the server with a key to distinguish between the custom values it receives as parameters, the custom values you want to change, and the custom values that were previously stored on the client.
+Calling SetCustomPropertyCas\<T\>() compares the custom property value stored on the client with the value stored on the server, and stores the custom property data only if they match, then broadcasts it to all users in the same room for synchronization. If the custom property values stored on the client and server differ, the request is ignored.
+SetCustomPropertyCas\<T\>() has one type parameter and the following two parameters:
 
-The server then compares the custom value previously stored on the client with the custom value obtained as a distinguishing key from the data stored on the server. 
-
-If they are the same, we assume that the client's custom values were up to date and synchronized, so we replace them with the desired values, store them on the server, and broadcast them to other users so they can also synchronize.
-
-If the custom value stored on the client is different from the value stored on the server, the request is ignored.
-
-```c#
-/// <summary>
-/// Checks if user-defined values are up to date before changing them.
-/// </summary>
-/// <typeparam name="T">Type of custom value</typeparam>
-/// <param name="key">Key to distinguish the custom value</param>
-/// <param name="value">Custom value</param>
-public static void SetCustomPropertyCAS<T>(string key, T value);
-```
-
-Let's look at a usage example.
+| Type | Name | Description |
+|---------|-------|-------------------------------------------------|
+| Type parameter | T | Type of the custom property value to store. One of int, float, bool, or string. |
+| String | key | Key used to identify the custom property value |
+| T | value | Custom property value |
 
 ```c#
-SyncController.SetCustomPropertyCAS<float>("custom_key", 0.9f);
+public void SetCustomPropertyCas()
+{
+    SyncController.Instance.SetCustomPropertyCas("IntValue", 1);
+    SyncController.Instance.SetCustomPropertyCas("FloatValue", 1.0f);
+    SyncController.Instance.SetCustomPropertyCas("BoolValue", false);
+    SyncController.Instance.SetCustomPropertyCas("StringValue", "Value");
+}
 ```
 
 <a id="lookup-custom-values"></a>
 ### Lookup custom values { #lookup-custom-values }
 
-You can get a custom value with SyncController.GetCustomProperty<T>(). When you call the function, you specify the type of the custom value. To find the desired custom value, we pass a delimiter key as a parameter of type string.
+You can retrieve a custom value by using GetCustomProperty\<T\>().
+SetCustomPropertyCas\<T\>() has one type parameter and one parameter as follows:
+
+| Type            | Name | Description                                                                       |
+|-----------------|------|-----------------------------------------------------------------------------------|
+| Type parameter  | T    | The type of the custom value to retrieve. One of int, float, bool, or string.    |
+| String          | key  | A key used to identify the custom value.                                          |
 
 ```c#
-/// <summary>
-/// Retrieves a user-defined value.
-/// </summary>
-/// <typeparam name="T">Type of custom value</typeparam>
-/// <param name="key">Key to distinguish the custom value</param>
-/// <returns>Custom value</returns>
-public static T GetCustomProperty<T>(string key);
-```
-
-Let's look at a usage example.
-
-```c#
-float custom_value = SyncController.GetCustomProperty<float>("custom_key");
+public void GetCustomProperty()
+{
+    int intValue = SyncController.Instance.GetCustomProperty<int>("IntValue");
+    float floatValue = SyncController.Instance.GetCustomProperty<float>("FloatValue");
+    bool boolValue = SyncController.Instance.GetCustomProperty<bool>("BoolValue");
+    string stringValue = SyncController.Instance.GetCustomProperty<string>("StringValue");        
+}
 ```
 
 <a id="delete-custom-values"></a>
 ### Delete custom values { #delete-custom-values }
 
-You can delete a custom value with SyncController.RemoveCustomProperty<T>(). You specify the type of the custom value when you call the function. To find the desired custom value, pass a key as a parameter of type string. The server will also delete the saved custom value data.
+You can use RemoveCustomProperty\<T\>() to delete a custom value. This also deletes the custom value data that was saved on the server.
+SetCustomPropertyCas\<T\>() has one parameter as follows:
+
+| Type   | Name | Description                          |
+|--------|------|--------------------------------------|
+| String | key  | Key used to identify the custom value |
 
 ```c#
-/// <summary>
-/// Deletes a user-defined value.
-/// </summary>
-/// <param name="key">Key to distinguish between custom values</param>
-public static void RemoveCustomProperty(string key)
-```
-
-Let's look at a usage example.
-
-```c#
-SyncController.RemoveCustomProperty("custom_key");
+public void RemoveCustomProperty()
+{
+    SyncController.Instance.RemoveCustomProperty("IntValue");
+    SyncController.Instance.RemoveCustomProperty("FloatValue");
+    SyncController.Instance.RemoveCustomProperty("BoolValue");
+    SyncController.Instance.RemoveCustomProperty("StringValue");
+}
 ```

@@ -22,29 +22,16 @@ By default, most GameAnvil features are provided in the form of callbacks. Engin
 <a id="start-of-all-implements-nodes"></a>
 ## Start of All Implements, Nodes { #start-of-all-implements-nodes }
 
-For example, all nodes must redefine the callback methods below in common. And each node may require the implementation of additional callback methods for the role. For example, in the code below, SampleGatewayNode implements IGatewayNode, which is the default interface of GatewayNode.
+For example, all nodes must redefine the callback methods below in common. And each node may require the implementation of additional callback methods for the role. For example, in the code below, SampleGatewayNode implements BaseGatewayNode, which is the base class of GatewayNode.
 
-All interface nodes, including IGatewayNode, offer the following callback methods in common. The context interface according to the type implemented by the onCreate() method is passed to the parameters. When a user implements these callback methods, the engine calls the callback at a certain point in time. This is the most basic use of GameAnvil. This usage is consistent throughout the document, so you should be able to understand each chapter without much confusion.
+All interface nodes, including BaseGatewayNode, commonly provide the following callback methods. When a user implements this class, the engine calls the callback at a certain point in time. This is the most basic usage of GameAnvil. This usage is consistent throughout the document, so you should be able to understand each chapter without much confusion.
 
 ```java
 @GameAnvilGatewayNode // Register this class as Gateway to the engine
-public class SampleGatewayNode implements IGatewayNode {
-    private IGatewayNodeContext gatewayNodeContext;
+public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
-     * Call to send gateway node context
-     * <p/>
-     * Call once after the object is created
-     *
-     * @param gatewayNodeContext Gateway Node Context
-     */
-    @Override
-    public void onCreate(IGatewayNodeContext gatewayNodeContext) {
-        this.gatewayNodeContext = gatewayNodeContext;
-    }
-
-    /**
-     * Call when the node is initialized
+     * Called when the node is initialized
      */
     @Override
     public void onInit() {
@@ -60,20 +47,10 @@ public class SampleGatewayNode implements IGatewayNode {
     }
 
     /**
-     * Call when you are ready
+     * Call when you are Ready
      */
     @Override
     public void onReady() {
-
-    }
-
-    /**
-     * Call when Pause
-     *
-     * Additional information to send from the @param payload content
-     */
-    @Override
-    public void onPause(IPayload payload) {
 
     }
 
@@ -84,29 +61,17 @@ public class SampleGatewayNode implements IGatewayNode {
     public void onShuttingdown() {
 
     }
-
-    /**
-     * Call when Resume
-     *
-     * Additional information to send from the @param payload content
-     */
-    @Override
-    public void onResume(IPayload payload) {
-
-    }
 }
 ```
 
-For the meaning and usage of these node common callbacks, see the table below:
+Refer to the table below for the meaning and purpose of these common node callbacks.
 
-| Callback name | Meaning | Description | |---------------- |------- |--------------------------------------------------------------------------------------------- |
-| onCreate | Create object | Calls when the object is created. You receive the context where the API available for the created type can be used. If needed from the content, it can be saved and used. |
-| onInit | Initialize | Calls when the node proceeds with the first initialization. If there is any initialization task required before the node runs, this callback is suitable. At this time, the node is still not being processing the message. |
-| onPrepare | Prepare | The node will be called after the node is initialized. The user can proceed with any task here before the node is ready. At this time, the node can process messages. |
-| onReady | Prepared | After all preparations are completed, the node is running. At this time, the node is in Ready state, so the user will be able to use all features from this time. |
-| onPause | Pause | Pause the node will call the call. Here you can implement the code you want to process additionally when the node is temporarily stopped. |
-| onShuttingdown | Node stopped | Calls are sent when the node receives a Shutdown command. Stopped nodes cannot be Resume. |
-| onResume | Resume | Calls are called when the node restarts the run while it is temporarily stopped. Here, the user can implement the code he wants to process while in a restart. |
+| Callback Name  | Meaning  | Description                                                                                                                                                                      |
+|----------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| onInit         | Initialize | Called when the node performs its initial initialization. If there is any initialization task required before the node runs, this callback is suitable. At this time, the node is still not being processing the message. |
+| onPrepare      | Prepare  | The node will be called after the node is initialized. The user can proceed with any task here before the node is ready. At this time, the node can process messages.            |
+| onReady        | Prepared | After all preparations are completed, the node is running. At this time, the node is in Ready state, so the user will be able to use all features from this time.                |
+| onShuttingdown | Node Stop | Called when the node receives a Shutdown command. A stopped node cannot be resumed.                                                                                              |
 
 <a id="methods-and-variables-beginning-with-underscore"></a>
 ## Methods and variables beginning with _(underscore) { #methods-and-variables-beginning-with-underscore }
