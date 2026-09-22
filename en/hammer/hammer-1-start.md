@@ -6,7 +6,16 @@
 <a id="overview"></a>
 ### Overview { #overview }
 
-<!-- TODO: translate body -->
+GameHammer is a performance and feature test tool that can be used after developing a game server using the GameAnvil engine. It can be tested using all the features provided by the actual connector in the same way, and can be used as running multiple GameHammers at the same time for stress tests, etc. You can check and save the progress during the test process or take the test final result together.
+
+* Support all functions in the connector the same
+* Support both Sync/Async methods
+    * Provide Async API
+    * Provide Future for the Sync method
+* Allow you to use more than thousands of connections at the same time
+* Support status-based scenario management
+
+This guide provides how to use GameHammer with detailed examples. It describes the use based on IntelliJ, like the server engine.
 
 <a id="supported-environment-and-protocol"></a>
 ### Supported Environment and Protocol { #supported-environment-and-protocol }

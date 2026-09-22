@@ -11,7 +11,7 @@ In addition to the basic functionality of ConnectionAgent and UserAgent, you can
 <a id="create-and-register-message"></a>
 ### Create and Register Message { #create-and-register-message }
 
-<!-- TODO: translate body -->
+The process for creating and registering messages is the same as when using GameAnvilManager. For more information, see [Basic Development Guide to Unity > Message Handling](../unity-basic/unity-basic-06-message-handling.md).
 
 <a id="sending-messages"></a>
 ### Sending messages { #sending-messages }

@@ -6,12 +6,10 @@
 <a id="20-january-29-2026"></a>
 ### 2.2.0 (2026.01.29) { #20-january-29-2026 }
 
-<!-- TODO: translate body -->
-
 <a id="20-january-29-2026-new"></a>
 #### New
 
-<!-- TODO: translate body -->
+* Java 21で実行できるように更新
 
 <a id="20-january-29-2026-change"></a>
 #### Change

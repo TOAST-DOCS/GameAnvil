@@ -6,22 +6,18 @@
 <a id="20-january-29-2026"></a>
 ### 2.2.0 (2026.01.29) { #20-january-29-2026 }
 
-<!-- TODO: translate body -->
-
 <a id="20-january-29-2026-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector.unitypackage)
-
-<!-- TODO: translate body -->
 
 <a id="20-january-29-2026-gameanvil-220-or-later"></a>
 #### GameAnvil 2.2.0 以降
 
-<!-- TODO: translate body -->
+* GameAnvil 2.2.0 サーバーのリリースに合わせて、Connector も 2.2.0 バージョンをリリースしました。
 
 <a id="20-january-29-2026-change"></a>
 #### Change
 
-<!-- TODO: translate body -->
+* エンジンバージョンに合わせてプロトコルバージョンを更新
 
 <a id="20-january-29-2026-fix"></a>
 #### Fix
