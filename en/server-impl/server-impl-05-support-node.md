@@ -101,4 +101,4 @@ public class _SupportNodeTest {
 ```
 
 
-All nodes need a message handler registration process to process custom messages. SupportNode, like GameNode, is a node where users can implement arbitrary content. First, (1) create a support node service name specified in GameAnvilConfig. The support node service name must be one defined in GameAnvilConfig. (2) Then, connect it to the [handler](server-impl-07-message-handling.md#_2) that implements the message you want to process.
+All nodes need a message handler registration process to process custom messages. SupportNode, like GameNode, is a node where users can implement arbitrary content. First, (1) create a support node service name specified in GameAnvilConfig. The support node service name must be one defined in GameAnvilConfig. (2) Then, connect it to the [handler](server-impl-07-message-handling.md#implement-message-handler-and-connect-messages-to-handlers) that implements the message you want to process.
