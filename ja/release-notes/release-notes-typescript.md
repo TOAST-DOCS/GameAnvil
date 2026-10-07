@@ -6,22 +6,16 @@
 <a id="20-january-28-2026"></a>
 ### 2.2.0 (2026.01.28) { #20-january-28-2026 }
 
-<!-- TODO: translate body -->
-
 <a id="20-january-28-2026-download"></a>
 #### [ダウンロード](https://static.toastoven.net/prod_gameanvil/files/v2_2/gameanvil-connector-typescript.zip)
-
-<!-- TODO: translate body -->
 
 <a id="20-january-28-2026-gameanvil-220-or-later"></a>
 #### GameAnvil 2.2.0 以降
 
-<!-- TODO: translate body -->
-
 <a id="20-january-28-2026-changed"></a>
 #### 変更
 
-<!-- TODO: translate body -->
+* GameAnvil 2.2 サーバーに合わせてエンジンプロトコルを更新しました。
 
 <a id="20-january-28-2026-fix"></a>
 #### Fix

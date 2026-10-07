@@ -50,7 +50,27 @@ CustomMessage.SampleResponse responseMsg = packet.GetMessage<CustomMessage.Sampl
 <a id="sent"></a>
 ### Sent { #sent }
 
-<!-- TODO: translate body -->
+The packet created this way can be sent to the server in the same way as sending a ProtocolBuffer message.
+```c#
+public async void RequestPacket()
+{
+    try
+    {
+        Packet packet = Packet.MakePacket(new Protocol.SampleRequest());
+        Result<ResultCode, Protocol.SampleResponse> result = await connector.Request<Protocol.SampleResponse>(packet);
+        if (result.ResultCode == ResultCode.SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
 
 <a id="payload"></a>
 ### Payload { #payload }

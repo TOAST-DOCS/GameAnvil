@@ -26,10 +26,71 @@ Some of the features related to the ID mentioned above are provided to engine us
 <a id="id-support-api-verify-valid-id-api"></a>
 #### Verify Valid ID API
 
-<!-- TODO: translate body -->
+```java
+/**
+ * A class for validating IDs used in GameAnvil
+ */
+public class GameAnvilIdValidator {
+    /**
+     * Checks whether a String ID is a valid value
+     *
+     * @param id The ID to check, of type String
+     * @return If the return value is true, it is valid; and if false, it is invalid.
+     */
+    public static boolean isValid(String id)
+
+    /**
+     * Checks whether an ID is valid
+     *
+     * @param id The Node ID to check, of type long
+     * @return If the return value is true, it is valid; and if false, it is invalid.
+     */
+    public static boolean isValid(long id)
+
+    /**
+     * Checks whether an ID is valid
+     *
+     * @param id The Node ID to check, of type int
+     * @return If the return value is true, it is valid; and if false, it is invalid.
+     */
+    public static boolean isValid(int id) 
+
+    /**
+     * Range check for a service ID, 0 < service ID < 100
+     *
+     * @param serviceId The service ID
+     * @return Whether the service ID passed as an argument is valid
+     */
+    public static boolean isValidOpenId(int serviceId)
+}
+```
 
 <a id="id-support-api-verify-registered-services-api-insecure"></a>
 #### Verify Registered Services API (Insecure)
 
-<!-- TODO: translate body -->
+* You can manage IDs and names, but this API is subject to change in the future.
+```java
+/**
+ * Class that manages service ID < - > name mappings
+ */
+public enum ServiceInfoMap {
+    INSTANCE;
+
+    /**
+     * Retrieves the service name by service ID.
+     *
+     * @param serviceId Service ID
+     * @return Service name, or an empty string ("") if the ID does not exist
+     */
+    public String getServiceName(int serviceId) 
+
+    /**
+     * Retrieves the service ID by service name.
+     *
+     * @param serviceName Service name
+     * @return Service ID, or -1 if the name does not exist
+     */
+    public int getServiceId(String serviceName) 
+}
+```
 

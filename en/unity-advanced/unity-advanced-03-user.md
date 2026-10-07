@@ -86,7 +86,17 @@ userAgent.Logout((UserAgent user, Defines.ResultCodeLogout result, bool force, P
 <a id="logout-force-logout-notification"></a>
 #### Force Logout Notification
 
-<!-- TODO: translate body -->
+Even if Logout() is not called, you can force the user to log out from the server. In this case, you can be notified via OnForceLogout.
+```c#
+public void AddOnLogout()
+{
+    user.OnForceLogout += (GameAnvilUser, Payload) =>
+    {
+        // Force Logout notification
+    };
+}
+```
+Depending on the implementation of the server, additional information can also be obtained through the parameter Payload payload.
 
 <a id="create-enter-and-leave-rooms"></a>
 ### Create, enter, and leave rooms { #create-enter-and-leave-rooms }
@@ -96,27 +106,246 @@ This is the same as creating, entering, and leaving rooms in [Unity Basic Develo
 <a id="create-enter-and-leave-rooms-create-room"></a>
 #### Create Room
 
-<!-- TODO: translate body -->
+Call CreateRoom() to create a room and enter it.
+
+```c#
+public async void CreateRoom()
+{
+    try
+    {
+        Payload createRoomPayload = new Payload(new Protocol.CreateRoomData());
+        Result<ResultCodeCreateRoom, CreatedRoomResult> result = await user.CreateRoom("RoomName", "RoomType", "MatchingGroup", createRoomPayload);
+        if (result.ResultCode == ResultCodeCreateRoom.CREATE_ROOM_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    }
+    catch(Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+CreateRoom() has the following four parameters:
+
+| Type    | Name          | Description                                                                                      |
+|---------|---------------|--------------------------------------------------------------------------------------------------|
+| String  | roomName      | Name of the room to create. Enter string.Empty (empty string) if not used.                      |
+| String  | roomType      | Type of the room to create. Enter a room type registered on the server.                          |
+| String  | matchingGroup | Name of the matching group to use during matching. Enter string.Empty (empty string) if not used. |
+| Payload | payload       | Additional information required by the user code on the server that processes the room creation request. (default = null) |
+
+The response returns Result<ResultCodeCreateRoom, CreatedRoomResult>. You can check the value of the ResultCode field to determine whether the call succeeded. If CreateRoom succeeds, the value of the ResultCode field is ResultCodeCreateRoom.CREATE_ROOM_SUCCESS; otherwise, the room creation has failed. You can obtain the CreatedRoomResult from the request result through the Data field. This allows you to retrieve information about the created room, and you may also obtain additional information depending on the Server Implementation.
+
+The details of ResultCodeCreateRoom are as follows:
+
+| Name                                 | Value | Description                                                                              |
+|--------------------------------------|-------|------------------------------------------------------------------------------------------|
+| PARSE_ERROR                          | -2    | Packet parsing error. This may occur when the server and client versions differ.         |
+| TIMEOUT                              | -1    | Timeout. A response to the request was not received within the specified time.           |
+| SYSTEM_ERROR                         | 1     | Server system error. Failed due to an unknown server error.                              |
+| INVALID_PROTOCOL                     | 2     | Protocol not registered on the server. A protocol not registered in the additional information was used. |
+| CREATE_ROOM_SUCCESS                  | 0     | Success                                                                                  |
+| CREATE_ROOM_FAIL_CONTENT             | 601   | Failed. Rejected by user code.                                                           |
+| CREATE_ROOM_FAIL_ALREADY_JOINED_ROOM | 602   | Failed. Already in a room.                                                               |
+| CREATE_ROOM_FAIL_CREATE_ROOM_ID      | 603   | Failed. Room ID creation failed.                                                         |
+| CREATE_ROOM_FAIL_CREATE_ROOM         | 604   | Failed. Room creation failed.                                                            |
+
+The details of CreatedRoomResult are as follows:
+
+| Type    | Name     | Description                                  |
+|---------|----------|----------------------------------------------|
+| int     | RoomId   | ID of the created room                       |
+| String? | RoomName | Name of the created room                     |
+| Payload | payload  | Additional information required by the client |
 
 <a id="create-enter-and-leave-rooms-enter-room"></a>
 #### Enter Room
 
-<!-- TODO: translate body -->
+Call JoinRoom() to enter a room that has already been created.
+
+``` c#
+public async void JoinRoom()
+{
+    try
+    {
+        Payload joinRoomPayload = new Payload(new Protocol.JoinRoomData());
+        Result<ResultCodeJoinRoom, JoinRoomResult> result = await user.JoinRoom("RoomType", roomId, "MatchingUserCategory", joinRoomPayload);
+        if(result.ResultCode == ResultCodeJoinRoom.JOIN_ROOM_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    }
+    catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+JoinRoom() has the following four parameters:
+
+| Type    | Name                 | Description                                                                                                                                                                                                                                                                                                                                            |
+|---------|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| String  | roomType             | Type of the room to enter.                                                                                                                                                                                                                                                                                                                             |
+| int     | roomId               | ID of the room to enter.                                                                                                                                                                                                                                                                                                                               |
+| String  | matchingUserCategory | The matchingUserCategory to use in the room to enter. If not used, enter string.Empty (empty string). <br/>Each room can divide users into categories and apply a maximum user count per category. JoinRoom may fail if the current number of users for the specified matchingUserCategory is at its maximum. |
+| Payload | payload              | Additional information required by the user code on the server that will process the room entry request. (default = null)                                                                                                                                                                                                                              |
+
+The response returns Result<ResultCodeJoinRoom, JoinRoomResult>. You can check whether the request succeeded by examining the value of the ResultCode field. If JoinRoom succeeds, the ResultCode field value is ResultCodeJoinRoom.JOIN_ROOM_SUCCESS; otherwise, room entry has failed. You can obtain the request result JoinRoomResult through the Data field. This allows you to retrieve information about the room that was entered, and you may also obtain additional information depending on the Server Implementation.
+
+The details of ResultCodeJoinRoom are as follows:
+
+| Name                               | Value | Description                                                                                    |
+|------------------------------------|-------|------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                        | -2    | Packet parsing error. May occur if the server and client versions differ.                      |
+| TIMEOUT                            | -1    | Timeout. The response to the request did not arrive within the set time.                       |
+| SYSTEM_ERROR                       | 1     | Server system error. Failed due to an unknown error on the server.                             |
+| INVALID_PROTOCOL                   | 2     | Protocol not registered on server. A protocol not registered in the additional information was used. |
+| JOIN_ROOM_SUCCESS                  | 0     | Success.                                                                                       |
+| JOIN_ROOM_FAIL_CONTENT             | 701   | Failed. Rejected by user code.                                                                 |
+| JOIN_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702   | Failed. The room requested for entry does not exist.                                           |
+| JOIN_ROOM_FAIL_ALREADY_JOINED_ROOM | 703   | Failed. Already in a room.                                                                     |
+| JOIN_ROOM_FAIL_ALREADY_FULL        | 704   | Failed. The room requested for entry is full.                                                  |
+| JOIN_ROOM_FAIL_ROOM_MATCH          | 705   | Failed. A problem occurred during room matchmaking.                                            |
+
+The details of JoinRoomResult are as follows:
+
+| Type    | Name     | Description                                    |
+|---------|----------|------------------------------------------------|
+| int     | RoomId   | ID of the room entered.                        |
+| String? | RoomName | Name of the room entered.                      |
+| Payload | payload  | Additional information required by the client. |
 
 <a id="create-enter-and-leave-rooms-leave-room"></a>
 #### Leave Room
 
-<!-- TODO: translate body -->
+You can leave a room that you have joined by calling LeaveRoom().
+
+``` c#
+public async void LeaveRoom()
+{
+    try
+    {
+        Payload leaveRoomPayload = new Payload(new Protocol.LeaveRoomData());
+        Result<ResultCodeLeaveRoom, Payload> result = await user.LeaveRoom(leaveRoomPayload);
+        if (result.ResultCode == ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    }
+    catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+LeaveRoom() has the following 1 parameter:
+
+| Type    | Name    | Description                                                                                      |
+|---------|---------|--------------------------------------------------------------------------------------------------|
+| Payload | payload | Additional information required by the user code on the server that processes the room leave request. (default = null) |
+
+Returns Result<ResultCodeLeaveRoom, Payload> as the response. Check the value of the ResultCode field to determine whether the request was successful. If LeaveRoom succeeds, the ResultCode field value is ResultCodeLeaveRoom.LEAVE_ROOM_SUCCESS; otherwise, the room leave request has failed. Depending on the server implementation, you can also obtain additional information through the Payload in the Data field.
+
+The details of ResultCodeLeaveRoom are as follows:
+
+| Name                    | Value | Description                                                                                       |
+|-------------------------|-------|---------------------------------------------------------------------------------------------------|
+| PARSE_ERROR             | -2    | Packet parsing error. This may occur if the server and client versions are different.             |
+| TIMEOUT                 | -1    | Timeout. No response to the request was received within the specified time.                       |
+| SYSTEM_ERROR            | 1     | Server system error. Failed due to an unknown server error.                                       |
+| INVALID_PROTOCOL        | 2     | Protocol not registered on server. A protocol not registered in the additional information was used. |
+| LEAVE_ROOM_SUCCESS      | 0     | Success.                                                                                          |
+| LEAVE_ROOM_FAIL_CONTENT | 801   | Failed. Rejected by user code.                                                                    |
 
 <a id="create-enter-and-leave-rooms-notification-for-forced-to-leave-the-room"></a>
 #### Notification for Forced to Leave the Room
 
-<!-- TODO: translate body -->
+Even if you do not call LeaveRoom(), you can force the server to leave the room. In this case, you can be notified via OnForceLeaveRoom.
+```c#
+public void AddOnLeaveRoom()
+{
+    user.OnForceLeaveRoom += (GameAnvilUser gameAnvilUser, int roomId, Payload payload) =>
+    {
+        // Notification for Forced to Leave the Room
+    };
+}
+```
+You can find out from which room you were forcibly removed through the parameter int roomId, and depending on the implementation of the server, you can also get additional information through the parameter Payload payload.
 
 <a id="create-enter-and-leave-rooms-enter-the-room-with-the-specified-name"></a>
 #### Enter the room with the specified name
 
-<!-- TODO: translate body -->
+You can call `NamedRoom()` to enter a room with the specified name. If no room with the specified name exists, a new room is created and you enter that room.
+
+```c#
+public async void NamedRoom()
+{
+    try
+    {
+        bool isParty = false;
+        Payload namedRoomPayload = new Payload(new Protocol.NamedRoomData());
+        Result<ResultCodeNamedRoom, NamedRoomResult> result = await user.NamedRoom("RoomName", "RoomType", isParty, namedRoomPayload);
+        if (result.ResultCode == ResultCodeNamedRoom.NAMED_ROOM_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+`NamedRoom()` has the following 4 parameters:
+
+| Type    | Name     | Description                                                                                                                                                              |
+|---------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| String  | roomType | Type of the room to enter or create.                                                                                                                                     |
+| String  | roomName | Name of the room to enter or create.                                                                                                                                     |
+| bool    | isParty  | Whether the room is for party matchmaking.<br/>Enter true if you create a room for users connected to the same party to wait together until the party matches are complete. |
+| Payload | payload  | Additional information required from the user code of the server to process the entry or creation request. (default = null)                                              |
+
+The response returns `Result<ResultCodeNamedRoom, NamedRoomResult>`. You can check whether the request was successful by checking the value of the `ResultCode` field. If `NamedRoom` succeeds, the value of the `ResultCode` field is `ResultCodeNamedRoom.NAMED_ROOM_SUCCESS`; otherwise, the room entry or creation has failed. You can obtain the `NamedRoomResult` of the request result through the `Data` field. This allows you to get information about the room that was entered or created, and you may also obtain additional information depending on the server implementation.
+
+The details of `ResultCodeNamedRoom` are as follows:
+
+| Name                                | Value | Description                                                                                                                                        |
+|-------------------------------------|-------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                         | -2    | Packet parsing error. May occur when the server and client versions differ.                                                                        |
+| TIMEOUT                             | -1    | Timeout. The response to the request did not arrive within the specified time.                                                                     |
+| SYSTEM_ERROR                        | 1     | Server system error. Failed due to an unknown error on the server.                                                                                 |
+| INVALID_PROTOCOL                    | 2     | Protocol not registered on the server. A protocol not registered in the additional information is used.                                            |
+| NAMED_ROOM_SUCCESS                  | 0     | Success.                                                                                                                                           |
+| NAMED_ROOM_FAIL_CONTENT             | 701   | Failed. Rejected by user code.                                                                                                                     |
+| NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST | 702   | Failed. The room does not exist.<br/>May occur when all users in the room leave the room while the room entry is being processed.                  |
+| NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM | 703   | Failed. Already in a room.                                                                                                                         |
+| NAMED_ROOM_FAIL_INVALID_ROOM_NAME   | 704   | Failed. An invalid room name was requested.                                                                                                        |
+| NAMED_ROOM_FAIL_CREATE_ROOM         | 705   | Failed. Failed to create the room.                                                                                                                 |
+
+The details of `NamedRoomResult` are as follows:
+
+| Type    | Name     | Description                                     |
+|---------|----------|-------------------------------------------------|
+| bool    | Created  | Whether a new room was created.                 |
+| int     | RoomId   | ID of the room entered.                         |
+| String? | RoomName | Name of the room entered.                       |
+| Payload | payload  | Additional information required by the client.  |
 
 <a id="matchmaking"></a>
 ### Matchmaking { #matchmaking }
@@ -126,12 +355,201 @@ GameAnvil offers two types of matchmaking. One is Room Matchmaking, which perfor
 <a id="matchmaking-room-matchmaking"></a>
 #### Room Matchmaking
 
-<!-- TODO: translate body -->
+Room matchmaking is a method that places users into rooms that meet certain conditions. When a room matchmaking request is made, if a matching room exists, the user is placed directly into that room; if no matching room exists, a new room is created and the user is placed into it.
+
+You can request room matchmaking by calling MatchRoom().
+
+```c#
+public async void MatchRoom()
+{
+    try
+    {
+        var matchRoomPayload = new Payload(new Protocol.MatchRoomData());
+        Result<ResultCodeMatchRoom, MatchResult> result = await user.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
+        if (result.ResultCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+MatchRoom() has the following 7 parameters.
+
+| Type | Name | Description |
+|---------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| bool | isCreateRoomIfNotJoinRoom | Whether to create and enter a room when no matching room is found. <br/>true: Creates a room if none exists. <br/>false: Returns a failure if no room exists. |
+| bool | isMoveRoomIfJoinedRoom | Whether to move to a different room when the user is already in a room. <br/>true: Moves to a different room if the user is already in one. <br/>false: Returns a failure if a matchmaking request is made while the user is already in a room. |
+| string | roomType | Room type. Finds rooms of the same type. |
+| string | matchingGroup | Matching group. Finds rooms created with the same group. |
+| string | matchingUserCategory | User category to use in the matched room.<br/>Each room can divide users into categories and apply a limit per category.<br/>Finds rooms with a specified matchingUserCategory that doesn't have the maximum number of users. |
+| Payload | payload | Additional information required by the server's user code to process the matchmaking request. (default = null) |
+| Payload | leaveRoomPayload | Additional information required by the server's user code to process the room exit when moving to a different room. (default = null) |
+
+The response returns Result<ResultCodeMatchRoom, MatchResult>. You can check the success of the request by checking the value of the ResultCode field. If MatchRoom succeeds, the value of the ResultCode field is ResultCodeMatchRoom.MATCH_ROOM_SUCCESS; otherwise, the room matchmaking has failed. You can retrieve the MatchResult from the Data field. This provides information about the matched room and, depending on the server implementation, may include additional information.
+
+The details of ResultCodeMatchRoom are as follows.
+
+| Name | Value | Description |
+|------------------------------------------------|-----|----------------------------------------------------------------------------------------|
+| PARSE_ERROR                                    | -2  | Packet parsing error. May occur when the server and client versions differ.            |
+| TIMEOUT                                        | -1  | Timeout. No response to the request within the specified time.                         |
+| SYSTEM_ERROR                                   | 1   | Server system error. Failed due to an unknown server error.                            |
+| INVALID_PROTOCOL                               | 2   | Protocol not registered on the server. An unregistered protocol was used in the additional information. |
+| NAMED_ROOM_SUCCESS                             | 0   | Success                                                                                |
+| NAMED_ROOM_FAIL_CONTENT                        | 701 | Failed. Rejected by user code.                                                         |
+| NAMED_ROOM_FAIL_ROOM_DOES_NOT_EXIST            | 702 | Failed. The room disappeared while processing room entry.                              |
+| NAMED_ROOM_FAIL_ALREADY_JOINED_ROOM            | 703 | Failed. The user is already in a room.                                                 |
+| NAMED_ROOM_FAIL_INVALID_ROOM_NAME              | 704 | Failed. An invalid room name was requested.                                            |
+| NAMED_ROOM_FAIL_CREATE_ROOM                    | 705 | Failed. Room creation failed.                                                          |
+| MATCH_ROOM_SUCCESS                             | 0   | Success                                                                                |
+| MATCH_ROOM_FAIL_CONTENT                        | 901 | Failed. Rejected by user code.                                                         |
+| MATCH_ROOM_FAIL_ROOM_DOES_NOT_EXIST            | 902 | Failed. The room does not exist.                                                       |
+| MATCH_ROOM_FAIL_ALREADY_JOINED_ROOM            | 903 | Failed. The user is already in a room.                                                 |
+| MATCH_ROOM_FAIL_LEAVE_ROOM                     | 904 | Failed. Failed to leave the current room when moving to a different room.              |
+| MATCH_ROOM_FAIL_IN_PROGRESS                    | 905 | Failed. Matchmaking is already in progress.                                            |
+| MATCH_ROOM_FAIL_MATCHED_ROOM_DOES_NOT_EXIST    | 906 | Failed. The room disappeared while adding the user to the matched room.<br/>This can occur when all users in the room leave during room entry processing. |
+| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM_ID          | 907 | Failed. Room ID creation failed.                                                       |
+| MATCH_ROOM_FAIL_CREATE_FAILED_ROOM             | 908 | Failed. Room creation failed.                                                          |
+| MATCH_ROOM_FAIL_INVALID_ROOM_ID                | 909 | Failed. An invalid room ID was used.                                                   |
+| MATCH_ROOM_FAIL_INVALID_NODE_ID                | 910 | Failed. An invalid node ID was used.                                                   |
+| MATCH_ROOM_FAIL_INVALID_USER_ID                | 911 | Failed. An invalid user ID was used.                                                   |
+| MATCH_ROOM_FAIL_MATCHED_ROOM_NOT_FOUND         | 912 | Failed. Matchmaking was performed, but no room was found.                              |
+| MATCH_ROOM_FAIL_INVALID_MATCHING_USER_CATEGORY | 913 | Failed. An invalid matching user category was used.                                    |
+| MATCH_ROOM_FAIL_MATCHING_USER_CATEGORY_EMPTY   | 914 | Failed. The user category size in the matching room is 0.                              |
+| MATCH_ROOM_FAIL_BASE_ROOM_MATCH_FORM_NULL      | 915 | Failed. The match application form is NULL.                                            |
+| MATCH_ROOM_FAIL_BASE_ROOM_MATCH_INFO_NULL      | 916 | Failed. The match information is NULL.                                                 |
+
+The details of MatchResult are as follows.
+
+| Type     | Name     | Description                                   |
+|----------|----------|-----------------------------------------------|
+| bool     | IsCancel | Whether the request was canceled.             |
+| int      | RoomId   | ID of the room you entered.                   |
+| bool     | Created  | Whether a new room has been created.          |
+| String   | RoomName | Name of the room you entered.                 |
+| Payload? | payload  | Additional information required by the client. |
 
 <a id="matchmaking-user-matchmaking"></a>
 #### User Matchmaking
 
-<!-- TODO: translate body -->
+User matchmaking creates a user pool, finds users that match the specified conditions within the pool, and places them into a newly created room. If the user pool does not have enough users matching the conditions, matchmaking may take some time to complete. If matchmaking does not complete within the time limit, it times out and the match may fail.
+
+You can start user matchmaking by calling MatchUserStart(). A successful result from this request does not mean that user matchmaking has completed. It only means that the start request was successful; the result of matchmaking is delivered through a separate callback.
+
+```c#
+public async void MatchUserStart()
+{
+    user.OnMatchUserDone +=(GameAnvilUser user, ResultCodeMatchUserDone resultCode, MatchResult matchResult) => {
+        // Matching successful
+    };
+    user.onMatchUserTimeOut +=(GameAnvilUser user, ResultCodeMatchUserTimeOut resultCode) =>
+    {
+        // Matching failed
+    };
+    try
+    {
+        Payload matchUserPayload = new Payload(new Protocol.MatchUserData());
+        Result<ResultCodeMatchUserStart, Payload> result = await user.MatchUserStart("RoomType", "MatchingGroup", matchUserPayload);
+        if (result.ResultCode == ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS)
+        {
+            // Request successful
+        } else
+        {
+            // Failed
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+MatchUserStart() has the following three parameters.
+
+| Type    | Name          | Description                                                                                                        |
+|---------|---------------|--------------------------------------------------------------------------------------------------------------------|
+| String  | roomType      | Type of the room to create.                                                                                        |
+| String  | matchingGroup | Matching group. Finds users matching the conditions from the user pool of the same group.                          |
+| Payload | payload       | Additional information required by the user code on the server that processes the user matchmaking request. (default = null) |
+
+The response returns Result<ResultCodeMatchUserStart, Payload>. You can check the value of the ResultCode field to determine whether the request was successful. If MatchUserStart succeeds, the ResultCode field is set to ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS; otherwise, the request has failed. Depending on the server implementation, you may also obtain additional information through the Payload in the Data field.
+
+The details of ResultCodeMatchUserStart are as follows.
+
+| Name                                      | Value | Description                                                                                              |
+|-------------------------------------------|-------|----------------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                               | -2    | Packet parsing error. This error may occur when the server and client versions differ.                   |
+| TIMEOUT                                   | -1    | Timeout. A response to the request was not received within the specified time.                           |
+| SYSTEM_ERROR                              | 1     | Server system error. Failed due to an unknown error on the server.                                       |
+| INVALID_PROTOCOL                          | 2     | Protocol not registered on server. A protocol not registered in the additional information was used.     |
+| MATCH_USER_START_SUCCESS                  | 0     | Success.                                                                                                 |
+| MATCH_USER_START_FAIL_CONTENT             | 1101  | Failed. Rejected by user code.                                                                           |
+| MATCH_USER_START_FAIL_ALREADY_JOINED_ROOM | 1102  | Failed. The user is already in a room.                                                                   |
+
+<br>
+
+When user matchmaking succeeds, you will be notified through onMatchUserDone. You can retrieve the result code through the parameter ResultCodeMatchUserDone resultCode, and obtain information about the matched room through the parameter MatchResult matchResult. Depending on the server implementation, you may also obtain additional information through the payload of MatchResult.
+If matchmaking does not succeed within the time limit, you will be notified through onMatchUserTimeout.
+
+The details of ResultCodeMatchUserDone are as follows.
+
+| Name                                     | Value | Description                                                                                                                         |
+|------------------------------------------|-------|-------------------------------------------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                              | -2    | Packet parsing error. This error may occur when the server and client versions differ.                                              |
+| TIMEOUT                                  | -1    | Timeout. A response to the request was not received within the specified time.                                                      |
+| SYSTEM_ERROR                             | 1     | Server system error. Failed due to an unknown error on the server.                                                                  |
+| INVALID_PROTOCOL                         | 2     | Protocol not registered on server. A protocol not registered in the additional information was used.                                |
+| MATCH_USER_DONE_SUCCESS                  | 0     | Success.                                                                                                                            |
+| MATCH_USER_DONE_FAIL_CONTENT             | 1501  | Failed. Rejected by user code.                                                                                                      |
+| MATCH_USER_DONE_FAIL_ROOM_DOES_NOT_EXIST | 1502  | Failed. The room disappeared while finding a matching room and joining it.                                                          |
+| MATCH_USER_DONE_FAIL_TRANSFER            | 1503  | Failed. The transfer process failed while finding a matching room and joining it.                                                   |
+| MATCH_USER_DONE_FAIL_CREATE_ROOM         | 1504  | Failed. Room creation failed.                                                                                                       |
+
+<br>
+
+You can cancel an ongoing user matchmaking by calling MatchUserCancel().
+
+```c#
+public async void MatchUserCancel()
+{
+    try
+    {
+        ResultCodeMatchUserCancel result = await user.MatchUserCancel("RoomType");
+        if (result == ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS)
+        {
+            // Success
+        } else
+        {
+            // Failure
+        }
+    } catch (Exception e)
+    {
+        // Exception
+    }
+}
+```
+
+The response returns ResultCodeMatchUserCancel. If the cancellation succeeds, the value is ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS; otherwise, the cancellation has failed. The request may fail if user matchmaking is not in progress, if it has already succeeded, or if a timeout has occurred.
+
+The details of ResultCodeMatchUserCancel are as follows.
+
+| Name                                       | Value | Description                                                                                          |
+|--------------------------------------------|-------|------------------------------------------------------------------------------------------------------|
+| PARSE_ERROR                                | -2    | Packet parsing error. This error may occur when the server and client versions differ.               |
+| TIMEOUT                                    | -1    | Timeout. A response to the request was not received within the specified time.                       |
+| SYSTEM_ERROR                               | 1     | Server system error. Failed due to an unknown error on the server.                                   |
+| INVALID_PROTOCOL                           | 2     | Protocol not registered on server. A protocol not registered in the additional information was used. |
+| MATCH_USER_CANCEL_SUCCESS                  | 0     | Success.                                                                                             |
+| MATCH_USER_CANCEL_FAIL                     | 1201  | Failed. Rejected by user code.                                                                       |
+| MATCH_USER_CANCEL_FAIL_ALREADY_JOINED_ROOM | 1202  | Failed. The user is already in a room.                                                               |
+| MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS     | 1203  | Failed. User matchmaking is not in progress.                                                         |
 
 <a id="matchmaking-party-matchmaking"></a>
 #### Party matchmaking
@@ -237,12 +655,20 @@ userAgent.MatchPartyCancel(Constants.RoomType, (UserAgent user, Defines.ResultCo
 <a id="channel"></a>
 ### Channel { #channel }
 
-<!-- TODO: translate body -->
-
 <a id="channel-move-notification"></a>
 #### Channel move notification
 
-<!-- TODO: translate body -->
+In some cases, channel movements can occur as a result of matching. If a channel has been moved, you can receive notification through OnMoveChannel. You can also get information about the channel where you moved the MoveChannelResult parameters, and you can also get additional information depending on the server implementation.
+
+```c#
+public void AddOnMoveChannel()
+{
+    user.OnMoveChannel += (GameAnvilUser user, MoveChannelResult result) =>
+    {
+        // Called when moving channels 
+    };
+}
+```
 
 <a id="channel-moving-channels"></a>
 #### Moving channels

@@ -5,12 +5,8 @@
 <a id="20-january-2026"></a>
 ### 2.2.0 (January 2026) { #20-january-2026 }
 
-<!-- TODO: translate body -->
-
 <a id="20-january-2026-change"></a>
 #### Change
-
-<!-- TODO: translate body -->
 
 ##### Supports running Java 25
 
@@ -27,7 +23,21 @@
 <a id="20-january-2026-fix"></a>
 #### Fix
 
-<!-- TODO: translate body -->
+* Fixed an issue where the Matchmaking status was intermittently abnormal in party matches.
+* Fixed an issue where an exception occurred related to roomId.
+* Fixed an issue where an exception occurred related to the client state.
+* Optimized internal communication packets.
+* Fixed an issue where the engine did not operate correctly when an Error was thrown in a user-implemented method.
+* Fixed an issue where the timeout was not applied correctly during shutdown.
+* Modified publish and send to be processed through the same socket so that the order is not reversed when both features are used together.
+* Fixed an issue where an exception occurred when sending a request to oneself, so that it is now handled correctly.
+* Fixed an issue where room transfer did not work correctly occasionally.
+* Improved the behavior of internal location information.
+* Fixed an issue where intermittent abnormal behavior occurred when SafePause was called without being implemented.
+* Fixed an issue where shutdown did not work correctly intermittently.
+* Fixed an issue where entering a NamedRoom with the same name immediately after leaving did not work correctly.
+* Fixed an issue where the server intermittently failed to start correctly.
+* Fixed an issue where certain operations were not processed correctly during Node Pause.
 
 <a id="10-june-30-2025"></a>
 ### 2.1.0 (June 30, 2025) { #10-june-30-2025 }
