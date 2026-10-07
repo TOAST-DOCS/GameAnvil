@@ -222,7 +222,7 @@ The provision of components greatly enhances the convenience of integrating with
 
 * API changes: Modified to receive ErrorCode as a name change and factor
 
-| dcgm 버전이 3.1.7에서 3.1.8로 변경되었습니다. | CentOS 7.9 - Container (2023.08.22) |
+| The dcgm version has been changed from 3.1.7 to 3.1.8. | CentOS 7.9 - Container (2023.08.22) |
 |--|--|
 | OnTimeout(msgId) | OnError(msgId, ErrorCode) |
 | OnCustomTimeout(command) | OnCustomError(command, ErrorCode)| 

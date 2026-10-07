@@ -50,11 +50,11 @@ When you register your payment method by following the instructions on the scree
 Once the service is activated and the organization is created, users have unique console access rights. Users can access the console and set up and manage all the features you need during operational phase.
 
 <a id="gameanvil"></a>
-## GameAnvil 라이선스 동의 { #gameanvil }
+## GameAnvil License Agreement { #gameanvil }
 
-먼저 라이선스 스크롤을 맨 아래로 내린 후, 약관에 동의하기에 체크할 수 있습니다.
+You can scroll down to the bottom of the license terms first, and then check the agreement checkbox.
 
-![그림](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/license_agree.png)
+![Figure](https://static.toastoven.net/prod_gameanvil/images/console/v2/getting-started/license_agree.png)
 
 <a id="select-gameanvil-product"></a>
 ## Select GameAnvil product { #select-gameanvil-product }

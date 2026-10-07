@@ -322,7 +322,7 @@ scheduleTimerAtFixedRate - N, fixed delay
 | Room | onPostLeaveRoom | onAfterLeaveRoom |
 | Room | onLeaveRoom | canLeaveRoom | LeaveRoom Conditional check|
 | Room | None | onMatchPartyCancel | Called when a match is canceled|
-| RoomMatchMaker | onPreMatch | Deleted | onMatch 로 병합 |
+| RoomMatchMaker | onPreMatch | Deleted | Merged into onMatch |
 | RoomMatchMaker | onPostMatch | Deleted | Merged into onMatch |
 
 <a id="00-december-4-2024-fix"></a>

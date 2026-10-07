@@ -1,31 +1,31 @@
 <!-- pre-align:aligned sig=d9d45df7e543 -->
 
 <a id="game-gameanvil-virtual-thread"></a>
-## Game > GameAnvil > 서버 개념 설명 > Virtual Thread { #game-gameanvil-virtual-thread }
+## Game > GameAnvil > Server Concept Description > Virtual Thread { #game-gameanvil-virtual-thread }
 
 <a id="virtual-thread"></a>
 ## Virtual Thread { #virtual-thread }
 
-Virtual Thread는 JDK 21 에서 추가된 기능으로 경량 유저 스레드(Lightweight User Thread)입니다. GameAnvil에서는 Virtual Thread 를 서버 코드의 기본 흐름 단위로 사용하고 있습니다. 앞서 살펴본 노드의 싱글 스레드는 많은 수의 세션, 유저 그리고 방 등을 동시에 효과적으로 처리하기 위해 다수의 Virtual Thread 에서 코드 흐름이 나뉩니다. 즉, GameAnvil은 Virtual Thread 기반의 Continuation을 사용합니다.
+Virtual Thread is a feature added in JDK 21 and is a lightweight user thread. GameAnvil uses Virtual Thread as the basic flow unit of server code. The single-threaded node described earlier splits code flow across multiple Virtual Threads to effectively handle large numbers of sessions, users, and rooms simultaneously. That is, GameAnvil uses Continuation based on Virtual Thread.
 
-표준 구현의 Virtual Thread들은 JDK 내부의 스레드풀에서 스케줄링됩니다. GameAnvil 에서는 동시 처리의 편의성을 높이기 위해 커스텀한 스레드풀 스케쥴러를 사용하고 있습니다. JDK 내부의 스레드풀의 크기를 1로 고정하면 바로 GameAnvil 노드의 모델이 됩니다. 즉, 노드는 다수의 Virtual Thread를 동시에 처리하기 위한 스케줄러인 것입니다. 이를 그림으로 표현하면 아래와 같습니다.
+Standard Virtual Threads are scheduled in a thread pool inside the JDK. GameAnvil uses a customized thread pool scheduler to improve the convenience of concurrent processing. If the size of the JDK's internal thread pool is fixed at 1, it becomes the model of a GameAnvil node. In other words, a node is a scheduler for processing multiple Virtual Threads concurrently. The image shows the following:
 
 ![VirtualThread_concept.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-basic/02-vt/VirtualThreadConcept1.png)
 
-이와 같이 Virtual Thread를 사용할 때의 장점은 순차적인 코드 작성이 가능하다는 점입니다. 서버 코드는 일반적인 블로킹 코드를 작성하는 것과 매우 흡사해집니다. 별도의 콜백 처리나 완료 통보에 신경 쓸 필요가 전혀 없습니다. 이런 Virtual Thread의 장점에 더해 GameAnvil 사용자는 이 Virtual Thread 단위에 대해 크게 신경 쓸 필요가 없습니다. GameAnvil 엔진단에서 모든 Virtual Thread를 관리하고 있으므로 사용자는 일반적인 싱글 스레딩 코드를 작성하듯이 개발하면 됩니다.
+One of the advantages of using Virtual Thread in this way is that you can write code sequentially. Server code becomes very similar to writing ordinary blocking code. You don't need to worry about separate callback handling or completion notifications at all. In addition to these advantages of Virtual Thread, GameAnvil users don't need to pay much attention to the Virtual Thread unit itself. Since the GameAnvil engine manages all Virtual Threads, you can develop just as you would write ordinary single-threaded code.
 
 ![vt-context-switching.png](https://static.toastoven.net/prod_gameanvil/images/v2_0/server-basic/02-vt/vt-context-switching.png)
 
-GameAnvil 서버 코드는 비동기 처리를 기반으로 합니다. 이를 위해 [비동기 지원 API](../server-impl/server-impl-10-async)를 제공합니다. 이러한 비동기 API를 사용하여 임의의 Virtual Thread상에서 블로킹 호출을 할 경우에는 해당 Virtual Thread만 park(대기 상태)됩니다.
+GameAnvil server code is based on asynchronous processing. To support this, it provides an [Asynchronous Support API](../server-impl/server-impl-10-async). When you make a blocking call on an arbitrary Virtual Thread using these asynchronous APIs, only that Virtual Thread is parked (put into a waiting state).
 
 <a id="virtual-thread-2"></a>
-## Virtual Thread 기반의 비동기 처리 { #virtual-thread-2 }
-GameAnvil 엔진은 커스텀한 Virtual Thread Executor 를 구현하였습니다. 이 Executor 는 1개의 Platform Thread로 동작하며 1개의 노드에서 여러 Virtual Thread 를 실행 시킬 수 있습니다. 하나의 Virtual Thread에서 임의의 시간이 소요되는 I/O 호출을 했을 경우에 해당 Virtual Thread는 호출이 완료될 때까지 실행 권한을 다른 Virtual Thread에게 양보하여 동작합니다. 이러한 구현은 멀티 스레드 동기화 문제를 고민하지 않고 서버를 작성할 수 있게 하는 대신 코드를 Virtual Thread상에서 비동기로 처리될 수 있게 코드를 작성해야 합니다. GameAnvil 에서 제공하는 메서드는 기본적으로 이러한 비동기 처리를 사용하여 동작하며 엔진 사용자는 동기화 문제를 신경쓰지 않고 읽기 쉬운 코드를 작성할 수 있습니다. 
+## Asynchronous processing based on Virtual Thread { #virtual-thread-2 }
+The GameAnvil engine implements a customized Virtual Thread Executor. This Executor operates with a single Platform Thread and can run multiple Virtual Threads on a single node. When a Virtual Thread makes an I/O call that takes an arbitrary amount of time, that Virtual Thread yields execution rights to another Virtual Thread until the call completes. This implementation allows you to write server code without worrying about multi-thread synchronization issues, but you must write your code so that it can be processed asynchronously on Virtual Threads. The methods provided by GameAnvil operate using this asynchronous processing by default, allowing engine users to write readable code without worrying about synchronization issues.
 
 
 <a id="virtual-thread-3"></a>
-## Virtual Thread 사용 시 주의 사항 { #virtual-thread-3 }
-스레드 블로킹 호출이 될 수 있는 작업(대표적으로 synchronized 사용)은 사용하지 않도록 해야하며 만일 호출 시 해당 Platform Thread가 블로킹되고 그 결과 모든 Virtual Thread들이 블로킹되어서 노드 전체가 멈추게 되는 결과를 초래하게 됩니다. 
+## Caution on Using Virtual Thread { #virtual-thread-3 }
+Operations that can cause thread-blocking calls (most notably, using `synchronized`) should be avoided. If called, the Platform Thread will be blocked, which in turn blocks all Virtual Threads, causing the entire node to stop.
 
 ```java
 void someProblematicMethod() {
@@ -35,7 +35,7 @@ void someProblematicMethod() {
 
 }
 ```
-synchronized를 사용하는 코드를 발견했을 때는 ReentrantLock 을 사용하는 코드로 변경할 수 있습니다
+You can replace code that uses `synchronized` with code that uses `ReentrantLock`.
 ```java
 private final ReentrantLock myLock = new ReentrantLock();
 void someProblematicMethod() {
@@ -48,5 +48,5 @@ void someProblematicMethod() {
 }
 ```
 
-synchronized를 사용하여 Platform Thread가 멈추는 문제는 Pinning 이라고 합니다. Pinning 에 대한 자세한 설명은 openJDK 의 [Virtual Threads#Pinning](https://openjdk.org/jeps/444#Pinning) 항목 에서 확인할 수 있습니다.
+The problem where using `synchronized` causes a Platform Thread to stop is called Pinning. For more information on such pinning, see the section [Virtual Threads#Pinning](https://openjdk.org/jeps/444#Pinning) in openJDK.
 

@@ -4,9 +4,9 @@
 ## Game > GameAnvil > Server Concept Description > Packet { #game-gameanvil-server-concept-description-packet }
 
 <a id="section-1"></a>
-## 패킷 { #section-1 }
+## Packet { #section-1 }
 
-패킷은 GameAnvil 에서 서버와 클라이언트간 메세지를 전달하는 단위입니다. 자바의 프로토 버퍼나 빌더를 사용하여 패킷을 생성할 수 있습니다. 패킷은 GameAnvil 엔진에서 지원하는 여러 타입에서 만들 수 있는데 간단한 사용법은 다음과 같습니다.
+A packet is the unit used to transfer messages between a server and a client in GameAnvil. You can create packets by using Java's protocol buffers or builders. Packets can be created from various types supported by the GameAnvil engine. Here is how to use them:
 ```java
 // 응답 프로토 버퍼 작성
 EchoSend res = EchoSend.newBuilder()
@@ -19,12 +19,12 @@ Packet packet = Packet.makePacket(res);
 userContext.send(packet);
 ```
 
-위 코드는 게임 유저에서 클라이언트로 패킷을 전달하는 코드입니다. 먼저 전달할 프로토 버퍼를 정의한 뒤 패킷을 생성하고 클라이언트에게 전달합니다. 
+The code above is the code that delivers a packet from a game user to the client. First, define the protocol buffer to be delivered, then create a packet and deliver it to the client.
 
 <a id="section-2"></a>
-## 패킷 활용 성능 최적화 { #section-2 }
+## Optimize Performance { #section-2 }
 
-패킷은 내부적으로 프로토 버퍼를 직렬화 한 데이터의 캐싱을 하고 있습니다. 그러므로 여러 유저에게 프로토 버퍼 메세지를 보낼 때는 패킷을 여러 번 만들어서 보내는 대신 한번만 만들어서 보내는게 좋습니다. 아래 예제에서는 2명의 유저에게 패킷의 얕은 복사를 하여 전달하는 방법을 다루고 있습니다. 
+Packets cache the serialized proto buffer data internally. Therefore, when sending a proto buffer message to multiple users, it is better to create the packet only once instead of creating it multiple times. The example below demonstrates how to send a packet to two users by making a shallow copy of the packet.
 ```java
 EchoSend.Builder res = EchoSend.newBuilder()
     .setData("hello");
@@ -48,6 +48,6 @@ for (GameUser myUser : allUsers) {
     userContext.send(packet.duplicate()); // 패킷의 얕은 복사를 합니다 직렬화는 1번!
 }
 ```
-`duplicate` 함수는 얕은 복사를 합니다. GameAnil 엔진은 내부적으로 패킷이 정상적으로 처리되지 않았는지 검사를 하고 있기 때문에 재활용 시 정상적으로 처리되지 않을 수 있습니다. 이때 패킷의 얕은 복사를 하여 새로운 패킷처럼 취급하면 GameAnvil 은 다른 패킷으로 인식하고 다시 카운트 하게 됩니다. 
+The `duplicate` function performs a shallow copy. Because the GameAnvil engine internally checks whether a packet has been processed normally, reusing a packet may cause it to not be processed normally. In this case, performing a shallow copy of the packet and treating it as a new packet causes GameAnvil to recognize it as a different packet and count it again.
 
-물론 이러한 추가는 코드 읽기가 어려울 수 있고 위 예제와 같이 단순한 코드는 직렬화 작업을 많이 하더라도 실제 성능 상 크게 차이가 없을 수 있습니다. 많은 데이터가 들어가는 패킷을 전송하고 성능 최적화가 필요한 시점에서 이러한 구문을 작성하는것이 좋겠습니다. 
+Of course, this addition can make the code harder to read, and for simple code like the example above, there may not be a significant difference in actual performance even with more serialization operations. We recommend that you write this type of code when you are sending packets that contain large amounts of data and performance optimization is needed.
