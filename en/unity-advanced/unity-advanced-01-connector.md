@@ -64,6 +64,7 @@ The following are the types of settings:
 | int | PingIntervalMillis | Set the interval of sending Ping messages to confirm the connection to the server (unit: milliseconds, default: Not used for 3,000, 0 days |
 | bool | UseIPv6 | Convert to IPv6 address when connecting (default: false) |
 | bool | UseSocketNoDelay | Use Nodelay for socket (default: true) |
+
 <a id="gameanvillogger"></a>
 ## GameAnvilLogger { #gameanvillogger }
 
