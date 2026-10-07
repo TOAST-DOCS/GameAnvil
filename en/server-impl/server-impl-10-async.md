@@ -40,7 +40,7 @@ Response httpResponse = httpFuture.get(); // In Java 21, only Virtual Thread is 
 
 In existing Java, many RDBMS drivers use `java.sql.DriverManager`, so queries are blocked. In Java 21, however, when running above Virtual Thread, you can benefit from improved utilization of asynchronous, by changing these block queries to the form that stops Virtual Thread only. GameAnvil can also be executed above Virtual Thread to improve performance through asynchronous queries. These drivers are mainly [MySQL Connector/J](https://github.com/mysql/mysql-connector-j). 
 
-You can also use a driver such as [jasync-sql](https://github.com/jasync-sql/jasync-sql) that enables asynchronous processing in the Future method when setting asynchronous rules in detail and requiring performance improvements over a blocking-type driver. You can expect greater flexibility and performance when using [jasync-sql](https://github.com/jasync-sql/jasync-sql) , but there are several cautions to take when running with GameAnvil . For more information about this, see the [Pinning Issues](#pinning) section below.
+You can also use a driver such as [jasync-sql](https://github.com/jasync-sql/jasync-sql) that enables asynchronous processing in the Future method when setting asynchronous rules in detail and requiring performance improvements over a blocking-type driver. You can expect greater flexibility and performance when using [jasync-sql](https://github.com/jasync-sql/jasync-sql) , but there are several cautions to take when running with GameAnvil . For more information about this, see the [Pinning Issues](#pinning-issues) section below.
 
 > [Note]
 >
@@ -57,7 +57,7 @@ final String myKey = ForkJoinPool.commonPool().submit(() -> {
 });
 ```
 
-GameAnvil recommends using [Lettuce](https://github.com/redis/lettuce) for Redis. You can expect high performance when using [Lettuce](https://github.com/redis/lettuce) on GameAnvil , but there are a few cautions. For more information about this, see the [Pinning Issues](#pinning) section below.
+GameAnvil recommends using [Lettuce](https://github.com/redis/lettuce) for Redis. You can expect high performance when using [Lettuce](https://github.com/redis/lettuce) on GameAnvil , but there are a few cautions. For more information about this, see the [Pinning Issues](#pinning-issues) section below.
 
 
 

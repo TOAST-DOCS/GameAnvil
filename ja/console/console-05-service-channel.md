@@ -14,7 +14,7 @@
 
 サービス名は人間が読むには便利ですが、サーバープログラムが読むには不必要に長く大きな値であるため、構成情報(Config)で各サービス名に固有の整数であるサービスIDをマッピングしました。サービスIDは必ず0より大きい整数値である必要があります。詳細な情報はサーバー実装ドキュメントで確認できます。
 
-詳細は[Game > GameAnvil > サーバー開発ガイド > ゲームノード実装](../server-impl/server-impl-03-game-node/#gamenode)または[Game > GameAnvil > サーバー開発ガイド > サポートノード実装](../server-impl/server-impl-05-support-node/#supportnode)を参照してください。
+詳細は[Game > GameAnvil > サーバー開発ガイド > ゲームノード実装](../server-impl/server-impl-03-game-node/#game-gameanvil-server-development-guide-implement-game-node)または[Game > GameAnvil > サーバー開発ガイド > サポートノード実装](../server-impl/server-impl-05-support-node/#game-gameanvil-server-development-guide-supportnode-implementation)を参照してください。
 
 <a id="channel"></a>
 ## チャンネル { #channel }
