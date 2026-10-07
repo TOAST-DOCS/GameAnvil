@@ -64,6 +64,7 @@ GameAnvilConfig.UseSocketNoDelay = true;
 | int  | PingIntervalMillis          | サーバーとの接続を確認するためにPingメッセージを送る周期設定 (単位 : ミリ秒、デフォルト値 : 3000、0の場合は使用しない)                                           |
 | bool | UseIPv6                     | 接続時にIPv6アドレスへ変換するかどうか (デフォルト値 : false)                                                                                                       |
 | bool | UseSocketNoDelay            | ソケットのNodelay使用有無 (デフォルト値 : true)                                                                                                        |
+
 <a id="gameanvillogger"></a>
 ## GameAnvilLogger { #gameanvillogger }
 
