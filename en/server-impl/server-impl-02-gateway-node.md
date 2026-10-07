@@ -224,7 +224,6 @@ For the meaning and usage of these callbacks, see the table below:
 
 | Callback name | Meaning | Description |
 |----------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate | Create object | Call when the object is created. You receive the context where the API available for the created type can be used. If needed from the content, you can save and use it. |
 | onBeforeLogin | Pre-Login Process | GameNode will be called just before you request login. At this time, the user can enter a value for the outPayload delivered as a parameter and send it to the login request. This payload is delivered as it is when processing the login callback from the game node. |
 | onAfterLogin | Login After Processing | After logging in to GameNode, the payload is called. If there is any code to be processed by the session after logging in, implement it here. |
 | onAfterLogout | Logout After Processing | You will be called after logout processing is completed. If there is any code to be processed in the session after logout, implement it here. |

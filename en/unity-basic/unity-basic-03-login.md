@@ -15,9 +15,14 @@ To use a quick login, you must pre-set the value to be used for the Login operat
 
 | Category | Name | Description | Default |
 |----------------|--------------|-------------------------|:---------:|
-| Connect | Ip | IP of the server to connect to in Easy Login | 127.0.0.1 |
-| | Port | Port of the server to connect to in Easy Login | 18200 |
-| Authentication | AccountId | User identification ID to use in Easy Login | test | | | DeviceId | Device unique value to use in Easy Login | test | | | Password | Password to use in Easy Login | test | | Login | User Type | User type to use in Easy Login | | | | Channel Id | Channel ID to use in Easy Login | | | | Service Name | Service name to use in Easy Login | |
+| Connect | Ip | IP of the server to connect to in Simple Login | 127.0.0.1 |
+| | Port | Port of the server to connect to in Simple Login | 18200 |
+| Authentication | AccountId | User identification ID to use in Simple Login | test |
+| | DeviceId | Device unique value to use in Simple Login | test |
+| | Password | Password to use in Simple Login | test |
+| Login | User Type | User type to use in Simple Login | |
+| | Channel Id | Channel ID to use in Simple Login | |
+| | Service Name | Service name to use in Simple Login | |
 
 These settings can be set in the Inspector window of GameAnvilManager in the Unity editor or in the script code.
 

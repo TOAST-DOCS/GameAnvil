@@ -153,7 +153,6 @@ For the meaning and usage of callbacks, see the table below:
 
 | Callback Name | Meaning | Description |
 |-------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate | Create Object | Call when the object is created. You receive the context where the API available for the created type can be used. If needed, it can be saved and used in the content. |
 | onChannelUserInfoUpdate | Update channel user information | Some of the GameNodes associated with the same channel are called for synchronization by all others in the same channel when channel user information is changed in one GameNode. At this time, the user can update the current channel information in GameNode based on the information you have received. |
 | onChannelRoomInfoUpdate | Update channel room information | Many of the GameNodes associated with the same channel are called for synchronization by all the others in the same channel when channel room information is changed in one GameNode. At this time, the user can update the current channel information in GameNode based on the information you have received. |
 | onChannelInfo | Request Channel Information | Calls are made when the client requests channel information. In this callback, the user can configure channel information to pass to the client as they want. |
@@ -811,7 +810,6 @@ If you clean up the callback of these rooms, you can see the table below.
 
 | Callback Name | Meaning | Description |
 |---------------------------- |-------------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| onCreate | Object Create | Call when the object is created. You receive the context where the API available for the created type can be used. If needed from the content, it can be saved and used. |
 | onInit | Initialize | When a room is created, it will be called for initialization. You can write an init code for the room, such as registering topics. |
 | onDestroy | Room Disappearance | If the last user leaves the room and there is no message to deal with, the room will disappear. This is the callback called. |
 | onCreateRoom | Create Room | When the client requests to create a room, the call will be called. Create a material structure for the user list to be used in the content or write the code to be processed with other room creation. |
@@ -828,7 +826,7 @@ If you clean up the callback of these rooms, you can see the table below.
 | onMatchParty | Request Party Matchmaking | If the user requests Party Matchmaking, the message will be called. Party Matchmaking is a feature to request a match with one party from all the users in the room after creating a random NamedRoom for party use. In this callback, the user can use a party matchmaking API provided by the engine or a third-party matchmaking solution at random. |
 | onMatchPartyCancel | Cancel party matchmaking request | If the user requests a party matchmaking, the user will be called. Party Matchmaking is a feature to request a match with one party from all the users in the room after creating a random NamedRoom for party use. For this callback, the user can use a partial matchmaking API provided by the engine or a third-party matchmaking solution at random. |
 | onForceMatchRoomUnregistered | Room matchmaking is canceled | When room matchmaking is canceled, the user will be called. |
-| canTransfer | Check whether the room is available for transmission | Calls to check whether the room is available for transmission to another node. If the game is still in play or unprepared in the room, you can return false and delay the sending. If false is returned, the engine will continue to call this callback after a random amount of time. Note that room transmission is only used when performing a non-stop check patch. |
+| canTransfer | Check whether the room is available for transmission | Calls to check whether the room is available for transmission to another node. If the game is still in play or unprepared in the room, you can return false and delay the sending. If false is returned, the engine will continue to call this callback after a random amount of time. Note that room transfer is only used when performing a non-stop patch. |
 
 <a id="room-type"></a>
 ## Room Type { #room-type }
@@ -837,7 +835,8 @@ The method of implementation of the room discussed earlier and the type of room 
 
 | Room type | Description |
 |-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Normal Room | CreateRoom is created by the client's explicit request. Other clients can also use the room's ID to explicitly participate with JoinRoom. Therefore, the user that will participate must be previously shared with the ID of the room. | | Named Room | NamedRoom performs the action for a room named based on the only room name as it is. The client requests namedRoom as the only room name within the server group. In this case, if the room name does not exist on the server, the requestant will create a room directly. Conversely, if the room name already exists on the server, it will automatically enter the room. For example, it's easy to understand if you think of any kind of argument, such as "3:3 Hunter First!" that appears in our custom game list.
+| Normal Room | CreateRoom is created by the client's explicit request. Other clients can also use the room's ID to explicitly participate with JoinRoom. Therefore, the user that will participate must be previously shared with the ID of the room. |
+| Named Room  | NamedRoom performs the action for a room named based on the only room name as it is. The client requests namedRoom as the only room name within the server group. In this case, if the room name does not exist on the server, the requestant will create a room directly. Conversely, if the room name already exists on the server, it will automatically enter the room. For example, it's easy to understand if you think of any kind of argument, such as "3:3 Hunter First!" that appears in our custom game list. |
 
 These two room types are used in four different ways in total.
 
