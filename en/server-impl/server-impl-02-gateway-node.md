@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=4435e036d920 -->
 
 <a id="game-gameanvil-server-development-guide-implement-gateway-node"></a>
@@ -12,29 +14,16 @@ GatewayNode is a gateway accessed by the client. The service manages sessions fo
 
 ![Node Layer.png](https://static.toastoven.net/prod_gameanvil/images/ConnectionAndSession.png)
 
-Typically, a client establishes one connection to a GatewayNode. At this time, the service allows you to proceed with the authentication procedure for the connection. If it’s successful, you can create one or more sessions in one year. Each session is the logical unit of connection between the client and the user. The image above shows a session created by the client with the Game service and the Chat service through one connection. This structure allows simple [session recovery](#session-recovery) even if the client's connection is accidentally lost.
+Typically, a client establishes one connection to a GatewayNode. At this time, the service allows you to proceed with the authentication procedure for the connection. If it's successful, you can create one or more sessions in one year. Each session is the logical unit of connection between the client and the user. The image above shows a session created by the client with the Game service and the Chat service through one connection. This structure allows simple [session recovery](#session-recovery) even if the client's connection is accidentally lost.
 
 <a id="implement-gatewaynode"></a>
 ### Implement GatewayNode { #implement-gatewaynode }
 
-For such GatewayNode, @GameAnvilGatewayNode annotation can be declared and registered in the engine, and the IGatewayNode interface can be implemented to redefine only the callback method. These common callback methods are clearly explained with their name.
+For such GatewayNode, @GameAnvilGatewayNode annotation can be declared and registered in the engine, and the BaseGatewayNode class can be implemented to redefine only the callback method. These common callback methods are clearly explained with their name.
 ```java
-@GameAnvilGatewayNode // Register this class as Gateway in the engine
-public class SampleGatewayNode implements IGatewayNode {
-    private IGatewayNodeContext gatewayNodeContext;
-
-    /**
-     * Call to send gateway node context
-     * <p/>
-     * Call once after the object is created
-     *
-     * @param gatewayNodeContext Gateway Node Context
-     */
-    @Override
-    public void onCreate(IGatewayNodeContext gatewayNodeContext) {
-        this.gatewayNodeContext = gatewayNodeContext;
-    }
-
+@GameAnvilGatewayNode // Register this class as Gateway to the engine
+public class SampleGatewayNode extends BaseGatewayNode {
+ 
     /**
      * Call when the node is initialized
      */
@@ -60,30 +49,10 @@ public class SampleGatewayNode implements IGatewayNode {
     }
 
     /**
-     * Call when Pause
-     *
-     * Additional information to send from the @param payload content
-     */
-    @Override
-    public void onPause(IPayload payload) {
-
-    }
-
-    /**
      * Call when you receive the Shutdown command
      */
     @Override
     public void onShuttingdown() {
-
-    }
-
-    /**
-     * Call when Resume
-     *
-     * Additional information to send from the @param payload content
-     */
-    @Override
-    public void onResume(IPayload payload) {
 
     }
 }
@@ -95,63 +64,26 @@ public class SampleGatewayNode implements IGatewayNode {
 
 Connection designates the physical access itself to the client. The client can proceed with the authentication procedure on the connection using its unique AccountId. If authentication succeeds, the accountId is mapped to the created connection.
 
-After implementing IConnection, these connections redefine the callback methods as follows. At this time, you can use the user's key value obtained after authenticating from any platform as AccountId. For example, if you acquire a UserId after authenticating through Gamebase, this value can be used as an AccountId in the GameAnvil authentication process. 
+After implementing BaseConnection, these connections redefine the callback methods as follows. At this time, you can use the user's key value obtained after authenticating from any platform as AccountId. For example, if you acquire a UserId after authenticating through Gamebase, this value can be used as an AccountId in the GameAnvil authentication process. 
 
 ```java
-@GameAnvilGatewayConnection // Register this class as a Connection in the engine 
-public class SampleConnection implements IConnection {
-    private IConnectionContext connectionContext;
-    
-    /**
-     * Call to send connection context
-     * <p/>
-     * Call once after the object is created
-     *
-     * @param connectionContext connection context
-     */
-    @Override
-    public void onCreate(IConnectionContext connectionContext) {
-        this.connectionContext = connectionContext;
-    }
+@GameAnvilGatewayConnection // Register this class as Connection to the engine
+public class SampleConnection extends BaseConnection {
 
     /**
-     * Call for authentication requests
+     * Called when an authentication request is received
      *
-     * @param accountId  account ID
-     * @param password  account password
-     * @param deviceId   device ID of client
+     * @param accountId  Account ID
+     * @param password   Account password
+     * @param deviceId   Device ID of the client
      * @param payload    {@link IPayload} sent by client
-     * @param outPayload  {@link IPayload} to be sent to the client
-     * If the @return return value is true, the authentication succeeded, and if false, the connection to the client ended.
+     * @param outPayload {@link IPayload} to be sent to the client
+     * @return If the return value is true, the authentication succeeded, and if false, the connection to the client ended.
      */
     @Override
     public boolean onAuthenticate(String accountId, String password, String deviceId, IPayload payload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
-    }
-
-    /**
-     * Call when the node belonging to the connection is Pause
-     */
-    @Override
-    public void onPause() {
-
-    }
-
-    /**
-     * Call when the node belonging to the connection is Resume
-     */
-    @Override
-    public void onResume() {
-
-    }
-
-    /**
-     * Call when connection to the client is lost
-     */
-    @Override
-    public void onDisconnect() {
-
     }
 }
 ```
@@ -161,11 +93,7 @@ For the meaning and usage of these callbacks, see the table below:
 
 | Callback Name | Meaning | Description |
 |----------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate | Create object | Called when the object is created. You receive the context where the API available for the created type can be used. If needed in the content, you can save and use it. |
 | onAuthenticate | Authentication | Calls are called when the client requests authentication for the connection using the Authentication() API. The user can proceed with authentication processing based on the credentials sent by the client here. If authentication succeeds, you must return true and false if the authentication fails. |
-| onPause | Pause | Pause of GatewayNode through the console, all connections to the GatewayNode will be called. Here, when the node is temporarily stopped, the user can implement the code he wants to process additionally in the connection. |
-| onResume | Resume | When GatewayNode runs again during a temporary stop, all connections in the GatewayNode are called. Here, the user can implement the code he wants to process for the connection in a restarted state. |
-| onDisconnect | Access Ended | Called when the connection is lost from the client. At this time, the code to be processed is implemented here. |
 
 <a id="perform-session"></a>
 ### Perform Session { #perform-session }
@@ -175,26 +103,13 @@ Clients who are successfully connected can enter a logical session for GameNode,
 In this case, SubId can be allocated to any unique value within that connection according to random rules the user sets. In other words, different connections may have the same SubId. But it is possible to distinguish because they have different AccountId.
 
 ```java
-@GameAnvilGatewaySession  // Register this class as a session 
-public class SampleSession implements ISession {
-    private ISessionContext sessionContext;
+@GameAnvilGatewaySession  // Register this class as Session in the engine
+public class SampleSession extends BaseSession {
 
     /**
-     * Call to send the session context
-     * <p/>
-     * Call once after the object is created
+     * Called before login
      *
-     * @param sessionContext session context
-     */
-    @Override
-    public void onCreate(ISessionContext sessionContext) {
-        this.sessionContext = sessionContext;
-    }
-
-    /**
-     * Call before login calls
-     *
-     * @param outPayload  {@link IPayload} to be sent to the client
+     * @param outPayload {@link IPayload} to be sent to the client
      */
     @Override
     public void onBeforeLogin(IPayload payload) {
@@ -202,7 +117,7 @@ public class SampleSession implements ISession {
     }
 
     /**
-     * Call after login succeeded
+     * Called after a successful login
      */
     @Override
     public void onAfterLogin(boolean isReLogined) {
@@ -210,7 +125,7 @@ public class SampleSession implements ISession {
     }
 
     /**
-     * Call after logout
+     * Called after logout
      */
     @Override
     public void onAfterLogout() {
