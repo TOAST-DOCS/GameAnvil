@@ -8,7 +8,7 @@
 <a id="key-libraries"></a>
 ## Key Libraries { #key-libraries }
 
-The four key libraries used by GameAnvil are listed below. Quasar, ZeroMQ, and Netty are used inside the engine, so GameAnvil users don't need to use them themselves. Protocol Buffers are used to serialize/deserialize messages. If you understand these four libraries well, whether you use them directly or not, it will help you use the engine a lot.
+The three key libraries used by GameAnvil are listed below. ZeroMQ and Netty are used inside the engine, so GameAnvil users don't need to use them themselves. Protocol Buffers are used to serialize/deserialize messages. If you understand these three libraries well, whether you use them directly or not, it will help you use the engine a lot.
 
 | Library       | Usage                            |
 | ---------------- | ------------------------------- |

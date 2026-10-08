@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=b2564be6b47a -->
 
 <a id="game-gameanvil-server-development-guide-implement-game-node"></a>
@@ -21,35 +23,21 @@ This session is directed to the user object. GameNode manages these user objects
 <a id="implement-gamenode"></a>
 ## Implement GameNode { #implement-gamenode }
 
-GameNode implements the IGameNode interface. The example code below shows the callback methods that can be basically redefined in GameNode. A callback exists for channel management, along with a node common callback.
+GameNode implements the BaseGameNode class. The example code below shows the callback methods that can be basically redefined in GameNode. A callback exists for channel management, along with a node common callback.
 
 ```java
-@GameAnvilGameNode(gameServiceName = "MyGame") // (1)
-Register in Engine with GameNode for a service called "MyGame"
-public class SampleGameNode implements IGameNode {
-    private IGameNodeContext gameNodeContext;
-
-    /**
-     * Call to send game node context
-     * <p/>
-     * Call once after the object is created
-     *
-     * @param gameNodeContext Game Node Context
-     */
-    @Override
-    public void onCreate(IGameNodeContext gameNodeContext) {
-        this.gameNodeContext = gameNodeContext;
-    }
+@GameAnvilGameNode(gameServiceName = "MyGame") // (1) Register in Engine with GameNode for a service called "MyGame"
+public class SampleGameNode extends BaseGameNode {
 
     /**
      * Call when user changes occur to other nodes in the same channel
      * <p>
-     * Call when calling updateChannelUser ().
+     * Occurs when updateChannelUser() is called.
      *
      * @param type            {@link ChannelUpdateType}, which is the channel information change type (update/delete)
      * @param channelUserInfo {@link IChannelUserInfo}, the user information to be changed
-     * @param userId          User ID of the target for change
-     * @param accountId       Account ID to be changed
+     * @param userId          User ID of the target to be changed
+     * @param accountId       Account ID of the target to be changed
      */
     @Override
     public void onChannelUserInfoUpdate(ChannelUpdateType channelUpdateType, IChannelUserInfo channelUserInfo, int userId, String accountId) {
@@ -59,11 +47,11 @@ public class SampleGameNode implements IGameNode {
     /**
      * Call when room status changes occur in other nodes in the same channel
      * <p>
-     * Occurred by calling updateChannelRoomInfo()
+     * Occurs when updateChannelRoomInfo() is called
      *
      * @param type            Channel information change type (updated/deleted) {@link ChannelUpdateType}
      * @param channelRoomInfo {@link IChannelRoomInfo}, the room information to be changed
-     * @param roomId          Room ID to be changed
+     * @param roomId          Room ID of the target to be changed
      */
     @Override
     public void onChannelRoomInfoUpdate(ChannelUpdateType channelUpdateType, IChannelRoomInfo channelRoomInfo, int userId) {
@@ -71,9 +59,9 @@ public class SampleGameNode implements IGameNode {
     }
 
     /**
-     * Call when the client requests channel information   (Base.GetChannelInfoReq)
+     * Called when the client requests channel information (Base.GetChannelInfoReq)
      *
-     * Channel information to be sent to the @param outPayload client
+     * @param outPayload Channel information to be delivered to the client
      */
     @Override
     public void onChannelInfo(IPayload payload) {
@@ -81,7 +69,7 @@ public class SampleGameNode implements IGameNode {
     }
 
     /**
-     * Call when the node is initialized
+     * Called when the node is initialized
      */
     @Override
     public void onInit() {
@@ -89,7 +77,7 @@ public class SampleGameNode implements IGameNode {
     }
 
     /**
-     * Call for what to handle before you get Ready
+     * Called to handle tasks before the node becomes Ready
      */
     @Override
     public void onPrepare() {
@@ -97,7 +85,7 @@ public class SampleGameNode implements IGameNode {
     }
 
     /**
-     * Call when you are Ready
+     * Called when the node becomes Ready
      */
     @Override
     public void onReady() {
@@ -105,9 +93,9 @@ public class SampleGameNode implements IGameNode {
     }
 
     /**
-     * Call when Pause
+     * Called when the node is Paused
      *
-     * Additional information to send from the @param payload content
+     * @param payload Additional information to send from the content
      */
     @Override
     public void onPause(IPayload payload) {
@@ -115,7 +103,7 @@ public class SampleGameNode implements IGameNode {
     }
 
     /**
-     * Call when you receive the Shutdown command
+     * Called when a Shutdown command is received
      */
     @Override
     public void onShuttingdown() {
@@ -123,9 +111,9 @@ public class SampleGameNode implements IGameNode {
     }
 
     /**
-     * Call when Resume
+     * Called when the node is Resumed
      *
-     * Additional information to send from the @param payload content
+     * @param payload Additional information to send from the content
      */
     @Override
     public void onResume(IPayload payload) {
@@ -141,7 +129,7 @@ public class _GameNodeTest {
     // (2) Mapping the protocol and handler we want to handle in SampleGameNode
     @GameNodeMapping(
         value = MyGame.GameNodeTest.class, // Protobuffer to process
-        loadClass = SampleGameNode.class // The message receiver (SampleGameNode)
+        loadClass = SampleGameNode.class   // The message receiver (SampleGameNode)
     )
     public void execute(IGameNodeDispatchContext ctx) {
         // Write the task to be performed here
@@ -154,7 +142,7 @@ For the meaning and usage of callbacks, see the table below:
 | Callback Name | Meaning | Description |
 |-------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | onChannelUserInfoUpdate | Update channel user information | Some of the GameNodes associated with the same channel are called for synchronization by all others in the same channel when channel user information is changed in one GameNode. At this time, the user can update the current channel information in GameNode based on the information you have received. |
-| onChannelRoomInfoUpdate | Update channel room information | Many of the GameNodes associated with the same channel are called for synchronization by all the others in the same channel when channel room information is changed in one GameNode. At this time, the user can update the current channel information in GameNode based on the information you have received. |
+| onChannelRoomInfoUpdate | Update channel room information | Many of the GameNodes associated with the same channel are called for synchronization by all the others in the same channel when channel room information is changed in one GameNode. At this time, the user can update the current channel information in GameNode based on the information you have received.  |
 | onChannelInfo | Request Channel Information | Calls are made when the client requests channel information. In this callback, the user can configure channel information to pass to the client as they want. |
 | onInit | Initialize | Calls when the node proceeds with the first initialization. If there is any initialization task required before the node runs, this callback is suitable. At this time, the node is still not being processing the message. |
 | onPrepare | Prepare | The node will be called after the node is initialized. The user can proceed with any task here before the node is ready. At this time, the node can process messages. |
@@ -165,7 +153,7 @@ For the meaning and usage of callbacks, see the table below:
 
 All nodes need a message handler registration process to process custom messages. In particular, this process is required for GameNode game content. Proceed with the setting up in the main class before the server runs. (1) Create the game service name set for GameAnvilConfig. The game service name must use the name defined in GameAnvilConfig. (2) And connect to the [translator](server-impl-07-message-handling.md#implement-message-handler-and-connect-messages-to-handlers) that has implemented the message you want to process. One GameNode class can only be registered for one service.
 
-The main purpose of such GameNode is to process all GameUser and GameRoom objects connected to the node. Let me explain this right away.
+The primary purpose of these GameNodes is to perform processing for all GameUser and GameRoom objects connected to the node, which we'll discuss in a moment.
 
 <a id="implement-user"></a>
 ## Implement User { #implement-user }
@@ -175,44 +163,30 @@ User objects are created in GameNode through the login process. User-based conte
 ```java
 @GameAnvilUser(
     gameServiceName = "MyGame", // Node to which the user belongs (service name such as SampleGameNode above)
-    gameType = "BasicUser", // Register a user of a unique user type, "BasicUser" in the engine
-    useChannelInfo = true // Setting up synchronization of information between channels
+    gameType = "BasicUser",     // Register a user of a unique user type, "BasicUser" in the engine
+    useChannelInfo = true       // Setting up synchronization of information between channels
 )
-public class SampleGameUser implements IUser {
-    private IUserContext userContext;
+public class SampleGameUser extends BaseGameUser {
 
     /**
-     * Call to send user context
-     * <p/>
-     * Call once after the object is created
+     * Called when logging in
      *
-     * @param userContext User Context
-     */
-    @Override
-    public void onCreate(IUserContext userContext) {
-        this.userContext = userContext;
-    }
-
-    /**
-     * Call when logging in
-     *
-     * @param payload        {@link IPayload} sent by client
-     * {@link IPayload} sent by @param sessionPayload onBeforeLogin
+     * @param payload        {@link IPayload} received from the client
+     * @param sessionPayload {@link IPayload} passed from onBeforeLogin
      * @param outPayload     {@link IPayload} to be sent to the client
-     * If the @return return value is true, login succeeded; and if false, login failed
+     * @return If the return value is true, login succeeds; if false, login fails
      */
     @Override
     public boolean onLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
-        boolean isSuccess = true;
-        return isSuccess;
+        return false;
     }
 
     /**
-     * Call for post-processing required after login succeeds
-     * <p/>
-     * (i.e., call after onLogin or onReLoin succeeds)
+     * Called for post-processing required after a successful login
+     * <p></p>
+     * (That is, called after onLogin or onReLogin succeeds)
      *
-     * @param isRelogined Re-logged in or not
+     * @param isRelogined Whether this is a re-login
      */
     @Override
     public void onAfterLogin(boolean isRelogined) {
@@ -220,23 +194,22 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * Call when attempting to log in again while already logged in
-     * <p/>
-     * Even if the connection is lost while logged in, the user's game user object remains valid for a period of time in the game node.
+     * Called when a login is attempted again while already logged in
+     * <p></p>
+     * Even if the connection is lost while logged in, the user's game user object remains valid on the game node for a certain period of time
      *
-     * @param payload        Any {@link IPayload} sent by the client
-     * {@link IPayload} sent by @param sessionPayload onBeforeLogin
-     * @param outPayload     Any {@link IPayload} to send to the client
-     * If the @return return value is true, ReLogin succeeds; and if false, ReLogin fails.
+     * @param payload        Arbitrary {@link IPayload} passed from the client
+     * @param sessionPayload {@link IPayload} passed from onBeforeLogin
+     * @param outPayload     Arbitrary {@link IPayload} to be sent to the client
+     * @return If the return value is true, ReLogin succeeds; if false, ReLogin fails
      */
     @Override
     public boolean onReLogin(IPayload payload, IPayload sessionPayload, IPayload outPayload) {
-        boolean isSuccess = true;
-        return isSuccess;
+        return false;
     }
 
     /**
-     * Callback called when connection to the client is lost
+     * Callback called when the connection with the client is lost
      */
     @Override
     public void onDisconnect() {
@@ -244,7 +217,7 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * When the node belongs to the user is Pause, the user is also called and Pause
+     * Called when the node to which the user belongs is paused, causing the user to be paused as well
      */
     @Override
     public void onPause() {
@@ -252,7 +225,7 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * When the node belonging to the user is Resume, the user is also called as Resume
+     * Called when the node to which the user belongs is resumed, causing the user to be resumed as well
      */
     @Override
     public void onResume() {
@@ -260,10 +233,10 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * Call when the user logs out
+     * Called when the user logs out
      *
-     * @param payload    {@link IPayload} sent by client
-     * @param outPayload  {@link IPayload} to be sent to the client
+     * @param payload    {@link IPayload} received from the client
+     * @param outPayload {@link IPayload} to be sent to the client
      */
     @Override
     public void onLogout(IPayload payload, IPayload outPayload) {
@@ -271,21 +244,21 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * Call to confirm that the user can log out
-     * <p/>
-     * The engineer can determine whether the current game user will not have any problems even if they log out.
+     * Called to check whether the user can log out
+     * <p></p>
+     * Engine users can decide in this callback whether it is safe for the current game user to log out
      *
-     * If the @return return value is false, the logout progress stops and calls the callback again periodically after that. If the return value is true, proceed with log out.
+     * @return If the return value is false, the logout process stops and the callback is called again periodically thereafter. If the return value is true, logout proceeds
      */
     @Override
     public boolean canLogout() {
-        return true;
+        return false;
     }
 
     /**
-     * Run onLeavingRoom of the room and call after the user has left the room completely
-     * <p/>
-     * Proceed with the tasks required by the user who have left the room
+     * Called after onLeavingRoom of the room is executed and the user has completely left the room
+     * <p></p>
+     * Performs tasks that the user who has left the room needs to handle
      */
     @Override
     public void onAfterLeaveRoom() {
@@ -293,69 +266,67 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * Call to confirm whether the user can move to another node
+     * Called to check whether the user can be transferred (moved) to another node
      *
-     * If the @return return value is true, the state can be sent and if false, the state cannot be sent. In the unavailable state, if SafePause is in progress, continue to call to send the user until SafePause ends.
+     * @return If the return value is true, transfer is possible; if false, transfer is not possible. In the unavailable state, if SafePause is in progress, continue to call to send the user until SafePause ends.
      */
     @Override
     public boolean canTransfer() {
-        return true;
+        return false;
     }
 
     /**
-     * Call when the same user logs in to another device while they are already logged in
+     * Called when the same user logs in from a different device while already logged in
      *
-     * @param newDeviceId           Device ID value of the newly connected user
-     * @param outPayloadForKickUser {@link IPayload} to be passed to the client. Including kickOut or LoginRes information.
-     * If the @return return value is true, the existing user will be forced to log out after the newly connected user is logged in. If false, the newly connected user will fail to log in.
+     * @param newDeviceId           Device ID of the newly connected user
+     * @param outPayloadForKickUser {@link IPayload} to be sent to the client. Includes kickOut or LoginRes information
+     * @return If the return value is true, the existing user will be forced to log out after the newly connected user is logged in. If false, the newly connected user will fail to log in.
      */
     @Override
-    public boolean onLoginByOtherDevice(String s, IPayload payload) {
-        boolean isSuccess = true;
-        return isSuccess;
+    public boolean onLoginByOtherDevice(String newDeviceId, IPayload outPayloadForKickUser) {
+        return false;
     }
 
     /**
-     * Call when trying to log in to another user type while already logged in with the random user type
+     * Called when a login is attempted with a different user type while already logged in with an arbitrary user type
      *
-     * @param userType   Type of user attempting to log in for the first time
-     * @param outPayload  {@link IPayload} to be sent to the client
-     * If the @return return value is true, the new login succeeds, and if false, it fails
+     * @param userType   The type of the user attempting the new login
+     * @param outPayload {@link IPayload} to be sent to the client
+     * @return If the return value is true, the new login succeeds; if false, it fails
      */
     @Override
-    public boolean onLoginByOtherUserType(String s, IPayload payload) {
-        boolean isSuccess = true;
-        return isSuccess;
+    public boolean onLoginByOtherUserType(String userType, IPayload outPayload) {
+        return false;
     }
 
     /**
-     * When attempting to log in through other connections while already logged in (for reasons of re-access, etc.) Call
+     * Called when a login is attempted through another connection (e.g., due to reconnection) while already logged in
      *
-     * @param outPayload  {@link IPayload} to be sent to the client
+     * @param outPayload {@link IPayload} to be sent to the client
      */
     @Override
-    public void onLoginByOtherConnection(IPayload payload) {
+    public void onLoginByOtherConnection(IPayload outPayload) {
 
     }
 
     /**
-     * Call if you receive a room matchmaking request
+     * Called when a room matchmaking request is received
      *
-     * @param roomType             An arbitrary value that distinguishes between predefined room types between the client and the server
-     * @param matchingGroup        Deliver room matching group matched
-     * @param matchingUserCategory Deliver matching user category matched
-     * @param payload              {@link IPayload} sent by client
-     * Return the information of the room matched with the @return {@link RoomMatchResult} type. If you return null, new rooms are created according to the client request option or the request fails
+     * @param roomType             An arbitrary value that distinguishes the room type predefined between the client and the server
+     * @param matchingGroup        The room matching group to be matched
+     * @param matchingUserCategory The matching user category to be matched
+     * @param payload              {@link IPayload} received from the client
+     * @return Return the information of the room matched with the {@link RoomMatchResult} type. If you return null, new rooms are created according to the client request option or the request fails
      */
     @Override
     public RoomMatchResult onMatchRoom(String roomType, String matchingGroup, String matchingUserCategory, IPayload payload) {
-        return RoomMatchResult.FAILED;
+        return null;
     }
 
     /**
-     * Call if processing the client's room matchmaking request fails
+     * Called when processing the client's room matchmaking request fails
      *
-     * Why @param matchRoomFailCode room matches failed
+     * @param matchRoomFailCode The reason why room matchmaking failed
      */
     @Override
     public void onMatchRoomFail(MatchRoomFailCode matchRoomFailCode) {
@@ -363,9 +334,9 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * Call if processing client's user matchmaking request fails
+     * Called when processing the client's user matchmaking request fails
      *
-     * Why @param matchUserFailCode user matches failed
+     * @param matchUserFailCode The reason why user matchmaking failed
      */
     @Override
     public void onMatchUserFail(MatchUserFailCode matchUserFailCode) {
@@ -375,32 +346,31 @@ public class SampleGameUser implements IUser {
     /**
      * Callback called when the client requests user matchmaking
      *
-     * @param roomType      An arbitrary value that distinguishes between predefined room types for the client and the server.
-     * @param matchingGroup Matching group
-     * @param payload       {@link IPayload} sent by client
+     * @param roomType      An arbitrary value that distinguishes the room type predefined between the client and the server
+     * @param matchingGroup The matching group
+     * @param payload       {@link IPayload} received from the client
      * @param outPayload    {@link IPayload} to be sent to the client
-     * If the @return return value is true, the user matchmaking request succeeded, and if false, it failed.
+     * @return If the return value is true, the user matchmaking request succeeds; if false, it fails
      */
     @Override
     public boolean onMatchUser(String roomType, String matchingGroup, IPayload payload, IPayload outPayload) {
-        boolean isSuccess = true;
-        return isSuccess;
+        return false;
     }
 
     /**
-     * Call when user matching is canceled
+     * Called when user matchmaking is canceled
      *
-     * @param reason Reason for cancellation. TIMEOUT, CANCEL by user request, and SHUTDOWN by shutdown of the match node
+     * @param reason The reason for cancellation: timeout (TIMEOUT), canceled by the user's request (CANCEL), or canceled due to the match node shutting down (SHUTDOWN)
      */
     @Override
-    public void onMatchUserCancel(MatchCancelReason matchCancelReason) {
+    public void onMatchUserCancel(MatchCancelReason reason) {
 
     }
 
     /**
-     * When a user moves (sends) to another node, calls to get data to pass from the source node
+     * Called to package the data to be sent from the source node when the user is transferred (moved) to another node
      *
-     * @param transferPack A package to store data to take to another node
+     * @param transferPack A data package for storing data to be taken to another node
      */
     @Override
     public void onTransferOut(ITransferPack transferPack) {
@@ -408,22 +378,22 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * When the user has been moved (sending) from another node, calls to transfer data to the destination node, and the timer key to be re-registered
+     * When the user has been moved (transferred) from another node, calls to transfer data to the destination node, and the timer key to be re-registered
      * <p>
-     * Check the list of the timerHandlerKey registered to the user through TimerHandlerTransferPack
-     * <p/>
-     * Re-register the timerHandler to use by utilizing the reRegister() of TimerHandlerTransferPack
+     * Use TimerHandlerTransferPack to check the list of timerHandlerKeys registered to the user
+     * <p></p>
+     * Use reRegister() of TimerHandlerTransferPack to re-register the timerHandler to be used
      *
-     * @param transferPack             A package for transmitting data brought from other nodes
-     * @param timerHandlerTransferPack
+     * @param transferPack             A data package for delivering data brought from another node
+     * @param timerHandlerTransferPack A data package for delivering timer information brought from another node
      */
     @Override
-    public void onTransferIn(ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+    public void onTransferIn(IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
 
     }
 
     /**
-     * When the user has been moved (sending) from another node, call after the sending is completed
+     * Called after the transfer is complete when the user has been transferred (moved) from another node
      */
     @Override
     public void onAfterTransferIn() {
@@ -431,12 +401,12 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * Call when the client requests a snapshot
+     * Called when the client requests a snapshot
      * <p>
      * Used to synchronize client and server status information when the connection is mainly disconnected and the server status is likely to change.
      *
-     * Send {@link IPayload} with the default set that is sent from @param payload client to the server
-     * Send {@link IPayload} with the default set that is sent from the @param outPayload server to the client
+     * @param payload    {@link IPayload} with defines set, passed from the client to the server
+     * @param outPayload {@link IPayload} with defines set, passed from the server to the client
      */
     @Override
     public void onSnapshot(IPayload payload, IPayload outPayload) {
@@ -444,35 +414,35 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * When making a request to move from client to another channel, call to confirm whether the user is currently in a channel moveable state
+     * When making a request to move from the client to another channel, called to confirm whether the user is currently in a channel-moveable state
      * <p>
-     * Caution! If the user explicitly calls the moveChannel() API to move a channel, canMoveOutChannel() is not called.
-     * <p/>
-     * Only called when silent channel moves occur
+     * Caution! If the user explicitly calls the moveChannel() API to move a channel, canMoveOutChannel() is not called
+     * <p></p>
+     * It is called only when an implicit channel move occurs by the engine
      *
-     * @param destinationChannelId ID of the moving target channel
-     * @param payload              {@link IPayload} sent by client
-     * @param errorPayload         If the channel transfer fails, the server sends an error {@link IPayload} to the client. If it is successful, it cannot be delivered.
-     * If the @return return value is false, channel moves are not possible, so the request fails and if the return value is true, the request succeeds.
+     * @param destinationChannelId The ID of the target channel to move to
+     * @param payload              {@link IPayload} received from the client
+     * @param errorPayload         Error {@link IPayload} sent from the server to the client if the channel move fails. Not sent if successful
+     * @return If the return value is false, the channel move is not possible and the request fails; if true, it succeeds
      */
     @Override
-    public boolean canMoveOutChannel(String channelId, IPayload payload, IPayload outPayload) {
+    public boolean canMoveOutChannel(String destinationChannelId, IPayload payload, IPayload errorPayload) {
         return false;
     }
 
     /**
-     * When moving a channel to another node, call from the departure node
+     * Called from the source node when moving to another channel
      *
-     * @param destinationChannelId ID of the moving target channel
-     * @param outPayload            {@link IPayload} to be sent to the channel that will move
+     * @param destinationChannelId The ID of the target channel to move to
+     * @param outPayload           {@link IPayload} to be sent to the target channel
      */
     @Override
-    public void onMoveOutChannel(String channelId, IPayload payload) {
+    public void onMoveOutChannel(String destinationChannelId, IPayload outPayload) {
 
     }
 
     /**
-     * Call from the departure node after moving channel to another node
+     * Called from the source node after the channel move to another node is complete
      */
     @Override
     public void onAfterMoveOutChannel() {
@@ -480,31 +450,30 @@ public class SampleGameUser implements IUser {
     }
 
     /**
-     * When moving a channel to another node, call by entering the target node
+     * Called upon entering the target node when moving to another channel
      *
-     * @param sourceChannelId Channel ID before moving
-     * @param payload         {@link IPayload} sent by client
+     * @param sourceChannelId The ID of the channel before the move
+     * @param payload         {@link IPayload} received from the client
      * @param outPayload      {@link IPayload} to be sent to the client
-     * @throws GameAnvilException When an IOException, ExecutionException, or InterruptedException occurs, it is bundled into GameAnvilException and thrown.
+     * @throws GameAnvilException Throws a GameAnvilException wrapping IOException, ExecutionException, or InterruptedException if any of these occur
      */
     @Override
-    public void onMoveInChannel(String channelId, IPayload payload, IPayload outPayload) {
+    public void onMoveInChannel(String sourceChannelId, IPayload payload, IPayload outPayload) throws GameAnvilException {
 
     }
 }
-
 ```
 
 ```java
 @GameAnvilController
 public class _GameUserTest {
-    // Mapping the protocols and dealers you want to process in SampleGameUser
-     @GameUserMapping(
-        value = MyGame.GameUserTest.class, // Proof buffer to process
-        loadClass = SampleGameUser.class // Recipient (SampleGameUser)
+   // Mapping the protocols and handlers you want to process in SampleGameUser
+    @GameUserMapping(
+        value = MyGame.GameUserTest.class, // Protobuffer to process
+        loadClass = SampleGameUser.class   // The message receiver (SampleGameUser)
     )
     public void execute(IUserDispatchContext ctx) {
-        // Write down what to do
+       // Write the task to be performed here
     }
 }
 ```
@@ -513,7 +482,7 @@ In particular, users have to be set to register for the engine compared to other
 
 Callbacks starting with onLogin in the example code above are all called as related to login. For example, for the first login request, an onLogin callback is called, and when processing re-login while you are already logged in, an onReLogin callback is called. In the same way, when processing logouts, an onLogout callback is called. Thus, GameAnvil's callback is often clearly explained through its name and JavaDoc commas.
 
-The user can move between channels at any time. What is related to these channels will be explained in [specific chapters](server-impl-09-channel) below, so let me pass by here first. In addition, a user is an object that can be transferred between multiple GameNodes. This feature is also explained in more detail in s [separate chapter](server-impl-08-object-transfer). 
+The user can move between channels at any time. What is related to these channels will be explained in [specific chapters](server-impl-09-channel) below, so let me pass by here first. In addition, a user is an object that can be transferred between multiple GameNodes. This feature is also explained in more detail in a [separate chapter](server-impl-08-object-transfer).
 
 GameAnvil offers two types of matchmaking - room matchmaking and user matchmaking. When these matchmaking requests reach the user, an onMatchRoom or onMatchUser callback is called. For this callback, the user may use a matchmaker provided by GameAnvil or implement it directly or use another matchmaker provided by a third party. For more detailed description, let me re-examine MatchNode in [the next chapter](server-impl-04-match-node).
 
@@ -521,7 +490,6 @@ The callbacks for these users are summarized in the table below:
 
 | Callback Name | Meaning | Description |
 |--------------------------|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate | Create Object | Call when the object is created. You receive the context where the API available for the created type can be used. If needed from the content, it can be saved and used. |
 | onLogin | Log in | Called when you first log in. Usually, the user performs tasks to reset the game user object by taking user information from repositories such as DB from this callback. |
 | onAfterLogin | Successful Login After Processing | OnLogin is called after success. You can perform the post-processing task for logging in to this callback. |
 | onReLogin | Re-logged in | If you log in again while you are already logged in, onReLogin will be called instead of onLogin. The task of re-logging is processed in this callback. |
@@ -532,7 +500,7 @@ The callbacks for these users are summarized in the table below:
 | canLogout | Check logout availability | The user is called to check if the user is currently in a logout availability state. If you are in the game or should not lose your information, you can delay your log out by returning false. If false is returned, the engine will continue to call this callback after a random time. |
 | onAfterLeaveRoom | Post-processing of the room has left | Run onLeavingRoom of the room and the user will be called after the room has left. Proceed with the task that must be performed by the user in the room. |
 | canTransfer | Confirm that user transmission is available | The user will be called to check whether the user can be transferred to another node. If you are in the game or are not yet prepared, you can return false and delay the sending. If you return false, the engine will continue to call this callback after a random time. |
-|onLoginByOtherDevice | Trying to log in to another device | If you have an additional login request to another device and you are already logged in, it will be called. The user can determine which of the existing and new users to log in with the return value. |
+| onLoginByOtherDevice | Trying to log in to another device | If you have an additional login request to another device and you are already logged in, it will be called. The user can determine which of the existing and new users to log in with the return value. |
 | onLoginByOtherUserType | Trying to log in with a different user type | It will be called when the login request comes with another user type while already logged in. You can determine whether to proceed with logging for the new user type with a return value. |
 | onLoginByOtherConnection | Trying to log in with another connection | If you are already logged in (due to re-access), you will be called if you try to log in with another connection. If you need to do more about re-access, you can do it in this callback. |
 | onMatchRoom | Request room matchmaking | If the user requests room matchmaking, the call will be called. At this time, the user can randomly use the room matchmaking API provided by the engine from this callback. |
@@ -541,7 +509,7 @@ The callbacks for these users are summarized in the table below:
 | onMatchUser | Request User Matchmaking | If the user requests user matchmaking, the call will be sent. In this callback, the user can use a user matchmaking API provided by the engine or a third-party matchmaking solution at random. |
 | onMatchUserCancel | Cancel User Matchmaking | If the user previously applied for a user matchmaking, the call will be canceled. If the cancelation is unavailable because the match is already completed, it may fail. |
 | onTransferOut | Sending and ready to be sent from an existing node | When the user is sent to another GameNode, it will be called when the sending starts from the source node. In this callback, the user can create a data package to be sent with the user object. |
-| onTransferIn | Transfer to the new node completed. | When the user is sent to another GameNode, the message is called while the sending is completed from the target node. The user can release the data package you brought with him and restore it to the original user status. |
+| onTransferIn | Transfer to the new node completed. | When the user is sent to another GameNode, the message is called while the sending is completed from the target node. The user can release the data package they brought with them and restore it to the original user state. |
 | onAfterTransferIn | Post-processing has been completed | If the user transfer succeeds, the target node will be called for post-processing. |
 | onSnapshot | Request a snapshot from the client | Calls when the client requests a snapshot. When the connection is mainly disconnected and the server status is likely to change, the call is used to synchronize the client and server status information. |
 | canMoveOutChannel | Check whether the channel can be moved | Calls are used to check whether the user can be moved to another channel. If the user explicitly calls the moveChannel() API to move a channel, it will not be called. Only called when a silent channel movement occurs by the engine. |
@@ -567,214 +535,201 @@ Two or more users can create a synchronized message flow through the room. It me
 ```java
 @GameAnvilRoom(
     gameServiceName = "MyGame", // Nodes (service names such as SampleGameNode above)
-    gameType = "BasicRoom", // Register a room of the type "BasicRoom" in the engine
-    useChannelInfo = true // Settings for synchronizing information between channels
+    gameType = "BasicRoom",     // Register a room of the type "BasicRoom" in the engine
+    useChannelInfo = true       // Settings for synchronizing information between channels
 )
-public class SampleRoom implements IRoom<SampleUser> {
-    private IRoomContext roomContext;
+public class SampleGameRoom extends BaseGameRoom<SampleGameUser> {
 
-    /**
-     * Call to send the room context
-     * <p/>
-     * Call once after the object is created
-     *
-     * @param roomContext Room context
-     */
-    @Override
-    public void onCreate(IRoomContext<SampleUser> roomContext) {
-        this.roomContext = roomContext;
-    }
-
-    /**
-     * Call when the room is reset
+/**
+     * Called when the room is initialized
      */
     @Override
     public void onInit() {
 
-    }
+}
 
-    /**
-     * Call when a room is deleted
+/**
+     * Called when the room is destroyed
      */
     @Override
     public void onDestroy() {
 
-    }
+}
 
-    /**
-     * Call when creating a new room
+/**
+     * Called when a new room is created
      * <p/>
-     * Determine whether to create a room by the return value
+     * Whether to create the room is determined by the return value
      *
-     * @param user       Requested user object
-     * @param inPayload  {@link IPayload} sent by client
-     * @param outPayload  {@link IPayload} to be sent to the client
-     * If the @return return value is true, the room creation succeeds, and if false, it fails
+     * @param user       The user object that made the request
+     * @param inPayload  {@link IPayload} received from the client
+     * @param outPayload {@link IPayload} to be sent to the client
+     * @return true if room creation succeeds, false if it fails
      */
     @Override
-    public boolean onCreateRoom(SampleUser user, IPayload payload, IPayload outPayload) {
+    public boolean onCreateRoom(SampleGameUser user, IPayload inPayload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
-    /**
-     * Call when you join any room
+/**
+     * Called when joining an arbitrary room
      * <p/>
-     * Determine whether to join the room by the return value
+     * Whether to join the room is determined by the return value
      *
-     * @param user       Requested user object
-     * @param inPayload  {@link IPayload} sent by client
-     * @param outPayload  {@link IPayload} to be sent to the client
-     * If the @return return value is true, the entering succeeds, and if false, it fails
+     * @param user       The user object that made the request
+     * @param inPayload  {@link IPayload} received from the client
+     * @param outPayload {@link IPayload} to be sent to the client
+     * @return true if entry succeeds, false if it fails
      */
     @Override
-    public boolean onJoinRoom(SampleUser user, IPayload payload, IPayload outPayload) {
+    public boolean onJoinRoom(SampleGameUser user, IPayload inPayload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
-    /**
-     * Call when you leave the room
+/**
+     * Called when leaving a room
      * <p/>
-     * Determine whether to leave the room by the return value
+     * Whether to leave the room is determined by the return value
      *
-     * @param user       Requested user object
-     * @param inPayload  {@link IPayload} sent by client
-     * @param outPayload  {@link IPayload} to be sent to the client
-     * If the @return return value is true, the leaving succeeds, and if false, it fails
+     * @param user       The user object that made the request
+     * @param inPayload  {@link IPayload} received from the client
+     * @param outPayload {@link IPayload} to be sent to the client
+     * @return true if leaving succeeds, false if it fails
      */
     @Override
-    public boolean canLeaveRoom(SampleUser user, IPayload payload, IPayload outPayload) {
+    public boolean canLeaveRoom(SampleGameUser user, IPayload inPayload, IPayload outPayload) {
         return true;
     }
 
-    /**
-     * Calls when the user leaves the room
+/**
+     * Called when a user leaves the room
      * <p/>
-     * Proceed with the last task before the user leaves the room
+     * Processes the last task before the user leaves the room
      *
-     * @param user A user leaving the room
+     * @param user The user leaving the room
      */
     @Override
-    public void onLeaveRoom(SampleUser user) {
+    public void onLeaveRoom(SampleGameUser user) {
 
-    }
+}
 
-    /**
-     * Call after the user has left the room completely
+/**
+     * Called after the user has completely left the room
      * <p/>
-     * Proceed with tasks regarding the users remaining in the room and the room.
+     * Processes tasks related to the room and the users remaining in the room
      */
     @Override
     public void onAfterLeaveRoom() {
 
-    }
+}
 
-    /**
-     * When logging in, automatically re-enter the room and call
+/**
+     * Called when automatically re-entering the room upon re-login
      *
-     * @param user       A user object entering the room
-     * @param outPayload  {@link IPayload} to be sent to the client
+     * @param user       The user object entering the room
+     * @param outPayload {@link IPayload} to be sent to the client
      */
     @Override
-    public void onRejoinRoom(SampleUser user, IPayload payload) {
+    public void onRejoinRoom(SampleGameUser user, IPayload outPayload) {
 
-    }
+}
 
-    /**
+/**
      * When the room moves (sends) to another node, calls to get data to pass from the departure node
      *
-     * @param transferPack {@link ITransferPack}, a package for storing data to be transferred to another node
+     * @param transferPack {@link ITransferPack} for storing the data package to be carried to another node
      */
     @Override
     public void onTransferOut(ITransferPack transferPack) {
 
-    }
+}
 
-    /**
+/**
      * When the room moves to another node (sending), the newly created room objects from the target node are restored to their original state and called to register the time for the operator to process.
      * <p>
-     * Check the list of the timerKey registered in the room through TimerHandlerTransferPack
+     * Check the list of timerKeys registered in the room through TimerHandlerTransferPack
      * <p/>
-     * Re-register the timerHandler to use by utilizing the reRegister() of TimerHandlerTransferPack
+     * Use reRegister() of TimerHandlerTransferPack to re-register the timerHandler to use
      * <p/>
      * At this point, the room is not fully restored, so requested message to other places (node, user, etc.) is restricted
      *
-     * @param userList                 List of users to move
-     * @param transferPack             {@link ITransferPack}, a data package brought from another node
-     * @param timerHandlerTransferPack
+     * @param userList                 The list of users to move
+     * @param transferPack             {@link ITransferPack} containing the data package brought from the other node
+     * @param timerHandlerTransferPack {@link ITimerHandlerTransferPack} for re-registering timer handlers
      */
     @Override
-    public void onTransferIn(List<SampleUser> list, ITransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
+    public void onTransferIn(List<SampleGameUser> userList, IReadOnlyTransferPack transferPack, ITimerHandlerTransferPack timerHandlerTransferPack) {
 
-    }
+}
 
-    /**
-     * Call after the room is moved to another node (sending)
+/**
+     * Called after the room has completed moving (sending) to another node
      */
     @Override
     public void onAfterTransferIn() {
 
-    }
+}
 
-    /**
-     * When the node in the room is Pause, the room is also called as Pause
+/**
+     * Called when the node that the room belongs to is paused, causing the room to also be paused
      */
     @Override
     public void onPause() {
 
-    }
+}
 
-    /**
-     * When the node belonging to the room is Resume, the room is also called with Resume.
+/**
+     * Called when the node that the room belongs to is resumed, causing the room to also be resumed
      */
     @Override
     public void onResume() {
 
-    }
+}
 
-    /**
-     * Call if the client has requested party matchmaking
+/**
+     * Called when the client requests party matchmaking
      * <p/>
-     * For party matchmaking, at least two users must enter the Pattah-type named room.
+     * For party matchmaking, two or more users must enter a Named Room of the party type
      *
-     * @param roomType      An arbitrary value that distinguishes between predefined room types for the client and the server.
-     * @param matchingGroup Matching group
+     * @param roomType      An arbitrary value that distinguishes between predefined room types between the client and the server
+     * @param matchingGroup The matching group
      * @param user          The user (room leader) who requested party matchmaking
-     * @param payload       {@link IPayload} sent by client
+     * @param payload       {@link IPayload} received from the client
      * @param outPayload    {@link IPayload} to be sent to the client
-     * If the @return return value is true, the party matchmaking request succeeded, and if false, it failed
+     * @return true if the party matchmaking request succeeds, false if it fails
      */
     @Override
-    public boolean onMatchParty(String roomType, String matchingGroup, SampleUser user, IPayload payload, IPayload outPayload) {
+    public boolean onMatchParty(String roomType, String matchingGroup, SampleGameUser user, IPayload payload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
     }
 
-    /**
-     * Call when the party matchmaking is canceled
+/**
+     * Called when party matchmaking is canceled
      *
-     * @param reason Reason for cancellation. TIMEOUT, CANCEL by user request, and SHUTDOWN by shutdown of the match node
+     * @param reason The reason for cancellation: timeout (TIMEOUT), canceled by user request (CANCEL), canceled due to Match Node shutdown (SHUTDOWN)
      */
     @Override
-    public void onMatchPartyCancel(MatchCancelReason matchCancelReason) {
+    public void onMatchPartyCancel(MatchCancelReason reason) {
 
-    }
+}
 
-    /**
-     * Call when room matching is canceled
+/**
+     * Called when room matchmaking is canceled
      *
-     * @param reason Reason for cancellation. (SHUTDOWN: cancel by shutdown of the match node
+     * @param reason The reason for cancellation. (SHUTDOWN: canceled due to Match Node shutdown)
      */
     @Override
-    public void onForceMatchRoomUnregistered(MatchCancelReason matchCancelReason) {
+    public void onForceMatchRoomUnregistered(MatchCancelReason reason) {
 
-    }
+}
 
-    /**
-     * Call to check if the room is in a state that can be moved to another node
+/**
+     * Called to check whether the room is in a state that allows it to move (send) to another node
      *
-     * @return If the return value is true, it is possible to transmit, and if it is false, it is not possible.
+     * @return true if transfer is possible, false if not
      * <p/>
      * In case of unavailability, if SafePause is in progress, continue to call to transfer to the room until SafePause ends.
      */
@@ -786,13 +741,13 @@ public class SampleRoom implements IRoom<SampleUser> {
 ```
 
 ```java
-// Proto Buffer MyGame.GameRoomTest Running Message Processing Class 
+// Proto Buffer MyGame.GameRoomTest Running Message Processing Class
 @GameAnvilController
 public class _GameRoomTest {
-    // Map the protocol and handle to be processed in SampleRoom
+    // Map the protocol and handler to be processed in SampleRoom
     @GameRoomMapping(
-        value = MyGame.GameRoomTest.class, // Proto Buffer
-        loadClass = SampleRoom.class // Recipient (SampleRoom)
+        value = MyGame.GameRoomTest.class, // Proto Buffer to process
+        loadClass = SampleRoom.class   // Recipient (SampleRoom)
     )
     public void execute(IRoomDispatchContext ctx) {
         // Write up the task
@@ -831,18 +786,19 @@ If you clean up the callback of these rooms, you can see the table below.
 <a id="room-type"></a>
 ## Room Type { #room-type }
 
-The method of implementation of the room discussed earlier and the type of room provided by the engine separately are largely two. Use these two rooms in four different ways in total.
+The method of implementation of the room discussed earlier and the type of room provided by the engine separately are largely two. These two room types are used in four different ways in total.
 
 | Room type | Description |
 |-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Normal Room | CreateRoom is created by the client's explicit request. Other clients can also use the room's ID to explicitly participate with JoinRoom. Therefore, the user that will participate must be previously shared with the ID of the room. | | Named Room | NamedRoom performs the action for a room named based on the only room name as it is. The client requests namedRoom as the only room name within the server group. In this case, if the room name does not exist on the server, the requestant will create a room directly. Conversely, if the room name already exists on the server, it will automatically enter the room. For example, it's easy to understand if you think of any kind of argument, such as "3:3 Hunter First!" that appears in our custom game list.
+| Normal Room | CreateRoom is created by the client's explicit request. Other clients can also use the room's ID to explicitly participate with JoinRoom. Therefore, the user that will participate must be previously shared with the ID of the room. |
+| Named Room  | NamedRoom performs the action for a room named based on the only room name as it is. The client requests namedRoom as the only room name within the server group. In this case, if the room name does not exist on the server, the requestant will create a room directly. Conversely, if the room name already exists on the server, it will automatically enter the room. For example, it's easy to understand if you think of any kind of argument, such as "3:3 Hunter First!" that appears in our custom game list. |
 
 These two room types are used in four different ways in total.
 
 | Room Type | Usage |
 |------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Normal Room | 1. Clients are created and participated through CreateRoom / JoinRoom requests.<br>2\. You can create or participate in NormalRoom through room matchmaking. You can also register for preventive room matches created with CreateRoom. At this time, the room ID is automatically shared between the room and the user that is managed and matched by the engine. |
-| Named Room | 3. Clients are created and involved via the NamedRoom request.<br>4\. You can create or participate in NamedRoom through user matchmaking. At this time, the room names of the created NamedRoom are created and managed uniquely in the engine. Unlike room matchmaking, rooms created with the normal NamedRoom cannot be targeted for user matchmaking. However, after creating a party room with NamedRoom for party matchmaking, multiple users can request matchmaking as a party. |
+| Normal Room | 1. Clients are created and participated through CreateRoom / JoinRoom requests.<br>2. You can create or participate in NormalRoom through room matchmaking. You can also register for preventive room matches created with CreateRoom. At this time, the room ID is automatically shared between the room and the user that is managed and matched by the engine. |
+| Named Room  | 3. Clients are created and involved via the NamedRoom request.<br>4. You can create or participate in NamedRoom through user matchmaking. At this time, the room names of the created NamedRoom are created and managed uniquely in the engine. Unlike room matchmaking, rooms created with the normal NamedRoom cannot be targeted for user matchmaking. However, after creating a party room with NamedRoom for party matchmaking, multiple users can request matchmaking as a party. |
 
 <a id="channel"></a>
 ## Channel { #channel }
