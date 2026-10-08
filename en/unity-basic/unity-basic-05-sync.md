@@ -1,38 +1,51 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=b5ad44f1ec14 -->
 
 <a id="game-gameanvil-unity-basic-development-guide-synchronization"></a>
+
 ## Game > GameAnvil > Unity Basic Development Guide > Synchronization { #game-gameanvil-unity-basic-development-guide-synchronization }
 
 <a id="synchronize"></a>
+
 ## Synchronize { #synchronize }
 
-The GameAnvilConnector provides a simple way to synchronize the creation/destruction, Transform, Animation, Rigidbody2D, and Rigidbody properties of GameObjects.
+The GameAnvilManager provides a simple way to synchronize the creation/destruction, Transform, Animation, Rigidbody2D, and Rigidbody properties of GameObjects.
 
 Simply attach the Sync, TransformSync, AnimatorSync, Rigidbody2DSync, and RigidbodySync components to the GameObjects you want to synchronize, respectively, and their properties will be synchronized.
 
-It is important to note that GameObjects that want to use the Sync Component must also have a Sync Component added to them, but this is not a concern as the implementation will automatically add them together when you attach each Sync Component if they do not have the necessary components, including the Sync Component.
+A Sync component must also be added to any GameObject that wants to use a synchronization component. If a Sync component is not present when each synchronization component is added, it will be added automatically.
 
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/01-component.png)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/01-component.png)
 
 When one client changes certain properties, a sync request packet is sent, and the server broadcasts it to all users in the same room so that they can synchronize on other clients.
 
 <a id="synccontroller"></a>
+
 ## SyncController { #synccontroller }
 
-The SyncController must exist in the scene where you want to use the Sync feature. It plays a key role in the behavior of the Sync feature, including the Instantiate() and Destroy() functions that create and destroy Synchronized GameObjects.
+The SyncController must exist in the scene where you want to use the Sync feature. It plays a key role in the behavior of the Sync feature, including the Instantiate() and Destroy() methods that create and destroy synchronized GameObjects.
 
 <a id="create-a-synccontroller"></a>
 ### Create a SyncController { #create-a-synccontroller }
 
-Create a GameObject and add the SyncController component. You can add it as a component by choosing Add Component > GameAnvil > SyncController.
+You can create one directly from the Unity Hierarchy window by right-clicking and selecting **GameAnvil > SyncController**.
 
-Alternatively, you can create one directly from the Unity Hierarchy by right-clicking and selecting GameAnvil > SyncController.
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/02-add-sync-controller.png)
+
+Alternatively, you can create an empty GameObject and add the SyncController component.
+SyncController has the following options:
+
+| Options | Description |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Lazy Loading | Sets whether to automatically synchronize existing data immediately after entering a room. <br/>If this option is set to false, call SyncController::InstantiateSyncObject() directly at the time you want to synchronize existing data. <br/>(Default: true) |
 
 <a id="synchronizing-gameobject-creationdestruction-sync"></a>
+
 ## Synchronizing GameObject creation/destruction, Sync { #synchronizing-gameobject-creationdestruction-sync }
 
 If you want to synchronize the creation/destruction of GameObjects, you can attach the Sync component to any GameObject to synchronize the creation/destruction of mutually created GameObjects between users in the same room.
-You can add it as a component by selecting Add Component > GameAnvil > GameAnvil Sync > Sync.
+Select the GameObject you want to add the component to, then choose **Component > GameAnvil > GameAnvil Sync > Sync** from the menu to add it as a component. You can also click the **Add Component** button in the Inspector window and search for the Sync component to add it.
 
 <a id="sync-id"></a>
 ### Sync Id { #sync-id }
@@ -54,56 +67,52 @@ You can prefab a GameObject with a Sync component attached to it and save it und
 Note that you must be in the room to create a GameObject with synchronized creation/destruction.
 
 ```c#
-/// <summary>
-/// Creates a Synchronization GameObject.
-/// </summary>
-/// <param name="prefabName">The name of the prefab to create. The prefab must exist under the Assets/Resources folder.</param>
-/// <param name="v">The position to create the prefab at</param>
-/// <param name="r">rotation of the prefab</param>
-/// <returns></returns>
-public GameObject Instantiate(string prefabName, Vector3 v, Quaternion r);
+public void Instanticate()
+{
+    SyncController.Instance.Instantiate("prefabName", Vector3.zero, Quaternion.identity);
+}
 ```
 
 <a id="synchronizing-gameobject-creation-when-entering-a-room"></a>
-### Synchronizing GameObject Creation When Entering a Room { #synchronizing-gameobject-creation-when-entering-a-room }
+### Synchronizing GameObject Creation When a New User Enters the Room { #synchronizing-gameobject-creation-when-entering-a-room }
 
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/02-instantiate-sync-object-immediatly.png)
+When a new user enters a room that is already in play, they immediately receive the sync data of other users who were already playing in the room. This sync data is used to automatically create and synchronize the other users' GameObjects.
 
-| Options | Description |
-| --- | --- |
-| InstantiateSyncObjectImmediatly | If true, synchronize immediately after the user enters the room; if false, don't synchronize immediately and call the sync function directly instead. |
+However, you may not want to create GameObjects immediately upon entering the room. In that case, you can set the SyncController's Lazy Loading option to false and call SyncController.InstantiateSyncObject() at the desired time to create the other users' GameObjects.
+![](https://static.toastoven.net/prod_gameanvil/files/v2_2/unity-basic/05-sync/03-lazy-loading.png)
 
-When a user enters a room, SyncController.roomSyncStart() is called in the callback that is called after the user enters the room to create and synchronize GameObjects using the existing room's sync data received from the server.
-
-However, if you don't want to synchronize immediately after entering a room, you can set the SyncController's InstantiateSyncObjectImmediatly option to false and call SyncController.InstantiateSyncObject() at the desired time.
+```c#
+public void InstantiateSyncObject()
+{
+    SyncController.Instance.InstantiateSyncObject();
+}
+```
 
 <a id="synchronizing-gameobject-destruction"></a>
 ### Synchronizing GameObject Destruction { #synchronizing-gameobject-destruction }
 
-When a GameObject with a Sync component attached to it is destroyed, the destruction synchronization is handled in the onDestroy() function so that the GameObject disappears from other users' scenes as well.
+When a GameObject with a Sync component attached to it is destroyed, the destruction synchronization is handled automatically so that the GameObject disappears from other users' scenes as well.
 
-The current specification is that when a user enters a room, creates synchronized GameObjects, and then moves around the scene, all of the GameObjects are destroyed and the data stored on the server while synchronizing them is deleted.
+When a user enters a room, creates synchronized GameObjects, and then moves to a different scene, all of the GameObjects are destroyed and the data stored on the server while synchronizing them is deleted.
 
-This means that when you move to a different scene and come back to the original scene, you may find that the synchronized GameObjects you created are missing, and if you move the scene on one client and all of the synchronized GameObjects are destroyed, the destructive synchronization may cause them to be destroyed on the other client as well. This is something that will be fixed in the next specification.
+This means that when you move to a different scene and come back to the original scene, you may find that the synchronized GameObjects you created are missing. And if you move the scene on one client and all of the synchronized GameObjects are destroyed, the destructive synchronization may cause them to be destroyed on the other client as well. Be mindful of this when changing scenes. This is something that will be improved in the future.
 
 <a id="transform-synchronization-transformsync"></a>
+
 ## Transform Synchronization, TransformSync { #transform-synchronization-transformsync }
 
 You can attach the TransformSync component to any GameObject that you want to synchronize its Transforms to synchronize the Transforms of the synchronizing GameObject.
-You can add it as a component by selecting Add Component > GameAnvil > GameAnvil Sync > TransformSync. Sync components are automatically added together.
+Select the GameObject you want to add the component to, then choose **Component > GameAnvil > GameAnvil Sync > TransformSync** from the menu to add it as a component. You can also click the **Add Component** button in the Inspector window and search for the TransformSync component to add it.
+Create a prefab GameObject with the TransformSync component attached to it and save it under the Assets/Resources folder in Unity. When you enter a room, create that prefab via Instantiate() in the SyncController, and then change the Transform, you'll see that all other clients synchronize to the changed Transform.
 
-Create a prefab GameObject with the TransformSync component attached to it and save it under the Assets/Resources folder in Unity.
-
-When you enter a room, create that prefab via Instantiate() in the SyncController, and then change the Transform, you'll see that all other clients synchronize to the changed Transform.
-
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/03-transform-sync.gif)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/04-transform-sync.gif)
 
 <a id="transform-synchronization-options"></a>
 ### Transform synchronization options { #transform-synchronization-options }
 
 You can optionally select which properties to synchronize during the transformation.
 
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/04-transform-sync-option.png)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/05-transform-sync-option.png)
 
 | Options | Description |
 | --- | --- |
@@ -113,72 +122,69 @@ You can optionally select which properties to synchronize during the transformat
 | Use Local | Sets whether localPosition and localRotation should be used. Scale ignores this setting and always uses localScale to avoid issues with lossyScale. |
 
 <a id="animation-synchronization-animatorsync"></a>
+
 ## Animation Synchronization, AnimatorSync { #animation-synchronization-animatorsync }
 
 You can attach the AnimatorSync component to any GameObject that you want to synchronize animations to, and change the Animation State by changing the value of the Animator's parameters, and those changes will be synchronized on other clients.
-You can add it as a component by choosing Add Component > GameAnvil > GameAnvil Sync > AnimatorSync. The Sync and Animator components are automatically added together.
-
-Create a prefab GameObject with an AnimatorSync component attached to it and save it under the Assets/Resources folder in Unity.
-
-When you enter a room, create that prefab via Instantiate() in the SyncController, and then change the Animation, you'll see that all other clients synchronize to the changed Animation.
-
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/05-animator-sync.gif)
+Select the GameObject you want to add the component to, then choose **Component > GameAnvil > GameAnvil Sync > AnimatorSync** from the menu to add it as a component. You can also click the **Add Component** button in the Inspector window and search for the AnimatorSync component to add it.
+Create a prefab GameObject with an AnimatorSync component attached to it and save it under the Assets/Resources folder in Unity. When you enter a room, create that prefab via Instantiate() in the SyncController, and then change the Animation, you'll see that all other clients synchronize to the changed Animation.
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/06-animator-sync.gif)
 
 <a id="rigidbody2d-synchronization-rigidbody2dsync"></a>
+
 ## Rigidbody2D Synchronization, Rigidbody2DSync { #rigidbody2d-synchronization-rigidbody2dsync }
 
 Attaching the Rigidbody2DSync component to the GameObject you want to synchronize the Rigidbody2D with will synchronize the Rigidbody2D of the synchronizing GameObject.
-You can add it as a component by choosing Add Component > GameAnvil > GameAnvil Sync > Rigidbody2DSync. The Sync, TransformSync, and Rigidbody2D components are automatically added together.
+Select the GameObject to which you want to add the component, then choose **Component > GameAnvil > GameAnvil Sync > Rigidbody2DSync** from the menu to add it as a component. You can also click the **Add Component** button in the Inspector window and search for the Rigidbody2DSync component to add it.
 
-Create a GameObject prefab with the Rigidbody2DSync component attached to it and save it under the Assets/Resources folder in Unity.
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/07-rigidbody2d-sync.gif)
 
-When you enter the room, create that prefab via Instantiate() in the SyncController, and then change the Rigidbody2D, you will see that all other clients synchronize to the changed Rigidbody2D.
-
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/06-rigidbody2d-sync.gif)
+Create a GameObject prefab with the Rigidbody2DSync component attached to it and save it under the Assets/Resources folder in Unity. When you enter the room, create that prefab via Instantiate() in the SyncController, and then change the Rigidbody2D, you will see that all other clients synchronize to the changed Rigidbody2D.
 
 <a id="rigidbody2d-synchronization-options"></a>
 ### Rigidbody2D Synchronization Options { #rigidbody2d-synchronization-options }
 
 You can optionally select which properties of the Rigidbody2D you want to synchronize.
 
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/07-rigidbody2d-sync-option.png)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/08-rigidbody2d-sync-option.png)
 
 | Options | Description |
-| --- | --- |
+|-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | Synchronize Velocity | Sets whether to synchronize the Velocity property: true to synchronize the Velocity value, false to not synchronize the Velocity value. |
 | Synchronize Angular Velocity | Sets whether to synchronize the Angular Velocity property: true to synchronize Angular Velocity values, false to not synchronize Angular Velocity values. |
 | Teleport Enabled | Set whether to allow teleportation. |
-| Teleport if distance greater than | If the distance differs by more than a set threshold, we apply the Position value to the Rigidbody2D's Position to synchronize to, and then synchronize using the Velocity value. |
-| Teleport if angle greater than | If the angle varies by more than a set threshold, we apply the angle value we want to synchronize to the Rigidbody2D's Rotation and then synchronize using the Angular Velocity value. |
+| Teleport if distance greater than | If the distance differs by more than a set threshold, we apply the Position value to the Rigidbody2D's Position to synchronize to, and then synchronize using the Velocity value. <br/>Displayed only when Teleport Enabled is checked. |
+| Teleport if angle greater than | If the angle varies by more than a set threshold, we apply the angle value we want to synchronize to the Rigidbody2D's Rotation and then synchronize using the Angular Velocity value. <br/>Displayed only when Teleport Enabled is checked. |
 
 <a id="rigidbody-synchronization-rigidbodysync"></a>
+
 ## Rigidbody Synchronization, RigidbodySync { #rigidbody-synchronization-rigidbodysync }
 
 The RigidbodySync component can be attached to any GameObject that you want to synchronize RigidBodies to synchronize the RigidBodies of the synchronizing GameObject.
-You can add it as a component by choosing Add Component > GameAnvil > GameAnvil Sync > RigidbodySync. The Sync, TransformSync, and Rigidbody components are automatically added together.
+You can add it as a component by choosing **Component > GameAnvil > GameAnvil Sync > RigidbodySync** from the menu after selecting the GameObject to which you want to add the component. You can also click the **Add Component** button in the Inspector window and find and add the RigidbodySync component.
 
 Create a prefab GameObject with the RigidbodySync component attached to it and save it under the Assets/Resources folder in Unity.
 
 When you enter the room, create that prefab via Instantiate() in the SyncController, and then change the Rigidbody, you'll see that all other clients synchronize to the changed Rigidbody.
 
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/08-rigidbody-sync.gif)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/09-rigidbody-sync.gif)
 
 <a id="rigidbody-synchronization-options"></a>
 ### Rigidbody Synchronization Options { #rigidbody-synchronization-options }
 
 You can optionally select which properties of the Rigidbody you want to synchronize.
-
-![](https://static.toastoven.net/prod_gameanvil/images/unity-basic/05-sync/09-rigidbody-sync-option.png)
+![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/10-rigidbody-sync-option.png)
 
 | Options | Description |
 | --- | --- |
 | Synchronize Velocity | Sets whether to synchronize the Velocity property: true to synchronize the Velocity value, false to not synchronize the Velocity value. |
 | Synchronize Angular Velocity | Sets whether to synchronize the Angular Velocity property: true to synchronize Angular Velocity values, false to not synchronize Angular Velocity values. |
 | Teleport Enabled | Set whether to allow teleportation. |
-| Teleport if distance greater than | If the distance differs by more than a set threshold, we apply the Position value to the Rigidbody's Position to synchronize to, and then synchronize using the Velocity value. |
-| Teleport if angle greater than | If the angle varies by more than a set threshold, we apply the angle value we want to synchronize to the Rigidbody's Rotation and then synchronize using the Angular Velocity value. |
+| Teleport if distance greater than | If the distance differs by more than a set threshold, we apply the Position value to the Rigidbody's Position to synchronize to, and then synchronize using the Velocity value. <br/>Displayed only when Teleport Enabled is checked. |
+| Teleport if angle greater than | If the angle varies by more than a set threshold, we apply the angle value we want to synchronize to the Rigidbody's Rotation and then synchronize using the Angular Velocity value. <br/>Displayed only when Teleport Enabled is checked. |
 
 <a id="synchronizing-custom-values"></a>
+
 ## Synchronizing custom values { #synchronizing-custom-values }
 
 Provides the ability to synchronize user-defined values of type int, float, bool, and string.
@@ -186,87 +192,84 @@ Provides the ability to synchronize user-defined values of type int, float, bool
 <a id="add-or-change-a-custom-value"></a>
 ### Add or change a custom value { #add-or-change-a-custom-value }
 
-You can add or change a custom value with SyncController.SetCustomProperty<T>(). You specify the type of the custom value when you call the function. You pass a key to distinguish the custom value as a parameter of type string. The server stores that custom value data and broadcasts it to all users in the same room so that they can synchronize.
+You can add or change a custom value with SetCustomProperty\<T\>(). The server stores that custom value data and broadcasts it to all users in the same room so that they can synchronize.
+SetCustomProperty\<T\>() has one type parameter and two parameters as follows:
+
+| Type | Name | Description |
+|---------|-------|-------------------------------------------------|
+| Type parameter | T | The type of the custom value to store. One of int, float, bool, or string. |
+| String | key | Key to distinguish the custom value |
+| T | value | Custom value |
 
 ```c#
-/// <summary>
-/// Adds a user-defined value.
-/// </summary>
-/// <typeparam name="T">Type of custom value</typeparam>
-/// <param name="key">Key to distinguish the custom value</param>
-/// <param name="value">Custom value</param>
-public static void SetCustomProperty<T>(string key, T value);
-```
-
-Let's look at a usage example.
-
-```c#
-SyncController.SetCustomProperty<float>("custom_key", 0.9f);
+public void SetCustomProperty()
+{
+    SyncController.Instance.SetCustomProperty("IntValue", 1);
+    SyncController.Instance.SetCustomProperty("FloatValue", 1.0f);
+    SyncController.Instance.SetCustomProperty("BoolValue", false);
+    SyncController.Instance.SetCustomProperty("StringValue", "Value");
+}
 ```
 
 <a id="make-sure-your-custom-values-are-up-to-date-before-making-changes"></a>
 ### Make sure your custom values are up to date before making changes { #make-sure-your-custom-values-are-up-to-date-before-making-changes }
 
-When you call SyncController.SetCustomPropertyCAS<T>(), it sends a packet to the server with a key to distinguish between the custom values it receives as parameters, the custom values you want to change, and the custom values that were previously stored on the client.
+When you call SetCustomPropertyCas\<T\>(), it compares the custom value stored on the client with the custom value stored on the server, and only if they are the same, stores the custom value data and broadcasts it to all users in the same room so that they can synchronize. If the custom value stored on the client differs from the value stored on the server, the request is ignored.
+SetCustomPropertyCas\<T\>() has one type parameter and two parameters as follows:
 
-The server then compares the custom value previously stored on the client with the custom value obtained as a distinguishing key from the data stored on the server. 
-
-If they are the same, we assume that the client's custom values were up to date and synchronized, so we replace them with the desired values, store them on the server, and broadcast them to other users so they can also synchronize.
-
-If the custom value stored on the client is different from the value stored on the server, the request is ignored.
-
-```c#
-/// <summary>
-/// Checks if user-defined values are up to date before changing them.
-/// </summary>
-/// <typeparam name="T">Type of custom value</typeparam>
-/// <param name="key">Key to distinguish the custom value</param>
-/// <param name="value">Custom value</param>
-public static void SetCustomPropertyCAS<T>(string key, T value);
-```
-
-Let's look at a usage example.
+| Type | Name | Description |
+|---------|-------|-------------------------------------------------|
+| Type parameter | T | The type of the custom value to store. One of int, float, bool, or string. |
+| String | key | Key to distinguish the custom value |
+| T | value | Custom value |
 
 ```c#
-SyncController.SetCustomPropertyCAS<float>("custom_key", 0.9f);
+public void SetCustomPropertyCas()
+{
+    SyncController.Instance.SetCustomPropertyCas("IntValue", 1);
+    SyncController.Instance.SetCustomPropertyCas("FloatValue", 1.0f);
+    SyncController.Instance.SetCustomPropertyCas("BoolValue", false);
+    SyncController.Instance.SetCustomPropertyCas("StringValue", "Value");
+}
 ```
 
 <a id="lookup-custom-values"></a>
 ### Lookup custom values { #lookup-custom-values }
 
-You can get a custom value with SyncController.GetCustomProperty<T>(). When you call the function, you specify the type of the custom value. To find the desired custom value, we pass a delimiter key as a parameter of type string.
+You can get a custom value with GetCustomProperty\<T\>().
+SetCustomPropertyCas\<T\>() has one type parameter and one parameter as follows:
+
+| Type | Name | Description |
+|---------|-----|-------------------------------------------------|
+| Type parameter | T | The type of the custom value to retrieve. One of int, float, bool, or string. |
+| String | key | Key to distinguish the custom value |
 
 ```c#
-/// <summary>
-/// Retrieves a user-defined value.
-/// </summary>
-/// <typeparam name="T">Type of custom value</typeparam>
-/// <param name="key">Key to distinguish the custom value</param>
-/// <returns>Custom value</returns>
-public static T GetCustomProperty<T>(string key);
-```
-
-Let's look at a usage example.
-
-```c#
-float custom_value = SyncController.GetCustomProperty<float>("custom_key");
+public void GetCustomProperty()
+{
+    int intValue = SyncController.Instance.GetCustomProperty<int>("IntValue");
+    float floatValue = SyncController.Instance.GetCustomProperty<float>("FloatValue");
+    bool boolValue = SyncController.Instance.GetCustomProperty<bool>("BoolValue");
+    string stringValue = SyncController.Instance.GetCustomProperty<string>("StringValue");        
+}
 ```
 
 <a id="delete-custom-values"></a>
 ### Delete custom values { #delete-custom-values }
 
-You can delete a custom value with SyncController.RemoveCustomProperty<T>(). You specify the type of the custom value when you call the function. To find the desired custom value, pass a key as a parameter of type string. The server will also delete the saved custom value data.
+You can delete a custom value with RemoveCustomProperty\<T\>(). The server will also delete the saved custom value data.
+SetCustomPropertyCas\<T\>() has one parameter as follows:
+
+| Type | Name | Description |
+|--------|-----|---------------------|
+| String | key | Key to distinguish the custom value |
 
 ```c#
-/// <summary>
-/// Deletes a user-defined value.
-/// </summary>
-/// <param name="key">Key to distinguish between custom values</param>
-public static void RemoveCustomProperty(string key)
-```
-
-Let's look at a usage example.
-
-```c#
-SyncController.RemoveCustomProperty("custom_key");
+public void RemoveCustomProperty()
+{
+    SyncController.Instance.RemoveCustomProperty("IntValue");
+    SyncController.Instance.RemoveCustomProperty("FloatValue");
+    SyncController.Instance.RemoveCustomProperty("BoolValue");
+    SyncController.Instance.RemoveCustomProperty("StringValue");
+}
 ```
