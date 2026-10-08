@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=4435e036d920 -->
 
 <a id="game-gameanvil-server-development-guide-implement-gateway-node"></a>
@@ -17,26 +19,13 @@ GatewayNodeはクライアントが接続する関門(Gateway)です。つまり
 <a id="implement-gatewaynode"></a>
 ### GatewayNode実装 { #implement-gatewaynode }
 
-このようなGatewayNodeは、@GameAnvilGatewayNodeアノテーションを宣言してエンジンに登録し、IGatewayNodeインターフェースを実装してコールバックメソッドのみをオーバーライドすれば済みます。これらの共通コールバックメソッドは、その名前が用途を明確に説明しています。
+このようなGatewayNodeは、@GameAnvilGatewayNodeアノテーションを宣言してエンジンに登録し、BaseGatewayNodeクラスを実装してコールバックメソッドのみをオーバーライドすれば済みます。これらの共通コールバックメソッドは、その名前が用途を明確に説明しています。
 ```java
-@GameAnvilGatewayNode // エンジンにこのクラスをGatewayとして登録
-public class SampleGatewayNode implements IGatewayNode {
-    private IGatewayNodeContext gatewayNodeContext;
-
+@GameAnvilGatewayNode // このクラスをGatewayとしてエンジンに登録
+public class SampleGatewayNode extends BaseGatewayNode {
+ 
     /**
-     * ゲートウェイノードコンテキストを伝達するために呼び出し
-     * <p/>
-     * オブジェクトが生成された後、一度呼び出される
-     *
-     * @param gatewayNodeContextゲートウェイノードコンテキスト
-     */
-    @Override
-    public void onCreate(IGatewayNodeContext gatewayNodeContext) {
-        this.gatewayNodeContext = gatewayNodeContext;
-    }
-
-    /**
-     * ノードが初期化される時に呼び出し
+     * ノードが初期化されるときに呼び出される
      */
     @Override
     public void onInit() {
@@ -44,7 +33,7 @@ public class SampleGatewayNode implements IGatewayNode {
     }
 
     /**
-     * Readyになる前に処理する部分のために呼び出し
+     * Readyになる前に処理する部分のために呼び出される
      */
     @Override
     public void onPrepare() {
@@ -52,7 +41,7 @@ public class SampleGatewayNode implements IGatewayNode {
     }
 
     /**
-     * Readyになる時に呼び出し
+     * Readyになるときに呼び出される
      */
     @Override
     public void onReady() {
@@ -60,30 +49,10 @@ public class SampleGatewayNode implements IGatewayNode {
     }
 
     /**
-     * Pauseになる時に呼び出し
-     *
-     * @param payloadコンテンツから伝達したい追加情報
-     */
-    @Override
-    public void onPause(IPayload payload) {
-
-    }
-
-    /**
-     * Shutdown命令を受け取ると呼び出し
+     * Shutdownコマンドを受け取ると呼び出される
      */
     @Override
     public void onShuttingdown() {
-
-    }
-
-    /**
-     * Resumeになる時に呼び出し
-     *
-     * @param payloadコンテンツから伝達したい追加情報
-     */
-    @Override
-    public void onResume(IPayload payload) {
 
     }
 }
@@ -95,63 +64,26 @@ public class SampleGatewayNode implements IGatewayNode {
 
 コネクションはクライアントの物理的接続自体を意味します。クライアントは固有のAccountIdを利用してコネクション上で認証手続きを進めることができます。認証が成功した場合、該当AccountIdは作成されたコネクションにマッピングされます。
 
-このようなコネクションは次のようにIConnectionを実装した後、コールバックメソッドを再定義します。この時、任意のプラットフォームで認証した後に獲得するユーザーのキー値などをAccountIdとして使用できます。例えばGamebaseを通じて認証した後UserIdを獲得すれば、この値をGameAnvilの認証過程でAccountIdとして使用できます。 
+このようなコネクションは次のようにBaseConnectionを実装した後、コールバックメソッドを再定義します。この時、任意のプラットフォームで認証した後に獲得するユーザーのキー値などをAccountIdとして使用できます。例えばGamebaseを通じて認証した後UserIdを獲得すれば、この値をGameAnvilの認証過程でAccountIdとして使用できます。 
 
 ```java
-@GameAnvilGatewayConnection // エンジンにこのクラスをConnectionとして登録
-public class SampleConnection implements IConnection {
-    private IConnectionContext connectionContext;
-    
-    /**
-     * コネクションコンテキストを伝達するために呼び出し
-     * <p/>
-     * オブジェクトが生成された後、一度呼び出される
-     *
-     * @param connectionContextコネクションコンテキスト
-     */
-    @Override
-    public void onCreate(IConnectionContext connectionContext) {
-        this.connectionContext = connectionContext;
-    }
+@GameAnvilGatewayConnection // このクラスをConnectionとしてエンジンに登録
+public class SampleConnection extends BaseConnection {
 
     /**
-     * 認証リクエスト時に呼び出し
+     * 認証リクエスト時に呼び出される
      *
-     * @param accountId アカウントID
-     * @param password  アカウントパスワード
-     * @param deviceId  クライアントのデバイスID
-     * @param payload   クライアントから受け取った{@link IPayload}
-     * @param outPayloadクライアントへ伝達する{@link IPayload}
-     * @return戻り値がtrueなら認証成功、falseならクライアントとの接続終了
+     * @param accountId  アカウントID
+     * @param password   アカウントパスワード
+     * @param deviceId   クライアントのデバイスID
+     * @param payload    クライアントから受け取った {@link IPayload}
+     * @param outPayload クライアントへ送信する {@link IPayload}
+     * @return 戻り値がtrueの場合は認証成功、falseの場合はクライアントとの接続を切断
      */
     @Override
     public boolean onAuthenticate(String accountId, String password, String deviceId, IPayload payload, IPayload outPayload) {
         boolean isSuccess = true;
         return isSuccess;
-    }
-
-    /**
-     * コネクションが属するノードがPauseになる時に呼び出し
-     */
-    @Override
-    public void onPause() {
-
-    }
-
-    /**
-     * コネクションが属するノードがResumeになる時に呼び出し
-     */
-    @Override
-    public void onResume() {
-
-    }
-
-    /**
-     * クライアントとの接続が切れた時に呼び出し
-     */
-    @Override
-    public void onDisconnect() {
-
     }
 }
 ```
@@ -161,11 +93,7 @@ public class SampleConnection implements IConnection {
 
 | コールバック名         | 意味     | 説明                                                                                                                                                      |
 |----------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate       | オブジェクト生成  | オブジェクトが生成された時に呼び出されます。生成されたタイプで使用可能なAPIを使用できるコンテキストを受け取ります。コンテンツで必要であれば保存して使用できます。                                  |
 | onAuthenticate | 認証     | クライアントがAuthentication() APIを使用してコネクションに対する認証をリクエストする時に呼び出されます。ユーザーはここでクライアントが送った認証情報をもとに認証処理を進めることができます。もし認証が成功すればtrueを返し、失敗すればfalseを返さなければなりません。 |
-| onPause        | 一時停止  | コンソールを通じてGatewayNodeを一時停止すると、該当GatewayNodeの全てのコネクションに対して呼び出されます。ユーザーはノードが一時停止される時にコネクションで追加で処理したいコードをここに実装できます。                               |
-| onResume       | 再開     | コンソールを通じてGatewayNodeが一時停止状態で駆動を再開すると、該当GatewayNodeの全てのコネクションに対して呼び出されます。ユーザーは再開状態でコネクションに対して処理したいコードをここに実装できます。                             |
-| onDisconnect   | 接続終了  | クライアントから接続が切れた時に呼び出されます。この時、追加で処理するコードをここに実装します。                                                                                                  |
 
 <a id="perform-session"></a>
 ### Session実装 { #perform-session }
@@ -175,26 +103,13 @@ public class SampleConnection implements IConnection {
 この時、SubIdはユーザーが任意に決めたルールに合わせて該当コネクション内の任意の固有な値として割り当てればよいです。つまり、別々のコネクションは同一のSubIdを持つこともあります。しかし別々のAccountIdを持つため区分が可能です。
 
 ```java
-@GameAnvilGatewaySession // エンジンにこのクラスをSessionとして登録
-public class SampleSession implements ISession {
-    private ISessionContext sessionContext;
+@GameAnvilGatewaySession  // このクラスをSessionとしてエンジンに登録
+public class SampleSession extends BaseSession {
 
     /**
-     * セッションコンテキストを伝達するために呼び出し
-     * <p/>
-     * オブジェクトが生成された後、一度呼び出される
+     * ログイン呼び出し前に呼び出される
      *
-     * @param sessionContextセッションコンテキスト
-     */
-    @Override
-    public void onCreate(ISessionContext sessionContext) {
-        this.sessionContext = sessionContext;
-    }
-
-    /**
-     * ログイン呼び出し以前に呼び出し
-     *
-     * @param outPayloadクライアントへ伝達する{@link IPayload}
+     * @param outPayload クライアントに渡す {@link IPayload}
      */
     @Override
     public void onBeforeLogin(IPayload payload) {
@@ -202,7 +117,7 @@ public class SampleSession implements ISession {
     }
 
     /**
-     * ログイン成功以後に呼び出し
+     * ログイン成功後に呼び出される
      */
     @Override
     public void onAfterLogin(boolean isReLogined) {
@@ -210,7 +125,7 @@ public class SampleSession implements ISession {
     }
 
     /**
-     * ログアウト以後に呼び出し
+     * ログアウト後に呼び出される
      */
     @Override
     public void onAfterLogout() {
