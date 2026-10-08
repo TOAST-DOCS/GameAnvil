@@ -3,18 +3,15 @@
 <!-- pre-align:aligned sig=343635dd9ba0 -->
 
 <a id="game-gameanvil-unity-advanced-development-guide-user"></a>
-
 ## Game > GameAnvil > Unity Advanced Development Guide > User { #game-gameanvil-unity-advanced-development-guide-user }
 
 <a id="useragent"></a>
-
 ## User { #useragent }
 
 GameAnvilUser is responsible for operations related to users on the GameAnvil server. It provides basic functionality such as Login(), Logout(), and room management.
 The GameAnvil server can run multiple services simultaneously, and a single GameAnvilUser logs in to one service and operates independently of others. This means that you can create multiple GameAnvilUsers to log in to different services and use them simultaneously. You can also have multiple GameAnvilUsers logged into the same service at the same time by using different SubIds.
 
 <a id="create"></a>
-
 ### Create { #create }
 
 To use GameAnvilUser, you must first create a GameAnvilUser object.
@@ -53,7 +50,6 @@ public void CreateUsers()
 ```
 
 <a id="disable"></a>
-
 ### Disable { #disable }
 
 When you are done using a GameAnvilUser, you must call Dispose() to release it.
@@ -72,7 +68,6 @@ public void DisposeUser()
 ```
 
 <a id="loginlogout"></a>
-
 ### Login/Logout { #loginlogout }
 
 Login can be defined as the process by which a client connects to the server and creates its own user object in GameNode. Logout is the opposite of login. In other words, it is the process of removing a user object from the GameNode.
@@ -146,7 +141,6 @@ The details of LoginResult are as follows:
 | bool    | IsMatching   | Whether matching has been requested                  |
 
 <a id="logout"></a>
-
 ### Logout { #logout }
 
 Call Logout() to log out of the service.
@@ -206,13 +200,11 @@ public void AddOnLogout()
 Depending on the implementation of the server, additional information can also be obtained through the parameter Payload payload.
 
 <a id="create-enter-and-leave-rooms"></a>
-
 ### Create, enter, and leave rooms { #create-enter-and-leave-rooms }
 
 Two or more users can create a synchronized message flow through a room. In other words, requests from users within a room are all guaranteed to be processed in order. Of course, creating a room for a single user may also be meaningful depending on the content. How rooms are used is entirely up to the engine user.
 
 <a id="create-enter-and-leave-rooms-create-room"></a>
-
 #### Create Room
 
 Call CreateRoom() to create a room and enter it.
@@ -273,7 +265,6 @@ The details of CreatedRoomResult are as follows:
 | Payload | payload  | Additional information required by the client |
 
 <a id="create-enter-and-leave-rooms-enter-room"></a>
-
 #### Enter Room
 
 Call JoinRoom() to enter a room that has already been created.
@@ -335,7 +326,6 @@ The details of JoinRoomResult are as follows:
 | Payload | payload  | Additional information required by the client. |
 
 <a id="create-enter-and-leave-rooms-leave-room"></a>
-
 #### Leave Room
 
 You can leave a room that you have joined by calling LeaveRoom().
@@ -382,7 +372,6 @@ The details of ResultCodeLeaveRoom are as follows:
 | LEAVE_ROOM_FAIL_CONTENT | 801   | Failed. Rejected by user code.                                                                    |
 
 <a id="create-enter-and-leave-rooms-notification-for-forced-to-leave-the-room"></a>
-
 #### Notification for Forced to Leave the Room
 Even if you do not call LeaveRoom(), you can force the server to leave the room. In this case, you can be notified via OnForceLeaveRoom.
 ```c#
@@ -397,7 +386,6 @@ public void AddOnLeaveRoom()
 You can find out from which room you were forcibly removed through the parameter int roomId, and depending on the implementation of the server, you can also get additional information through the parameter Payload payload.
 
 <a id="create-enter-and-leave-rooms-enter-the-room-with-the-specified-name"></a>
-
 #### Enter the room with the specified name
 
 You can call `NamedRoom()` to enter a room with the specified name. If no room with the specified name exists, a new room is created and you enter that room.
@@ -460,13 +448,11 @@ The details of `NamedRoomResult` are as follows:
 | Payload | payload  | Additional information required by the client.  |
 
 <a id="matchmaking"></a>
-
 ### Matchmaking { #matchmaking }
 
 GameAnvil offers two types of matchmaking. One is Room Matchmaking, which performs room-by-room matching, and the other is User Matchmaking, which performs user-by-user matching.
 
 <a id="matchmaking-room-matchmaking"></a>
-
 #### Room Matchmaking
 
 Room matchmaking is a method that places users into rooms that meet certain conditions. When a room matchmaking request is made, if a matching room exists, the user is placed directly into that room; if no matching room exists, a new room is created and the user is placed into it.
@@ -551,7 +537,6 @@ The details of MatchResult are as follows.
 | Payload? | payload  | Additional information required by the client. |
 
 <a id="matchmaking-user-matchmaking"></a>
-
 #### User Matchmaking
 
 User matchmaking creates a user pool, finds users that match the specified conditions within the pool, and places them into a newly created room. If the user pool does not have enough users matching the conditions, matchmaking may take some time to complete. If matchmaking does not complete within the time limit, it times out and the match may fail.
@@ -667,7 +652,6 @@ The details of ResultCodeMatchUserCancel are as follows.
 | MATCH_USER_CANCEL_FAIL_NOT_IN_PROGRESS     | 1203  | Failed. User matchmaking is not in progress.                                                         |
 
 <a id="matchmaking-party-matchmaking"></a>
-
 #### Party matchmaking
 
 Party matchmaking is a specialized form of user matchmaking where two or more users are grouped together as a party, added to a user pool, and matched with other eligible users to enter a newly created room together. Partyed users will always enter the same room. Outside of parties, the matching users can be other parties or individuals, depending on the server's matchmaker implementation.
@@ -794,7 +778,6 @@ The details of ResultCodeMatchPartyStart are as follows.
 | MATCH_PARTY_CANCEL_FAIL_NOT_IN_PROGRESS     | 1404  | Failed. Party matchmaking is not in progress but a cancellation was attempted.                       |
 
 <a id="channel"></a>
-
 ### Channel { #channel }
 
 <a id="channel-move-notification"></a>
@@ -870,7 +853,6 @@ The details of MoveChannelResult are as follows:
 | Payload? | payload   | Additional information required by the client.                                                                                                         |
 
 <a id="channel-information"></a>
-
 ### Channel information { #channel-information }
 
 GameAnvil allows you to freely change channel configurations in the settings. These channel configurations can be pre-agreed between the server and the client and used in a fixed form, or they can be changed flexibly to suit the situation. GameAnvilUser provides several methods to get information about these changed channels.
