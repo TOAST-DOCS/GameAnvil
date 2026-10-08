@@ -3,17 +3,14 @@
 <!-- pre-align:aligned sig=7eecd13a676d -->
 
 <a id="game-gameanvil-unity-advanced-development-guide-connector"></a>
-
 ## Game > GameAnvil > Unity Advanced Development Guide > Connector { #game-gameanvil-unity-advanced-development-guide-connector }
 
 <a id="connectionagent"></a>
-
 ## Connector { #connectionagent }
 
 The GameAnvilConnector is responsible for managing the connection to the GameAnvil server. It provides basic session management functions such as Connect() and Authentication(), as well as a list of channels.
 
 <a id="connect-to-the-server"></a>
-
 ### Connect to the server { #connect-to-the-server }
 
 Call Connect() to connect to the server.
@@ -44,7 +41,6 @@ Connect() has the following 2 parameters:
 There is no return value. If the connection succeeds, the next code is executed; if it fails, an exception is thrown.
 
 <a id="authentication"></a>
-
 ### Authentication { #authentication }
 
 After connecting to the server, call Authentication() to perform the authentication process.
@@ -104,7 +100,6 @@ The details of AuthenticationResult are as follows:
 | Payload                      | payload           | Additional information required by the client                            |
 
 <a id="connection-and-authentication"></a>
-
 ### Connection and Authentication { #connection-and-authentication }
 
 You can also store the values needed for connection or authentication as properties of the GameAnvilConnector and use them from there.
@@ -160,7 +155,6 @@ public async void ConnectAndAuthentication2()
 ```
 
 <a id="secure-connection"></a>
-
 ### Secure Connection { #secure-connection }
 When security settings are configured on the GameAnvil server, you must call ConnectSecure() to establish a Secure Connection.
 ```c#
@@ -187,7 +181,6 @@ ConnectSecure() has the following 2 parameters:
 There is no return value. If the connection succeeds, the next code is executed; if it fails, an exception is thrown.
 
 <a id="channel-information"></a>
-
 ### Channel information { #channel-information }
 
 GameAnvil allows you to freely configure channels in the settings. These channel configurations can be pre-agreed between the server and client and used in a fixed form, or they can be varied to suit the situation. GameAnvilConnector provides a few methods to get this changed channel information.
@@ -201,7 +194,6 @@ GameAnvil allows you to freely configure channels in the settings. These channel
 | GetAllChannelInfo()        | Request information (user-defined) for all channels of a specific service         |
 
 <a id="channel-information-getchannellist"></a>
-
 #### GetChannelList
 
 GetChannelList() can request and receive a list of channel IDs for a specific service.
@@ -247,7 +239,6 @@ The details of ResultCodeChannelList are as follows:
 | CHANNEL_LIST_FAIL_NO_CHANNEL_LIST | 1801  | Failed. Channel list not found.                                                              |
 
 <a id="channel-information-getchannelcountinfo"></a>
-
 #### GetChannelCountInfo
 
 GetChannelCountInfo() can request and receive count information (number of users and rooms) for a specific channel.
@@ -306,7 +297,6 @@ The details of ChannelCountResult are as follows:
 <br>
 
 <a id="channel-information-getchannelinfo"></a>
-
 #### GetChannelInfo
 
 GetChannelInfo() can request and receive information (user-defined) for a specific channel.
@@ -355,7 +345,6 @@ The details of ResultCodeChannelInfo are as follows:
 | CHANNEL_INFO_FAIL_CHANNEL_NOT_FOUND  | 1924  | Failed. Channel not found.                                                                           |
 
 <a id="channel-information-getallchannelcountinfo"></a>
-
 #### GetAllChannelCountInfo
 
 GetAllChannelCountInfo() can request and receive count information (number of users and rooms) for all channels of a specific service.
@@ -402,7 +391,6 @@ The details of ResultCodeAllChannelCountInfo are as follows:
 | ALL_CHANNEL_COUNT_INFO_FAIL_CHANNEL_NOT_FOUND  | 1933  | Failed. Channel not found.                                                                           |
 
 <a id="channel-information-getallchannelinfo"></a>
-
 #### GetAllChannelInfo
 
 GetAllChannelInfo() can request and receive information (user-defined) about all channels of a specific service.
@@ -451,7 +439,6 @@ The details of ResultCodeAllChannelInfo are as follows:
 The channelInfo field of ChannelInfoResult is a Dictionary<string, Payload> that uses the channel ID as the key and a Payload containing user-defined channel information as the value. You can use this to obtain user-defined information for each channel.
 
 <a id="terminate-the-connection"></a>
-
 ### Terminate the connection { #terminate-the-connection }
 
 Use the Disconnect() method to terminate the connection to the server.
