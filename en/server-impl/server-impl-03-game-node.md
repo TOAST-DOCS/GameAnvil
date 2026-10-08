@@ -153,7 +153,6 @@ For the meaning and usage of callbacks, see the table below:
 
 | Callback Name | Meaning | Description |
 |-------------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| onCreate | Create Object | Call when the object is created. You receive the context where the API available for the created type can be used. If needed, it can be saved and used in the content. |
 | onChannelUserInfoUpdate | Update channel user information | Some of the GameNodes associated with the same channel are called for synchronization by all others in the same channel when channel user information is changed in one GameNode. At this time, the user can update the current channel information in GameNode based on the information you have received. |
 | onChannelRoomInfoUpdate | Update channel room information | Many of the GameNodes associated with the same channel are called for synchronization by all the others in the same channel when channel room information is changed in one GameNode. At this time, the user can update the current channel information in GameNode based on the information you have received. |
 | onChannelInfo | Request Channel Information | Calls are made when the client requests channel information. In this callback, the user can configure channel information to pass to the client as they want. |
@@ -811,7 +810,6 @@ If you clean up the callback of these rooms, you can see the table below.
 
 | Callback Name | Meaning | Description |
 |---------------------------- |-------------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| onCreate | Object Create | Call when the object is created. You receive the context where the API available for the created type can be used. If needed from the content, it can be saved and used. |
 | onInit | Initialize | When a room is created, it will be called for initialization. You can write an init code for the room, such as registering topics. |
 | onDestroy | Room Disappearance | If the last user leaves the room and there is no message to deal with, the room will disappear. This is the callback called. |
 | onCreateRoom | Create Room | When the client requests to create a room, the call will be called. Create a material structure for the user list to be used in the content or write the code to be processed with other room creation. |

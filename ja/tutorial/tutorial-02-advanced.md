@@ -771,51 +771,50 @@ public class BasicGameNode implements IGameNode {
 <a id="game-node-user-and-room-settings"></a>
 ### ゲームノード、ユーザー、ルーム設定 { #game-node-user-and-room-settings }
 
- マウスの右ボタンでクリックした後、**New > Java Class**を選択して直接クラスを生成することもできます。 
+マウスの右ボタンをクリックし、**New > Java Class**を選択して直接クラスを作成することもできます。
 
 ```java
-@GameAnvilGameNode(gameServiceName = StringValues.serviceName)
-public class BasicGameNode implements IGameNode {
+@GameAnvilGameNode(gameServiceName = "BASIC_SERVICE")
+public class BasicGameNode extends BaseGameNode {
     // ...
 }
 
 @GameAnvilRoom(
-    gameServiceName = StringValues.serviceName,
-    gameType = StringValues.roomType,
-    useChannelInfo = false
+    gameServiceName = "BASIC_SERVICE",
+    gameType = "USER_TYPE_BASIC",
+    useChannelInfo = true
 )
-public class BasicRoom implements IRoom<BasicUser> {
+public class BasicRoom extends BaseGameRoom<BasicUser> {
     // ...
 }
 
 @GameAnvilUser(
-    gameServiceName = StringValues.serviceName,
-    gameType = StringValues.userType,
-    useChannelInfo = false)
-public class BasicUser implements IUser {
+    gameServiceName = "BASIC_SERVICE",
+    gameType = "USER_TYPE_BASIC",
+    useChannelInfo = true)
+public class BasicUser extends BaseGameUser {
     // ...
 }
 ```
 
-そしてエンジンが提供する@GameAnvilGameNodeアノテーションを通じてゲームノード、@GameAnvilUserアノテーションを通じてユーザー、@GameAnvilRoomアノテーションを通じてルーム関連の設定が自動的に登録されます。 
+また、エンジンが提供する@GameAnvilGameNodeアノテーションを通じてGameノード、@GameAnvilUserアノテーションを通じてユーザー、@GameAnvilRoomアノテーションを通じてルーム関連の設定が自動的に登録されます。
 
-ユーザータイプは各ユーザー実装を区別するサーバーとクライアント間で約束された文字列であり、ルームタイプは各ルーム実装を区別するサーバーとクライアント間で約束された文字列です。
+ユーザータイプは各ユーザー実装を区別するサーバーとクライアント間で取り決められた文字列であり、ルームタイプは各ルーム実装を区別するサーバーとクライアント間で取り決められた文字列です。
 
-今後クライアントプロジェクトの実装時に該当タイプを使用する必要があるため、覚えておきます。例で使用したユーザーとルームタイプは次のとおりです。
+今後のクライアントプロジェクト実装時にこれらのタイプを使用するため、覚えておいてください。サンプルで使用したユーザーとルームのタイプは次のとおりです。
 
-```java
-public class StringValues {
-    public static final String serviceName = "BASIC_SERVICE";
-    public static final String userType = "USER_TYPE_BASIC";
-    public static final String roomType = "ROOM_TYPE_BASIC";
-}
-```
+| Type           | value            |
+|----------------|------------------|
+| Severvice Name | BASIC_SERVICE    |
+| User Type      | USER_TYPE_BASIC  |
+| Room Type      | ROOM_TYPE_BASIC  |
 
-例で使用するBasicGameNode、BasicUser、BasicRoomコンストラクタをそれぞれパラメータとして入力します。
 
-最後にconfigを登録する部分では、チャンネル情報の使用有無設定、プロトコル登録などの作業を行います。プロトコルを登録する部分は、後ほどインゲームチャットとジグソーパズルロジックを実装する部分で扱うことになります。
+サンプルで使用するBasicGameNode、BasicUser、BasicRoomのコンストラクタをそれぞれパラメータとして入力します。
 
-これでクライアントがサーバーに接続してゲームユーザーとしてログインし、ゲームルームを生成できる機能の実装が完了しました。しかし、サーバーに接続したからといって、すぐにゲーム関連機能(ゲームユーザー生成、ゲームルーム生成など)をリクエストできるわけではありません。今の状態でサーバーとクライアントを実行しても、クライアントはゲームサーバーの機能を使用できないでしょう。サーバーにこれらをリクエストするには、サーバー接続後にクライアント認証プロセスが必要です。次のチャプターでは、サーバーとクライアントで認証をどのように処理するかを扱います。
+最後に、configを登録する箇所では、チャンネル情報の使用有無の設定、プロトコル登録などの作業を行います。プロトコル登録の箇所については、後続のインゲームチャットとジグソーパズルロジックを実装する箇所で説明します。
+
+これで、クライアントがサーバーに接続してゲームユーザーとしてログインし、ゲームルームを作成できる機能の実装が完了しました。ただし、サーバーに接続しただけでは、ゲーム関連の機能（ゲームユーザーの作成、ゲームルームの作成など）をすぐに要求できるわけではありません。現在の状態でサーバーとクライアントを実行しても、クライアントはゲームサーバーの機能を使用することはできません。サーバーにこれらを要求するには、サーバー接続後にクライアントの認証プロセスが必要です。次のチャプターでは、サーバーとクライアントで認証をどのように処理するかについて説明します。
 
 <a id="server-connection"></a>
 ## サーバー接続 { #server-connection }

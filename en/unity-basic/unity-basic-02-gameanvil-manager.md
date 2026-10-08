@@ -37,6 +37,5 @@ The following are the types of settings:
 | | Channel Id | Channel ID to use in Easy Login | |
 | | Service Name | Service name to use in Easy Login | |
 | Client Check | Pause Client State Check Time | Set the time to pause client state check. <br/>When switching to the background, the client connection status check is paused. During this time, the app will not be forcibly terminated by the server even if it comes to the foreground after remaining in the background. | 600 |
-| Log | Threshold | Set the log level. | Info |
 
 GameAnvilManager is now prepared for use.
