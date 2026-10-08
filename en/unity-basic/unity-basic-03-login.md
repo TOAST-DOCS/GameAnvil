@@ -19,7 +19,12 @@ To use a quick login, you must pre-set the value to be used for the Login operat
 |----------------|--------------|-------------------------|:---------:|
 | Connect | Ip | IP of the server to connect to in Easy Login | 127.0.0.1 |
 | | Port | Port of the server to connect to in Easy Login | 18200 |
-| Authentication | AccountId | User identification ID to use in Easy Login | test | | | DeviceId | Device unique value to use in Easy Login | test | | | Password | Password to use in Easy Login | test | | Login | User Type | User type to use in Easy Login | | | | Channel Id | Channel ID to use in Easy Login | | | | Service Name | Service name to use in Easy Login | |
+| Authentication | AccountId | User identification ID to use in Easy Login | test |
+| | DeviceId | Device unique value to use in Easy Login | test |
+| | Password | Password to use in Easy Login | test |
+| Login | User Type | User type to use in Easy Login | |
+| | Channel Id | Channel ID to use in Easy Login | |
+| | Service Name | Service name to use in Easy Login | |
 
 These settings can be set in the Inspector window of GameAnvilManager in the Unity editor or in the script code.
 
@@ -51,15 +56,15 @@ public async void ManagerLogin()
     {
         var result = await gameAnvilManager.Login();
         if (result.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
-            // 성공
+            // Success
         } else {
-            // 실패
+            // Failure
         }
     }
     catch (Exception e)
     {
-        // 서버 연결과 관련된 문제가 발생할 경우 예외 발생
-        // eg.) 연결 실패, 연결 끊김 등
+        // Thrown when a problem related to the server connection occurs
+        // e.g.) connection failure, disconnection, etc.
     }
 }
 ```
@@ -77,15 +82,15 @@ public async void ManagerLogin()
         var loginPayload = new Payload(new Protocol.LoginData());
         var result = await gameAnvilManager.Login(authenticatePayload, loginPayload);
         if (result.loginResultCode == GameAnvilManager.LoginResultCode.SUCCESS){
-            // 성공
+            // Success
         } else {
-            // 실패
+            // Failure
         }
     }
     catch (Exception e)
     {
-        // 서버 연결과 관련된 문제가 발생할 경우 예외 발생
-        // eg.) 연결 실패, 연결 끊김 등
+        // Thrown when a problem related to the server connection occurs
+        // e.g.) connection failure, disconnection, etc.
     }
 }
 ```
@@ -94,7 +99,8 @@ When the simple login succeeds, the GameAnvilUserController instance of the user
 
 You can check the reason for the failure when the simple login failed, using the loginResultCode for LoginResult. The following can be found for failure:
 
-| Name | Description | | |------------------------------------|-----------------------------------------------|-------------------------------------------------------------|
+| Name | Description | |
+|------------------------------------|-----------------------------------------------|-------------------------------------------------------------|
 | START\_FAIL\_LOGIN\_IN\_PROGRESS | Login is already in progress. | |
 | START\_FAIL\_ALREADY\_LOGGED\_IN | You are already logged in. | |
 | CONNECT\_FAIL | Failed to connect to server. | |

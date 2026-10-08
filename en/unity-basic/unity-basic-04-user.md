@@ -452,15 +452,15 @@ public async void ManagerMatchUserCancel()
         ResultCodeMatchUserCancel result = await userController.MatchUserCancel("RoomType");
         if (result == ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS)
         {
-            // 성공
+            // Success
         } else
         {
-            // 실패
+            // Failure
         }
     }
     catch (Exception e)
     {
-        // 예외
+        // Exception
     }
 }
 ```

@@ -62,7 +62,7 @@ public void DisposeUser()
         user.Dispose();
     } catch (Exception e)
     {
-        // 실패
+        // Failure
     }
 }
 ```
@@ -154,15 +154,15 @@ public async void Logout()
         Result<ResultCodeLogout, LogoutResult> result = await user.Logout(logoutPayload);
         if (result.ResultCode == ResultCodeLogout.LOGOUT_SUCCESS)
         {
-            // 성공
+            // Success
         } else
         {
-            // 실패
+            // Failure
         }
     }
     catch (Exception e)
     {
-        // 예외
+        // Exception
     }
 }
 ```
@@ -468,14 +468,14 @@ public async void MatchRoom()
         Result<ResultCodeMatchRoom, MatchResult> result = await user.MatchRoom(true, true, "RoomType", "MatchingGroup", "MatchingUserCategory", matchRoomPayload);
         if (result.ResultCode == ResultCodeMatchRoom.MATCH_ROOM_SUCCESS)
         {
-            // 성공
+            // Success
         } else
         {
-            // 실패
+            // Failure
         }
     } catch (Exception e)
     {
-        // 예외
+        // Exception
     }
 }
 ```
@@ -547,11 +547,11 @@ You can start user matchmaking by calling MatchUserStart(). A successful result 
 public async void MatchUserStart()
 {
     user.OnMatchUserDone +=(GameAnvilUser user, ResultCodeMatchUserDone resultCode, MatchResult matchResult) => {
-        // 매칭 성공
+        // Matching succeeded
     };
     user.onMatchUserTimeOut +=(GameAnvilUser user, ResultCodeMatchUserTimeOut resultCode) =>
     {
-        // 매칭 실패
+        // Matching failed
     };
     try
     {
@@ -559,14 +559,14 @@ public async void MatchUserStart()
         Result<ResultCodeMatchUserStart, Payload> result = await user.MatchUserStart("RoomType", "MatchingGroup", matchUserPayload);
         if (result.ResultCode == ResultCodeMatchUserStart.MATCH_USER_START_SUCCESS)
         {
-            // 요청 성공
+            // Request succeeded
         } else
         {
-            // 실패
+            // Failure
         }
     } catch (Exception e)
     {
-        // 예외
+        // Exception
     }
 }
 ```
@@ -624,14 +624,14 @@ public async void MatchUserCancel()
         ResultCodeMatchUserCancel result = await user.MatchUserCancel("RoomType");
         if (result == ResultCodeMatchUserCancel.MATCH_USER_CANCEL_SUCCESS)
         {
-            // 성공
+            // Success
         } else
         {
-            // 실패
+            // Failure
         }
     } catch (Exception e)
     {
-        // 예외
+        // Exception
     }
 }
 ```
@@ -668,14 +668,14 @@ public async void PartyRoom()
         Result<ResultCodeNamedRoom, NamedRoomResult> result = await user.NamedRoom("RoomName", "RoomType", isParty, partyRoomPayload);
         if (result.ResultCode == ResultCodeNamedRoom.NAMED_ROOM_SUCCESS)
         {
-            // 성공
+            // Success
         } else
         {
-            // 실패
+            // Failure
         }
     } catch (Exception e)
     {
-        // 예외
+        // Exception
     }
 }
 ```
