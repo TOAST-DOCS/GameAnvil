@@ -1,3 +1,5 @@
+<!-- machine_translated: true -->
+
 <!-- pre-align:aligned sig=1c47fe5642cb -->
 
 <a id="game-gameanvil-server-development-guide-getting-started"></a>
@@ -22,29 +24,16 @@ GameAnvilサーバーは基本的にノード(Node)単位で構成します。�
 <a id="start-of-all-implements-nodes"></a>
 ## 全ての実装の始まり、ノード { #start-of-all-implements-nodes }
 
-例えば、全てのノードは共通して以下のコールバックメソッドを再定義する必要があります。そして、それぞれのノードはその役割に合った追加のコールバックメソッドの実装を要求する場合があります。以下のコードで例に挙げたSampleGatewayNodeは、GatewayNodeの基本インターフェースであるIGatewayNodeを実装しています。
+例えば、全てのノードは共通して以下のコールバックメソッドを再定義する必要があります。そして、それぞれのノードはその役割に合った追加のコールバックメソッドの実装を要求する場合があります。以下のコードで例に挙げたSampleGatewayNodeは、GatewayNodeの基本クラスであるBaseGatewayNodeを実装しています。
 
-IGatewayNodeを含む全てのインターフェースノードは、共通して以下のようなコールバックメソッドを提供します。onCreate()メソッドのみ、実装するタイプに応じたコンテキストインターフェースをパラメータとして受け取ります。ユーザーがこれらのコールバックメソッドを実装すると、エンジンが特定の時点で該当コールバックを呼び出します。これこそがGameAnvilの最も基本的な使用法です。このような使用法はドキュメント全体を通して大同小異なので、大きな違和感なく各章を理解できるでしょう。
+BaseGatewayNodeを含む全てのインターフェースノードは、共通して以下のようなコールバックメソッドを提供します。ユーザーがこのクラスを実装すると、エンジンが特定の時点で該当コールバックを呼び出します。これこそがGameAnvilの最も基本的な使用法です。このような使用法はドキュメント全体を通して大同小異なので、大きな違和感なく各章を理解できるでしょう。
 
 ```java
 @GameAnvilGatewayNode // エンジンにこのクラスをGatewayとして登録
-public class SampleGatewayNode implements IGatewayNode {
-    private IGatewayNodeContext gatewayNodeContext;
+public class SampleGatewayNode extends BaseGatewayNode {
 
     /**
-     * ゲートウェイノードコンテキストを伝達するために呼び出し
-     * <p/>
-     * オブジェクトが生成された後、一度呼び出される
-     *
-     * @param gatewayNodeContextゲートウェイノードコンテキスト
-     */
-    @Override
-    public void onCreate(IGatewayNodeContext gatewayNodeContext) {
-        this.gatewayNodeContext = gatewayNodeContext;
-    }
-
-    /**
-     * ノードが初期化される時に呼び出し
+     * ノードが初期化されるときに呼び出される
      */
     @Override
     public void onInit() {
@@ -52,7 +41,7 @@ public class SampleGatewayNode implements IGatewayNode {
     }
 
     /**
-     * Readyになる前に処理する部分のために呼び出し
+     * 準備完了になる前に処理する部分のために呼び出される
      */
     @Override
     public void onPrepare() {
@@ -60,7 +49,7 @@ public class SampleGatewayNode implements IGatewayNode {
     }
 
     /**
-     * Readyになる時に呼び出し
+     * 準備完了になるときに呼び出される
      */
     @Override
     public void onReady() {
@@ -68,30 +57,10 @@ public class SampleGatewayNode implements IGatewayNode {
     }
 
     /**
-     * Pauseになる時に呼び出し
-     *
-     * @param payloadコンテンツから伝達したい追加情報
-     */
-    @Override
-    public void onPause(IPayload payload) {
-
-    }
-
-    /**
-     * Shutdown命令を受け取ると呼び出し
+     * Shutdownコマンドを受け取ると呼び出される
      */
     @Override
     public void onShuttingdown() {
-
-    }
-
-    /**
-     * Resumeになる時に呼び出し
-     *
-     * @param payloadコンテンツから伝達したい追加情報
-     */
-    @Override
-    public void onResume(IPayload payload) {
 
     }
 }
@@ -165,5 +134,3 @@ GameAnvilで提供する様々なクラスをすぐに作成できるファイ�
 | User                           | ゲームユーザーの基本実装          |
 | UserMatchInfo                  | ユーザーマッチ情報の基本実装       |
 | UserMatchMaker                 | ユーザーマッチメーカーの基本実装       |
-
- 
