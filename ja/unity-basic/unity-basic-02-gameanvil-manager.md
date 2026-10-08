@@ -37,6 +37,5 @@ GameAnvilManagerには様々な設定値があります。GameAnvilManager生成
 |                | Channel Id                    | 簡易ログインで使用するチャンネルID                                                                                                                                                                      |           |
 |                | Service Name                  | 簡易ログインで使用するサービス名                                                                                                                                                                      |           |
 | Client Check   | Pause Client State Check Time | クライアント状態チェック確認停止時間設定。<br/>バックグラウンド切替時にクライアントの接続状態チェックを一時停止する。この間はアプリがバックグラウンドに留まってからフォアグラウンドに戻っても、サーバーから強制終了させない。 |    600    |
-| Log            | Threshold                     | ログレベルを設定します。                                                                                                           |   Info    |
 
 これでGameAnvilManagerの使用準備が完了しました。

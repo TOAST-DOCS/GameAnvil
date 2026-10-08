@@ -146,11 +146,10 @@ Each configuration item is described below.
 
 | Name                             | Description                                                         | Default value |
 | -------------------------------- | ------------------------------------------------------------ | ------ |
-| nodeCnt                          | Number of nodes                                                    | -      |
-| ip                               | IP address for the client to connect to<br> (automatically set to the machine's private IP if none exists) | -      |
-| connectGroup                     | Gateway nodes support TCP sockets and WEB sockets           | -      |
-| connectGroup : port              | The port the client will connect to                                     | -      |
-| connectGroup : idleClientTimeout | Timeout between no data sent or received and connection cleanup (0 is not used) | 4000   |
+| connectGroup                     | Gateway Nodes support "TCP_SOCKET" and "WEB_SOCKET" sockets.          | -      |
+| connectGroup : port              | Specifies the port the client will connect to.                         | 0      |
+| nodeCnt                          | Sets the number of Gateway Nodes.<br />If 0, no Gateway Nodes are created. | 0      |
+| duplicateLoginServices           | Sets services that allow duplicate logins.                             | -      |
 
 
 

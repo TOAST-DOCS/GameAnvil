@@ -12,7 +12,6 @@ The four key libraries used by GameAnvil are listed below. Quasar, ZeroMQ, and N
 
 | Library       | Usage                            |
 | ---------------- | ------------------------------- |
-| Quasar           | Supports Fiber-based Continuation |
 | ZeroMQ           | Server's IPC                      |
 | Netty            | Communication between server and client            |
 | Protocol Buffers | Parallelization of messages between server and client   |
