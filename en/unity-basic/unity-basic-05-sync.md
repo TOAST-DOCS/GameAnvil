@@ -3,11 +3,9 @@
 <!-- pre-align:aligned sig=b5ad44f1ec14 -->
 
 <a id="game-gameanvil-unity-basic-development-guide-synchronization"></a>
-
 ## Game > GameAnvil > Unity Basic Development Guide > Synchronization { #game-gameanvil-unity-basic-development-guide-synchronization }
 
 <a id="synchronize"></a>
-
 ## Synchronize { #synchronize }
 
 The GameAnvilManager provides a simple way to synchronize the creation/destruction, Transform, Animation, Rigidbody2D, and Rigidbody properties of GameObjects.
@@ -21,7 +19,6 @@ A Sync component must also be added to any GameObject that wants to use a synchr
 When one client changes certain properties, a sync request packet is sent, and the server broadcasts it to all users in the same room so that they can synchronize on other clients.
 
 <a id="synccontroller"></a>
-
 ## SyncController { #synccontroller }
 
 The SyncController must exist in the scene where you want to use the Sync feature. It plays a key role in the behavior of the Sync feature, including the Instantiate() and Destroy() methods that create and destroy synchronized GameObjects.
@@ -41,7 +38,6 @@ SyncController has the following options:
 | Lazy Loading | Sets whether to automatically synchronize existing data immediately after entering a room. <br/>If this option is set to false, call SyncController::InstantiateSyncObject() directly at the time you want to synchronize existing data. <br/>(Default: true) |
 
 <a id="synchronizing-gameobject-creationdestruction-sync"></a>
-
 ## Synchronizing GameObject creation/destruction, Sync { #synchronizing-gameobject-creationdestruction-sync }
 
 If you want to synchronize the creation/destruction of GameObjects, you can attach the Sync component to any GameObject to synchronize the creation/destruction of mutually created GameObjects between users in the same room.
@@ -98,7 +94,6 @@ When a user enters a room, creates synchronized GameObjects, and then moves to a
 This means that when you move to a different scene and come back to the original scene, you may find that the synchronized GameObjects you created are missing. And if you move the scene on one client and all of the synchronized GameObjects are destroyed, the destructive synchronization may cause them to be destroyed on the other client as well. Be mindful of this when changing scenes. This is something that will be improved in the future.
 
 <a id="transform-synchronization-transformsync"></a>
-
 ## Transform Synchronization, TransformSync { #transform-synchronization-transformsync }
 
 You can attach the TransformSync component to any GameObject that you want to synchronize its Transforms to synchronize the Transforms of the synchronizing GameObject.
@@ -122,7 +117,6 @@ You can optionally select which properties to synchronize during the transformat
 | Use Local | Sets whether localPosition and localRotation should be used. Scale ignores this setting and always uses localScale to avoid issues with lossyScale. |
 
 <a id="animation-synchronization-animatorsync"></a>
-
 ## Animation Synchronization, AnimatorSync { #animation-synchronization-animatorsync }
 
 You can attach the AnimatorSync component to any GameObject that you want to synchronize animations to, and change the Animation State by changing the value of the Animator's parameters, and those changes will be synchronized on other clients.
@@ -131,7 +125,6 @@ Create a prefab GameObject with an AnimatorSync component attached to it and sav
 ![](https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_2acdfabf4efe4efc8a04c00b348110c9/cdn_origin/prod_gameanvil/images/v2_0/unity-basic/05-sync/06-animator-sync.gif)
 
 <a id="rigidbody2d-synchronization-rigidbody2dsync"></a>
-
 ## Rigidbody2D Synchronization, Rigidbody2DSync { #rigidbody2d-synchronization-rigidbody2dsync }
 
 Attaching the Rigidbody2DSync component to the GameObject you want to synchronize the Rigidbody2D with will synchronize the Rigidbody2D of the synchronizing GameObject.
@@ -157,7 +150,6 @@ You can optionally select which properties of the Rigidbody2D you want to synchr
 | Teleport if angle greater than | If the angle varies by more than a set threshold, we apply the angle value we want to synchronize to the Rigidbody2D's Rotation and then synchronize using the Angular Velocity value. <br/>Displayed only when Teleport Enabled is checked. |
 
 <a id="rigidbody-synchronization-rigidbodysync"></a>
-
 ## Rigidbody Synchronization, RigidbodySync { #rigidbody-synchronization-rigidbodysync }
 
 The RigidbodySync component can be attached to any GameObject that you want to synchronize RigidBodies to synchronize the RigidBodies of the synchronizing GameObject.
@@ -184,7 +176,6 @@ You can optionally select which properties of the Rigidbody you want to synchron
 | Teleport if angle greater than | If the angle varies by more than a set threshold, we apply the angle value we want to synchronize to the Rigidbody's Rotation and then synchronize using the Angular Velocity value. <br/>Displayed only when Teleport Enabled is checked. |
 
 <a id="synchronizing-custom-values"></a>
-
 ## Synchronizing custom values { #synchronizing-custom-values }
 
 Provides the ability to synchronize user-defined values of type int, float, bool, and string.
